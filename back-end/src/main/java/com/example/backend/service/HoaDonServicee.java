@@ -1,10 +1,9 @@
-package com.example.duanmishoes.service;
-
-import com.example.duanmishoes.entity.HoaDon;
-import com.example.duanmishoes.model.AdminHoaDonDetail;
-import com.example.duanmishoes.model.AdminHoaDonResponn;
-import com.example.duanmishoes.model.AdminHoaDonSanPham;
-import com.example.duanmishoes.respon.HoaDonResponn;
+package com.example.backend.service;
+import com.example.backend.entity.HoaDon;
+import com.example.backend.model.AdminHoaDonDetail;
+import com.example.backend.model.AdminHoaDonResponn;
+import com.example.backend.model.AdminHoaDonSanPham;
+import com.example.backend.respon.HoaDonResponn;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

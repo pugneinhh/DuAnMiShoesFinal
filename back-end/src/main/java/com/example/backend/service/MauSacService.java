@@ -1,10 +1,9 @@
-package com.example.duanmishoes.service;
-
-import com.example.duanmishoes.dto.request.MauSacRequest;
-import com.example.duanmishoes.dto.respone.MauSacRespone;
-import com.example.duanmishoes.entity.MauSac;
-import com.example.duanmishoes.respon.MauSacRespository;
-import com.example.duanmishoes.util.Status;
+package com.example.backend.service;
+import com.example.backend.dto.request.MauSacRequest;
+import com.example.backend.dto.respone.MauSacRespone;
+import com.example.backend.entity.MauSac;
+import com.example.backend.respon.MauSacRespository;
+import com.example.backend.util.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

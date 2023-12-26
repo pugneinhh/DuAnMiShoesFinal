@@ -1,9 +1,8 @@
-package com.example.duanmishoes.service;
-
-import com.example.duanmishoes.model.AdminVoucher;
-import com.example.duanmishoes.entity.Voucher;
-import com.example.duanmishoes.model.VoucherSearch;
-import com.example.duanmishoes.respon.VoucherRespon;
+package com.example.backend.service;
+import com.example.backend.model.AdminVoucher;
+import com.example.backend.entity.Voucher;
+import com.example.backend.model.VoucherSearch;
+import com.example.backend.respon.VoucherRespon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;

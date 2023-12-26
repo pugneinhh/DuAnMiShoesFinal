@@ -1,5 +1,4 @@
-package com.example.duanmishoes.entity;
-
+package com.example.backend.entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

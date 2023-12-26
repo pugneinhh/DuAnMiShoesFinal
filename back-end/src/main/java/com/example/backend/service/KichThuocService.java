@@ -1,8 +1,7 @@
-package com.example.duanmishoes.service;
-
-import com.example.duanmishoes.entity.KichThuoc;
-import com.example.duanmishoes.model.AdminKichThuocRespon;
-import com.example.duanmishoes.respon.KichThuocRespon;
+package com.example.backend.service;
+import com.example.backend.entity.KichThuoc;
+import com.example.backend.model.AdminKichThuocRespon;
+import com.example.backend.respon.KichThuocRespon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

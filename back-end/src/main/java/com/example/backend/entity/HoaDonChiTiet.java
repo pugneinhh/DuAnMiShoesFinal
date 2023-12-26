@@ -1,6 +1,5 @@
-package com.example.duanmishoes.entity;
-
-import com.example.duanmishoes.entity.IDHoaDonChiTiet;
+package com.example.backend.entity;
+import com.example.backend.entity.IDHoaDonChiTiet;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

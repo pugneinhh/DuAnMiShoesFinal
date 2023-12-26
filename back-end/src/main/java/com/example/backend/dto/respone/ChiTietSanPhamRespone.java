@@ -1,4 +1,5 @@
-package com.example.duanmishoes.dto.respone;
+package com.example.backend.dto.respone;
+
 
 public interface ChiTietSanPhamRespone {
 }

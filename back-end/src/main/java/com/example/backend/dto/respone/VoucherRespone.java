@@ -1,4 +1,4 @@
-package com.example.duanmishoes.dto.respone;
+package com.example.backend.dto.respone;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

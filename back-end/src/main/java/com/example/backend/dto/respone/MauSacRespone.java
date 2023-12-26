@@ -1,4 +1,4 @@
-package com.example.duanmishoes.dto.respone;
+package com.example.backend.dto.respone;
 
 import org.springframework.beans.factory.annotation.Value;
 

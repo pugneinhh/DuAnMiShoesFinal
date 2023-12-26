@@ -1,7 +1,7 @@
-package com.example.duanmishoes.controller;
+package com.example.backend.controller;
 
-import com.example.duanmishoes.model.AdminBanHangHDRespon;
-import com.example.duanmishoes.service.BanHangService;
+import com.example.backend.model.AdminBanHangHDRespon;
+import com.example.backend.service.BanHangService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

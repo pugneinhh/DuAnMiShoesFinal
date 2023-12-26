@@ -1,8 +1,9 @@
-package com.example.duanmishoes.controller;
+package com.example.backend.controller;
 
-import com.example.duanmishoes.dto.request.DanhMucRequest;
-import com.example.duanmishoes.entity.DanhMuc;
-import com.example.duanmishoes.service.DanhMucService;
+
+import com.example.backend.dto.request.DanhMucRequest;
+import com.example.backend.entity.DanhMuc;
+import com.example.backend.service.DanhMucService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

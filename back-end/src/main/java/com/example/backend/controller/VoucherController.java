@@ -1,8 +1,9 @@
-package com.example.duanmishoes.controller;
+package com.example.backend.controller;
 
-import com.example.duanmishoes.entity.Voucher;
-import com.example.duanmishoes.model.VoucherSearch;
-import com.example.duanmishoes.service.VoucherService;
+
+import com.example.backend.entity.Voucher;
+import com.example.backend.model.VoucherSearch;
+import com.example.backend.service.VoucherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -1,8 +1,8 @@
-package com.example.duanmishoes.respon;
+package com.example.backend.respon;
 
 
-import com.example.duanmishoes.entity.HoaDon;
-import com.example.duanmishoes.model.*;
+import com.example.backend.entity.HoaDon;
+import com.example.backend.model.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

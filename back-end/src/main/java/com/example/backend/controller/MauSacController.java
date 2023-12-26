@@ -1,7 +1,8 @@
-package com.example.duanmishoes.controller;
+package com.example.backend.controller;
 
-import com.example.duanmishoes.dto.request.MauSacRequest;
-import com.example.duanmishoes.service.MauSacService;
+
+import com.example.backend.dto.request.MauSacRequest;
+import com.example.backend.service.MauSacService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

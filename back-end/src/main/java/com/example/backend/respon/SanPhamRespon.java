@@ -1,8 +1,7 @@
-package com.example.duanmishoes.respon;
+package com.example.backend.respon;
 
-
-import com.example.duanmishoes.entity.SanPham;
-import com.example.duanmishoes.model.AdminSanPhamRespon;
+import com.example.backend.entity.SanPham;
+import com.example.backend.model.AdminSanPhamRespon;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

@@ -1,4 +1,4 @@
-package com.example.duanmishoes.model;
+package com.example.backend.model;
 
 import org.springframework.beans.factory.annotation.Value;
 

@@ -1,7 +1,8 @@
-package com.example.duanmishoes.controller;
+package com.example.backend.controller;
 
-import com.example.duanmishoes.entity.KhuyenMai;
-import com.example.duanmishoes.service.CTSPService;
+
+import com.example.backend.entity.KhuyenMai;
+import com.example.backend.service.CTSPService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

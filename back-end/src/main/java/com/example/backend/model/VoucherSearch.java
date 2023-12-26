@@ -1,4 +1,4 @@
-package com.example.duanmishoes.model;
+package com.example.backend.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

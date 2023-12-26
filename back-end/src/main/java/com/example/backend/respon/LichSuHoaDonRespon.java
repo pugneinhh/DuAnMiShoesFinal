@@ -1,9 +1,9 @@
-package com.example.duanmishoes.respon;
+package com.example.backend.respon;
 
 
-import com.example.duanmishoes.model.AdminHoaDonTimeLineRes;
-import com.example.duanmishoes.model.AdminHoaDonTimeLineRespon;
-import com.example.duanmishoes.entity.LichSuHoaDon;
+import com.example.backend.model.AdminHoaDonTimeLineRes;
+import com.example.backend.model.AdminHoaDonTimeLineRespon;
+import com.example.backend.entity.LichSuHoaDon;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

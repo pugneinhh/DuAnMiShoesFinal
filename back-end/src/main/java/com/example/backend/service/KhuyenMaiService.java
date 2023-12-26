@@ -1,7 +1,6 @@
-package com.example.duanmishoes.service;
-
-import com.example.duanmishoes.entity.KhuyenMai;
-import com.example.duanmishoes.respon.KhuyenMaiRespon;
+package com.example.backend.service;
+import com.example.backend.entity.KhuyenMai;
+import com.example.backend.respon.KhuyenMaiRespon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +8,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class KhuyenMaiService {

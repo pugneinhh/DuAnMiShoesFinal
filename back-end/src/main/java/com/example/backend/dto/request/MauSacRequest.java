@@ -1,6 +1,7 @@
-package com.example.duanmishoes.dto.request;
+package com.example.backend.dto.request;
 
-import com.example.duanmishoes.util.Status;
+
+import com.example.backend.util.Status;
 import lombok.*;
 
 import java.sql.Date;

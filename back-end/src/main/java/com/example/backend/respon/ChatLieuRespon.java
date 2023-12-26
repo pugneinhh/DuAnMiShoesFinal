@@ -1,12 +1,11 @@
-package com.example.duanmishoes.respon;
+package com.example.backend.respon;
 
-import com.example.duanmishoes.model.AdminChatLieuRespon;
-import com.example.duanmishoes.entity.ChatLieu;
+import com.example.backend.model.AdminChatLieuRespon;
+import com.example.backend.entity.ChatLieu;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface ChatLieuRespon extends JpaRepository<ChatLieu, String> {
     @Query(value = """

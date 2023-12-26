@@ -1,5 +1,4 @@
-package com.example.duanmishoes.entity;
-
+package com.example.backend.entity;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;

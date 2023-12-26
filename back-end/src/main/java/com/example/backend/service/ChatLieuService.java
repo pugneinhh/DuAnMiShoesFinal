@@ -1,8 +1,7 @@
-package com.example.duanmishoes.service;
-
-import com.example.duanmishoes.model.AdminChatLieuRespon;
-import com.example.duanmishoes.entity.ChatLieu;
-import com.example.duanmishoes.respon.ChatLieuRespon;
+package com.example.backend.service;
+import com.example.backend.model.AdminChatLieuRespon;
+import com.example.backend.entity.ChatLieu;
+import com.example.backend.respon.ChatLieuRespon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

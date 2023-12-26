@@ -1,7 +1,8 @@
-package com.example.duanmishoes.controller;
+package com.example.backend.controller;
 
-import com.example.duanmishoes.entity.DeGiay;
-import com.example.duanmishoes.service.DeGiayService;
+
+import com.example.backend.entity.DeGiay;
+import com.example.backend.service.DeGiayService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

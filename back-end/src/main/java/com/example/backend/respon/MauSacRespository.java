@@ -1,7 +1,6 @@
-package com.example.duanmishoes.respon;
-
-import com.example.duanmishoes.dto.respone.MauSacRespone;
-import com.example.duanmishoes.entity.MauSac;
+package com.example.backend.respon;
+import com.example.backend.dto.respone.MauSacRespone;
+import com.example.backend.entity.MauSac;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

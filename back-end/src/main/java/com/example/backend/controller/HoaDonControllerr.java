@@ -1,9 +1,10 @@
-package com.example.duanmishoes.controller;
+package com.example.backend.controller;
 
-import com.example.duanmishoes.entity.HoaDon;
-import com.example.duanmishoes.entity.LichSuHoaDon;
-import com.example.duanmishoes.service.HoaDonServicee;
-import com.example.duanmishoes.service.LichSuHoaDonService;
+
+import com.example.backend.entity.HoaDon;
+import com.example.backend.entity.LichSuHoaDon;
+import com.example.backend.service.HoaDonServicee;
+import com.example.backend.service.LichSuHoaDonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

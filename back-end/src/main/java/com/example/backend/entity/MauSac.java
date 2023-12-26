@@ -1,6 +1,6 @@
-package com.example.duanmishoes.entity;
+package com.example.backend.entity;
 
-import com.example.duanmishoes.util.Status;
+import com.example.backend.util.Status;
 import jakarta.persistence.*;
 import lombok.*;
 

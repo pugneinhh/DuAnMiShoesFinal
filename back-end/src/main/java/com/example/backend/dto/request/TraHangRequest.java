@@ -1,4 +1,4 @@
-package com.example.duanmishoes.dto.request;
+package com.example.backend.dto.request;
 
 import lombok.*;
 

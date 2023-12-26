@@ -1,8 +1,7 @@
-package com.example.duanmishoes.service;
-
-import com.example.duanmishoes.entity.LichSuHoaDon;
-import com.example.duanmishoes.model.*;
-import com.example.duanmishoes.respon.LichSuHoaDonRespon;
+package com.example.backend.service;
+import com.example.backend.entity.LichSuHoaDon;
+import com.example.backend.model.*;
+import com.example.backend.respon.LichSuHoaDonRespon;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
