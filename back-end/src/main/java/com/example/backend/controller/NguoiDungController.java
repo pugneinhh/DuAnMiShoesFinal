@@ -5,6 +5,7 @@ import com.example.backend.service.NguoiDungService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,7 @@ public class NguoiDungController {
     NguoiDungService nguoiDungService;
     @GetMapping("/hien-thi")
     public ResponseEntity<?> getAll(){
-        return ResponseEntity.ok(nguoiDungService.getAll());
+        return new ResponseEntity<>(nguoiDungService.getAll(), HttpStatus.FOUND);
     }
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody NguoiDungRequest request){
