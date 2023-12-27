@@ -142,9 +142,8 @@ const columns = [
     
   },
   {
-    title: 'Phương thức',
-    dataIndex: 'phuongThuc',
-    
+    title: 'Loại Voucher',
+    dataIndex: 'loaiVoucher',
   },
   {
     title: 'Ngày bắt đầu',
@@ -168,12 +167,12 @@ const columns = [
             render: (trangThai) => (
                 <>
                     {
-                        (trangThai == 0) ?
+                        (trangThai == 'SAP_DIEN_RA') ?
                             (
                                 <Tag color="gold">
                                     Sắp diễn ra
                                 </Tag>
-                            ) : (trangThai==1)?
+                            ) : (trangThai=='DANG_HOAT_DONG')?
                             <Tag color="green">
                             Hoạt động
                             </Tag>
@@ -184,18 +183,18 @@ const columns = [
                               
                     }
                 </>),
-    filters: [
-      {
-          text: 'Hoạt động',
-          value: '0',
-      },
-      {
-          text: 'Ngừng hoạt động',
-          value: '1',
-      },
+  //   filters: [
+  //     {
+  //         text: 'Hoạt động',
+  //         value: '0',
+  //     },
+  //     {
+  //         text: 'Ngừng hoạt động',
+  //         value: '1',
+  //     },
 
-  ],
-  onFilter: (value, record) => record.trangThai.indexOf(value) === 0,
+  // ],
+  // onFilter: (value, record) => record.trangThai.indexOf(value) === 0,
   },
   {
     title: 'Action',
@@ -359,8 +358,8 @@ const columns = [
                   <Form.Item label="Tìm kiếm" name='tenVoucher'>
                       <Input className='rounded-pill border-warning' placeholder='Nhập mã hoặc tên hoặc mức độ giảm giá'/>
                   </Form.Item>
-                  <Form.Item label="Hình thức" name='phuongThucVoucher'>
-                  <Select defaultValue={'Phương thức'} style={{borderColor:'yellow'}}  >
+                  <Form.Item label="Loại voucher" name='loaiVoucher'>
+                  <Select defaultValue={'Tiền mặt'} style={{borderColor:'yellow'}}  >
                       <Select.Option value="Tiền mặt">Tiền mặt</Select.Option>
                       <Select.Option value="Phần trăm">Phần trăm</Select.Option>
                   </Select>
@@ -368,17 +367,12 @@ const columns = [
               </div>
 
               <div className='col-md-4'>
-              <Form.Item label="Loại" name='loaiVoucher' >
-                  <Select defaultValue={'Tất cả'} style={{borderColor:'yellow'}}>
-                      <Select.Option value="true">Giới hạn</Select.Option>
-                      <Select.Option value="false">Không giới hạn</Select.Option>
-                  </Select>
-                  </Form.Item> 
+            
                   <Form.Item label="Trạng thái" name='trangThaiVoucher' >
                   <Select defaultValue={'Tất cả'} style={{borderColor:'yellow'}}>
-                      <Select.Option value="0">Sắp diễn ra</Select.Option>
-                      <Select.Option value="1">Hoạt động</Select.Option>
-                      <Select.Option value="2">Ngừng hoạt động</Select.Option>
+                      <Select.Option value="SAP_DIEN_RA">Sắp diễn ra</Select.Option>
+                      <Select.Option value="DANG_HOAT_DONG">Hoạt động</Select.Option>
+                      <Select.Option value="NGUNG_HOAT_DONG">Ngừng hoạt động</Select.Option>
                   </Select>
                   </Form.Item> 
                  
