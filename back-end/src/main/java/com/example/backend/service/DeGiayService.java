@@ -1,7 +1,7 @@
 package com.example.backend.service;
 import com.example.backend.entity.DeGiay;
 import com.example.backend.model.AdminDoCaoRespon;
-import com.example.backend.respon.DeGiayRespon;
+import com.example.backend.repository.DeGiayRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public class DeGiayService {
     @Autowired
-    private DeGiayRespon doCaoRespon;
+    private DeGiayRepository doCaoRespon;
     public List<DeGiay> getALL(){
         return doCaoRespon.findAll();
     }

@@ -1,8 +1,8 @@
 package com.example.backend.service;
 import com.example.backend.dto.request.MauSacRequest;
-import com.example.backend.dto.respone.MauSacRespone;
+import com.example.backend.dto.response.MauSacRespone;
 import com.example.backend.entity.MauSac;
-import com.example.backend.respon.MauSacRespository;
+import com.example.backend.repository.MauSacRespository;
 import com.example.backend.util.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

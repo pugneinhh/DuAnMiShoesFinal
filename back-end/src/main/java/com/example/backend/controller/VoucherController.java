@@ -1,20 +1,19 @@
 package com.example.backend.controller;
 
-
+import com.example.backend.dto.request.VoucherRequest;
 import com.example.backend.entity.Voucher;
-import com.example.backend.model.VoucherSearch;
+import com.example.backend.dto.request.VoucherSearch;
 import com.example.backend.service.VoucherService;
+import com.example.backend.util.Status;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @CrossOrigin("http://localhost:3000/")
 @RestController
@@ -29,24 +28,29 @@ public class VoucherController {
         return ResponseEntity.ok(vs.getAll());
     }
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody Voucher v){
-        if(v.getLoaiVoucher()==null){
-            v.setLoaiVoucher("false");
-        }
+    public ResponseEntity<?> add(@RequestBody VoucherRequest request){
         LocalDateTime lc= LocalDateTime.now();
-        if(v.getNgayBatDau().compareTo(lc)>0){
-            v.setTrangThai(0);
+        if(request.getNgayBatDau().compareTo(lc)>0){
+            request.setTrangThai(Status.SAP_DIEN_RA);
         }else{
-            v.setTrangThai(1);
+            request.setTrangThai(Status.DANG_HOAT_DONG);
         }
-        v.setNgayTao(new Date(new java.util.Date().getTime()));
-        return  ResponseEntity.ok(vs.addVoucher(v));
+        request.setNgayTao(LocalDateTime.now());
+        return  ResponseEntity.ok(vs.addVoucher(request));
     }
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") String id,@RequestBody Voucher v){
-        v.setId(id);
-        v.setNgaySua(new Date(new java.util.Date().getTime()));
-        return  ResponseEntity.ok(vs.addVoucher(v));
+    public ResponseEntity<?> update(@PathVariable("id") String id,@RequestBody VoucherRequest request){
+        request.setId(id);
+        LocalDateTime lc= LocalDateTime.now();
+        if(request.getNgayBatDau().compareTo(lc)>0){
+            request.setTrangThai(Status.SAP_DIEN_RA);
+        }else if(request.getNgayBatDau().compareTo(lc)==0){
+            request.setTrangThai(Status.DANG_HOAT_DONG);
+        }else{
+            request.setTrangThai(Status.NGUNG_HOAT_DONG);
+        }
+        request.setNgaySua(LocalDateTime.now());
+        return  ResponseEntity.ok(vs.addVoucher(request));
     }
     @GetMapping("/detail/{idV}")
     public ResponseEntity<?> detail(@PathVariable("idV") String id){
