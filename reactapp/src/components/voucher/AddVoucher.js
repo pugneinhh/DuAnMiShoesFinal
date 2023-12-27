@@ -144,13 +144,13 @@ message: 'Vui lòng không để trống tên!',
 ]}   >
 <Input  placeholder='Tên phiếu giảm giá' className='border-warning'/>
 </Form.Item>
-<Form.Item label="Hình thức" name='phuongThuc' style={{borderColor:'yellow'}} rules={[
+<Form.Item label="Loại voucher" name='loaiVoucher' style={{borderColor:'yellow'}} rules={[
 {
 required: true,
-message: 'Vui lòng chọn hình thức!',
+message: 'Vui lòng chọn loại voucher!',
 },
 ]} >
-<Select defaultValue={'Hình thức'} style={{borderColor:'yellow'}} onChange={handleChange}>
+<Select defaultValue={'Tiền mặt'} style={{borderColor:'yellow'}} onChange={handleChange}>
  <Select.Option value="Tiền mặt">Tiền mặt</Select.Option>
  <Select.Option value="Phần trăm">Phần trăm</Select.Option>
 </Select>
@@ -161,15 +161,10 @@ message: 'Vui lòng chọn hình thức!',
 </div>
 
 <div className='col-md-4'>
-<Form.Item label="Giới hạn" name='loaiVoucher' valuePropName="checked">
-<Switch onChange={handleChangeSwitch}/>
-</Form.Item>
-{gioiHan==true?
+
 <Form.Item label="Số lượng" name='soLuong'>
 <InputNumber  className='border-warning' defaultValue={'1'} min={1}/>
 </Form.Item>
-:<></>
-}
 <Form.Item label="Mức độ" name='mucDo'>
  {selectedValue==='Tiền mặt'?
 <InputNumber className='border-warning'
