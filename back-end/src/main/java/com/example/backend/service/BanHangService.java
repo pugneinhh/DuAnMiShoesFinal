@@ -1,7 +1,7 @@
 package com.example.backend.service;
 
 import com.example.backend.model.AdminBanHangHDRespon;
-import com.example.backend.respon.HoaDonResponn;
+import com.example.backend.repository.HoaDonRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,9 +12,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BanHangService {
     @Autowired
-    HoaDonResponn hoaDonResponn;
+    HoaDonRepository hoaDonRepository;
 
     public List<AdminBanHangHDRespon> HoaDonBanHang(){
-        return  hoaDonResponn.HoaDonBanHang();
+        return  hoaDonRepository.HoaDonBanHang();
     }
 }

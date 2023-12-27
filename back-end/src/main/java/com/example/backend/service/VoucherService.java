@@ -1,20 +1,21 @@
 package com.example.backend.service;
-import com.example.backend.model.AdminVoucher;
+
+import com.example.backend.dto.request.VoucherRequest;
+import com.example.backend.dto.response.AdminVoucher;
 import com.example.backend.entity.Voucher;
-import com.example.backend.model.VoucherSearch;
-import com.example.backend.respon.VoucherRespon;
+import com.example.backend.dto.request.VoucherSearch;
+import com.example.backend.repository.VoucherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class VoucherService {
     @Autowired
-    VoucherRespon vr;
+    VoucherRepository vr;
     public List<Voucher> getAll(){
         Sort sort=Sort.by(Sort.Order.desc("ngayTao"));
 //        return vr.findAll(sort);
@@ -23,7 +24,8 @@ public class VoucherService {
     public List<Voucher> getTim(String key, Date ngayBD,Date ngayKT){
         return vr.search(key,ngayBD,ngayKT);
     }
-    public Voucher addVoucher(Voucher v){
+    public Voucher addVoucher(VoucherRequest request){
+        Voucher v=request.map(new Voucher());
         return vr.save(v);
     }
     public Voucher detailVoucher(String id){return vr.getById(id);}
