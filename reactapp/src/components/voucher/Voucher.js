@@ -134,16 +134,18 @@ const columns = [
   {
     title: 'Mã Voucher',
     dataIndex: 'ma',
-    
+    sorter: (a, b) => a.ma - b.ma,
   },
   {
     title: 'Tên Voucher',
     dataIndex: 'ten',
-    
+    sorter: (a, b) => a.ma - b.ma,
   },
   {
+
     title: 'Loại Voucher',
     dataIndex: 'loaiVoucher',
+
   },
   {
     title: 'Ngày bắt đầu',
@@ -158,7 +160,7 @@ const columns = [
     render: (ngayKetThuc) => (
       <>{moment(ngayKetThuc).format("DD/MM/YYYY")}</>
   ),
-    
+    sorter: (a, b) => a.ngayKetThuc - b.ngayKetThuc,
   },
   {
     title: 'Trạng thái',
@@ -169,15 +171,19 @@ const columns = [
                     {
                         (trangThai == 'SAP_DIEN_RA') ?
                             (
-                                <Tag color="gold">
-                                    Sắp diễn ra
+                                <Tag color="green">
+                                    Hoạt động
                                 </Tag>
+
+                            ) :
+
                             ) : (trangThai=='DANG_HOAT_DONG')?
                             <Tag color="green">
                             Hoạt động
                             </Tag>
+
                             
-                                    :<Tag color="red">
+                                    <Tag color="red">
                                         Ngừng hoạt động
                                     </Tag>
                               

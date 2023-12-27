@@ -3,10 +3,12 @@ import axios from "axios";
 import {
   Table,
   Tag,
+  Form,
+  Input,
 } from "antd";
 import "./KhuyenMai.scss";
 
-const TableSanPham = ({onSelectedSanPham}) => {
+const TableSanPham = ({onSelectedSanPham , suaIDSP}) => {
     const [sanPham, setSanPhams] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
@@ -22,15 +24,14 @@ const TableSanPham = ({onSelectedSanPham}) => {
             }
           };
           loadSanPham();
+          if (suaIDSP !== null) setSelectedRowKeys(suaIDSP);
+          console.log("SuaSanPham",selectedRowKeys);
       }, []);
      
       const handleCheckboxChange = (selectedKeys , selectedRowKeys) => {
       if (selectedRowKeys !== null){
         setSelectedRowKeys(selectedKeys);
         onSelectedSanPham(selectedKeys);
-        console.log("selectedRowkeys",selectedRowKeys);
-        console.log('selectedKeys', selectedKeys);
-        console.log("Sản phẩm",sanPham);
 
       };
     }
@@ -59,6 +60,11 @@ const TableSanPham = ({onSelectedSanPham}) => {
           key:"ten",
         },
         {
+          title: "Số lượng",
+          dataIndex: "soLuong",
+          key:"soLuong",
+        },
+        {
           title: "Trạng thái",
           dataIndex: "trangThai",
           key: "trangThai",
@@ -85,7 +91,6 @@ const TableSanPham = ({onSelectedSanPham}) => {
       ];
 
       const handleCancel = (selectedKey) => {
-        console.log('Checkbox bị bỏ chọn:', selectedKey);
         const response =  axios.delete(`http://localhost:8080/san-pham/${selectedKey}`)
         .then (response => {
           console.log("Xóa ",selectedKey);
@@ -95,29 +100,46 @@ const TableSanPham = ({onSelectedSanPham}) => {
 
         })
         .catch(error => console.error('Error deleting product:', error));
+
+
+
       };
 
       const rowSelection = {
         selectedRowKeys,      
         onChange: handleCheckboxChange,
-        onCancel: () => handleCancel,
+        
+        // onCancel: () => handleCancel,
       };
+
+
+
       const dataSource = sanPham.map((item, index) => ({
         key: item.idSP,
         checkbox: ++index,
         idSP: item.idSP,
         ma: item.ma,
         ten: item.ten,
+        soLuong: item.soLuong,
         trangThai: item.trangThai,      
       }));
+
+     
       return (
+        <div className="container">
+          <Form>
+            <Form.Item label="Tìm kiếm" name="key">
+              <Input placeholder="Tìm kiếm"  className="rounded-pill border-warning"/>
+            </Form.Item>
+          </Form>
+
         <Table
         rowSelection={rowSelection}
         columns={columnsSanPham}
         dataSource={dataSource}  
         pagination={{ defaultPageSize: 3 }}
        /> 
-
+        </div>
 
       );
 };

@@ -8,33 +8,33 @@ import {
 import "./KhuyenMai.scss";
 
 
-const TableChiTietSanPham = ({ selectedIDSPs }) => {
+const TableChiTietSanPham = ({selectedIDSPs,onSelectedCTSanPham}) => {
   const [ctsp, setCTSP] = useState([]);
   const [idSanPham, setIDSanPham] = useState([]);
   const [selectedRowCTSP, setSelectedRowCTSP] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
-  const [selectedCTSP , setSelectedCTSP] = useState([]);
+  // const [selectedCTSP , setSelectedCTSP] = useState([]);
   useEffect(() => {
     const getCTSPByIDSP = async () => {
+      console.log("selectedIDSPs",selectedIDSPs);
       try {
         if (selectedIDSPs.length === 1) {
-          const response = await axios.get(`http://localhost:8080/ctsp/showct/${selectedIDSPs[0]}`)
+          const response = await axios.get(`http://localhost:8080/ctsp/showCTSP/${selectedIDSPs[0]}`)
           setCTSP(response.data);
           setIDSanPham(selectedIDSPs);
-          console.log("CTSP 1",ctsp);
         }
         else if (selectedIDSPs.length > 1) {
           const filterArrray = selectedIDSPs.filter((element) => !idSanPham.includes(element));
           if (filterArrray.length !== 0 ) {
-           const responses = await Promise.all(filterArrray.map(id => axios.get(`http://localhost:8080/ctsp/showct/${id}`)));
+           const responses = await Promise.all(filterArrray.map(id => axios.get(`http://localhost:8080/ctsp/showCTSP/${id}`)));
             const responseData = responses.map((response) => (
               setCTSP(prevData  => response.data.includes(prevData) ? console.log("trùng:" ,prevData) : 
                 [...prevData ,...response.data])));
               setIDSanPham(prevData => [...prevData , ...filterArrray]);
           } else {
             console.log("Xóa");
-            const responses = await Promise.all(selectedIDSPs.map(id => axios.get(`http://localhost:8080/ctsp/showct/${id}`)));
+            const responses = await Promise.all(selectedIDSPs.map(id => axios.get(`http://localhost:8080/ctsp/showCTSP/${id}`)));
             for (let i = 0 ; i < responses.length ; i++){
               if (i== 0) setCTSP(responses[0].data);
               else setCTSP((prevData) => [...prevData,...responses[i].data]);
@@ -50,6 +50,7 @@ const TableChiTietSanPham = ({ selectedIDSPs }) => {
       }
     };
     getCTSPByIDSP();
+    console.log("Seleted CTSP", ctsp);
   }, [selectedIDSPs]);
 
 
@@ -170,7 +171,11 @@ const TableChiTietSanPham = ({ selectedIDSPs }) => {
       dataIndex: "tenDM",
       key: "tenDM"
     },
-
+    {
+      title :"Số lượng",
+      dataIndex: "soLuong",
+      key:"soLuong"
+    },
     {
       title: "Trạng thái",
       dataIndex: "trangThai",
@@ -220,16 +225,16 @@ const TableChiTietSanPham = ({ selectedIDSPs }) => {
     tenH: item.tenH,
     tenDM: item.tenDM,
     trangThai: item.trangThai,
+    soLuong: item.soLuong,
   }));
 
   
   const rowSelection = {
     selectedRowCTSP,      
     onChange: (selectedKeys) => {
-        setSelectedCTSP(selectedKeys);
+      onSelectedCTSanPham(selectedKeys);
         setSelectedRowCTSP(selectedKeys);
-        // onSelectedCTSanPham(selectedKeys);
-        console.log('selectedKeys', selectedKeys);
+;
     
   }
   };
