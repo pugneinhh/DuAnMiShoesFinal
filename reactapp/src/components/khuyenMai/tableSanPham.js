@@ -95,9 +95,6 @@ const TableSanPham = ({onSelectedSanPham}) => {
 
         })
         .catch(error => console.error('Error deleting product:', error));
-
-
-
       };
 
       const rowSelection = {
@@ -105,9 +102,6 @@ const TableSanPham = ({onSelectedSanPham}) => {
         onChange: handleCheckboxChange,
         onCancel: () => handleCancel,
       };
-
-
-
       const dataSource = sanPham.map((item, index) => ({
         key: item.idSP,
         checkbox: ++index,
@@ -116,13 +110,6 @@ const TableSanPham = ({onSelectedSanPham}) => {
         ten: item.ten,
         trangThai: item.trangThai,      
       }));
-
-
-
-
-
-
-     
       return (
         <Table
         rowSelection={rowSelection}
