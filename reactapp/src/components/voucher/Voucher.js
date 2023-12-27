@@ -175,20 +175,19 @@ const columns = [
                                     Hoạt động
                                 </Tag>
 
-                            ) :
-
-                            ) : (trangThai=='DANG_HOAT_DONG')?
+                            )  : (trangThai=='DANG_HOAT_DONG')?(
                             <Tag color="green">
                             Hoạt động
-                            </Tag>
+                            </Tag>):(
 
                             
                                     <Tag color="red">
                                         Ngừng hoạt động
                                     </Tag>
+                            )
                               
                     }
-                </>),
+               </>),
   //   filters: [
   //     {
   //         text: 'Hoạt động',

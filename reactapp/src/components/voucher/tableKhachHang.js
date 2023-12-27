@@ -14,13 +14,14 @@ const TableKhachHang = () => {
 
     useEffect(() => {
         const loadKhachHang = async () => {
-            const result = await axios.get("http://localhost:8080/khach-hang", {
+            const result = await axios.get("http://localhost:8080/nguoi-dung/hien-thi", {
               validateStatus: () => {
                 return true;
               },
             });
             if (result.status === 302) {
               setKhachHangs(result.data);
+              console.log(result.data);
             }
           };
           loadKhachHang();
@@ -38,8 +39,8 @@ const TableKhachHang = () => {
 
         {
           title: "#",
-          dataIndex: "idKH",
-          key: "idKH",
+          dataIndex: "id",
+          key: "id",
           render: (id, record, index) => {
             ++index;
             return index;
@@ -48,24 +49,24 @@ const TableKhachHang = () => {
         },
         {
           title: "Mã",
-          dataIndex: "maKH",
-          key: "maKH",
-          sorter: (a, b) => a.maKH.slice(2) - b.maKH.slice(2),
+          dataIndex: "ma",
+          key: "ma",
+          sorter: (a, b) => a.ma.slice(2) - b.ma.slice(2),
         },
         {
           title: "Tên",
-          dataIndex: "tenKH",
-          key:"tenKH",
+          dataIndex: "ten",
+          key:"ten",
         },
         {
-          title: "Ảnh",
-          dataIndex: "anh",
-          key:"anh",
+          title: "Điểm",
+          dataIndex: "diem",
+          key:"diem",
         },
         {
           title: "Số điện thoại",
-          dataIndex: "sdt",
-          key: "sdt",
+          dataIndex: "soDienThoai",
+          key: "soDienThoai",
         },
         {
             title: "Email",
@@ -82,17 +83,17 @@ const TableKhachHang = () => {
         
         // onCancel: () => handleCancel,
       };
-
+      console.log(khachHang);
 
 
       const dataSource = khachHang.map((item, index) => ({
-        key: item.idKH,
+        key: item.id,
         checkbox: ++index,
-        idKH: item.idKH,
-        maKH: item.maKH,
-        tenKH: item.tenKH,
-        anh: item.anh,
-        sdt: item.sdt,      
+        id: item.id,
+        ma: item.ma,
+        ten: item.ten,
+        diem: item.diem,
+        soDienThoai: item.soDienThoai,      
         email : item.email
       }));
 
