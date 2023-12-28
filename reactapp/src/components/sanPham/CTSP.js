@@ -14,9 +14,6 @@ import {
   Tag,
 } from 'antd';
 import { InfoCircleFilled } from "@ant-design/icons";
-import { UndoOutlined } from "@ant-design/icons";
-import { DeleteFilled } from "@ant-design/icons";
-import { PlusCircleFilled } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
 import { EyeOutlined } from "@ant-design/icons";
