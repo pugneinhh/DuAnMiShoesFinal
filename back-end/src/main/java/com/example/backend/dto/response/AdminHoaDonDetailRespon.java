@@ -1,12 +1,7 @@
-package com.example.backend.model;
-
+package com.example.backend.dto.response;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.sql.Date;
-
-public interface AdminHoaDonResponn {
-
-
+public interface AdminHoaDonDetailRespon {
     @Value("#{target.idHD}")
     String getIdHD();
 
@@ -32,8 +27,8 @@ public interface AdminHoaDonResponn {
 
     @Value("#{target.trangThai}")
     String getTrangThai();
-//    @Value("#{target.diaChiKH}")
-//    String getDiaChiKH();
-
-
+    @Value("#{target.diaChi}")
+    String getDiaChi();
+    @Value("#{target.ghiChuHD}")
+    String getGhiChuHD();
 }

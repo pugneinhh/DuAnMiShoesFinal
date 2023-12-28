@@ -1,4 +1,4 @@
-package com.example.backend.model;
+package com.example.backend.dto.response;
 
 import org.springframework.beans.factory.annotation.Value;
 
