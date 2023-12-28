@@ -31,9 +31,9 @@ public class KhuyenMaiRequest {
         KhuyenMai km = new KhuyenMai();
         km.setMa(this.getMa());
         km.setTen(this.getTen());
-        km.setGiaTriKhuyenMai(this.getGia_tri_khuyen_mai());
-        km.setNgayBatDau(this.getNgay_bat_dau());
-        km.setNgayKetThuc(this.getNgay_ket_thuc());
+        km.setGia_tri_khuyen_mai(this.getGia_tri_khuyen_mai());
+        km.setNgay_bat_dau(this.getNgay_bat_dau());
+        km.setNgay_ket_thuc(this.getNgay_ket_thuc());
         km.setLoai(this.getLoai());
         km.setNguoiTao(this.getNguoiTao());
         km.setNguoiSua(this.getNguoiSua());
