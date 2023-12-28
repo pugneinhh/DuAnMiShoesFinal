@@ -24,9 +24,9 @@ public class KhuyenMai {
     private String id;
     private String ma;
     private String ten;
-    private BigDecimal giaTriKhuyenMai;
-    private LocalDateTime ngayBatDau;
-    private LocalDateTime ngayKetThuc;
+    private BigDecimal gia_tri_khuyen_mai;
+    private LocalDateTime ngay_bat_dau;
+    private LocalDateTime ngay_ket_thuc;
     private String loai;
     private String nguoiTao;
     private String nguoiSua;
@@ -43,7 +43,7 @@ public class KhuyenMai {
     public String formatCurrency(){
         Locale loc = new Locale("vi","VN");
         NumberFormat nf = NumberFormat.getCurrencyInstance(loc);
-        return  nf.format(this.giaTriKhuyenMai);
+        return  nf.format(this.gia_tri_khuyen_mai);
 
     }
 
