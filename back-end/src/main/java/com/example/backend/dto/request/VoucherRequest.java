@@ -38,6 +38,7 @@ public class VoucherRequest {
         v.setGiamToiDa(this.giamToiDa);
         v.setDieuKien(this.dieuKien);
         v.setNgayBatDau(this.ngayBatDau);
+        v.setSoLuong(this.soLuong);
         v.setNgayKetThuc(this.ngayKetThuc);
         v.setNguoiTao(this.nguoiTao);
         v.setNguoiSua(this.nguoiSua);
