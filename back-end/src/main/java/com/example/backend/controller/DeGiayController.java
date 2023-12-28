@@ -1,6 +1,7 @@
 package com.example.backend.controller;
 
 
+import com.example.backend.dto.request.DeGiayRequest;
 import com.example.backend.entity.DeGiay;
 import com.example.backend.service.DeGiayService;
 import lombok.RequiredArgsConstructor;
@@ -9,11 +10,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+
 @CrossOrigin("http://localhost:3000/")
 @RestController
-@RequestMapping("/do-cao")
+@RequestMapping("/de-giay")
 @RequiredArgsConstructor
-public class DoCaoController {
+public class DeGiayController {
     @Autowired
     private DeGiayService deGiayService;
 
@@ -23,9 +26,10 @@ public class DoCaoController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody DeGiay dc) {
+    public ResponseEntity<?> add(@RequestBody DeGiayRequest dg) {
         int dcThem = deGiayService.getALL().size();
-        dc.setMa("DC" + "-" + (dcThem + 1));
-        return ResponseEntity.ok(deGiayService.addDC(dc));
+        dg.setMa("DG" + "-" + (dcThem + 1));
+        dg.setNgayTao(LocalDateTime.now());
+        return ResponseEntity.ok(deGiayService.addDC(dg));
     }
 }

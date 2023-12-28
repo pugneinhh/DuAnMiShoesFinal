@@ -12,20 +12,21 @@ import java.util.List;
 @Service
 public class MauSacService {
     @Autowired
-    MauSacRespository mauSacRespon;
+    MauSacRespository mauSacRespository;
 
     public List<MauSac> getALL(){
-        return mauSacRespon.findAll();
+        return mauSacRespository.findAll();
     }
     public List<MauSacRespone> getALLMS(){
-        return mauSacRespon.getALLMS();
+        return mauSacRespository.getALLMS();
     }
-    public String addMS(MauSacRequest request){
+    public String addMS(MauSacRequest ms){
         MauSac mauSac = MauSac.builder()
-                .ma(request.getMa())
-                .ten(request.getTen())
-                .trangThai(Status.DANG_SU_DUNG)
+                .ma(ms.getMa())
+                .ten(ms.getTen())
+                .ngayTao(ms.getNgayTao())
+                .trangThai(1)
                 .build();
-        mauSacRespon.save(mauSac);
-        return "okkk";}
+        mauSacRespository.save(mauSac);
+        return "Done";}
 }

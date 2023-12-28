@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "mau_sac")
@@ -13,6 +14,7 @@ import java.sql.Date;
 @NoArgsConstructor
 @Setter
 @Getter
+
 public class MauSac {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -21,15 +23,14 @@ public class MauSac {
     private String ma;
     private String ten;
 
-    private Date ngayTao;
+    private LocalDateTime ngayTao;
 
-    private Date ngaySua;
+    private LocalDateTime ngaySua;
 
     private String nguoiTao;
 
     private String nguoiSua;
 
-    @Enumerated(EnumType.STRING)
-    private Status trangThai;
+    private int trangThai;
 }
 
