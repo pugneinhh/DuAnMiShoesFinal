@@ -12,20 +12,20 @@ import {
   Tag,
   Modal
 } from 'antd';
-import { PlusCircleOutlined } from "@ant-design/icons";
+import { InfoCircleFilled, PlusCircleOutlined } from "@ant-design/icons";
 import { DeleteFilled } from "@ant-design/icons";
-import { InfoCircleFilled } from "@ant-design/icons";
+import { PlusCircleFilled } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
 import { MdSearch } from 'react-icons/md';
 import axios from 'axios';
-import { BiSolidCategory } from 'react-icons/bi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Swal from "sweetalert2";
 import FormItem from 'antd/es/form/FormItem';
+import { AiOutlineColumnHeight } from 'react-icons/ai';
 
-export default function DanhMuc() {
+export default function DeGiay() {
   //Form
   const [selectedValue, setSelectedValue] = useState('1');
   const handleChange = (value) => {
@@ -36,13 +36,14 @@ export default function DanhMuc() {
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
   };
+  const [form] = Form.useForm();
   //Ấn add 
   const [open, setOpen] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
   const [bordered] = useState(false);
-  const addDanhMuc = (value) => {
+  const addDeGiay = (value) => {
     console.log(value);
-    axios.post('http://localhost:8080/danh-muc/add', value)
+    axios.post('http://localhost:8080/de-giay/add', value)
       .then(response => {
         console.log(response.data);
         toast('✔️ Thêm thành công!', {
@@ -55,42 +56,28 @@ export default function DanhMuc() {
           progress: undefined,
           theme: "light",
         });
-        loadDanhMuc();
+        loadDeGiay();
         form.resetFields();
 
       })
       .catch(error => console.error('Error adding item:', error));
 
-  }
-  //Tìm kiếm 
-  const handleSubmit = (values) => {
-
-    console.log(`${values.key}`);
-    // Send a POST request to the backend
-    axios.get(`http://localhost:8080/danh-muc/tim-kiem/${values.key}/${values.timTT}`)
-      .then(response => {
-        // Update the list of items
-        console.log(response.data);
-        setDanhMucs(response.data);
-        form.resetFields();
-      })
-      .catch(error => console.error('Error adding item:', error));
   }
   //Table
-  const [danhMuc, setDanhMucs] = useState([]);
+  const [deGiay, setDeGiays] = useState([]);
 
   useEffect(() => {
-    loadDanhMuc();
+    loadDeGiay();
   }, []);
 
-  const loadDanhMuc = async () => {
-    const result = await axios.get("http://localhost:8080/danh-muc", {
+  const loadDeGiay = async () => {
+    const result = await axios.get("http://localhost:8080/de-giay", {
       validateStatus: () => {
         return true;
       }
     });
     if (result.status === 302) {
-      setDanhMucs(result.data);
+      setDeGiays(result.data);
     }
   };
 
@@ -152,13 +139,12 @@ export default function DanhMuc() {
       ),
     },
   ]
-  const [form] = Form.useForm();
 
   return (
     <div className='container-fluid' style={{ borderRadius: 20 }}>
       <div className="container-fluid">
-        <Divider orientation="left" color="#d0aa73"><h4 className="text-first pt-1 fw-bold"> <BiSolidCategory size={35} /> Quản lý danh mục</h4></Divider>
-        <div className=' bg-light m-2 p-3 pt-2' style={{
+      <Divider orientation="left" color="#d0aa73"><h4 className="text-first pt-1 fw-bold"> <AiOutlineColumnHeight size={35} /> Quản lý đế giày</h4></Divider>
+      <div className=' bg-light m-2 p-3 pt-2' style={{
           border: '1px solid #ddd', // Border color
           boxShadow: '0 3px 8px rgba(0, 0, 0, 0.1)', // Box shadow
           borderRadius: '8px'
@@ -181,10 +167,8 @@ export default function DanhMuc() {
             style={{
               maxWidth: 1400,
             }}
-            onFinish={handleSubmit}
-            form={form}
           >
-            <div className="col-md-5">
+           <div className="col-md-5">
               <Form.Item label="Tên & Mã">
                 <Input className='rounded-pill border-warning' placeholder='Nhập tên hoặc mã' />
               </Form.Item>
@@ -203,20 +187,19 @@ export default function DanhMuc() {
           </Form>
         </div>
         <div className='text-end'>
-          <a className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill" role="button" onClick={() => setOpen(true)}> <PlusCircleOutlined />  Thêm danh mục</a>
+          <a className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill" role="button" onClick={() => setOpen(true)}> <PlusCircleOutlined />  Thêm đế giày</a>
         </div>
         <div className=' bg-light m-2 p-3 pt-2' style={{
           border: '1px solid #ddd', // Border color
           boxShadow: '0 3px 8px rgba(0, 0, 0, 0.1)', // Box shadow
           borderRadius: '8px'
         }}>
-          <h5><BookFilled size={30}/> Danh sách danh mục</h5>
+          <h5><BookFilled size={30}/> Danh sách đế giày</h5>
           <hr/>
           <div className="ms-3">
-            {/* Add danh mục */}
-
-            <Modal
-              title="Thêm Danh Mục"
+            {/* Add dc */}
+              <Modal
+              title="Thêm Đế Giày"
               centered
               open={open}
               onOk={() => setOpen(false)}
@@ -225,7 +208,7 @@ export default function DanhMuc() {
                 <Button onClick={() => setOpen(false)}>Hủy</Button>,
                 <Button type="primary" onClick={() => {
                   Modal.confirm({
-                    centered: true,
+                    centered : true,
                     title: 'Thông báo',
                     content: 'Bạn có chắc chắn muốn thêm không?',
                     onOk: () => { form.submit(); },
@@ -249,22 +232,24 @@ export default function DanhMuc() {
                 style={{
                   maxWidth: 1000,
                 }}
-                onFinish={addDanhMuc}
+                onFinish={addDeGiay}
                 form={form}>
-                <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
-                  <Input className="border" />
-                </Form.Item>
+                    <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
+                      <Input className="border" />
+                    </Form.Item>
               </Form>
             </Modal>
           </div>
           <div className="container-fluid mt-4">
-              <Table align="center" dataSource={danhMuc} columns={columns} pagination={{
+            <div>
+              <Table className='text-center' dataSource={deGiay} columns={columns} pagination={{
                 showQuickJumper: true,
                 defaultPageSize: 5,
                 position: ['bottomCenter'],
                 defaultCurrent: 1,
                 total: 100,
               }} />
+            </div>
           </div>
         </div>
 
