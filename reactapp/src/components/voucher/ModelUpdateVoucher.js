@@ -25,7 +25,6 @@ const ModelAddVoucher=(props)=>{
     form2.setFieldsValue({
       id:myVoucher.id,
 ma:myVoucher.ma,
-phuongThuc:myVoucher.phuongThuc,
 mucDo:myVoucher.mucDo,
 giamToiDa:myVoucher.giamToiDa,
 dieuKien:myVoucher.dieuKien,
@@ -163,10 +162,10 @@ message: 'Vui lòng không để trống mã!',
 ]} >
 <Input  placeholder='Mã giảm giá'/>
 </Form.Item>
-<Form.Item label="Phương thức" name='phuongThuc' hasFeedback rules={[
+<Form.Item label="Loại voucher" name='loaiVoucher' hasFeedback rules={[
 {
 required: true,
-message: 'Vui lòng chọn phương thức!',
+message: 'Vui lòng chọn loại voucher!',
 },
 ]} >
 <Select >
@@ -174,15 +173,10 @@ message: 'Vui lòng chọn phương thức!',
 <Select.Option value="Phần trăm">Phần trăm</Select.Option>
 </Select>
 </Form.Item>
-<Form.Item label="Giới hạn" name='loaiVoucher' valuePropName={gioiHan}>
-        <Switch checked={gioiHan} onChange={handleChangeSwitch}/>
-      </Form.Item>
-      {gioiHan===true?
       <Form.Item label="Số lượng" name='soLuong'>
       <InputNumber defaultValue={'1'} min={1}/>
     </Form.Item>
-    :<></>
-      }
+    
 </div>
 <div className='col-md-4'>
 <Form.Item label="Mức độ" name='mucDo'>

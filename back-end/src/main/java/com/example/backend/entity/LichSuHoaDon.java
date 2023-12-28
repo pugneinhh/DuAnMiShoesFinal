@@ -12,6 +12,7 @@ import java.util.Date;
 @Getter
 @Setter
 @ToString
+@Builder
 public class LichSuHoaDon {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

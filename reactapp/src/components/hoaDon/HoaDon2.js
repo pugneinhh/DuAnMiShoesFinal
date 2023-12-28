@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from "axios";
-import { Button, DatePicker, Form, Select, Space, Table } from 'antd';
+import { Button, DatePicker, Form, Select, Space, Table, Divider } from 'antd';
 import './HoaDon.scss';
 import { Tabs, Tag } from 'antd';
 import { BsFillEyeFill } from 'react-icons/bs';
@@ -8,6 +8,10 @@ import { Link } from "react-router-dom";
 import moment from "moment";
 import Input from 'antd/es/input/Input';
 import { FormattedNumber, IntlProvider } from 'react-intl';
+import { FaMoneyBills } from 'react-icons/fa6';
+import { FilterFilled, UnorderedListOutlined } from '@ant-design/icons';
+
+
 
 export default function HoaDon() {
  
@@ -63,10 +67,12 @@ export default function HoaDon() {
         });
         if (result.status === 302) {
             setHoaDonsCho(result.data);
+            
         }
 
 
     };
+    console.log(hoaDonCho);
     const [hoaDonXN, setHoaDonsXN] = useState([])
     useEffect(() => {
         loadHoaDonXN();
@@ -393,42 +399,91 @@ export default function HoaDon() {
         {
             key: '1',
             label: 'Tất cả',
-            children: <Table dataSource={hoaDon} columns={columns} pagination={{ defaultPageSize: 5, position: ['bottomCenter'] }} />,
+            children: <Table dataSource={hoaDon} columns={columns} 
+            pagination={{
+                showQuickJumper: true,
+                position: ['bottomCenter'],
+                defaultPageSize: 5,
+                defaultCurrent: 1,
+                total: 100,
+            }} />,
         },
         {
             key: '2',
             label: 'Chờ xác nhận',
-            children: <Table dataSource={hoaDonCho} columns={columns} pagination={{ defaultPageSize: 5, position: ['bottomCenter'] }} />,
+            children: <Table dataSource={hoaDonCho} columns={columns} pagination={{
+                showQuickJumper: true,
+                position: ['bottomCenter'],
+                defaultPageSize: 5,
+                defaultCurrent: 1,
+                total: 100,
+            }} />,
         },
         {
             key: '3',
             label: 'Xác nhận',
-            children: <Table dataSource={hoaDonXN} columns={columns} pagination={{ defaultPageSize: 5, position: ['bottomCenter'] }} />,
+            children: <Table dataSource={hoaDonXN} columns={columns} pagination={{
+                showQuickJumper: true,
+                position: ['bottomCenter'],
+                defaultPageSize: 5,
+                defaultCurrent: 1,
+                total: 100,
+            }} />,
         },
         {
             key: '4',
             label: 'Chờ vận chuyển',
-            children: <Table dataSource={hoaDonCVC} columns={columns} pagination={{ defaultPageSize: 5, position: ['bottomCenter'] }} />,
+            children: <Table dataSource={hoaDonCVC} columns={columns} pagination={{
+                showQuickJumper: true,
+                position: ['bottomCenter'],
+                defaultPageSize: 5,
+                defaultCurrent: 1,
+                total: 100,
+            }} />,
         },
         {
             key: '5',
             label: 'Vận chuyển',
-            children: <Table dataSource={hoaDonVC} columns={columns} pagination={{ defaultPageSize: 5, position: ['bottomCenter'] }} />,
+            children: <Table dataSource={hoaDonVC} columns={columns} pagination={{
+                showQuickJumper: true,
+                position: ['bottomCenter'],
+                defaultPageSize: 5,
+                defaultCurrent: 1,
+                total: 100,
+            }} />,
         },
         {
             key: '6',
             label: 'Thanh toán',
-            children: <Table dataSource={hoaDonTT} columns={columns} pagination={{ defaultPageSize: 5, position: ['bottomCenter'] }} />,
+            children: <Table dataSource={hoaDonTT} columns={columns} pagination={{
+                showQuickJumper: true,
+                position: ['bottomCenter'],
+                defaultPageSize: 5,
+                defaultCurrent: 1,
+                total: 100,
+            }} />,
         },
         {
             key: '7',
             label: 'Hoàn thành',
-            children: <Table dataSource={hoaDonHT} columns={columns} pagination={{ defaultPageSize: 5, position: ['bottomCenter'] }} />,
+            children: <Table dataSource={hoaDonHT} columns={columns} pagination={{
+                showQuickJumper: true,
+                position: ['bottomCenter'],
+                defaultPageSize: 5,
+                defaultCurrent: 1,
+                total: 100,
+            }} />,
         },
         {
             key: '8',
             label: 'Hủy',
-            children: <Table dataSource={hoaDonXN} columns={columns} pagination={{ defaultPageSize: 5, position: ['bottomCenter'] }} />,
+            children: <Table dataSource={hoaDonXN} columns={columns} pagination={{
+                showQuickJumper: true,
+                position: ['bottomCenter'],
+                defaultPageSize: 5,
+                defaultCurrent: 1,
+                total: 100,
+            }} />,
         },
     ];
 
@@ -442,10 +497,22 @@ export default function HoaDon() {
 
   
     return (
-        <div className='container'>
+        <div className='container-fluid'>
+            <Divider orientation="center" color="none">
+                <h2 className="text-first pt-1 fw-bold">
+                    <FaMoneyBills /> Quản lý hóa đơn
+                </h2>
+            </Divider>
+
+
             {/* lọc hóa đơn */}
-            <div className='container-fluid row'>
-                <h4 className='pt-1' >Lọc</h4>
+            <div className=' bg-light m-2 p-3 pt-2' style={{
+                border: '1px solid #ddd', // Border color
+                boxShadow: '0 3px 8px rgba(0, 0, 0, 0.1)', // Box shadow
+                borderRadius: '8px'
+            }}>
+                <h5><FilterFilled size={30} /> Bộ lọc</h5>
+                <hr />
                 <Form className="row col-md-12"
                     labelCol={{
                         span: 6,
@@ -466,7 +533,7 @@ export default function HoaDon() {
                     form={form}
                 >
                     <div className="col-md-6">
-                        <Form.Item label="Tìm kiếm"  name='hehe'>
+                        <Form.Item label="Tìm kiếm" name='hehe'>
                             <Input required className="rounded-pill border-warning" />
                         </Form.Item>
                         <Form.Item label="Loại HD" className="rounded-pill border-warning" name='timLoai'>
@@ -488,29 +555,34 @@ export default function HoaDon() {
                             </Form.Item>
                         </div>
                     </div>
-               
+
                     <Form.Item className='text-end '>
                         <Button type="primary" htmlType='submit' >Tìm kiếm</Button>
-                        </Form.Item>
-                 
+                    </Form.Item>
+
 
 
                 </Form>
 
+
+
             </div>
             {/* bảng hóa đơn */}
-            <div className='container-fluid'>
-                <h4 className='' >Danh sách hóa đơn</h4>
+  
 
-                <div className='container-fluid mt-2'>
-                    <div>
-                        <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
-
-                    </div>
+            <div className='mt-4' style={{
+                border: '1px solid #ddd', // Border color
+                boxShadow: '0 3px 6px rgba(0, 0, 0, 0.1)', // Box shadow
+                borderRadius: '8px', padding: '10px'
+            }}>
+                <div className="text-first fw-bold">
+                    <p><UnorderedListOutlined size={30} /> Danh sách hóa đơn </p>
                 </div>
+                <>
+                    <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+
+                </>
             </div>
-
-
 
         </div>
     )
