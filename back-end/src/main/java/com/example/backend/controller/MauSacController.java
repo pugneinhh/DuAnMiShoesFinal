@@ -27,7 +27,6 @@ public class MauSacController {
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody MauSacRequest v) {
         int msThem = mauSacService.getALL().size();
-        v.setMa("MS" + "-" + (msThem + 1));
         v.setNgayTao(LocalDateTime.now());
         return ResponseEntity.ok(mauSacService.addMS(v));
     }

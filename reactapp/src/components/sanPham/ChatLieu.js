@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   Button,
   DatePicker,
+  Divider,
   Form,
   Input,
   InputNumber,
@@ -11,17 +12,19 @@ import {
   Tag,
   Modal
 } from 'antd';
-import { InfoCircleFilled } from "@ant-design/icons";
+import { InfoCircleFilled, PlusCircleOutlined } from "@ant-design/icons";
 import { DeleteFilled } from "@ant-design/icons";
 import { PlusCircleFilled } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
-import {MdSearch} from 'react-icons/md';
+import { MdSearch } from 'react-icons/md';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Swal from "sweetalert2";
 import FormItem from 'antd/es/form/FormItem';
+import { GiMaterialsScience } from 'react-icons/gi';
+import { BsFillEyeFill } from 'react-icons/bs';
 
 export default function ChatLieu() {
   //Form
@@ -107,18 +110,12 @@ export default function ChatLieu() {
       render: (trang_thai) => (
         <>
           {trang_thai === 0 ? (
-            <Tag
-              color="#f50
-                "
-            >
-              Dừng Bán
+            <Tag color="red">
+              Còn bán
             </Tag>
           ) : (
-            <Tag
-              color="#87d068
-                "
-            >
-              Còn Bán
+            <Tag color="green">
+              Còn bán
             </Tag>
           )}
         </>
@@ -130,28 +127,29 @@ export default function ChatLieu() {
 
       render: () => (
         <Space size="middle">
-          <a>
-            <Button type="primary" primary shape="circle" icon={<InfoCircleFilled size={20} />} />
-          </a>
-          <a>
-            <Button type="primary" danger shape="circle" icon={<DeleteFilled size={20} />} />
-          </a>
+          <a className='btn btn-danger'><BsFillEyeFill className='mb-1' /></a>
         </Space>
       ),
     },
   ]
 
   return (
-    <div>
+    <div className='container-fluid' style={{ borderRadius: 20 }}>
       <div className="container-fluid">
-        <div className='bg-light pb-2 pt-2 mt-2' style={{ borderRadius: 20 }}>
-          <h4 className="ms-3 mt-2 mb-2"><FilterFilled /> Bộ lọc</h4>
+        <Divider orientation="center" color="#d0aa73"><h4 className="text-first pt-1 fw-bold"> <GiMaterialsScience size={35} /> Quản lý chất liệu</h4></Divider>
+        <div className=' bg-light m-2 p-3 pt-2' style={{
+          border: '1px solid #ddd', // Border color
+          boxShadow: '0 3px 8px rgba(0, 0, 0, 0.1)', // Box shadow
+          borderRadius: '8px'
+        }}>
+          <h5><FilterFilled size={30} /> Bộ lọc</h5>
+          <hr />
           <Form className="row"
             labelCol={{
-              span: 6,
+              span: 10,
             }}
             wrapperCol={{
-              span: 14,
+              span: 20,
             }}
             layout="horizontal"
             initialValues={{
@@ -160,34 +158,40 @@ export default function ChatLieu() {
             onValuesChange={onFormLayoutChange}
             size={componentSize}
             style={{
-              maxWidth: 1600,
+              maxWidth: 1400,
             }}
           >
             <div className="col-md-5">
               <Form.Item label="Tên & Mã">
-                <Input className="rounded-pill border" />
+                <Input className='rounded-pill border-warning' placeholder='Nhập tên hoặc mã' />
               </Form.Item>
             </div>
             <div className='col-md-5'>
               <Form.Item label="Trạng Thái">
-                <Select className="rounded-pill border" value={selectedValue} onChange={handleChange}>
+                <Select value={selectedValue} onChange={handleChange}>
                   <Select.Option value="1">Còn Bán</Select.Option>
                   <Select.Option value="0">Dừng Bán</Select.Option>
                 </Select>
               </Form.Item>
             </div>
-            <div className='container-fluid'>
             <Form.Item className='text-center'>
-              <Button type='primary' size='large' className="rounded-pill border-primary"><MdSearch/>  Tìm Kiếm</Button>
+              <Button type="primary" htmlType='reset'>Làm mới</Button>
             </Form.Item>
-            </div>
           </Form>
         </div>
-        <div className='bg-light pb-2 pt-2 mt-2' style={{ borderRadius: 20 }}>
-          <h4 className="ms-3 mt-2 mb-2"><BookFilled /> Danh sách chất liệu</h4>
+
+        <div className='text-end'>
+          <a className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill" role="button" onClick={() => setOpen(true)}> <PlusCircleOutlined />  Thêm chất liệu</a>
+        </div>
+        <div className=' bg-light m-2 p-3 pt-2' style={{
+          border: '1px solid #ddd', // Border color
+          boxShadow: '0 3px 8px rgba(0, 0, 0, 0.1)', // Box shadow
+          borderRadius: '8px'
+        }}>
+          <h5><BookFilled size={30} /> Danh sách chất liệu</h5>
+          <hr />
           <div className="ms-3">
             {/* Add cl */}
-            <a name="" id="" class="btn btn-success mt-2" href="#" role="button" onClick={() => setOpen(true)}> <PlusCircleFilled />  Thêm chất liệu</a>
             <Modal
               title="Thêm Chất Liệu"
               centered
@@ -198,6 +202,7 @@ export default function ChatLieu() {
                 <Button onClick={() => setOpen(false)}>Hủy</Button>,
                 <Button type="primary" onClick={() => {
                   Modal.confirm({
+                    centered: true,
                     title: 'Thông báo',
                     content: 'Bạn có chắc chắn muốn thêm không?',
                     onOk: () => { form.submit(); },
@@ -223,15 +228,21 @@ export default function ChatLieu() {
                 }}
                 onFinish={addChatLieu}
                 form={form}>
-                    <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
-                      <Input className="border" />
-                    </Form.Item>
+                <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
+                  <Input className="border" />
+                </Form.Item>
               </Form>
             </Modal>
           </div>
           <div className="container-fluid mt-4">
             <div>
-              <Table className='text-center' dataSource={chatLieu} columns={columns} pagination={{ defaultPageSize: 5 }} />
+              <Table className='text-center' dataSource={chatLieu} columns={columns} pagination={{
+                showQuickJumper: true,
+                defaultPageSize: 5,
+                position: ['bottomCenter'],
+                defaultCurrent: 1,
+                total: 100,
+              }} />
             </div>
           </div>
         </div>

@@ -24,6 +24,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Swal from "sweetalert2";
 import FormItem from 'antd/es/form/FormItem';
+import { BsFillEyeFill } from 'react-icons/bs';
 
 export default function DanhMuc() {
   //Form
@@ -122,18 +123,12 @@ export default function DanhMuc() {
       render: (trang_thai) => (
         <>
           {trang_thai === 0 ? (
-            <Tag
-              color="#f50
-                "
-            >
-              Dừng Bán
+            <Tag color="red">
+              Còn bán
             </Tag>
           ) : (
-            <Tag
-              color="#87d068
-                "
-            >
-              Còn Bán
+            <Tag color="green">
+              Còn bán
             </Tag>
           )}
         </>
@@ -145,9 +140,7 @@ export default function DanhMuc() {
 
       render: () => (
         <Space size="middle">
-          <a>
-            <Button type="primary" primary shape="circle" icon={<InfoCircleFilled size={20} />} />
-          </a>
+           <a className='btn btn-danger'><BsFillEyeFill className='mb-1'/></a>
         </Space>
       ),
     },
@@ -157,7 +150,7 @@ export default function DanhMuc() {
   return (
     <div className='container-fluid' style={{ borderRadius: 20 }}>
       <div className="container-fluid">
-        <Divider orientation="left" color="#d0aa73"><h4 className="text-first pt-1 fw-bold"> <BiSolidCategory size={35} /> Quản lý danh mục</h4></Divider>
+        <Divider orientation="center" color="#d0aa73"><h4 className="text-first pt-1 fw-bold"> <BiSolidCategory size={35} /> Quản lý danh mục</h4></Divider>
         <div className=' bg-light m-2 p-3 pt-2' style={{
           border: '1px solid #ddd', // Border color
           boxShadow: '0 3px 8px rgba(0, 0, 0, 0.1)', // Box shadow
@@ -210,8 +203,8 @@ export default function DanhMuc() {
           boxShadow: '0 3px 8px rgba(0, 0, 0, 0.1)', // Box shadow
           borderRadius: '8px'
         }}>
-          <h5><BookFilled size={30}/> Danh sách danh mục</h5>
-          <hr/>
+          <h5><BookFilled size={30} /> Danh sách danh mục</h5>
+          <hr />
           <div className="ms-3">
             {/* Add danh mục */}
 
@@ -258,13 +251,13 @@ export default function DanhMuc() {
             </Modal>
           </div>
           <div className="container-fluid mt-4">
-              <Table align="center" dataSource={danhMuc} columns={columns} pagination={{
-                showQuickJumper: true,
-                defaultPageSize: 5,
-                position: ['bottomCenter'],
-                defaultCurrent: 1,
-                total: 100,
-              }} />
+            <Table align="center" dataSource={danhMuc} columns={columns} pagination={{
+              showQuickJumper: true,
+              defaultPageSize: 5,
+              position: ['bottomCenter'],
+              defaultCurrent: 1,
+              total: 100,
+            }} />
           </div>
         </div>
 

@@ -1,4 +1,5 @@
 package com.example.backend.service;
+import com.example.backend.dto.response.SanPhamRespone;
 import com.example.backend.entity.SanPham;
 import com.example.backend.model.AdminSanPhamRespon;
 import com.example.backend.repository.SanPhamRepository;
@@ -15,7 +16,7 @@ public class SanPhamService {
     public List<SanPham> getALL(){
         return sanPhamRepository.findAll();
     }
-    public List<AdminSanPhamRespon> getALLSP(){
+    public List<SanPhamRespone> getALLSP(){
         System.out.println(sanPhamRepository.getALLSP().get(0).getTrangThai());
         return sanPhamRepository.getALLSP();
     }
