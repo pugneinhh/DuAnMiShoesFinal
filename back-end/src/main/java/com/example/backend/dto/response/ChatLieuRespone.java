@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.time.LocalDateTime;
 
 public interface ChatLieuRespone {
+    public String getId();
 
     public String getMa();
 

@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Value;
 import java.time.LocalDateTime;
 
 public interface MauSacRespone {
+     public String getId();
+
      public String getMa();
 
      public String getTen();

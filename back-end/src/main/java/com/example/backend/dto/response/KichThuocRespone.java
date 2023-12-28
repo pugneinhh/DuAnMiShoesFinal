@@ -5,6 +5,8 @@ import java.sql.Date;
 import java.time.LocalDateTime;
 
 public interface KichThuocRespone {
+    public String getId();
+
     public String getMa();
 
     public String getTen();
