@@ -10,6 +10,7 @@ import Voucher from './components/voucher/Voucher';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import KhuyenMai from './components/khuyenMai/KhuyenMai';
 import ThemKhuyenMai from './components/khuyenMai/ThemKhuyenMai'
+import SuaKhuyenMai from './components/khuyenMai/SuaKhuyenMai'
 import DanhMuc from './components/sanPham/DanhMuc';
 import DeGiay from './components/sanPham/DeGiay';
 import ChatLieu from './components/sanPham/ChatLieu';
@@ -37,6 +38,7 @@ root.render(
         <Route path='detail-hoa-don/:id' element={<HoaDonDetail/>}></Route>
           <Route path='khuyen-mai' element = {<KhuyenMai/>}></Route>
           <Route path='frm-khuyen-mai' element = {<ThemKhuyenMai />}></Route>
+          <Route path='sua-khuyen-mai/:id' element = {<SuaKhuyenMai />}></Route>
           <Route path='voucher' element = {<Voucher/>}></Route>
           <Route path='themVoucher' element = {<AddVoucher/>}></Route>
           <Route path='voucher/detail/:id' element = {<ModelUpdateVoucher/>}></Route>

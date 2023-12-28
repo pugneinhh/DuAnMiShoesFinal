@@ -64,7 +64,7 @@ const SuaKhuyenMai = () => {
           ma: response.data.ma,
           loai: response.data.loai,
           ten: response.data.ten,
-          gia_tri_giam: response.data.gia_tri_giam,
+          gia_tri_khuyen_mai: response.data.gia_tri_khuyen_mai,
           trang_thai: response.data.trang_thai,
           ngay_bat_dau: moment(
             response.data.ngay_bat_dau,
@@ -153,10 +153,6 @@ const SuaKhuyenMai = () => {
     axios
       .put(`http://localhost:8080/khuyen-mai/update/${id}`, value)
       .then((response) => {
-        // Promise.all(selectedIDCTSP.map(id => axios.put(`http://localhost:8080/ctsp/updateKM/${id}`,response.data)));
-        // for(let i = 0; i < selectedIDCTSP.length; i++) {
-        //   axios.put(`http://localhost:8080/ctsp/updateKM/${selectedIDCTSP[i]}`,response.data.id)
-        // }\
         setIDKM(response.data);
         navigate("/khuyen-mai");
         toast("✔️ Sửa thành công!", {
@@ -175,7 +171,6 @@ const SuaKhuyenMai = () => {
       })
       .catch((error) => console.error("Error adding item:", error));
 
-    // Promise.all(selectedIDCTSP.map(id => axios.put(`http://localhost:8080/ctsp/updateKM/${id}`,idKM)));
   };
 
   const [selectedIDSP, setSelectedIDSP] = useState([]);
@@ -214,7 +209,7 @@ const SuaKhuyenMai = () => {
         <div className="container-fluid">
           <Divider orientation="center" color="none">
             <h2 className="text-first pt-1 fw-bold">
-              <LuBadgePercent /> Thông tin đợt giảm giá
+              <LuBadgePercent /> Thông tin chi tiết đợt giảm giá
             </h2>
           </Divider>
           <br />
@@ -307,7 +302,7 @@ const SuaKhuyenMai = () => {
                 </Form.Item>
                 <Form.Item
                   label="Giá trị giảm"
-                  name="gia_tri_giam"
+                  name="gia_tri_khuyen_mai"
                   style={{ marginLeft: 0, width: 500 }}
                   hasFeedback
                   rules={[
