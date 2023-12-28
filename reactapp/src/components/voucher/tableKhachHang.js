@@ -21,7 +21,7 @@ const TableKhachHang = () => {
             });
             if (result.status === 302) {
               setKhachHangs(result.data);
-              console.log(result.data);
+              
             }
           };
           loadKhachHang();

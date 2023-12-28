@@ -28,7 +28,7 @@ public class VoucherService {
         Voucher v=request.map(new Voucher());
         return vr.save(v);
     }
-    public Voucher detailVoucher(String id){return vr.getById(id);}
+    public Voucher detailVoucher(String id){return vr.findById(id).get();}
 
     public List<AdminVoucher> getSearch(VoucherSearch voucherSearch) {
         return vr.searchVoucher(voucherSearch);

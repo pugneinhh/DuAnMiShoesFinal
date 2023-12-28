@@ -24,6 +24,7 @@ import AddSanPham from './components/sanPham/AddSanPham';
 
 import BanHang from './components/banHang/BanHang';
 import AddVoucher from './components/voucher/AddVoucher';
+import ModelUpdateVoucher from './components/voucher/ModelUpdateVoucher';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   // <React.StrictMode>
@@ -38,6 +39,7 @@ root.render(
           <Route path='frm-khuyen-mai' element = {<ThemKhuyenMai />}></Route>
           <Route path='voucher' element = {<Voucher/>}></Route>
           <Route path='themVoucher' element = {<AddVoucher/>}></Route>
+          <Route path='voucher/detail/:id' element = {<ModelUpdateVoucher/>}></Route>
           <Route path='danh-muc' element = {<DanhMuc/>}></Route>
           <Route path='de-giay' element = {<DeGiay/>}></Route>
           <Route path='chat-lieu' element = {<ChatLieu/>}></Route>

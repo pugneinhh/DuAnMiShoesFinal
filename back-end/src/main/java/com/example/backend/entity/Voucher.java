@@ -15,7 +15,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-
+@Builder
 public class Voucher {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
