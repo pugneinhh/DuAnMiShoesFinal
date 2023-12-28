@@ -772,7 +772,9 @@ export default function HoaDonDetail() {
                       {
                         listSanPhams.map((listSanPham, index) => (
                           <tr className='pt-3 row'>
-                            <div className='col-md-4'>   <img src={require(`../../assets/images/${listSanPham.tenHA}`)} style={{ width: 100, height: 100, marginLeft: 40 }} /> </div>
+                            <div className='col-md-4'>
+                               {/* <img src={listSanPham.tenHA} style={{ width: 100, height: 100, marginLeft: 40 }} />  */}
+                               </div>
                             <div className='col-md-6 '>
                               <div className='mt-4'><h6>{listSanPham.tenHang}  {listSanPham.tenSP}  {listSanPham.tenMauSac}</h6></div>
                               <div className='text-danger'><h6>   
