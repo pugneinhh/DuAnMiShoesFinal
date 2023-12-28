@@ -8,12 +8,12 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "nguoi_dung")
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-@ToString
 @Builder
+@ToString
 public class NguoiDung {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

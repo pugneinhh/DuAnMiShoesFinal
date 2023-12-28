@@ -1,14 +1,17 @@
 package com.example.backend.entity;
 import jakarta.persistence.*;
-import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
+import lombok.*;
 
-import java.sql.Date;
-import java.util.UUID;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "chat_lieu")
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
+@Builder
 
 public class ChatLieu {
 
@@ -20,9 +23,9 @@ public class ChatLieu {
 
     private String ten;
 
-    private Date ngayTao;
+    private LocalDateTime ngayTao;
 
-    private Date ngaySua;
+    private LocalDateTime ngaySua;
 
     private String nguoiTao;
 

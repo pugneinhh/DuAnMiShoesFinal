@@ -16,12 +16,13 @@ import { DeleteFilled } from "@ant-design/icons";
 import { PlusCircleFilled } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
-import {MdSearch} from 'react-icons/md';
+import { MdSearch } from 'react-icons/md';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Swal from "sweetalert2";
 import FormItem from 'antd/es/form/FormItem';
+import tinycolor from 'tinycolor2';
 
 export default function MauSac() {
   //Form
@@ -30,37 +31,46 @@ export default function MauSac() {
     console.log(`Selected value: ${value}`);
     setSelectedValue(value);
   };
+  const [tenMau, setTenMau] = useState(''); // Màu mặc định
+  const doiMau = (e) => {
+        const maMau = e.target.value;
+        const mau = tinycolor(maMau);
+        const ten = mau.toName();
+        console.log(`${ten}`);
+        setTenMau(ten);
+        console.log(`${tenMau}`);
+  };
   const [componentSize, setComponentSize] = useState('default');
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
   };
   const [form] = Form.useForm();
-   //Ấn Add
-   const [open, setOpen] = useState(false);
-   const [openUpdate, setOpenUpdate] = useState(false);
-   const [bordered] = useState(false);
-   const addMauSac = (value) => {
-     console.log(value);
-     axios.post('http://localhost:8080/mau-sac/add', value)
-       .then(response => {
-         console.log(response.data);
-         toast('✔️ Thêm thành công!', {
-           position: "top-right",
-           autoClose: 5000,
-           hideProgressBar: false,
-           closeOnClick: true,
-           pauseOnHover: true,
-           draggable: true,
-           progress: undefined,
-           theme: "light",
-         });
-         loadMauSac();
-         form.resetFields();
- 
-       })
-       .catch(error => console.error('Error adding item:', error));
- 
-   }
+  //Ấn Add
+  const [open, setOpen] = useState(false);
+  const [openUpdate, setOpenUpdate] = useState(false);
+  const [bordered] = useState(false);
+  const addMauSac = (value) => {
+    console.log(value);
+    axios.post('http://localhost:8080/mau-sac/add', value)
+      .then(response => {
+        console.log(response.data);
+        toast('✔️ Thêm thành công!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        loadMauSac();
+        form.resetFields();
+
+      })
+      .catch(error => console.error('Error adding item:', error));
+
+  }
   //Table
   const [mauSac, setMauSacs] = useState([]);
 
@@ -99,6 +109,16 @@ export default function MauSac() {
     {
       title: "Tên",
       dataIndex: "ten",
+    },
+    {
+      title: "Màu",
+      dataIndex: "ten",
+      key: "Ten",
+      render:(Ten) => {
+        return <>
+         <Tag color={Ten}>{Ten}</Tag>
+        </>;
+      }
     },
     {
       title: "Trạng thái",
@@ -177,7 +197,7 @@ export default function MauSac() {
               </Form.Item>
             </div>
             <Form.Item className='ms-3'>
-              <Button type='primary' size='large'><MdSearch/>  Tìm Kiếm</Button>
+              <Button type='primary' size='large'><MdSearch />  Tìm Kiếm</Button>
             </Form.Item>
           </Form>
         </div>
@@ -208,7 +228,7 @@ export default function MauSac() {
                   });
                 }}>Thêm</Button>
               ]}
-              width={1000}
+              width={500}
             >
               <Form
                 initialValues={{
@@ -216,27 +236,11 @@ export default function MauSac() {
                 }}
                 onValuesChange={onFormLayoutChange}
                 size={componentSize}
-                style={{
-                  maxWidth: 1000,
-                }}
                 onFinish={addMauSac}
                 form={form}>
-
-                <div className='row'>
-                  <div className="col-md-6">
                     <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
-                      <Input className="border" />
+                      <Input className="border" type="color" value={tenMau} onChange={doiMau}/>
                     </Form.Item>
-                  </div>
-                  <div className='col-md-6'>
-                    <Form.Item label="Trạng thái" name='trangThai' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống trạng thái!', },]}>
-                      <Select className="border" value={selectedValue} onChange={handleChange}>
-                        <Select.Option value="1" >Còn Bán</Select.Option>
-                        <Select.Option value="0">Dừng Bán</Select.Option>
-                      </Select>
-                    </Form.Item>
-                  </div>
-                </div>
               </Form>
             </Modal>
           </div>

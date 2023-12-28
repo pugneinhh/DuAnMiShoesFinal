@@ -39,6 +39,7 @@
     "sass": "^1.69.5",
     "stream-http": "^3.2.0",
     "sweetalert2": "^11.10.0",
+    "tinycolor2": "^1.6.0",
     "until": "^0.1.1",
     "web-vitals": "^2.1.4"
   },

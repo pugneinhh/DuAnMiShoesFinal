@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   Button,
   DatePicker,
+  Divider,
   Form,
   Input,
   InputNumber,
@@ -11,13 +12,14 @@ import {
   Tag,
   Modal
 } from 'antd';
-import { InfoCircleFilled } from "@ant-design/icons";
+import { PlusCircleOutlined } from "@ant-design/icons";
 import { DeleteFilled } from "@ant-design/icons";
-import { PlusCircleFilled } from "@ant-design/icons";
+import { InfoCircleFilled } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
 import { MdSearch } from 'react-icons/md';
 import axios from 'axios';
+import { BiSolidCategory } from 'react-icons/bi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Swal from "sweetalert2";
@@ -146,9 +148,6 @@ export default function DanhMuc() {
           <a>
             <Button type="primary" primary shape="circle" icon={<InfoCircleFilled size={20} />} />
           </a>
-          <a>
-            <Button type="primary" danger shape="circle" icon={<DeleteFilled size={20} />} />
-          </a>
         </Space>
       ),
     },
@@ -156,10 +155,16 @@ export default function DanhMuc() {
   const [form] = Form.useForm();
 
   return (
-    <div>
+    <div className='container-fluid' style={{ borderRadius: 20 }}>
       <div className="container-fluid">
-        <div className='bg-light pb-2 pt-2 mt-2' style={{ borderRadius: 20 }}>
-          <h4 className="ms-3 mt-2 mb-2"><FilterFilled /> Bộ lọc</h4>
+        <Divider orientation="left" color="#d0aa73"><h4 className="text-first pt-1 fw-bold"> <BiSolidCategory size={35} /> Quản lý danh mục</h4></Divider>
+        <div className=' bg-light m-2 p-3 pt-2' style={{
+          border: '1px solid #ddd', // Border color
+          boxShadow: '0 3px 8px rgba(0, 0, 0, 0.1)', // Box shadow
+          borderRadius: '8px'
+        }}>
+          <h5><FilterFilled size={30} /> Bộ lọc</h5>
+          <hr />
           <Form className="row"
             labelCol={{
               span: 10,
@@ -174,34 +179,42 @@ export default function DanhMuc() {
             onValuesChange={onFormLayoutChange}
             size={componentSize}
             style={{
-              maxWidth: 1000,
+              maxWidth: 1400,
             }}
             onFinish={handleSubmit}
             form={form}
           >
             <div className="col-md-5">
-              <Form.Item label="Tên & Mã" name='key'>
-                <Input />
+              <Form.Item label="Tên & Mã">
+                <Input className='rounded-pill border-warning' placeholder='Nhập tên hoặc mã' />
               </Form.Item>
             </div>
             <div className='col-md-5'>
-              <Form.Item label="Trạng Thái" name='timTT'>
+              <Form.Item label="Trạng Thái">
                 <Select value={selectedValue} onChange={handleChange}>
                   <Select.Option value="1">Còn Bán</Select.Option>
                   <Select.Option value="0">Dừng Bán</Select.Option>
                 </Select>
               </Form.Item>
             </div>
-            <Form.Item className='ms-3'>
-              <Button type='primary' size='large' htmlType='submit'><MdSearch />  Tìm Kiếm</Button>
+            <Form.Item className='text-center'>
+              <Button type="primary" htmlType='reset'>Làm mới</Button>
             </Form.Item>
           </Form>
         </div>
-        <div className='bg-light pb-2 pt-2 mt-2' style={{ borderRadius: 20 }}>
-          <h4 className="ms-3 mt-2 mb-2"><BookFilled /> Danh sách danh mục</h4>
+        <div className='text-end'>
+          <a className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill" role="button" onClick={() => setOpen(true)}> <PlusCircleOutlined />  Thêm danh mục</a>
+        </div>
+        <div className=' bg-light m-2 p-3 pt-2' style={{
+          border: '1px solid #ddd', // Border color
+          boxShadow: '0 3px 8px rgba(0, 0, 0, 0.1)', // Box shadow
+          borderRadius: '8px'
+        }}>
+          <h5><BookFilled size={30}/> Danh sách danh mục</h5>
+          <hr/>
           <div className="ms-3">
             {/* Add danh mục */}
-            <a name="" id="" class="btn btn-success mt-2" href="#" role="button" onClick={() => setOpen(true)}> <PlusCircleFilled />  Thêm danh mục</a>
+
             <Modal
               title="Thêm Danh Mục"
               centered
@@ -212,6 +225,7 @@ export default function DanhMuc() {
                 <Button onClick={() => setOpen(false)}>Hủy</Button>,
                 <Button type="primary" onClick={() => {
                   Modal.confirm({
+                    centered: true,
                     title: 'Thông báo',
                     content: 'Bạn có chắc chắn muốn thêm không?',
                     onOk: () => { form.submit(); },
@@ -224,7 +238,7 @@ export default function DanhMuc() {
                   });
                 }}>Thêm</Button>
               ]}
-              width={1000}
+              width={500}
             >
               <Form
                 initialValues={{
@@ -237,29 +251,20 @@ export default function DanhMuc() {
                 }}
                 onFinish={addDanhMuc}
                 form={form}>
-
-                <div className='row'>
-                  <div className="col-md-6">
-                    <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
-                      <Input className="border" />
-                    </Form.Item>
-                  </div>
-                  <div className='col-md-6'>
-                    <Form.Item label="Trạng thái" name='trangThai' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống trạng thái!', },]}>
-                      <Select className="border" value={selectedValue} onChange={handleChange}>
-                        <Select.Option value="1" >Còn Bán</Select.Option>
-                        <Select.Option value="0">Dừng Bán</Select.Option>
-                      </Select>
-                    </Form.Item>
-                  </div>
-                </div>
+                <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
+                  <Input className="border" />
+                </Form.Item>
               </Form>
             </Modal>
           </div>
           <div className="container-fluid mt-4">
-            <div>
-              <Table className='text-center' dataSource={danhMuc} columns={columns} pagination={{ defaultPageSize: 5 }} />
-            </div>
+              <Table align="center" dataSource={danhMuc} columns={columns} pagination={{
+                showQuickJumper: true,
+                defaultPageSize: 5,
+                position: ['bottomCenter'],
+                defaultCurrent: 1,
+                total: 100,
+              }} />
           </div>
         </div>
 

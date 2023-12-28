@@ -1,6 +1,8 @@
 package com.example.backend.controller;
 
 
+import com.example.backend.dto.request.HoaDonRequest;
+import com.example.backend.dto.request.LichSuHoaDonRequest;
 import com.example.backend.entity.HoaDon;
 import com.example.backend.entity.LichSuHoaDon;
 import com.example.backend.service.HoaDonServicee;
@@ -40,7 +42,7 @@ public class HoaDonControllerr {
     }
     @GetMapping("/detail-hoa-don/{idHD}")
     public ResponseEntity<?> detailHD(@PathVariable("idHD") String id){
-        return  ResponseEntity.ok(hoaDonService.getByID(UUID.fromString(id)));
+        return  ResponseEntity.ok(hoaDonService.getByID(id));
     }
     @GetMapping("/hoa-don/tim-kiem/{hehe}/{loaiHD}/{BD}/{KT}")
     public ResponseEntity<?> timHoaDon(@PathVariable("hehe") String tim,
@@ -55,11 +57,12 @@ public class HoaDonControllerr {
         return  ResponseEntity.ok(hoaDonService.timHoaDon(tim,loai,BD,KT));
     }
     @PutMapping("/update-hoa-don/{idHD}")
-    public ResponseEntity<?> updateTTHDvaADDLSHD(@RequestBody LichSuHoaDon ls,@PathVariable("idHD") String id, HoaDon hd){
+    public ResponseEntity<?> updateTTHDvaADDLSHD(@RequestBody LichSuHoaDonRequest ls, @PathVariable("idHD") String id, HoaDon hd){
         HoaDon hoaDon=hoaDonService.findHoaDonbyID(id);
         ls.setTrangThai(hoaDon.getTrangThai()+1);
         ls.setNgayTao(LocalDateTime.now());
-        ls.setHoaDon(hoaDon);
+        ls.setIdHD(id);
+        ls.setNguoiTao("Dương");
         ls.setMoTaHoatDong(ls.getMoTaHoatDong());
         lichSuHoaDonService.addLichSuHoaDon(ls);
         return ResponseEntity.ok(
@@ -68,19 +71,22 @@ public class HoaDonControllerr {
     }
     @GetMapping("/detail-lich-su-hoa-don/{idHD}")
     public ResponseEntity<?> detailLSHD(@PathVariable("idHD") String id){
-        return  ResponseEntity.ok(lichSuHoaDonService.getLichHoaDon(UUID.fromString(id)));
+        return  ResponseEntity.ok(lichSuHoaDonService.getLichHoaDon(id));
     }
     @GetMapping("/ngay-hoa-don-time-line/{idHD}")
     public ResponseEntity<?> ngayTimeLine(@PathVariable("idHD") String id){
-        return  ResponseEntity.ok(lichSuHoaDonService.HoaDonTimeLine(UUID.fromString(id)));
+        return  ResponseEntity.ok(lichSuHoaDonService.HoaDonTimeLine(id));
     }
     @GetMapping("/hoa-don-san-pham/{idHD}")
     public ResponseEntity<?> SanPhamHoaDon(@PathVariable("idHD") String id){
-        return  ResponseEntity.ok(hoaDonService.detailHDSanPham(UUID.fromString(id)));
+        return  ResponseEntity.ok(hoaDonService.detailHDSanPham(id));
     }
-//    public ResponseEntity<?> add(@RequestBody LichSuHoaDon khachHang){
-//        return  ResponseEntity.ok(hoaDonService.addLichSuHoaDon(khachHang));
-//    }
+    @PostMapping("/hoa-don/add")
+    public ResponseEntity<?> add(@RequestBody HoaDonRequest hoaDonRequest){
+        hoaDonRequest.setNgayMua(LocalDateTime.now());
+        hoaDonRequest.setNgayTao(LocalDateTime.now());
+        return  ResponseEntity.ok(hoaDonService.add(hoaDonRequest));
+    }
 //    @PutMapping("/update/{ma}")
 //    public ResponseEntity<?> update(@PathVariable String ma,@RequestBody LichSuHoaDon khachHang){
 //        return   ResponseEntity.ok(khachHangService.update(khachHang,ma));

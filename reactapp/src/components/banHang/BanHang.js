@@ -1,4 +1,4 @@
-import { Button, Empty, Input, Modal, Space, Switch, Tabs, Tag } from "antd";
+import { Button, Empty, Input, Modal, Space, Switch, Table, Tabs, Tag } from "antd";
 import React, { useEffect, useRef, useState } from 'react';
 import { toast, ToastContainer } from "react-toastify";
 import { BsQrCodeScan } from "react-icons/bs";
@@ -6,13 +6,15 @@ import { FaList } from "react-icons/fa";
 import { QrReader } from 'react-qr-reader';
 import { MdOutlinePayments, MdOutlineShoppingCartCheckout } from "react-icons/md";
 import axios from "axios";
+import ModalSanPham from "./ModalSanPham";
 
 const BanHang = () => {
   const [activeKey, setActiveKey] = useState(1);
   const [items, setItems] = useState([]);
   const newTabIndex = useRef(0);
   const demTab = useRef(0);
-
+  const [open, setOpen] = useState(false);
+  const [openSanPham,setOpenSanPham] = useState(false);
   const onChange = (key) => {
     setActiveKey(key);
   };
@@ -130,7 +132,7 @@ const BanHang = () => {
           </div>
           <div className="text-end">
             <Button type="primary" icon={<BsQrCodeScan />} onClick={() => setOpenScan(true)}>Quét QR sản phẩm</Button>
-            <Button type="primary" className="ms-3">Chọn sản phẩm</Button>
+            <Button type="primary" className="ms-3" onClick={()=>setOpenSanPham(true)}>Chọn sản phẩm</Button>
           </div>
         </div>
         {/* bảng giỏ hàng */}
@@ -156,7 +158,13 @@ const BanHang = () => {
             <h4> Tài khoản</h4>
           </div>
           <div className="text-end">
-            <Button className="ms-3">Chọn tài khoản</Button>
+            <>
+              <Button className='me-5 bg-success' type="primary" onClick={() => setOpen(true)}>
+                Chọn tài khoản
+              </Button>
+              <ModalSanPham openSanPham={openSanPham} setOpenDetail={setOpenSanPham} />
+
+            </>
           </div>
         </div>
         <hr></hr>
