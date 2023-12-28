@@ -2,15 +2,16 @@ package com.example.backend.dto.response;
 
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 public interface KichThuocRespone {
     public String getMa();
 
     public String getTen();
 
-    public Date getNgayTao();
+    public LocalDateTime getNgayTao();
 
-    public Date getNgaySua();
+    public LocalDateTime getNgaySua();
 
     public String getNguoiTao();
 

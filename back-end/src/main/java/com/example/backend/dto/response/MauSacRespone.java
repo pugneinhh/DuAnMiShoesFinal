@@ -2,22 +2,20 @@ package com.example.backend.dto.response;
 
 import org.springframework.beans.factory.annotation.Value;
 
+import java.time.LocalDateTime;
+
 public interface MauSacRespone {
+     public String getMa();
 
-     @Value("#{target.ma}")
-     String getMa();
+     public String getTen();
 
-     @Value("#{target.ten}")
-     String getTen();
+     public LocalDateTime getNgayTao();
 
-//     Date getNgayTao();
-//
-//     Date getNgaySua();
-//
-//     String getNguoiTao();
-//
-//     String getNguoiSua();
+     public LocalDateTime getNgaySua();
 
-     @Value("#{target.trangThai}")
-     String getTrangThai();
+     public String getNguoiTao();
+
+     public String getNguoiSua();
+
+     public int getTrangThai();
 }
