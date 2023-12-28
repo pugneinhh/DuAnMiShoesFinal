@@ -13,6 +13,7 @@ import java.util.UUID;
 @ToString
 @Table(name = "dia_chi")
 @Entity
+@Builder
 public class DiaChi {
 
     @Id

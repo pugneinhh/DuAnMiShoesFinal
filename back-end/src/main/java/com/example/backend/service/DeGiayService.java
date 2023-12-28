@@ -1,7 +1,8 @@
 package com.example.backend.service;
+import com.example.backend.dto.request.DeGiayRequest;
+import com.example.backend.dto.response.DeGiayRespone;
 import com.example.backend.entity.DeGiay;
-import com.example.backend.model.AdminDoCaoRespon;
-import com.example.backend.respon.DeGiayRespon;
+import com.example.backend.repository.DeGiayRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,12 +11,21 @@ import java.util.List;
 @Service
 public class DeGiayService {
     @Autowired
-    private DeGiayRespon doCaoRespon;
+    private DeGiayRepository deGiayRepository;
     public List<DeGiay> getALL(){
-        return doCaoRespon.findAll();
+        return deGiayRepository.findAll();
     }
-    public List<AdminDoCaoRespon> getALLDC(){
-        return doCaoRespon.getALLDC();
+    public List<DeGiayRespone> getALLDC(){
+        return deGiayRepository.getALLDC();
     }
-    public DeGiay addDC(DeGiay dc){return doCaoRespon.save(dc);}
+    public String addDC(DeGiayRequest dg){
+        DeGiay deGiay = DeGiay.builder()
+                .ma(dg.getMa())
+                .ten(dg.getTen())
+                .ngayTao(dg.getNgayTao())
+                .trangThai(1)
+                .build();
+        deGiayRepository.save(deGiay);
+        return "Done";
+    }
 }

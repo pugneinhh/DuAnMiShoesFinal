@@ -104,8 +104,8 @@ const SideBar=(props)=>{
                                 <Link to='/danh-muc'></Link>
                             </MenuItem>
                             <MenuItem icon={<AiOutlineColumnHeight color='#f7faf9' size={20} />}>
-                                Độ cao
-                                <Link to='/do-cao'></Link>
+                                Đế giày
+                                <Link to='/de-giay'></Link>
                             </MenuItem>
                             <MenuItem icon={<GiMaterialsScience color='#f7faf9' size={20}/>}>
                                 Chất Liệu

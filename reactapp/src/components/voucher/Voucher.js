@@ -175,20 +175,19 @@ const columns = [
                                     Hoạt động
                                 </Tag>
 
-                            ) :
-
-                            ) : (trangThai=='DANG_HOAT_DONG')?
+                            )  : (trangThai=='DANG_HOAT_DONG')?(
                             <Tag color="green">
                             Hoạt động
-                            </Tag>
+                            </Tag>):(
 
                             
                                     <Tag color="red">
                                         Ngừng hoạt động
                                     </Tag>
+                            )
                               
                     }
-                </>),
+               </>),
   //   filters: [
   //     {
   //         text: 'Hoạt động',
@@ -213,8 +212,19 @@ const columns = [
         <Button type='primary' danger shape="circle" icon={<IoInformation size={15} />} onClick={()=>{detailVoucher(record)}} />
         </a>
         <a>
-        <Button type='primary' className='btn btn-success text-center' shape="circle" icon={<BsPencilSquare size={15} />} onClick={()=>{editVoucher(record)}}/>
-        </a>
+            <Link
+              to={`/voucher/detail/${record.id}`}
+              className="btn"
+            >
+              <BsPencilSquare
+                style={{
+                  fontSize: 30,
+                  backgroundColor: "#ffff00",
+                  borderRadius: 90,
+                }}
+              />
+            </Link>
+          </a>
         
       </Space>
       
@@ -266,12 +276,12 @@ const columns = [
     };
 
     //khai  báo form update
-    const editVoucher=(row)=>{
-      setMyVoucher(row);
-      setID(row.id);
-      setOpenUpdate(true);
+    // const editVoucher=(row)=>{
+    //   setMyVoucher(row);
+    //   setID(row.id);
+    //   setOpenUpdate(true);
      
-    }
+    // }
     const resetMyVoucher=()=>{
       // setID('');
       setMyVoucher({});
@@ -283,17 +293,17 @@ const columns = [
       console.log('voucher',myVoucher);
     }
     
-    const getVoucherByID = async(id) => {
-      await axios.get(`http://localhost:8080/voucher/detail/${id}`)
-      .then(response => {
-        // Update the list of items
-        setMyVoucher(response.data);
-    })
-    .catch(error => console.error('Error adding item:', error));
+    // const getVoucherByID = async(id) => {
+    //   await axios.get(`http://localhost:8080/voucher/detail/${id}`)
+    //   .then(response => {
+    //     // Update the list of items
+    //     setMyVoucher(response.data);
+    // })
+    // .catch(error => console.error('Error adding item:', error));
   
     
-    };
-    const [id,setID]=useState('');
+    // };
+    // const [id,setID]=useState('');
     
     
     ///validate ngày 
@@ -437,7 +447,7 @@ const columns = [
     </>
     </div>
     {/* hết table voucher */}
-    <ModelAddVoucher id={id}  openUpdate={openUpdate} setOpenUpdate={setOpenUpdate} myVoucher={myVoucher} setMyVoucher={setMyVoucher} resetMyVoucher={resetMyVoucher} loadVoucher={loadVoucher}/>
+    {/* <ModelAddVoucher id={id}  openUpdate={openUpdate} setOpenUpdate={setOpenUpdate} myVoucher={myVoucher} setMyVoucher={setMyVoucher} resetMyVoucher={resetMyVoucher} loadVoucher={loadVoucher}/> */}
 
     <ModalDetail  openDetail={openDetail} setOpenDetail={setOpenDetail} myVoucher={myVoucher} setMyVoucher={setMyVoucher} resetMyVoucher={resetMyVoucher} loadVoucher={loadVoucher}/>
     

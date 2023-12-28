@@ -1,4 +1,5 @@
 package com.example.backend.entity;
+import com.example.backend.util.Status;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,7 +15,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-
+@Builder
 public class Voucher {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -30,7 +31,8 @@ public class Voucher {
     private int soLuong;
     private String nguoiTao;
     private String nguoiSua;
-    private Date ngayTao;
-    private Date ngaySua;
-    private int trangThai;
+    private LocalDateTime ngayTao;
+    private LocalDateTime ngaySua;
+    @Enumerated(EnumType.STRING)
+    private Status trangThai;
 }

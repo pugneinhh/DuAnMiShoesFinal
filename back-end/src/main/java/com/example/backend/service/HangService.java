@@ -1,7 +1,8 @@
 package com.example.backend.service;
+import com.example.backend.dto.request.HangRequest;
+import com.example.backend.dto.response.HangRespone;
 import com.example.backend.entity.Hang;
-import com.example.backend.model.AdminHangRespon;
-import com.example.backend.respon.HangRespon;
+import com.example.backend.repository.HangRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,12 +11,21 @@ import java.util.List;
 @Service
 public class HangService {
     @Autowired
-    HangRespon hangRespon;
+    HangRepository hangRepository;
     public List<Hang> getALL(){
-        return hangRespon.findAll();
+        return hangRepository.findAll();
     }
-    public List<AdminHangRespon> getALLH(){
-        return hangRespon.getALLH();
+    public List<HangRespone> getALLH(){
+        return hangRepository.getALLH();
     }
-    public Hang addH(Hang h){return hangRespon.save(h);}
+    public String addH(HangRequest h){
+        Hang hang = Hang.builder()
+                .ma(h.getMa())
+                .ten(h.getTen())
+                .ngayTao(h.getNgayTao())
+                .trangThai(1)
+                .build();
+        hangRepository.save(hang);
+        return "Done";
+    }
 }
