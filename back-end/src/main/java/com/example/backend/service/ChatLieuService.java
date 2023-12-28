@@ -1,5 +1,6 @@
 package com.example.backend.service;
-import com.example.backend.model.AdminChatLieuRespon;
+import com.example.backend.dto.request.ChatLieuRequest;
+import com.example.backend.dto.response.ChatLieuRespone;
 import com.example.backend.entity.ChatLieu;
 import com.example.backend.repository.ChatLieuRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,17 @@ public class ChatLieuService {
     ChatLieuRepository chatLieuRepository;
 
     public List<ChatLieu> getALL(){return chatLieuRepository.findAll();}
-    public List<AdminChatLieuRespon> getALLCL(){
+    public List<ChatLieuRespone> getALLCL(){
         return chatLieuRepository.getALLCL();
     }
-    public ChatLieu addCL(ChatLieu cl){return chatLieuRepository.save(cl);}
+    public String addCL(ChatLieuRequest cl){
+        ChatLieu chatLieu = ChatLieu.builder()
+                .ma(cl.getMa())
+                .ten(cl.getTen())
+                .ngayTao(cl.getNgayTao())
+                .trangThai(1)
+                .build();
+        chatLieuRepository.save(chatLieu);
+        return "Done";
+    }
 }

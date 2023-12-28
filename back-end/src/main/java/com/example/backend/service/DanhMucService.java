@@ -1,6 +1,7 @@
 package com.example.backend.service;
+import com.example.backend.dto.request.DanhMucRequest;
+import com.example.backend.dto.response.DanhMucRespone;
 import com.example.backend.entity.DanhMuc;
-import com.example.backend.model.AdminDanhMucRespon;
 import com.example.backend.repository.DanhMucRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +19,22 @@ public class DanhMucService {
         return danhMucRepository.findAll();
     }
 
-    public List<AdminDanhMucRespon> getALLDM() {
+    public List<DanhMucRespone> getALLDM() {
         return danhMucRepository.getALLDM();
     }
 
-    public List<AdminDanhMucRespon> getTim(String key, int tt) {
+    public List<DanhMucRespone> getTim(String key, int tt) {
         return danhMucRepository.timDM(key, tt);
     }
 
-    public DanhMuc addDM(DanhMuc dm) {
-        return danhMucRepository.save(dm);
+    public String addDM(DanhMucRequest dm) {
+        DanhMuc danhMuc = DanhMuc.builder()
+                .ma(dm.getMa())
+                .ten(dm.getTen())
+                .ngayTao(dm.getNgayTao())
+                .trangThai(1)
+                .build();
+        danhMucRepository.save(danhMuc);
+        return "Done";
     }
 }

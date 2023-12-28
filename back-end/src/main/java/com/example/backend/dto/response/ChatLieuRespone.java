@@ -1,6 +1,7 @@
 package com.example.backend.dto.response;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 public interface ChatLieuRespone {
 
@@ -8,9 +9,9 @@ public interface ChatLieuRespone {
 
     public String getTen();
 
-    public Date getNgayTao();
+    public LocalDateTime getNgayTao();
 
-    public Date getNgaySua();
+    public LocalDateTime getNgaySua();
 
     public String getNguoiTao();
 

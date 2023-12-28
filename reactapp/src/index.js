@@ -10,8 +10,9 @@ import Voucher from './components/voucher/Voucher';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import KhuyenMai from './components/khuyenMai/KhuyenMai';
 import ThemKhuyenMai from './components/khuyenMai/ThemKhuyenMai'
+import SuaKhuyenMai from './components/khuyenMai/SuaKhuyenMai'
 import DanhMuc from './components/sanPham/DanhMuc';
-import DoCao from './components/sanPham/DoCao';
+import DeGiay from './components/sanPham/DeGiay';
 import ChatLieu from './components/sanPham/ChatLieu';
 import KichThuoc from './components/sanPham/KichThuoc';
 import MauSac from './components/sanPham/MauSac';
@@ -37,11 +38,12 @@ root.render(
         <Route path='detail-hoa-don/:id' element={<HoaDonDetail/>}></Route>
           <Route path='khuyen-mai' element = {<KhuyenMai/>}></Route>
           <Route path='frm-khuyen-mai' element = {<ThemKhuyenMai />}></Route>
+          <Route path='sua-khuyen-mai/:id' element = {<SuaKhuyenMai />}></Route>
           <Route path='voucher' element = {<Voucher/>}></Route>
           <Route path='themVoucher' element = {<AddVoucher/>}></Route>
           <Route path='voucher/detail/:id' element = {<ModelUpdateVoucher/>}></Route>
           <Route path='danh-muc' element = {<DanhMuc/>}></Route>
-          <Route path='do-cao' element = {<DoCao/>}></Route>
+          <Route path='de-giay' element = {<DeGiay/>}></Route>
           <Route path='chat-lieu' element = {<ChatLieu/>}></Route>
           <Route path='kich-thuoc' element = {<KichThuoc/>}></Route>
           <Route path='mau-sac' element = {<MauSac/>}></Route>

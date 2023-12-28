@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   Button,
   DatePicker,
+  Divider,
   Form,
   Input,
   InputNumber,
@@ -11,17 +12,19 @@ import {
   Tag,
   Modal
 } from 'antd';
-import { InfoCircleFilled } from "@ant-design/icons";
+import { InfoCircleFilled, PlusCircleOutlined } from "@ant-design/icons";
 import { DeleteFilled } from "@ant-design/icons";
 import { PlusCircleFilled } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
-import {MdSearch} from 'react-icons/md';
+import { MdSearch } from 'react-icons/md';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Swal from "sweetalert2";
 import FormItem from 'antd/es/form/FormItem';
+import { BsFillEyeFill } from 'react-icons/bs';
+import { PiTrademarkFill } from 'react-icons/pi';
 
 export default function Hang() {
   //Form
@@ -35,32 +38,32 @@ export default function Hang() {
     setComponentSize(size);
   };
   const [form] = Form.useForm();
-   //Ấn Add
-   const [open, setOpen] = useState(false);
-   const [openUpdate, setOpenUpdate] = useState(false);
-   const [bordered] = useState(false);
-   const addHang = (value) => {
-     console.log(value);
-     axios.post('http://localhost:8080/hang/add', value)
-       .then(response => {
-         console.log(response.data);
-         toast('✔️ Thêm thành công!', {
-           position: "top-right",
-           autoClose: 5000,
-           hideProgressBar: false,
-           closeOnClick: true,
-           pauseOnHover: true,
-           draggable: true,
-           progress: undefined,
-           theme: "light",
-         });
-         loadHang();
-         form.resetFields();
- 
-       })
-       .catch(error => console.error('Error adding item:', error));
- 
-   }
+  //Ấn Add
+  const [open, setOpen] = useState(false);
+  const [openUpdate, setOpenUpdate] = useState(false);
+  const [bordered] = useState(false);
+  const addHang = (value) => {
+    console.log(value);
+    axios.post('http://localhost:8080/hang/add', value)
+      .then(response => {
+        console.log(response.data);
+        toast('✔️ Thêm thành công!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        loadHang();
+        form.resetFields();
+
+      })
+      .catch(error => console.error('Error adding item:', error));
+
+  }
   //Table
   const [hang, setHangs] = useState([]);
 
@@ -107,18 +110,12 @@ export default function Hang() {
       render: (trang_thai) => (
         <>
           {trang_thai === 0 ? (
-            <Tag
-              color="#f50
-                "
-            >
-              Dừng Bán
+            <Tag color="red">
+              Còn bán
             </Tag>
           ) : (
-            <Tag
-              color="#87d068
-                "
-            >
-              Còn Bán
+            <Tag color="green">
+              Còn bán
             </Tag>
           )}
         </>
@@ -130,28 +127,29 @@ export default function Hang() {
 
       render: () => (
         <Space size="middle">
-          <a>
-            <Button type="primary" primary shape="circle" icon={<InfoCircleFilled size={20} />} />
-          </a>
-          <a>
-            <Button type="primary" danger shape="circle" icon={<DeleteFilled size={20} />} />
-          </a>
+          <a className='btn btn-danger'><BsFillEyeFill className='mb-1' /></a>
         </Space>
       ),
     },
   ]
 
   return (
-    <div>
+    <div className='container-fluid' style={{ borderRadius: 20 }}>
       <div className="container-fluid">
-        <div className='bg-light pb-2 pt-2 mt-2' style={{ borderRadius: 20 }}>
-          <h4 className="ms-3 mt-2 mb-2"><FilterFilled /> Bộ lọc</h4>
+        <Divider orientation="center" color="#d0aa73"><h4 className="text-first pt-1 fw-bold"> <PiTrademarkFill size={35} /> Quản lý hãng</h4></Divider>
+        <div className=' bg-light m-2 p-3 pt-2' style={{
+          border: '1px solid #ddd', // Border color
+          boxShadow: '0 3px 8px rgba(0, 0, 0, 0.1)', // Box shadow
+          borderRadius: '8px'
+        }}>
+          <h5><FilterFilled size={30} /> Bộ lọc</h5>
+          <hr />
           <Form className="row"
             labelCol={{
-              span: 6,
+              span: 10,
             }}
             wrapperCol={{
-              span: 14,
+              span: 20,
             }}
             layout="horizontal"
             initialValues={{
@@ -160,12 +158,13 @@ export default function Hang() {
             onValuesChange={onFormLayoutChange}
             size={componentSize}
             style={{
-              maxWidth: 1600,
+              maxWidth: 1400,
             }}
+            form={form}
           >
             <div className="col-md-5">
               <Form.Item label="Tên & Mã">
-                <Input />
+                <Input className='rounded-pill border-warning' placeholder='Nhập tên hoặc mã' />
               </Form.Item>
             </div>
             <div className='col-md-5'>
@@ -176,16 +175,24 @@ export default function Hang() {
                 </Select>
               </Form.Item>
             </div>
-            <Form.Item className='ms-3'>
-              <Button type='primary' size='large'><MdSearch/>  Tìm Kiếm</Button>
+            <Form.Item className='text-center'>
+              <Button type="primary" htmlType='reset'>Làm mới</Button>
             </Form.Item>
           </Form>
         </div>
-        <div className='bg-light pb-2 pt-2 mt-2' style={{ borderRadius: 20 }}>
-          <h4 className="ms-3 mt-2 mb-2"><BookFilled /> Danh sách hãng</h4>
+
+        <div className='text-end'>
+          <a className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill" role="button" onClick={() => setOpen(true)}> <PlusCircleOutlined />  Thêm hãng</a>
+        </div>
+        <div className=' bg-light m-2 p-3 pt-2' style={{
+          border: '1px solid #ddd', // Border color
+          boxShadow: '0 3px 8px rgba(0, 0, 0, 0.1)', // Box shadow
+          borderRadius: '8px'
+        }}>
+          <h5><BookFilled size={30} /> Danh sách hãng</h5>
+          <hr />
           <div className="ms-3">
             {/* Add cl */}
-            <a name="" id="" class="btn btn-success mt-2" href="#" role="button" onClick={() => setOpen(true)}> <PlusCircleFilled />  Thêm hãng</a>
             <Modal
               title="Thêm Hãng"
               centered
@@ -196,6 +203,7 @@ export default function Hang() {
                 <Button onClick={() => setOpen(false)}>Hủy</Button>,
                 <Button type="primary" onClick={() => {
                   Modal.confirm({
+                    centered : true,
                     title: 'Thông báo',
                     content: 'Bạn có chắc chắn muốn thêm không?',
                     onOk: () => { form.submit(); },
@@ -208,7 +216,7 @@ export default function Hang() {
                   });
                 }}>Thêm</Button>
               ]}
-              width={1000}
+              width={500}
             >
               <Form
                 initialValues={{
@@ -221,28 +229,21 @@ export default function Hang() {
                 }}
                 onFinish={addHang}
                 form={form}>
-
-                <div className='row'>
-                  <div className="col-md-6">
-                    <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
-                      <Input className="border" />
-                    </Form.Item>
-                  </div>
-                  <div className='col-md-6'>
-                    <Form.Item label="Trạng thái" name='trangThai' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống trạng thái!', },]}>
-                      <Select className="border" value={selectedValue} onChange={handleChange}>
-                        <Select.Option value="1" >Còn Bán</Select.Option>
-                        <Select.Option value="0">Dừng Bán</Select.Option>
-                      </Select>
-                    </Form.Item>
-                  </div>
-                </div>
+                <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
+                  <Input className="border" />
+                </Form.Item>
               </Form>
             </Modal>
           </div>
           <div className="container-fluid mt-4">
             <div>
-              <Table className='text-center' dataSource={hang} columns={columns} pagination={{ defaultPageSize: 5 }} />
+              <Table className='text-center' dataSource={hang} columns={columns} pagination={{
+              showQuickJumper: true,
+              defaultPageSize: 5,
+              position: ['bottomCenter'],
+              defaultCurrent: 1,
+              total: 100,
+            }} />
             </div>
           </div>
         </div>

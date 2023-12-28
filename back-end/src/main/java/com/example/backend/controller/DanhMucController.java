@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
+import java.time.LocalDateTime;
 
 @CrossOrigin("http://localhost:3000/")
 @RestController
@@ -29,9 +30,10 @@ public class DanhMucController {
         return  ResponseEntity.ok(danhMucService.getTim(key,timTT));
     }
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody DanhMuc v){
+    public ResponseEntity<?> add(@RequestBody DanhMucRequest v){
         int dmThem = danhMucService.getALL().size();
         v.setMa("DM" + "-" + (dmThem + 1));
+        v.setNgayTao(LocalDateTime.now());
         return  ResponseEntity.ok(danhMucService.addDM(v));
     }
 }

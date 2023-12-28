@@ -1,4 +1,4 @@
-import { Button, Empty, Input, Modal, Space, Switch, Tabs, Tag } from "antd";
+import { Button, Empty, Input, Modal, Space, Switch, Table, Tabs, Tag } from "antd";
 import React, { useEffect, useRef, useState } from 'react';
 import { toast, ToastContainer } from "react-toastify";
 import { BsQrCodeScan } from "react-icons/bs";
@@ -6,13 +6,28 @@ import { FaList } from "react-icons/fa";
 import { QrReader } from 'react-qr-reader';
 import { MdOutlinePayments, MdOutlineShoppingCartCheckout } from "react-icons/md";
 import axios from "axios";
+import ModalSanPham from "./ModalSanPham";
+import ModalThanhToan from "./ModalThanhToan";
+import ModalKhachHang from "./ModalKhachHang";
 
 const BanHang = () => {
   const [activeKey, setActiveKey] = useState(1);
   const [items, setItems] = useState([]);
   const newTabIndex = useRef(0);
   const demTab = useRef(0);
-
+  const [open, setOpen] = useState(false);
+  const [openSanPham, setOpenSanPham] = useState(false);
+  const handleCloseSanPham = () => {
+    setOpenSanPham(false);
+  }
+  const [openKhachHang, setOpenKhachHang] = useState(false);
+  const handleCloseKhachHang = () => {
+    setOpenKhachHang(false);
+  }
+  const [openThanhToan, setOpenThanhToan] = useState(false);
+  const handleCloseThanhToan = () => {
+    setOpenThanhToan(false);
+  }
   const onChange = (key) => {
     setActiveKey(key);
   };
@@ -130,7 +145,12 @@ const BanHang = () => {
           </div>
           <div className="text-end">
             <Button type="primary" icon={<BsQrCodeScan />} onClick={() => setOpenScan(true)}>Quét QR sản phẩm</Button>
-            <Button type="primary" className="ms-3">Chọn sản phẩm</Button>
+            <Button type="primary" className="ms-3" onClick={() => setOpenSanPham(true)}>Chọn sản phẩm</Button>
+            <ModalSanPham openSanPham={openSanPham}
+              setOpenSanPham={setOpenSanPham}
+              onOk={handleCloseSanPham}
+              onCancel={handleCloseSanPham}
+            />
           </div>
         </div>
         {/* bảng giỏ hàng */}
@@ -156,7 +176,17 @@ const BanHang = () => {
             <h4> Tài khoản</h4>
           </div>
           <div className="text-end">
-            <Button className="ms-3">Chọn tài khoản</Button>
+            <>
+              <Button className='me-5 bg-success' type="primary" onClick={() => setOpenKhachHang(true)}>
+                Chọn tài khoản
+              </Button>
+              <ModalKhachHang openKhachHang={openKhachHang} 
+                setOpenKhachHang={setOpenKhachHang}
+                onOk={handleCloseKhachHang}
+                onCancel={handleCloseKhachHang}
+              />
+
+            </>
           </div>
         </div>
         <hr></hr>
@@ -167,19 +197,50 @@ const BanHang = () => {
         {/* hết thông tin tài khoản */}
         <h4>Khách hàng</h4>
         <hr></hr>
-        <div>
-          <h4 className="fw-bold"><MdOutlineShoppingCartCheckout />Thông tin thanh toán</h4>
-          <p>Thanh toán &nbsp;&nbsp;<Button icon={<MdOutlinePayments size={25} />}></Button></p>
-          <Space.Compact
+        <div className="container-fluid row">
+          <div className="col-md-7"></div>
+          <div className="col-md-5">
+            <h4 className="fw-bold"><MdOutlineShoppingCartCheckout />Thông tin thanh toán</h4>
+            <div className="row">
+            <h6 className="col-md-3 mt-2">Thanh toán</h6>
+              <Button className="col-md-9" icon={<MdOutlinePayments size={25} onClick={() => setOpenThanhToan(true)} />}></Button>
+              <ModalThanhToan openThanhToan={openThanhToan} setOpenThanhToan={setOpenThanhToan}
+                onOk={handleCloseThanhToan}
+                onCancel={handleCloseThanhToan}  />
+            </div>
+            
+            <div className="row">
+              <h6 className="col-md-4 mt-2">Mã giảm giá:</h6>
 
-          >
-            <Input defaultValue="Mã giảm giá" />
-            <Button >Áp mã</Button>
-          </Space.Compact>
-          <p>Trả sau: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Switch defaultChecked /></p>
-          <p>Giao hàng: &nbsp;&nbsp;&nbsp;<Switch /></p>
+            <Space.Compact
+                className="col-md-8"
+            >
+              <Input defaultValue="Mã giảm giá" />
+              <Button className="ms-5" >Áp mã</Button>
+            </Space.Compact>
+            </div>
+            <h6 className="mt-4">Trả sau: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Switch defaultChecked /></h6>
+            <h6 className="mt-4">Giao hàng: &nbsp;&nbsp;&nbsp;<Switch /></h6>
+            <div className="row">
+              <div className="col-md-8">
+
+                <h6 className="mt-4">Tiền hàng:</h6>
+                <h6 className="mt-4">Phí vận chuyển:</h6>
+                <h6 className="mt-4">Giảm giá:</h6>
+                <h6 className="mt-4">Điểm hiện tại:</h6>
+                <h6 className="mt-4">Tổng tiền:</h6>
+              </div>
+              <div className="col-md-4">
+            
+                <h6 className="mt-4">VND</h6>
+                
+                <h6 className="mt-4">VND</h6>
+                <h6 className="mt-4 text-danger">VND</h6>
+              </div>
+            </div>
+            <Button className=' mt-2 me-5 bg-success float-end bg-black' type="primary">Xác nhận đặt hàng</Button>
+          </div>
         </div>
-
 
       </div>
 
