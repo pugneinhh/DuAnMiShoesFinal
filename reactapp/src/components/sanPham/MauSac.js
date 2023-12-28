@@ -21,8 +21,8 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Swal from "sweetalert2";
-import tinycolor from 'tinycolor2';
 import FormItem from 'antd/es/form/FormItem';
+import tinycolor from 'tinycolor2';
 
 export default function MauSac() {
   //Form
@@ -31,15 +31,14 @@ export default function MauSac() {
     console.log(`Selected value: ${value}`);
     setSelectedValue(value);
   };
-  const [tenMau, setTenMau] = useState('#000000'); // Màu mặc định
-
+  const [tenMau, setTenMau] = useState(''); // Màu mặc định
   const doiMau = (e) => {
-    const newColor = e.target.value;
-    setTenMau(newColor);
-
-    // Chuyển đổi màu sang tên màu sử dụng tinycolor2
-    const colorName = tinycolor(newColor).toName();
-    console.log('Tên màu:', colorName);
+        const maMau = e.target.value;
+        const mau = tinycolor(maMau);
+        const ten = mau.toName();
+        console.log(`${ten}`);
+        setTenMau(ten);
+        console.log(`${tenMau}`);
   };
   const [componentSize, setComponentSize] = useState('default');
   const onFormLayoutChange = ({ size }) => {
