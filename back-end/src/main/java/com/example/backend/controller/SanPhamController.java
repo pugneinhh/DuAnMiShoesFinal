@@ -33,6 +33,8 @@ public class SanPhamController {
     }
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody SanPham v){
+        int spThem = sanPhamService.getALL().size();
+        v.setMa("SP" + "-" + (spThem + 1));
         return  ResponseEntity.ok(sanPhamService.addSP(v));
 
     }

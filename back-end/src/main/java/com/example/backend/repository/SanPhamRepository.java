@@ -1,5 +1,6 @@
 package com.example.backend.repository;
 
+import com.example.backend.dto.response.SanPhamRespone;
 import com.example.backend.entity.SanPham;
 import com.example.backend.model.AdminSanPhamRespon;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +14,7 @@ public interface SanPhamRepository extends JpaRepository<SanPham, String> {
     SELECT  a.id AS idSP,a.ma AS ma ,a.ten AS ten,SUM(o.so_luong) AS soLuong, a.trang_thai AS trangThai
     FROM san_pham a JOIN chi_tiet_san_pham o  on o.san_pham_id= a.id GROUP BY ma,ten,a.trang_thai,a.id
             """, nativeQuery = true)
-    List<AdminSanPhamRespon> getALLSP();
+    List<SanPhamRespone> getALLSP();
 
     @Query(value = "select san_pham.id from san_pham join chi_tiet_san_pham on san_pham.id = chi_tiet_san_pham.san_pham_id where chi_tiet_san_pham.id = ?1",nativeQuery = true)
     UUID getIDSPbyCTSP(UUID id);

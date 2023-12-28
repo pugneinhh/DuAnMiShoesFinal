@@ -1,19 +1,22 @@
 package com.example.backend.dto.response;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import java.sql.Date;
 
 public interface SanPhamRespone {
-    public String getMa();
+    @Value("#{target.idSP}")
+    String getIdSP();
 
-    public String getTen();
+    @Value("#{target.ma}")
+    String getMa();
 
-    public Date getNgayTao();
+    @Value("#{target.ten}")
+    String getTen();
 
-    public Date getNgaySua();
+    @Value("#{target.soLuong}")
+    int getSoLuong();
 
-    public String getNguoiTao();
-
-    public String getNguoiSua();
-
-    public int getTrangThai();
+    @Value("#{target.trangThai}")
+    String getTrangThai();
 }

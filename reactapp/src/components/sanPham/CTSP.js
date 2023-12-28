@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   Button,
   DatePicker,
+  Divider,
   Modal,
   Form,
   Input,
@@ -118,7 +119,6 @@ export default function CTSP() {
       title: "Giá Bán",
       dataIndex: "giaBan",
     },
-
     {
       title: "Trạng thái",
       dataIndex: "trangThai",
@@ -126,12 +126,12 @@ export default function CTSP() {
       render: (trang_thai) => (
         <>
           {trang_thai === 0 ? (
-            <Tag color="green">
-              Dừng Bán
+            <Tag color="red">
+              Còn bán
             </Tag>
           ) : (
-            <Tag color="red">
-              Còn Bán
+            <Tag color="green">
+              Còn bán
             </Tag>
           )}
         </>
@@ -167,10 +167,16 @@ export default function CTSP() {
   ]
 
   return (
-    <div>
+    <div className='container-fluid' style={{ borderRadius: 20 }}>
       <div className="container-fluid">
-        <div className='bg-light pb-2 pt-2 mt-2' style={{ borderRadius: 20 }}>
-          <h4 className="ms-3 mt-2 mb-2"><FilterFilled /> Bộ lọc</h4>
+      <Divider orientation="center" color="#d0aa73"><h4 className="text-first pt-1 fw-bold"> <InfoCircleFilled size={35} /> Quản lý chi tiết sản phẩm</h4></Divider>
+      <div className=' bg-light m-2 p-3 pt-2' style={{
+          border: '1px solid #ddd', // Border color
+          boxShadow: '0 3px 8px rgba(0, 0, 0, 0.1)', // Box shadow
+          borderRadius: '8px'
+        }}>
+          <h5><FilterFilled size={30} /> Bộ lọc</h5>
+          <hr />
           <Form
             labelCol={{
               span: 6,
@@ -190,15 +196,6 @@ export default function CTSP() {
           >
 
             {/* Form tìm kiếm */}
-            <div className='row'>
-              <div className='col-md-6'>
-                <Form.Item className='text-start'>
-                  <Button type='primary' size='large' className="rounded-pill border ms-3"><SearchOutlined />  Tìm Kiếm</Button>
-                  <Button size='large' className=" text-white bg-danger rounded-pill border ms-3"><UndoOutlined />  Đặt lại tìm kiếm</Button>
-                </Form.Item>
-              </div>
-
-            </div>
             <div className='row'>
               <div className="col-md-3">
                 <Form.Item label="Tên & Mã">
@@ -268,20 +265,29 @@ export default function CTSP() {
 
 
             <div className='container-fluid'>
-
+            <Form.Item className='text-center'>
+              <Button type="primary" htmlType='reset'>Làm mới</Button>
+            </Form.Item>
             </div>
+           
           </Form>
         </div>
-        <div className='bg-light pb-2 pt-2 mt-2' style={{ borderRadius: 20 }}>
-          <h4 className="ms-3 mt-2 mb-2"><BookFilled /> Danh sách Chi Tiết Sản Phẩm</h4>
-          <div className="ms-3">
-            <a size='large' class="btn bg-success text-white mt-2 rounded-pill border" href="#">
-              <PlusCircleFilled /> Thêm Chi Tiết Sản Phẩm
-            </a>
-          </div>
+        <div className=' bg-light m-2 p-3 pt-2' style={{
+          border: '1px solid #ddd', // Border color
+          boxShadow: '0 3px 8px rgba(0, 0, 0, 0.1)', // Box shadow
+          borderRadius: '8px'
+        }}>
+          <h5><BookFilled size={30} /> Danh sách chi tiết sản phẩm</h5>
+          <hr />
           <div className="container-fluid mt-4">
             <div>
-              <Table className='text-center' dataSource={cTSP} columns={columns} pagination='5' />
+              <Table className='text-center' dataSource={cTSP} columns={columns} pagination={{
+                showQuickJumper: true,
+                defaultPageSize: 5,
+                position: ['bottomCenter'],
+                defaultCurrent: 1,
+                total: 100,
+              }} />
             </div>
           </div>
         </div>

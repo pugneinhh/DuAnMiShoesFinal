@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   Button,
   DatePicker,
+  Divider,
   Form,
   Input,
   InputNumber,
@@ -11,7 +12,7 @@ import {
   Tag,
   Modal
 } from 'antd';
-import { InfoCircleFilled } from "@ant-design/icons";
+import { InfoCircleFilled, PlusCircleOutlined } from "@ant-design/icons";
 import { DeleteFilled } from "@ant-design/icons";
 import { PlusCircleFilled } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
@@ -22,6 +23,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Swal from "sweetalert2";
 import FormItem from 'antd/es/form/FormItem';
+import { BsFillEyeFill } from 'react-icons/bs';
+import { GoNumber } from 'react-icons/go';
 
 export default function KichThuoc() {
   //Form
@@ -107,18 +110,12 @@ export default function KichThuoc() {
       render: (trang_thai) => (
         <>
           {trang_thai === 0 ? (
-            <Tag
-              color="#f50
-                "
-            >
-              Dừng Bán
+            <Tag color="red">
+              Còn bán
             </Tag>
           ) : (
-            <Tag
-              color="#87d068
-                "
-            >
-              Còn Bán
+            <Tag color="green">
+              Còn bán
             </Tag>
           )}
         </>
@@ -130,28 +127,29 @@ export default function KichThuoc() {
 
       render: () => (
         <Space size="middle">
-          <a>
-            <Button type="primary" primary shape="circle" icon={<InfoCircleFilled size={20} />} />
-          </a>
-          <a>
-            <Button type="primary" danger shape="circle" icon={<DeleteFilled size={20} />} />
-          </a>
+          <a className='btn btn-danger'><BsFillEyeFill className='mb-1'/></a>
         </Space>
       ),
     },
   ]
 
   return (
-    <div>
+    <div  className='container-fluid' style={{ borderRadius: 20 }}>
       <div className="container-fluid">
-        <div className='bg-light pb-2 pt-2 mt-2' style={{ borderRadius: 20 }}>
-          <h4 className="ms-3 mt-2 mb-2"><FilterFilled /> Bộ lọc</h4>
+      <Divider orientation="center" color="#d0aa73"><h4 className="text-first pt-1 fw-bold"> <GoNumber size={35} /> Quản lý kích thước</h4></Divider>
+      <div className=' bg-light m-2 p-3 pt-2' style={{
+          border: '1px solid #ddd', // Border color
+          boxShadow: '0 3px 8px rgba(0, 0, 0, 0.1)', // Box shadow
+          borderRadius: '8px'
+        }}>
+          <h5><FilterFilled size={30} /> Bộ lọc</h5>
+          <hr />
           <Form className="row"
             labelCol={{
-              span: 6,
+              span: 10,
             }}
             wrapperCol={{
-              span: 14,
+              span: 20,
             }}
             layout="horizontal"
             initialValues={{
@@ -160,12 +158,12 @@ export default function KichThuoc() {
             onValuesChange={onFormLayoutChange}
             size={componentSize}
             style={{
-              maxWidth: 1600,
+              maxWidth: 1400,
             }}
           >
             <div className="col-md-5">
               <Form.Item label="Tên & Mã">
-                <Input />
+                <Input className='rounded-pill border-warning' placeholder='Nhập tên hoặc mã' />
               </Form.Item>
             </div>
             <div className='col-md-5'>
@@ -176,16 +174,24 @@ export default function KichThuoc() {
                 </Select>
               </Form.Item>
             </div>
-            <Form.Item className='ms-3'>
-              <Button type='primary' size='large'><MdSearch/>  Tìm Kiếm</Button>
+            <Form.Item className='text-center'>
+              <Button type="primary" htmlType='reset'>Làm mới</Button>
             </Form.Item>
           </Form>
         </div>
-        <div className='bg-light pb-2 pt-2 mt-2' style={{ borderRadius: 20 }}>
-          <h4 className="ms-3 mt-2 mb-2"><BookFilled /> Danh sách kích thước</h4>
+
+        <div className='text-end'>
+          <a className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill" role="button" onClick={() => setOpen(true)}> <PlusCircleOutlined />  Thêm kích thước </a>
+        </div>
+        <div className=' bg-light m-2 p-3 pt-2' style={{
+          border: '1px solid #ddd', // Border color
+          boxShadow: '0 3px 8px rgba(0, 0, 0, 0.1)', // Box shadow
+          borderRadius: '8px'
+        }}>
+          <h5><BookFilled size={30} /> Danh sách kích thước</h5>
+          <hr />
           <div className="ms-3">
             {/* Add kt */}
-            <a name="" id="" class="btn btn-success mt-2" href="#" role="button" onClick={() => setOpen(true)}> <PlusCircleFilled />  Thêm kích thước</a>
             <Modal
               title="Thêm Kích Thước"
               centered
@@ -196,6 +202,7 @@ export default function KichThuoc() {
                 <Button onClick={() => setOpen(false)}>Hủy</Button>,
                 <Button type="primary" onClick={() => {
                   Modal.confirm({
+                    centered : true,
                     title: 'Thông báo',
                     content: 'Bạn có chắc chắn muốn thêm không?',
                     onOk: () => { form.submit(); },
@@ -229,7 +236,13 @@ export default function KichThuoc() {
           </div>
           <div className="container-fluid mt-4">
             <div>
-              <Table className='text-center' dataSource={kichThuoc} columns={columns} pagination={{ defaultPageSize: 5 }} />
+              <Table className='text-center' dataSource={kichThuoc} columns={columns} pagination={{
+                showQuickJumper: true,
+                defaultPageSize: 5,
+                position: ['bottomCenter'],
+                defaultCurrent: 1,
+                total: 100,
+              }} />
             </div>
           </div>
         </div>
