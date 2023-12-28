@@ -45,19 +45,25 @@ const Voucher = ()=>{
     const onChangeFilter=(changedValues, allValues)=>{
       
       console.log("hi",changedValues);
+      console.log("hi2",allValues);
       // console.log("gtri",value);
       setDataSearch(allValues);
       // setDataSearch(e);
       console.log(dataSearch);
-      timKiemVoucher(dataSearch);
+      timKiemVoucher(allValues);
     }
     //call api tìm kiếm
     const timKiemVoucher=(dataSearch)=>{
       axios.post('http://localhost:8080/voucher/search-voucher',dataSearch)
       .then(response => {
           // Update the list of items
-          setVouchers(response.data);
-          console.log("tìm kím:",response.data);
+          if(response.data.length==0){
+          setVouchers(null);
+          }else{
+            setVouchers(response.data);
+          }
+          console.log("tìm kím:",voucher);
+          console.log("tìm :",response.data.length);
       })
       .catch(error => console.error('Error adding item:', error));
     }
@@ -83,28 +89,11 @@ const Voucher = ()=>{
       //   loadVoucher();
       // },60000);
       // return () => clearInterval();
-      timKiemVoucher(dataSearch);
-    },[dataSearch]);
+      // timKiemVoucher(dataSearch);
+    },[]);
     
      //tìm kiếm
-     const timKiem = (values) => {
-      if(values.key!==undefined&&values.key!==null&&values.ngayBD!==undefined&&values.ngayBD!==null&&values.ngayKT!==undefined&&values.ngayKT!==null){
-       console.log(values);
-      // Send a POST request to the backend
-      axios.get(`http://localhost:8080/voucher/tim-voucher/${values.key}/${moment(values.ngayBD).format('YYYY-MM-DD')}/${moment(values.ngayKT).format('YYYY-MM-DD')}`)
-      .then(response => {
-          // Update the list of items
-          setVouchers(response.data);
-          form.resetFields();
-          
-      })
-      .catch(error => console.error('Error adding item:', error));
-    }else{
-      loadVoucher();
-  
-    }
-       console.log(moment(values.ngayKT).format('YYYY-MM-DD'));
-    }
+    
   
 
     //loadvoucher
@@ -220,7 +209,7 @@ const columns = [
                 style={{
                   fontSize: 30,
                   backgroundColor: "#ffff00",
-                  borderRadius: 90,
+                  
                 }}
               />
             </Link>
@@ -344,7 +333,7 @@ const columns = [
       
       
          <div className="container-fluid">
-         <Divider orientation="left" color="#d0aa73"><h4 className="text-first pt-1 fw-bold"> <FaTag size={20} />Quản lý phiếu giảm giá</h4></Divider>
+         <Divider orientation="center" color="#d0aa73"><h4 className="text-first pt-1 fw-bold"> <FaTag size={20} />Quản lý phiếu giảm giá</h4></Divider>
          {/* form tìm kiếm */}
             <div className=' bg-light m-2 p-3 pt-2' style={{border: '1px solid #ddd', // Border color
     boxShadow: '0 3px 8px rgba(0, 0, 0, 0.1)', // Box shadow
