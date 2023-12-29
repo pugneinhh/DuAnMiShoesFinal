@@ -1,4 +1,5 @@
 package com.example.backend.service;
+import com.example.backend.dto.response.ChiTietSanPhamRespone;
 import com.example.backend.entity.ChiTietSanPham;
 import com.example.backend.entity.KhuyenMai;
 import com.example.backend.model.*;
@@ -19,7 +20,7 @@ public class CTSPService {
     public List<ChiTietSanPham> getALL(){
         return ctspRepository.findAll();
     }
-    public List<AdminCTSPRespon> getALLCTSP(UUID id){
+    public List<ChiTietSanPhamRespone> getALLCTSP(String id){
         return ctspRepository.getALLCTSP(id);
     }
 

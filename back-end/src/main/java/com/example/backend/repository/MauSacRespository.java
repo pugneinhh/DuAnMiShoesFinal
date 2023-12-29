@@ -10,7 +10,9 @@ import java.util.List;
 @Repository
 public interface MauSacRespository extends JpaRepository<MauSac, String> {
     @Query(value = """
-    SELECT o.ma as ma ,
+    SELECT 
+    o.id as id,
+    o.ma as ma ,
          o.ten as ten,
          o.trang_thai as trangThai
       FROM mau_sac o ORDER BY o.ma ASC
