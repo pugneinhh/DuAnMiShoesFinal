@@ -33,12 +33,13 @@ const Admin = (props) => {
   }, []);
 
     return(
-        <div className={`admin-container ${isHeaderFixed ? 'fixed' : ''}`}>
-           <div class="admin-sidebar">
+        <div className={ `admin-container ${isHeaderFixed ? 'fixed' : ''}`}>
+          
+           <div class="admin-sidebar  ">
                 <SideBar collapsed={collapsed} />
                 
             </div>
-            <div className="admin-contents">
+            <div className="admin-contents ">
                
                 <Header className="admin-header" style={{padding:0}}>
                     <Button type="text" style={{

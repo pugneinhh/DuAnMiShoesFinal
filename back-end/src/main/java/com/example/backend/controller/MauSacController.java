@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/mau-sac")
@@ -22,10 +24,10 @@ public class MauSacController {
         return new ResponseEntity<>(mauSacService.getALLMS(), HttpStatus.FOUND);
     }
 
-    @PostMapping("")
+    @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody MauSacRequest v) {
-//        int msThem = mauSacService.getALL().size();
-//        v.setMa("MS" + "-" + (msThem + 1));
+        int msThem = mauSacService.getALL().size();
+        v.setNgayTao(LocalDateTime.now());
         return ResponseEntity.ok(mauSacService.addMS(v));
     }
 }

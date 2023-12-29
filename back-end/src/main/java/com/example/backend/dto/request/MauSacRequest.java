@@ -5,6 +5,7 @@ import com.example.backend.util.Status;
 import lombok.*;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -17,13 +18,13 @@ public class MauSacRequest {
 
     private String ten;
 
-//    private Date ngayTao;
-//
-//    private Date ngaySua;
-//
-//    private String nguoiTao;
-//
-//    private String nguoiSua;
+    private LocalDateTime ngayTao;
+
+    private LocalDateTime ngaySua;
+
+    private String nguoiTao;
+
+    private String nguoiSua;
 
     private Status trangThai;
 }

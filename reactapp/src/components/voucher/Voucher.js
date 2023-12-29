@@ -45,19 +45,25 @@ const Voucher = ()=>{
     const onChangeFilter=(changedValues, allValues)=>{
       
       console.log("hi",changedValues);
+      console.log("hi2",allValues);
       // console.log("gtri",value);
       setDataSearch(allValues);
       // setDataSearch(e);
       console.log(dataSearch);
-      timKiemVoucher(dataSearch);
+      timKiemVoucher(allValues);
     }
     //call api tìm kiếm
     const timKiemVoucher=(dataSearch)=>{
       axios.post('http://localhost:8080/voucher/search-voucher',dataSearch)
       .then(response => {
           // Update the list of items
-          setVouchers(response.data);
-          console.log("tìm kím:",response.data);
+          if(response.data.length==0){
+          setVouchers(null);
+          }else{
+            setVouchers(response.data);
+          }
+          console.log("tìm kím:",voucher);
+          console.log("tìm :",response.data.length);
       })
       .catch(error => console.error('Error adding item:', error));
     }
@@ -83,28 +89,11 @@ const Voucher = ()=>{
       //   loadVoucher();
       // },60000);
       // return () => clearInterval();
-      timKiemVoucher(dataSearch);
-    },[dataSearch]);
+      // timKiemVoucher(dataSearch);
+    },[]);
     
      //tìm kiếm
-     const timKiem = (values) => {
-      if(values.key!==undefined&&values.key!==null&&values.ngayBD!==undefined&&values.ngayBD!==null&&values.ngayKT!==undefined&&values.ngayKT!==null){
-       console.log(values);
-      // Send a POST request to the backend
-      axios.get(`http://localhost:8080/voucher/tim-voucher/${values.key}/${moment(values.ngayBD).format('YYYY-MM-DD')}/${moment(values.ngayKT).format('YYYY-MM-DD')}`)
-      .then(response => {
-          // Update the list of items
-          setVouchers(response.data);
-          form.resetFields();
-          
-      })
-      .catch(error => console.error('Error adding item:', error));
-    }else{
-      loadVoucher();
-  
-    }
-       console.log(moment(values.ngayKT).format('YYYY-MM-DD'));
-    }
+    
   
 
     //loadvoucher
@@ -134,17 +123,18 @@ const columns = [
   {
     title: 'Mã Voucher',
     dataIndex: 'ma',
-    
+    sorter: (a, b) => a.ma - b.ma,
   },
   {
     title: 'Tên Voucher',
     dataIndex: 'ten',
-    
+    sorter: (a, b) => a.ma - b.ma,
   },
   {
-    title: 'Phương thức',
-    dataIndex: 'phuongThuc',
-    
+
+    title: 'Loại Voucher',
+    dataIndex: 'loaiVoucher',
+
   },
   {
     title: 'Ngày bắt đầu',
@@ -159,7 +149,7 @@ const columns = [
     render: (ngayKetThuc) => (
       <>{moment(ngayKetThuc).format("DD/MM/YYYY")}</>
   ),
-    
+    sorter: (a, b) => a.ngayKetThuc - b.ngayKetThuc,
   },
   {
     title: 'Trạng thái',
@@ -168,34 +158,37 @@ const columns = [
             render: (trangThai) => (
                 <>
                     {
-                        (trangThai == 0) ?
+                        (trangThai == 'SAP_DIEN_RA') ?
                             (
-                                <Tag color="gold">
-                                    Sắp diễn ra
+                                <Tag color="green">
+                                    Hoạt động
                                 </Tag>
-                            ) : (trangThai==1)?
+
+                            )  : (trangThai=='DANG_HOAT_DONG')?(
                             <Tag color="green">
                             Hoạt động
-                            </Tag>
+                            </Tag>):(
+
                             
-                                    :<Tag color="red">
+                                    <Tag color="red">
                                         Ngừng hoạt động
                                     </Tag>
+                            )
                               
                     }
-                </>),
-    filters: [
-      {
-          text: 'Hoạt động',
-          value: '0',
-      },
-      {
-          text: 'Ngừng hoạt động',
-          value: '1',
-      },
+               </>),
+  //   filters: [
+  //     {
+  //         text: 'Hoạt động',
+  //         value: '0',
+  //     },
+  //     {
+  //         text: 'Ngừng hoạt động',
+  //         value: '1',
+  //     },
 
-  ],
-  onFilter: (value, record) => record.trangThai.indexOf(value) === 0,
+  // ],
+  // onFilter: (value, record) => record.trangThai.indexOf(value) === 0,
   },
   {
     title: 'Action',
@@ -208,8 +201,19 @@ const columns = [
         <Button type='primary' danger shape="circle" icon={<IoInformation size={15} />} onClick={()=>{detailVoucher(record)}} />
         </a>
         <a>
-        <Button type='primary' className='btn btn-success text-center' shape="circle" icon={<BsPencilSquare size={15} />} onClick={()=>{editVoucher(record)}}/>
-        </a>
+            <Link
+              to={`/voucher/detail/${record.id}`}
+              className="btn"
+            >
+              <BsPencilSquare
+                style={{
+                  fontSize: 30,
+                  backgroundColor: "#ffff00",
+                  
+                }}
+              />
+            </Link>
+          </a>
         
       </Space>
       
@@ -261,12 +265,12 @@ const columns = [
     };
 
     //khai  báo form update
-    const editVoucher=(row)=>{
-      setMyVoucher(row);
-      setID(row.id);
-      setOpenUpdate(true);
+    // const editVoucher=(row)=>{
+    //   setMyVoucher(row);
+    //   setID(row.id);
+    //   setOpenUpdate(true);
      
-    }
+    // }
     const resetMyVoucher=()=>{
       // setID('');
       setMyVoucher({});
@@ -278,17 +282,17 @@ const columns = [
       console.log('voucher',myVoucher);
     }
     
-    const getVoucherByID = async(id) => {
-      await axios.get(`http://localhost:8080/voucher/detail/${id}`)
-      .then(response => {
-        // Update the list of items
-        setMyVoucher(response.data);
-    })
-    .catch(error => console.error('Error adding item:', error));
+    // const getVoucherByID = async(id) => {
+    //   await axios.get(`http://localhost:8080/voucher/detail/${id}`)
+    //   .then(response => {
+    //     // Update the list of items
+    //     setMyVoucher(response.data);
+    // })
+    // .catch(error => console.error('Error adding item:', error));
   
     
-    };
-    const [id,setID]=useState('');
+    // };
+    // const [id,setID]=useState('');
     
     
     ///validate ngày 
@@ -329,7 +333,7 @@ const columns = [
       
       
          <div className="container-fluid">
-         <Divider orientation="left" color="#d0aa73"><h4 className="text-first pt-1 fw-bold"> <FaTag size={20} />Quản lý phiếu giảm giá</h4></Divider>
+         <Divider orientation="center" color="#d0aa73"><h4 className="text-first pt-1 fw-bold"> <FaTag size={20} />Quản lý phiếu giảm giá</h4></Divider>
          {/* form tìm kiếm */}
             <div className=' bg-light m-2 p-3 pt-2' style={{border: '1px solid #ddd', // Border color
     boxShadow: '0 3px 8px rgba(0, 0, 0, 0.1)', // Box shadow
@@ -359,8 +363,8 @@ const columns = [
                   <Form.Item label="Tìm kiếm" name='tenVoucher'>
                       <Input className='rounded-pill border-warning' placeholder='Nhập mã hoặc tên hoặc mức độ giảm giá'/>
                   </Form.Item>
-                  <Form.Item label="Hình thức" name='phuongThucVoucher'>
-                  <Select defaultValue={'Phương thức'} style={{borderColor:'yellow'}}  >
+                  <Form.Item label="Loại voucher" name='loaiVoucher'>
+                  <Select defaultValue={'Tiền mặt'} style={{borderColor:'yellow'}}  >
                       <Select.Option value="Tiền mặt">Tiền mặt</Select.Option>
                       <Select.Option value="Phần trăm">Phần trăm</Select.Option>
                   </Select>
@@ -368,17 +372,12 @@ const columns = [
               </div>
 
               <div className='col-md-4'>
-              <Form.Item label="Loại" name='loaiVoucher' >
-                  <Select defaultValue={'Tất cả'} style={{borderColor:'yellow'}}>
-                      <Select.Option value="true">Giới hạn</Select.Option>
-                      <Select.Option value="false">Không giới hạn</Select.Option>
-                  </Select>
-                  </Form.Item> 
+            
                   <Form.Item label="Trạng thái" name='trangThaiVoucher' >
                   <Select defaultValue={'Tất cả'} style={{borderColor:'yellow'}}>
-                      <Select.Option value="0">Sắp diễn ra</Select.Option>
-                      <Select.Option value="1">Hoạt động</Select.Option>
-                      <Select.Option value="2">Ngừng hoạt động</Select.Option>
+                      <Select.Option value="SAP_DIEN_RA">Sắp diễn ra</Select.Option>
+                      <Select.Option value="DANG_HOAT_DONG">Hoạt động</Select.Option>
+                      <Select.Option value="NGUNG_HOAT_DONG">Ngừng hoạt động</Select.Option>
                   </Select>
                   </Form.Item> 
                  
@@ -437,7 +436,7 @@ const columns = [
     </>
     </div>
     {/* hết table voucher */}
-    <ModelAddVoucher id={id}  openUpdate={openUpdate} setOpenUpdate={setOpenUpdate} myVoucher={myVoucher} setMyVoucher={setMyVoucher} resetMyVoucher={resetMyVoucher} loadVoucher={loadVoucher}/>
+    {/* <ModelAddVoucher id={id}  openUpdate={openUpdate} setOpenUpdate={setOpenUpdate} myVoucher={myVoucher} setMyVoucher={setMyVoucher} resetMyVoucher={resetMyVoucher} loadVoucher={loadVoucher}/> */}
 
     <ModalDetail  openDetail={openDetail} setOpenDetail={setOpenDetail} myVoucher={myVoucher} setMyVoucher={setMyVoucher} resetMyVoucher={resetMyVoucher} loadVoucher={loadVoucher}/>
     

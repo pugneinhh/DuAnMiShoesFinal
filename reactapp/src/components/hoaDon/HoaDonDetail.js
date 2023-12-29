@@ -263,7 +263,7 @@ export default function HoaDonDetail() {
   const [loaiHD, setLoaiHD] = useState([])
   const [tenKH, setTenKH] = useState([])
   const [sdtKH, setsdtKH] = useState([])
-  const [diaChiKH, setdiaChiKH] = useState([])
+  const [diaChi, setdiaChiKH] = useState([])
   const [thanhTienHD, setThanhTienHD] = useState([])
   const [ghiChuHD, setGhiChuHD] = useState([])
   const { id } = useParams();
@@ -276,7 +276,7 @@ export default function HoaDonDetail() {
         setLoaiHD(response.data.loaiHD);
         setTenKH(response.data.tenKH);
         setsdtKH(response.data.sdt);
-        setdiaChiKH(response.data.diaChiKH)
+        setdiaChiKH(response.data.diaChi)
         setThanhTienHD(response.data.thanhTien)
         setGhiChuHD(response.data.ghiChuHD)
       })
@@ -316,7 +316,7 @@ export default function HoaDonDetail() {
             {trangThai == 0 ?
               <Flex horizontal>
                 <TimelineEvent
-                  color='#25f55c'
+                  color='#3d874d'
                   icon={icon[trangThai]}
                   index={trangThai }
                   values={trangThai}
@@ -346,7 +346,7 @@ export default function HoaDonDetail() {
               </Flex> : trangThai == 1 ?
                 <Flex horizontal>
                   <TimelineEvent
-                    color='#25f55c'
+                    color='#3d874d'
                     icon={icon[trangThai - 1]}
                     index={trangThai - 1}
                     values={trangThai - 1}
@@ -357,7 +357,7 @@ export default function HoaDonDetail() {
 
                   />
                   <TimelineEvent
-                    color='#25f55c'
+                    color='#3d874d'
                     icon={icon[trangThai]}
                     index={trangThai}
                     values={trangThai}
@@ -384,7 +384,7 @@ export default function HoaDonDetail() {
                 trangThai == 2 ?
                   <Flex horizontal>
                     <TimelineEvent
-                      color='#25f55c'
+                      color='#3d874d'
                       icon={icon[trangThai - 2]}
                       index={trangThai - 2}
                       values={trangThai - 2}
@@ -394,7 +394,7 @@ export default function HoaDonDetail() {
                       subtitle={moment(ngay[trangThai - 2]).format('hh:mm:ss DD/MM/YYYY')}
                     />
                     <TimelineEvent
-                      color='#25f55c'
+                      color='#3d874d'
                       icon={icon[trangThai - 1]}
                       index={trangThai - 1}
                       values={trangThai - 1}
@@ -404,7 +404,7 @@ export default function HoaDonDetail() {
                       subtitle={moment(ngay[trangThai - 1]).format('hh:mm:ss DD/MM/YYYY')}
                     />
                     <TimelineEvent
-                      color='#25f55c'
+                      color='#3d874d'
                       icon={icon[trangThai]}
                       index={trangThai}
                       values={trangThai}
@@ -426,7 +426,7 @@ export default function HoaDonDetail() {
                   trangThai == 3 ?
                     <Flex horizontal>
                       <TimelineEvent
-                        color='#25f55c'
+                        color='#3d874d'
                         icon={icon[trangThai - 3]}
                         index={trangThai - 3}
                         values={trangThai - 3}
@@ -436,7 +436,7 @@ export default function HoaDonDetail() {
                         subtitle={moment(ngay[trangThai - 3]).format('hh:mm:ss DD/MM/YYYY')}
                       />
                       <TimelineEvent
-                        color='#25f55c'
+                        color='#3d874d'
                         icon={icon[trangThai - 2]}
                         index={trangThai - 2}
                         values={trangThai - 2}
@@ -446,7 +446,7 @@ export default function HoaDonDetail() {
                         subtitle={moment(ngay[trangThai - 2]).format('hh:mm:ss DD/MM/YYYY')}
                       />
                       <TimelineEvent
-                        color='#25f55c'
+                        color='#3d874d'
                         icon={icon[trangThai - 1]}
                         index={trangThai - 1}
                         values={trangThai - 1}
@@ -456,7 +456,7 @@ export default function HoaDonDetail() {
                         subtitle={moment(ngay[trangThai - 1]).format('hh:mm:ss DD/MM/YYYY')}
                       />
                       <TimelineEvent
-                        color='#25f55c'
+                        color='#3d874d'
                         icon={icon[trangThai]}
                         index={trangThai}
                         values={trangThai}
@@ -475,7 +475,7 @@ export default function HoaDonDetail() {
                     trangThai == 4 ?
                       <Flex horizontal>
                         <TimelineEvent
-                          color='#25f55c'
+                          color='#3d874d'
                           icon={icon[trangThai - 4]}
                         
                           index={trangThai - 4}
@@ -487,7 +487,7 @@ export default function HoaDonDetail() {
                         />
 
                         <TimelineEvent
-                          color='#25f55c'
+                          color='#3d874d'
                           icon={icon[trangThai - 3]}
                           index={trangThai - 3}
                           values={trangThai - 3}
@@ -497,7 +497,7 @@ export default function HoaDonDetail() {
                           subtitle={moment(ngay[trangThai - 3]).format('hh:mm:ss DD/MM/YYYY')}
                         />
                         <TimelineEvent
-                          color='#25f55c'
+                          color='#3d874d'
                           icon={icon[trangThai - 2]}
                           index={trangThai - 2}
                           values={trangThai - 2}
@@ -507,7 +507,7 @@ export default function HoaDonDetail() {
                           subtitle={moment(ngay[trangThai - 2]).format('hh:mm:ss DD/MM/YYYY')}
                         />
                         <TimelineEvent
-                          color='#25f55c'
+                          color='#3d874d'
                           icon={icon[trangThai - 1]}
                           index={trangThai - 1}
                           values={trangThai - 1}
@@ -517,7 +517,7 @@ export default function HoaDonDetail() {
                           subtitle={moment(ngay[trangThai - 1]).format('hh:mm:ss DD/MM/YYYY')}
                         />
                         <TimelineEvent
-                          color='#25f55c'
+                          color='#3d874d'
                           icon={icon[trangThai]}
                           index={trangThai}
                           values={trangThai}
@@ -533,7 +533,7 @@ export default function HoaDonDetail() {
 
                       <Flex horizontal style={{ width: 50 }} >
                         <TimelineEvent
-                          color='#25f55c'
+                          color='#3d874d'
                           iconStyle={{ marginLeft: 10 }}
                           icon={icon[trangThai - 5]}
                           index={trangThai - 5}
@@ -546,7 +546,7 @@ export default function HoaDonDetail() {
                         
                         />
                         <TimelineEvent
-                          color='#25f55c'
+                          color='#3d874d'
                           icon={icon[trangThai - 4]}
                           index={trangThai - 4}
                           values={trangThai - 4}
@@ -556,7 +556,7 @@ export default function HoaDonDetail() {
                           subtitle={moment(ngay[trangThai - 4]).format('hh:mm:ss DD/MM/YYYY')}
                         />
                         <TimelineEvent
-                          color='#25f55c'
+                          color='#3d874d'
                           icon={icon[trangThai - 3]}
                           index={trangThai - 3}
                           values={trangThai - 3}
@@ -566,7 +566,7 @@ export default function HoaDonDetail() {
                           subtitle={moment(ngay[trangThai - 3]).format('hh:mm:ss DD/MM/YYYY')}
                         />
                         <TimelineEvent
-                          color='#25f55c'
+                          color='#3d874d'
                           icon={icon[trangThai - 2]}
                           index={trangThai - 2}
                           values={trangThai - 2}
@@ -576,7 +576,7 @@ export default function HoaDonDetail() {
                           subtitle={moment(ngay[trangThai - 2]).format('hh:mm:ss DD/MM/YYYY')}
                         />
                         <TimelineEvent
-                          color='#25f55c'
+                          color='#3d874d'
                           icon={icon[trangThai - 1]}
                           index={trangThai - 1}
                           values={trangThai - 1}
@@ -586,7 +586,7 @@ export default function HoaDonDetail() {
                           subtitle={moment(ngay[trangThai - 1]).format('hh:mm:ss DD/MM/YYYY')}
                         />
                         <TimelineEvent
-                          color='#25f55c'
+                          color='#3d874d'
                           icon={icon[trangThai]}
                           index={trangThai}
                           values={trangThai}
@@ -695,7 +695,7 @@ export default function HoaDonDetail() {
                       <p>{sdtKH}</p>
                     </div>
                     <div className='mt-4'>
-                      <p>{diaChiKH}</p>
+                      <p>{diaChi}</p>
                     </div>
                   </div>
                   <div className='col-md-3'>
@@ -772,7 +772,9 @@ export default function HoaDonDetail() {
                       {
                         listSanPhams.map((listSanPham, index) => (
                           <tr className='pt-3 row'>
-                            <div className='col-md-4'>   <img src={require(`../../assets/images/${listSanPham.tenHA}`)} style={{ width: 100, height: 100, marginLeft: 40 }} /> </div>
+                            <div className='col-md-4'>
+                               {/* <img src={listSanPham.tenHA} style={{ width: 100, height: 100, marginLeft: 40 }} />  */}
+                               </div>
                             <div className='col-md-6 '>
                               <div className='mt-4'><h6>{listSanPham.tenHang}  {listSanPham.tenSP}  {listSanPham.tenMauSac}</h6></div>
                               <div className='text-danger'><h6>   
@@ -942,7 +944,7 @@ export default function HoaDonDetail() {
             {(loaiHD == 0) ? (<Tag color="orange">Online</Tag>) : (<Tag color="red">Tại quầy</Tag>)}
           </div>
           <div className='mt-4'>
-            <p>{diaChiKH}</p>
+            <p>{diaChi}</p>
           </div>
         </div>
         <div className='col-md-3'>

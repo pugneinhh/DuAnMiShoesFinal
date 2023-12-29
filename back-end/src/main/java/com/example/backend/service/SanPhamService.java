@@ -1,7 +1,8 @@
 package com.example.backend.service;
+import com.example.backend.dto.response.SanPhamRespone;
 import com.example.backend.entity.SanPham;
 import com.example.backend.model.AdminSanPhamRespon;
-import com.example.backend.respon.SanPhamRespon;
+import com.example.backend.repository.SanPhamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,27 +12,27 @@ import java.util.UUID;
 @Service
 public class SanPhamService {
     @Autowired
-    SanPhamRespon sanPhamRespon;
+    SanPhamRepository sanPhamRepository;
     public List<SanPham> getALL(){
-        return sanPhamRespon.findAll();
+        return sanPhamRepository.findAll();
     }
-    public List<AdminSanPhamRespon> getALLSP(){
-        System.out.println(sanPhamRespon.getALLSP().get(0).getTrangThai());
-        return sanPhamRespon.getALLSP();
+    public List<SanPhamRespone> getALLSP(){
+        System.out.println(sanPhamRepository.getALLSP().get(0).getTrangThai());
+        return sanPhamRepository.getALLSP();
     }
 
 
     public boolean existByID(String id){
-        return sanPhamRespon.existsById(id);
+        return sanPhamRepository.existsById(id);
     }
 
     public void deleteByID(String id){
-         sanPhamRespon.deleteById(id);
+         sanPhamRepository.deleteById(id);
     }
 
-    public SanPham addSP(SanPham sp){return sanPhamRespon.save(sp);}
+    public SanPham addSP(SanPham sp){return sanPhamRepository.save(sp);}
 
     public UUID getSPByCTSP(UUID id){
-        return sanPhamRespon.getIDSPbyCTSP(id);
+        return sanPhamRepository.getIDSPbyCTSP(id);
     }
 }

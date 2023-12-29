@@ -15,6 +15,7 @@
     "antd": "^5.11.0",
     "axios": "^1.6.1",
     "bootstrap": "^5.3.2",
+    "cloudinary": "^1.41.1",
     "cloudinary-react": "^1.8.1",
     "date-fns": "^2.30.0",
     "https-browserify": "^1.0.0",
@@ -22,6 +23,7 @@
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.7.1",
     "moment": "^2.29.4",
+    "moment-timezone": "^0.5.43",
     "react": "^18.2.0",
     "react-bootstrap": "^2.9.1",
     "react-dom": "^18.2.0",
@@ -38,6 +40,7 @@
     "sass": "^1.69.5",
     "stream-http": "^3.2.0",
     "sweetalert2": "^11.10.0",
+    "tinycolor2": "^1.6.0",
     "until": "^0.1.1",
     "web-vitals": "^2.1.4"
   },
