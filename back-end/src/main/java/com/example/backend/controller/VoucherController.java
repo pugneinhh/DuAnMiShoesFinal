@@ -72,4 +72,16 @@ public class VoucherController {
     public ResponseEntity<?> search(@RequestBody VoucherSearch voucherSearch){
         return ResponseEntity.ok(vs.getSearch(voucherSearch));
     }
+    @PutMapping("/updateTTHD/{id}")
+    public ResponseEntity<?> updateTTHD(@PathVariable("id")String id,@RequestBody VoucherRequest request){
+        return ResponseEntity.ok(vs.updateTTHD(id,request));
+    }
+    @PutMapping("/updateTTNgung/{id}")
+    public ResponseEntity<?> updateTTNgung(@PathVariable("id")String id,@RequestBody VoucherRequest request){
+        return ResponseEntity.ok(vs.updateTTNgung(id,request));
+    }
+    @PutMapping("/updateTTSap/{id}")
+    public ResponseEntity<?> updateTTSap(@PathVariable("id")String id,@RequestBody VoucherRequest request){
+        return ResponseEntity.ok(vs.updateTTSap(id,request));
+    }
 }
