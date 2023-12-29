@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface DeGiayRepository extends JpaRepository<DeGiay, String> {
     @Query(value = """
-    SELECT o.ma as ma ,o.ten as ten, o.trang_thai as trangThai FROM de_giay o ORDER BY o.ma ASC
+    SELECT o.id as id,o.ma as ma ,o.ten as ten, o.trang_thai as trangThai FROM de_giay o ORDER BY o.ma ASC
             """, nativeQuery = true)
     List<DeGiayRespone> getALLDC();
 }
