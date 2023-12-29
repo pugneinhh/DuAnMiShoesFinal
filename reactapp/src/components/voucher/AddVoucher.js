@@ -104,8 +104,8 @@ const AddVoucher = () => {
       // }}
     >
       <div className="row">
-        <Divider orientation="left" color="none">
-          <h4 className="text-first pt-1 fw-bold">
+        <Divider orientation="center" color="none">
+          <h4 className="text-first pt-5 fw-bold">
             <FaTag size={20} /> 
             Thêm phiếu giảm giá
           </h4>

@@ -1,54 +1,51 @@
-import 'react-pro-sidebar/dist/css/styles.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import {FaGithub,FaTshirt, FaTag} from 'react-icons/fa';
-import { GoNumber } from 'react-icons/go';
-import { AiOutlineColumnHeight } from 'react-icons/ai';
-import {  GiMaterialsScience } from 'react-icons/gi';
-import { IoColorPalette } from 'react-icons/io5';
-import { BiSolidCategory, BiSolidUserBadge, BiSolidUserDetail } from 'react-icons/bi';
-import { BsBoxSeamFill } from 'react-icons/bs';
-import { RxDashboard } from 'react-icons/rx';
-import { FaCartShopping, FaMoneyBills } from 'react-icons/fa6';
-import { PiTrademarkFill } from 'react-icons/pi';
-import { LuBadgePercent } from 'react-icons/lu';
-import {Link} from "react-router-dom";
-import Badge from 'react-bootstrap/Badge';
-import {Image } from 'antd';
-import { RiAccountCircleFill } from 'react-icons/ri';
-import logoShop from '../../assets/images/logo.png';
-import './sidebar.scss'
+import "react-pro-sidebar/dist/css/styles.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { FaGithub, FaTshirt, FaTag } from "react-icons/fa";
+import { GoNumber } from "react-icons/go";
+import { AiOutlineColumnHeight } from "react-icons/ai";
+import { GiMaterialsScience } from "react-icons/gi";
+import { IoColorPalette } from "react-icons/io5";
+import {
+  BiSolidCategory,
+  BiSolidUserBadge,
+  BiSolidUserDetail,
+} from "react-icons/bi";
+import { BsBoxSeamFill } from "react-icons/bs";
+import { RxDashboard } from "react-icons/rx";
+import { FaCartShopping, FaMoneyBills } from "react-icons/fa6";
+import { PiTrademarkFill } from "react-icons/pi";
+import { LuBadgePercent } from "react-icons/lu";
+import { Link } from "react-router-dom";
+import Badge from "react-bootstrap/Badge";
+import { Image } from "antd";
+import { RiAccountCircleFill } from "react-icons/ri";
+import logoShop from "../../assets/images/logo.png";
+import "./sidebar.scss";
 import { BiSolidDiscount } from "react-icons/bi";
 import {
-    ProSidebar,
-    Menu,
-    MenuItem,
-    SubMenu,
-    SidebarHeader,
-    SidebarFooter,
-    
-} from 'react-pro-sidebar';
-import { useEffect, useState } from 'react';
+  ProSidebar,
+  Menu,
+  MenuItem,
+  SubMenu,
+  SidebarHeader,
+  SidebarFooter,
+} from "react-pro-sidebar";
+import { useEffect, useState } from "react";
 
+const SideBar = (props) => {
+  const { collapsed, toggled, handleToggleSidebar } = props;
 
-
-
-
-
-const SideBar=(props)=>{
-
-    const {collapsed,toggled,handleToggleSidebar}=props;
-    
-    return(
-        <>
-        <ProSidebar  className={`nav-sidebar`}
+  return (
+    <>
+      <ProSidebar
+        className={`nav-sidebar`}
         //image={sidebarBg}
         collapsed={collapsed}
         toggled={toggled}
         breakPoint="md"
         onToggle={handleToggleSidebar}
-        image='https://i.pinimg.com/564x/40/81/08/4081083e8895a9a620ada4b0fac3d436.jpg?fbclid=IwAR0HZwn_m42pqnvest56DrS32EKJXbpfIQvedmzUNReYtTiipdjSBjz6r-o'
-    
-        >
+        image="https://i.pinimg.com/564x/40/81/08/4081083e8895a9a620ada4b0fac3d436.jpg?fbclid=IwAR0HZwn_m42pqnvest56DrS32EKJXbpfIQvedmzUNReYtTiipdjSBjz6r-o"
+      >
             <SidebarHeader>
                     <div
                         style={{
@@ -133,11 +130,11 @@ const SideBar=(props)=>{
                         >
                             <MenuItem icon={<BiSolidUserBadge color='#f7faf9' size={20}/>}>
                                 Nhân Viên
-                                
+                                <Link to='/nhan-vien'></Link>
                             </MenuItem>
                             <MenuItem icon={<BiSolidUserDetail color='#f7faf9' size={25} />}>
                                 Khách Hàng
-                                
+                                 <Link to='/khach-hang'></Link>
                             </MenuItem>
                            
                         </SubMenu>
@@ -174,38 +171,47 @@ const SideBar=(props)=>{
                     
                     </SubMenu>
                     </Menu>
-                <SidebarFooter style={{ textAlign: 'center' }}>
-                    <div
-                        className="sidebar-btn-wrapper"
-                        style={{
-                            padding: '20px 24px',
-                        }}
-                    >
-                        {collapsed ? <a
-                            href="#"
-                            target="_blank"
-                            className="sidebar-btn"
-                            rel="noopener noreferrer"
-                        >
-                            <FaGithub color='#f7faf9'size={20}/>
-                        </a> : <a
-                            href="#"
-                            target="_blank"
-                            className="sidebar-btn link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
-                            rel="noopener noreferrer"
-
-                        >
-                            <FaGithub color='#f7faf9'size={20} className='text-center'/>
-                            &ensp;
-                            <span style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden',color:'white', }} >
-                                  Mi Shoes
-                            </span>
-                        </a>}
-                    </div>
-                </SidebarFooter>
-        </ProSidebar>
-        
-        </>
-    )
-}
+        <SidebarFooter style={{ textAlign: "center" }}>
+          <div
+            className="sidebar-btn-wrapper"
+            style={{
+              padding: "20px 24px",
+            }}
+          >
+            {collapsed ? (
+              <a
+                href="#"
+                target="_blank"
+                className="sidebar-btn"
+                rel="noopener noreferrer"
+              >
+                <FaGithub color="#f7faf9" size={20} />
+              </a>
+            ) : (
+              <a
+                href="#"
+                target="_blank"
+                className="sidebar-btn link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+                rel="noopener noreferrer"
+              >
+                <FaGithub color="#f7faf9" size={20} className="text-center" />
+                &ensp;
+                <span
+                  style={{
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
+                    overflow: "hidden",
+                    color: "white",
+                  }}
+                >
+                  Mi Shoes
+                </span>
+              </a>
+            )}
+          </div>
+        </SidebarFooter>
+      </ProSidebar>
+    </>
+  );
+};
 export default SideBar;
