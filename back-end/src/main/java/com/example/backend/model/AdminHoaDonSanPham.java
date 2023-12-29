@@ -9,8 +9,8 @@ public interface AdminHoaDonSanPham {
     @Value("#{target.giaBanSP}")
     String getGiaBanSP();
 
-//    @Value("#{target.tenHA}")
-//    String getTenHA();
+    @Value("#{target.urlHA}")
+    String getUrlHA();
 
     @Value("#{target.TenSP}")
     String getTenSP();

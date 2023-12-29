@@ -9,12 +9,12 @@ const App=() => {
       <div className='col-auto'>
         <Admin />
       </div>
-      <div className='col bg-danger'>
+      <div>
         {/* <Outlet></Outlet> */}
         
       </div>
       <FloatButton.BackTop />
-      
+    
     </div>
         
   );
