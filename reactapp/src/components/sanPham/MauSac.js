@@ -135,9 +135,14 @@ export default function MauSac() {
       title: "Màu",
       dataIndex: "ma",
       key: "Ma",
-      render: (Ma, ten) => {
+      render: (text, record) => {
         return <>
-          <Tag bordered="true" color={Ma}>{Ma}</Tag>
+          <div style={{
+            backgroundColor: `${record.ma}`,
+            borderRadius: 6,
+            width: 60, 
+            height: 25,
+          }}></div >
         </>;
       }
     },

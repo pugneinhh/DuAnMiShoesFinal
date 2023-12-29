@@ -18,12 +18,12 @@ public class CTSPController {
     private CTSPService ctspService;
     @GetMapping("/showct/{idSP}")
     public ResponseEntity<?> getALLCTSP(@PathVariable("idSP") String id){
-        return new ResponseEntity<>(ctspService.getALLCTSP(UUID.fromString(id)), HttpStatus.OK);
+        return new ResponseEntity<>(ctspService.getALLCTSP(id), HttpStatus.OK);
     }
 
     @GetMapping("/showct")
     public ResponseEntity<?> getALLCTSP_1(@RequestParam String id){
-        return new ResponseEntity<>(ctspService.getALLCTSP(UUID.fromString(id)), HttpStatus.OK);
+        return new ResponseEntity<>(ctspService.getALLCTSP(id), HttpStatus.OK);
     }
 
     @PutMapping("/updateKM/{idCTSP}")

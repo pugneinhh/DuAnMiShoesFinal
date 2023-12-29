@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ReactDOM from 'react-dom/client';
@@ -21,7 +22,9 @@ import SanPham from './components/sanPham/SanPham';
 import ChiTietSanPham from './components/sanPham/CTSP';
 import ThongKe from './components/thongKe/ThongKe';
 import AddSanPham from './components/sanPham/AddSanPham';
-
+import KhachHang from "./components/khachHang/KhachHang";
+import NhanVien from "./components/nhanVien/NhanVien";
+import AddNhanVien from "./components/nhanVien/AddNhanVien";
 
 import BanHang from './components/banHang/BanHang';
 import AddVoucher from './components/voucher/AddVoucher';
@@ -54,7 +57,9 @@ root.render(
           <Route path='hang' element = {<Hang/>}></Route>
           <Route path='san-pham' element = {<SanPham/>}></Route>
           <Route path='showct/:uuid' element = {<ChiTietSanPham/>}></Route>
-
+            <Route path="nhan-vien" element={<NhanVien />}></Route>
+        <Route path="themNhanVien" element={<AddNhanVien />}></Route>
+        <Route path="khach-hang" element={<KhachHang />}></Route>
           <Route path='them-san-pham' element = {<AddSanPham/>}></Route>
 
           <Route path='/admin/ban-hang' element={<BanHang/>}></Route>

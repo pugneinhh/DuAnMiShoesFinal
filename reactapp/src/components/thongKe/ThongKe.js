@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { Pie } from '@ant-design/plots';
+import { Divider } from 'antd';
+import { RxDashboard } from 'react-icons/rx';
 
 const ThongKe = () => {
     const data = [
@@ -51,8 +53,9 @@ const ThongKe = () => {
         ],
     };
     return (
+        
         <div className='container-fluid'>
-
+            <Divider orientation="center" color="#d0aa73"><h4 className="text-first pt-1 fw-bold"> <RxDashboard size={35} /> Quản lý thống kê</h4></Divider>
             {/* bảng thống kê */}
             <div class="row">
                 <div class="col-xl-3 col-md-6 mb-4">
