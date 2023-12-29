@@ -10,4 +10,5 @@ import java.util.List;
 public interface NguoiDungVoucherRepository extends JpaRepository<NguoiDungVoucher,String> {
     List<NguoiDungVoucher> getAllByVoucherLike(String voucher);
     List<NguoiDungVoucher> getAllByNguoiDungLike(String nguoiDung);
+    NguoiDungVoucher getNguoiDungVoucherByNguoiDung_IdAndVoucher_Id(String idKH,String idV);
 }
