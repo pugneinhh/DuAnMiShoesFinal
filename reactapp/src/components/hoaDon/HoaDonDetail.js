@@ -5,16 +5,18 @@ import { RiTruckFill } from "react-icons/ri";
 import { SlNotebook } from "react-icons/sl";
 import { GiNotebook, GiPiggyBank } from "react-icons/gi";
 import { FaTruckFast } from "react-icons/fa6";
-import { Button, Modal, Table, Tag, Input, Flex, Form, Image } from 'antd';
+import { Button, Modal, Table, Tag, Input, Flex, Form } from 'antd';
 import axios from "axios";
 import { useParams } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './HoaDonDetail.scss'
 import moment from 'moment';
+import { Image } from 'cloudinary-react';
 import {useReactToPrint} from 'react-to-print';
 import logo from '../../assets/images/logo.png';
 import { FormattedNumber, IntlProvider } from 'react-intl';
+import { ImageTag } from 'cloudinary-core';
 export default function HoaDonDetail() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [open, setOpen] = useState(false);
@@ -773,6 +775,14 @@ export default function HoaDonDetail() {
                         listSanPhams.map((listSanPham, index) => (
                           <tr className='pt-3 row'>
                             <div className='col-md-4'>
+                              <Image
+                                cloudName="dtetgawxc"
+                                publicId={listSanPham.urlHA}
+                                width="100"
+                                crop="scale"
+                                href={listSanPham.urlHA}
+                                style={{ width: 100, height: 100, marginLeft: 40 }}
+                              />
                                {/* <img src={listSanPham.tenHA} style={{ width: 100, height: 100, marginLeft: 40 }} />  */}
                                </div>
                             <div className='col-md-6 '>
@@ -971,6 +981,9 @@ export default function HoaDonDetail() {
         </div>
 
       </div>
+      <h5 style={{ marginTop: '20px', paddingTop: '20px' }}>Thông tin sản phẩm</h5>
+      <hr></hr>
+    
        {/* detail hóa đơn */}
       <div className='container-fuild mt-3 row bg-light radius'>
         <div>
@@ -979,11 +992,19 @@ export default function HoaDonDetail() {
               <tr className='pt-3 row'>
                 
                 <div className='col-md-3'>  
-                  <Image src={require(`../../assets/images/${listSanPham.tenHA}`)} style={{ width: 150, height: 150, marginLeft: 15 }} /> 
+                  <Image
+                    cloudName="dtetgawxc"
+                    publicId={listSanPham.urlHA}
+                    width="100"
+                    crop="scale"
+                    href={listSanPham.urlHA}
+                    style={{ width: 150, height: 150, marginLeft: 15 }}
+                  />
+                
                  
                  </div>
                 <div className='col-md-5 '> 
-                  <div className='mt-4'><h6>{listSanPham.tenHang}  {listSanPham.tenSP}  {listSanPham.tenMauSac}</h6></div> 
+                  <div className='mt-3'><h6>{listSanPham.tenHang}  {listSanPham.tenSP}  </h6></div> 
                   <div className='text-danger'>
                     <h6>
                       <IntlProvider locale='vi-VN'>
@@ -996,10 +1017,16 @@ export default function HoaDonDetail() {
                           />
                         </div>
                       </IntlProvider></h6></div> 
-                <div>Size:{listSanPham.tenKichThuoc}</div>
-                  <div>x{listSanPham.soLuongSP}</div>
+                <h6>Size:{listSanPham.tenKichThuoc}</h6>
+                  <div style={{
+                    backgroundColor: `${listSanPham.tenMauSac}`,
+                    borderRadius: 6,
+                    width: 60,
+                    height: 25,
+                  }}></div >
+                  <h6>x{listSanPham.soLuongSP}</h6>
                 </div>
-                
+            
                 <div className='col-md-2 text-danger mt-5'><h6>     
                   <IntlProvider locale='vi-VN'>
                   <div>
@@ -1012,13 +1039,17 @@ export default function HoaDonDetail() {
                   </div>
                 </IntlProvider>
                </h6></div>
-                <div className='col-md-2 text-danger mt-5'><Tag color="red">Trả hàng</Tag></div>
+                <div className='col-md-2  mt-5'>
+                <Button className=' btn btn-danger'>Trả hàng</Button>
+                </div>
+              
+                <hr className='mt-3'></hr>
               </tr>
              
             ))
           }
         </div>
-        <hr></hr>
+      
         <tr className='pt-3 row'>
           <div className='col-md-6'></div>
           <div className='col-md-3'></div>

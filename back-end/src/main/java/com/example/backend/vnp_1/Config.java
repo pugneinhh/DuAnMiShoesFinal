@@ -1,23 +1,33 @@
-package com.example.backend.vnp;
+package com.example.backend.vnp_1;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 
 public class Config {
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = "http://localhost:3000/admin/ban-hang";
-    public static String vnp_TmnCode = "U1C2D16J";
-    public static String secretKey = "ROSAQFVNPNITEGLYDSJZSKVOKKVISFAQ";
+    public static String vnp_ReturnUrl = "http://localhost:8080/vnpay_jsp/vnpay_return.jsp";
+    public static String vnp_TmnCode = "DNTGR12O";
+    public static String secretKey = "YCMRFPVEBRTGBKDMORYFROJJSJURGOIC";
+
+    public static String vnp_Version = "2.1.0";
+    public static String vnp_Command = "pay";
+    public static String orderType = "other";
+    public static String vnp_Locale = "vn";
+    public static String vnp_IpAddr ="127.0.0.1";
     public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
-    public  static String vnp_Version = "2.1.0";
-    public  static String vnp_Command = "pay";
+
     public static String md5(String message) {
         String digest = null;
         try {
@@ -77,6 +87,7 @@ public class Config {
 
     public static String hmacSHA512(final String key, final String data) {
         try {
+
             if (key == null || data == null) {
                 throw new NullPointerException();
             }
@@ -96,6 +107,7 @@ public class Config {
             return "";
         }
     }
+
     public static String getIpAddress(HttpServletRequest request) {
         String ipAdress;
         try {

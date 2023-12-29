@@ -25,6 +25,18 @@ public interface CTSPRepository extends JpaRepository<ChiTietSanPham,String> {
             WHERE o.san_pham_id=:idSP
                      """, nativeQuery = true)
     List<ChiTietSanPhamRespone> getALLCTSP(@Param("idSP") String idSP);
+    @Query(value = """
+                     SELECT distinct o.id AS idCTSP,MIN(ha.url) AS linkAnh ,sp.ten AS tenSP ,kt.ten AS tenKT,ms.ten AS tenMS,ms.ma AS maMS,
+                      o.so_luong AS soLuong,o.gia_ban AS giaBan,o.trang_thai AS trangThai
+                      FROM duanmishoes.chi_tiet_san_pham o
+                      JOIN duanmishoes.san_pham sp  on o.san_pham_id=sp.id
+                      JOIN duanmishoes.kich_thuoc kt  on o.kich_thuoc_id=kt.id
+                      JOIN duanmishoes.mau_sac ms  on o.mau_sac_id=ms.id
+                      JOIN duanmishoes.hinh_anh ha on o.id=ha.chi_tiet_san_pham_id   \s
+                      where o.trang_thai =1
+                      group by o.id
+                     """, nativeQuery = true)
+    List<ChiTietSanPhamRespone> getALLCTSPBanHang();
 
 
 
