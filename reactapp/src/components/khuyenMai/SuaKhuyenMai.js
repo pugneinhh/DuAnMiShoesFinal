@@ -2,9 +2,6 @@ import React, { useState, useEffect, Text, View, Component } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import axios from "axios";
 import {
-  Space,
-  Table,
-  Tag,
   Form,
   Input,
   Select,
@@ -12,9 +9,6 @@ import {
   Button,
   DatePicker,
   Divider,
-  Pagination,
-  Switch,
-  Checkbox,
   Modal,
 } from "antd";
 import "./KhuyenMai.scss";
@@ -24,6 +18,8 @@ import moment from "moment";
 import TableSanPham from "./tableSanPham";
 import TableChiTietSanPham from "./tableChiTietSanPham";
 import { Navigate, useNavigate } from "react-router-dom";
+import dayjs from 'dayjs';
+
 
 const SuaKhuyenMai = () => {
   const [formSuaKhuyenMai] = Form.useForm();
@@ -66,11 +62,11 @@ const SuaKhuyenMai = () => {
           ten: response.data.ten,
           gia_tri_khuyen_mai: response.data.gia_tri_khuyen_mai,
           trang_thai: response.data.trang_thai,
-          ngay_bat_dau: moment(
+          ngay_bat_dau: dayjs(
             response.data.ngay_bat_dau,
             "YYYY-MM-DD HH:mm:ss"
           ).locale("vi"),
-          ngay_ket_thuc: moment(
+          ngay_ket_thuc: dayjs(
             response.data.ngay_ket_thuc,
             "YYYY-MM-DD HH:mm:ss"
           ).locale("vi"),
@@ -119,7 +115,7 @@ const SuaKhuyenMai = () => {
 
   useEffect(() => {
     loadDetailKhuyenMai();
-  }, [formSuaKhuyenMai]);
+  }, []);
 
   //  const loadTableSanPham() = async() => {
   //   await axios.get(`http://localhost:8080/ctsp/showKM/${id}`).then((response) => {
