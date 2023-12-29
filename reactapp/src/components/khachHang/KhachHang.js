@@ -16,12 +16,13 @@ import { FilterFilled, UnorderedListOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { IoInformation } from "react-icons/io5";
 import { BsPencilSquare } from "react-icons/bs";
+import { BsMap } from "react-icons/bs";
 import { FaTag } from "react-icons/fa";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { ToastContainer, toast } from "react-toastify";
 
-export default function NhanVien() {
-  const [nhanVien, setNhanVien] = useState([]);
+export default function KhachHang() {
+  const [khachHang, setKhachHang] = useState([]);
 
   const [componentSize, setComponentSize] = useState("default");
   const onFormLayoutChange = ({ size }) => {
@@ -31,17 +32,17 @@ export default function NhanVien() {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    loadNhanVien();
+    loadKhachHang();
   }, []);
 
-  const loadNhanVien = async () => {
-    const result = await axios.get("http://localhost:8080/nhan-vien", {
+  const loadKhachHang = async () => {
+    const result = await axios.get("http://localhost:8080/khach-hang", {
       validateStatus: () => {
         return true;
       },
     });
     if (result.status === 302) {
-      setNhanVien(result.data);
+      setKhachHang(result.data);
     }
     console.log(result.data);
   };
@@ -58,12 +59,12 @@ export default function NhanVien() {
       showSortTooltip: false,
     },
     {
-      title: "Mã Nhân Viên",
+      title: "Mã Khách Hàng",
       dataIndex: "maND",
       sorter: (a, b) => a.ma - b.ma,
     },
     {
-      title: "Tên Nhân Viên",
+      title: "Tên Khách Hàng",
       dataIndex: "tenND",
       sorter: (a, b) => a.ten - b.ten,
     },
@@ -140,6 +141,15 @@ export default function NhanVien() {
               onClick={() => {}}
             />
           </a>
+          <a>
+            <Button
+              type="primary"
+              className="btn btn-warning text-center"
+              shape="circle"
+              icon={<BsMap size={15} />}
+              onClick={() => {}}
+            />
+          </a>
         </Space>
       ),
       center: "true",
@@ -192,7 +202,7 @@ export default function NhanVien() {
           <h4 className="text-first pt-1 fw-bold">
             {" "}
             <FaTag size={20} />
-            Quản lý nhân viên
+            Quản lý khách hàng
           </h4>
         </Divider>
         {/* form tìm kiếm */}
@@ -257,7 +267,7 @@ export default function NhanVien() {
         {/* view add nhân viên */}
         <div className=" text-end mt-3">
           <Link
-            to="/themNhanVien"
+            to="#"
             className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill"
           >
             {" "}
@@ -277,10 +287,10 @@ export default function NhanVien() {
               total: 100,
             }}
             columns={tableColumns}
-            dataSource={hasData ? nhanVien : []}
+            dataSource={hasData ? khachHang : []}
             scroll={scroll}
           />
-        </div>{" "}
+        </div>
         <ToastContainer
           position="top-right"
           autoClose={5000}
