@@ -9,10 +9,12 @@ const App=() => {
       <div className='col-auto'>
         <Admin />
       </div>
-      <div>
+      <div className='col bg-danger'>
         {/* <Outlet></Outlet> */}
+        
       </div>
       <FloatButton.BackTop />
+      
     </div>
         
   );
