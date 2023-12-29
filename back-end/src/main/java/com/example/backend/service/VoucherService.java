@@ -11,6 +11,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Service
@@ -53,7 +56,14 @@ public class VoucherService {
         return vr.searchVoucher(voucherSearch);
     }
 
-
+    public LocalDateTime convertTime(LocalDateTime ldt0){
+        ZoneId utc = ZoneId.of("UTC");
+        ZoneId plus7Zone = ZoneId.of("Asia/Bangkok");
+        ZonedDateTime utcZonedDateTime = ZonedDateTime.of(ldt0, utc);
+        ZonedDateTime plus7ZonedDateTime = utcZonedDateTime.withZoneSameInstant(plus7Zone);
+        LocalDateTime plus7DateTime = plus7ZonedDateTime.toLocalDateTime();
+        return plus7DateTime;
+    }
 //    @Scheduled(cron = "0 * * * * *",zone = "Asia/Saigon")
 //    public void checkHan(){
 //        Timestamp now = new Timestamp(System.currentTimeMillis());
