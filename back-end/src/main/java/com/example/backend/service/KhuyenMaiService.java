@@ -1,4 +1,8 @@
 package com.example.backend.service;
+import com.example.backend.dto.request.KhuyenMaiSearch;
+import com.example.backend.dto.request.VoucherSearch;
+import com.example.backend.dto.response.AdminKhuyenMai;
+import com.example.backend.dto.response.AdminVoucher;
 import com.example.backend.repository.KhuyenMaiRepository;
 import com.example.backend.entity.KhuyenMai;
 import com.example.backend.repository.KhuyenMaiRepository;
@@ -42,4 +46,9 @@ public class KhuyenMaiService {
         LocalDateTime apart7DateTime = apart7ZonedDateTime.toLocalDateTime();
         return apart7DateTime;
     }
+
+    public List<AdminKhuyenMai> getSearch(KhuyenMaiSearch khuyenMaiSearch) {
+        return khuyenMaiRespone.searchKhuyenMai(khuyenMaiSearch);
+    }
+
 }

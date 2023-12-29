@@ -6,9 +6,7 @@ import {
   Tag,
   Form,
   Input,
-  Select,
   InputNumber,
-  Button,
   DatePicker,
   Divider,
   Modal,
@@ -17,50 +15,25 @@ import "./KhuyenMai.scss";
 import {
   EyeOutlined,
   PlusCircleOutlined,
-  StopOutlined,
   UnorderedListOutlined,
   FilterFilled,
-  SearchOutlined,
   PlayCircleOutlined,
   PauseCircleOutlined,
-  InfoCircleOutlined,
+  ReloadOutlined
 } from "@ant-design/icons";
 import { LuBadgePercent } from "react-icons/lu";
 import moment from "moment";
 import { Link } from "react-router-dom";
-import ThemKhuyenMai from "./ThemKhuyenMai";
-import SuaKhuyenMai from "./SuaKhuyenMai";
-import { IoInformation } from "react-icons/io5";
 import { ToastContainer, toast } from "react-toastify";
+import { dayjs } from "dayjs";
 
 const KhuyenMai = () => {
   const currentTime = moment(); // thời gian hiện tại
-  const [dataGoc, setDataGoc] = useState([]);
-  const [dataSearchResult, setDataSearchResult] = useState([]);
-  const [dataSearch, setDataSearch] = useState({});
-  const onChangeFilter=(changedValues, allValues)=>{
+  const [current, setCurrent] = React.useState(1);
 
-    console.log("hi",changedValues);
-    // console.log("gtri",value);
-    setDataSearch(allValues);
-    // setDataSearch(e);
-    console.log(dataSearch);
-    timKiemKhuyenMai(dataSearch);
+  const pageSizeRef = React.useRef(10);
 
-
-    // if (allValues === null) loadKhuyenMai();
-  }
-  //call api tìm kiếm
-  const timKiemKhuyenMai=(dataSearch)=>{
-    axios.post('http://localhost:8080/khuyen-mai/search-khuyen-mai',dataSearch)
-    .then(response => {
-        // Update the list of items
-        setDataGoc(response.data);
-        console.log("tìm kím:",response.data);
-    })
-    .catch(error => console.error('Error adding item:', error));
-  }
-
+ 
   const onChange = (value) => {
     console.log("changed", value);
   };
@@ -76,14 +49,15 @@ const KhuyenMai = () => {
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
   };
-  const [promotions, setPromotions] = useState([]);
 
   const [khuyenMai, setKhuyenMais] = useState([]);
+
+
 
   const checkAndUpdateStatus = () => {
     const currentDate = new Date();
     // Lặp qua dữ liệu và kiểm tra điều kiện
-    const updatedData = dataGoc.map(item => {
+    const updatedData = khuyenMai.map(item => {
       if ((new Date(item.ngay_bat_dau) < currentDate) && (new Date(item.ngay_ket_thuc) > currentDate) && (item.trang_thai !== 2)){
         item.trang_thai = 1
         return { ...item, status: 'Hoạt động' };
@@ -95,64 +69,65 @@ const KhuyenMai = () => {
       return item;
     });
 
-    // Cập nhật state "data" với dữ liệu mới
-    setDataGoc(updatedData);
+    setKhuyenMais(updatedData);
+  };
+  const loadKhuyenMai = async () => {
+    const result = await axios.get("http://localhost:8080/khuyen-mai").then(
+      response => {setKhuyenMais(response.data);
+      console.log(response.data);})
+      .catch(error => 
+        console.error('Error adding item:',error));
   };
 
-  useEffect(() => {
-
-      timKiemKhuyenMai(dataSearch);
-      // checkAndUpdateStatus();
-  }, [dataSearch]);
-
+// tự update
   useEffect(() => {
       loadKhuyenMai();
-      if (dataGoc.length === khuyenMai.length) {
-      setDataGoc(khuyenMai)
-      }
-      // setDataGoc(khuyenMai);
-  },[khuyenMai]);
-
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const response = await axios.get("http://localhost:8080/khuyen-mai");
-  //     setKhuyenMais(response.data);
-  //   };
-  //   fetchData();
-  //   console.log("Khuyến mại:",khuyenMai);
-  // }, [khuyenMai]);
-
-    // Hàm kiểm tra và cập nhật trạng thái
-    
-
+  },[]);
 
   useEffect(() => {
-
-    const checkAndUpdateStatus = () => {
-      const currentDate = new Date();
-
-      // Lặp qua dữ liệu và kiểm tra điều kiện
-      const updatedData = khuyenMai.map(item => {
-        if ((new Date(item.ngay_bat_dau) < currentDate) && (new Date(item.ngay_ket_thuc) > currentDate) && (item.trang_thai !== 2)){
-          item.trang_thai = 1
-          return { ...item, status: 'Hoạt động' };
-        }
-        else if (new Date(item.ngay_ket_thuc) < currentDate) {
-          item.trang_thai = 2
-          return { ...item, status: 'Hết hạn' };
-        } 
-        return item;
+    const handleUpdateStatus = (status) => {
+      const currentTime = new Date();
+      khuyenMai.forEach( x => {
+       (currentTime > new Date(x.ngay_bat_dau) && currentTime < new Date(x.ngay_ket_thuc)) ?
+        axios.put(`http://localhost:8080/khuyen-mai/updateTrangThai1/${x.id}`, x)
+       : ( currentTime > new Date(x.ngay_ket_thuc))
+        ?
+        axios.put(`http://localhost:8080/khuyen-mai/updateTrangThai/${x.id}`, x)
+        : console.log('Không có dữ liệu update');      
       });
+      if (!dataSearch.ma
+          && !dataSearch.ten  && !dataSearch.ngay_bat_dau && !dataSearch.ngay_ket_thuc && !dataSearch.loai && !dataSearch.gia_tri_khuyen_mai){
+      loadKhuyenMai();
+          }
+  }
+    const time = setInterval(handleUpdateStatus , 10000)
+    return () => {
+      clearInterval(time);
+    }
+  
+  },[khuyenMai]);
 
-      // Cập nhật state "data" với dữ liệu mới
-      setKhuyenMais(updatedData);
-    };
-    // Gọi hàm kiểm tra và cập nhật khi component được mount
-    checkAndUpdateStatus();
-    // Clear interval khi component bị hủy
-    // return () => clearInterval(intervalId);
-  }, [khuyenMai.trang_thai,khuyenMai.ngay_ket_thuc,khuyenMai.ngay_bat_dau]); // useEffect sẽ chạy khi "data" thay đổi
+// tìm kiếm
+
+const [dataSearch,setDataSearch]=useState({});
+const onChangeFilter=(changedValues, allValues)=>{
+  console.log("hi",changedValues);
+  console.log("ob",allValues);
+  timKiemKhuyenMai(allValues);
+  setDataSearch(allValues); 
+}
+
+const timKiemKhuyenMai=(dataSearch)=>{
+  axios.post('http://localhost:8080/khuyen-mai/search-khuyen-mai',dataSearch)
+  .then(response => {
+    console.log(response.data);
+      setKhuyenMais(response.data);
+  })
+  .catch(error => console.error('Error adding item:', error));
+}
+    
+// hết tìm kiếm
+
 
   const updateTrangThai = async(id, value) => {
    await axios
@@ -160,7 +135,6 @@ const KhuyenMai = () => {
       .then((response) => {
         if (response.status === 200) {
           loadKhuyenMai();
-          // checkAndUpdateStatus();
         toast("✔️ Cập nhật thành công!", {
           position: "top-right",
           autoClose: 5000,
@@ -181,7 +155,6 @@ const KhuyenMai = () => {
       .then((response) => {
         if (response.status === 200) {
           loadKhuyenMai();
-          // checkAndUpdateStatus();
         toast("✔️ Cập nhật thành công!", {
           position: "top-right",
           autoClose: 5000,
@@ -196,22 +169,11 @@ const KhuyenMai = () => {
       });
   };
 
-  const loadKhuyenMai = async () => {
-    await axios
-      .get("http://localhost:8080/khuyen-mai")
-      .then((response) => {
-        setKhuyenMais(response.data);
-        // setDataGoc(response.data);
-      })
-      .catch((error) => {
-        console.error("Error adding item:", error);
-      });
-  };
+
 
   const columns = [
     {
       title: "#",
-      selector: (row) => promotions.indexOf(row) + 1,
       dataIndex: "id",
       key: "id",
       render: (id, record, index) => {
@@ -249,16 +211,16 @@ const KhuyenMai = () => {
     },
     {
       title: "Giá trị giảm",
-      dataIndex: "gia_tri_giam",
-      key: "gia_tri_giam",
-      render: (gia_tri_giam, x) => (
+      dataIndex: "gia_tri_khuyen_mai",
+      key: "gia_tri_khuyen_mai",
+      render: (gia_tri_khuyen_mai, x) => (
         <>
           {x.loai === "Tiền Mặt" || x.loai === "Tiền mặt"
             ? new Intl.NumberFormat("vi-Vi", {
                 style: "currency",
                 currency: "VND",
-              }).format(gia_tri_giam)
-            : gia_tri_giam + "%"}
+              }).format(gia_tri_khuyen_mai)
+            : gia_tri_khuyen_mai + "%"}
         </>
       ),
     },
@@ -266,30 +228,30 @@ const KhuyenMai = () => {
       title: "Ngày bắt đầu",
       dataIndex: "ngay_bat_dau",
       render: (ngay_bat_dau) => (
-        <>{moment(ngay_bat_dau).format("DD/MM/YYYY, hh:mm:ss")}</>
+        <>{moment(ngay_bat_dau).format("DD/MM/YYYY, HH:mm:ss")}</>
       ),
     },
     {
       title: "Ngày kết thúc ",
       dataIndex: "ngay_ket_thuc",
       render: (ngay_ket_thuc) => (
-        <>{moment(ngay_ket_thuc).format("DD/MM/YYYY, hh:mm:ss")}</>
+        <>{moment(ngay_ket_thuc).format("DD/MM/YYYY, HH:mm:ss")}</>
       ),
     },
     {
       title: "Trạng thái",
-      dataIndex: "trang_thai",
-      key: "trang_thai",
-      render: (trang_thai) => (
+      dataIndex: "trangThai",
+      key: "trangThai",
+      render: (trangThai) => (
         <>
-          {trang_thai === 0 ? (
+          {trangThai === 0 ? (
             <Tag
               color="#f50
                 "
             >
               Sắp bắt đầu
             </Tag>
-          ) : trang_thai === 1 ? (
+          ) : trangThai === 1 ? (
             <Tag
               color="#87d068
                 "
@@ -315,7 +277,7 @@ const KhuyenMai = () => {
           value: "2",
         },
       ],
-      onFilter: (value, record) => record.trang_thai === parseInt(value),
+      onFilter: (value, record) => record.trangThai === parseInt(value),
     },
     {
       title: "Action",
@@ -327,18 +289,20 @@ const KhuyenMai = () => {
               to={{ pathname: `/sua-khuyen-mai/${record.id}` }}
               className="btn rounded-pill"
             >
-              <InfoCircleOutlined
+              <EyeOutlined
                 style={{
                   fontSize: 30,
                   backgroundColor: "#ffff00",
                   borderRadius: 90,
+                  borderWidth:10,
+                  borderColor: "#000000",
                 }}
               />
             </Link>
           </a>
           <>
             {new Date(record.ngay_ket_thuc) > currentTime ? (
-              record.trang_thai === 2 ? (
+              record.trangThai === 2 ? (
                 <a className="btn rounded-pill" 
                 //onClick={() =>updateTrangThai1(record.id,record)}
                 onClick={() => {
@@ -437,7 +401,7 @@ const KhuyenMai = () => {
               initialValues={{
                 size: componentSize,
               }}
-              onValuesChange={onChangeFilter}
+             onValuesChange={onChangeFilter}
               // onChange={timKiem}
               size={componentSize}
               style={{
@@ -446,7 +410,7 @@ const KhuyenMai = () => {
               form={form}
             >
               <div className="col-md-4">
-                <Form.Item label="Mã KM" name="maKM">
+                <Form.Item label="Mã KM" name="ma">
                   <Input
                     placeholder="Mã khuyến mại"
                     className="rounded-pill border-warning"
@@ -466,13 +430,13 @@ const KhuyenMai = () => {
                 </Form.Item>
               </div>
               <div className="col-md-4">
-                <Form.Item label="Tên KM" name="tenKM">
+                <Form.Item label="Tên KM" name="ten">
                   <Input
                     placeholder="Tên khuyến mại "
                     className="rounded-pill border-warning"
                   />
                 </Form.Item>
-                <Form.Item label="Giá trị giảm" name="giaTriGiam">
+                <Form.Item label="Giá trị giảm" name="gia_tri_khuyen_mai">
                   {selectedValue === "Tiền mặt" ? (
                     <InputNumber
                       defaultValue={0}
@@ -504,14 +468,14 @@ const KhuyenMai = () => {
                 </Form.Item>
               </div>
               <div className="col-md-4">
-                <Form.Item label="Ngày bắt đầu" name="ngayBatDau">
+                <Form.Item label="Ngày bắt đầu" name="ngay_bat_dau">
                   <DatePicker
                     style={{ width: "100%" }}
                     placeholder="Ngày bắt đầu"
                     className="rounded-pill border-warning"
                   />
                 </Form.Item>
-                <Form.Item label="Ngày kết thúc" name="ngayKetThuc">
+                <Form.Item label="Ngày kết thúc" name="ngay_ket_thuc">
                   <DatePicker
                     style={{ width: "100%" }}
                     placeholder="Ngày kết thúc"
@@ -525,7 +489,8 @@ const KhuyenMai = () => {
                 <Form.Item className="text-center">
                   {/* <Button className="btn btn-warning nut-tim-kiem">Tìm kiếm</Button> */}
                   <button className="btn btn-warning nut-tim-kiem rounded-pill fw-bold">
-                    <SearchOutlined />
+                    <ReloadOutlined />
+                    
                     Làm mới
                   </button>
                 </Form.Item>
@@ -554,10 +519,15 @@ const KhuyenMai = () => {
           <div className="container-fluid mt-4">
             <div>
               <Table
-                dataSource={dataGoc}
+                dataSource={khuyenMai}
                 columns={columns}
                 id="bang"
-                pagination={{ defaultPageSize: 5 }}
+                pagination={{
+                  showQuickJumper: true,
+                  defaultCurrentPage:1, 
+                  defaultPageSize:5,
+                  total: khuyenMai.length,
+                }}
               />
             </div>
           </div>

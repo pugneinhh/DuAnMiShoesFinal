@@ -2,6 +2,7 @@ package com.example.backend.controller;
 
 
 import com.example.backend.dto.request.KhuyenMaiRequest;
+import com.example.backend.dto.request.KhuyenMaiSearch;
 import com.example.backend.entity.KhuyenMai;
 import com.example.backend.service.KhuyenMaiService;
 //import com.example.duanmishoes.util.ScheduledCheck;
@@ -37,8 +38,8 @@ public class KhuyenMaiController {
         KhuyenMai km = request.map();
         System.out.println(km.getId()+""+km.getMa()+""+km.getTen()+""+km.getLoai()+""+km.getNgay_bat_dau()+""+km.getNgay_ket_thuc()+""+km.getGia_tri_khuyen_mai());
         km.setNgayTao(new Date(new java.util.Date().getTime()));
-        LocalDateTime ngayBD =  km.getNgay_bat_dau();
-        LocalDateTime ngayKT =  km.getNgay_ket_thuc();
+        LocalDateTime ngayBD =  khuyenMaiService.convertTime(km.getNgay_bat_dau());
+        LocalDateTime ngayKT = khuyenMaiService.convertTime(km.getNgay_ket_thuc());
         LocalDateTime today = LocalDateTime.now();
         System.out.println("Today"+today);
         System.out.println("Bắt đầu"+ngayBD);
@@ -94,9 +95,8 @@ public class KhuyenMaiController {
         return  ResponseEntity.ok(khuyenMaiService.addKhuyenMai(km));
     }
 
-/*    @PostMapping("/search-khuyen-mai")
+    @PostMapping("/search-khuyen-mai")
     public ResponseEntity<?> search(@RequestBody KhuyenMaiSearch khuyenMaiSearch){
-        System.out.println(ResponseEntity.ok(khuyenMaiService.getSearch(khuyenMaiSearch)));
         return ResponseEntity.ok(khuyenMaiService.getSearch(khuyenMaiSearch));
-    }*/
+    }
 }

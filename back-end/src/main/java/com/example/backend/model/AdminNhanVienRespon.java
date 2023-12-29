@@ -4,19 +4,16 @@ import org.springframework.beans.factory.annotation.Value;
 
 public interface AdminNhanVienRespon {
 
-    @Value("#{target.idNV}")
-    String getIdNV();
+    @Value("#{target.idND}")
+    String getIdND();
 
-    @Value("#{target.maCV}")
-    String getMaCV();
+    @Value("#{target.maND}")
+    String getMaND();
 
-    @Value("#{target.maNV}")
-    String getMaNV();
+    @Value("#{target.tenND}")
+    String getTenND();
 
-    @Value("#{target.tenNV}")
-    String getTenNV();
-
-    @Value("#{target.anhNV}")
+    @Value("#{target.anh}")
     String getAnh();
 
     @Value("#{target.gioiTinh}")
@@ -34,18 +31,7 @@ public interface AdminNhanVienRespon {
     @Value("#{target.cccd}")
     String getCCCD();
 
-    @Value("#{target.thanhPho}")
-    String getThanhPho();
+    @Value("#{target.trangThai}")
+    String getTrangThai();
 
-    @Value("#{target.huyen}")
-    String getHuyen();
-
-    @Value("#{target.xa}")
-    String getXa();
-
-    @Value("#{target.diaChiCuThe}")
-    String getDiaChiCuThe();
-
-    @Value("#{target.matKhau}")
-    String getMatKhau();
 }
