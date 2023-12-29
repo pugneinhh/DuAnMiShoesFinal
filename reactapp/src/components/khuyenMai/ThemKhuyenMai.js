@@ -110,14 +110,7 @@ const ThemKhuyenMai = () => {
   }, []);
 
   const loadKhuyenMai = async () => {
-    const result = await axios.get("http://localhost:8080/khuyen-mai", {
-      validateStatus: () => {
-        return true;
-      },
-    });
-    if (result.status === 302) {
-      setKhuyenMais(result.data);
-    }
+    const result = await axios.get("http://localhost:8080/khuyen-mai").then(response => {setKhuyenMais(response.data);}).catch(error => console.error('Error adding item:',error));
   };
 
   // Validate ngày
@@ -237,13 +230,13 @@ const ThemKhuyenMai = () => {
                 </Form.Item>
                 <Form.Item
                   label="Giá trị giảm"
-                  name="gia_tri_giam"
+                  name="gia_tri_khuyen_mai"
                   style={{ marginLeft: 0, width: 500 }}
                   hasFeedback
                   rules={[
                     {
                       required: true,
-                      message: "Vui lòng nhập giá trị giảm tối đa!",
+                      message: "Vui lòng nhập giá trị giảm !",
                     },
                   ]}
                 >
