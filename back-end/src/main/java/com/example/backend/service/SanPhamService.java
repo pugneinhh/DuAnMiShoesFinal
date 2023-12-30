@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.SimpleTimeZone;
 import java.util.UUID;
 
 @Service
@@ -32,7 +33,7 @@ public class SanPhamService {
 
     public SanPham addSP(SanPham sp){return sanPhamRepository.save(sp);}
 
-    public UUID getSPByCTSP(UUID id){
+    public String  getSPByCTSP(String id){
         return sanPhamRepository.getIDSPbyCTSP(id);
     }
 }

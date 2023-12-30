@@ -34,7 +34,15 @@ public class CTSPController {
 
     @GetMapping("/showKM/{idKM}")
     public ResponseEntity<?> getALLCTSPByKM(@PathVariable("idKM") String id){
-        return new ResponseEntity<>(ctspService.getALLCTSPByKM(UUID.fromString(id)), HttpStatus.OK);
+        System.out.println("id"+id);
+        return  ResponseEntity.ok(ctspService.getALLCTSPByKM(id));
     }
+
+    @GetMapping("/showCTSP/{idSP}")
+    public ResponseEntity<?> getCTSPByIDSP(@PathVariable("idSP") String id){
+        System.out.println("id "+id);
+        return  ResponseEntity.ok(ctspService.getAllCTSPByIDSP(id));
+    }
+
 }
 

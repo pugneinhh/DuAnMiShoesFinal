@@ -81,21 +81,31 @@ const SuaKhuyenMai = () => {
 
   const loadCTSP = async () => {
     // Lấy ra ctsp có KM trên
-    const x = axios.get(`http://localhost:8080/ctsp/showKM/${dataUpdate.id}`);
+    console.log("IDKM",dataUpdate.id);
+    const x = await axios.get(`http://localhost:8080/ctsp/showKM/${id}`);
+    console.log("x",x.data); 
+    if (!x.data || x.data === null) return;
+    else 
     setCTSP(x.data);
-    console.log("CTSP lấy từ khuyến mại =", CTSP);
+
   };
 
   const loadSP = async () => {
-    const resp = CTSP.map((id) =>
-      axios.get(`http://localhost:8080/san-pham/showSP/${id}`)
+    console.log("CTSP lấy từ khuyến mại =", CTSP);
+    if (!CTSP) return;
+    const resp =  CTSP.map((id) =>
+      axios.get(`http://localhost:8080/san-pham/showSP/${id}`).then(resp1 =>  
+     // idSP.filter(x => x !== resp1.data)
+      setIDSP(resp1.data)
+      )
     );
-    const apiResponses = await Promise.all(resp);
-    console.log(apiResponses);
-    //  setIDSP(apiResponses)
-    setChua(apiResponses.map((i) => i.data));
-    console.log(filterUniqueData(chua));
-    setIDSP(filterUniqueData(chua));
+   
+    // const apiResponses = await Promise.all(resp);
+    // console.log(apiResponses);
+    // //  setIDSP(apiResponses)
+    // setChua(apiResponses.map((i) => i.data));
+    // console.log(filterUniqueData(chua));
+    // setIDSP(filterUniqueData(chua));
     //   Lấy chi tiết sản phẩm theo CTSP
     // for (let i = 0; i < CTSP.length; i++) {
     //   await axios
@@ -116,7 +126,12 @@ const SuaKhuyenMai = () => {
   useEffect(() => {
     loadDetailKhuyenMai();
   }, []);
-
+  useEffect(() => {
+    loadCTSP();
+  },[dataUpdate]);
+  useEffect(() => {
+    loadSP();
+  },[CTSP]);
   //  const loadTableSanPham() = async() => {
   //   await axios.get(`http://localhost:8080/ctsp/showKM/${id}`).then((response) => {
   //     setDataUpdate( response.data);

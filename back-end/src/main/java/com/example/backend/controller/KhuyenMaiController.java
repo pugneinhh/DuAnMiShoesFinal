@@ -4,6 +4,7 @@ package com.example.backend.controller;
 import com.example.backend.dto.request.KhuyenMaiRequest;
 import com.example.backend.dto.request.KhuyenMaiSearch;
 import com.example.backend.entity.KhuyenMai;
+import com.example.backend.service.CTSPService;
 import com.example.backend.service.KhuyenMaiService;
 //import com.example.duanmishoes.util.ScheduledCheck;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @CrossOrigin("http://localhost:3000/")
@@ -25,7 +27,8 @@ import java.util.UUID;
 public class KhuyenMaiController {
     @Autowired
     KhuyenMaiService khuyenMaiService;
-
+    @Autowired
+    CTSPService ctspService;
 //    private ScheduledCheck scheduledCheck;
     @GetMapping
     public ResponseEntity<?> getALL(){
@@ -78,6 +81,14 @@ public class KhuyenMaiController {
     public ResponseEntity<?> updateTrangThai(@PathVariable("id") String id , @RequestBody KhuyenMaiRequest request){
         KhuyenMai km = request.map();
         km.setId(id);
+        LocalDateTime ngayKT =  khuyenMaiService.convertTimeForUpdate(km.getNgay_ket_thuc());
+        LocalDateTime today = LocalDateTime.now();
+        if (ngayKT.isBefore(today)){
+            List<String> list = ctspService.getCTSPByKM(id);
+            for (String x: list) {
+                ctspService.deleteKM(x);
+            }
+        }
         km.setTrangThai(2);
         km.setNgaySua(new Date(new java.util.Date().getTime()));
         return  ResponseEntity.ok(khuyenMaiService.addKhuyenMai(km));

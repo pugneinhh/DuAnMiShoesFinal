@@ -20,7 +20,7 @@ public class SanPhamController {
     SanPhamService sanPhamService;
     @GetMapping
     public ResponseEntity<?> getALLSP(){
-        return new ResponseEntity<>(sanPhamService.getALLSP(), HttpStatus.FOUND);
+        return new ResponseEntity<>(sanPhamService.getALLSP(), HttpStatus.OK);
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable String id) {
@@ -41,6 +41,6 @@ public class SanPhamController {
 
     @GetMapping("/showSP/{idCTSP}")
     public ResponseEntity<?> getSPByCTSP(@PathVariable("idCTSP") String id){
-        return ResponseEntity.ok(sanPhamService.getSPByCTSP(UUID.fromString(id)));
+        return ResponseEntity.ok(sanPhamService.getSPByCTSP(id));
     }
 }

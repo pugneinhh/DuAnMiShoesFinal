@@ -54,7 +54,7 @@ const TableChiTietSanPham = ({selectedIDSPs,onSelectedCTSanPham}) => {
   }, [selectedIDSPs]);
 
 
-
+  console.log("Seleted CTSP", ctsp);
 
   const columnsChiTietSanPham = [
     {
@@ -91,63 +91,11 @@ const TableChiTietSanPham = ({selectedIDSPs,onSelectedCTSanPham}) => {
       key: "tenMS",
       render: (tenMS) => (
         <>
-          {tenMS === "Hồng" ? (
             <Tag
-              color="#ffadd2
-                    "
+              color= {tenMS}              
               className="rounded-circle"
               style={{ height: 25, width: 25 }}
             ></Tag>
-          ) : tenMS === "Xanh" ? (
-            <Tag
-              color="#52c41a
-                    "
-              className="rounded-circle"
-              style={{ height: 25, width: 25 }}
-            ></Tag>
-          ) : tenMS === "Xám" ? (
-            <Tag
-              color="#8c8c8c
-                    "
-              className="rounded-circle"
-              style={{ height: 25, width: 25 }}
-            ></Tag>
-          ) : tenMS === "Đỏ" ? (
-            <Tag
-              color="#f5222d
-                    "
-              className="rounded-circle"
-              style={{ height: 25, width: 25 }}
-            ></Tag>
-          ) : tenMS === "Tím" ? (
-            <Tag
-              color="#722ed1
-                    "
-              className="rounded-circle"
-              style={{ height: 25, width: 25 }}
-            ></Tag>
-          ) : tenMS === "Vàng" ? (
-            <Tag
-              color="#fadb14
-                    "
-              className="rounded-circle"
-              style={{ height: 25, width: 25 }}
-            ></Tag>
-          ) : tenMS === "Đen" ? (
-            <Tag
-              color="#000000
-                    "
-              className="rounded-circle"
-              style={{ height: 25, width: 25 }}
-            ></Tag>
-          ) : (
-            <Tag
-              color="#ffffff
-                    "
-              className="rounded-circle"
-              style={{ height: 25, width: 25 }}
-            ></Tag>
-          )}
         </>
       ),
     },
@@ -157,9 +105,9 @@ const TableChiTietSanPham = ({selectedIDSPs,onSelectedCTSanPham}) => {
   
     },
     {
-      title: "Độ cao",
-      dataIndex: "tenDC",
-      key: "tenDC"
+      title: "Đế giày",
+      dataIndex: "tenDG",
+      key: "tenDG"
     },
     {
       title: "Hãng",
@@ -221,7 +169,7 @@ const TableChiTietSanPham = ({selectedIDSPs,onSelectedCTSanPham}) => {
     tenKT: item.tenKT,
     tenMS: item.tenMS,
     tenCL: item.tenCL,
-    tenDC: item.tenDC,
+    tenDG: item.tenDG,
     tenH: item.tenH,
     tenDM: item.tenDM,
     trangThai: item.trangThai,
@@ -243,7 +191,12 @@ const TableChiTietSanPham = ({selectedIDSPs,onSelectedCTSanPham}) => {
       rowSelection={rowSelection}
       columns={columnsChiTietSanPham}
       dataSource={dataSoure1}
-      pagination={{ defaultPageSize: 5 }}
+      pagination={{
+        showQuickJumper: true,
+        defaultCurrentPage:1, 
+        defaultPageSize:5,
+        total: dataSoure1.length,
+      }}
     />
   );
 };

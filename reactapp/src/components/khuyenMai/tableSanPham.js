@@ -14,21 +14,19 @@ const TableSanPham = ({onSelectedSanPham , suaIDSP}) => {
 
     useEffect(() => {
         const loadSanPham = async () => {
-            const result = await axios.get("http://localhost:8080/san-pham", {
-              validateStatus: () => {
-                return true;
-              },
-            });
-            if (result.status === 302) {
-              setSanPhams(result.data);
-            }
+            await axios.get("http://localhost:8080/san-pham")
+            .then(response =>{
+
+              setSanPhams(response.data)
+            })
+            .catch(error => console.error('Error adding item:', error));
           };
           loadSanPham();
-          if (suaIDSP !== null) setSelectedRowKeys(suaIDSP);
-          console.log("SuaSanPham",selectedRowKeys);
       }, []);
      
+
       const handleCheckboxChange = (selectedKeys , selectedRowKeys) => {
+        console.log("selected row key",selectedRowKeys);
       if (selectedRowKeys !== null){
         setSelectedRowKeys(selectedKeys);
         onSelectedSanPham(selectedKeys);
@@ -105,11 +103,14 @@ const TableSanPham = ({onSelectedSanPham , suaIDSP}) => {
 
       };
 
+
+
+
       const rowSelection = {
-        selectedRowKeys,      
+        selectedRowKeys,   
         onChange: handleCheckboxChange,
-        
-        // onCancel: () => handleCancel,
+        // getCheckboxProps : record => ({        
+        //   disabled: selectedRowKeys.includes(record.key)}),
       };
 
 
@@ -137,7 +138,12 @@ const TableSanPham = ({onSelectedSanPham , suaIDSP}) => {
         rowSelection={rowSelection}
         columns={columnsSanPham}
         dataSource={dataSource}  
-        pagination={{ defaultPageSize: 3 }}
+        pagination={{
+          showQuickJumper: true,
+          defaultCurrentPage:1, 
+          defaultPageSize:5,
+          total: dataSource.length,
+        }}
        /> 
         </div>
 
