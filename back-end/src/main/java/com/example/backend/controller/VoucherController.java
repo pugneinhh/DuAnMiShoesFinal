@@ -29,8 +29,12 @@ public class VoucherController {
     }
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody VoucherRequest request){
+        LocalDateTime ngayBD =  vs.convertTime(request.getNgayBatDau());
+        LocalDateTime ngayKT = vs.convertTime(request.getNgayKetThuc());
+        request.setNgayBatDau(ngayBD);
+        request.setNgayKetThuc(ngayKT);
         LocalDateTime lc= LocalDateTime.now();
-        if(request.getNgayBatDau().compareTo(lc)>0){
+        if(ngayBD.compareTo(lc)>0){
             request.setTrangThai(Status.SAP_DIEN_RA);
         }else{
             request.setTrangThai(Status.DANG_HOAT_DONG);
@@ -41,6 +45,10 @@ public class VoucherController {
     @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable("id") String id,@RequestBody VoucherRequest request){
         request.setId(id);
+        LocalDateTime ngayBD =  vs.convertTime(request.getNgayBatDau());
+        LocalDateTime ngayKT = vs.convertTime(request.getNgayKetThuc());
+        request.setNgayBatDau(ngayBD);
+        request.setNgayKetThuc(ngayKT);
         LocalDateTime lc= LocalDateTime.now();
         if(request.getNgayBatDau().compareTo(lc)>0){
             request.setTrangThai(Status.SAP_DIEN_RA);
@@ -71,5 +79,17 @@ public class VoucherController {
     @PostMapping("/search-voucher")
     public ResponseEntity<?> search(@RequestBody VoucherSearch voucherSearch){
         return ResponseEntity.ok(vs.getSearch(voucherSearch));
+    }
+    @PutMapping("/updateTTHD/{id}")
+    public ResponseEntity<?> updateTTHD(@PathVariable("id")String id,@RequestBody VoucherRequest request){
+        return ResponseEntity.ok(vs.updateTTHD(id,request));
+    }
+    @PutMapping("/updateTTNgung/{id}")
+    public ResponseEntity<?> updateTTNgung(@PathVariable("id")String id,@RequestBody VoucherRequest request){
+        return ResponseEntity.ok(vs.updateTTNgung(id,request));
+    }
+    @PutMapping("/updateTTSap/{id}")
+    public ResponseEntity<?> updateTTSap(@PathVariable("id")String id,@RequestBody VoucherRequest request){
+        return ResponseEntity.ok(vs.updateTTSap(id,request));
     }
 }

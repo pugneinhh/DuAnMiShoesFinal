@@ -28,11 +28,11 @@ const TableKhachHang = () => {
       }, []);
      
       const handleCheckboxChange = (selectedKeys , selectedRowKeys) => {
-    //   if (selectedRowKeys !== null){
-    //     setSelectedRowKeys(selectedKeys);
-    //     onSelectedSanPham(selectedKeys);
+      if (selectedRowKeys !== null){
+        setSelectedRowKeys(selectedKeys);
+        // onSelectedSanPham(selectedKeys);
 
-    //   };
+      };
     }
 
       const columnsKhachHang= [

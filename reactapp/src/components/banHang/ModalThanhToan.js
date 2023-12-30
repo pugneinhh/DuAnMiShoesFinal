@@ -23,6 +23,7 @@ const ModalThanhToan = (props) => {
                 .then(response => {
                     // Update the list of items
                     setUrlCK(response.data.url);
+                    
                 })
                 .catch(error => console.error('Error adding item:', error));
 

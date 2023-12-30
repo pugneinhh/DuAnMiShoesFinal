@@ -1,5 +1,6 @@
 package com.example.backend.controller;
 
+import com.example.backend.dto.response.ChiTietSanPhamRespone;
 import com.example.backend.model.AdminBanHangHDRespon;
 import com.example.backend.service.BanHangService;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +21,15 @@ import java.util.List;
 public class BanHangController {
     @Autowired
     BanHangService banHangService;
+
     @GetMapping()
     public ResponseEntity<?> getALL(){
         List<AdminBanHangHDRespon> list=banHangService.HoaDonBanHang();
+        return ResponseEntity.ok(list);
+    }
+    @GetMapping("/getALLCTSP")
+    public ResponseEntity<?> getALLctsp(){
+        List<ChiTietSanPhamRespone> list=banHangService.getALLCTSPBanHang();
         return ResponseEntity.ok(list);
     }
 }
