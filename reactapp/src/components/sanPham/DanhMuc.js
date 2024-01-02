@@ -140,7 +140,7 @@ export default function DanhMuc() {
 
       render: () => (
         <Space size="middle">
-           <a className='btn btn-danger'><BsFillEyeFill className='mb-1'/></a>
+          <a className='btn btn-danger'><BsFillEyeFill className='mb-1' /></a>
         </Space>
       ),
     },
@@ -245,7 +245,7 @@ export default function DanhMuc() {
                 onFinish={addDanhMuc}
                 form={form}>
                 <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
-                  <Input className="border" />
+                     <Input className='border'></Input>
                 </Form.Item>
               </Form>
             </Modal>
