@@ -21,6 +21,9 @@ import {MdSearch} from 'react-icons/md';
 import axios from 'axios';
 import { BsBoxSeamFill, BsFillEyeFill } from 'react-icons/bs';
 import { FaTshirt } from 'react-icons/fa';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 export default function SanPham() {
   //Form
   const [selectedValue, setSelectedValue] = useState('1');
@@ -47,9 +50,7 @@ export default function SanPham() {
         return true;
       }
     });
-    if (result.status === 302) {
       setSanPhams(result.data);
-    }
   };
 
   const columns = [
@@ -183,6 +184,20 @@ export default function SanPham() {
         </div>
 
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      {/* Same as */}
+      <ToastContainer />
     </div>
   )
 }

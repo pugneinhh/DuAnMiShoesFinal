@@ -1,4 +1,4 @@
-import { Button, Empty, Input, Modal, Space, Switch, Table, Tabs, Tag } from "antd";
+import { Button, Empty, Input, Modal, Space, Switch, Tabs, Tag } from "antd";
 import React, { useEffect, useRef, useState } from 'react';
 import { toast, ToastContainer } from "react-toastify";
 import { BsQrCodeScan } from "react-icons/bs";
@@ -13,15 +13,15 @@ import { createInvoice,removeInvoice } from "./redux/Cartaction";
 import {useDispatch,useSelector} from 'react-redux';
 import {v4 as uuid} from 'uuid';
 import { getHoaDons } from "./redux/selector";
-import HoaDon from "../hoaDon/HoaDon2";
-import { ta } from "date-fns/locale";
+const {TabPane}=Tabs;
 const BanHang = () => {
+  
   const [activeKey, setActiveKey] = useState(1);
   // const newTabIndex = useRef(0);
   // const demTab = useRef(0);
   const initState=useRef(2);
   const hoaDons=useSelector(getHoaDons);
-  console.log("hoa",hoaDons);
+ 
   const [open, setOpen] = useState(false);
   const [openSanPham, setOpenSanPham] = useState(false);
   const handleCloseSanPham = () => {
@@ -58,7 +58,7 @@ const handleClickAddHD=() => {
   dispatch(
     createInvoice(
     {"id":uuid(),label: `Hóa đơn ${maxKey+1}`,
-          children: `New Tab ${maxKey+1}`,ma:`HDTQ${maxKey+1}`,trangThai:0,sanPham:{},key:`${maxKey+1}`}
+          children: `New Tab ${maxKey+1}`,ma:`HDTQ${maxKey+1}`,trangThai:0,sanPham:null,key:`${maxKey+1}`}
   )
   );
   initState.current++;
@@ -68,7 +68,7 @@ const handleClickAddHD=() => {
       dispatch(
         createInvoice(
         {"id":uuid(),label: `Hóa đơn ${initState.current}`,
-              children: `New Tab ${initState.current}`,ma:`HDTQ${initState.current}`,trangThai:0,sanPham:{},key:`${initState.current}`}
+              children: `New Tab ${initState.current}`,ma:`HDTQ${initState.current}`,trangThai:0,sanPham:null,key:`${initState.current}`}
       )
       );
       initState.current++;
@@ -193,39 +193,72 @@ const onEdit = (targetKey, action) => {
           activeKey={activeKey}
           type="editable-card"
           onEdit={onEdit}
-          items={hoaDons}
-        /> 
-        {/* hết tab hóa đơn */}
-        <div className="d-flex justify-content-between align-items-center">
-          <div className="text-start">
-            <h4><FaList /> Danh sách</h4>
+        >
+ {hoaDons.map((tab) => (
+    <TabPane tab={tab.label} key={tab.key}>
+      {tab.sanPham==null ? (
+        /* Content when tab.sanPham is empty */
+        <>
+          <div className="d-flex justify-content-between align-items-center">
+            <div className="text-start">
+              <h4><FaList /> Danh sách</h4>
+            </div>
+            <div className="text-end">
+              <Button type="primary" icon={<BsQrCodeScan />} onClick={() => setOpenScan(true)}>Quét QR sản phẩm</Button>
+              <Button type="primary" className="ms-3" onClick={() => setOpenSanPham(true)}>Chọn sản phẩm</Button>
+              <ModalSanPham
+                openSanPham={openSanPham}
+                setOpenSanPham={setOpenSanPham}
+                onOk={handleCloseSanPham}
+                onCancel={handleCloseSanPham}
+              />
+            </div>
           </div>
-          <div className="text-end">
-            <Button type="primary" icon={<BsQrCodeScan />} onClick={() => setOpenScan(true)}>Quét QR sản phẩm</Button>
-            <Button type="primary" className="ms-3" onClick={() => setOpenSanPham(true)}>Chọn sản phẩm</Button>
-            <ModalSanPham openSanPham={openSanPham}
-              setOpenSanPham={setOpenSanPham}
-              onOk={handleCloseSanPham}
-              onCancel={handleCloseSanPham}
+
+          {/* Bảng giỏ hàng */}
+          <div>
+            <Empty
+              image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSy4Pi1fKO57hmDRxcyP1cVftjpGRe2xg-ymZd6Q25PAgeq7dUX4MqU5GGLK3UYYYc_s8s&amp;usqp=CAU"
+              imageStyle={{
+                height: 250,
+              }}
+              description={
+                <span>
+                  Không có sản phẩm nào trong giỏ
+                </span>
+              }
             />
           </div>
-        </div>
-        {/* bảng giỏ hàng */}
-        <div>
-          <Empty
-            image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSy4Pi1fKO57hmDRxcyP1cVftjpGRe2xg-ymZd6Q25PAgeq7dUX4MqU5GGLK3UYYYc_s8s&amp;usqp=CAU"
-            imageStyle={{
-              height: 250,
-            }}
-            description={
-              <span>
-                Không có sản phẩm nào trong giỏ
-              </span>
-            }
-          />
-
-        </div>
-        {/* hết giỏ hàng
+          {/* Hết giỏ hàng */}
+        </>
+      ) : (
+        /* Content when tab.sanPham is not empty */
+        <>
+          <div>
+            <div className="d-flex justify-content-between align-items-center">
+            <div className="text-start">
+              <h4><FaList /> Danh sách</h4>
+            </div>
+            <div className="text-end">
+              <Button type="primary" icon={<BsQrCodeScan />} onClick={() => setOpenScan(true)}>Quét QR sản phẩm</Button>
+              <Button type="primary" className="ms-3" onClick={() => setOpenSanPham(true)}>Chọn sản phẩm</Button>
+              <ModalSanPham
+                openSanPham={openSanPham}
+                setOpenSanPham={setOpenSanPham}
+                onOk={handleCloseSanPham}
+                onCancel={handleCloseSanPham}
+              />
+            </div>
+          </div>
+            {/* Your content when tab.sanPham is not empty */}
+            (hehhee {tab.ma})
+          </div>
+        </>
+      )}
+    </TabPane>
+  ))}
+        </Tabs>
+        
 
         {/* thông tin khách hàng */}
         <div className="d-flex justify-content-between align-items-center">

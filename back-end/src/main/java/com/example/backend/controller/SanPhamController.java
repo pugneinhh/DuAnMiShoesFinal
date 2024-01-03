@@ -20,7 +20,11 @@ public class SanPhamController {
     SanPhamService sanPhamService;
     @GetMapping
     public ResponseEntity<?> getALLSP(){
-        return new ResponseEntity<>(sanPhamService.getALLSP(), HttpStatus.FOUND);
+        return new ResponseEntity<>(sanPhamService.getALLSP(), HttpStatus.OK);
+    }
+    @GetMapping("/getAll")
+    public ResponseEntity<?> getALL(){
+        return new ResponseEntity<>(sanPhamService.getALL(), HttpStatus.OK);
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable String id) {
@@ -35,6 +39,7 @@ public class SanPhamController {
     public ResponseEntity<?> add(@RequestBody SanPham v){
         int spThem = sanPhamService.getALL().size();
         v.setMa("SP" + "-" + (spThem + 1));
+        v.setTrangThai(1);
         return  ResponseEntity.ok(sanPhamService.addSP(v));
 
     }

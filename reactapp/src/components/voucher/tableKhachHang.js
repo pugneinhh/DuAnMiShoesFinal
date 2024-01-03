@@ -11,7 +11,6 @@ import {
 const TableKhachHang = () => {
     const [khachHang, setKhachHangs] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-
     useEffect(() => {
         const loadKhachHang = async () => {
             const result = await axios.get("http://localhost:8080/nguoi-dung/hien-thi", {
@@ -21,7 +20,9 @@ const TableKhachHang = () => {
             });
             if (result.status === 302) {
               setKhachHangs(result.data);
-              
+              const defaultSelectedKeys = result.data.length > 0 ? [result.data[0].id] : [];
+              console.log("key",defaultSelectedKeys)
+              setSelectedRowKeys(defaultSelectedKeys);
             }
           };
           loadKhachHang();
@@ -111,6 +112,7 @@ const TableKhachHang = () => {
         columns={columnsKhachHang}
         dataSource={dataSource}  
         pagination={{ defaultPageSize: 5 }}
+        defaultSelectedRowKeys={selectedRowKeys}
        /> 
         </div>
 

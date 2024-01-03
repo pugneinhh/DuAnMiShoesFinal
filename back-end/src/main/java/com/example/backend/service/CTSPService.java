@@ -1,9 +1,12 @@
 package com.example.backend.service;
+import com.example.backend.dto.request.ChiTietSanPhamRequest;
+import com.example.backend.dto.request.HinhAnhRequest;
 import com.example.backend.dto.response.ChiTietSanPhamRespone;
 import com.example.backend.entity.ChiTietSanPham;
 import com.example.backend.entity.KhuyenMai;
 import com.example.backend.model.*;
 import com.example.backend.repository.CTSPRepository;
+import com.example.backend.repository.HinhAnhRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +25,11 @@ public class CTSPService {
     }
     public List<ChiTietSanPhamRespone> getALLCTSP(String id){
         return ctspRepository.getALLCTSP(id);
+    }
+
+    public ChiTietSanPham add (ChiTietSanPhamRequest sp){
+        ChiTietSanPham ct = sp.map(new ChiTietSanPham());
+        return ctspRepository.save(ct);
     }
 
     public List<UUID> getALLCTSPByKM(UUID id){

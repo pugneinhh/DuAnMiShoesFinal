@@ -1,9 +1,9 @@
-package com.example.backend.respon;
+package com.example.backend.repository;
 
 import com.example.backend.entity.DiaChi;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;
 
-public interface DiaChiRespon extends JpaRepository<DiaChi, UUID> {
+public interface DiaChiRepository extends JpaRepository<DiaChi, UUID> {
 }
