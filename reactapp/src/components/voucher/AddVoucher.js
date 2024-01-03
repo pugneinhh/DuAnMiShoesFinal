@@ -11,8 +11,9 @@ import {
 } from "antd";
 import { useState } from "react";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { FaTag } from "react-icons/fa";
+import { Navigate, useNavigate } from 'react-router-dom';
 
 
 import TableKhachHang from "./tableKhachHang";
@@ -22,6 +23,9 @@ const AddVoucher = () => {
     console.log(`Selected value: ${value}`);
     setSelectedValue(value);
   };
+  const navigate = useNavigate();
+
+
   const [componentSize, setComponentSize] = useState("default");
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
@@ -29,31 +33,19 @@ const AddVoucher = () => {
 
   const [form] = Form.useForm();
   const handleSubmit = (value) => {
-    // Swal.fire({
-    //   title: "Thông báo",
-    //   text: "Bạn muốn thêm voucher!",
-    //   icon: "infor",
-    //   showCancelButton: true,
-    //   confirmButtonColor: "#3085d6",
-    //   cancelButtonColor: "#d33",
-    //   confirmButtonText: "Có",
-    //   cancelButtonText: "Hủy",
-    // }).then((result) => {
-    //   if (result.isConfirmed) {
-    // promotionService
-    //   .changeStatusPromotion(row.promotionID)
-    //   .then((res) => {
-    //
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-    console.log(value);
     axios
       .post("http://localhost:8080/voucher/add", value)
       .then((response) => {
-        // Update the list of items
+        Promise.all(
+          selectedIDKH.map((id) =>
+            axios.put(
+              `http://localhost:8080/nguoi-dung-voucher/add/${id}`,
+              response.data
+            )
+          )
+        );
         console.log(response.data);
+        navigate('/voucher');
         toast("✔️ Thêm thành công!", {
           position: "top-right",
           autoClose: 5000,
@@ -64,7 +56,14 @@ const AddVoucher = () => {
           progress: undefined,
           theme: "light",
         });
+        form.resetFields();
       })
+  };
+
+  const [selectedIDKH, setSelectedIDKH] = useState([]);
+
+  const handleSelectedIDKH = (selectedRowKeys) => {
+    setSelectedIDKH(selectedRowKeys);
   };
   ///validate ngày
   const validateDateKT = (_, value) => {
@@ -188,12 +187,13 @@ const AddVoucher = () => {
                   style={{ borderColor: "yellow", marginLeft: 20, width: 220 }}
                   onChange={handleChange}
                 >
+                  
                   <Select.Option value="Tiền mặt">Tiền mặt</Select.Option>
                   <Select.Option value="Phần trăm">Phần trăm</Select.Option>
                 </Select>
               </Form.Item>
             </div>
-
+                bugge
             <div className="col-md-4">
               
                 <Form.Item
@@ -358,23 +358,12 @@ const AddVoucher = () => {
           <p className="fw-bold" style={{ marginTop: 10 }}>
             Khách hàng
           </p>
-          <TableKhachHang />
+          <TableKhachHang 
+            onSelectedKH = {handleSelectedIDKH}
+          />
         </div>
       </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
-      {/* Same as */}
-      <ToastContainer />
+
     </div>
   );
 }
