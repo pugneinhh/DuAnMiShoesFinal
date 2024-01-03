@@ -234,7 +234,12 @@ const ModalSanPham = (props) => {
         {
             title: "Action",
             key: "action",
-
+            dataIndex: 'idCTSP',
+            render: (title) => (
+                <Space size="middle">
+                    <Button className='btn btn-danger'>Chọn</Button>
+                </Space>
+            ),
   
         },
     ]

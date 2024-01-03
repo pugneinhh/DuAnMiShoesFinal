@@ -8,7 +8,10 @@ const initState={
         {id:1,tenSP:"giày adidas",giaBan:100000,soLuong:1,kichThuoc:35,Mau:"#fafafa"}
     ]
     }
-]
+],
+
+    sanPhamLists:[],
+    sanPhamobj:{},
 }
 const rootReducer=(state =initState,action) =>{
     
@@ -29,6 +32,12 @@ const rootReducer=(state =initState,action) =>{
                 ...state.hoaDons.filter((item)=>item.key!==action.payload.key)
             ]
             
+        }
+        case'GET_SanPham_LIST':
+        return {
+            
+            sanPhamLists:action.payload,
+            sanPhamobj:{}
         }
         default:
             return state;
