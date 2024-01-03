@@ -3,6 +3,9 @@ package com.example.backend.model;
 import org.springframework.beans.factory.annotation.Value;
 
 public interface AdminKhachHangRepon {
+    @Value("#{target.diem}")
+    String getDiem();
+
     @Value("#{target.idND}")
     String getIdND();
 

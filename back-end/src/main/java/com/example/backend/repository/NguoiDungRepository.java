@@ -1,10 +1,28 @@
 package com.example.backend.repository;
 
 import com.example.backend.entity.NguoiDung;
+import com.example.backend.model.AdminKhachHangRepon;
+import com.example.backend.model.AdminNhanVienRespon;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Query;
 
-@Repository
-public interface NguoiDungRepository extends JpaRepository<NguoiDung,String> {
+import java.util.List;
+import java.util.UUID;
 
+public interface NguoiDungRepository extends JpaRepository<NguoiDung, String> {
+    @Query(value = "SELECT nd.id AS idND, nd.ma AS maND, nd.ten AS tenND, nd.so_dien_thoai AS SDT,\n" +
+            "  nd.email AS email,nd.ngay_sinh AS ngaySinh,nd.gioi_tinh AS gioiTinh, nd.chung_minh_thu AS cccd, nd.chuc_vu AS chucVu, nd.anh AS anh, nd.trang_thai AS trangThai,\n" +
+            "  dc.ten_nguoi_nhan AS tenNguoiNhan, dc.so_dien_thoai AS sdtNguoiNhan,\n" +
+            "  dc.ten_thanh_pho AS tenThanhPho, dc.ten_huyen AS tenHuyen, dc.ten_xa AS tenXa\n" +
+            "FROM nguoi_dung nd\n" +
+            "INNER JOIN dia_chi dc ON nd.dia_chi_id = dc.id WHERE nd.chuc_vu = 'nhan_vien' ", nativeQuery = true)
+    List<AdminNhanVienRespon> getAllNhanVien();
+
+    @Query(value = "SELECT nd.diem AS diem, nd.id AS idND, nd.ma AS maND, nd.ten AS tenND, nd.so_dien_thoai AS SDT,\n" +
+            "  nd.email AS email,nd.ngay_sinh AS ngaySinh,nd.gioi_tinh AS gioiTinh, nd.chung_minh_thu AS cccd, nd.chuc_vu AS chucVu, nd.anh AS anh, nd.trang_thai AS trangThai,\n" +
+            "  dc.ten_nguoi_nhan AS tenNguoiNhan, dc.so_dien_thoai AS sdtNguoiNhan,\n" +
+            "  dc.ten_thanh_pho AS tenThanhPho, dc.ten_huyen AS tenHuyen, dc.ten_xa AS tenXa\n" +
+            "FROM nguoi_dung nd\n" +
+            "INNER JOIN dia_chi dc ON nd.dia_chi_id = dc.id WHERE nd.chuc_vu = 'khach_hang'", nativeQuery = true)
+    List<AdminKhachHangRepon> getAllKhachHang();
 }
