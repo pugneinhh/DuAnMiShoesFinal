@@ -29,13 +29,17 @@ import AddNhanVien from "./components/nhanVien/AddNhanVien";
 import BanHang from './components/banHang/BanHang';
 import AddVoucher from './components/voucher/AddVoucher';
 import ModelUpdateVoucher from './components/voucher/ModelUpdateVoucher';
+import store from "./components/banHang/redux/store";
+import { Provider } from "react-redux";
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
 root.render(
   // <React.StrictMode>
-
+  <Provider store={store}>
     <BrowserRouter>
       <Routes>
         <Route path = '/' element = {<App/>}>
+          
         <Route path='thong-ke' element={<ThongKe/>}></Route>
           <Route path='hoa-don' element = {<HoaDon/>}>   </Route>
         <Route path='detail-hoa-don/:id' element={<HoaDonDetail/>}></Route>
@@ -57,11 +61,15 @@ root.render(
         <Route path="themNhanVien" element={<AddNhanVien />}></Route>
         <Route path="khach-hang" element={<KhachHang />}></Route>
           <Route path='them-san-pham' element = {<AddSanPham/>}></Route>
-        <Route path="/admin/ban-hang" element={<BanHang />}></Route>
-      </Route>
-    </Routes>
-  </BrowserRouter>
 
+          <Route path='/admin/ban-hang' element={<BanHang/>}></Route>
+          
+        </Route>
+      </Routes>
+      
+    </BrowserRouter>
+    </Provider>
+  
   // {/* </React.StrictMode> */}
 );
 

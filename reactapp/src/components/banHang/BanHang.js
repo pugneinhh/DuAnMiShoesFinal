@@ -1,4 +1,4 @@
-import { Button, Empty, Input, Modal, Space, Switch, Table, Tabs, Tag } from "antd";
+import { Button, Empty, Input, Modal, Space, Switch, Tabs, Tag } from "antd";
 import React, { useEffect, useRef, useState } from 'react';
 import { toast, ToastContainer } from "react-toastify";
 import { BsQrCodeScan } from "react-icons/bs";
@@ -9,12 +9,19 @@ import axios from "axios";
 import ModalSanPham from "./ModalSanPham";
 import ModalThanhToan from "./ModalThanhToan";
 import ModalKhachHang from "./ModalKhachHang";
-
+import { createInvoice,removeInvoice } from "./redux/Cartaction";
+import {useDispatch,useSelector} from 'react-redux';
+import {v4 as uuid} from 'uuid';
+import { getHoaDons } from "./redux/selector";
+const {TabPane}=Tabs;
 const BanHang = () => {
+  
   const [activeKey, setActiveKey] = useState(1);
-  const [items, setItems] = useState([]);
-  const newTabIndex = useRef(0);
-  const demTab = useRef(0);
+  // const newTabIndex = useRef(0);
+  // const demTab = useRef(0);
+  const initState=useRef(2);
+  const hoaDons=useSelector(getHoaDons);
+ 
   const [open, setOpen] = useState(false);
   const [openSanPham, setOpenSanPham] = useState(false);
   const handleCloseSanPham = () => {
@@ -30,6 +37,78 @@ const BanHang = () => {
   }
   const onChange = (key) => {
     setActiveKey(key);
+  };
+////tạo hóa đơn bằng redux
+const dispatch=useDispatch();
+const handleClickAddHD=() => {
+  const maxKey=Math.max(...hoaDons.map((hd)=>hd.key));
+  if(hoaDons.length>=5){
+    return toast.error('Không được vượt quá 5 hóa đơn!', {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+  }
+  if(maxKey>0){
+  dispatch(
+    createInvoice(
+    {"id":uuid(),label: `Hóa đơn ${maxKey+1}`,
+          children: `New Tab ${maxKey+1}`,ma:`HDTQ${maxKey+1}`,trangThai:0,sanPham:null,key:`${maxKey+1}`}
+  )
+  );
+  initState.current++;
+  setActiveKey(maxKey+1);
+  
+    }else{
+      dispatch(
+        createInvoice(
+        {"id":uuid(),label: `Hóa đơn ${initState.current}`,
+              children: `New Tab ${initState.current}`,ma:`HDTQ${initState.current}`,trangThai:0,sanPham:null,key:`${initState.current}`}
+      )
+      );
+      initState.current++;
+      setActiveKey(initState.current);
+    }
+
+};
+///remove hóa đơn bằng redux
+const handleClickRemoveHD=(targetKey) => {
+  console.log(targetKey);
+  console.log(hoaDons.filter((hoaDon)=>hoaDon.key==targetKey)[0]);
+  if(hoaDons.length<=0){
+    return toast.error('Không còn hóa đơn!', {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+  }else{
+  dispatch(
+    removeInvoice(
+    hoaDons.filter((hoaDon)=>hoaDon.key==targetKey)[0]
+  )
+  );
+  
+  initState.current--;
+  setActiveKey(initState.current);
+    }
+};
+//onedit sự kiện
+const onEdit = (targetKey, action) => {
+    if (action === 'handlrClickAddHD') {
+      handleClickAddHD();
+    } else {
+      handleClickRemoveHD(targetKey);
+    }
   };
 
 
@@ -59,51 +138,51 @@ const BanHang = () => {
 
   };
   //add và remove tab
-  const add = () => {
-    if (demTab.current >= 5) {
-      return toast.error('Không được vượt quá 5 hóa đơn!', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+  // const add = () => {
+  //   if (demTab.current >= 5) {
+  //     return toast.error('Không được vượt quá 5 hóa đơn!', {
+  //       position: "top-right",
+  //       autoClose: 5000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //       progress: undefined,
+  //       theme: "light",
+  //     });
 
-    }
-    const newActiveKey = `${newTabIndex.current++}`;
-    setItems([
-      ...items,
-      {
-        label: `Hóa đơn ${newTabIndex.current}`,
-        children: `New Tab ${newTabIndex.current}`,
-        key: newActiveKey,
-      },
-    ]);
-    console.log('kkkkkkkk', newActiveKey);
-    demTab.current++;
-    setActiveKey(newActiveKey);
-  };
-  const remove = (targetKey) => {
-    const targetIndex = items.findIndex((pane) => pane.key === targetKey);
-    const newPanes = items.filter((pane) => pane.key !== targetKey);
-    if (newPanes.length && targetKey === activeKey) {
-      const { key } = newPanes[targetIndex === newPanes.length ? targetIndex - 1 : targetIndex];
-      setActiveKey(key);
-    }
-    setItems(newPanes);
-    demTab.current--;
-    console.log('dem tru', demTab);
-  };
-  const onEdit = (targetKey, action) => {
-    if (action === 'add') {
-      add();
-    } else {
-      remove(targetKey);
-    }
-  };
+  //   }
+  //   const newActiveKey = `${newTabIndex.current++}`;
+  //   setItems([
+  //     ...items,
+  //     {
+  //       label: `Hóa đơn ${newTabIndex.current}`,
+  //       children: `New Tab ${newTabIndex.current}`,
+  //       key: newActiveKey,
+  //     },
+  //   ]);
+  //   console.log('kkkkkkkk', newActiveKey);
+  //   demTab.current++;
+  //   setActiveKey(newActiveKey);
+  // };
+  // const remove = (targetKey) => {
+  //   const targetIndex = items.findIndex((pane) => pane.key === targetKey);
+  //   const newPanes = items.filter((pane) => pane.key !== targetKey);
+  //   if (newPanes.length && targetKey === activeKey) {
+  //     const { key } = newPanes[targetIndex === newPanes.length ? targetIndex - 1 : targetIndex];
+  //     setActiveKey(key);
+  //   }
+  //   setItems(newPanes);
+  //   demTab.current--;
+  //   console.log('dem tru', demTab);
+  // };
+  // const onEdit = (targetKey, action) => {
+  //   if (action === 'add') {
+  //     add();
+  //   } else {
+  //     remove(targetKey);
+  //   }
+  // };
   ////quét QR sản phẩm
   const [openScan, setOpenScan] = useState(false);
   const [qrData, setQrData] = useState('');
@@ -126,7 +205,8 @@ const BanHang = () => {
 
       <div className="text-end mt-3 me-4 mb-3">
 
-        <Button type="primary" onClick={add} >Tạo hóa đơn</Button>
+        {/* <Button type="primary" onClick={add} >Tạo hóa đơn</Button> */}
+         <Button type="primary" onClick={handleClickAddHD} >Tạo hóa đơn</Button>
       </div>
 
       <div className="bg-light m-2 p-3 pt-2" style={{ borderRadius: 20 }}>
@@ -136,39 +216,72 @@ const BanHang = () => {
           activeKey={activeKey}
           type="editable-card"
           onEdit={onEdit}
-          items={items}
-        />
-        {/* hết tab hóa đơn */}
-        <div className="d-flex justify-content-between align-items-center">
-          <div className="text-start">
-            <h4><FaList /> Danh sách</h4>
+        >
+ {hoaDons.map((tab) => (
+    <TabPane tab={tab.label} key={tab.key}>
+      {tab.sanPham==null ? (
+        /* Content when tab.sanPham is empty */
+        <>
+          <div className="d-flex justify-content-between align-items-center">
+            <div className="text-start">
+              <h4><FaList /> Danh sách</h4>
+            </div>
+            <div className="text-end">
+              <Button type="primary" icon={<BsQrCodeScan />} onClick={() => setOpenScan(true)}>Quét QR sản phẩm</Button>
+              <Button type="primary" className="ms-3" onClick={() => setOpenSanPham(true)}>Chọn sản phẩm</Button>
+              <ModalSanPham
+                openSanPham={openSanPham}
+                setOpenSanPham={setOpenSanPham}
+                onOk={handleCloseSanPham}
+                onCancel={handleCloseSanPham}
+              />
+            </div>
           </div>
-          <div className="text-end">
-            <Button type="primary" icon={<BsQrCodeScan />} onClick={() => setOpenScan(true)}>Quét QR sản phẩm</Button>
-            <Button type="primary" className="ms-3" onClick={() => setOpenSanPham(true)}>Chọn sản phẩm</Button>
-            <ModalSanPham openSanPham={openSanPham}
-              setOpenSanPham={setOpenSanPham}
-              onOk={handleCloseSanPham}
-              onCancel={handleCloseSanPham}
+
+          {/* Bảng giỏ hàng */}
+          <div>
+            <Empty
+              image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSy4Pi1fKO57hmDRxcyP1cVftjpGRe2xg-ymZd6Q25PAgeq7dUX4MqU5GGLK3UYYYc_s8s&amp;usqp=CAU"
+              imageStyle={{
+                height: 250,
+              }}
+              description={
+                <span>
+                  Không có sản phẩm nào trong giỏ
+                </span>
+              }
             />
           </div>
-        </div>
-        {/* bảng giỏ hàng */}
-        <div>
-          <Empty
-            image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSy4Pi1fKO57hmDRxcyP1cVftjpGRe2xg-ymZd6Q25PAgeq7dUX4MqU5GGLK3UYYYc_s8s&amp;usqp=CAU"
-            imageStyle={{
-              height: 250,
-            }}
-            description={
-              <span>
-                Không có sản phẩm nào trong giỏ
-              </span>
-            }
-          />
-
-        </div>
-        {/* hết giỏ hàng */}
+          {/* Hết giỏ hàng */}
+        </>
+      ) : (
+        /* Content when tab.sanPham is not empty */
+        <>
+          <div>
+            <div className="d-flex justify-content-between align-items-center">
+            <div className="text-start">
+              <h4><FaList /> Danh sách</h4>
+            </div>
+            <div className="text-end">
+              <Button type="primary" icon={<BsQrCodeScan />} onClick={() => setOpenScan(true)}>Quét QR sản phẩm</Button>
+              <Button type="primary" className="ms-3" onClick={() => setOpenSanPham(true)}>Chọn sản phẩm</Button>
+              <ModalSanPham
+                openSanPham={openSanPham}
+                setOpenSanPham={setOpenSanPham}
+                onOk={handleCloseSanPham}
+                onCancel={handleCloseSanPham}
+              />
+            </div>
+          </div>
+            {/* Your content when tab.sanPham is not empty */}
+            (hehhee {tab.ma})
+          </div>
+        </>
+      )}
+    </TabPane>
+  ))}
+        </Tabs>
+        
 
         {/* thông tin khách hàng */}
         <div className="d-flex justify-content-between align-items-center">

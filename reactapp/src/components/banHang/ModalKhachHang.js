@@ -69,7 +69,7 @@ const ModalKhachHang = (props) => {
             // footer={
             //     <button onClick={handleClose}>Hủy</button>
             // }
-            width={1000}
+            width={1300}
         >
             <div className="container">
                 <div className="row mt-4">
