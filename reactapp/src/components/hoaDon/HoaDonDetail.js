@@ -16,7 +16,7 @@ import { Image } from 'cloudinary-react';
 import {useReactToPrint} from 'react-to-print';
 import logo from '../../assets/images/logo.png';
 import { FormattedNumber, IntlProvider } from 'react-intl';
-import { ImageTag } from 'cloudinary-core';
+
 export default function HoaDonDetail() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [open, setOpen] = useState(false);

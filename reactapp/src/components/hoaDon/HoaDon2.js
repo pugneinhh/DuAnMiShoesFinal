@@ -37,7 +37,12 @@ export default function HoaDon() {
     const [hoaDon, setHoaDons] = useState([])
     useEffect(() => {
         loadHoaDon();
-
+        loadHoaDonCho();
+        loadHoaDonCVC();
+        loadHoaDonHT();
+        loadHoaDonTT();
+        loadHoaDonVC();
+        loadHoaDonXN();
     }, []);
     // load full hóa đơn
     const loadHoaDon = async () => {
@@ -54,10 +59,7 @@ export default function HoaDon() {
 
     };
     const [hoaDonCho, setHoaDonsCho] = useState([])
-    useEffect(() => {
-        loadHoaDonCho();
 
-    }, []);
     const loadHoaDonCho = async () => {
 
         const result = await axios.get('http://localhost:8080/hoa-don/0', {
@@ -74,10 +76,7 @@ export default function HoaDon() {
     };
     console.log(hoaDonCho);
     const [hoaDonXN, setHoaDonsXN] = useState([])
-    useEffect(() => {
-        loadHoaDonXN();
 
-    }, []);
     const loadHoaDonXN = async () => {
 
         const result = await axios.get('http://localhost:8080/hoa-don/1', {
@@ -92,10 +91,7 @@ export default function HoaDon() {
 
     };
     const [hoaDonCVC, setHoaDonCVC] = useState([])
-    useEffect(() => {
-        loadHoaDonCVC();
 
-    }, []);
     const loadHoaDonCVC = async () => {
 
         const result = await axios.get('http://localhost:8080/hoa-don/2', {
@@ -110,10 +106,7 @@ export default function HoaDon() {
 
     };
     const [hoaDonVC, setHoaDonVC] = useState([])
-    useEffect(() => {
-        loadHoaDonVC();
 
-    }, []);
     const loadHoaDonVC = async () => {
 
         const result = await axios.get('http://localhost:8080/hoa-don/3', {
@@ -128,10 +121,7 @@ export default function HoaDon() {
 
     };
     const [hoaDonTT, setHoaDonTT] = useState([])
-    useEffect(() => {
-        loadHoaDonTT();
-
-    }, []);
+ 
     const loadHoaDonTT = async () => {
 
         const result = await axios.get('http://localhost:8080/hoa-don/4', {
@@ -146,10 +136,7 @@ export default function HoaDon() {
 
     };
     const [hoaDonHT, setHoaDonHT] = useState([])
-    useEffect(() => {
-        loadHoaDonHT();
 
-    }, []);
     const loadHoaDonHT = async () => {
 
         const result = await axios.get('http://localhost:8080/hoa-don/5', {

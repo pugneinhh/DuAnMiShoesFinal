@@ -112,31 +112,8 @@ const onEdit = (targetKey, action) => {
   };
 
 
-  const [maHD, setmaHD] = useState([])
-  const [hoaDon, setHoaDons] = useState([])
-  // const maHoaDon = maHD.map((item) => item.maHD);
-  useEffect(() => {
-    loadHoaDon();
-
-  }, []);
-  // load full hóa đơn
-  const loadHoaDon = async () => {
-
-    const result = await axios.get('http://localhost:8080/ban-hang', {
-      validateStatus: () => {
-        return true;
-      },
-    });
-    if (result.status === 302) {
-      setHoaDons(result.data);
-      setmaHD(result.data.maHD);
-      console.log(maHD)
-
-      console.log(hoaDon)
-    }
 
 
-  };
   //add và remove tab
   // const add = () => {
   //   if (demTab.current >= 5) {

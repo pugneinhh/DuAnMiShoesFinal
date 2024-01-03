@@ -22,11 +22,7 @@ public class BanHangController {
     @Autowired
     BanHangService banHangService;
 
-    @GetMapping()
-    public ResponseEntity<?> getALL(){
-        List<AdminBanHangHDRespon> list=banHangService.HoaDonBanHang();
-        return ResponseEntity.ok(list);
-    }
+
     @GetMapping("/getALLCTSP")
     public ResponseEntity<?> getALLctsp(){
         List<ChiTietSanPhamRespone> list=banHangService.getALLCTSPBanHang();

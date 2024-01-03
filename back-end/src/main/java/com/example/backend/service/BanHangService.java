@@ -18,9 +18,7 @@ public class BanHangService {
     @Autowired
     CTSPRepository ctspRepository;
 
-    public List<AdminBanHangHDRespon> HoaDonBanHang(){
-        return  hoaDonRepository.HoaDonBanHang();
-    }
+
    public List<ChiTietSanPhamRespone> getALLCTSPBanHang(){
         return ctspRepository.getALLCTSPBanHang();
     }
