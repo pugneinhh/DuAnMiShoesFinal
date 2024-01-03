@@ -21,13 +21,20 @@ const TableKhachHang = ({onSelectedKH,suaKH}) => {
             });
             if (result.status === 302) {
               setKhachHangs(result.data);
-              // setSelectedRowKeys(suaKH);
-              // onSelectedKH(suaKH);
+
             }
           };
           loadKhachHang();
       }, []);
      
+
+      useEffect(() => {
+        console.log("idKH  =", suaKH);
+        setSelectedRowKeys(suaKH);
+        onSelectedKH(suaKH);
+      },[suaKH]);
+
+      
       const handleCheckboxChange = (selectedKeys , selectedRowKeys) => {
       if (selectedRowKeys !== null){
         setSelectedRowKeys(selectedKeys);

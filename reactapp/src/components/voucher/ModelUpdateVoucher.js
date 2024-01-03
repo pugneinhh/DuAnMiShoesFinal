@@ -13,6 +13,7 @@ const ModelUpdateVoucher=(props)=>{
   const { id } = useParams();
   const [selectedValue, setSelectedValue] = useState('Tiền mặt');
   const [dataUpdate, setDataUpdate] = useState({});
+  const [khachHang,setKhachHang] = useState([]);
   const navigate = useNavigate();
 
   const handleChange = (value) => {
@@ -29,6 +30,8 @@ const ModelUpdateVoucher=(props)=>{
 const detailVoucher= async () =>{
   axios.get(`http://localhost:8080/voucher/detail/${id}`)
   .then(response => {
+    const x =  axios.get(`http://localhost:8080/nguoi-dung-voucher/voucher/${response.data.id}`);
+    setKhachHang(x.data);
     form2.setFieldsValue({
       id:response.data.id,
 ma:response.data.ma,
@@ -56,6 +59,10 @@ useEffect(() => {
     setDataUpdate({});
     console.log("đóng")
 };
+
+const loadKH = async() => {
+
+}
 
 const [selectedIDKH, setSelectedIDKH] = useState([]);
 
@@ -373,7 +380,7 @@ const validateDateBD = (_, value) => {
           </p>
           <TableKhachHang        
           onSelectedKH = {handleSelectedIDKH}
-          //suaKH ={idKH}
+          suaKH ={khachHang}
           />
         </div>
       </div>

@@ -16,7 +16,7 @@ import java.util.UUID;
 @Repository
 public interface CTSPRepository extends JpaRepository<ChiTietSanPham,String> {
     @Query(value = """
-            SELECT o.id AS idCTSP,ha.url AS linkAnh ,sp.ten AS tenSP ,kt.ten AS tenKT,ms.ten AS tenMS,ms.ma AS maMS,
+            SELECT o.id AS idCTSP,MIN(ha.url) AS linkAnh ,sp.ten AS tenSP ,kt.ten AS tenKT,ms.ten AS tenMS,ms.ma AS maMS,
             o.so_luong AS soLuong,o.gia_ban AS giaBan,o.trang_thai AS trangThai
             FROM chi_tiet_san_pham o
             JOIN san_pham sp  on o.san_pham_id=sp.id
@@ -24,6 +24,7 @@ public interface CTSPRepository extends JpaRepository<ChiTietSanPham,String> {
             JOIN mau_sac ms  on o.mau_sac_id=ms.id
             JOIN hinh_anh ha on o.id=ha.chi_tiet_san_pham_id    
             WHERE o.san_pham_id=:idSP
+             group by o.id
                      """, nativeQuery = true)
     List<ChiTietSanPhamRespone> getALLCTSP(@Param("idSP") String idSP);
     @Query(value = """

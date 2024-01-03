@@ -117,6 +117,7 @@ const SuaKhuyenMai = () => {
       .put(`http://localhost:8080/khuyen-mai/update/${id}`, value)
       .then((response) => {
         setIDKM(response.data);
+        if (selectedIDCTSP > 0){
         Promise.all(
           selectedIDCTSP.map((id) =>
             axios.put(
@@ -125,6 +126,7 @@ const SuaKhuyenMai = () => {
             )
           )
         );
+            }
         navigate("/khuyen-mai");
         toast("✔️ Sửa thành công!", {
           position: "top-right",

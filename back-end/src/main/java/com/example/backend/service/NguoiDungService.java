@@ -3,6 +3,7 @@ package com.example.backend.service;
 import com.example.backend.dto.request.NguoiDungRequest;
 
 import com.example.backend.entity.NguoiDung;
+import com.example.backend.model.AdminKhachHangRepon;
 import com.example.backend.repository.NguoiDungRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,8 @@ import java.util.List;
 public class NguoiDungService {
     @Autowired
     NguoiDungRepository nguoiDungRepository;
+
+    public List<AdminKhachHangRepon> getKhach() {return nguoiDungRepository.getAllKhachHang();}
     public List<NguoiDung> getAll(){
         return nguoiDungRepository.findAll();
     }

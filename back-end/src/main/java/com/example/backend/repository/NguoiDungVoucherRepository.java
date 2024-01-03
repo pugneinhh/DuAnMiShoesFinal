@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface NguoiDungVoucherRepository extends JpaRepository<NguoiDungVoucher,String> {
-    @Query(value = "select nguoi_dung_id from nguoidung_voucher where voucher_id=:?1",nativeQuery = true)
+    @Query(value = "select nguoi_dung_id from nguoidung_voucher where voucher_id=:id",nativeQuery = true)
     List<String> getIDKHByIDKM(String id);
     List<NguoiDungVoucher> getAllByNguoiDungLike(String nguoiDung);
     NguoiDungVoucher getNguoiDungVoucherByNguoiDung_IdAndVoucher_Id(String idKH,String idV);

@@ -348,7 +348,7 @@ export default function CTSP() {
             <div className='row'>
               {/* Độ Cao */}
               <div className='col-md-3'>
-                <Form.Item label="Độ Cao" name="idDC">
+                <Form.Item label="Đế giày" name="idDC">
                   <Select placeholder="Chọn một giá trị">
                     {dc.map(item => (
                       <Option key={item.ma} value={item.ma}>
