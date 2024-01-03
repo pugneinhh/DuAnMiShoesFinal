@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import java.math.BigDecimal;
 
 public interface ChiTietSanPhamRespone {
+
     @Value("#{target.idCTSP}")
     String getIdCTSP();
 
