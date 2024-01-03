@@ -22,6 +22,10 @@ public class NguoiDungController {
     public ResponseEntity<?> getAll(){
         return new ResponseEntity<>(nguoiDungService.getAll(), HttpStatus.FOUND);
     }
+    @GetMapping("/khach-hang")
+    public ResponseEntity<?> getKhach(){
+        return new ResponseEntity<>(nguoiDungService.getKhach(), HttpStatus.OK);
+    }
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody NguoiDungRequest request){
         request.setNgayTao(LocalDateTime.now());
