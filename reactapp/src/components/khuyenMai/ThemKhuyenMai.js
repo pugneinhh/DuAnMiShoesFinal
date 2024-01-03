@@ -65,9 +65,6 @@ const ThemKhuyenMai = () => {
             )
           )
         );
-        // for(let i = 0; i < selectedIDCTSP.length; i++) {
-        //   axios.put(`http://localhost:8080/ctsp/updateKM/${selectedIDCTSP[i]}`,response.data.id)
-        // }\
         setIDKM(response.data);
         console.log("Thêm res", response.data.id);
         navigate('/khuyen-mai');

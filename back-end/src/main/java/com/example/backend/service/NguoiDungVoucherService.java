@@ -6,6 +6,7 @@ import com.example.backend.entity.NguoiDungVoucher;
 import com.example.backend.entity.Voucher;
 import com.example.backend.repository.NguoiDungRepository;
 import com.example.backend.repository.NguoiDungVoucherRepository;
+import com.example.backend.repository.VoucherRepository;
 import com.example.backend.util.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,9 +20,15 @@ public class NguoiDungVoucherService {
     NguoiDungVoucherRepository nguoiDungVoucherRepository;
     @Autowired
     NguoiDungRepository nguoiDungRepository;
-    public List<NguoiDungVoucher> getAllByVoucher(String voucher){
-        return nguoiDungVoucherRepository.getAllByVoucherLike(voucher);
+    @Autowired
+    VoucherRepository voucherRepository;
+    public List<String> getAllByVoucher(String id){
+        return nguoiDungVoucherRepository.getIDKHByIDKM(id);
     }
+    public List<NguoiDungVoucher> getALL(){
+        return nguoiDungVoucherRepository.findAll();
+    }
+
     public List<NguoiDungVoucher> getAllByNguoiDung(String nguoiDung){
         return nguoiDungVoucherRepository.getAllByNguoiDungLike(nguoiDung);
     }

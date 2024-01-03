@@ -24,7 +24,7 @@ import {PlusCircleOutlined} from '@ant-design/icons';
 import "./Voucher.scss";
 import ModelAddVoucher from "./ModelUpdateVoucher";
 import ModalDetail from "./ModalDetail";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { render } from '@testing-library/react';
 import { FaTag } from 'react-icons/fa';
@@ -42,6 +42,8 @@ const Voucher = ()=>{
     //   ngayKTVoucher:"",
     // });
      const [dataSearch,setDataSearch]=useState({});
+     const[voucher,setVouchers]=useState([])
+
     const onChangeFilter=(changedValues, allValues)=>{
       
       console.log("hi",changedValues);
@@ -56,19 +58,49 @@ const Voucher = ()=>{
     const timKiemVoucher=(dataSearch)=>{
       axios.post('http://localhost:8080/voucher/search-voucher',dataSearch)
       .then(response => {
-          // Update the list of items
-          if(response.data.length==0){
-          setVouchers(null);
-          }else{
             setVouchers(response.data);
-          }
-          console.log("tìm kím:",voucher);
-          console.log("tìm :",response.data.length);
       })
       .catch(error => console.error('Error adding item:', error));
     }
+    const loadVoucher=async()=>{
+       
+      await axios.get('http://localhost:8080/voucher/hien-thi')
+      .then(response => {
+        // Update the list of items
+        setVouchers(response.data);
+    })
+    .catch(error => console.error('Error adding item:', error));
+  
+    
+  };
 
-
+  useEffect(()=>{
+    loadVoucher();
+  },[]);
+    useEffect(() => {
+      const handleUpdateStatus = (status) => {
+        const currentTime = new Date();
+        if (!dataSearch.tenVoucher  && !dataSearch.trangThaiVoucher && !dataSearch.ngayKTVoucher && !dataSearch.ngayBDVoucher && !dataSearch.loaiVoucher){
+        voucher.forEach( x => {
+         (currentTime > new Date(x.ngayBatDau) && currentTime < new Date(x.ngayKetThuc)) ?
+          axios.put(`http://localhost:8080/voucher/updateTTHD/${x.id}`, x)
+         : ( currentTime > new Date(x.ngayKetThuc))
+          ?
+          axios.put(`http://localhost:8080/voucher/updateTTNgung/${x.id}`, x)
+          // : (currentTime < new Date(x.ngayBatDau)) ?
+          // axios.put(`http://localhost:8080/voucher/updateTTSap/${x.id}`, x)
+          : console.log('Không có dữ liệu update');      
+        });
+       
+        loadVoucher();
+          }
+    }
+      const time = setInterval(handleUpdateStatus , 10000)
+      return () => {
+        clearInterval(time);
+      }
+    
+    },[voucher]);
 
 
     const [componentSize, setComponentSize] = useState('default');
@@ -81,33 +113,15 @@ const Voucher = ()=>{
  
     ///call api
 
-    const[voucher,setVouchers]=useState([])
     const [myVoucher,setMyVoucher]=useState({});
-    useEffect(()=>{
-      loadVoucher();
-      // setInterval(()=>{
-      //   loadVoucher();
-      // },60000);
-      // return () => clearInterval();
-      // timKiemVoucher(dataSearch);
-    },[]);
+
     
      //tìm kiếm
     
   
 
     //loadvoucher
-    const loadVoucher=async()=>{
-       
-        await axios.get('http://localhost:8080/voucher/hien-thi')
-        .then(response => {
-          // Update the list of items
-          setVouchers(response.data);
-      })
-      .catch(error => console.error('Error adding item:', error));
-    
-      
-    };
+
     //của table
     //table
 
@@ -160,8 +174,8 @@ const columns = [
                     {
                         (trangThai == 'SAP_DIEN_RA') ?
                             (
-                                <Tag color="green">
-                                    Hoạt động
+                                <Tag color="yellow">
+                                  Sắp hoạt động
                                 </Tag>
 
                             )  : (trangThai=='DANG_HOAT_DONG')?(

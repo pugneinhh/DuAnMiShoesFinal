@@ -1,23 +1,20 @@
-import React, { useState, useEffect, Text, View, Component } from "react";
+import React, { useState, useEffect} from "react";
 import axios from "axios";
 import {
   Table,
   Tag,
-  Checkbox
 } from "antd";
 import "./KhuyenMai.scss";
 
 
-const TableChiTietSanPham = ({selectedIDSPs,onSelectedCTSanPham}) => {
+const TableChiTietSanPham = ({selectedIDSPs,onSelectedCTSanPham,suaIDCTSP}) => {
   const [ctsp, setCTSP] = useState([]);
   const [idSanPham, setIDSanPham] = useState([]);
-  const [selectedRowCTSP, setSelectedRowCTSP] = useState([]);
+ // const [selectedRowCTSP, setSelectedRowCTSP] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
-  // const [selectedCTSP , setSelectedCTSP] = useState([]);
   useEffect(() => {
     const getCTSPByIDSP = async () => {
-      console.log("selectedIDSPs",selectedIDSPs);
       try {
         if (selectedIDSPs.length === 1) {
           const response = await axios.get(`http://localhost:8080/ctsp/showCTSP/${selectedIDSPs[0]}`)
@@ -32,14 +29,16 @@ const TableChiTietSanPham = ({selectedIDSPs,onSelectedCTSanPham}) => {
               setCTSP(prevData  => response.data.includes(prevData) ? console.log("trùng:" ,prevData) : 
                 [...prevData ,...response.data])));
               setIDSanPham(prevData => [...prevData , ...filterArrray]);
+        
           } else {
             console.log("Xóa");
             const responses = await Promise.all(selectedIDSPs.map(id => axios.get(`http://localhost:8080/ctsp/showCTSP/${id}`)));
             for (let i = 0 ; i < responses.length ; i++){
-              if (i== 0) setCTSP(responses[0].data);
+              if (i === 0) setCTSP(responses[0].data);
               else setCTSP((prevData) => [...prevData,...responses[i].data]);
             }
               setIDSanPham(selectedIDSPs);
+           
           }
         } else {
             setCTSP([])
@@ -50,12 +49,15 @@ const TableChiTietSanPham = ({selectedIDSPs,onSelectedCTSanPham}) => {
       }
     };
     getCTSPByIDSP();
-    console.log("Seleted CTSP", ctsp);
+
   }, [selectedIDSPs]);
 
 
-  console.log("Seleted CTSP", ctsp);
-
+  useEffect(() => {
+    setSelectedRowKeys(suaIDCTSP);
+    console.log("CTSP from tblSP: " , suaIDCTSP);
+    onSelectedCTSanPham(suaIDCTSP);
+  },[suaIDCTSP]);
   const columnsChiTietSanPham = [
     {
       title: "#",
@@ -178,17 +180,19 @@ const TableChiTietSanPham = ({selectedIDSPs,onSelectedCTSanPham}) => {
 
   
   const rowSelection = {
-    selectedRowCTSP,      
-    onChange: (selectedKeys) => {
+    selectedRowKeys,      
+    onChange: (selectedKeys,selectedRowKeys) => {
+      if (selectedRowKeys !== null){
       onSelectedCTSanPham(selectedKeys);
-        setSelectedRowCTSP(selectedKeys);
-;
+      setSelectedRowKeys(selectedKeys);
+      }
     
   }
   };
   return (
     <Table
       rowSelection={rowSelection}
+      defaultSelectedRowKeys={selectedRowKeys}
       columns={columnsChiTietSanPham}
       dataSource={dataSoure1}
       pagination={{

@@ -33,7 +33,7 @@ public class SanPhamService {
 
     public SanPham addSP(SanPham sp){return sanPhamRepository.save(sp);}
 
-    public String  getSPByCTSP(String id){
+    public List<String>  getSPByCTSP(String id){
         return sanPhamRepository.getIDSPbyCTSP(id);
     }
 }

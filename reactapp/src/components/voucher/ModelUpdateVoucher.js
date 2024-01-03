@@ -6,13 +6,15 @@ import { useParams, useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { FaTag } from "react-icons/fa";
 import TableKhachHang from "./tableKhachHang";
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const ModelUpdateVoucher=(props)=>{
   const [form2]=Form.useForm();
   const { id } = useParams();
   const [selectedValue, setSelectedValue] = useState('Tiền mặt');
   const [dataUpdate, setDataUpdate] = useState({});
-  
+  const navigate = useNavigate();
+
   const handleChange = (value) => {
     console.log(`Selected value: ${value}`);
     setSelectedValue(value);
@@ -55,10 +57,16 @@ useEffect(() => {
     console.log("đóng")
 };
 
+const [selectedIDKH, setSelectedIDKH] = useState([]);
+
+const handleSelectedIDKH = (selectedRowKeys) => {
+  setSelectedIDKH(selectedRowKeys);
+}
 const handleUpdateVoucher=(value)=>{
       
   axios.put(`http://localhost:8080/voucher/update/${dataUpdate.id}`,value)
   .then(response => {
+    navigate('/voucher');
     toast('✔️ Cập nhật thành công!', {
       position: "top-right",
       autoClose: 5000,
@@ -363,10 +371,13 @@ const validateDateBD = (_, value) => {
           <p className="fw-bold" style={{ marginTop: 10 }}>
             Khách hàng
           </p>
-          <TableKhachHang />
+          <TableKhachHang        
+          onSelectedKH = {handleSelectedIDKH}
+          //suaKH ={idKH}
+          />
         </div>
       </div>
-      <ToastContainer
+      {/* <ToastContainer
         position="top-right"
         autoClose={5000}
         hideProgressBar={false}
@@ -378,8 +389,7 @@ const validateDateBD = (_, value) => {
         pauseOnHover
         theme="light"
       />
-      {/* Same as */}
-      <ToastContainer />
+      <ToastContainer /> */}
     </div>
     )
 }

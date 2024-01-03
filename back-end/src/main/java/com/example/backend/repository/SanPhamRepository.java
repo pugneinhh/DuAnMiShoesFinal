@@ -17,5 +17,5 @@ public interface SanPhamRepository extends JpaRepository<SanPham, String> {
     List<SanPhamRespone> getALLSP();
 
     @Query(value = "select san_pham.id from san_pham join chi_tiet_san_pham on san_pham.id = chi_tiet_san_pham.san_pham_id where chi_tiet_san_pham.id = ?1",nativeQuery = true)
-    String getIDSPbyCTSP(String id);
+    List<String> getIDSPbyCTSP(String id);
 }

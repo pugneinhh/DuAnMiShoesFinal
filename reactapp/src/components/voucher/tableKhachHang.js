@@ -8,7 +8,7 @@ import {
 } from "antd";
 
 
-const TableKhachHang = () => {
+const TableKhachHang = ({onSelectedKH,suaKH}) => {
     const [khachHang, setKhachHangs] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
@@ -21,7 +21,8 @@ const TableKhachHang = () => {
             });
             if (result.status === 302) {
               setKhachHangs(result.data);
-              
+              // setSelectedRowKeys(suaKH);
+              // onSelectedKH(suaKH);
             }
           };
           loadKhachHang();
@@ -30,10 +31,17 @@ const TableKhachHang = () => {
       const handleCheckboxChange = (selectedKeys , selectedRowKeys) => {
       if (selectedRowKeys !== null){
         setSelectedRowKeys(selectedKeys);
-        // onSelectedSanPham(selectedKeys);
+        onSelectedKH(selectedKeys);
+      
 
       };
     }
+
+    // useEffect(() => {
+    //   setSelectedRowKeys(suaKH);
+    //   console.log("Khách hàng: " , suaKH);
+    //   onSelectedKH(suaKH);
+    // },[suaKH]);
 
       const columnsKhachHang= [
 
@@ -88,7 +96,7 @@ const TableKhachHang = () => {
 
       const dataSource = khachHang.map((item, index) => ({
         key: item.id,
-        checkbox: ++index,
+       // checkbox: ++index,
         id: item.id,
         ma: item.ma,
         ten: item.ten,
@@ -108,6 +116,7 @@ const TableKhachHang = () => {
 
         <Table
         rowSelection={rowSelection}
+        defaultSelectedRowKeys={selectedRowKeys}
         columns={columnsKhachHang}
         dataSource={dataSource}  
         pagination={{ defaultPageSize: 5 }}

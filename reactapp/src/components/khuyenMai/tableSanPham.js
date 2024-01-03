@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Text, View, Component , } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   Table,
@@ -8,23 +8,32 @@ import {
 } from "antd";
 import "./KhuyenMai.scss";
 
+
 const TableSanPham = ({onSelectedSanPham , suaIDSP}) => {
     const [sanPham, setSanPhams] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
 
     useEffect(() => {
         const loadSanPham = async () => {
             await axios.get("http://localhost:8080/san-pham")
             .then(response =>{
-
               setSanPhams(response.data)
+              console.log("idSP  =", suaIDSP);
+              setSelectedRowKeys(suaIDSP);
+              onSelectedSanPham(suaIDSP);
             })
             .catch(error => console.error('Error adding item:', error));
           };
-          loadSanPham();
-      }, []);
-     
 
+          loadSanPham();
+      }, [suaIDSP]);
+     
+      // useEffect(() =>{
+      //   setSelectedRowKeys(suaIDSP);
+      //   onSelectedSanPham(suaIDSP); 
+      // },[]);
+      
       const handleCheckboxChange = (selectedKeys , selectedRowKeys) => {
         console.log("selected row key",selectedRowKeys);
       if (selectedRowKeys !== null){
@@ -88,36 +97,20 @@ const TableSanPham = ({onSelectedSanPham , suaIDSP}) => {
         },
       ];
 
-      const handleCancel = (selectedKey) => {
-        const response =  axios.delete(`http://localhost:8080/san-pham/${selectedKey}`)
-        .then (response => {
-          console.log("Xóa ",selectedKey);
-          console.log("Còn lại",selectedRowKeys.filter(row => row !== selectedKey));
-          setSelectedRowKeys(selectedRowKeys.filter(row => row !== selectedKey))
-          onSelectedSanPham(selectedRowKeys.filter(row => row !== selectedKey));
-
-        })
-        .catch(error => console.error('Error deleting product:', error));
-
-
-
-      };
-
-
-
 
       const rowSelection = {
-        selectedRowKeys,   
+        selectedRowKeys,
+        // type : 'checkbox',
         onChange: handleCheckboxChange,
-        // getCheckboxProps : record => ({        
-        //   disabled: selectedRowKeys.includes(record.key)}),
+        // selectedRowKeys : selectedRowKeys,
+       // defultSelectedRowKeys : suaIDSP
       };
 
 
 
       const dataSource = sanPham.map((item, index) => ({
         key: item.idSP,
-        checkbox: ++index,
+       // checkbox: ++index,
         idSP: item.idSP,
         ma: item.ma,
         ten: item.ten,
@@ -136,6 +129,7 @@ const TableSanPham = ({onSelectedSanPham , suaIDSP}) => {
 
         <Table
         rowSelection={rowSelection}
+        defaultSelectedRowKeys={selectedRowKeys}
         columns={columnsSanPham}
         dataSource={dataSource}  
         pagination={{
@@ -144,6 +138,7 @@ const TableSanPham = ({onSelectedSanPham , suaIDSP}) => {
           defaultPageSize:5,
           total: dataSource.length,
         }}
+
        /> 
         </div>
 

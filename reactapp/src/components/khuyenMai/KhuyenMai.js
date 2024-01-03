@@ -423,7 +423,7 @@ const timKiemKhuyenMai=(dataSearch)=>{
                     className="rounded-pill border-warning"
                     id="abc"
                   >
-                    <option value="Tất cả">Tất cả</option>
+                    <option value="">Tất cả</option>
                     <option value="Tiền mặt">Tiền mặt</option>
                     <option value="Phần trăm">Phần trăm</option>
                   </select>

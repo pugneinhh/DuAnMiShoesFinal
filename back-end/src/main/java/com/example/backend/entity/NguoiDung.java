@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
-@ToString
+
 public class NguoiDung {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -39,4 +39,6 @@ public class NguoiDung {
     private String hangKhachHang;
     private int diem;
     private int trangThai;
+
+
 }
