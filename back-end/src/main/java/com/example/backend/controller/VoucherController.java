@@ -1,8 +1,10 @@
 package com.example.backend.controller;
 
 import com.example.backend.dto.request.VoucherRequest;
+import com.example.backend.entity.NguoiDungVoucher;
 import com.example.backend.entity.Voucher;
 import com.example.backend.dto.request.VoucherSearch;
+import com.example.backend.service.NguoiDungVoucherService;
 import com.example.backend.service.VoucherService;
 import com.example.backend.util.Status;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,8 @@ import java.time.LocalDateTime;
 public class VoucherController {
     @Autowired
     VoucherService vs;
+    @Autowired
+    NguoiDungVoucherService nguoiDungVoucherService;
     @GetMapping("/hien-thi")
     public ResponseEntity<?> getALL(){
 //        vs.checkHan();
@@ -82,6 +86,7 @@ public class VoucherController {
     }
     @PutMapping("/updateTTHD/{id}")
     public ResponseEntity<?> updateTTHD(@PathVariable("id")String id,@RequestBody VoucherRequest request){
+
         return ResponseEntity.ok(vs.updateTTHD(id,request));
     }
     @PutMapping("/updateTTNgung/{id}")

@@ -1,8 +1,7 @@
-import React, { useState, useEffect, Text, View, Component , } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   Table,
-  Tag,
   Form,
   Input,
 } from "antd";
@@ -29,7 +28,6 @@ const TableKhachHang = ({onSelectedKH,suaKH}) => {
      
 
       useEffect(() => {
-        console.log("idKH  =", suaKH);
         setSelectedRowKeys(suaKH);
         onSelectedKH(suaKH);
       },[suaKH]);
@@ -43,12 +41,6 @@ const TableKhachHang = ({onSelectedKH,suaKH}) => {
 
       };
     }
-
-    // useEffect(() => {
-    //   setSelectedRowKeys(suaKH);
-    //   console.log("Khách hàng: " , suaKH);
-    //   onSelectedKH(suaKH);
-    // },[suaKH]);
 
       const columnsKhachHang= [
 
@@ -95,10 +87,7 @@ const TableKhachHang = ({onSelectedKH,suaKH}) => {
       const rowSelection = {
         selectedRowKeys,      
         onChange: handleCheckboxChange,
-        
-        // onCancel: () => handleCancel,
       };
-      console.log(khachHang);
 
 
       const dataSource = khachHang.map((item, index) => ({
