@@ -2,6 +2,7 @@ package com.example.backend.service;
 
 import com.example.backend.dto.request.VoucherRequest;
 import com.example.backend.dto.response.AdminVoucher;
+import com.example.backend.entity.NguoiDungVoucher;
 import com.example.backend.entity.Voucher;
 import com.example.backend.dto.request.VoucherSearch;
 import com.example.backend.repository.VoucherRepository;
@@ -20,6 +21,8 @@ import java.util.List;
 public class VoucherService {
     @Autowired
     VoucherRepository vr;
+    @Autowired
+    NguoiDungVoucherService nguoiDungVoucherService;
     public List<Voucher> getAll(){
         Sort sort=Sort.by(Sort.Order.desc("ngayTao"));
 //        return vr.findAll(sort);
@@ -36,6 +39,12 @@ public class VoucherService {
         Voucher v=request.map(new Voucher());
         v.setId(id);
         v.setTrangThai(Status.NGUNG_HOAT_DONG);
+        List<String> listIDKH = nguoiDungVoucherService.getAllByVoucher(id);
+        if (listIDKH.size() > 0) {
+            for (String x : listIDKH) {
+                nguoiDungVoucherService.updateTrangThai_DaKetThuc(x, id);
+            }
+        }
         return vr.save(v);
     }
     public Voucher updateTTHD(String id,VoucherRequest request){

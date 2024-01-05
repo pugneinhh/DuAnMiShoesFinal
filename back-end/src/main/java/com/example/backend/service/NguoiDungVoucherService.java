@@ -46,4 +46,21 @@ public class NguoiDungVoucherService {
         return ndv;
     }
 
+    public NguoiDungVoucher updateTrangThai_ChuaBatDau(String idKH, String idV){
+        NguoiDungVoucher n = nguoiDungVoucherRepository.getNguoiDungVoucherByVoucherAndKHhachHang(idV,idKH);
+        n.setTrangThai(Status.SAP_DIEN_RA);
+        return n;
+    }
+
+    public NguoiDungVoucher updateTrangThai_DangDienRa(String idKH, String idV){
+        NguoiDungVoucher n = nguoiDungVoucherRepository.getNguoiDungVoucherByVoucherAndKHhachHang(idV,idKH);
+        n.setTrangThai(Status.DANG_SU_DUNG);
+        return n;
+    }
+
+    public NguoiDungVoucher updateTrangThai_DaKetThuc(String idKH, String idV){
+        NguoiDungVoucher n = nguoiDungVoucherRepository.getNguoiDungVoucherByVoucherAndKHhachHang(idV,idKH);
+        n.setTrangThai(Status.NGUNG_HOAT_DONG);
+        return n;
+    }
 }
