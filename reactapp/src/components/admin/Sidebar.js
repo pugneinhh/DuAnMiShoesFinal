@@ -64,10 +64,18 @@ const SideBar = (props) => {
                         }}
                     >
                         <div className='logo_slibar'>
-                            {!collapsed ? <Image width={100} src={logoShop} /> : <Image src={logoShop} rounded />}
+                            {!collapsed ? 
+                            (
+                              <div>
+                            <Image width={100} src={logoShop} />
+                            <br></br>
+                            <span> Mi Shoes</span> 
+                            </div>
+                            )
+                            :( <Image src={logoShop} rounded /> )}
 
                         </div>
-                        <span> Mi Shoes</span>
+
                     </div>
                 </SidebarHeader>
                 <Menu iconShape="circle">
@@ -204,7 +212,7 @@ const SideBar = (props) => {
                     color: "white",
                   }}
                 >
-                  Mi Shoes
+                 Mi Shoes
                 </span>
               </a>
             )}
