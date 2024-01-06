@@ -9,8 +9,13 @@ import {
   Divider,
   Modal,
   DatePicker,
+  Breadcrumb,
 } from "antd";
 import "./KhuyenMai.scss";
+import {
+  HomeOutlined,
+} from "@ant-design/icons";
+import { BiSolidDiscount } from "react-icons/bi";
 import { LuBadgePercent } from "react-icons/lu";
 import { toast } from "react-toastify";
 import {useNavigate } from 'react-router-dom';
@@ -130,6 +135,34 @@ const ThemKhuyenMai = () => {
   return (
     <div className="container">
       <div>
+      <Breadcrumb
+      style={{marginTop: "10px"}}
+    items={[
+      {
+        href: '/admin/ban-hang',
+        title: <HomeOutlined />,
+      },
+      {
+        href: 'http://localhost:3000/admin/ban-hang',
+        title: (
+          <>
+            <BiSolidDiscount size={15} style={{paddingBottom:2}}/> 
+            <span>Giảm giá</span>
+          </>
+        ),
+      },
+      {
+        href: 'http://localhost:3000/khuyen-mai',
+        title: (
+          <>
+          <LuBadgePercent size={15} style={{paddingBottom:2}}/> 
+          <span>Đợt giảm giá</span>       </> )
+      },
+      {
+        title: 'Thêm đợt giảm giá'
+      }
+    ]}
+  />
         <div className="container-fluid">
           <br />
           <div className="row">
