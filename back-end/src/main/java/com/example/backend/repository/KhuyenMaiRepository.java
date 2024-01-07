@@ -27,9 +27,9 @@ public interface KhuyenMaiRepository extends JpaRepository<KhuyenMai,String> {
                     "(:#{#khuyenMaiSearch.ma} IS NULL OR khuyen_mai.ma LIKE (%:#{#khuyenMaiSearch.ma}%)) AND \n"+
                     "(:#{#khuyenMaiSearch.gia_tri_khuyen_mai} IS NULL OR khuyen_mai.gia_tri_khuyen_mai LIKE (%:#{#khuyenMaiSearch.gia_tri_khuyen_mai}%)) AND \n"+
                     "(:#{#khuyenMaiSearch.loai} IS NULL OR khuyen_mai.loai LIKE  (%:#{#khuyenMaiSearch.loai}%)) AND \n"+
-                    "(:#{#khuyenMaiSearch.ngayBatDau} IS NULL OR :#{#khuyenMaiSearch.ngayKetThuc} IS NULL OR \n"+
-                    "(khuyen_mai.ngay_bat_dau BETWEEN (:#{#khuyenMaiSearch.ngayBatDau}) AND (:#{#khuyenMaiSearch.ngayKetThuc})) \n"+
-                    "AND (khuyen_mai.ngay_ket_thuc BETWEEN (:#{#khuyenMaiSearch.ngayBatDau}) AND (:#{#khuyenMaiSearch.ngayKetThuc})))",nativeQuery = true)
+                    "(:#{#khuyenMaiSearch.ngay_bat_dau} IS NULL OR :#{#khuyenMaiSearch.ngay_ket_thuc} IS NULL OR \n"+
+                    "(khuyen_mai.ngay_bat_dau BETWEEN (:#{#khuyenMaiSearch.ngay_bat_dau}) AND (:#{#khuyenMaiSearch.ngay_ket_thuc})) \n"+
+                    "AND (khuyen_mai.ngay_ket_thuc BETWEEN (:#{#khuyenMaiSearch.ngay_bat_dau}) AND (:#{#khuyenMaiSearch.ngay_ket_thuc})))",nativeQuery = true)
     List<AdminKhuyenMai> searchKhuyenMai(KhuyenMaiSearch khuyenMaiSearch);
 }
 

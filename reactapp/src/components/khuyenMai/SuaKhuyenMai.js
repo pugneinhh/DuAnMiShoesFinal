@@ -10,8 +10,14 @@ import {
   DatePicker,
   Divider,
   Modal,
+  Breadcrumb,
 } from "antd";
 import "./KhuyenMai.scss";
+import {
+  HomeOutlined,
+} from "@ant-design/icons";
+import { BiSolidDiscount } from "react-icons/bi";
+
 import { LuBadgePercent } from "react-icons/lu";
 import {toast } from "react-toastify";
 import TableSanPham from "./tableSanPham";
@@ -72,13 +78,6 @@ const SuaKhuyenMai = () => {
     );
   };
 
-  // const loadSP = async () => {    
-  //   const resp =  CTSP.map(idCTSP =>
-  //     axios.get(`http://localhost:8080/san-pham/showSP/${idCTSP}`).then(resp1 =>  
-  //     setIDSP(resp1.data)
-  //     ),   
-  //   );
-  // };
 
   useEffect(() => {
     loadDetailKhuyenMai();
@@ -86,14 +85,7 @@ const SuaKhuyenMai = () => {
     
 
   }, []);
-  // useEffect(() => {
-  //   loadCTSP();
-  // },[]);
-  // //[dataUpdate]);
 
-  // useEffect(() => {
-  //   loadSP();
-  // },[]);
 
   const onChangeLoai = (value) => {
     console.log("changed", value);
@@ -125,7 +117,7 @@ const SuaKhuyenMai = () => {
               response.data
             )
           )
-        );
+        ); 
             }
         navigate("/khuyen-mai");
         toast("✔️ Sửa thành công!", {
@@ -178,6 +170,34 @@ const SuaKhuyenMai = () => {
   return (
     <div className="container">
       <div>
+      <Breadcrumb
+      style={{marginTop: "10px"}}
+    items={[
+      {
+        href: '/admin/ban-hang',
+        title: <HomeOutlined />,
+      },
+      {
+        href: 'http://localhost:3000/admin/ban-hang',
+        title: (
+          <>
+            <BiSolidDiscount size={15} style={{paddingBottom:2}}/> 
+            <span>Giảm giá</span>
+          </>
+        ),
+      },
+      {
+        href: 'http://localhost:3000/khuyen-mai',
+        title: (
+          <>
+          <LuBadgePercent size={15} style={{paddingBottom:2}}/> 
+          <span>Đợt giảm giá</span>       </> )
+      },
+      {
+        title: `Sửa đợt giảm giá ${dataUpdate.ma} - ${dataUpdate.ten}`
+      }
+    ]}
+  />
         <div className="container-fluid">
           <Divider orientation="center" color="none">
             <h2 className="text-first pt-1 fw-bold">

@@ -10,9 +10,13 @@ import {
   DatePicker,
   Divider,
   Modal,
+  Breadcrumb ,
 } from "antd";
 import "./KhuyenMai.scss";
+import { BiSolidDiscount } from "react-icons/bi";
 import {
+  HomeOutlined,
+  UserOutlined,
   EyeOutlined,
   PlusCircleOutlined,
   UnorderedListOutlined,
@@ -26,6 +30,7 @@ import moment from "moment";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { dayjs } from "dayjs";
+
 
 const KhuyenMai = () => {
   const currentTime = moment(); // thời gian hiện tại
@@ -374,8 +379,38 @@ const timKiemKhuyenMai=(dataSearch)=>{
       center: "true",
     },
   ];
+
+
+
   return (
+
     <div className="container">
+
+      <Breadcrumb
+      style={{marginTop: "10px"}}
+    items={[
+      {
+        href: '/admin/ban-hang',
+        title: <HomeOutlined />,
+      },
+      {
+       href:'/admin/ban-hang',
+        title: (
+          <>
+            <BiSolidDiscount size={15} style={{paddingBottom:2}}/> 
+        
+            <span>Giảm giá</span>
+          </>
+        ),
+      },
+      {
+        title: (
+          <>
+          <LuBadgePercent size={15} style={{paddingBottom:2}}/> 
+          <span>Đợt giảm giá</span>       </> )
+      },
+    ]}
+  />
       <div>
         <div className="container-fluid">
           <Divider orientation="center" color="none">
@@ -470,15 +505,19 @@ const timKiemKhuyenMai=(dataSearch)=>{
               <div className="col-md-4">
                 <Form.Item label="Ngày bắt đầu" name="ngay_bat_dau">
                   <DatePicker
+                  showTime  
                     style={{ width: "100%" }}
                     placeholder="Ngày bắt đầu"
+                    format="YYYY-MM-DD HH:mm:ss"
                     className="rounded-pill border-warning"
                   />
                 </Form.Item>
                 <Form.Item label="Ngày kết thúc" name="ngay_ket_thuc">
                   <DatePicker
+                  showTime
                     style={{ width: "100%" }}
                     placeholder="Ngày kết thúc"
+                    format="YYYY-MM-DD HH:mm:ss"
                     className="rounded-pill border-warning"
                   />
                 </Form.Item>
@@ -502,7 +541,6 @@ const timKiemKhuyenMai=(dataSearch)=>{
             {/* <a name="" id="" class="btn btn-warning bg-gradient fw-bold nut-them" role="button">                
             </a> */}
             <br />
-
             <Link
               to="/frm-khuyen-mai"
               className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill"
