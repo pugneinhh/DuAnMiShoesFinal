@@ -57,7 +57,7 @@ const ThemKhuyenMai = () => {
       .post(`http://localhost:8080/khuyen-mai/add`, value)
       .then((response) => {
         setIDKM(response.data);
-        if (selectedIDCTSP > 0){
+        if (selectedIDCTSP.length > 0){
         Promise.all(
           selectedIDCTSP.map((id) =>
             axios.put(
