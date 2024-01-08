@@ -38,7 +38,7 @@ public class NhanVienService {
        NguoiDung add= new NguoiDung();
        add.setTen(request.getTen());
        add.setMa("NV"+size);
-//       System.out.println("NV"+(nguoiDungRepository.getAllNhanVien().size()+1));
+       System.out.println("NV"+(nguoiDungRepository.getAllNhanVien().size()+1));
        add.setEmail(request.getEmail());
        add.setGioiTinh(request.getGioiTinh());
        add.setChucVu("nhan_vien");
