@@ -22,9 +22,9 @@ public class DiaChi {
     private String tenNguoiNhan;
     private String soDienThoai;
     private String diaChi;
-    private int idXa;
-    private int idHuyen;
-    private int idThanhPho;
+    private String idXa;
+    private Integer idHuyen;
+    private Integer idThanhPho;
     private int idQuocGia;
     private String tenXa;
     private String tenHuyen;

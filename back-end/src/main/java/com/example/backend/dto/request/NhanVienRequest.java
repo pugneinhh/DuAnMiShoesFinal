@@ -27,7 +27,7 @@ public class NhanVienRequest {
     private String tenThanhPho;
     private int idHuyen;
     private String tenHuyen;
-    private int idXa;
+    private String idXa;
     private String tenXa;
     private String diaChi;
 }
