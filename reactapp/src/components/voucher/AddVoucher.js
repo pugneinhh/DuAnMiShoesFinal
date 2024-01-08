@@ -193,7 +193,7 @@ const AddVoucher = () => {
                 </Select>
               </Form.Item>
             </div>
-                bugge
+                
             <div className="col-md-4">
               
                 <Form.Item
