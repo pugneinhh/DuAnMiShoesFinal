@@ -15,6 +15,10 @@ import {
    Table,
    Tag,
 } from 'antd';
+import {
+  EyeOutlined,
+
+} from "@ant-design/icons";
 import {FilterFilled , UnorderedListOutlined}  from "@ant-design/icons";
 import { IoInformation} from 'react-icons/io5';
 import {BsPencilSquare} from 'react-icons/bs';
@@ -212,7 +216,16 @@ const columns = [
       
       <Space size="middle">
         <a>
-        <Button type='primary' danger shape="circle" icon={<IoInformation size={15} />} onClick={()=>{detailVoucher(record)}} />
+
+        <Button shape="circle" style={{border:0}} icon={<EyeOutlined
+                style={{
+                  fontSize: 30,
+                  backgroundColor: "#ffff00",
+                  borderRadius: 90,
+                  borderWidth:10,
+                  borderColor: "#000000",
+                }}
+              />} onClick={()=>{detailVoucher(record)}} />
         </a>
         <a>
             <Link

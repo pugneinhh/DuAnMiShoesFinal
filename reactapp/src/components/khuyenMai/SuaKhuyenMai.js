@@ -103,13 +103,23 @@ const SuaKhuyenMai = () => {
 
   const [idKM, setIDKM] = useState("");
 
+  const [khuyenMai, setKhuyenMais] = useState([]);
+ 
+
+  useEffect(() => {
+    loadKhuyenMai();
+  }, []);
+
+  const loadKhuyenMai = async () => {
+    const result = await axios.get("http://localhost:8080/khuyen-mai").then(response => {setKhuyenMais(response.data);}).catch(error => console.error('Error adding item:',error));
+  };
 
   const handleSubmit = (value) => {
     axios
       .put(`http://localhost:8080/khuyen-mai/update/${id}`, value)
       .then((response) => {
         setIDKM(response.data);
-        if (selectedIDCTSP > 0){
+        if (selectedIDCTSP.length > 0){
         Promise.all(
           selectedIDCTSP.map((id) =>
             axios.put(
@@ -119,7 +129,9 @@ const SuaKhuyenMai = () => {
           )
         ); 
             }
+            loadKhuyenMai();
         navigate("/khuyen-mai");
+
         toast("✔️ Sửa thành công!", {
           position: "top-right",
           autoClose: 5000,
@@ -130,6 +142,7 @@ const SuaKhuyenMai = () => {
           progress: undefined,
           theme: "light",
         });
+
         setSelectedIDSP("");
         formSuaKhuyenMai.resetFields();
       })

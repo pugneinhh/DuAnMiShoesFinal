@@ -136,7 +136,7 @@ const timKiemKhuyenMai=(dataSearch)=>{
 
   const updateTrangThai = async(id, value) => {
    await axios
-      .put(`http://localhost:8080/khuyen-mai/updateTrangThai/${id}`, value)
+      .put(`http://localhost:8080/khuyen-mai/updateTrangThai2/${id}`, value)
       .then((response) => {
         if (response.status === 200) {
           loadKhuyenMai();
@@ -156,7 +156,7 @@ const timKiemKhuyenMai=(dataSearch)=>{
 
   const updateTrangThai1 = async(id, value) => {
     await axios
-      .put(`http://localhost:8080/khuyen-mai/updateTrangThai1/${id}`, value)
+      .put(`http://localhost:8080/khuyen-mai/updateTrangThai3/${id}`, value)
       .then((response) => {
         if (response.status === 200) {
           loadKhuyenMai();
@@ -254,7 +254,7 @@ const timKiemKhuyenMai=(dataSearch)=>{
               color="#f50
                 "
             >
-              Sắp bắt đầu
+              Sắp diễn ra
             </Tag>
           ) : trangThai === 1 ? (
             <Tag
@@ -263,14 +263,17 @@ const timKiemKhuyenMai=(dataSearch)=>{
             >
               Đang diễn ra
             </Tag>
-          ) : (
+          ) : trangThai === 2 ? (
             <Tag color="#ff0000">Đã kết thúc</Tag>
-          )}
+          ) : (
+            <Tag color="#000000">Tạm dừng</Tag>
+          )
+        }
         </>
       ),
       filters: [
         {
-          text: "Sắp bắt đầu",
+          text: "Sắp diễn ra",
           value: "0",
         },
         {
@@ -280,6 +283,11 @@ const timKiemKhuyenMai=(dataSearch)=>{
         {
           text: "Đã kết thúc",
           value: "2",
+        },
+        ,
+        {
+          text: "Tạm dừng",
+          value: "3",
         },
       ],
       onFilter: (value, record) => record.trangThai === parseInt(value),
@@ -307,7 +315,7 @@ const timKiemKhuyenMai=(dataSearch)=>{
           </a>
           <>
             {new Date(record.ngay_ket_thuc) > currentTime ? (
-              record.trangThai === 2 ? (
+              record.trangThai === 3 ? (
                 <a className="btn rounded-pill" 
                 //onClick={() =>updateTrangThai1(record.id,record)}
                 onClick={() => {

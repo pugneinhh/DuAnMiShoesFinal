@@ -53,7 +53,10 @@ public class VoucherController {
         LocalDateTime ngayKT = vs.convertTime(request.getNgayKetThuc());
         request.setNgayBatDau(ngayBD);
         request.setNgayKetThuc(ngayKT);
+        System.out.println("Ngày bắt đầu"+ngayBD);
+        System.out.println("Ngày kết thúc "+ngayKT);
         LocalDateTime lc= LocalDateTime.now();
+        System.out.println("LC"+lc);
         if(request.getNgayBatDau().compareTo(lc)>0){
             request.setTrangThai(Status.SAP_DIEN_RA);
         }else if(request.getNgayBatDau().compareTo(lc)==0){

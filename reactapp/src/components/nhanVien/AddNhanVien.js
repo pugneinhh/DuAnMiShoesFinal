@@ -1,87 +1,130 @@
-import { DatePicker, Form, Input, Select, Button, Modal } from "antd";
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
-import { AdressClientApi } from "../diaChi/diaChiApi";
-import { Option } from "antd/es/mentions";
-
-const AddNhanVien = () => {
-  const [selectedValue, setSelectedValue] = useState("1");
-  const [dc, setDC] = useState([]);
-  const handleChange = (value) => {
-    console.log(`Selected value: ${value}`);
-    setSelectedValue(value);
-  };
-  const [componentSize, setComponentSize] = useState("default");
-  const onFormLayoutChange = ({ size }) => {
-    setComponentSize(size);
-  };
-
-  useEffect(() => {
-    loadDC();
-  }, []);
-  const loadDC = async () => {
-    const result = await axios.get("http://localhost:8080/dia-chi", {
-      validateStatus: () => {
-        return true;
-      },
-    });
-    if (result.status === 302) {
-      setDC(result.data);
-    }
-  };
+import React, { useEffect, useState } from 'react'
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Card, Col, DatePicker, Divider, Form, Input, message, Modal, Radio, Row, Select, Upload } from 'antd';
+import { FaMoneyBills, FaQrcode } from 'react-icons/fa6';
+import { QrReader } from 'react-qr-reader';
+import { BsQrCodeScan } from 'react-icons/bs';
+import UpLoadImage from './UploadAnh';
+import { AddressApi } from "../diaChi/AddressApi";
+import { Link, useNavigate } from 'react-router-dom';
+import { NhanVienAPI } from '../api/user/nhanVien.api';
+import showConfirmationModal from "./ModalConfirm";
+import { Spin } from 'antd';
+import { ToastContainer, toast } from 'react-toastify';
+export default function AddNhanVien() {
 
   const [form] = Form.useForm();
-  const [provinces, setProvinces] = useState([]);
-  const [districts, setDistricts] = useState([]);
-  const [wards, setWards] = useState([]);
-  const fetchData = async () => {
-    try {
-      const provincesResponse = await AdressClientApi.getAllProvince();
-      setProvinces(provincesResponse.data.data);
-      console.log(provincesResponse.data.data);
-    } catch (error) {
-      console.error("Error fetching address data:", error);
-    }
+  const [fileImage, setFileIamge] = useState(null);
+  const [listProvince, setListProvince] = useState([]);
+  const [listDistricts, setListDistricts] = useState([]);
+  const [listWard, setListWard] = useState([]);
+  const nav = useNavigate();
+
+  const handleFileUpload = (fileData) => {
+    setFileIamge(fileData);
   };
+
+  const [showModal, setShowModal] = useState(false);
+
+  const handleScanButtonClick = () => {
+    setShowModal(true);
+  };
+
+  const handleModalClose = () => {
+    setShowModal(false);
+  };
+
+  const loadDataProvince = () => {
+    AddressApi.fetchAllProvince().then((res) => {
+      setListProvince(res.data.data);
+    });
+  };
+
+  const [province, setProvince] = useState(null);
+  const [district, setDistrict] = useState(null);
+  const [ward, setWard] = useState(null);
+
+  const handleProvinceChange = (value, valueProvince) => {
+    form.setFieldsValue({ provinceId: valueProvince.valueProvince });
+    AddressApi.fetchAllProvinceDistricts(valueProvince.valueProvince).then(
+      (res) => {
+        setListDistricts(res.data.data);
+      }
+    );
+    setProvince(valueProvince);
+  };
+
+  const handleDistrictChange = (value, valueDistrict) => {
+    form.setFieldsValue({ toDistrictId: valueDistrict.valueDistrict });
+    AddressApi.fetchAllProvinceWard(valueDistrict.valueDistrict).then((res) => {
+      setListWard(res.data.data);
+    });
+    setDistrict(valueDistrict);
+  };
+
+  const handleWardChange = (value, valueWard) => {
+    form.setFieldsValue({ wardCode: valueWard.valueWard });
+    setWard(valueWard);
+  };
+
   useEffect(() => {
-    // Lấy dữ liệu về tỉnh/thành phố từ API
-    fetchData();
+    loadDataProvince();
   }, []);
 
-  // Xử lý khi chọn tỉnh/thành phố
-  const handleProvinceChange = async (codeProvince) => {
-    try {
-      const districtsResponse = await AdressClientApi.getAllDistrict(
-        codeProvince
-      );
-      setDistricts(districtsResponse.data.data);
-      console.log(districtsResponse.data.data);
-    } catch (error) {
-      console.error("Error fetching districts:", error);
+  // QR code
+  const [qrResult, setQrResult] = useState("");
+
+  const handleQRResult = (result) => {
+    if (result != null) {
+      setShowModal(false);
     }
+    setQrResult(result);
   };
 
-  // Xử lý khi chọn quận/huyện
-  const handleDistrictChange = async (codeDistrict) => {
-    try {
-      const wardsResponse = await AdressClientApi.getAllWard(codeDistrict);
-      setWards(wardsResponse.data.data);
-      console.log(wardsResponse.data);
-    } catch (error) {
-      console.error("Error fetching wards:", error);
-    }
-  };
-
-  const handleSubmit = (value) => {
-    console.log(value);
-    axios
-      .post("http://localhost:8080/nhan-vien/add", value)
-      .then((response) => {
-        console.log(response.data);
-        toast("✔️ Thêm thành công!", {
+  const handleSuccess = () => {
+    form
+      .validateFields()
+      .then((values) => {
+        if (fileImage === null) {
+          message.error("Vui lòng chọn ảnh đại diện.");
+        }
+        const data = {
+          ...values,
+          ngaySinh: values.ngaySinh
+            ? new Date(values.ngaySinh).getTime()
+            : null,
+          idThanhPho: province.key,
+          idHuyen: district.key,
+          idXa: ward.key,
+        };
+        const formData = new FormData();
+        formData.append(`file`, fileImage);
+        formData.append("request", JSON.stringify(data));
+        NhanVienAPI.create(formData)
+        
+          .then((result) => {
+            <Spin />
+            nav("/nhan-vien");
+            toast('🦄 Thêm Thành công!', {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+              
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      })
+      .catch(() => {
+        toast('🦄 Thêm Thất bại!', {
           position: "top-right",
-          autoClose: 5000,
+          autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -89,255 +132,367 @@ const AddNhanVien = () => {
           progress: undefined,
           theme: "light",
         });
-
-        form.resetFields();
-      })
-      .catch((error) => console.error("Error adding item:", error));
+      });
   };
 
+  ////quét QR sản phẩm
+  const [openScan, setOpenScan] = useState(false);
+  const [qrData, setQrData] = useState('');
+  const handleCloseScan = () => {
+    setOpenScan(false);
+  }
+  const handleScan = (data) => {
+    if (data) {
+      setQrData(data);
+      // Gửi dữ liệu mã QR lên server ở đây
+    }
+  };
+
+  const handleError = (err) => {
+    console.error(err);
+  };
   return (
-    <div className="container">
-      <div
-        className="container-fluid bg-light m-2 p-3 pt-2"
-        style={{
-          border: "1px solid #ddd",
-          boxShadow: "0 3px 8px rgba(0, 0, 0, 0.1)",
-          borderRadius: "8px",
-        }}
+    <>
+      <h1>
+       
+         <Divider orientation="center" color="none">
+          <h3 className="text-first  fw-bold">
+            <FaMoneyBills /> Thêm nhân viên
+          </h3>
+        </Divider>
+
+      </h1>
+      <Form form={form}
+        layout="vertical"
       >
-        <h4 className="text-center">Thêm nhân viên</h4>
-        <Form
-          className="row col-md-12 mt-3"
-          labelCol={{
-            span: 10,
-          }}
-          wrapperCol={{
-            span: 20,
-          }}
-          layout="horizontal"
-          initialValues={{
-            size: componentSize,
-          }}
-          onValuesChange={onFormLayoutChange}
-          size={componentSize}
-          style={{
-            maxWidth: 1000,
-          }}
-          onFinish={handleSubmit}
-          form={form}
-        >
-          <div className="col-md-4">
-            <Form.Item
-              label="Mã nhân viên"
-              name="maND"
-              hasFeedback
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng không để trống mã!",
-                },
-              ]}
-            >
-              <Input placeholder="Mã nhân viên" className="border-warning" />
-            </Form.Item>
-            <Form.Item
-              label="Tên nhân viên"
-              name="tenND"
-              hasFeedback
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng không để trống tên!",
-                },
-              ]}
-            >
-              <Input placeholder="Tên nhân viên" className="border-warning" />
-            </Form.Item>
-          </div>
-          <div className="col-md-4">
-            <Form.Item
-              label="Email"
-              name="email"
-              hasFeedback
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng không để trống email!",
-                },
-              ]}
-            >
-              <Input placeholder="Email" className="border-warning" />
-            </Form.Item>
-            <Form.Item
-              label="Số CCCD"
-              name="cccd"
-              hasFeedback
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng không để trống CCCD!",
-                },
-              ]}
-            >
-              <Input placeholder="CCCD" className="border-warning" />
-            </Form.Item>
-          </div>
-          <div className="col-md-4">
-            <Form.Item label="Giới tính" name="gioiTinh">
-              <Select value={selectedValue} onChange={handleChange}>
-                <Select.Option value="true">Nam</Select.Option>
-                <Select.Option value="false">Nữ</Select.Option>
-              </Select>
-            </Form.Item>
-          </div>
-          <div className="col-md-4">
-            <Form.Item
-              label="Số Điện thoại"
-              name="soDienThoai"
-              hasFeedback
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng không để trống số điện thoại!",
-                },
-              ]}
-            >
-              <Input placeholder="Số điện thoại" className="border-warning" />
-            </Form.Item>
-            <Form.Item
-              label="Ngày sinh"
-              name="ngaySinh"
-              hasFeedback
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng chọn ngày sinh!",
-                },
-              ]}
-            >
-              <DatePicker
-                showTime
-                style={{ width: "100%" }}
-                className="border-warning"
-                placeholder="Ngày sinh"
-              />
-            </Form.Item>
-          </div>
-          <div className="col-md-4">
-            <Form.Item label="Thành phố">
-              <Select onChange={handleProvinceChange}>
-                {provinces?.map((item) => {
-                  return (
-                    <Option
-                      key={item.ProvinceID}
-                      value={item.ProvinceName}
-                      valueProvince={item.ProvinceID}
-                    >
-                      {item.ProvinceName}
-                    </Option>
-                  );
-                })}
-              </Select>
-            </Form.Item>
+        <Row gutter={16} style={{ marginTop: "30px" }}>
+          <Col span={7}>
+            <Card style={{ height: "100%" }}>
+              <h5 className='text-center fw-bold'>Ảnh đại diện</h5>
+              <Row className='text-center mt-5'>
+                <UpLoadImage  onFileUpload={handleFileUpload} />
+              </Row>
+            </Card>
+          </Col>
+          <Col span={17}>
+            <Card style={{ height: "100%" }}>
+              <h5 className='text-center fw-bold'>Thông tin nhân viên</h5>
+              <Row
+                justify="end"
+                align="middle"
+                style={{ marginBottom: "15px", marginTop: "10px" }}
+                
+              >
+                <Col span={11}>
+                  <Button
+                    onClick={handleScanButtonClick}
+                    style={{
+                      width: "150px",
+                      height: "40px",
+                      margin: "0 10px 10px 10px ",
+                      backgroundColor: "#3366CC",
+                      color: "white",
+                    }}
+                  >
+                    {/* <FontAwesomeIcon icon={FaQrcode} /> */}
+                    <span style={{ marginLeft: "10px" }}>QR-Căn cước</span>
+                  </Button>
+                  {/* {showModal && (
+                    <QRScannerModal
+                      visible={showModal}
+                      onCancel={handleModalClose}
+                      onQRResult={handleQRResult}
+                    />
+                  )} */}
+                 
+                  
+                   
+               
+                </Col>
+              </Row>
+              <Row>
+                <Col span={11} style={{ marginRight: "20px" }}  >
+                  <Form.Item
+                    name="ten"
+                    label="Họ và tên"
+                    tooltip="Họ tên đầy đủ của bạn là gì?"
+                    
+                    rules={[
+                      {
+                        required: true,
+                        message: "Vui lòng hãy nhập họ và tên.",
+                        whitespace: true,
+                      },
+                      {
+                        pattern: /^[A-Za-zÀ-Ỹà-ỹ\s]+$/,
+                        message: "Họ và tên chỉ được phép chứa chữ cái.",
+                      },
+                    ]}
+                    // labelCol={{ span: 9 }}
+                    // wrapperCol={{ span: 15 }}
+                  >
+                    <Input
+                      onKeyPress={(e) => {
+                        if (e.key === " " && e.target.selectionStart === 0) {
+                          e.preventDefault();
+                        }
+                      }}
+                      // style={{ textAlign: "center" }}
+                    />
+                  </Form.Item>
+                  <Form.Item
+                    name="canCuocCongDan"
+                    label="Căn cước"
+                    tooltip="Căn cước công dân của bạn là gì?"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Vui lòng hãy nhập căn cước công dân.",
+                        whitespace: true,
+                      },
+                      {
+                        pattern: /^\d{12}$/,
+                        message: "Căn cước công dân cần phải 12 chữ số.",
+                      },
+                    ]}
+                    // labelCol={{ span: 9 }}
+                    // wrapperCol={{ span: 15 }}
+                  >
+                    <Input  />
+                  </Form.Item>
+                  <Form.Item
+                    name="gioiTinh"
+                    label="Giới tính"
+                    tooltip="Giới tính của bạn là gì?"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Vui lòng hãy chọn giới tính.",
+                        whitespace: true,
+                      },
+                    ]}
+                    // labelCol={{ span: 9 }}
+                    // wrapperCol={{ span: 15 }}
+                  >
+                    <Select defaultValue={""}>
+                      <Select.Option value="">Chọn giới tính</Select.Option>
+                      <Select.Option value="true">Nam</Select.Option>
+                      <Select.Option value="false">Nữ</Select.Option>
+                    </Select>
+                  </Form.Item>
+                  <Form.Item
+                    name="tenThanhPho"
+                    label="Tỉnh/Thành phố"
+                    tooltip="Tỉnh/Thành phố của bạn là gì?"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Vui lòng hãy chọn Tỉnh/Thành phố.",
+                        whitespace: true,
+                      },
+                    ]}
+                    // labelCol={{ span: 9 }}
+                    // wrapperCol={{ span: 15 }}
+                  >
+                    <Select defaultValue={""} onChange={handleProvinceChange}>
+                      <Select.Option value="">
+                        --Chọn Tỉnh/Thành phố--
+                      </Select.Option>
+                      {listProvince?.map((item) => {
+                        return (
+                          <Select.Option
+                            key={item.ProvinceID}
+                            value={item.ProvinceName}
+                            valueProvince={item.ProvinceID}
+                          >
+                            {item.ProvinceName}
+                          </Select.Option>
+                        );
+                      })}
+                    </Select>
+                  </Form.Item>
+                  <Form.Item
+                    name="tenXa"
+                    label="Xã/Phường"
+                    tooltip="Xã/Phường của bạn là gì?"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Vui lòng hãy chọn Xã/Phường.",
+                        whitespace: true,
+                      },
+                    ]}
+                    // labelCol={{ span: 9 }}
+                    // wrapperCol={{ span: 15 }}
+                  >
+                    <Select defaultValue={""} onChange={handleWardChange}>
+                      <Select.Option value="">--Chọn Xã/Phường--</Select.Option>
+                      {listWard?.map((item) => {
+                        return (
+                          <Select.Option
+                            key={item.WardCode}
+                            value={item.WardName}
+                            valueWard={item.WardCode}
+                          >
+                            {item.DistrictName}
+                          </Select.Option>
+                        );
+                      })}
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col span={11} style={{ marginRight: "20px" }}>
+                  <Form.Item
+                    name="ngaySinh"
+                    label="Ngày sinh"
+                    tooltip="Ngày sinh của bạn là gì?"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Vui lòng hãy nhập ngày sinh.",
+                        whitespace: true,
+                      },
+                    ]}
+                    // labelCol={{ span: 9 }}
+                    // wrapperCol={{ span: 15 }}
+                  >
+                    <Input type="date" style={{ textAlign: "center" }} />
+                  </Form.Item>
 
-            {/* Dropdown cho quận/huyện */}
-            <Form.Item label="Huyện">
-              <Select onChange={handleDistrictChange}>
-                {districts?.map((district) => {
-                  return (
-                    <Option
-                      key={district.DistrictID}
-                      value={district.DistrictName}
-                      valueProvince={district.DistrictID}
-                    >
-                      {district.DistrictName}
-                    </Option>
-                  );
-                })}
-              </Select>
-            </Form.Item>
-          </div>
-          <div className="col-md-4">
-            {/* Dropdown cho xã/phường */}
-            <Form.Item label="Xã">
-              <Select>
-                {wards?.map((ward) => {
-                  return (
-                    <Option
-                      key={ward.DistrictID}
-                      value={ward.WardName}
-                      valueProvince={ward.DistrictID}
-                    >
-                      {ward.WardName}
-                    </Option>
-                  );
-                })}
-              </Select>
-            </Form.Item>
-          </div>
-          <div className="col-md-4">
-            <Form.Item
-              label="Địa chỉ cụ thể"
-              name="diaChi"
-              hasFeedback
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng không để trống địa chỉ cụ thể!",
-                },
-              ]}
-            >
-              <Input placeholder="Địa chỉ cụ thể" className="border-warning" />
-            </Form.Item>
-            <Form.Item label="Trạng thái" name="trangThai">
-              <Select defaultValue={"Tất cả"} style={{ borderColor: "yellow" }}>
-                <Select.Option value="0">Hoạt động</Select.Option>
-                <Select.Option value="1">Không hoạt động</Select.Option>
-              </Select>
-            </Form.Item>
-          </div>
-          <div className="col-md-4"></div>
-          <div className="col-md-1"></div>
-          <div className="col-md-4">
-            <Button
-              type="primary"
-              onClick={() => {
-                Modal.confirm({
-                  title: "Thông báo",
-                  content: "Bạn có chắc chắn muốn thêm không?",
-                  onOk: () => {
-                    form.submit();
-                  },
-                  footer: (_, { OkBtn, CancelBtn }) => (
-                    <>
-                      <CancelBtn />
-                      <OkBtn />
-                    </>
-                  ),
-                });
-              }}
-            >
-              Thêm
-            </Button>
-          </div>
-        </Form>
+                  <Form.Item
+                    name="email"
+                    label="Email"
+                    tooltip="Email của bạn là gì?"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Vui lòng hãy nhập email.",
+                        whitespace: true,
+                      },
+                      {
+                        type: "email",
+                        message: "Vui lòng nhập đúng định dạng email.",
+                      },
+                    ]}
+                    // labelCol={{ span: 9 }}
+                    // wrapperCol={{ span: 15 }}
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    name="soDienThoai"
+                    label="Số điện thoại"
+                    tooltip="Số điện thoại của bạn là gì?"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Vui lòng hãy nhập số điện thoại.",
+                        whitespace: true,
+                      },
+                      {
+                        pattern: /^0\d{9}$/,
+                        message: "Vui lòng nhập số điện thoại hợp lệ.",
+                      },
+                    ]}
+                    // labelCol={{ span: 9 }}
+                    // wrapperCol={{ span: 15 }}
+                  >
+                    <Input  />
+                  </Form.Item>
+                  <Form.Item
+                    name="tenHuyen"
+                    label="Quận/Huyện"
+                    tooltip="Quận/Huyện của bạn là gì?"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Vui lòng hãy chọn Quận/Huyện.",
+                        whitespace: true,
+                      },
+                    ]}
+                    // labelCol={{ span: 9 }}
+                    // wrapperCol={{ span: 15 }}
+                  >
+                    <Select defaultValue={""} onChange={handleDistrictChange}>
+                      <Select.Option value="">
+                        --Chọn Quận/Huyện--
+                      </Select.Option>
+                      {listDistricts?.map((item) => {
+                        return (
+                          <Select.Option
+                            key={item.DistrictID}
+                            value={item.DistrictName}
+                            valueDistrict={item.DistrictID}
+                          >
+                            {item.DistrictName}
+                          </Select.Option>
+                        );
+                      })}
+                    </Select>
+                  </Form.Item>
+                  <Form.Item
+                    name="diaChi"
+                    label="Số nhà"
+                    tooltip="Số nhà của bạn là gì?"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Vui lòng hãy nhập số nhà.",
+                        whitespace: true,
+                      },
+                    ]}
+                    // labelCol={{ span: 9 }}
+                    // wrapperCol={{ span: 15 }}
+                  >
+                    <Input  />
+                  </Form.Item>
+                </Col>
+                <Button
+                  onClick={
 
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-        />
-        {/* Same as */}
-        <ToastContainer />
-      </div>
-    </div>
-  );
-};
-export default AddNhanVien;
+                    handleSuccess
+                  }
+                  style={{
+                    width: "110px",
+                    height: "40px",
+                    margin: "0 10px 10px 10px ",
+                    backgroundColor: "#3366CC",
+                    color: "white",
+                  }}
+                  // htmlType="reset"
+                >
+                  Hoàn tất
+                </Button>
+
+                <Link to={'/nhan-vien'} className='btn btn-danger' style={{
+                  width: "110px",
+                  height: "40px",
+                  margin: "0 10px 10px 10px ",
+                  backgroundColor: "#3366CC",
+                  color: "white",
+                }}>Hủy</Link>
+
+              </Row>
+      
+            </Card>
+          </Col>
+        </Row>
+      </Form>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      <ToastContainer />
+    </>
+
+  )
+
+}

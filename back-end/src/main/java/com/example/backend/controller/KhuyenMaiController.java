@@ -60,11 +60,18 @@ public class KhuyenMaiController {
     public ResponseEntity<?> update(@PathVariable("id") String id,@RequestBody KhuyenMaiRequest request){
         KhuyenMai km = request.map();
         km.setId(id);
-        LocalDateTime ngayBD =  khuyenMaiService.convertTimeForUpdate(km.getNgay_bat_dau());
-        LocalDateTime ngayKT =  khuyenMaiService.convertTimeForUpdate(km.getNgay_ket_thuc());
+        LocalDateTime ngayBD =  khuyenMaiService.convertTime(km.getNgay_bat_dau());
+        LocalDateTime ngayKT =  khuyenMaiService.convertTime(km.getNgay_ket_thuc());
         LocalDateTime today = LocalDateTime.now();
-        int trangThai = khuyenMaiService.detailKhuyenMai(id).getTrangThai();
-        km.setTrangThai(trangThai);
+        System.out.println("Update ngày bắt đầu"+ngayBD);
+        System.out.println("Update ngày kết thúc"+ngayKT);
+        System.out.println("Update ngày hiện tại"+today);
+        System.out.println("trang thai"+khuyenMaiService.detailKhuyenMai(id).getTrangThai());
+        if (khuyenMaiService.detailKhuyenMai(id).getTrangThai() != 3){
+            if (ngayBD.isAfter(today)) km.setTrangThai(0);
+            else if (ngayBD.isBefore(today) && ngayKT.isAfter(today)) km.setTrangThai(1);
+            else if (ngayKT.isBefore(today)) km.setTrangThai(2);
+        }
         km.setNgay_bat_dau(ngayBD);
         km.setNgay_ket_thuc(ngayKT);
         km.setNgaySua(new Date(new java.util.Date().getTime()));
@@ -99,13 +106,34 @@ public class KhuyenMaiController {
     public ResponseEntity<?> updateTrangThai1(@PathVariable("id") String id ,@RequestBody KhuyenMaiRequest request){
         KhuyenMai km = request.map();
         km.setId(id);
-        if (km.getNgay_bat_dau().isAfter(LocalDateTime.now()))
-        km.setTrangThai(0);
-        else km.setTrangThai(1);
+        if(km.getTrangThai() != 3) {
+            if (km.getNgay_bat_dau().isAfter(LocalDateTime.now()))
+                km.setTrangThai(0);
+            else km.setTrangThai(1);
+            km.setNgaySua(new Date(new java.util.Date().getTime()));
+        }
+        return  ResponseEntity.ok(khuyenMaiService.addKhuyenMai(km));
+    }
+
+    @PutMapping("/updateTrangThai2/{id}")
+    public ResponseEntity<?> updateTrangThai2(@PathVariable("id") String id , @RequestBody KhuyenMaiRequest request){
+        KhuyenMai km = request.map();
+        km.setId(id);
+        km.setTrangThai(3);
         km.setNgaySua(new Date(new java.util.Date().getTime()));
         return  ResponseEntity.ok(khuyenMaiService.addKhuyenMai(km));
     }
 
+    @PutMapping("/updateTrangThai3/{id}")
+    public ResponseEntity<?> updateTrangThai3(@PathVariable("id") String id , @RequestBody KhuyenMaiRequest request){
+        KhuyenMai km = request.map();
+        km.setId(id);
+        if (km.getNgay_bat_dau().isAfter(LocalDateTime.now()))
+            km.setTrangThai(0);
+        else km.setTrangThai(1);
+        km.setNgaySua(new Date(new java.util.Date().getTime()));
+        return  ResponseEntity.ok(khuyenMaiService.addKhuyenMai(km));
+    }
     @PostMapping("/search-khuyen-mai")
     public ResponseEntity<?> search(@RequestBody KhuyenMaiSearch khuyenMaiSearch){
         System.out.println(khuyenMaiSearch.getNgay_bat_dau());

@@ -38,7 +38,7 @@ const AddVoucher = () => {
       .then((response) => {
         Promise.all(
           selectedIDKH.map((id) =>
-            axios.put(
+            axios.post(
               `http://localhost:8080/nguoi-dung-voucher/add/${id}`,
               response.data
             )
@@ -193,7 +193,7 @@ const AddVoucher = () => {
                 </Select>
               </Form.Item>
             </div>
-                
+
             <div className="col-md-4">
               
                 <Form.Item
