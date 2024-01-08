@@ -22,7 +22,7 @@ import { PlusCircleOutlined } from "@ant-design/icons";
 import { ToastContainer, toast } from "react-toastify";
 import { BiSolidUserBadge } from "react-icons/bi";
 import ConvertLongToDate from "../Date/ConvertLongToDate";
-
+import moment from "moment";
 export default function NhanVien() {
   const [nhanVien, setNhanVien] = useState([]);
 
@@ -102,9 +102,16 @@ export default function NhanVien() {
     {
       title: "Ngày sinh",
       dataIndex: "ngaySinh",
-      key: "ngaySinh",
+      render: (ngaySinh) => (
+       <>
+       {
+        new Date(ngaySinh*1).toLocaleDateString()
+  
+       }
+       </>
+        ),
       sorter: (a, b) => a.ngaySinh - b.ngaySinh,
-      render: (_, record) => <ConvertLongToDate long={record.ngaySinh} />,
+      //render: (_, record) => <ConvertLongToDate long={record.ngaySinh} />,
     },
   
     {
