@@ -19,19 +19,19 @@ public class DiaChi {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-
     private String tenNguoiNhan;
-
     private String soDienThoai;
     private String diaChi;
-    private String idXa;
-    private String idHuyen;
-    private String idThanhPho;
-    private String idQuocGia;
+    private int idXa;
+    private int idHuyen;
+    private int idThanhPho;
+    private int idQuocGia;
     private String tenXa;
     private String tenHuyen;
     private String tenThanhPho;
     private String quocGia;
     private int trangThai;
-
+    @ManyToOne
+    @JoinColumn(name = "nguoi_dung_id",referencedColumnName = "id")
+    private NguoiDung nguoiDung;
 }

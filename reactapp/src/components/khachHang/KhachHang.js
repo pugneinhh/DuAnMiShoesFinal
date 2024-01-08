@@ -89,22 +89,36 @@ export default function KhachHang() {
       sorter: (a, b) => a.ngaySinh - b.ngaySinh,
     },
     {
+      title: "Điểm",
+      dataIndex: "diem",
+      key: "diem",
+      render: (diem) => (
+        <>
+         
+            <Tag color="red">
+              {diem}
+            </Tag>
+        </>
+      ),
+    },
+    {
       title: "Trạng thái",
       dataIndex: "trangThai",
       key: "trangThai",
-      render: (trangThai) => {
-        let tagColor = "";
-        let tagText = "";
 
-        if (trangThai === 0) {
-          tagColor = "gold";
-          tagText = "Hoạt động";
-        } else {
-          tagColor = "green";
-          tagText = "Không Hoạt động";
-        }
-        return <Tag color={tagColor}>{tagText}</Tag>;
-      },
+      render: (trang_thai) => (
+        <>
+          {trang_thai == 1 ? (
+            <Tag color="red">
+              Không hoạt động
+            </Tag>
+          ) : (
+            <Tag color="green">
+              Hoạt động
+            </Tag>
+          )}
+        </>
+      ),
       filters: [
         {
           text: "Hoạt động",

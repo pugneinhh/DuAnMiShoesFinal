@@ -10,7 +10,7 @@ import axios from "axios";
 import { useParams } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './HoaDonDetail.scss'
+import './HoaDonDetail.css'
 import moment from 'moment';
 import { Image } from 'cloudinary-react';
 import {useReactToPrint} from 'react-to-print';
@@ -647,7 +647,8 @@ export default function HoaDonDetail() {
                         </>
                       ),
                     });
-                  }}>Xác nhận</Button>
+                  }
+                  }>Xác nhận</Button>
 
                 </Form>
               </Modal >

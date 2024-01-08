@@ -11,14 +11,17 @@ import {
   Space,
   Table,
   Tag,
+  Image,
 } from "antd";
 import { FilterFilled, UnorderedListOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { IoInformation } from "react-icons/io5";
-import { BsPencilSquare } from "react-icons/bs";
+import { BsFillEyeFill, BsPencilSquare } from "react-icons/bs";
 import { FaTag } from "react-icons/fa";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { ToastContainer, toast } from "react-toastify";
+import { BiSolidUserBadge } from "react-icons/bi";
+import ConvertLongToDate from "../Date/ConvertLongToDate";
 
 export default function NhanVien() {
   const [nhanVien, setNhanVien] = useState([]);
@@ -35,7 +38,7 @@ export default function NhanVien() {
   }, []);
 
   const loadNhanVien = async () => {
-    const result = await axios.get("http://localhost:8080/nhan-vien", {
+    const result = await axios.get("http://localhost:8080/admin/nhan-vien", {
       validateStatus: () => {
         return true;
       },
@@ -58,6 +61,20 @@ export default function NhanVien() {
       showSortTooltip: false,
     },
     {
+      title: " Ảnh",
+      dataIndex: "anh",
+      key: "anh",
+      align: "center",
+      render: (text) => (
+        <Image
+          width={100}
+          height={100}
+          style={{ borderRadius: "15px" }}
+          src={text}
+        />
+      ),
+    },
+    {
       title: "Mã Nhân Viên",
       dataIndex: "maND",
       sorter: (a, b) => a.ma - b.ma,
@@ -67,11 +84,11 @@ export default function NhanVien() {
       dataIndex: "tenND",
       sorter: (a, b) => a.ten - b.ten,
     },
-    {
-      title: "Email",
-      dataIndex: "email",
-      sorter: (a, b) => a.email - b.email,
-    },
+    // {
+    //   title: "Email",
+    //   dataIndex: "email",
+    //   sorter: (a, b) => a.email - b.email,
+    // },
     {
       title: "CCCD",
       dataIndex: "cccd",
@@ -85,25 +102,28 @@ export default function NhanVien() {
     {
       title: "Ngày sinh",
       dataIndex: "ngaySinh",
+      key: "ngaySinh",
       sorter: (a, b) => a.ngaySinh - b.ngaySinh,
+      render: (_, record) => <ConvertLongToDate long={record.ngaySinh} />,
     },
+  
     {
       title: "Trạng thái",
       dataIndex: "trangThai",
       key: "trangThai",
-      render: (trangThai) => {
-        let tagColor = "";
-        let tagText = "";
-
-        if (trangThai === 0) {
-          tagColor = "gold";
-          tagText = "Hoạt động";
-        } else {
-          tagColor = "green";
-          tagText = "Không Hoạt động";
-        }
-        return <Tag color={tagColor}>{tagText}</Tag>;
-      },
+      render: (trang_thai) => (
+        <>
+          {trang_thai == 1 ? (
+            <Tag color="red">
+              Không hoạt động
+            </Tag>
+          ) : (
+            <Tag color="green">
+              Hoạt động
+            </Tag>
+          )}
+        </>
+      ),
       filters: [
         {
           text: "Hoạt động",
@@ -120,26 +140,10 @@ export default function NhanVien() {
       title: "Action",
       key: "action",
       sorter: true,
-      render: (record) => (
+      render: (title) => (
         <Space size="middle">
-          <a>
-            <Button
-              type="primary"
-              danger
-              shape="circle"
-              icon={<IoInformation size={15} />}
-              onClick={() => {}}
-            />
-          </a>
-          <a>
-            <Button
-              type="primary"
-              className="btn btn-success text-center"
-              shape="circle"
-              icon={<BsPencilSquare size={15} />}
-              onClick={() => {}}
-            />
-          </a>
+          <Link to={`/detail-nhan-vien/${title}`} className='btn btn-danger'><BsFillEyeFill /></Link>
+          <Link to={`/update-nhan-vien/${title}`} className='btn btn-danger'><BsFillEyeFill /></Link>
         </Space>
       ),
       center: "true",
@@ -188,13 +192,12 @@ export default function NhanVien() {
   return (
     <div className="container">
       <div className="container-fluid">
-        <Divider orientation="left" color="#d0aa73">
-          <h4 className="text-first pt-1 fw-bold">
-            {" "}
-            <FaTag size={20} />
-            Quản lý nhân viên
-          </h4>
+        <Divider orientation="center" color="none">
+          <h2 className="text-first pt-1 fw-bold">
+            <BiSolidUserBadge /> Quản lý nhân viên
+          </h2>
         </Divider>
+
         {/* form tìm kiếm */}
         <div
           className=" bg-light m-2 p-3 pt-2"
