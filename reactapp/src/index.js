@@ -29,8 +29,9 @@ import AddNhanVien from "./components/nhanVien/AddNhanVien";
 import BanHang from './components/banHang/BanHang';
 import AddVoucher from './components/voucher/AddVoucher';
 import ModelUpdateVoucher from './components/voucher/ModelUpdateVoucher';
-import store from "./components/banHang/redux/store";
+
 import { Provider } from "react-redux";
+import { store } from './components/banHang/redux/store';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
