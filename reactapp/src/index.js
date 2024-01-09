@@ -29,9 +29,13 @@ import UpdateKhachHang from "./components/khachHang/UpdateKhachHang";
 import BanHang from './components/banHang/BanHang';
 import AddVoucher from './components/voucher/AddVoucher';
 import ModelUpdateVoucher from './components/voucher/ModelUpdateVoucher';
-import store from "./components/banHang/redux/store";
+
 import { Provider } from "react-redux";
+
 import AddKhachHang from './components/khachHang/AddKhachHang';
+
+import { store } from './components/banHang/redux/store';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
