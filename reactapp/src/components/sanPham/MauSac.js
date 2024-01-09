@@ -38,6 +38,7 @@ export default function MauSac() {
     setSelectedValue(value);
   };
 
+  const [tenMau, setTenMaus] = useState('black');
   const doiMau = (e) => {
     const ma = e.target.value;
     const hexCode = ma.replace("#", "").toUpperCase();
@@ -47,9 +48,10 @@ export default function MauSac() {
       console.log("hehe")
     } else {
       console.log(colorName);
+      setTenMaus(colorName)
     }
   };
-  
+  console.log('Tên màu : '+tenMau);
   const [componentSize, setComponentSize] = useState('default');
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
@@ -282,7 +284,7 @@ export default function MauSac() {
                   <Input readOnly="true" className="border" type="text" />
                 </Form.Item>
                 <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
-                  <Input className="border" type="text" />
+                  <Input className="border" type="text" value={tenMau}/>
                 </Form.Item>
               </Form>
             </Modal>
