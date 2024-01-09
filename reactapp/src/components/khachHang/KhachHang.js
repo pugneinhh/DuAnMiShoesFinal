@@ -23,6 +23,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { BiSolidUserBadge } from "react-icons/bi";
 import { useAppDispatch } from "../api/Hook";
 import { KhachHangAPI } from "../api/user/khachHang.api";
+import { GrMapLocation } from "react-icons/gr";
 export default function KhachHang() {
   const dispatch = useAppDispatch();
   const [khachHang, setKhachHang] = useState([]);
@@ -65,9 +66,9 @@ export default function KhachHang() {
     console.log(result.data);
   };
 
-  console.log("111",khachHang);
+  // console.log("111",khachHang);
 
-  console.log("112", data);
+  // console.log("112", data);
 
 
   const columns = [
@@ -140,7 +141,6 @@ export default function KhachHang() {
       key: "trangThai",
       render: (trang_thai) => (
         <>
-
           {trang_thai == 1 ? (
 
             <Tag color="red">
@@ -172,7 +172,8 @@ export default function KhachHang() {
       render: (title) => (
         <Space size="middle">
           <Link to={`/detail-khach-hang/${title}`} className='btn btn-danger'><BsFillEyeFill /></Link>
-          <Link to={`/update-khach-hang/${title}`} className='btn btn-danger'><BsFillEyeFill /></Link>
+          <Link to={`/update-khach-hang/${title}`} className='btn btn-success'  ><BsPencilSquare /></Link>
+          <Button className="btn btn-success"><GrMapLocation /></Button>
         </Space>
       ),
       center: "true",

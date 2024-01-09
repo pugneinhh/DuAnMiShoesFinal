@@ -9,6 +9,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import UpLoadImageUpdate from "../api/UpdateImage/UploadImageUpdate";
 import { KhachHangAPI } from "../api/user/khachHang.api";
 import moment from "moment";
+import { ToastContainer, toast } from "react-toastify";
+import { FaMoneyBills } from "react-icons/fa6";
+
 export default function UpdateCustumerManagement() {
     const [form] = Form.useForm();
     var { id } = useParams();
@@ -21,7 +24,7 @@ export default function UpdateCustumerManagement() {
     const [getOneEmployee, setOneEmployee] = useState(null);
  console.log(id)
     // console.log(KhachHangAPI.getOneByIdUser(id)
-    console.log(getOneEmployee)
+    console.log("dfdf",getOneEmployee)
     const getOneEmployeeById = () => {
         KhachHangAPI.getOneByIdUser(id)
             .then((resp) => {
@@ -103,16 +106,27 @@ export default function UpdateCustumerManagement() {
                 idThanhPho: province === null ? null : province.key,
                 idHuyen: district === null ? null : district.key,
                 idXa: ward === null ? null : ward.key,
-                idUser: id,
+                id: id,
             };
             const formData = new FormData();
             formData.append(`file`, fileImage);
             formData.append("request", JSON.stringify(data));
-            console.log(data);
+           
             KhachHangAPI.update(formData)
                 .then(() => {
-                    message.success("Chỉnh sửa khách hàng thành công.");
+                    toast('🦄 Thêm Thành công!', {
+                        position: "top-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+
+                    });
                     nav("/khach-hang");
+              
                 })
                 .catch((error) => {
                     console.log(error);
@@ -122,16 +136,22 @@ export default function UpdateCustumerManagement() {
    
     return (
         <div>
-            <h4>
-                <span style={{ marginLeft: "15px" }}>Update KH </span>
-            </h4>
+            <h1>
+
+              
+                    <h3 className="text-first  text-center fw-bold">
+                        <FaMoneyBills /> Update khách hàng
+                    </h3>
+             
+
+            </h1>
             {getOneEmployee !== null && (
                 <Form form={form} initialValues={getOneEmployee}>
                     <Row gutter={16} style={{ marginTop: "30px" }}>
                         <Col span={7}>
                             <Card style={{ height: "100%" }}>
-                                <h2>Ảnh đại diện</h2>
-                                <Row>
+                                <h5 className='text-center fw-bold'>Ảnh đại diện</h5>
+                                <Row className='text-center mt-5'>
                                     <UpLoadImageUpdate
                                         onFileUpload={handleFileUpload}
                                         defaultImage={getOneEmployee.anh}
@@ -141,7 +161,7 @@ export default function UpdateCustumerManagement() {
                         </Col>
                         <Col span={17}>
                             <Card style={{ height: "100%" }}>
-                                <h2>Thông tin khách hàng</h2>
+                                <h5 className='text-center fw-bold'>Thông tin khách hàng</h5>
                                 <Row
                                     justify="end"
                                     align="middle"
@@ -168,7 +188,7 @@ export default function UpdateCustumerManagement() {
                                             />
                                         )} */}
                                         <Button
-                                            onClick={() =>
+                                            onClick={
                                                 // showConfirmationModal(
                                                 //     "Bạn có chắc muốn thêm ?",
                                                     handleSuccess
@@ -430,7 +450,21 @@ export default function UpdateCustumerManagement() {
                             </Card>
                         </Col>
                     </Row>
+                    <ToastContainer
+                        position="top-right"
+                        autoClose={5000}
+                        hideProgressBar={false}
+                        newestOnTop={false}
+                        closeOnClick
+                        rtl={false}
+                        pauseOnFocusLoss
+                        draggable
+                        pauseOnHover
+                        theme="light"
+                    />
+                    <ToastContainer />
                 </Form>
+                
             )}
         </div>
     );

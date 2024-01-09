@@ -3,13 +3,12 @@ package com.example.backend.controller;
 import com.example.backend.dto.request.KhachHangRequest;
 import com.example.backend.service.KhachHangService;
 import com.google.gson.Gson;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@CrossOrigin("http://localhost:3000/")
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/admin/khach-hang")
 //@RequiredArgsConstructor
@@ -20,42 +19,46 @@ public class KhachHangController {
 
     @GetMapping
     public ResponseEntity<?> getAll() {
-        return  ResponseEntity.ok(khachHangService.getAll());
+        return ResponseEntity.ok(khachHangService.getAll());
     }
 
     @PostMapping()
     public ResponseEntity<?> add(@RequestParam("request") String request,
-                                 @RequestParam(value = "file") MultipartFile file){
-
-        Gson gson = new Gson();
-        KhachHangRequest khachHangRequest=gson.fromJson(request, KhachHangRequest.class);
-
-        return  ResponseEntity.ok(khachHangService.add(khachHangRequest,file));
-    }
-
-    @PutMapping()
-    public ResponseEntity<?> update(@RequestParam("request") String request,
                                  @RequestParam(value = "file") MultipartFile file) {
 
         Gson gson = new Gson();
         KhachHangRequest khachHangRequest = gson.fromJson(request, KhachHangRequest.class);
 
-        return ResponseEntity.ok(khachHangService.update(khachHangRequest, file));
+        return ResponseEntity.ok(khachHangService.add(khachHangRequest, file));
+    }
+
+    @PutMapping()
+    public ResponseEntity<?> update(@RequestParam("request") String request,
+                                    @RequestParam(value = "file", required = false) MultipartFile file) {
+
+        Gson gson = new Gson();
+//        System.out.println(gson);
+        KhachHangRequest zzzzzzzzz = gson.fromJson(request, KhachHangRequest.class);
+//        System.out.println(khachHangRequest);
+//        System.out.println(file);
+        return ResponseEntity.ok(khachHangService.update(zzzzzzzzz, file));
 
     }
+
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable("id") String id){
-        System.out.println("ID detail"+id);
-        System.out.println("Detail"+khachHangService.getByID(id).toString());
+    public ResponseEntity<?> getById(@PathVariable("id") String id) {
+//        System.out.println("ID detail" + id);
+//        System.out.println("Detail" + khachHangService.getByID(id).toString());
         return ResponseEntity.ok(khachHangService.getByID(id));
 
     }
+
     @PostMapping("/update")
     public ResponseEntity<?> updateStatus(@RequestParam("id") String id,
-                                       @RequestParam("status") String status) {
+                                          @RequestParam("status") String status) {
         Gson gson = new Gson();
         String idUser = gson.fromJson(id, String.class);
         String statusGson = gson.fromJson(status, String.class);
-        return ResponseEntity.ok(khachHangService.updateStatus(idUser,statusGson));
+        return ResponseEntity.ok(khachHangService.updateStatus(idUser, statusGson));
     }
 }
