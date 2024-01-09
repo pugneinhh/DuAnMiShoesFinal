@@ -64,11 +64,11 @@ root.render(
           <Route path='showct/:uuid' element = {<ChiTietSanPham/>}></Route>
             <Route path="nhan-vien" element={<NhanVien />}></Route>
         <Route path="themNhanVien" element={<AddNhanVien />}></Route>
-          <Route path="detail-nhan-vien/:id" element={<AddNhanVien />}></Route>
-          <Route path="update-nhan-vien/:id" element={<AddNhanVien />}></Route>
+          {/* <Route path="detail-nhan-vien/:id" element={<AddNhanVien />}></Route>
+          <Route path="update-nhan-vien/:id" element={<AddNhanVien />}></Route> */}
         <Route path="khach-hang" element={<KhachHang />}></Route>
           <Route path="themKhachHang" element={<AddKhachHang />}></Route>
-          <Route path="detail-khach-hang/:id" element={<AddNhanVien />}></Route>
+          {/* <Route path="detail-khach-hang/:id" element={<AddNhanVien />}></Route> */}
           <Route path="update-khach-hang/:id" element={<UpdateKhachHang />}></Route>
           <Route path='them-san-pham' element = {<AddSanPham/>}></Route>
 
