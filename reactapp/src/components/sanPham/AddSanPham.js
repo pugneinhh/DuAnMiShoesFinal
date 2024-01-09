@@ -12,7 +12,7 @@ import {
     notification
 } from 'antd';
 import { Link } from "react-router-dom";
-import { MdAddTask } from "react-icons/md";
+import { MdAddTask, MdDelete } from "react-icons/md";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { Cascader } from 'antd';
 import axios from 'axios';
@@ -22,7 +22,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Swal from "sweetalert2";
 import FormItem from 'antd/es/form/FormItem';
-import { InfoCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { DeleteOutlined, InfoCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { keys } from '@antv/util';
 import { App } from 'antd';
 import tr from 'date-fns/esm/locale/tr/index.js';
@@ -57,6 +57,11 @@ export default function AddSanPham() {
     const [dataDeGiay, setDataDeGiays] = useState([]);
     const [dataDanhMuc, setDataDanhMucs] = useState([]);
     const [dataMoTa, setDataMoTas] = useState([]);
+
+    const handleDelete = (key) => {
+        const updatedData = tableData.filter(item => item.key !== key);
+        setTableData(updatedData);
+      };
 
     const handleLinkAnhChange = (linkAnh, index) => {
         // Tìm dòng tương ứng trong dataSource
@@ -218,7 +223,9 @@ export default function AddSanPham() {
             dataIndex: "maMau",
             render: (_, record) => {
                 return <>
-                    <div style={{
+                    <div 
+                    className='custom-div'
+                    style={{
                         backgroundColor: record.maMau,
                         borderRadius: 6,
                         width: 60,
@@ -233,6 +240,15 @@ export default function AddSanPham() {
             render: (_, record) => {
                 return <>
                     <CloudinaryUpload onLinkAnhChange={(imageUrl) => handleLinkAnhChange(imageUrl, record.key)}></CloudinaryUpload>
+                </>;
+            }
+        },
+        {
+            title: "Hành động",
+            dataIndex: "ghiChu",
+            render: (_, record) => {
+                return <>
+                    <Button onClick={() => handleDelete(record.key)} style={{height:50,backgroundColor: 'red',color: 'white',borderRadius: 5}}><MdDelete size={30}/></Button>
                 </>;
             }
         },
