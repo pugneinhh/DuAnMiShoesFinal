@@ -6,9 +6,9 @@ import ClientReducer from "../reducer/Client.reducer";
 export const store = configureStore({
     reducer: {
       bill:BillReducer,
-      product:ProductReducer,
-      detailInvoiceL:DetailInvoiceReducer,
-      client:ClientReducer,
+      // product:ProductReducer,
+      // detailInvoiceL:DetailInvoiceReducer,
+      // client:ClientReducer,
     },
   });
   
