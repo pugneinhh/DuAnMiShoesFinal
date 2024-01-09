@@ -1,7 +1,9 @@
 package com.example.backend.service;
 import com.example.backend.dto.request.ChiTietSanPhamRequest;
 import com.example.backend.dto.request.HinhAnhRequest;
+import com.example.backend.dto.request.UpdateCTSPRequest;
 import com.example.backend.dto.response.ChiTietSanPhamRespone;
+import com.example.backend.dto.response.DetailCTSPRespone;
 import com.example.backend.entity.ChiTietSanPham;
 import com.example.backend.entity.KhuyenMai;
 import com.example.backend.model.*;
@@ -25,6 +27,13 @@ public class CTSPService {
     }
     public List<ChiTietSanPhamRespone> getALLCTSP(String id){
         return ctspRepository.getALLCTSP(id);
+    }
+    public DetailCTSPRespone detailCTSP(String id){return ctspRepository.detailCTSP(id);}
+
+    public ChiTietSanPham update(String id, UpdateCTSPRequest request) {
+        ChiTietSanPham ct = request.map(new ChiTietSanPham());
+        ct.setId(id);
+        return ctspRepository.save(ct);
     }
 
 

@@ -42,6 +42,8 @@ public class ChiTietSanPham {
     @ManyToOne
     @JoinColumn(name = "hang_id")
     private Hang hang;
+    private String tenCt;
+    private String ghiChu;
     private boolean gioiTinh;
     private BigDecimal giaBan;
     private BigDecimal giaNhap;

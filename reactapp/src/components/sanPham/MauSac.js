@@ -27,6 +27,8 @@ import FormItem from 'antd/es/form/FormItem';
 import tinycolor from 'tinycolor2';
 import { BsFillEyeFill } from 'react-icons/bs';
 import { IoColorPalette } from 'react-icons/io5';
+import convert from 'color-convert';
+import './SanPham.scss'
 
 export default function MauSac() {
   //Form
@@ -35,20 +37,25 @@ export default function MauSac() {
     console.log(`Selected value: ${value}`);
     setSelectedValue(value);
   };
-  const [tenMau, setTenMau] = useState('#000000'); // Màu mặc định
+
   const doiMau = (e) => {
-    const maMau = e.target.value;
-    const mau = tinycolor(maMau);
-    const ten = mau.toName();
-    console.log(`${ten}`);
-    setTenMau(ten);
-    console.log(`${tenMau}`);
+    const ma = e.target.value;
+    const hexCode = ma.replace("#", "").toUpperCase();
+    const rgb = convert.hex.rgb(hexCode);
+    const colorName = convert.rgb.keyword(rgb);
+    if (colorName === null) {
+      console.log("hehe")
+    } else {
+      console.log(colorName);
+    }
   };
+  
   const [componentSize, setComponentSize] = useState('default');
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
   };
   const [form] = Form.useForm();
+
   //Ấn Add
   const [open, setOpen] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
@@ -142,7 +149,7 @@ export default function MauSac() {
             borderRadius: 6,
             width: 60, 
             height: 25,
-          }}></div >
+          }} className='custom-div'></div >
         </>;
       }
     },
@@ -269,10 +276,10 @@ export default function MauSac() {
                 onFinish={addMauSac}
                 form={form}>
                 <Form.Item label="Màu" name='ma' hasFeedback rules={[{ required: true, message: 'Vui lòng chọn màu', },]} >
-                  <Input className="border" type="color" value={tenMau} onChange={doiMau} />
+                  <Input className="border" type="color" onChange={doiMau} />
                 </Form.Item>
                 <Form.Item label=" Mã" name='ma' hasFeedback rules={[{ required: true, message: '', },]} >
-                  <Input readOnly="true" className="border" type="text" value={tenMau} onChange={doiMau} />
+                  <Input readOnly="true" className="border" type="text" />
                 </Form.Item>
                 <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
                   <Input className="border" type="text" />
