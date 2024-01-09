@@ -26,11 +26,9 @@ public class NhanVienController {
     @PostMapping()
     public ResponseEntity<?> add(@RequestParam("request") String request,
                                  @RequestParam(value = "file") MultipartFile file){
-        System.out.println(request);
-        System.out.println(file);
         Gson gson = new Gson();
         NhanVienRequest nhanVienRequest=gson.fromJson(request, NhanVienRequest.class);
-        System.out.println("Nhân viên service"+nhanVienRequest.toString());
+
         return  ResponseEntity.ok(nhanVienService.add(nhanVienRequest,file));
     }
 

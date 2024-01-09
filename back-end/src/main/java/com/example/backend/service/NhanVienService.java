@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 @Service
 public class NhanVienService {
@@ -47,6 +48,7 @@ public class NhanVienService {
        add.setTrangThai(0);
        add.setNgaySinh(request.getNgaySinh());
        add.setAnh(url);
+       add.setNgayThamGia(LocalDateTime.now());
        add.setMatKhau(password);
        add.setSoDienThoai(request.getSoDienThoai());
        nguoiDungRepository.save(add);

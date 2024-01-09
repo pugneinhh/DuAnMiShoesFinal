@@ -5,11 +5,10 @@ import { FaMoneyBills, FaQrcode } from 'react-icons/fa6';
 import { QrReader } from 'react-qr-reader';
 import { BsQrCodeScan } from 'react-icons/bs';
 import UpLoadImage from './UploadAnh';
-import { AddressApi } from "../diaChi/AddressApi";
+import { AddressApi } from '../api/address/AddressApi';
 import { Link, useNavigate } from 'react-router-dom';
 import { NhanVienAPI } from '../api/user/nhanVien.api';
-import showConfirmationModal from "./ModalConfirm";
-import { Spin } from 'antd';
+
 import { ToastContainer, toast } from 'react-toastify';
 export default function AddNhanVien() {
 
@@ -103,7 +102,7 @@ export default function AddNhanVien() {
         NhanVienAPI.create(formData)
         
           .then((result) => {
-            <Spin />
+          
             nav("/nhan-vien");
             toast('🦄 Thêm Thành công!', {
               position: "top-right",

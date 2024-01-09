@@ -21,8 +21,7 @@ import { FaTag } from "react-icons/fa";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { ToastContainer, toast } from "react-toastify";
 import { BiSolidUserBadge } from "react-icons/bi";
-import ConvertLongToDate from "../Date/ConvertLongToDate";
-import moment from "moment";
+
 export default function NhanVien() {
   const [nhanVien, setNhanVien] = useState([]);
 
@@ -146,7 +145,8 @@ export default function NhanVien() {
     {
       title: "Action",
       key: "action",
-      sorter: true,
+      dataIndex: 'idND',
+      
       render: (title) => (
         <Space size="middle">
           <Link to={`/detail-nhan-vien/${title}`} className='btn btn-danger'><BsFillEyeFill /></Link>
