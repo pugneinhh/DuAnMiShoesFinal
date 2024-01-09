@@ -76,9 +76,12 @@ const billSlice = createSlice({
                 state[index].ngaySua= updatedBill.ngaySua;
             }
         },
+        RemoveBill:(state, action)=>{
+           return state.filter((item)=>item.key!==action.payload.key)
+        },
     },
 });
 
-export const { SetBill, CreateBill, UpdateBill } = billSlice.actions;
+export const { SetBill, CreateBill, UpdateBill,RemoveBill } = billSlice.actions;
 export default billSlice.reducer;
 export const GetBill =(state)=>state.bill;

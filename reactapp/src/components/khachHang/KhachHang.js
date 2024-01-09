@@ -140,7 +140,9 @@ export default function KhachHang() {
       key: "trangThai",
       render: (trang_thai) => (
         <>
-          {trang_thai == 0 ? (
+
+          {trang_thai == 1 ? (
+
             <Tag color="red">
                Không hoạt động
             </Tag>
