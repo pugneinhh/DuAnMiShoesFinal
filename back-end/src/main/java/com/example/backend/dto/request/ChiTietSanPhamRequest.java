@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 
 public class ChiTietSanPhamRequest {
     private String id;
+    private String ghiChu;
+    private String tenCt;
     public String sanPham;
     public String kichThuoc;
     public String mauSac;
@@ -53,6 +55,8 @@ public class ChiTietSanPhamRequest {
         ctsp.setNguoiTao(this.nguoiTao);
         ctsp.setNguoiSua(this.nguoiSua);
         ctsp.setTrangThai(this.trangThai);
+        ctsp.setGhiChu(this.ghiChu);
+        ctsp.setTenCt(this.tenCt);
         return ctsp;
     }
 }

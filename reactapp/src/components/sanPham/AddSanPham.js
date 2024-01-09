@@ -26,10 +26,16 @@ import { InfoCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { keys } from '@antv/util';
 import { App } from 'antd';
 import tr from 'date-fns/esm/locale/tr/index.js';
+import CloudinaryUpload from './UpAnh';
+import { useNavigate } from 'react-router-dom';
+import convert from 'color-convert';
 
 
 export default function AddSanPham() {
     //Form
+    const nav = useNavigate();
+    const [form] = Form.useForm();
+    const [form1] = Form.useForm();
     const [selectedValue, setSelectedValue] = useState('1');
     const handleChange = (value) => {
         console.log(`Selected value: ${value}`);
@@ -41,52 +47,261 @@ export default function AddSanPham() {
         setComponentSize(size);
 
     };
-    const onChange = (selectedOption) => {
-        // In ra giá trị của key khi có sự thay đổi
-        console.log('Selected key:', selectedOption);
+
+    const [tableData, setTableData] = useState([]);
+    const [dataKichThuoc, setDataKichThuocs] = useState([]);
+    const [dataSanPham, setDataSanPhams] = useState([]);
+    const [dataMauSac, setDataMauSacs] = useState([]);
+    const [dataChatLieu, setDataChatLieus] = useState([]);
+    const [dataHang, setDataHangs] = useState([]);
+    const [dataDeGiay, setDataDeGiays] = useState([]);
+    const [dataDanhMuc, setDataDanhMucs] = useState([]);
+    const [dataMoTa, setDataMoTas] = useState([]);
+
+    const handleLinkAnhChange = (linkAnh, index) => {
+        // Tìm dòng tương ứng trong dataSource
+        const updatedDataSource = tableData.map((item) => {
+            if (item.key === index) {
+                // Cập nhật giá trị ghiChu cho dòng đó
+                return { ...item, ghiChu: linkAnh };
+            }
+            return item;
+        });
+        // Cập nhật state với dataSource mới
+        setTableData(updatedDataSource);
     };
-    const [form] = Form.useForm();
-    const [form1] = Form.useForm();
+
+
+    const onChangeKT = (selectedOption) => {
+        setDataKichThuocs(selectedOption);
+    };
+    const onChangeMS = (selectedOption) => {
+        setDataMauSacs(selectedOption);
+    };
+    const onChangeCL = (selectedOption) => {
+        setDataChatLieus(selectedOption);
+    };
+    const onChangeH = (selectedOption) => {
+        setDataHangs(selectedOption);
+    };
+    const onChangeDG = (selectedOption) => {
+        setDataDeGiays(selectedOption);
+    };
+    const onChangeDM = (selectedOption) => {
+        setDataDanhMucs(selectedOption);
+    };
+    const onChangeMT = (e) => {
+        setDataMoTas(e.target.value)
+    };
+    const onChangeSP = (selectedOption) => {
+        setDataSanPhams(selectedOption)
+    };
+    const onChangeSL = (record, value) => {
+        const newData = [...tableData];
+        const index = newData.findIndex(item => item.key === record.key);
+        if (index > -1) {
+            newData[index].soLuong = value;
+            setTableData(newData);
+        }
+    };
+    const onChangeGB = (record, value) => {
+        const newData = [...tableData];
+        const index = newData.findIndex(item => item.key === record.key);
+        if (index > -1) {
+            newData[index].giaBan = value;
+            setTableData(newData);
+        }
+    };
+
+
+    const loadDuLieuThem = () => {
+        const newDataKT = ktData.filter((data) =>
+            dataKichThuoc.includes(data.ten)
+        );
+        const newDataMS = msData.filter((data) =>
+            dataMauSac.includes(data.ma)
+        );
+        const newDataCL = cl.filter((data) =>
+            dataChatLieu.includes(data.ten)
+        );
+        const newDataH = h.filter((data) =>
+            dataHang.includes(data.ten)
+        );
+        const newDataDG = dc.filter((data) =>
+            dataDeGiay.includes(data.ten)
+        );
+        const newDataDM = dm.filter((data) =>
+            dataDanhMuc.includes(data.ten)
+        );
+        const newDataSP = optionsSP.filter((data) =>
+            dataSanPham.includes(data.ten)
+        );
+        if (dataKichThuoc.length > 0 && dataMauSac.length > 0) {
+            let index = 1;
+            const nameProduct = selectedValue
+            setTableData([])
+            for (let i = 0; i < newDataKT.length; i++) {
+                for (let j = 0; j < newDataMS.length; j++) {
+                    const newSanPham = {
+                        key: `${newDataSP[0].ten} - ${newDataKT[i].ten} ${newDataMS[j].ten}`,
+                        tenCt: `${newDataSP[0].ten} - [${newDataKT[i].ten} ${newDataMS[j].ten}]`,
+                        maMau: newDataMS[j].ma,
+                        sanPham: newDataSP[0].id,
+                        moTa: dataMoTa,
+                        chatLieu: newDataCL[0].id,
+                        hang: newDataH[0].id,
+                        deGiay: newDataDG[0].id,
+                        danhMuc: newDataDM[0].id,
+                        mauSac: newDataMS[j].id,
+                        kichThuoc: newDataKT[i].id,
+                        ghiChu: null,
+                        soLuong: 1,
+                        giaBan: 1000000,
+                        stt: index++,
+
+                    };
+                    setTableData((prevData) => [...prevData, newSanPham]);
+
+                }
+            }
+        } else {
+            setTableData([])
+        }
+
+    }
+
+    useEffect(() => {
+        loadDuLieuThem()
+    }, [dataKichThuoc, dataMauSac]);
+
+    console.log(tableData)
     //Load table
     const columns = [
         {
             title: "STT",
-            dataIndex: "idSP",
-            key: "id",
-            render: (id, record, index) => {
-                ++index;
-                return index;
-            },
-            showSorterTooltip: false,
+            dataIndex: "stt",
+            key: "key"
         },
         {
             title: "Tên",
-            dataIndex: "tenSP",
+            dataIndex: "tenCt",
             center: "true",
         },
         {
-            title: "Số lượng",
-            dataIndex: "",
+            title: 'Số lượng',
+            dataIndex: 'soLuong',
+            render: (_, record) => (
+                <Input
+                    type='number'
+                    rules={[{ required: true, alert: 'Không để trống số lượng', },]}
+                    style={{ width: 100 }}
+                    defaultValue={1}
+                    onChange={(e) => onChangeSL(record, e.target.value)}
+                />
+            ),
         },
         {
             title: "Giá bán",
-            dataIndex: "",
-        }, ,
+            dataIndex: "giaBan",
+            render: (_, record) => {
+                return <>
+                    <Input type='number'
+                        rules={[{ required: true, alert: 'Không để trống giá', },]}
+                        style={{ width: 100 }}
+                        defaultValue={1000000}
+                        onChange={(e) => onChangeGB(record, e.target.value)}></Input> VNĐ
+                </>;
+            }
+        },
+        {
+            title: "Màu",
+            dataIndex: "maMau",
+            render: (_, record) => {
+                return <>
+                    <div style={{
+                        backgroundColor: record.maMau,
+                        borderRadius: 6,
+                        width: 60,
+                        height: 25,
+                    }}></div >
+                </>;
+            }
+        },
         {
             title: "Upload ảnh",
-            dataIndex: "",
+            dataIndex: "ghiChu",
+            render: (_, record) => {
+                return <>
+                    <CloudinaryUpload onLinkAnhChange={(imageUrl) => handleLinkAnhChange(imageUrl, record.key)}></CloudinaryUpload>
+                </>;
+            }
         },
     ]
-    //Add CTSP
-    const addCTSanPham = (value) => {
-        console.log(value);
-        axios.post('http://localhost:8080/ctsp/add', value)
-            .then(response => {
-                console.log(response.data);
-                loadSP();
-                form.resetFields();
-            })
-            .catch(error => console.error('Error adding item:', error));
+
+    //CTSP
+    const [optionsCTSP, setOptionsCTSP] = useState([]);
+    useEffect(() => {
+        loadCTSP();
+    }, []);
+    const loadCTSP = async () => {
+        const result = await axios.get("http://localhost:8080/ctsp/show", {
+            validateStatus: () => {
+                return true;
+            }
+        });
+        setOptionsCTSP(result.data);
+    };
+
+    const addCTSanPham = () => {
+        const chekTrung = (code) => {
+            return optionsCTSP.some(ctsp => ctsp.tenCt === code);
+        };
+
+        for (let i = 0; i < tableData.length; i++) {
+            if (chekTrung(tableData[i].tenCt)) {
+                toast.error('Sản phẩm "' + tableData[i].tenCt + '" đã tồn tại', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+                return;
+            }
+        }
+
+        for (let i = 0; i < tableData.length; i++) {
+            if (tableData[i].ghiChu == null) {
+                toast.error('Không để trống ảnh!', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+                return;
+            }
+        }
+
+        for (let i = 0; i < tableData.length; i++) {
+            axios.post('http://localhost:8080/ctsp/add', tableData[i])
+                .then(response => {
+                    console.log(response.data);
+                    loadCTSP();
+                    loadSP();
+                    form1.resetFields();
+                    form.resetFields();
+                    setTableData([])
+                })
+                .catch(error => console.error('Error adding item:', error));
+        }
+
         toast('✔️ Thêm thành công!', {
             position: "top-right",
             autoClose: 5000,
@@ -171,6 +386,18 @@ export default function AddSanPham() {
 
     }
     // Load Màu Sắc
+    const doiMau = (e) => {
+        const ma = e.target.value;
+        const hexCode = ma.replace("#", "").toUpperCase();
+        const rgb = convert.hex.rgb(hexCode);
+        const colorName = convert.rgb.keyword(rgb);
+        if (colorName === null) {
+            console.log("hehe")
+        } else {
+            console.log(colorName);
+        }
+    };
+
     const [openMS, setOpenMS] = useState(false);
     const [msData, setMSData] = useState([]);
     const [optionsMS, setOptionsMS] = useState([]);
@@ -194,26 +421,43 @@ export default function AddSanPham() {
         }
     };
     const addMauSac = (value) => {
-        console.log(value);
-        axios.post('http://localhost:8080/mau-sac/add', value)
-            .then(response => {
-                console.log(response.data);
-                toast('✔️ Thêm thành công!', {
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                });
-                loadMS();
-                form1.resetFields();
+        const chekTrung = (code) => {
+            return msData.some(color => color.ma === code);
+        };
+        if (!chekTrung(value.ma)) {
+            console.log(value.ma);
+            axios.post('http://localhost:8080/mau-sac/add', value)
+                .then(response => {
+                    console.log(response.data);
+                    toast('✔️ Thêm thành công!', {
+                        position: "top-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                    });
+                    loadMS();
+                    form.resetFields();
 
-            })
-            .catch(error => console.error('Error adding item:', error));
+                })
+                .catch(error => console.error('Error adding item:', error));
 
+        } else {
+            console.log('hehe');
+            toast.error('Mã màu đã tồn tại!', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        }
     }
     // Load Chất Liệu
     const [openCL, setOpenCL] = useState(false);
@@ -229,7 +473,6 @@ export default function AddSanPham() {
         });
         if (result.status === 302) {
             setCL(result.data);
-            console.log(cl);
         }
     };
     const addChatLieu = (value) => {
@@ -367,13 +610,6 @@ export default function AddSanPham() {
 
     }
     //Hiển Thị 
-    const [tableData, setTableData] = useState([]);
-    const [selectedSizes, setSelectedSizes] = useState([]);
-    const formTableChange = (changedValues, allValues) => {
-        const newData = { ...tableData[tableData.length - 1], ...changedValues };
-        setTableData([...tableData.slice(0, -1), newData]);
-    };
-
     return (
         <div className='container-fluid' style={{ borderRadius: 20 }}>
             <div className="container-fluid">
@@ -406,9 +642,9 @@ export default function AddSanPham() {
                             {/* Sản Phẩm  */}
                             <div className='row'>
                                 <Form.Item className='col' style={{ paddingLeft: 235 }} name='sanPham' label={<b>Tên Sản Phẩm </b>}
-                                    hasFeedback rules={[{ required: true, message: '', },]}>
+                                    hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên sản phẩm!', },]}>
                                     <Select
-                                        onChange={handleChange}
+                                        onChange={onChangeSP}
                                         placeholder="Chọn một giá trị"
                                         style={{ height: 40, width: 613 }}
                                         showSearch
@@ -421,7 +657,7 @@ export default function AddSanPham() {
                                         {optionsSP.map(item => (
                                             <Select.Option
                                                 key={item.id}
-                                                value={item.id}>
+                                                value={item.ten}>
                                                 {item.ten}
                                             </Select.Option>
                                         ))}
@@ -479,8 +715,8 @@ export default function AddSanPham() {
                             </div>
                             {/* Mô Tả */}
                             <Form.Item name='moTa' label={<b>Mô tả </b>}
-                                hasFeedback rules={[{ required: true, message: '', },]}>
-                                <TextArea rows={5} placeholder='Nhập mô tả sản phẩm' className='w-75' />
+                                hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống mô tả!', },]}>
+                                <TextArea rows={5} value={dataMoTa} onChange={onChangeMT} placeholder='Nhập mô tả sản phẩm' className='w-75' />
                             </Form.Item>
                             {/* Chất liệu & Hãng */}
                             <div className='row'>
@@ -488,10 +724,10 @@ export default function AddSanPham() {
                                     {/* Chất Liệu */}
                                     <div className='row'>
                                         <Form.Item className='col' style={{ paddingLeft: 180, height: 10 }} name='chatLieu' label={<b>Chất liệu </b>}
-                                            hasFeedback rules={[{ required: true, message: '', },]}>
-                                            <Select placeholder="Chọn một giá trị" style={{ width: 250 }}>
+                                            hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống chất liệu !', },]}>
+                                            <Select placeholder="Chọn một giá trị" style={{ width: 250 }} onChange={onChangeCL}>
                                                 {cl.map(item => (
-                                                    <Select.Option key={item.id} value={item.id}>
+                                                    <Select.Option key={item.id} value={item.ten}>
                                                         {item.ten}
                                                     </Select.Option>
                                                 ))}
@@ -553,9 +789,9 @@ export default function AddSanPham() {
                                     <div className='row'>
                                         <Form.Item className='col' style={{ paddingRight: 410, height: 10 }} name='hang' label={<b>Hãng </b>}
                                             hasFeedback rules={[{ required: true, message: '', },]}>
-                                            <Select placeholder="Chọn một giá trị" style={{ width: 250 }} className='me-2'>
+                                            <Select placeholder="Chọn một giá trị" style={{ width: 250 }} className='me-2' onChange={onChangeH}>
                                                 {h.map(item => (
-                                                    <Select.Option key={item.id} value={item.id}>
+                                                    <Select.Option key={item.id} value={item.ten}>
                                                         {item.ten}
                                                     </Select.Option>
                                                 ))}
@@ -620,9 +856,9 @@ export default function AddSanPham() {
                                     <div className='row'>
                                         <Form.Item className='col' style={{ paddingLeft: 180, height: 10 }} name='deGiay' label={<b>Đế giày </b>}
                                             hasFeedback rules={[{ required: true, message: '', },]}>
-                                            <Select placeholder="Chọn một giá trị" style={{ width: 250 }} className='me-2' onChange={onChange}>
+                                            <Select placeholder="Chọn một giá trị" style={{ width: 250 }} className='me-2' onChange={onChangeDG}>
                                                 {dc.map(item => (
-                                                    <Select.Option key={item.id} value={item.id}>
+                                                    <Select.Option key={item.id} value={item.ten}>
                                                         {item.ten}
                                                     </Select.Option>
                                                 ))}
@@ -682,66 +918,66 @@ export default function AddSanPham() {
                                 {/* Danh mục */}
                                 <div className='col'>
                                     <div className='row'>
-                                    <Form.Item className='col' style={{ paddingRight: 410, height: 10 }} name='danhMuc' label={<b>Danh mục </b>}
-                                        hasFeedback rules={[{ required: true, message: '', },]}>
-                                        <Select placeholder="Chọn một giá trị" style={{ width: 250 }} className='me-2'>
-                                            {dm.map(item => (
-                                                <Select.Option key={item.id} value={item.id}>
-                                                    {item.ten}
-                                                </Select.Option>
-                                            ))}
-                                        </Select>
-                                       
-                                    </Form.Item>
-                                    <Form.Item style={{ paddingLeft:100}}>
-                                    <Button style={{ width: 250, height: 30, }}  className='bg-success text-white w-1' onClick={() => setOpenDM(true)}><b>Thêm danh mục</b></Button>
-                                        <Modal
-                                            title="Thêm Danh Mục"
-                                            centered
-                                            open={openDM}
-                                            onOk={() => setOpenDM(false)}
-                                            onCancel={() => setOpenDM(false)}
-                                            footer={[
-                                                <Button onClick={() => setOpenDM(false)}>Hủy</Button>,
-                                                <Button type="primary" onClick={() => {
-                                                    Modal.confirm({
-                                                        centered: true,
-                                                        title: 'Thông báo',
-                                                        content: 'Bạn có chắc chắn muốn thêm không?',
-                                                        onOk: () => { form1.submit(); },
-                                                        footer: (_, { OkBtn, CancelBtn }) => (
-                                                            <>
-                                                                <CancelBtn />
-                                                                <OkBtn />
-                                                            </>
-                                                        ),
-                                                    });
-                                                }}>Thêm</Button>
-                                            ]}
-                                            width={500}
-                                        >
-                                            <Form
-                                                initialValues={{
-                                                    size: componentSize,
-                                                }}
-                                                onValuesChange={onFormLayoutChange}
-                                                size={componentSize}
-                                                style={{
-                                                    maxWidth: 1000,
-                                                }}
-                                                onFinish={addDanhMuc}
-                                                form={form1}>
+                                        <Form.Item className='col' style={{ paddingRight: 410, height: 10 }} name='danhMuc' label={<b>Danh mục </b>}
+                                            hasFeedback rules={[{ required: true, message: '', },]}>
+                                            <Select placeholder="Chọn một giá trị" style={{ width: 250 }} className='me-2' onChange={onChangeDM}>
+                                                {dm.map(item => (
+                                                    <Select.Option key={item.id} value={item.ten}>
+                                                        {item.ten}
+                                                    </Select.Option>
+                                                ))}
+                                            </Select>
 
-                                                <div className='row'>
-                                                    <div className="container">
-                                                        <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
-                                                            <Input className="border" />
-                                                        </Form.Item>
+                                        </Form.Item>
+                                        <Form.Item style={{ paddingLeft: 100 }}>
+                                            <Button style={{ width: 250, height: 30, }} className='bg-success text-white w-1' onClick={() => setOpenDM(true)}><b>Thêm danh mục</b></Button>
+                                            <Modal
+                                                title="Thêm Danh Mục"
+                                                centered
+                                                open={openDM}
+                                                onOk={() => setOpenDM(false)}
+                                                onCancel={() => setOpenDM(false)}
+                                                footer={[
+                                                    <Button onClick={() => setOpenDM(false)}>Hủy</Button>,
+                                                    <Button type="primary" onClick={() => {
+                                                        Modal.confirm({
+                                                            centered: true,
+                                                            title: 'Thông báo',
+                                                            content: 'Bạn có chắc chắn muốn thêm không?',
+                                                            onOk: () => { form1.submit(); },
+                                                            footer: (_, { OkBtn, CancelBtn }) => (
+                                                                <>
+                                                                    <CancelBtn />
+                                                                    <OkBtn />
+                                                                </>
+                                                            ),
+                                                        });
+                                                    }}>Thêm</Button>
+                                                ]}
+                                                width={500}
+                                            >
+                                                <Form
+                                                    initialValues={{
+                                                        size: componentSize,
+                                                    }}
+                                                    onValuesChange={onFormLayoutChange}
+                                                    size={componentSize}
+                                                    style={{
+                                                        maxWidth: 1000,
+                                                    }}
+                                                    onFinish={addDanhMuc}
+                                                    form={form1}>
+
+                                                    <div className='row'>
+                                                        <div className="container">
+                                                            <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
+                                                                <Input className="border" />
+                                                            </Form.Item>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </Form>
-                                        </Modal>
-                                    </Form.Item>
+                                                </Form>
+                                            </Modal>
+                                        </Form.Item>
                                     </div>
                                 </div>
                             </div>
@@ -757,74 +993,40 @@ export default function AddSanPham() {
                             <h5><MdAddTask size={30} /> Kích thước và màu sắc</h5>
                             <hr />
                             {/* Kích Thước */}
-                            <div className='row'>
-                            <Form.Item className='col' style={{ paddingLeft: 235 }} label={<b>Kích thước </b>} name="kichThuoc"
-                            hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống kích thước !', },]}>
+                            <div className='row'style={{ paddingLeft: 219 }}>
+                             <div className='col'> 
+                            <Form.Item label={<b>Kích thước </b>} name="kichThuoc" 
+                            hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống kích thước!', },]}>
                                 <Select style={{
-                                    width : '630px',
+                                    width: 650,
                                     height: '50px'
                                 }}
-                                    // mode="multiple"
+                                    mode="multiple"
                                     placeholder="Chọn một giá trị"
                                     className='me-2'
-                                    onChange={onChange}
-                                    filterOption={(input, option) =>
-                                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                    }
+                                    onChange={onChangeKT}
                                 >
                                     {ktData.map(item => (
-                                        <Select.Option key={item.id} value={item.id}>
+                                        <Select.Option key={item.id} value={item.ten}>
                                             {item.ten}
                                         </Select.Option>
                                     ))}
-                                </Select>                                                            
+                                </Select>                              
                             </Form.Item>
-                            <Form.Item className='col mt-2' style={{ paddingLeft: 140 }}>
-                                <Button className='bg-success text-white w-1' onClick={() => setSelectKT(true)}> + </Button>
-                                {/* Modal chọn */}
-                                <Modal
-                                    title="Danh Sách Kích Thước"
-                                    centered
-                                    open={openSelectKT}
-                                    onOk={() => setSelectKT(false)}
-                                    onCancel={() => setSelectKT(false)}
-                                    footer={[
-                                        <Button onClick={() => setOpenKT(false)}>Hủy</Button>,
-                                        <Button type="primary" onClick={() => {
-                                            Modal.confirm({
-                                                centered: true,
-                                                title: 'Thông báo',
-                                                content: 'Bạn có chắc chắn muốn thêm không?',
-                                                onOk: () => { form.submit(); },
-                                                footer: (_, { OkBtn, CancelBtn }) => (
-                                                    <>
-                                                        <CancelBtn />
-                                                        <OkBtn />
-                                                    </>
-                                                ),
-                                            });
-                                        }}>Thêm</Button>
-                                    ]}
-                                    width={500}>
-                                    <div className='text-end'> <Button className='bg-success text-white w-1' onClick={() => { setOpenKT(true); setSelectKT(false); }}>+ Thêm kích thước </Button></div>
-                                    <div className='row'>
-                                        {ktData.map(item => (
-                                            <div className='col-md-2 mt-3 mb-3' ><Radio.Button>{item.ten}</Radio.Button></div>
-                                        ))}
-                                    </div>
-                                </Modal>
-                                {/* Modal tạo mới */}
+                            </div>  
+                            <div className='col' style={{ paddingLeft: 150, paddingTop: 10 }}> 
+                            <Form.Item>
+                            <Button className='bg-success text-white w-1' onClick={() => setOpenKT(true)}> + </Button>
                                 <Modal
                                     title="Thêm Kích Thước"
                                     centered
                                     open={openKT}
-                                    onOk={() => { setOpenKT(false); setSelectKT(true); }}
-                                    onCancel={() => { setOpenKT(false); setSelectKT(true); }}
+                                    onOk={() => setOpenKT(false)}
+                                    onCancel={() => setOpenKT(false)}
                                     footer={[
                                         <Button onClick={() => setOpenKT(false)}>Hủy</Button>,
                                         <Button type="primary" onClick={() => {
                                             Modal.confirm({
-                                                centered: true,
                                                 title: 'Thông báo',
                                                 content: 'Bạn có chắc chắn muốn thêm không?',
                                                 onOk: () => { form1.submit(); },
@@ -861,39 +1063,32 @@ export default function AddSanPham() {
                                     </Form>
                                 </Modal>
                                 <br />
-                                </Form.Item>
+                            </Form.Item>
+                            </div>  
                             </div>
                             {/* Màu Sắc */}
-                            <div className='row'>
-                            <Form.Item className='col' style={{ paddingLeft: 235 }} label={<b>Màu sắc </b>} name='mauSac'
-                            hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống màu sắc!', },]}>
-                                <Select
-                                    style={{
-                                        width : '630px',
-                                        height: '50px'
-                                    }}
-                                    // mode="multiple"
+                            <div className='row'style={{ paddingLeft: 219 }}>
+                            <div className='col'>
+                            <Form.Item label={<b>Màu sắc </b>} name="mauSac" hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống màu sắc!', },]}>
+                                <Select style={{
+                                    width: 650,
+                                    height: '50px'
+                                }}
+                                    mode="multiple"
                                     placeholder="Chọn một giá trị"
                                     className='me-2'
-                                    onChange={onChange}
+                                    onChange={onChangeMS}
                                 >
                                     {msData.map(item => (
-                                        <Select.Option
-                                            centered
-                                            key={item.id}
-                                            value={item.id}
-                                        >
-                                            <div style={{
-                                                backgroundColor: `${item.ma}`,
-                                                borderRadius: 6,
-                                                width: 500,
-                                                height: 25,
-                                            }}></div>
+                                        <Select.Option key={item.id} value={item.ma}>
+                                            {item.ten}
                                         </Select.Option>
                                     ))}
-                                </Select>
+                                </Select>    
                             </Form.Item>
-                            <Form.Item className='col mt-2' style={{ paddingLeft: 140 }}>
+                            </div>
+                            <div className='col' style={{ paddingLeft: 150, paddingTop: 10 }}>
+                            <Form.Item>
                             <Button className='bg-success text-white w-1' onClick={() => setOpenMS(true)}> + </Button>
                                 <Modal
                                     title="Thêm Màu Sắc"
@@ -926,22 +1121,21 @@ export default function AddSanPham() {
                                         }}
                                         onValuesChange={onFormLayoutChange}
                                         size={componentSize}
-                                        style={{
-                                            maxWidth: 1000,
-                                        }}
                                         onFinish={addMauSac}
                                         form={form1}>
-
-                                        <div className='row'>
-                                            <div className="container">
-                                                <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
-                                                    <Input className="border" />
-                                                </Form.Item>
-                                            </div>
-                                        </div>
+                                        <Form.Item label="Màu" name='ma' hasFeedback rules={[{ required: true, message: 'Vui lòng chọn màu', },]} >
+                                            <Input className="border" type="color" onChange={doiMau} />
+                                        </Form.Item>
+                                        <Form.Item label=" Mã" name='ma' hasFeedback rules={[{ required: true, message: '', },]} >
+                                            <Input readOnly="true" className="border" type="text" />
+                                        </Form.Item>
+                                        <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
+                                            <Input className="border" type="text" />
+                                        </Form.Item>
                                     </Form>
                                 </Modal>
                             </Form.Item>
+                            </div>
                             </div>
                         </div>
 
@@ -971,7 +1165,7 @@ export default function AddSanPham() {
                                     }}>Thêm Sản Phẩm</Button>
                                 </Form.Item>
                             </div>
-                            <Table dataSource={tableData} columns={columns}></Table>
+                            <Table dataSource={tableData} rowKey={"key"} columns={columns}></Table>
                         </div>
                     </div>
                 </Form>

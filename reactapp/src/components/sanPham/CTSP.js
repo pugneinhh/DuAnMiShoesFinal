@@ -5,6 +5,7 @@ import {
   Divider,
   Modal,
   Form,
+  Radio,
   Input,
   InputNumber,
   Select,
@@ -13,7 +14,8 @@ import {
   Table,
   Tag,
 } from 'antd';
-import { InfoCircleFilled } from "@ant-design/icons";
+import TextArea from 'antd/es/input/TextArea';
+import { InfoCircleFilled, InfoCircleOutlined } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
 import { EyeOutlined } from "@ant-design/icons";
@@ -23,11 +25,24 @@ import { useParams } from 'react-router-dom';
 import { GrUpdate } from "react-icons/gr";
 import { Image } from 'cloudinary-react';
 import axios from 'axios';
+import { IoIosAddCircleOutline } from 'react-icons/io';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { MdAddTask } from 'react-icons/md';
+
 export default function CTSP() {
   //Mở detail ctsp
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [open, setOpen] = useState(false);
-  const showModal = () => {
+  const showModal = async (idCT) => {
+    const result = await axios.get(`http://localhost:8080/ctsp/detail/${idCT}`, {
+      validateStatus: () => {
+        return true;
+      }
+    });
+    console.log(idCT)
+    console.log(result.data)
+    setCTDatas(result.data);
     setIsModalOpen(true);
   };
   const handleOk = () => {
@@ -38,6 +53,10 @@ export default function CTSP() {
   };
   const { Option } = Select;
   //Form
+  const onChange = (selectedOption) => {
+    // In ra giá trị của key khi có sự thay đổi
+    console.log('Selected key:', selectedOption);
+  };
   const [selectedValue, setSelectedValue] = useState('');
   const handleChange = (value) => {
     console.log(`Selected value: ${value}`);
@@ -47,6 +66,36 @@ export default function CTSP() {
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
   };
+  const updateCT = async () => {
+    const updateData = {
+      idC: ctData.idC,
+      moTa: ctData.moTa,
+      idKT: ctData.idKT,
+      idMS: ctData.idMS,
+      idCL: ctData.idCL,
+      idDC: ctData.idDC,
+      idDM: ctData.idDM,
+      idH: ctData.idH,
+      soLuong: ctData.soLuong,
+      giaBan: ctData.giaBan,
+      trangThai: ctData.trangThai
+    }
+    console.log(updateData);
+  }
+  
+  const [form] = Form.useForm();
+  const [form1] = Form.useForm();
+  const [form2] = Form.useForm();
+  const [openKT, setOpenKT] = useState(false);
+  const [openMS, setOpenMS] = useState(false);
+  const [openCL, setOpenCL] = useState(false);
+  const [openDC, setOpenDC] = useState(false);
+  const [openDM, setOpenDM] = useState(false);
+  const [openH, setOpenH] = useState(false);
+  const handleChangeKT = () => {
+    setCTDatas({ ...ctData, idKT: ctData.idKT, });
+  };
+  const [ctData, setCTDatas] = useState({});
   //Load kich thước
   const [kt, setKT] = useState([]);
   useEffect(() => {
@@ -62,6 +111,28 @@ export default function CTSP() {
       setKT(result.data);
     }
   };
+  const addKichThuoc = (value) => {
+    console.log(value);
+    axios.post('http://localhost:8080/kich-thuoc/add', value)
+      .then(response => {
+        console.log(response.data);
+        toast('✔️ Thêm thành công!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        loadKT();
+        form1.resetFields();
+
+      })
+      .catch(error => console.error('Error adding item:', error));
+
+  }
   //Load Màu Sắc 
   const [ms, setMS] = useState([]);
   useEffect(() => {
@@ -77,6 +148,28 @@ export default function CTSP() {
       setMS(result.data);
     }
   };
+  const addMauSac = (value) => {
+    console.log(value);
+    axios.post('http://localhost:8080/mau-sac/add', value)
+      .then(response => {
+        console.log(response.data);
+        toast('✔️ Thêm thành công!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        loadMS();
+        form1.resetFields();
+
+      })
+      .catch(error => console.error('Error adding item:', error));
+
+  }
   //Load Chất Liệu
   const [cl, setCL] = useState([]);
   useEffect(() => {
@@ -92,6 +185,28 @@ export default function CTSP() {
       setCL(result.data);
     }
   };
+  const addChatLieu = (value) => {
+    console.log(value);
+    axios.post('http://localhost:8080/chat-lieu/add', value)
+      .then(response => {
+        console.log(response.data);
+        toast('✔️ Thêm thành công!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        loadCL();
+        form1.resetFields();
+
+      })
+      .catch(error => console.error('Error adding item:', error));
+
+  }
   //Load Độ Cao
   const [dc, setDC] = useState([]);
   useEffect(() => {
@@ -107,6 +222,28 @@ export default function CTSP() {
       setDC(result.data);
     }
   };
+  const addDoCao = (value) => {
+    console.log(value);
+    axios.post('http://localhost:8080/de-giay/add', value)
+      .then(response => {
+        console.log(response.data);
+        toast('✔️ Thêm thành công!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        loadDC();
+        form1.resetFields();
+
+      })
+      .catch(error => console.error('Error adding item:', error));
+
+  }
   //Load Danh Mục
   const [dm, setDM] = useState([]);
   useEffect(() => {
@@ -120,7 +257,29 @@ export default function CTSP() {
     });
     setDM(result.data);
   };
-  //Load Chất Liệu
+  const addDanhMuc = (value) => {
+    console.log(value);
+    axios.post('http://localhost:8080/danh-muc/add', value)
+      .then(response => {
+        console.log(response.data);
+        toast('✔️ Thêm thành công!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        loadDM();
+        form1.resetFields();
+
+      })
+      .catch(error => console.error('Error adding item:', error));
+
+  }
+  //Load Hãng
   const [h, setH] = useState([]);
   useEffect(() => {
     loadH();
@@ -135,6 +294,28 @@ export default function CTSP() {
       setH(result.data);
     }
   };
+  const addHang = (value) => {
+    console.log(value);
+    axios.post('http://localhost:8080/hang/add', value)
+      .then(response => {
+        console.log(response.data);
+        toast('✔️ Thêm thành công!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        loadH();
+        form1.resetFields();
+
+      })
+      .catch(error => console.error('Error adding item:', error));
+
+  }
   //Table
   const [cTSP, setCTSPs] = useState([]);
 
@@ -238,23 +419,147 @@ export default function CTSP() {
     {
       title: "Action",
       key: "action",
-
-      render: () => (
+      dataIndex: "idCTSP",
+      render: (title) => (
         <Space size="middle">
           <a>
-            <Button type="primary" shape='round' className='bg-success text-white' icon={<EyeOutlined />} onClick={showModal} />
+            <Button type="primary" shape='round' className='bg-success text-white' icon={<EyeOutlined />} onClick={() => showModal(`${title}`)} />
             <Modal
               open={isModalOpen}
               onOk={handleOk}
               onCancel={handleCancel}
+              width={700}
               footer={[]}>
               <div className='text-center mb-3'>
                 <h3>Chi Tiết Sản Phẩm</h3>
               </div>
+              <Form
+                initialValues={{
+                  size: componentSize,
+                }}
+                onValuesChange={onFormLayoutChange}
+                size={componentSize}
+                onFinish={updateCT}
+                form={form2}>
+                <div className='row'>
+                  <Form.Item label={<b>Tên sản phẩm </b>}>
+                    <Input readOnly value={ctData.tenSP}></Input>
+                  </Form.Item>
+                </div>
+                <div className='row'>
+                  <Form.Item label={<b>Mô tả </b>} hasFeedback rules={[{ required: true, message: 'Vui lòng nhập mô tả!', },]}>
+                    <TextArea value={ctData.moTa} onChange={(e) => setCTDatas({ ...ctData, moTa: e.target.value })}></TextArea>
+                  </Form.Item>
+                </div>
+                <div className='row'>
+                  <div className='col-md-6'>
+                    <Form.Item label={<b>Kích thước </b>} hasFeedback rules={[{ required: true, message: 'Vui lòng chọn kích thước!', },]}>
+                      <Select placeholder="Chọn một giá trị" value={ctData.idKT} onChange={handleChangeKT}>
+                        {kt.map(item => (
+                          <Select.Option key={item.id} value={item.id} >
+                            {item.ten}
+                          </Select.Option>
+                        ))}
+                      </Select>
+                    </Form.Item>
+                  </div>
+                  <div className='col-md-6'>
+                    <Form.Item label={<b>Màu Sắc</b>}>
+                      <Select placeholder="Chọn một giá trị" value={ctData.idMS}>
+                        {ms.map(item => (
+                          <Select.Option key={item.id} value={item.id}>
+                            {item.ten}
+                          </Select.Option>
+                        ))}
+                      </Select>
+                    </Form.Item>
+                  </div>
+                </div>
+                <div className='row'>
+                  <div className='col-md-6'>
+                    <Form.Item label={<b>Chất liệu </b>}>
+                      <Select placeholder="Chọn một giá trị" value={ctData.idCL}>
+                        {cl.map(item => (
+                          <Select.Option key={item.id} value={item.id}>
+                            {item.ten}
+                          </Select.Option>
+                        ))}
+                      </Select>
+                    </Form.Item>
+                  </div>
+                  <div className='col-md-6'>
+                    <Form.Item label={<b>Độ cao</b>}>
+                      <Select placeholder="Chọn một giá trị" value={ctData.idDC}>
+                        {dc.map(item => (
+                          <Select.Option key={item.id} value={item.id}>
+                            {item.ten}
+                          </Select.Option>
+                        ))}
+                      </Select>
+                    </Form.Item>
+                  </div>
+                </div>
+                <div className='row'>
+                  <div className='col-md-6'>
+                    <Form.Item label={<b>Danh mục </b>}>
+                      <Select placeholder="Chọn một giá trị" value={ctData.idDM}>
+                        {dm.map(item => (
+                          <Select.Option key={item.id} value={item.id}>
+                            {item.ten}
+                          </Select.Option>
+                        ))}
+                      </Select>
+                    </Form.Item>
+                  </div>
+                  <div className='col-md-6'>
+                    <Form.Item label={<b>Hãng</b>}>
+                      <Select placeholder="Chọn một giá trị" value={ctData.idH}>
+                        {h.map(item => (
+                          <Select.Option key={item.id} value={item.id}>
+                            {item.ten}
+                          </Select.Option>
+                        ))}
+                      </Select>
+                    </Form.Item>
+                  </div>
+                </div>
+                <div className='row'>
+                  <div className='col-md-4'>
+                    <Form.Item label={<b>Số lượng </b>}>
+                      <InputNumber min={0} placeholder='Nhập số lượng' value={ctData.soLuong}></InputNumber>
+                    </Form.Item>
+                  </div>
+                  <div className='col-md-4'>
+                    <Form.Item label={<b>Giá bán </b>}>
+                      <InputNumber placeholder='Nhập giá bán' value={ctData.giaBan}></InputNumber>
+                    </Form.Item>
+                  </div>
+                  <div className='col-md-4'>
+                    <Form.Item label={<b>Trạng thái </b>}>
+                      <Select value={ctData.trangThai}>
+                        <Select.Option value='1'>Còn Bán</Select.Option>
+                        <Select.Option value='0'>Dừng Bán</Select.Option>
+                      </Select>
+                    </Form.Item>
+                  </div>
+                </div>
+              </Form>
               <div className='row'>
                 <div className='container text-center'>
-                  <Button className='bg-primary text-light rounded-pill border'>Hủy</Button>,
-                  <Button className='bg-warning text-dark rounded-pill border'><GrUpdate className='me-1' />Cập Nhật</Button>
+                  <Button className='bg-warning text-dark rounded-pill border'
+                    onClick={() => {
+                      Modal.confirm({
+                        title: 'Thông báo',
+                        content: 'Bạn có chắc chắn muốn cập nhật không?',
+                        onOk: () => { form2.submit(); },
+                        footer: (_, { OkBtn, CancelBtn }) => (
+                          <>
+                            <CancelBtn />
+                            <OkBtn />
+                          </>
+                        ),
+                      });
+                    }}><GrUpdate className='me-1' />Cập Nhật</Button>
                 </div>
               </div>
             </Modal>
@@ -373,21 +678,19 @@ export default function CTSP() {
               {/* Hãng */}
               <div className='col-md-3'>
                 <Form.Item label="Hãng" name="idH">
-                  <Select defaultValue={null}>
-                    <Select.Option value={null}>Tất cả</Select.Option>
+                  <Select placeholder="Chọn một giá trị">
                     {h.map(item => (
-                      <Select.Option key={item.id} value={item.id}>
+                      <Option key={item.id} value={item.id}>
                         {item.ten}
-                      </Select.Option>
+                      </Option>
                     ))}
                   </Select>
                 </Form.Item>
               </div>
               {/* Trạng Thái */}
               <div className='col-md-3'>
-                <Form.Item label="Số Lượng" name="trangThaiCT">
-                  <Select defaultValue={null}>
-                    <Select.Option value={null}>Tất cả</Select.Option>
+                <Form.Item label="Trạng thái" name="trangThaiCT">
+                  <Select placeholder="Chọn một giá trị">
                     <Select.Option value='1'>Còn Bán</Select.Option>
                     <Select.Option value='0'>Dừng Bán</Select.Option>
                   </Select>
@@ -410,7 +713,7 @@ export default function CTSP() {
 
 
             <div className='container-fluid'>
-              <Form.Item className='text-center'>
+              <Form.Item className='text-center' style={{ paddingLeft: 360 }}>
                 <Button type="primary" htmlType='reset'>Làm mới</Button>
               </Form.Item>
             </div>
