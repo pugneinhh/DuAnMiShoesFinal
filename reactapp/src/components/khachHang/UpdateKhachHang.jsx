@@ -26,8 +26,8 @@ export default function UpdateCustumerManagement() {
         KhachHangAPI.getOneByIdUser(id)
             .then((resp) => {
                 const modifiedEmployee = {
-                    ...resp.data.data,
-                    ngaySinh: moment(resp.data.data.ngaySinh).format("YYYY-MM-DD"),
+                    ...resp.data,
+                    ngaySinh: moment(resp.data.ngaySinh).format("YYYY-MM-DD"),
                 };
                 setOneEmployee(modifiedEmployee);
             })
