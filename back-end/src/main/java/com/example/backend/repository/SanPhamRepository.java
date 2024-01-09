@@ -11,7 +11,11 @@ import java.util.UUID;
 
 public interface SanPhamRepository extends JpaRepository<SanPham, String> {
     @Query(value = """
-    SELECT  a.id AS idSP,a.ma AS ma ,a.ten AS ten,SUM(coalesce(o.so_luong,0)) AS soLuong, a.trang_thai AS trangThai
+    SELECT  
+     a.id  AS idSP
+    ,a.ma AS ma ,a.ten AS ten
+    ,CASE WHEN SUM(coalesce(o.so_luong,0)) IS NULL THEN N'0' ELSE SUM(coalesce(o.so_luong,0)) END AS soLuong
+    , a.trang_thai AS trangThai
     FROM san_pham a LEFT JOIN chi_tiet_san_pham o  on o.san_pham_id= a.id GROUP BY ma,ten,a.trang_thai,a.id
             """, nativeQuery = true)
     List<SanPhamRespone> getALLSP();

@@ -13,15 +13,12 @@ const TableKhachHang = ({onSelectedKH,suaKH}) => {
 
     useEffect(() => {
         const loadKhachHang = async () => {
-            const result = await axios.get("http://localhost:8080/nguoi-dung/hien-thi", {
-              validateStatus: () => {
-                return true;
-              },
+            const result = await axios.get("http://localhost:8080/admin/khach-hang", {
+              
             });
-            if (result.status === 302) {
+            
               setKhachHangs(result.data);
-
-            }
+              console.log(result.data);
           };
           loadKhachHang();
       }, []);
@@ -46,8 +43,8 @@ const TableKhachHang = ({onSelectedKH,suaKH}) => {
 
         {
           title: "#",
-          dataIndex: "id",
-          key: "id",
+          dataIndex: "idND",
+          key: "idND",
           render: (id, record, index) => {
             ++index;
             return index;
@@ -56,14 +53,14 @@ const TableKhachHang = ({onSelectedKH,suaKH}) => {
         },
         {
           title: "Mã",
-          dataIndex: "ma",
-          key: "ma",
+          dataIndex: "maND",
+          key: "maND",
           sorter: (a, b) => a.ma.slice(2) - b.ma.slice(2),
         },
         {
           title: "Tên",
-          dataIndex: "ten",
-          key:"ten",
+          dataIndex: "tenND",
+          key:"tenND",
         },
         {
           title: "Điểm",
@@ -72,8 +69,8 @@ const TableKhachHang = ({onSelectedKH,suaKH}) => {
         },
         {
           title: "Số điện thoại",
-          dataIndex: "soDienThoai",
-          key: "soDienThoai",
+          dataIndex: "sdt",
+          key: "sdt",
         },
         {
             title: "Email",
@@ -91,13 +88,13 @@ const TableKhachHang = ({onSelectedKH,suaKH}) => {
 
 
       const dataSource = khachHang.map((item, index) => ({
-        key: item.id,
+        key: item.idND,
        // checkbox: ++index,
-        id: item.id,
-        ma: item.ma,
-        ten: item.ten,
+        idND: item.idND,
+        maND: item.maND,
+        tenND: item.tenND,
         diem: item.diem,
-        soDienThoai: item.soDienThoai,      
+        sdt: item.sdt,      
         email : item.email
       }));
 

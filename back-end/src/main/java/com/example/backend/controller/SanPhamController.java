@@ -22,6 +22,7 @@ public class SanPhamController {
     public ResponseEntity<?> getALLSP(){
         return new ResponseEntity<>(sanPhamService.getALLSP(), HttpStatus.OK);
     }
+
     @GetMapping("/getAll")
     public ResponseEntity<?> getALL(){
         return new ResponseEntity<>(sanPhamService.getALL(), HttpStatus.OK);

@@ -135,7 +135,6 @@ export default function KhachHang() {
       sorter: (a, b) => a.ngaySinh - b.ngaySinh,
 
     },
-
     {
       title: "Trạng thái",
       dataIndex: "trangThai",
@@ -143,8 +142,9 @@ export default function KhachHang() {
       render: (trang_thai) => (
         <>
           {trang_thai == 1 ? (
+
             <Tag color="red">
-              Không hoạt động
+               Không hoạt động
             </Tag>
           ) : (
             <Tag color="green">
