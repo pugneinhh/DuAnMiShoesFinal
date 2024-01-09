@@ -141,12 +141,9 @@ export default function KhachHang() {
       key: "trangThai",
       render: (trang_thai) => (
         <>
-          {trang_thai == 0 ? (
-            <Tag color="red">
-               Không hoạt động
           {trang_thai == 1 ? (
             <Tag color="red">
-              Không hoạt động
+               Không hoạt động
             </Tag>
           ) : (
             <Tag color="green">
