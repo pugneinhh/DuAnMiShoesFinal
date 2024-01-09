@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@CrossOrigin("*")
+@CrossOrigin("http://localhost:3000/")
 @RestController
 @RequestMapping("/admin/khach-hang")
 //@RequiredArgsConstructor
@@ -45,6 +45,8 @@ public class KhachHangController {
     }
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable("id") String id){
+        System.out.println("ID detail"+id);
+        System.out.println("Detail"+khachHangService.getByID(id).toString());
         return ResponseEntity.ok(khachHangService.getByID(id));
 
     }
