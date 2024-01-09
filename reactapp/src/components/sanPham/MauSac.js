@@ -38,7 +38,7 @@ export default function MauSac() {
     setSelectedValue(value);
   };
 
-  const [tenMau, setTenMaus] = useState('black');
+  const [ten, setTenMaus] = useState('');
   const doiMau = (e) => {
     const ma = e.target.value;
     const hexCode = ma.replace("#", "").toUpperCase();
@@ -51,7 +51,7 @@ export default function MauSac() {
       setTenMaus(colorName)
     }
   };
-  console.log('Tên màu : '+tenMau);
+  console.log('Tên màu : '+ten);
   const [componentSize, setComponentSize] = useState('default');
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
@@ -68,6 +68,11 @@ export default function MauSac() {
     };
     if (!chekTrung(value.ma)) {
       console.log(value.ma);
+      const hexCode = value.ma.replace("#", "").toUpperCase();
+      const rgb = convert.hex.rgb(hexCode);
+      const colorName = convert.rgb.keyword(rgb);
+      value.ten = colorName;
+      console.log(value.ten);
       axios.post('http://localhost:8080/mau-sac/add', value)
         .then(response => {
           console.log(response.data);
@@ -204,9 +209,9 @@ export default function MauSac() {
               span: 20,
             }}
             layout="horizontal"
-            initialValues={{
-              size: componentSize,
-            }}
+            // initialValues={{
+            //   size: componentSize,
+            // }}
             onValuesChange={onFormLayoutChange}
             size={componentSize}
             style={{
@@ -283,8 +288,12 @@ export default function MauSac() {
                 <Form.Item label=" Mã" name='ma' hasFeedback rules={[{ required: true, message: '', },]} >
                   <Input readOnly="true" className="border" type="text" />
                 </Form.Item>
-                <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
-                  <Input className="border" type="text" value={tenMau}/>
+                <Form.Item label="Tên"  hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
+
+                  <Input 
+                  type='text'
+                  value={ten}
+                  readOnly/>
                 </Form.Item>
               </Form>
             </Modal>
