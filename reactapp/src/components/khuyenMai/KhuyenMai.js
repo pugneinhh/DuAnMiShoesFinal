@@ -10,9 +10,13 @@ import {
   DatePicker,
   Divider,
   Modal,
+  Breadcrumb ,
 } from "antd";
 import "./KhuyenMai.scss";
+import { BiSolidDiscount } from "react-icons/bi";
 import {
+  HomeOutlined,
+  UserOutlined,
   EyeOutlined,
   PlusCircleOutlined,
   UnorderedListOutlined,
@@ -26,6 +30,7 @@ import moment from "moment";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { dayjs } from "dayjs";
+
 
 const KhuyenMai = () => {
   const currentTime = moment(); // thời gian hiện tại
@@ -131,7 +136,7 @@ const timKiemKhuyenMai=(dataSearch)=>{
 
   const updateTrangThai = async(id, value) => {
    await axios
-      .put(`http://localhost:8080/khuyen-mai/updateTrangThai/${id}`, value)
+      .put(`http://localhost:8080/khuyen-mai/updateTrangThai2/${id}`, value)
       .then((response) => {
         if (response.status === 200) {
           loadKhuyenMai();
@@ -151,7 +156,7 @@ const timKiemKhuyenMai=(dataSearch)=>{
 
   const updateTrangThai1 = async(id, value) => {
     await axios
-      .put(`http://localhost:8080/khuyen-mai/updateTrangThai1/${id}`, value)
+      .put(`http://localhost:8080/khuyen-mai/updateTrangThai3/${id}`, value)
       .then((response) => {
         if (response.status === 200) {
           loadKhuyenMai();
@@ -249,7 +254,7 @@ const timKiemKhuyenMai=(dataSearch)=>{
               color="#f50
                 "
             >
-              Sắp bắt đầu
+              Sắp diễn ra
             </Tag>
           ) : trangThai === 1 ? (
             <Tag
@@ -258,14 +263,17 @@ const timKiemKhuyenMai=(dataSearch)=>{
             >
               Đang diễn ra
             </Tag>
-          ) : (
+          ) : trangThai === 2 ? (
             <Tag color="#ff0000">Đã kết thúc</Tag>
-          )}
+          ) : (
+            <Tag color="#000000">Tạm dừng</Tag>
+          )
+        }
         </>
       ),
       filters: [
         {
-          text: "Sắp bắt đầu",
+          text: "Sắp diễn ra",
           value: "0",
         },
         {
@@ -275,6 +283,11 @@ const timKiemKhuyenMai=(dataSearch)=>{
         {
           text: "Đã kết thúc",
           value: "2",
+        },
+        ,
+        {
+          text: "Tạm dừng",
+          value: "3",
         },
       ],
       onFilter: (value, record) => record.trangThai === parseInt(value),
@@ -302,7 +315,7 @@ const timKiemKhuyenMai=(dataSearch)=>{
           </a>
           <>
             {new Date(record.ngay_ket_thuc) > currentTime ? (
-              record.trangThai === 2 ? (
+              record.trangThai === 3 ? (
                 <a className="btn rounded-pill" 
                 //onClick={() =>updateTrangThai1(record.id,record)}
                 onClick={() => {
@@ -374,8 +387,38 @@ const timKiemKhuyenMai=(dataSearch)=>{
       center: "true",
     },
   ];
+
+
+
   return (
+
     <div className="container">
+
+      <Breadcrumb
+      style={{marginTop: "10px"}}
+    items={[
+      {
+        href: '/admin/ban-hang',
+        title: <HomeOutlined />,
+      },
+      {
+       href:'/admin/ban-hang',
+        title: (
+          <>
+            <BiSolidDiscount size={15} style={{paddingBottom:2}}/> 
+        
+            <span>Giảm giá</span>
+          </>
+        ),
+      },
+      {
+        title: (
+          <>
+          <LuBadgePercent size={15} style={{paddingBottom:2}}/> 
+          <span>Đợt giảm giá</span>       </> )
+      },
+    ]}
+  />
       <div>
         <div className="container-fluid">
           <Divider orientation="center" color="none">
@@ -423,7 +466,7 @@ const timKiemKhuyenMai=(dataSearch)=>{
                     className="rounded-pill border-warning"
                     id="abc"
                   >
-                    <option value="Tất cả">Tất cả</option>
+                    <option value="">Tất cả</option>
                     <option value="Tiền mặt">Tiền mặt</option>
                     <option value="Phần trăm">Phần trăm</option>
                   </select>
@@ -470,15 +513,19 @@ const timKiemKhuyenMai=(dataSearch)=>{
               <div className="col-md-4">
                 <Form.Item label="Ngày bắt đầu" name="ngay_bat_dau">
                   <DatePicker
+                  showTime  
                     style={{ width: "100%" }}
                     placeholder="Ngày bắt đầu"
+                    format="YYYY-MM-DD HH:mm:ss"
                     className="rounded-pill border-warning"
                   />
                 </Form.Item>
                 <Form.Item label="Ngày kết thúc" name="ngay_ket_thuc">
                   <DatePicker
+                  showTime
                     style={{ width: "100%" }}
                     placeholder="Ngày kết thúc"
+                    format="YYYY-MM-DD HH:mm:ss"
                     className="rounded-pill border-warning"
                   />
                 </Form.Item>
@@ -502,7 +549,6 @@ const timKiemKhuyenMai=(dataSearch)=>{
             {/* <a name="" id="" class="btn btn-warning bg-gradient fw-bold nut-them" role="button">                
             </a> */}
             <br />
-
             <Link
               to="/frm-khuyen-mai"
               className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill"

@@ -1,25 +1,24 @@
-import React, { useState, useEffect, Text, View, Component } from "react";
+import React, { useState, useEffect} from "react";
 import axios from "axios";
 import {
-  Space,
-  Table,
-  Tag,
   Form,
   Input,
   Select,
   InputNumber,
   Button,
   Divider,
-  Pagination,
-  Switch,
-  Checkbox,
   Modal,
   DatePicker,
+  Breadcrumb,
 } from "antd";
 import "./KhuyenMai.scss";
+import {
+  HomeOutlined,
+} from "@ant-design/icons";
+import { BiSolidDiscount } from "react-icons/bi";
 import { LuBadgePercent } from "react-icons/lu";
-import { ToastContainer, toast } from "react-toastify";
-import { Navigate, useNavigate } from 'react-router-dom';
+import { toast } from "react-toastify";
+import {useNavigate } from 'react-router-dom';
 import TableSanPham from "./tableSanPham";
 import TableChiTietSanPham from "./tableChiTietSanPham";
 import moment from "moment-timezone";
@@ -57,6 +56,8 @@ const ThemKhuyenMai = () => {
     axios
       .post(`http://localhost:8080/khuyen-mai/add`, value)
       .then((response) => {
+        setIDKM(response.data);
+        if (selectedIDCTSP.length > 0){
         Promise.all(
           selectedIDCTSP.map((id) =>
             axios.put(
@@ -65,12 +66,10 @@ const ThemKhuyenMai = () => {
             )
           )
         );
-        // for(let i = 0; i < selectedIDCTSP.length; i++) {
-        //   axios.put(`http://localhost:8080/ctsp/updateKM/${selectedIDCTSP[i]}`,response.data.id)
-        // }\
-        setIDKM(response.data);
-        console.log("Thêm res", response.data.id);
+            }
+        // console.log("Thêm res", response.data.id);
         navigate('/khuyen-mai');
+        
         toast("✔️ Thêm thành công!", {
           position: "top-right",
           autoClose: 5000,
@@ -136,6 +135,34 @@ const ThemKhuyenMai = () => {
   return (
     <div className="container">
       <div>
+      <Breadcrumb
+      style={{marginTop: "10px"}}
+    items={[
+      {
+        href: '/admin/ban-hang',
+        title: <HomeOutlined />,
+      },
+      {
+        href: 'http://localhost:3000/admin/ban-hang',
+        title: (
+          <>
+            <BiSolidDiscount size={15} style={{paddingBottom:2}}/> 
+            <span>Giảm giá</span>
+          </>
+        ),
+      },
+      {
+        href: 'http://localhost:3000/khuyen-mai',
+        title: (
+          <>
+          <LuBadgePercent size={15} style={{paddingBottom:2}}/> 
+          <span>Đợt giảm giá</span>       </> )
+      },
+      {
+        title: 'Thêm đợt giảm giá'
+      }
+    ]}
+  />
         <div className="container-fluid">
           <br />
           <div className="row">

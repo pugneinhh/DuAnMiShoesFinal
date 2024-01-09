@@ -1,23 +1,20 @@
-import React, { useState, useEffect, Text, View, Component } from "react";
+import React, { useState, useEffect} from "react";
 import axios from "axios";
 import {
   Table,
   Tag,
-  Checkbox
 } from "antd";
 import "./KhuyenMai.scss";
 
 
-const TableChiTietSanPham = ({selectedIDSPs,onSelectedCTSanPham}) => {
+const TableChiTietSanPham = ({selectedIDSPs,onSelectedCTSanPham,suaIDCTSP}) => {
   const [ctsp, setCTSP] = useState([]);
   const [idSanPham, setIDSanPham] = useState([]);
-  const [selectedRowCTSP, setSelectedRowCTSP] = useState([]);
+ // const [selectedRowCTSP, setSelectedRowCTSP] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
-  // const [selectedCTSP , setSelectedCTSP] = useState([]);
   useEffect(() => {
     const getCTSPByIDSP = async () => {
-      console.log("selectedIDSPs",selectedIDSPs);
       try {
         if (selectedIDSPs.length === 1) {
           const response = await axios.get(`http://localhost:8080/ctsp/showCTSP/${selectedIDSPs[0]}`)
@@ -32,14 +29,16 @@ const TableChiTietSanPham = ({selectedIDSPs,onSelectedCTSanPham}) => {
               setCTSP(prevData  => response.data.includes(prevData) ? console.log("trùng:" ,prevData) : 
                 [...prevData ,...response.data])));
               setIDSanPham(prevData => [...prevData , ...filterArrray]);
+        
           } else {
             console.log("Xóa");
             const responses = await Promise.all(selectedIDSPs.map(id => axios.get(`http://localhost:8080/ctsp/showCTSP/${id}`)));
             for (let i = 0 ; i < responses.length ; i++){
-              if (i== 0) setCTSP(responses[0].data);
+              if (i === 0) setCTSP(responses[0].data);
               else setCTSP((prevData) => [...prevData,...responses[i].data]);
             }
               setIDSanPham(selectedIDSPs);
+           
           }
         } else {
             setCTSP([])
@@ -50,12 +49,15 @@ const TableChiTietSanPham = ({selectedIDSPs,onSelectedCTSanPham}) => {
       }
     };
     getCTSPByIDSP();
-    console.log("Seleted CTSP", ctsp);
+
   }, [selectedIDSPs]);
 
 
-
-
+  useEffect(() => {
+    setSelectedRowKeys(suaIDCTSP);
+    console.log("CTSP from tblSP: " , suaIDCTSP);
+    onSelectedCTSanPham(suaIDCTSP);
+  },[suaIDCTSP]);
   const columnsChiTietSanPham = [
     {
       title: "#",
@@ -91,63 +93,11 @@ const TableChiTietSanPham = ({selectedIDSPs,onSelectedCTSanPham}) => {
       key: "tenMS",
       render: (tenMS) => (
         <>
-          {tenMS === "Hồng" ? (
             <Tag
-              color="#ffadd2
-                    "
+              color= {tenMS}              
               className="rounded-circle"
               style={{ height: 25, width: 25 }}
             ></Tag>
-          ) : tenMS === "Xanh" ? (
-            <Tag
-              color="#52c41a
-                    "
-              className="rounded-circle"
-              style={{ height: 25, width: 25 }}
-            ></Tag>
-          ) : tenMS === "Xám" ? (
-            <Tag
-              color="#8c8c8c
-                    "
-              className="rounded-circle"
-              style={{ height: 25, width: 25 }}
-            ></Tag>
-          ) : tenMS === "Đỏ" ? (
-            <Tag
-              color="#f5222d
-                    "
-              className="rounded-circle"
-              style={{ height: 25, width: 25 }}
-            ></Tag>
-          ) : tenMS === "Tím" ? (
-            <Tag
-              color="#722ed1
-                    "
-              className="rounded-circle"
-              style={{ height: 25, width: 25 }}
-            ></Tag>
-          ) : tenMS === "Vàng" ? (
-            <Tag
-              color="#fadb14
-                    "
-              className="rounded-circle"
-              style={{ height: 25, width: 25 }}
-            ></Tag>
-          ) : tenMS === "Đen" ? (
-            <Tag
-              color="#000000
-                    "
-              className="rounded-circle"
-              style={{ height: 25, width: 25 }}
-            ></Tag>
-          ) : (
-            <Tag
-              color="#ffffff
-                    "
-              className="rounded-circle"
-              style={{ height: 25, width: 25 }}
-            ></Tag>
-          )}
         </>
       ),
     },
@@ -157,9 +107,9 @@ const TableChiTietSanPham = ({selectedIDSPs,onSelectedCTSanPham}) => {
   
     },
     {
-      title: "Độ cao",
-      dataIndex: "tenDC",
-      key: "tenDC"
+      title: "Đế giày",
+      dataIndex: "tenDG",
+      key: "tenDG"
     },
     {
       title: "Hãng",
@@ -221,7 +171,7 @@ const TableChiTietSanPham = ({selectedIDSPs,onSelectedCTSanPham}) => {
     tenKT: item.tenKT,
     tenMS: item.tenMS,
     tenCL: item.tenCL,
-    tenDC: item.tenDC,
+    tenDG: item.tenDG,
     tenH: item.tenH,
     tenDM: item.tenDM,
     trangThai: item.trangThai,
@@ -230,20 +180,27 @@ const TableChiTietSanPham = ({selectedIDSPs,onSelectedCTSanPham}) => {
 
   
   const rowSelection = {
-    selectedRowCTSP,      
-    onChange: (selectedKeys) => {
+    selectedRowKeys,      
+    onChange: (selectedKeys,selectedRowKeys) => {
+      if (selectedRowKeys !== null){
       onSelectedCTSanPham(selectedKeys);
-        setSelectedRowCTSP(selectedKeys);
-;
+      setSelectedRowKeys(selectedKeys);
+      }
     
   }
   };
   return (
     <Table
       rowSelection={rowSelection}
+      defaultSelectedRowKeys={selectedRowKeys}
       columns={columnsChiTietSanPham}
       dataSource={dataSoure1}
-      pagination={{ defaultPageSize: 5 }}
+      pagination={{
+        showQuickJumper: true,
+        defaultCurrentPage:1, 
+        defaultPageSize:5,
+        total: dataSoure1.length,
+      }}
     />
   );
 };

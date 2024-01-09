@@ -11,17 +11,20 @@ import {
   Space,
   Table,
   Tag,
+  Image,
 } from "antd";
 import { FilterFilled, UnorderedListOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { IoInformation } from "react-icons/io5";
-import { BsPencilSquare } from "react-icons/bs";
-import { BsMap } from "react-icons/bs";
+import { BsFillEyeFill, BsPencilSquare } from "react-icons/bs";
 import { FaTag } from "react-icons/fa";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { ToastContainer, toast } from "react-toastify";
-
+import { BiSolidUserBadge } from "react-icons/bi";
+import { useAppDispatch } from "../api/Hook";
+import { KhachHangAPI } from "../api/user/khachHang.api";
 export default function KhachHang() {
+  const dispatch = useAppDispatch();
   const [khachHang, setKhachHang] = useState([]);
 
   const [componentSize, setComponentSize] = useState("default");
@@ -29,6 +32,24 @@ export default function KhachHang() {
     setComponentSize(size);
   };
 
+  const [data, setData] = useState([]);
+  const loadData = () => {
+    KhachHangAPI.getALLKH()
+      .then((res) => {
+        // dispatch(SetEmployee(res.data.data));
+        setData(res.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
+
+  
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -36,16 +57,18 @@ export default function KhachHang() {
   }, []);
 
   const loadKhachHang = async () => {
-    const result = await axios.get("http://localhost:8080/khach-hang", {
-      validateStatus: () => {
-        return true;
-      },
+    const result = await axios.get("http://localhost:8080/admin/khach-hang", {
+   
     });
-    if (result.status === 302) {
       setKhachHang(result.data);
-    }
+  
     console.log(result.data);
   };
+
+  console.log("111",khachHang);
+
+  console.log("112", data);
+
 
   const columns = [
     {
@@ -59,20 +82,34 @@ export default function KhachHang() {
       showSortTooltip: false,
     },
     {
-      title: "Mã Khách Hàng",
+      title: " Ảnh",
+      dataIndex: "anh",
+      key: "anh",
+      align: "center",
+      render: (text) => (
+        <Image
+          width={100}
+          height={100}
+          style={{ borderRadius: "15px" }}
+          src={text}
+        />
+      ),
+    },
+    {
+      title: "Mã KH",
       dataIndex: "maND",
       sorter: (a, b) => a.ma - b.ma,
     },
     {
-      title: "Tên Khách Hàng",
+      title: "Tên KH",
       dataIndex: "tenND",
       sorter: (a, b) => a.ten - b.ten,
     },
-    {
-      title: "Email",
-      dataIndex: "email",
-      sorter: (a, b) => a.email - b.email,
-    },
+    // {
+    //   title: "Email",
+    //   dataIndex: "email",
+    //   sorter: (a, b) => a.email - b.email,
+    // },
     {
       title: "CCCD",
       dataIndex: "cccd",
@@ -86,8 +123,18 @@ export default function KhachHang() {
     {
       title: "Ngày sinh",
       dataIndex: "ngaySinh",
+      render: (ngaySinh) => (
+        <>
+          {
+            new Date(ngaySinh * 1).toLocaleDateString()
+
+          }
+        </>
+      ),
       sorter: (a, b) => a.ngaySinh - b.ngaySinh,
+
     },
+
     {
       title: "Trạng thái",
       dataIndex: "trangThai",
@@ -97,6 +144,9 @@ export default function KhachHang() {
           {trang_thai == 0 ? (
             <Tag color="red">
                Không hoạt động
+          {trang_thai == 1 ? (
+            <Tag color="red">
+              Không hoạt động
             </Tag>
           ) : (
             <Tag color="green">
@@ -120,36 +170,11 @@ export default function KhachHang() {
     {
       title: "Action",
       key: "action",
-      sorter: true,
-      render: (record) => (
+      dataIndex: 'idND',
+      render: (title) => (
         <Space size="middle">
-          <a>
-            <Button
-              type="primary"
-              danger
-              shape="circle"
-              icon={<IoInformation size={15} />}
-              onClick={() => {}}
-            />
-          </a>
-          <a>
-            <Button
-              type="primary"
-              className="btn btn-success text-center"
-              shape="circle"
-              icon={<BsPencilSquare size={15} />}
-              onClick={() => {}}
-            />
-          </a>
-          <a>
-            <Button
-              type="primary"
-              className="btn btn-warning text-center"
-              shape="circle"
-              icon={<BsMap size={15} />}
-              onClick={() => {}}
-            />
-          </a>
+          <Link to={`/detail-khach-hang/${title}`} className='btn btn-danger'><BsFillEyeFill /></Link>
+          <Link to={`/update-khach-hang/${title}`} className='btn btn-danger'><BsFillEyeFill /></Link>
         </Space>
       ),
       center: "true",
@@ -198,13 +223,12 @@ export default function KhachHang() {
   return (
     <div className="container">
       <div className="container-fluid">
-        <Divider orientation="left" color="#d0aa73">
-          <h4 className="text-first pt-1 fw-bold">
-            {" "}
-            <FaTag size={20} />
-            Quản lý khách hàng
-          </h4>
+        <Divider orientation="center" color="none">
+          <h2 className="text-first pt-1 fw-bold">
+            <BiSolidUserBadge /> Quản lý khách hàng
+          </h2>
         </Divider>
+
         {/* form tìm kiếm */}
         <div
           className=" bg-light m-2 p-3 pt-2"
@@ -267,7 +291,7 @@ export default function KhachHang() {
         {/* view add nhân viên */}
         <div className=" text-end mt-3">
           <Link
-            to="#"
+            to="/themKhachHang"
             className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill"
           >
             {" "}
@@ -290,7 +314,7 @@ export default function KhachHang() {
             dataSource={hasData ? khachHang : []}
             scroll={scroll}
           />
-        </div>
+        </div>{" "}
         <ToastContainer
           position="top-right"
           autoClose={5000}

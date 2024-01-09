@@ -37,4 +37,7 @@ public interface VoucherRepository extends JpaRepository<Voucher,String> {
             AND (ngay_ket_thuc BETWEEN (:#{#voucherSearch.ngayBDVoucher}) AND (:#{#voucherSearch.ngayKTVoucher})))
 """,nativeQuery = true)
     List<AdminVoucher> searchVoucher(VoucherSearch voucherSearch);
+
+
+
 }

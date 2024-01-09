@@ -1,7 +1,8 @@
 package com.example.backend.service;
 
-import com.example.backend.dto.request.NguoiDungRequest;
+import com.example.backend.dto.impldto.NhanVienResponseImplDTO;
 
+import com.example.backend.dto.response.KhachHangRespon;
 import com.example.backend.entity.NguoiDung;
 import com.example.backend.model.AdminKhachHangRepon;
 import com.example.backend.repository.NguoiDungRepository;
@@ -16,11 +17,11 @@ public class NguoiDungService {
     NguoiDungRepository nguoiDungRepository;
 
     public List<AdminKhachHangRepon> getKhach() {return nguoiDungRepository.getAllKhachHang();}
-    public List<NguoiDung> getAll(){
-        return nguoiDungRepository.findAll();
-    }
-    public NguoiDung add(NguoiDungRequest request){
-        NguoiDung nd=request.map(new NguoiDung());
-        return nguoiDungRepository.save(nd);
-    }
+//    public List<NguoiDung> getAll(){
+//        return nguoiDungRepository.findAll();
+//    }
+////    public NguoiDung add(NhanVienResponseImplDTO request){
+////        NguoiDung nd=request.map(new NguoiDung());
+////        return nguoiDungRepository.save(nd);
+////    }
 }

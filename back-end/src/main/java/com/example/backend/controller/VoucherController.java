@@ -1,8 +1,10 @@
 package com.example.backend.controller;
 
 import com.example.backend.dto.request.VoucherRequest;
+import com.example.backend.entity.NguoiDungVoucher;
 import com.example.backend.entity.Voucher;
 import com.example.backend.dto.request.VoucherSearch;
+import com.example.backend.service.NguoiDungVoucherService;
 import com.example.backend.service.VoucherService;
 import com.example.backend.util.Status;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,8 @@ import java.time.LocalDateTime;
 public class VoucherController {
     @Autowired
     VoucherService vs;
+    @Autowired
+    NguoiDungVoucherService nguoiDungVoucherService;
     @GetMapping("/hien-thi")
     public ResponseEntity<?> getALL(){
 //        vs.checkHan();
@@ -49,7 +53,10 @@ public class VoucherController {
         LocalDateTime ngayKT = vs.convertTime(request.getNgayKetThuc());
         request.setNgayBatDau(ngayBD);
         request.setNgayKetThuc(ngayKT);
+        System.out.println("Ngày bắt đầu"+ngayBD);
+        System.out.println("Ngày kết thúc "+ngayKT);
         LocalDateTime lc= LocalDateTime.now();
+        System.out.println("LC"+lc);
         if(request.getNgayBatDau().compareTo(lc)>0){
             request.setTrangThai(Status.SAP_DIEN_RA);
         }else if(request.getNgayBatDau().compareTo(lc)==0){
@@ -78,10 +85,12 @@ public class VoucherController {
     }
     @PostMapping("/search-voucher")
     public ResponseEntity<?> search(@RequestBody VoucherSearch voucherSearch){
+        System.out.println(voucherSearch.getNgayBDVoucher());
         return ResponseEntity.ok(vs.getSearch(voucherSearch));
     }
     @PutMapping("/updateTTHD/{id}")
     public ResponseEntity<?> updateTTHD(@PathVariable("id")String id,@RequestBody VoucherRequest request){
+
         return ResponseEntity.ok(vs.updateTTHD(id,request));
     }
     @PutMapping("/updateTTNgung/{id}")

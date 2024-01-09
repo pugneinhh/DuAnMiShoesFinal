@@ -13,21 +13,18 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
-@ToString
+
 public class NguoiDung {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     private String ma;
     private String ten;
-    private Date ngaySinh;
+    private Long ngaySinh;
     private String soDienThoai;
-    @ManyToOne
-    @JoinColumn(name = "dia_chi_id")
-    private DiaChi diaChi;
     private LocalDateTime ngayThamGia;
     private String chungMinhThu;
-    private boolean gioiTinh;
+    private Boolean gioiTinh;
     private String anh;
     private String email;
     private String matKhau;
@@ -39,4 +36,6 @@ public class NguoiDung {
     private String hangKhachHang;
     private int diem;
     private int trangThai;
+
+
 }

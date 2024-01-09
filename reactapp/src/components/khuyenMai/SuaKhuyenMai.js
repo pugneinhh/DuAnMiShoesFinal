@@ -1,5 +1,5 @@
-import React, { useState, useEffect, Text, View, Component } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import {
   Form,
@@ -10,45 +10,33 @@ import {
   DatePicker,
   Divider,
   Modal,
+  Breadcrumb,
 } from "antd";
 import "./KhuyenMai.scss";
+import {
+  HomeOutlined,
+} from "@ant-design/icons";
+import { BiSolidDiscount } from "react-icons/bi";
+
 import { LuBadgePercent } from "react-icons/lu";
-import { ToastContainer, toast } from "react-toastify";
-import moment from "moment";
+import {toast } from "react-toastify";
 import TableSanPham from "./tableSanPham";
 import TableChiTietSanPham from "./tableChiTietSanPham";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import dayjs from 'dayjs';
 
 
 const SuaKhuyenMai = () => {
-  const [formSuaKhuyenMai] = Form.useForm();
+
   const navigate = useNavigate();
 
-  const { id } = useParams("");
-  console.log("id khuyến mại lấy từ trang chủ =", id);
+  const {id} = useParams("");
 
   const [CTSP, setCTSP] = useState([]);
   const [idSP, setIDSP] = useState([]);
-  const [chua, setChua] = useState([]);
   const [dataUpdate, setDataUpdate] = useState({});
 
-  // Hàm xử lý để giữ lại duy nhất một dữ liệu
-  const filterUniqueData = (data) => {
-    if (!data || !Array.isArray(data)) {
-      return [];
-    }
-
-    const uniqueSet = new Set();
-    const uniqueArray = data.filter((item) => {
-      if (!uniqueSet.has(item)) {
-        uniqueSet.add(item);
-        return true;
-      }
-      return false;
-    });
-    return uniqueArray;
-  };
+  const [formSuaKhuyenMai] = Form.useForm();
 
   const loadDetailKhuyenMai = async () => {
     // Lấy ra chi tiết khuyến mại
@@ -80,52 +68,24 @@ const SuaKhuyenMai = () => {
   };
 
   const loadCTSP = async () => {
-    // Lấy ra ctsp có KM trên
-    const x = axios.get(`http://localhost:8080/ctsp/showKM/${dataUpdate.id}`);
+    const x = await axios.get(`http://localhost:8080/ctsp/showKM/${id}`);
+    console.log("id ctsp",x.data); 
     setCTSP(x.data);
-    console.log("CTSP lấy từ khuyến mại =", CTSP);
-  };
-
-  const loadSP = async () => {
-    const resp = CTSP.map((id) =>
-      axios.get(`http://localhost:8080/san-pham/showSP/${id}`)
+    x.data.map(idCTSP =>
+      axios.get(`http://localhost:8080/san-pham/showSP/${idCTSP}`).then(resp1 =>  
+      setIDSP(resp1.data)
+      ),   
     );
-    const apiResponses = await Promise.all(resp);
-    console.log(apiResponses);
-    //  setIDSP(apiResponses)
-    setChua(apiResponses.map((i) => i.data));
-    console.log(filterUniqueData(chua));
-    setIDSP(filterUniqueData(chua));
-    //   Lấy chi tiết sản phẩm theo CTSP
-    // for (let i = 0; i < CTSP.length; i++) {
-    //   await axios
-    //     .get(`http://localhost:8080/san-pham/showSP/${CTSP[i]}`)
-    //     .then((response2) => {
-    //       // setIDSP((prevData) =>
-    //       //   response2.data === prevData
-    //       //     ? console.log("trùng:", prevData)
-    //       //     : [prevData, ...response2.data]
-    //       // );
-    //       setChua(response2.data);
-    //       console.log("SP lấy từ CTSP từ khuyến mại (response)",response2.data);
-
-    //     });
-    // }
   };
+
 
   useEffect(() => {
     loadDetailKhuyenMai();
+    loadCTSP();
+    
+
   }, []);
 
-  //  const loadTableSanPham() = async() => {
-  //   await axios.get(`http://localhost:8080/ctsp/showKM/${id}`).then((response) => {
-  //     setDataUpdate( response.data);
-  //     console.log("Form",formSuaKhuyenMai.getFieldValue);
-  //     console.log(response.data.ngay_bat_dau);
-  //     console.log("Data update 1",dataUpdate);
-  //   })
-  //   .catch(error => console.error('Error adding item:', error));
-  //  }
 
   const onChangeLoai = (value) => {
     console.log("changed", value);
@@ -143,14 +103,35 @@ const SuaKhuyenMai = () => {
 
   const [idKM, setIDKM] = useState("");
 
-  // Sử dụng form hiện tại
+  const [khuyenMai, setKhuyenMais] = useState([]);
+ 
+
+  useEffect(() => {
+    loadKhuyenMai();
+  }, []);
+
+  const loadKhuyenMai = async () => {
+    const result = await axios.get("http://localhost:8080/khuyen-mai").then(response => {setKhuyenMais(response.data);}).catch(error => console.error('Error adding item:',error));
+  };
 
   const handleSubmit = (value) => {
     axios
       .put(`http://localhost:8080/khuyen-mai/update/${id}`, value)
       .then((response) => {
         setIDKM(response.data);
+        if (selectedIDCTSP.length > 0){
+        Promise.all(
+          selectedIDCTSP.map((id) =>
+            axios.put(
+              `http://localhost:8080/ctsp/updateKM/${id}`,
+              response.data
+            )
+          )
+        ); 
+            }
+            loadKhuyenMai();
         navigate("/khuyen-mai");
+
         toast("✔️ Sửa thành công!", {
           position: "top-right",
           autoClose: 5000,
@@ -161,8 +142,8 @@ const SuaKhuyenMai = () => {
           progress: undefined,
           theme: "light",
         });
-        setSelectedIDSP("");
 
+        setSelectedIDSP("");
         formSuaKhuyenMai.resetFields();
       })
       .catch((error) => console.error("Error adding item:", error));
@@ -202,6 +183,34 @@ const SuaKhuyenMai = () => {
   return (
     <div className="container">
       <div>
+      <Breadcrumb
+      style={{marginTop: "10px"}}
+    items={[
+      {
+        href: '/admin/ban-hang',
+        title: <HomeOutlined />,
+      },
+      {
+        href: 'http://localhost:3000/admin/ban-hang',
+        title: (
+          <>
+            <BiSolidDiscount size={15} style={{paddingBottom:2}}/> 
+            <span>Giảm giá</span>
+          </>
+        ),
+      },
+      {
+        href: 'http://localhost:3000/khuyen-mai',
+        title: (
+          <>
+          <LuBadgePercent size={15} style={{paddingBottom:2}}/> 
+          <span>Đợt giảm giá</span>       </> )
+      },
+      {
+        title: `Sửa đợt giảm giá ${dataUpdate.ma} - ${dataUpdate.ten}`
+      }
+    ]}
+  />
         <div className="container-fluid">
           <Divider orientation="center" color="none">
             <h2 className="text-first pt-1 fw-bold">
@@ -434,25 +443,14 @@ const SuaKhuyenMai = () => {
                 <TableChiTietSanPham
                   selectedIDSPs={selectedIDSP}
                   onSelectedCTSanPham={handleSelectedCTSanPham}
+                  suaIDCTSP = {CTSP}
                 />
               </div>
             </div>
           </div>
         </div>
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-        />
-        {/* Same as */}
-        <ToastContainer />
+
+      
       </div>
     </div>
   );

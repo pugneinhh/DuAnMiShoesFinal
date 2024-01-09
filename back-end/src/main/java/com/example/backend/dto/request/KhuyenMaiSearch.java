@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -17,6 +18,6 @@ public class KhuyenMaiSearch {
     String ten;
     String loai;
     BigDecimal gia_tri_khuyen_mai;
-    Date ngayBatDau;
-    Date ngayKetThuc;
+    LocalDateTime ngay_bat_dau;
+    LocalDateTime ngay_ket_thuc;
 }

@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 public class NguoiDungVoucher {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

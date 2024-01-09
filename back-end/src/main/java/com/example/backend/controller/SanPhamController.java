@@ -46,6 +46,6 @@ public class SanPhamController {
 
     @GetMapping("/showSP/{idCTSP}")
     public ResponseEntity<?> getSPByCTSP(@PathVariable("idCTSP") String id){
-        return ResponseEntity.ok(sanPhamService.getSPByCTSP(UUID.fromString(id)));
+        return ResponseEntity.ok(sanPhamService.getSPByCTSP(id));
     }
 }

@@ -36,12 +36,16 @@ public class CTSPService {
         return ctspRepository.save(ct);
     }
 
+
+//    public List<String> getALLCTSPByKM(String id){
+
+
     public ChiTietSanPham add (ChiTietSanPhamRequest sp){
         ChiTietSanPham ct = sp.map(new ChiTietSanPham());
         return ctspRepository.save(ct);
     }
 
-    public List<UUID> getALLCTSPByKM(UUID id){
+    public List<String> getALLCTSPByKM(String id){
         return ctspRepository.getAllCTSPByKM(id);
     }
 
@@ -54,5 +58,18 @@ public class CTSPService {
         return ctspRepository.save(ctsp);
     }
 
+    public List<AdminCTSPForKhuyenMai> getAllCTSPByIDSP(String idSP){
+        return ctspRepository.getCTSPBySP(idSP);
+    }
 
+    public List<String> getCTSPByKM(String idKM){
+        return  ctspRepository.getCTSPByKM(idKM);
+    }
+
+    public ChiTietSanPham deleteKM(String idCTSP){
+        ChiTietSanPham ctsp = ctspRepository.getReferenceById(idCTSP);
+        ctsp.setKhuyenMai(null);
+        ctsp.setNgaySua(LocalDateTime.now());
+        return ctspRepository.save(ctsp);
+    }
 }

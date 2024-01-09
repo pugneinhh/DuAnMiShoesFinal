@@ -12,7 +12,8 @@ import ModalKhachHang from "./ModalKhachHang";
 import { createInvoice,removeInvoice } from "./redux/Cartaction";
 import {useDispatch,useSelector} from 'react-redux';
 import {v4 as uuid} from 'uuid';
-import { getHoaDons } from "./redux/selector";
+import { GetBill } from "./reducer/Bill.reducer";
+// import { getHoaDons } from "./redux/selector";
 const {TabPane}=Tabs;
 const BanHang = () => {
   
@@ -20,7 +21,7 @@ const BanHang = () => {
   // const newTabIndex = useRef(0);
   // const demTab = useRef(0);
   const initState=useRef(2);
-  const hoaDons=useSelector(getHoaDons);
+  const hoaDons=useSelector(GetBill);
  
   const [open, setOpen] = useState(false);
   const [openSanPham, setOpenSanPham] = useState(false);
@@ -39,104 +40,81 @@ const BanHang = () => {
     setActiveKey(key);
   };
 ////tạo hóa đơn bằng redux
-const dispatch=useDispatch();
-const handleClickAddHD=() => {
-  const maxKey=Math.max(...hoaDons.map((hd)=>hd.key));
-  if(hoaDons.length>=5){
-    return toast.error('Không được vượt quá 5 hóa đơn!', {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
-  }
-  if(maxKey>0){
-  dispatch(
-    createInvoice(
-    {"id":uuid(),label: `Hóa đơn ${maxKey+1}`,
-          children: `New Tab ${maxKey+1}`,ma:`HDTQ${maxKey+1}`,trangThai:0,sanPham:null,key:`${maxKey+1}`}
-  )
-  );
-  initState.current++;
-  setActiveKey(maxKey+1);
+// const dispatch=useDispatch();
+// const handleClickAddHD=() => {
+//   const maxKey=Math.max(...hoaDons.map((hd)=>hd.key));
+//   if(hoaDons.length>=5){
+//     return toast.error('Không được vượt quá 5 hóa đơn!', {
+//             position: "top-right",
+//             autoClose: 5000,
+//             hideProgressBar: false,
+//             closeOnClick: true,
+//             pauseOnHover: true,
+//             draggable: true,
+//             progress: undefined,
+//             theme: "light",
+//           });
+//   }
+//   if(maxKey>0){
+//   dispatch(
+//     createInvoice(
+//     {"id":uuid(),label: `Hóa đơn ${maxKey+1}`,
+//           children: `New Tab ${maxKey+1}`,ma:`HDTQ${maxKey+1}`,trangThai:0,sanPham:null,key:`${maxKey+1}`}
+//   )
+//   );
+//   initState.current++;
+//   setActiveKey(maxKey+1);
   
-    }else{
-      dispatch(
-        createInvoice(
-        {"id":uuid(),label: `Hóa đơn ${initState.current}`,
-              children: `New Tab ${initState.current}`,ma:`HDTQ${initState.current}`,trangThai:0,sanPham:null,key:`${initState.current}`}
-      )
-      );
-      initState.current++;
-      setActiveKey(initState.current);
-    }
+//     }else{
+//       dispatch(
+//         createInvoice(
+//         {"id":uuid(),label: `Hóa đơn ${initState.current}`,
+//               children: `New Tab ${initState.current}`,ma:`HDTQ${initState.current}`,trangThai:0,sanPham:null,key:`${initState.current}`}
+//       )
+//       );
+//       initState.current++;
+//       setActiveKey(initState.current);
+//     }
 
-};
-///remove hóa đơn bằng redux
-const handleClickRemoveHD=(targetKey) => {
-  console.log(targetKey);
-  console.log(hoaDons.filter((hoaDon)=>hoaDon.key==targetKey)[0]);
-  if(hoaDons.length<=0){
-    return toast.error('Không còn hóa đơn!', {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
-  }else{
-  dispatch(
-    removeInvoice(
-    hoaDons.filter((hoaDon)=>hoaDon.key==targetKey)[0]
-  )
-  );
+// };
+// ///remove hóa đơn bằng redux
+// const handleClickRemoveHD=(targetKey) => {
+//   console.log(targetKey);
+//   console.log(hoaDons.filter((hoaDon)=>hoaDon.key==targetKey)[0]);
+//   if(hoaDons.length<=0){
+//     return toast.error('Không còn hóa đơn!', {
+//             position: "top-right",
+//             autoClose: 5000,
+//             hideProgressBar: false,
+//             closeOnClick: true,
+//             pauseOnHover: true,
+//             draggable: true,
+//             progress: undefined,
+//             theme: "light",
+//           });
+//   }else{
+//   dispatch(
+//     removeInvoice(
+//     hoaDons.filter((hoaDon)=>hoaDon.key==targetKey)[0]
+//   )
+//   );
   
-  initState.current--;
-  setActiveKey(initState.current);
-    }
-};
+//   initState.current--;
+//   setActiveKey(initState.current);
+//     }
+// };
 //onedit sự kiện
-const onEdit = (targetKey, action) => {
-    if (action === 'handlrClickAddHD') {
-      handleClickAddHD();
-    } else {
-      handleClickRemoveHD(targetKey);
-    }
-  };
+// const onEdit = (targetKey, action) => {
+//     if (action === 'handlrClickAddHD') {
+//       handleClickAddHD();
+//     } else {
+//       handleClickRemoveHD(targetKey);
+//     }
+//   };
 
 
-  const [maHD, setmaHD] = useState([])
-  const [hoaDon, setHoaDons] = useState([])
-  // const maHoaDon = maHD.map((item) => item.maHD);
-  useEffect(() => {
-    loadHoaDon();
-
-  }, []);
-  // load full hóa đơn
-  const loadHoaDon = async () => {
-
-    const result = await axios.get('http://localhost:8080/ban-hang', {
-      validateStatus: () => {
-        return true;
-      },
-    });
-    if (result.status === 302) {
-      setHoaDons(result.data);
-      setmaHD(result.data.maHD);
-      console.log(maHD)
-
-      console.log(hoaDon)
-    }
 
 
-  };
   //add và remove tab
   // const add = () => {
   //   if (demTab.current >= 5) {
@@ -206,7 +184,7 @@ const onEdit = (targetKey, action) => {
       <div className="text-end mt-3 me-4 mb-3">
 
         {/* <Button type="primary" onClick={add} >Tạo hóa đơn</Button> */}
-         <Button type="primary" onClick={handleClickAddHD} >Tạo hóa đơn</Button>
+         {/* <Button type="primary" onClick={handleClickAddHD} >Tạo hóa đơn</Button> */}
       </div>
 
       <div className="bg-light m-2 p-3 pt-2" style={{ borderRadius: 20 }}>
@@ -215,7 +193,7 @@ const onEdit = (targetKey, action) => {
           onChange={onChange}
           activeKey={activeKey}
           type="editable-card"
-          onEdit={onEdit}
+          // onEdit={onEdit}
         >
  {hoaDons.map((tab) => (
     <TabPane tab={tab.label} key={tab.key}>

@@ -1,16 +1,16 @@
-import React, { useState, useEffect, Text, View, Component , } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   Table,
-  Tag,
   Form,
   Input,
 } from "antd";
 
 
-const TableKhachHang = () => {
+const TableKhachHang = ({onSelectedKH,suaKH}) => {
     const [khachHang, setKhachHangs] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
     useEffect(() => {
         const loadKhachHang = async () => {
             const result = await axios.get("http://localhost:8080/nguoi-dung/hien-thi", {
@@ -20,18 +20,24 @@ const TableKhachHang = () => {
             });
             if (result.status === 302) {
               setKhachHangs(result.data);
-              const defaultSelectedKeys = result.data.length > 0 ? [result.data[0].id] : [];
-              console.log("key",defaultSelectedKeys)
-              setSelectedRowKeys(defaultSelectedKeys);
+
             }
           };
           loadKhachHang();
       }, []);
      
+
+      useEffect(() => {
+        setSelectedRowKeys(suaKH);
+        onSelectedKH(suaKH);
+      },[suaKH]);
+
+      
       const handleCheckboxChange = (selectedKeys , selectedRowKeys) => {
       if (selectedRowKeys !== null){
         setSelectedRowKeys(selectedKeys);
-        // onSelectedSanPham(selectedKeys);
+        onSelectedKH(selectedKeys);
+      
 
       };
     }
@@ -81,15 +87,12 @@ const TableKhachHang = () => {
       const rowSelection = {
         selectedRowKeys,      
         onChange: handleCheckboxChange,
-        
-        // onCancel: () => handleCancel,
       };
-      console.log(khachHang);
 
 
       const dataSource = khachHang.map((item, index) => ({
         key: item.id,
-        checkbox: ++index,
+       // checkbox: ++index,
         id: item.id,
         ma: item.ma,
         ten: item.ten,
@@ -109,10 +112,10 @@ const TableKhachHang = () => {
 
         <Table
         rowSelection={rowSelection}
+        defaultSelectedRowKeys={selectedRowKeys}
         columns={columnsKhachHang}
         dataSource={dataSource}  
         pagination={{ defaultPageSize: 5 }}
-        defaultSelectedRowKeys={selectedRowKeys}
        /> 
         </div>
 

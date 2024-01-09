@@ -19,7 +19,10 @@ public class NguoiDungVoucherController {
     NguoiDungVoucherService nguoiDungVoucherService;
     @GetMapping("/voucher/{id}")
     public ResponseEntity<?> getByVoucher(@PathVariable("id")String id){
+        System.out.println("ID"+id);
+       // System.out.println("SEND"+nguoiDungVoucherService.getALL());
         return ResponseEntity.ok(nguoiDungVoucherService.getAllByVoucher(id));
+       // return null;
     }
     @GetMapping("/nguoi-dung/{id}")
     public ResponseEntity<?> getByNguoiDung(@PathVariable("id")String id){
@@ -27,10 +30,28 @@ public class NguoiDungVoucherController {
     }
     @PostMapping("/add/{id}")
     public ResponseEntity<?> add(@PathVariable("id")String id,@RequestBody Voucher request){
+        System.out.println("Voucher"+request.toString());
+        System.out.println("IDKH"+id);
         return ResponseEntity.ok(nguoiDungVoucherService.add(id,request));
     }
     @DeleteMapping("/delete-ndv/{idND}/{idV}")
     public ResponseEntity<?> delete(@PathVariable("idND")String idND,@PathVariable("idV") String idV){
         return ResponseEntity.ok(nguoiDungVoucherService.delete(idND,idV));
+    }
+
+    @PutMapping("/update/sap-bat-dau/{idV}/{idKH}")
+    public ResponseEntity<?> updateSapBatDau(@PathVariable("idV") String idV,@PathVariable("idKH")String idKH){
+        return ResponseEntity.ok(nguoiDungVoucherService.updateTrangThai_ChuaBatDau(idV,idKH));
+    }
+
+    @PutMapping("/update/dang-dien-ra/{idV}/{idKH}")
+    public ResponseEntity<?> updateDangDienRa(@PathVariable("idV") String idV,@PathVariable("idKH")String idKH) {
+        return ResponseEntity.ok(nguoiDungVoucherService.updateTrangThai_DangDienRa(idV, idKH));
+    }
+
+
+    @PutMapping("/update/da-ket-thuc/{idV}/{idKH}")
+    public ResponseEntity<?> updateDaKetThuc(@PathVariable("idV") String idV,@PathVariable("idKH")String idKH) {
+        return ResponseEntity.ok(nguoiDungVoucherService.updateTrangThai_DaKetThuc(idV, idKH));
     }
 }
