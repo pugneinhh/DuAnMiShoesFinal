@@ -20,7 +20,7 @@ export class NhanVienAPI {
     static update = (data) => {
         return requestAdmin({
             method: "PUT",
-            url: `/admin/employee`,
+            url: `/admin/nhan-vien`,
             data: data,
         });
     };
@@ -36,7 +36,7 @@ export class NhanVienAPI {
     static getOneByIdUser = (id) => {
         return requestAdmin({
             method: "GET",
-            url: `/admin/employee/${id}`,
+            url: `/admin/nhan-vien/${id}`,
         });
     };
 }

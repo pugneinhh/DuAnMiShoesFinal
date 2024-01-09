@@ -67,8 +67,8 @@ public class KhachHangService {
        diaChi.setIdThanhPho(request.getIdThanhPho());
        diaChi.setIdHuyen(request.getIdHuyen());
        diaChi.setIdXa(request.getIdXa());
-       diaChi.setTenNguoiNhan(request.getTen());
-       diaChi.setSoDienThoai(request.getSoDienThoai());
+//       diaChi.setTenNguoiNhan(request.getTen());
+//       diaChi.setSoDienThoai(request.getSoDienThoai());
        diaChi.setNguoiDung(add);
        diaChi.setTrangThai(0);
        diaChiRepository.save(diaChi);
@@ -80,13 +80,13 @@ public class KhachHangService {
     public KhachHangResponImplDTO update(KhachHangRequest request, MultipartFile file){
         Optional<NguoiDung> optional = nguoiDungRepository.findById(request.getId());
         // todo: update user
-
+        System.out.println("aaaaaaaaaaaaaaaaaaaaaa"+optional.get());
         NguoiDung update =optional.get();
         update.setTen(request.getTen());
         update.setEmail(request.getEmail());
         update.setGioiTinh(request.getGioiTinh());
         update.setChungMinhThu(request.getCanCuocCongDan());
-        update.setTrangThai(request.getTrangThai());
+        update.setTrangThai(0);
         update.setNgaySinh(request.getNgaySinh());
         update.setAnh(file==null?optional.get().getAnh(): uploadImageToCloudinary.uploadImage(file));
         update.setSoDienThoai(request.getSoDienThoai());
@@ -101,10 +101,11 @@ public class KhachHangService {
         diaChi.setIdThanhPho(request.getIdThanhPho());
         diaChi.setIdHuyen(request.getIdHuyen());
         diaChi.setIdXa(request.getIdXa());
-        diaChi.setTenNguoiNhan(request.getTen());
+//        diaChi.setTenNguoiNhan(request.getTen());
         diaChi.setSoDienThoai(request.getSoDienThoai());
         diaChi.setNguoiDung(update);
         diaChi.setTrangThai(0);
+        diaChiRepository.save(diaChi);
         return  new KhachHangResponImplDTO(update,diaChi);
     }
     public KhachHangRespon getByID(String id){

@@ -1,5 +1,6 @@
 package com.example.backend.controller;
 
+import com.example.backend.dto.request.KhachHangRequest;
 import com.example.backend.dto.request.NhanVienRequest;
 import com.example.backend.service.NhanVienService;
 import com.google.gson.Gson;
@@ -10,10 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@CrossOrigin("http://localhost:3000/")
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/admin/nhan-vien")
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class NhanVienController {
     @Autowired
     NhanVienService nhanVienService;
@@ -31,5 +32,18 @@ public class NhanVienController {
 
         return  ResponseEntity.ok(nhanVienService.add(nhanVienRequest,file));
     }
+    @PutMapping()
+    public ResponseEntity<?> update(@RequestParam("request") String request,
+                                    @RequestParam(value = "file", required = false) MultipartFile file) {
 
+        Gson gson = new Gson();
+        NhanVienRequest zzzzzzzzz = gson.fromJson(request, NhanVienRequest.class);
+        return ResponseEntity.ok(nhanVienService.update(zzzzzzzzz, file));
+
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getById(@PathVariable("id") String id) {
+        return ResponseEntity.ok(nhanVienService.getByID(id));
+
+    }
 }

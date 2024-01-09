@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.UUID;
 
-public interface DiaChiRepository extends JpaRepository<DiaChi, UUID> {
-    @Query("SELECT a FROM DiaChi a WHERE a.trangThai = 0 AND a.id =:id")
+public interface DiaChiRepository extends JpaRepository<DiaChi, String> {
+    @Query(value = "SELECT * FROM dia_chi a WHERE a.trang_thai = 0 AND a.nguoi_dung_id =:id",nativeQuery = true)
     DiaChi findByUserAndStatus (@Param("id") String user);
 }

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
-
+@ToString
 public class NguoiDung {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
