@@ -25,12 +25,13 @@ import AddSanPham from './components/sanPham/AddSanPham';
 import KhachHang from "./components/khachHang/KhachHang";
 import NhanVien from "./components/nhanVien/NhanVien";
 import AddNhanVien from "./components/nhanVien/AddNhanVien";
-
+import UpdateKhachHang from "./components/khachHang/UpdateKhachHang";
 import BanHang from './components/banHang/BanHang';
 import AddVoucher from './components/voucher/AddVoucher';
 import ModelUpdateVoucher from './components/voucher/ModelUpdateVoucher';
 import store from "./components/banHang/redux/store";
 import { Provider } from "react-redux";
+import AddKhachHang from './components/khachHang/AddKhachHang';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
@@ -62,6 +63,9 @@ root.render(
           <Route path="detail-nhan-vien/:id" element={<AddNhanVien />}></Route>
           <Route path="update-nhan-vien/:id" element={<AddNhanVien />}></Route>
         <Route path="khach-hang" element={<KhachHang />}></Route>
+          <Route path="themKhachHang" element={<AddKhachHang />}></Route>
+          <Route path="detail-khach-hang/:id" element={<AddNhanVien />}></Route>
+          <Route path="update-khach-hang/:id" element={<UpdateKhachHang />}></Route>
           <Route path='them-san-pham' element = {<AddSanPham/>}></Route>
 
           <Route path='/admin/ban-hang' element={<BanHang/>}></Route>

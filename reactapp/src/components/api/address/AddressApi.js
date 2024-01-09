@@ -1,5 +1,4 @@
-import { requestAdress } from "../api/request";
-
+import { requestAdress } from "../request";
 export class AddressApi {
     static fetchAllProvince = () => {
         return requestAdress({
