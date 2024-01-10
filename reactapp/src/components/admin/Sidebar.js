@@ -52,7 +52,7 @@ const SideBar = (props) => {
                             alignItems : 'center',
                             display : 'flex',   
                             flexDirection : 'column ',
-                            padding: '24px',
+                            padding: '20px',
                             textTransform: 'uppercase',
                             fontWeight: 'bold',
                             fontSize: 18,

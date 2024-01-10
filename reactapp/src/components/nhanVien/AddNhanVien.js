@@ -164,7 +164,7 @@ export default function AddNhanVien() {
       <Form form={form}
         layout="vertical"
       >
-        <Row gutter={16} style={{ marginTop: "30px" }}>
+        <Row gutter={16} style={{ marginTop: "0px" }}>
           <Col span={7}>
             <Card style={{ height: "100%" }}>
               <h5 className='text-center fw-bold'>Ảnh đại diện</h5>
