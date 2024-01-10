@@ -24,6 +24,7 @@ import { BiSolidUserBadge } from "react-icons/bi";
 import { useAppDispatch } from "../api/Hook";
 import { KhachHangAPI } from "../api/user/khachHang.api";
 import { GrMapLocation } from "react-icons/gr";
+import ModalDiaChi from "./ModalDiaChi";
 export default function KhachHang() {
   const dispatch = useAppDispatch();
   const [khachHang, setKhachHang] = useState([]);
@@ -33,6 +34,10 @@ export default function KhachHang() {
     setComponentSize(size);
   };
 
+  const [openModalDiaChi, setOpenModalDiaChi] = useState(false);
+  const handleCloseMoDalDiaChi = () => {
+    setOpenModalDiaChi(false);
+  }
   const [data, setData] = useState([]);
   const loadData = () => {
     KhachHangAPI.getALLKH()
@@ -171,9 +176,13 @@ export default function KhachHang() {
       dataIndex: 'idND',
       render: (title) => (
         <Space size="middle">
-          <Link to={`/detail-khach-hang/${title}`} className='btn btn-danger'><BsFillEyeFill /></Link>
-          <Link to={`/update-khach-hang/${title}`} className='btn btn-success'  ><BsPencilSquare /></Link>
-          <Button className="btn btn-success"><GrMapLocation /></Button>
+          <Link to={`/detail-khach-hang/${title}`} className='btn btn-success'><BsFillEyeFill /></Link>
+          <Link to={`/update-khach-hang/${title}`} className='btn btn-danger'  ><BsPencilSquare /></Link>
+          <Button style={{ width: 41, height: 37.6, backgroundColor:"#35afb1",color:"white"}} type="primary" onClick={() => setOpenModalDiaChi(true)}>
+            <GrMapLocation />
+          </Button>
+       
+
         </Space>
       ),
       center: "true",
@@ -181,8 +190,7 @@ export default function KhachHang() {
   ];
 
   const [open, setOpen] = useState(false);
-  const [openUpdate, setOpenUpdate] = useState(false);
-  const [openDetail, setOpenDetail] = useState(false);
+
   const [bordered] = useState(false);
   const [size] = useState("large");
   const [expandable] = useState(undefined);
@@ -314,6 +322,11 @@ export default function KhachHang() {
             scroll={scroll}
           />
         </div>{" "}
+        <ModalDiaChi openModalDiaChi={openModalDiaChi}
+          setOpenModalDiaChi={setOpenModalDiaChi}
+          onOk={handleCloseMoDalDiaChi}
+          onCancel={handleCloseMoDalDiaChi}
+        />
         <ToastContainer
           position="top-right"
           autoClose={5000}

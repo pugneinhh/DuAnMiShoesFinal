@@ -149,8 +149,8 @@ export default function NhanVien() {
       
       render: (title) => (
         <Space size="middle">
-          <Link to={`/detail-nhan-vien/${title}`} className='btn btn-danger'><BsFillEyeFill /></Link>
-          <Link to={`/update-nhan-vien/${title}`} className='btn btn-danger'><BsFillEyeFill /></Link>
+          <Link to={`/detail-nhan-vien/${title}`} className='btn btn-success'><BsFillEyeFill /></Link>
+          <Link to={`/update-nhan-vien/${title}`} className='btn btn-danger'><BsPencilSquare /></Link>
         </Space>
       ),
       center: "true",
