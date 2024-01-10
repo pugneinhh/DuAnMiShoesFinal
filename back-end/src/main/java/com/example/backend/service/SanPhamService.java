@@ -18,7 +18,6 @@ public class SanPhamService {
         return sanPhamRepository.findAll();
     }
     public List<SanPhamRespone> getALLSP(){
-        System.out.println(sanPhamRepository.getALLSP().get(0).getTrangThai());
         return sanPhamRepository.getALLSP();
     }
 
