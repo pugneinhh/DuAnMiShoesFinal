@@ -57,7 +57,18 @@ export default function MauSac() {
     setComponentSize(size);
   };
   const [form] = Form.useForm();
-
+  //Tìm kiếm
+  const onChangeFilter = (changedValues, allValues) => {
+    console.log("All values : ", allValues)
+    timKiemCT(allValues);
+  }
+  const timKiemCT = (dataSearch) => {
+    axios.post(`http://localhost:8080/mau-sac/tim-kiem`, dataSearch)
+      .then(response => {
+        setMauSacs(response.data);
+      })
+      .catch(error => console.error('Error adding item:', error));
+  }
   //Ấn Add
   const [open, setOpen] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
@@ -106,6 +117,17 @@ export default function MauSac() {
       });
     }
   }
+  //Update
+  const [msUpdate, setmsUpdates] = useState({});
+  const showModal = async (id) => {
+    const result = await axios.get(`http://localhost:8080/mau-sac/detail/${id}`, {
+      validateStatus: () => {
+        return true;
+      }
+    });;
+    setmsUpdates(result.data)
+    setOpenUpdate(true);
+  };
   //Table
   const [mauSac, setMauSacs] = useState([]);
 
@@ -167,12 +189,12 @@ export default function MauSac() {
       render: (trang_thai) => (
         <>
           {trang_thai === 0 ? (
-            <Tag color="red">
+            <Tag color="green">
               Còn bán
             </Tag>
           ) : (
-            <Tag color="green">
-              Còn bán
+            <Tag color="red">
+              Dừng bán
             </Tag>
           )}
         </>
@@ -181,10 +203,10 @@ export default function MauSac() {
     {
       title: "Action",
       key: "action",
-
-      render: () => (
+      dataIndex: "id",
+      render: (title) => (
         <Space size="middle">
-          <a className='btn btn-danger'><BsFillEyeFill className='mb-1' /></a>
+          <a className='btn btn-danger'><BsFillEyeFill className='mb-1' onClick={() => showModal(`${title}`)}/></a>
         </Space>
       ),
     },
@@ -212,27 +234,27 @@ export default function MauSac() {
             // initialValues={{
             //   size: componentSize,
             // }}
-            onValuesChange={onFormLayoutChange}
+            onValuesChange={onChangeFilter}
             size={componentSize}
             style={{
               maxWidth: 1400,
             }}
           >
             <div className="col-md-5">
-              <Form.Item label="Tên & Mã">
+              <Form.Item label="Tên & Mã" name="ten">
                 <Input className='rounded-pill border-warning' placeholder='Nhập tên hoặc mã' />
               </Form.Item>
             </div>
             <div className='col-md-5'>
-              <Form.Item label="Trạng Thái">
-                <Select value={selectedValue} onChange={handleChange}>
-                  <Select.Option value="1">Còn Bán</Select.Option>
-                  <Select.Option value="0">Dừng Bán</Select.Option>
+              <Form.Item label="Trạng Thái" name="trangThai">
+                <Select placeholder="Chọn trạng thái" value={selectedValue} onChange={handleChange}>
+                  <Select.Option value="0">Còn Bán</Select.Option>
+                  <Select.Option value="1">Dừng Bán</Select.Option>
                 </Select>
               </Form.Item>
             </div>
-            <Form.Item className='text-center'>
-              <Button type="primary" htmlType='reset'>Làm mới</Button>
+            <Form.Item className='text-center' name="trangThai">
+              <Button type="primary" htmlType='reset' onClick={loadMauSac}>Làm mới</Button>
             </Form.Item>
           </Form>
         </div>
@@ -293,8 +315,64 @@ export default function MauSac() {
                   <Input 
                   type='text'
                   value={ten}
-                  readOnly/>
+                 />
                 </Form.Item>
+              </Form>
+            </Modal>
+             {/* Update ms */}
+             <Modal
+              title="Sửa Màu Sắc"
+              centered
+              open={openUpdate}
+              onOk={() => setOpenUpdate(false)}
+              onCancel={() => setOpenUpdate(false)}
+              footer={[
+                <Button onClick={() => setOpenUpdate(false)}>Hủy</Button>,
+                <Button type="primary" onClick={() => {
+                  Modal.confirm({
+                    centered : true,
+                    title: 'Thông báo',
+                    content: 'Bạn có chắc chắn muốn thêm không?',
+                    onOk: () => { form.submit(); },
+                    footer: (_, { OkBtn, CancelBtn }) => (
+                      <>
+                        <CancelBtn />
+                        <OkBtn />
+                      </>
+                    ),
+                  });
+                }}>Sửa</Button>
+              ]}
+              width={500}
+            >
+              <Form
+                initialValues={{
+                  size: componentSize,
+                }}
+                onValuesChange={onFormLayoutChange}
+                size={componentSize}
+                onFinish={addMauSac}
+                form={form}>
+                <Form.Item label="Màu" name='ma' hasFeedback rules={[{ required: true, message: 'Vui lòng chọn màu', },]} >
+                  <Input className="border" type="color" value={msUpdate.ma} onChange={doiMau} />
+                </Form.Item>
+                <Form.Item label=" Mã" name='ma' hasFeedback rules={[{ required: true, message: '', },]} >
+                  <Input readOnly="true" className="border" value={msUpdate.ma} type="text" />
+                </Form.Item>
+                <Form.Item label="Tên"  hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
+
+                  <Input 
+                  type='text'
+                  value={msUpdate.ten}
+                  onChange={(e) => setmsUpdates({ ...msUpdate, ten: e })}
+                  />
+                </Form.Item>
+                <Form.Item label={<b>Trạng thái </b>}>
+                      <Select defaultValue={msUpdate.trangThai == 0 ? 'Còn bán' : 'Dừng bán'} onChange={(e) => setmsUpdates({ ...msUpdate, trangThai: e })}>
+                        <Select.Option value='0'>Còn Bán</Select.Option>
+                        <Select.Option value='1'>Dừng Bán</Select.Option>
+                      </Select>
+                    </Form.Item>
               </Form>
             </Modal>
           </div>

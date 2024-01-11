@@ -2,6 +2,9 @@ package com.example.backend.controller;
 
 
 import com.example.backend.dto.request.DanhMucRequest;
+import com.example.backend.dto.request.sanphamsearch.SanPhamSearch;
+import com.example.backend.dto.request.sanphamupdate.UpdateCTSPRequest;
+import com.example.backend.dto.request.sanphamupdate.UpdateDanhMucRequest;
 import com.example.backend.entity.DanhMuc;
 import com.example.backend.service.DanhMucService;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +27,21 @@ public class DanhMucController {
     public ResponseEntity<?> getALLDM(){
         return new ResponseEntity<>(danhMucService.getALLDM(), HttpStatus.FOUND);
     }
-    @GetMapping("/tim-kiem/{key}/{timTT}")
-    public ResponseEntity<?> tim(@PathVariable("key")String key,
-                                 @PathVariable("timTT")int timTT) throws ParseException {
-        return  ResponseEntity.ok(danhMucService.getTim(key,timTT));
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> update(@PathVariable("id") String id, @RequestBody UpdateDanhMucRequest request){
+        System.out.println(request);
+        return ResponseEntity.ok(danhMucService.update(id,request));
+    }
+
+    @GetMapping("/detail/{idDM}")
+    public ResponseEntity<?> detail(@PathVariable("idDM") String id){
+        return ResponseEntity.ok(danhMucService.detailDM(id));
+    }
+
+    @PostMapping("/tim-kiem")
+    public ResponseEntity<?> search(@RequestBody SanPhamSearch sanPhamSearch){
+        return ResponseEntity.ok(danhMucService.getTim(sanPhamSearch));
     }
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody DanhMucRequest v){
