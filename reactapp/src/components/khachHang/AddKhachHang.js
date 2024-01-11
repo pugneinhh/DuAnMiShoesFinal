@@ -10,6 +10,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { KhachHangAPI } from '../api/user/khachHang.api';
 
 import { ToastContainer, toast } from 'react-toastify';
+import QRScannerModal from '../api/QR_Code/QrCode';
+import moment from 'moment';
 export default function AddKhachHang() {
 
     const [form] = Form.useForm();
@@ -44,6 +46,7 @@ export default function AddKhachHang() {
     const [ward, setWard] = useState(null);
 
     const handleProvinceChange = (value, valueProvince) => {
+        console.log("fdfdf", valueProvince);
         form.setFieldsValue({ provinceId: valueProvince.valueProvince });
         AddressApi.fetchAllProvinceDistricts(valueProvince.valueProvince).then(
             (res) => {
@@ -78,6 +81,57 @@ export default function AddKhachHang() {
             setShowModal(false);
         }
         setQrResult(result);
+
+
+        // Tìm vị trí của phần tử thứ ba trong chuỗi
+        const firstIndex = result.indexOf('|');
+        const secondIndex = result.indexOf('|', firstIndex + 1);
+        const thirdIndex = result.indexOf('|', secondIndex + 1);
+        const fourIndex = result.indexOf('|', thirdIndex + 1);
+        const fifIndex = result.indexOf('|', fourIndex + 1);
+        const sixIndex = result.indexOf('|', fifIndex + 1);
+
+        const indexDC = result.indexOf(',');
+        const indexXa = result.indexOf(',', indexDC + 1);
+        const indexHuyen = result.indexOf(',', indexXa + 1);
+
+
+        
+        setProvince(listProvince.filter((item) =>
+            item.ProvinceName.toLowerCase().replace(/\s/g, '') === result.substring(indexHuyen + 1, sixIndex).toLowerCase().replace(/\s/g, '')
+        )[0])
+        
+        AddressApi.fetchAllProvinceDistricts(listProvince.filter((item) =>
+            item.ProvinceName.toLowerCase().replace(/\s/g, '') === result.substring(indexHuyen + 1, sixIndex).toLowerCase().replace(/\s/g, '')
+        )[0].ProvinceID).then(
+            (res) => {
+                setListDistricts(res.data.data);
+                setDistrict(res.data.data.filter((item) =>
+                    item.NameExtension[3].toLowerCase().replace(/\s/g, '') === result.substring(indexXa + 1, indexHuyen).toLowerCase().replace(/\s/g, '')
+                )[0])
+                AddressApi.fetchAllProvinceWard(res.data.data.filter((item) =>
+                    item.NameExtension[3].toLowerCase().replace(/\s/g, '') === result.substring(indexXa + 1, indexHuyen).toLowerCase().replace(/\s/g, '')
+                )[0].DistrictID).then((res) => {
+                    setListWard(res.data.data);
+                    console.log("xã", res.data.data)
+                    setWard(res.data.data.filter((item) =>
+                        item.NameExtension[3].toLowerCase().replace(/\s/g, '') === result.substring(indexDC + 1, indexXa).toLowerCase().replace(/\s/g, '')
+                    )[0])
+                });
+            }
+        );
+       
+
+        form.setFieldsValue({
+            canCuocCongDan: result.substring(0, 12),
+            ten: result.split('|')[2],
+            ngaySinh: moment(result.split('|')[3], "DDMMYYYY").format("YYYY-MM-DD"),
+            gioiTinh: result.split('|')[4] == 'Nam' ? "true" : "false",
+            diaChi: result.substring(fifIndex + 1, indexDC),
+            tenXa: result.substring(indexDC + 1, indexXa),
+            tenHuyen: result.substring(indexXa + 1, indexHuyen),
+            tenThanhPho: result.substring(indexHuyen + 1, sixIndex),
+        })
     };
 
     const handleSuccess = () => {
@@ -87,14 +141,15 @@ export default function AddKhachHang() {
                 if (fileImage === null) {
                     message.error("Vui lòng chọn ảnh đại diện.");
                 }
+                
                 const data = {
                     ...values,
                     ngaySinh: values.ngaySinh
                         ? new Date(values.ngaySinh).getTime()
                         : null,
-                    idThanhPho: province.key,
-                    idHuyen: district.key,
-                    idXa: ward.key,
+                    idThanhPho: province.key == null ? province.ProvinceID : province.key,
+                    idHuyen: district.key==null? district.DistrictID :district.key,
+                    idXa: ward.key==null? ward.WardCode:ward.key,
                 };
                 const formData = new FormData();
                 formData.append(`file`, fileImage);
@@ -134,22 +189,22 @@ export default function AddKhachHang() {
             });
     };
 
-    ////quét QR sản phẩm
-    const [openScan, setOpenScan] = useState(false);
-    const [qrData, setQrData] = useState('');
-    const handleCloseScan = () => {
-        setOpenScan(false);
-    }
-    const handleScan = (data) => {
-        if (data) {
-            setQrData(data);
-            // Gửi dữ liệu mã QR lên server ở đây
-        }
-    };
+    // ////quét QR sản phẩm
+    // const [openScan, setOpenScan] = useState(false);
+    // const [qrData, setQrData] = useState('');
+    // const handleCloseScan = () => {
+    //     setOpenScan(false);
+    // }
+    // const handleScan = (data) => {
+    //     if (data) {
+    //         setQrData(data);
+    //         // Gửi dữ liệu mã QR lên server ở đây
+    //     }
+    // };
 
-    const handleError = (err) => {
-        console.error(err);
-    };
+    // const handleError = (err) => {
+    //     console.error(err);
+    // };
     return (
         <>
             <h1>
@@ -196,13 +251,13 @@ export default function AddKhachHang() {
                                         {/* <FontAwesomeIcon icon={FaQrcode} /> */}
                                         <span style={{ marginLeft: "10px" }}>QR-Căn cước</span>
                                     </Button>
-                                    {/* {showModal && (
-                    <QRScannerModal
-                      visible={showModal}
-                      onCancel={handleModalClose}
-                      onQRResult={handleQRResult}
-                    />
-                  )} */}
+                                    {showModal && (
+                                        <QRScannerModal
+                                            visible={showModal}
+                                            onCancel={handleModalClose}
+                                            onQRResult={handleQRResult}
+                                        />
+                                    )}
 
 
 

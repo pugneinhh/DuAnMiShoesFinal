@@ -1,5 +1,6 @@
 package com.example.backend.controller;
 
+import com.example.backend.dto.request.HoaDonRequest;
 import com.example.backend.dto.response.ChiTietSanPhamRespone;
 import com.example.backend.model.AdminBanHangHDRespon;
 import com.example.backend.service.BanHangService;
@@ -7,10 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,5 +25,10 @@ public class BanHangController {
     public ResponseEntity<?> getALLctsp(){
         List<ChiTietSanPhamRespone> list=banHangService.getALLCTSPBanHang();
         return ResponseEntity.ok(list);
+    }
+    @PostMapping("/add-hoa-don")
+    public  ResponseEntity<?> addHD(@RequestBody HoaDonRequest hoaDonRequest){
+
+        return  ResponseEntity.ok(hoaDonRequest);
     }
 }
