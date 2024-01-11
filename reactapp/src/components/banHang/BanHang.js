@@ -405,7 +405,9 @@ const onEdit = (targetKey, action) => {
               <Button className="col-md-9" icon={<MdOutlinePayments size={25} onClick={() => setOpenThanhToan(true)} />}></Button>
               <ModalThanhToan openThanhToan={openThanhToan} setOpenThanhToan={setOpenThanhToan}
                 onOk={handleCloseThanhToan}
-                onCancel={handleCloseThanhToan}  />
+                onCancel={handleCloseThanhToan} 
+                total = {data.reduce((accumulator,currentProduct) =>{
+                  return accumulator + currentProduct.total},0)} />
             </div>
             
             <div className="row">
@@ -528,7 +530,8 @@ const onEdit = (targetKey, action) => {
               <Button className="col-md-9" icon={<MdOutlinePayments size={25} onClick={() => setOpenThanhToan(true)} />}></Button>
               <ModalThanhToan openThanhToan={openThanhToan} setOpenThanhToan={setOpenThanhToan}
                 onOk={handleCloseThanhToan}
-                onCancel={handleCloseThanhToan}  />
+                onCancel={handleCloseThanhToan} 
+                 />
             </div>
             
             <div className="row">
@@ -587,7 +590,8 @@ const onEdit = (targetKey, action) => {
               <Button className="col-md-9" icon={<MdOutlinePayments size={25} onClick={() => setOpenThanhToan(true)} />}></Button>
               <ModalThanhToan openThanhToan={openThanhToan} setOpenThanhToan={setOpenThanhToan}
                 onOk={handleCloseThanhToan}
-                onCancel={handleCloseThanhToan}  />
+                onCancel={handleCloseThanhToan}
+                 />
             </div>
             
             <div className="row">
