@@ -1,6 +1,8 @@
 package com.example.backend.service;
 
+import com.example.backend.dto.request.HoaDonRequest;
 import com.example.backend.dto.response.ChiTietSanPhamRespone;
+import com.example.backend.entity.HoaDon;
 import com.example.backend.model.AdminBanHangHDRespon;
 import com.example.backend.repository.CTSPRepository;
 import com.example.backend.repository.HoaDonRepository;
@@ -21,5 +23,10 @@ public class BanHangService {
 
    public List<ChiTietSanPhamRespone> getALLCTSPBanHang(){
         return ctspRepository.getALLCTSPBanHang();
+    }
+
+    public HoaDon addHoaDon(HoaDonRequest hoaDonRequest){
+       HoaDon hd =hoaDonRequest.map(new HoaDon());
+       return hoaDonRepository.save(hd);
     }
 }
