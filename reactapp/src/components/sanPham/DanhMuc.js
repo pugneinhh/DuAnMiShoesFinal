@@ -39,7 +39,6 @@ export default function DanhMuc() {
   };
   //Ấn add 
   const [open, setOpen] = useState(false);
-  const [openUpdate, setOpenUpdate] = useState(false);
   const [bordered] = useState(false);
   const addDanhMuc = (value) => {
     console.log(value);
@@ -63,17 +62,71 @@ export default function DanhMuc() {
       .catch(error => console.error('Error adding item:', error));
 
   }
-  //Tìm kiếm 
-  const handleSubmit = (values) => {
+  //Update
+  const [openUpdate, setOpenUpdate] = useState(false);
+  const [dmUpdate, setDmUpdate] = useState(false);
+  const [tenCheck, setTenCheck] = useState(false);
+  const showModal = async (id) => {
+    const result = await axios.get(`http://localhost:8080/danh-muc/detail/${id}`, {
+      validateStatus: () => {
+        return true;
+      }
+    });;
+    setTenCheck(result.data.ten)
+    setDmUpdate(result.data)
+    setOpenUpdate(true);
+  };
+  console.log(dmUpdate)
+  const updateDanhMuc = () => {
 
-    console.log(`${values.key}`);
-    // Send a POST request to the backend
-    axios.get(`http://localhost:8080/danh-muc/tim-kiem/${values.key}/${values.timTT}`)
+      if(dmUpdate.ten != tenCheck){
+        const checkTrung = (ten) => {
+          return danhMuc.some(dm =>
+            dm.ten === ten
+          );
+        };
+  
+        if (checkTrung(dmUpdate.ten)) {
+          toast.error('Sản phẩm có tên trùng với sản phẩm khác !', {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          return;
+        }
+      }
+      
+    axios.put(`http://localhost:8080/danh-muc/update/${dmUpdate.id}`, dmUpdate)
       .then(response => {
-        // Update the list of items
         console.log(response.data);
+        toast('✔️ Sửa thành công!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        loadDanhMuc();
+      })
+      .catch(error => console.error('Error adding item:', error));
+  }
+  //Tìm kiếm
+  const onChangeFilter = (changedValues, allValues) => {
+    console.log("All values : ", allValues)
+    timKiemCT(allValues);
+  }
+  const timKiemCT = (dataSearch) => {
+    axios.post(`http://localhost:8080/danh-muc/tim-kiem`, dataSearch)
+      .then(response => {
         setDanhMucs(response.data);
-        form.resetFields();
       })
       .catch(error => console.error('Error adding item:', error));
   }
@@ -123,12 +176,12 @@ export default function DanhMuc() {
       render: (trang_thai) => (
         <>
           {trang_thai === 0 ? (
-            <Tag color="red">
+            <Tag color="green">
               Còn bán
             </Tag>
           ) : (
-            <Tag color="green">
-              Còn bán
+            <Tag color="red">
+              Dừng bán
             </Tag>
           )}
         </>
@@ -137,16 +190,16 @@ export default function DanhMuc() {
     {
       title: "Action",
       key: "action",
-
-      render: () => (
+      dataIndex: "id",
+      render: (title) => (
         <Space size="middle">
-          <a className='btn btn-danger'><BsFillEyeFill className='mb-1' /></a>
+          <a className='btn btn-danger'><BsFillEyeFill className='mb-1' onClick={() => showModal(`${title}`)}/></a>
         </Space>
       ),
     },
   ]
   const [form] = Form.useForm();
-
+  const [form1] = Form.useForm();
   return (
     <div className='container-fluid' style={{ borderRadius: 20 }}>
       <div className="container-fluid">
@@ -169,29 +222,28 @@ export default function DanhMuc() {
             initialValues={{
               size: componentSize,
             }}
-            onValuesChange={onFormLayoutChange}
+            onValuesChange={onChangeFilter}
             size={componentSize}
             style={{
               maxWidth: 1400,
             }}
-            onFinish={handleSubmit}
             form={form}
           >
             <div className="col-md-5">
-              <Form.Item label="Tên & Mã">
+              <Form.Item label="Tên & Mã" name="ten">
                 <Input className='rounded-pill border-warning' placeholder='Nhập tên hoặc mã' />
               </Form.Item>
             </div>
             <div className='col-md-5'>
-              <Form.Item label="Trạng Thái">
+              <Form.Item placeholder="Chọn trạng thái"  label="Trạng Thái" name="trangThai">
                 <Select value={selectedValue} onChange={handleChange}>
-                  <Select.Option value="1">Còn Bán</Select.Option>
-                  <Select.Option value="0">Dừng Bán</Select.Option>
+                  <Select.Option value="0">Còn Bán</Select.Option>
+                  <Select.Option value="1">Dừng Bán</Select.Option>
                 </Select>
               </Form.Item>
             </div>
             <Form.Item className='text-center'>
-              <Button type="primary" htmlType='reset'>Làm mới</Button>
+              <Button type="primary" htmlType='reset' onClick={loadDanhMuc}>Làm mới</Button>
             </Form.Item>
           </Form>
         </div>
@@ -221,7 +273,7 @@ export default function DanhMuc() {
                     centered: true,
                     title: 'Thông báo',
                     content: 'Bạn có chắc chắn muốn thêm không?',
-                    onOk: () => { form.submit(); },
+                    onOk: () => { form1.submit(); },
                     footer: (_, { OkBtn, CancelBtn }) => (
                       <>
                         <CancelBtn />
@@ -243,10 +295,59 @@ export default function DanhMuc() {
                   maxWidth: 1000,
                 }}
                 onFinish={addDanhMuc}
-                form={form}>
+                form={form1}>
                 <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
                      <Input className='border'></Input>
                 </Form.Item>
+              </Form>
+            </Modal>
+
+            {/* Update danh mục */}
+            <Modal
+              title="Sửa Danh Mục"
+              centered
+              open={openUpdate}
+              onOk={() => setOpenUpdate(false)}
+              onCancel={() => setOpenUpdate(false)}
+              footer={[
+                <Button onClick={() => setOpenUpdate(false)}>Hủy</Button>,
+                <Button type="primary" onClick={() => {
+                  Modal.confirm({
+                    centered: true,
+                    title: 'Thông báo',
+                    content: 'Bạn có chắc chắn muốn sửa không?',
+                    onOk: () => { form1.submit(); },
+                    footer: (_, { OkBtn, CancelBtn }) => (
+                      <>
+                        <CancelBtn />
+                        <OkBtn />
+                      </>
+                    ),
+                  });
+                }}>Sửa</Button>
+              ]}
+              width={500}
+            >
+              <Form
+                initialValues={{
+                  size: componentSize,
+                }}
+                onValuesChange={onFormLayoutChange}
+                size={componentSize}
+                style={{
+                  maxWidth: 1000,
+                }}
+                onFinish={updateDanhMuc}
+                form={form1}>
+                <Form.Item label="Tên" hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
+                     <Input className='border' value={dmUpdate.ten} onChange={(e) => setDmUpdate({ ...dmUpdate, ten: e.target.value })}></Input>
+                </Form.Item>
+                <Form.Item label={<b>Trạng thái </b>}>
+                      <Select defaultValue={dmUpdate.trangThai == 0 ? 'Còn bán' : 'Dừng bán'} onChange={(e) => setDmUpdate({ ...dmUpdate, trangThai: e })}>
+                        <Select.Option value='0'>Còn Bán</Select.Option>
+                        <Select.Option value='1'>Dừng Bán</Select.Option>
+                      </Select>
+                    </Form.Item>
               </Form>
             </Modal>
           </div>

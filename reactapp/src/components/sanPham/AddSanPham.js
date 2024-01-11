@@ -61,7 +61,7 @@ export default function AddSanPham() {
     const handleDelete = (key) => {
         const updatedData = tableData.filter(item => item.key !== key);
         setTableData(updatedData);
-      };
+    };
 
     const handleLinkAnhChange = (linkAnh, index) => {
         // Tìm dòng tương ứng trong dataSource
@@ -210,7 +210,12 @@ export default function AddSanPham() {
             dataIndex: "giaBan",
             render: (_, record) => {
                 return <>
-                    <Input type='number'
+                    <Input
+                        formatter={(value) =>
+                            `VND ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                        }
+                        parser={(value) => value.replace(/\VND\s?|(,*)/g, "")}
+                        type='number'
                         rules={[{ required: true, alert: 'Không để trống giá', },]}
                         style={{ width: 100 }}
                         defaultValue={1000000}
@@ -223,14 +228,14 @@ export default function AddSanPham() {
             dataIndex: "maMau",
             render: (_, record) => {
                 return <>
-                    <div 
-                    className='custom-div'
-                    style={{
-                        backgroundColor: record.maMau,
-                        borderRadius: 6,
-                        width: 60,
-                        height: 25,
-                    }}></div >
+                    <div
+                        className='custom-div'
+                        style={{
+                            backgroundColor: record.maMau,
+                            borderRadius: 6,
+                            width: 60,
+                            height: 25,
+                        }}></div >
                 </>;
             }
         },
@@ -248,7 +253,7 @@ export default function AddSanPham() {
             dataIndex: "ghiChu",
             render: (_, record) => {
                 return <>
-                    <Button onClick={() => handleDelete(record.key)} style={{height:50,backgroundColor: 'red',color: 'white',borderRadius: 5}}><MdDelete size={30}/></Button>
+                    <Button onClick={() => handleDelete(record.key)} style={{ height: 50, backgroundColor: 'red', color: 'white', borderRadius: 5 }}><MdDelete size={30} /></Button>
                 </>;
             }
         },
@@ -402,6 +407,7 @@ export default function AddSanPham() {
 
     }
     // Load Màu Sắc
+    const [ten, setTenMaus] = useState('');
     const doiMau = (e) => {
         const ma = e.target.value;
         const hexCode = ma.replace("#", "").toUpperCase();
@@ -411,6 +417,7 @@ export default function AddSanPham() {
             console.log("hehe")
         } else {
             console.log(colorName);
+            setTenMaus(colorName);
         }
     };
 
@@ -1009,149 +1016,152 @@ export default function AddSanPham() {
                             <h5><MdAddTask size={30} /> Kích thước và màu sắc</h5>
                             <hr />
                             {/* Kích Thước */}
-                            <div className='row'style={{ paddingLeft: 219 }}>
-                             <div className='col'> 
-                            <Form.Item label={<b>Kích thước </b>} name="kichThuoc" 
-                            hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống kích thước!', },]}>
-                                <Select style={{
-                                    width: 650,
-                                    height: '50px'
-                                }}
-                                    mode="multiple"
-                                    placeholder="Chọn một giá trị"
-                                    className='me-2'
-                                    onChange={onChangeKT}
-                                >
-                                    {ktData.map(item => (
-                                        <Select.Option key={item.id} value={item.ten}>
-                                            {item.ten}
-                                        </Select.Option>
-                                    ))}
-                                </Select>                              
-                            </Form.Item>
-                            </div>  
-                            <div className='col' style={{ paddingLeft: 150, paddingTop: 10 }}> 
-                            <Form.Item>
-                            <Button className='bg-success text-white w-1' onClick={() => setOpenKT(true)}> + </Button>
-                                <Modal
-                                    title="Thêm Kích Thước"
-                                    centered
-                                    open={openKT}
-                                    onOk={() => setOpenKT(false)}
-                                    onCancel={() => setOpenKT(false)}
-                                    footer={[
-                                        <Button onClick={() => setOpenKT(false)}>Hủy</Button>,
-                                        <Button type="primary" onClick={() => {
-                                            Modal.confirm({
-                                                title: 'Thông báo',
-                                                content: 'Bạn có chắc chắn muốn thêm không?',
-                                                onOk: () => { form1.submit(); },
-                                                footer: (_, { OkBtn, CancelBtn }) => (
-                                                    <>
-                                                        <CancelBtn />
-                                                        <OkBtn />
-                                                    </>
-                                                ),
-                                            });
-                                        }}>Thêm</Button>
-                                    ]}
-                                    width={500}
-                                >
-                                    <Form
-                                        initialValues={{
-                                            size: componentSize,
+                            <div className='row' style={{ paddingLeft: 219 }}>
+                                <div className='col'>
+                                    <Form.Item label={<b>Kích thước </b>} name="kichThuoc"
+                                        hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống kích thước!', },]}>
+                                        <Select style={{
+                                            width: 650,
+                                            height: '50px'
                                         }}
-                                        onValuesChange={onFormLayoutChange}
-                                        size={componentSize}
-                                        style={{
-                                            maxWidth: 1000,
-                                        }}
-                                        onFinish={addKichThuoc}
-                                        form={form1}>
+                                            mode="multiple"
+                                            placeholder="Chọn một giá trị"
+                                            className='me-2'
+                                            onChange={onChangeKT}
+                                        >
+                                            {ktData.map(item => (
+                                                <Select.Option key={item.id} value={item.ten}>
+                                                    {item.ten}
+                                                </Select.Option>
+                                            ))}
+                                        </Select>
+                                    </Form.Item>
+                                </div>
+                                <div className='col' style={{ paddingLeft: 150, paddingTop: 10 }}>
+                                    <Form.Item>
+                                        <Button className='bg-success text-white w-1' onClick={() => setOpenKT(true)}> + </Button>
+                                        <Modal
+                                            title="Thêm Kích Thước"
+                                            centered
+                                            open={openKT}
+                                            onOk={() => setOpenKT(false)}
+                                            onCancel={() => setOpenKT(false)}
+                                            footer={[
+                                                <Button onClick={() => setOpenKT(false)}>Hủy</Button>,
+                                                <Button type="primary" onClick={() => {
+                                                    Modal.confirm({
+                                                        title: 'Thông báo',
+                                                        content: 'Bạn có chắc chắn muốn thêm không?',
+                                                        onOk: () => { form1.submit(); },
+                                                        footer: (_, { OkBtn, CancelBtn }) => (
+                                                            <>
+                                                                <CancelBtn />
+                                                                <OkBtn />
+                                                            </>
+                                                        ),
+                                                    });
+                                                }}>Thêm</Button>
+                                            ]}
+                                            width={500}
+                                        >
+                                            <Form
+                                                initialValues={{
+                                                    size: componentSize,
+                                                }}
+                                                onValuesChange={onFormLayoutChange}
+                                                size={componentSize}
+                                                style={{
+                                                    maxWidth: 1000,
+                                                }}
+                                                onFinish={addKichThuoc}
+                                                form={form1}>
 
-                                        <div className='row'>
-                                            <div className="container">
-                                                <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
-                                                    <Input className="border" />
-                                                </Form.Item>
-                                            </div>
-                                        </div>
-                                    </Form>
-                                </Modal>
-                                <br />
-                            </Form.Item>
-                            </div>  
+                                                <div className='row'>
+                                                    <div className="container">
+                                                        <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
+                                                            <Input className="border" />
+                                                        </Form.Item>
+                                                    </div>
+                                                </div>
+                                            </Form>
+                                        </Modal>
+                                        <br />
+                                    </Form.Item>
+                                </div>
                             </div>
                             {/* Màu Sắc */}
-                            <div className='row'style={{ paddingLeft: 219 }}>
-                            <div className='col'>
-                            <Form.Item label={<b>Màu sắc </b>} name="mauSac" hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống màu sắc!', },]}>
-                                <Select style={{
-                                    width: 650,
-                                    height: '50px'
-                                }}
-                                    mode="multiple"
-                                    placeholder="Chọn một giá trị"
-                                    className='me-2'
-                                    onChange={onChangeMS}
-                                >
-                                    {msData.map(item => (
-                                        <Select.Option key={item.id} value={item.ma}>
-                                            {item.ten}
-                                        </Select.Option>
-                                    ))}
-                                </Select>    
-                            </Form.Item>
-                            </div>
-                            <div className='col' style={{ paddingLeft: 150, paddingTop: 10 }}>
-                            <Form.Item>
-                            <Button className='bg-success text-white w-1' onClick={() => setOpenMS(true)}> + </Button>
-                                <Modal
-                                    title="Thêm Màu Sắc"
-                                    centered
-                                    open={openMS}
-                                    onOk={() => setOpenMS(false)}
-                                    onCancel={() => setOpenMS(false)}
-                                    footer={[
-                                        <Button onClick={() => setOpenMS(false)}>Hủy</Button>,
-                                        <Button type="primary" onClick={() => {
-                                            Modal.confirm({
-                                                centered: true,
-                                                title: 'Thông báo',
-                                                content: 'Bạn có chắc chắn muốn thêm không?',
-                                                onOk: () => { form1.submit(); },
-                                                footer: (_, { OkBtn, CancelBtn }) => (
-                                                    <>
-                                                        <CancelBtn />
-                                                        <OkBtn />
-                                                    </>
-                                                ),
-                                            });
-                                        }}>Thêm</Button>
-                                    ]}
-                                    width={500}
-                                >
-                                    <Form
-                                        initialValues={{
-                                            size: componentSize,
+                            <div className='row' style={{ paddingLeft: 219 }}>
+                                <div className='col'>
+                                    <Form.Item label={<b>Màu sắc </b>} name="mauSac" hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống màu sắc!', },]}>
+                                        <Select style={{
+                                            width: 650,
+                                            height: '50px'
                                         }}
-                                        onValuesChange={onFormLayoutChange}
-                                        size={componentSize}
-                                        onFinish={addMauSac}
-                                        form={form1}>
-                                        <Form.Item label="Màu" name='ma' hasFeedback rules={[{ required: true, message: 'Vui lòng chọn màu', },]} >
-                                            <Input className="border" type="color" onChange={doiMau} />
-                                        </Form.Item>
-                                        <Form.Item label=" Mã" name='ma' hasFeedback rules={[{ required: true, message: '', },]} >
-                                            <Input readOnly="true" className="border" type="text" />
-                                        </Form.Item>
-                                        <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
-                                            <Input className="border" type="text" />
-                                        </Form.Item>
-                                    </Form>
-                                </Modal>
-                            </Form.Item>
-                            </div>
+                                            mode="multiple"
+                                            placeholder="Chọn một giá trị"
+                                            className='me-2'
+                                            onChange={onChangeMS}
+                                        >
+                                            {msData.map(item => (
+                                                <Select.Option key={item.id} value={item.ma}>
+                                                    {item.ten}
+                                                </Select.Option>
+                                            ))}
+                                        </Select>
+                                    </Form.Item>
+                                </div>
+                                <div className='col' style={{ paddingLeft: 150, paddingTop: 10 }}>
+                                    <Form.Item>
+                                        <Button className='bg-success text-white w-1' onClick={() => setOpenMS(true)}> + </Button>
+                                        <Modal
+                                            title="Thêm Màu Sắc"
+                                            centered
+                                            open={openMS}
+                                            onOk={() => setOpenMS(false)}
+                                            onCancel={() => setOpenMS(false)}
+                                            footer={[
+                                                <Button onClick={() => setOpenMS(false)}>Hủy</Button>,
+                                                <Button type="primary" onClick={() => {
+                                                    Modal.confirm({
+                                                        centered: true,
+                                                        title: 'Thông báo',
+                                                        content: 'Bạn có chắc chắn muốn thêm không?',
+                                                        onOk: () => { form1.submit(); },
+                                                        footer: (_, { OkBtn, CancelBtn }) => (
+                                                            <>
+                                                                <CancelBtn />
+                                                                <OkBtn />
+                                                            </>
+                                                        ),
+                                                    });
+                                                }}>Thêm</Button>
+                                            ]}
+                                            width={500}
+                                        >
+                                            <Form
+                                                initialValues={{
+                                                    size: componentSize,
+                                                }}
+                                                onValuesChange={onFormLayoutChange}
+                                                size={componentSize}
+                                                onFinish={addMauSac}
+                                                form={form1}>
+                                                <Form.Item label="Màu" name='ma' hasFeedback rules={[{ required: true, message: 'Vui lòng chọn màu', },]} >
+                                                    <Input className="border" type="color" onChange={doiMau} />
+                                                </Form.Item>
+                                                <Form.Item label=" Mã" name='ma' hasFeedback rules={[{ required: true, message: '', },]} >
+                                                    <Input readOnly="true" className="border" type="text" />
+                                                </Form.Item>
+                                                <Form.Item label="Tên" hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
+                                                    <Input
+                                                        type='text'
+                                                        value={ten}
+                                                        readOnly />
+                                                </Form.Item>
+                                            </Form>
+                                        </Modal>
+                                    </Form.Item>
+                                </div>
                             </div>
                         </div>
 
@@ -1168,6 +1178,7 @@ export default function AddSanPham() {
                                     <Button className='ms-3 me-2' href='/san-pham'>Hủy</Button>
                                     <Button className='bg-success text-white' onClick={() => {
                                         Modal.confirm({
+                                            centered: 'true',
                                             title: 'Thông báo',
                                             content: 'Bạn có chắc chắn muốn thêm không?',
                                             onOk: () => { form.submit(); },

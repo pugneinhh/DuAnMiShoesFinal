@@ -1,27 +1,19 @@
 package com.example.backend.controller;
 
 
-import com.example.backend.dto.request.AddRequest;
-import com.example.backend.dto.request.ChiTietSanPhamRequest;
-import com.example.backend.dto.request.HinhAnhRequest;
-import com.example.backend.dto.request.UpdateCTSPRequest;
+import com.example.backend.dto.request.*;
+import com.example.backend.dto.request.sanphamsearch.CTSPSearch;
+import com.example.backend.dto.request.sanphamupdate.UpdateCTSPRequest;
 import com.example.backend.entity.ChiTietSanPham;
 import com.example.backend.entity.KhuyenMai;
 import com.example.backend.service.CTSPService;
 import com.example.backend.service.HinhAnhService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-import java.sql.SQLOutput;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
 
 @CrossOrigin("http://localhost:3000/")
 @RestController
@@ -35,6 +27,11 @@ public class CTSPController {
     @GetMapping("/show")
     public ResponseEntity<?> getALLCTSP() {
         return new ResponseEntity<>(ctspService.getALL(), HttpStatus.OK);
+    }
+
+    @GetMapping("/detailsp")
+    public ResponseEntity<?> getAllDetail() {
+        return new ResponseEntity<>(ctspService.detail(), HttpStatus.OK);
     }
 
     @GetMapping("/showct/{idSP}")
@@ -55,6 +52,13 @@ public class CTSPController {
     @GetMapping("/showct")
     public ResponseEntity<?> getALLCTSP_1(@RequestParam String id) {
         return new ResponseEntity<>(ctspService.getALLCTSP(id), HttpStatus.OK);
+    }
+
+    @PostMapping ("/search-ctsp/{idSP}")
+    public ResponseEntity<?> search(@PathVariable("idSP") String id, @RequestBody CTSPSearch ctspSearch){
+        System.out.println(id);
+        System.out.println(ctspSearch.toString());
+        return ResponseEntity.ok(ctspService.getSearch(id,ctspSearch));
     }
 
     @PutMapping("/updateKM/{idCTSP}")
@@ -78,13 +82,13 @@ public class CTSPController {
 
     @PostMapping("/add")
     public ResponseEntity<String> add(@RequestBody ChiTietSanPhamRequest request,HinhAnhRequest ha) {
-        request.setTrangThai(1);
+        request.setTrangThai(0);
         request.setNgayTao(LocalDateTime.now());
         request.setGioiTinh(true);
         ChiTietSanPham newct = ctspService.add(request);
 
         int maAnh = hinhAnhService.getALL().size();
-        ha.setTrangThai(1);
+        ha.setTrangThai(0);
         ha.setMa("HA-" + (maAnh + 1));
         ha.setChiTietSanPham(newct.getId());
         ha.setTen("P-"+newct.getTenCt());

@@ -45,11 +45,7 @@ export default function SanPham() {
   }, []);
 
   const loadSanPham = async () => {
-    const result = await axios.get("http://localhost:8080/san-pham", {
-      validateStatus: () => {
-        return true;
-      }
-    });
+    const result = await axios.get("http://localhost:8080/san-pham");
       setSanPhams(result.data);
   };
 
@@ -159,7 +155,7 @@ export default function SanPham() {
         </div>
 
          <div className='text-end'>
-          <a className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill" role="button" href='/them-san-pham'> <PlusCircleOutlined />  Thêm sản phẩm </a>
+          <Link to='/them-san-pham' className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill" role="button"> <PlusCircleOutlined />  Thêm sản phẩm </Link>
         </div>
         <div className=' bg-light m-2 p-3 pt-2' style={{
           border: '1px solid #ddd', // Border color

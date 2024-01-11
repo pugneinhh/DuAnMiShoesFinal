@@ -1,20 +1,19 @@
 package com.example.backend.service;
+import com.example.backend.dto.request.sanphamsearch.CTSPSearch;
 import com.example.backend.dto.request.ChiTietSanPhamRequest;
-import com.example.backend.dto.request.HinhAnhRequest;
-import com.example.backend.dto.request.UpdateCTSPRequest;
+import com.example.backend.dto.request.sanphamupdate.UpdateCTSPRequest;
+import com.example.backend.dto.response.CTSPSearchRespone;
 import com.example.backend.dto.response.ChiTietSanPhamRespone;
 import com.example.backend.dto.response.DetailCTSPRespone;
 import com.example.backend.entity.ChiTietSanPham;
 import com.example.backend.entity.KhuyenMai;
 import com.example.backend.model.*;
 import com.example.backend.repository.CTSPRepository;
-import com.example.backend.repository.HinhAnhRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class CTSPService {
@@ -30,14 +29,17 @@ public class CTSPService {
     }
     public DetailCTSPRespone detailCTSP(String id){return ctspRepository.detailCTSP(id);}
 
+    public List<DetailCTSPRespone> detail(){return ctspRepository.detail();}
+
     public ChiTietSanPham update(String id, UpdateCTSPRequest request) {
         ChiTietSanPham ct = request.map(new ChiTietSanPham());
         ct.setId(id);
         return ctspRepository.save(ct);
     }
 
-
-//    public List<String> getALLCTSPByKM(String id){
+    public List<CTSPSearchRespone> getSearch(String idSP, CTSPSearch ctspSearch){
+        return ctspRepository.getTim(idSP,ctspSearch);
+    }
 
 
     public ChiTietSanPham add (ChiTietSanPhamRequest sp){
