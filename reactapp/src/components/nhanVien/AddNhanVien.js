@@ -8,8 +8,9 @@ import UpLoadImage from './UploadAnh';
 import { AddressApi } from '../api/address/AddressApi';
 import { Link, useNavigate } from 'react-router-dom';
 import { NhanVienAPI } from '../api/user/nhanVien.api';
-
+import QRScannerModal from '../api/QR_Code/QrCode';
 import { ToastContainer, toast } from 'react-toastify';
+import moment from 'moment';
 export default function AddNhanVien() {
 
   const [form] = Form.useForm();
@@ -78,6 +79,57 @@ export default function AddNhanVien() {
       setShowModal(false);
     }
     setQrResult(result);
+
+
+    // Tìm vị trí của phần tử thứ ba trong chuỗi
+    const firstIndex = result.indexOf('|');
+    const secondIndex = result.indexOf('|', firstIndex + 1);
+    const thirdIndex = result.indexOf('|', secondIndex + 1);
+    const fourIndex = result.indexOf('|', thirdIndex + 1);
+    const fifIndex = result.indexOf('|', fourIndex + 1);
+    const sixIndex = result.indexOf('|', fifIndex + 1);
+
+    const indexDC = result.indexOf(',');
+    const indexXa = result.indexOf(',', indexDC + 1);
+    const indexHuyen = result.indexOf(',', indexXa + 1);
+
+
+
+    setProvince(listProvince.filter((item) =>
+      item.ProvinceName.toLowerCase().replace(/\s/g, '') === result.substring(indexHuyen + 1, sixIndex).toLowerCase().replace(/\s/g, '')
+    )[0])
+
+    AddressApi.fetchAllProvinceDistricts(listProvince.filter((item) =>
+      item.ProvinceName.toLowerCase().replace(/\s/g, '') === result.substring(indexHuyen + 1, sixIndex).toLowerCase().replace(/\s/g, '')
+    )[0].ProvinceID).then(
+      (res) => {
+        setListDistricts(res.data.data);
+        setDistrict(res.data.data.filter((item) =>
+          item.NameExtension[3].toLowerCase().replace(/\s/g, '') === result.substring(indexXa + 1, indexHuyen).toLowerCase().replace(/\s/g, '')
+        )[0])
+        AddressApi.fetchAllProvinceWard(res.data.data.filter((item) =>
+          item.NameExtension[3].toLowerCase().replace(/\s/g, '') === result.substring(indexXa + 1, indexHuyen).toLowerCase().replace(/\s/g, '')
+        )[0].DistrictID).then((res) => {
+          setListWard(res.data.data);
+          console.log("xã", res.data.data)
+          setWard(res.data.data.filter((item) =>
+            item.NameExtension[3].toLowerCase().replace(/\s/g, '') === result.substring(indexDC + 1, indexXa).toLowerCase().replace(/\s/g, '')
+          )[0])
+        });
+      }
+    );
+
+
+    form.setFieldsValue({
+      canCuocCongDan: result.substring(0, 12),
+      ten: result.split('|')[2],
+      ngaySinh: moment(result.split('|')[3], "DDMMYYYY").format("YYYY-MM-DD"),
+      gioiTinh: result.split('|')[4] == 'Nam' ? "true" : "false",
+      diaChi: result.substring(fifIndex + 1, indexDC),
+      tenXa: result.substring(indexDC + 1, indexXa),
+      tenHuyen: result.substring(indexXa + 1, indexHuyen),
+      tenThanhPho: result.substring(indexHuyen + 1, sixIndex),
+    })
   };
 
   const handleSuccess = () => {
@@ -92,17 +144,17 @@ export default function AddNhanVien() {
           ngaySinh: values.ngaySinh
             ? new Date(values.ngaySinh).getTime()
             : null,
-          idThanhPho: province.key,
-          idHuyen: district.key,
-          idXa: ward.key,
+          idThanhPho: province.key == null ? province.ProvinceID : province.key,
+          idHuyen: district.key == null ? district.DistrictID : district.key,
+          idXa: ward.key == null ? ward.WardCode : ward.key,
         };
         const formData = new FormData();
         formData.append(`file`, fileImage);
         formData.append("request", JSON.stringify(data));
         NhanVienAPI.create(formData)
-        
+
           .then((result) => {
-          
+
             nav("/nhan-vien");
             toast('🦄 Thêm Thành công!', {
               position: "top-right",
@@ -113,7 +165,7 @@ export default function AddNhanVien() {
               draggable: true,
               progress: undefined,
               theme: "light",
-              
+
             });
           })
           .catch((error) => {
@@ -134,27 +186,11 @@ export default function AddNhanVien() {
       });
   };
 
-  ////quét QR sản phẩm
-  const [openScan, setOpenScan] = useState(false);
-  const [qrData, setQrData] = useState('');
-  const handleCloseScan = () => {
-    setOpenScan(false);
-  }
-  const handleScan = (data) => {
-    if (data) {
-      setQrData(data);
-      // Gửi dữ liệu mã QR lên server ở đây
-    }
-  };
-
-  const handleError = (err) => {
-    console.error(err);
-  };
   return (
     <>
       <h1>
-       
-         <Divider orientation="center" color="none">
+
+        <Divider orientation="center" color="none">
           <h3 className="text-first  fw-bold">
             <FaMoneyBills /> Thêm nhân viên
           </h3>
@@ -169,7 +205,7 @@ export default function AddNhanVien() {
             <Card style={{ height: "100%" }}>
               <h5 className='text-center fw-bold'>Ảnh đại diện</h5>
               <Row className='text-center mt-5'>
-                <UpLoadImage  onFileUpload={handleFileUpload} />
+                <UpLoadImage onFileUpload={handleFileUpload} />
               </Row>
             </Card>
           </Col>
@@ -180,7 +216,7 @@ export default function AddNhanVien() {
                 justify="end"
                 align="middle"
                 style={{ marginBottom: "15px", marginTop: "10px" }}
-                
+
               >
                 <Col span={11}>
                   <Button
@@ -196,17 +232,16 @@ export default function AddNhanVien() {
                     {/* <FontAwesomeIcon icon={FaQrcode} /> */}
                     <span style={{ marginLeft: "10px" }}>QR-Căn cước</span>
                   </Button>
-                  {/* {showModal && (
+                  {showModal && (
                     <QRScannerModal
                       visible={showModal}
                       onCancel={handleModalClose}
                       onQRResult={handleQRResult}
                     />
-                  )} */}
-                 
-                  
-                   
-               
+                  )}
+
+
+
                 </Col>
               </Row>
               <Row>
@@ -215,7 +250,7 @@ export default function AddNhanVien() {
                     name="ten"
                     label="Họ và tên"
                     tooltip="Họ tên đầy đủ của bạn là gì?"
-                    
+
                     rules={[
                       {
                         required: true,
@@ -227,8 +262,8 @@ export default function AddNhanVien() {
                         message: "Họ và tên chỉ được phép chứa chữ cái.",
                       },
                     ]}
-                    // labelCol={{ span: 9 }}
-                    // wrapperCol={{ span: 15 }}
+                  // labelCol={{ span: 9 }}
+                  // wrapperCol={{ span: 15 }}
                   >
                     <Input
                       onKeyPress={(e) => {
@@ -236,7 +271,7 @@ export default function AddNhanVien() {
                           e.preventDefault();
                         }
                       }}
-                      // style={{ textAlign: "center" }}
+                    // style={{ textAlign: "center" }}
                     />
                   </Form.Item>
                   <Form.Item
@@ -254,10 +289,10 @@ export default function AddNhanVien() {
                         message: "Căn cước công dân cần phải 12 chữ số.",
                       },
                     ]}
-                    // labelCol={{ span: 9 }}
-                    // wrapperCol={{ span: 15 }}
+                  // labelCol={{ span: 9 }}
+                  // wrapperCol={{ span: 15 }}
                   >
-                    <Input  />
+                    <Input />
                   </Form.Item>
                   <Form.Item
                     name="gioiTinh"
@@ -270,8 +305,8 @@ export default function AddNhanVien() {
                         whitespace: true,
                       },
                     ]}
-                    // labelCol={{ span: 9 }}
-                    // wrapperCol={{ span: 15 }}
+                  // labelCol={{ span: 9 }}
+                  // wrapperCol={{ span: 15 }}
                   >
                     <Select defaultValue={""}>
                       <Select.Option value="">Chọn giới tính</Select.Option>
@@ -290,8 +325,8 @@ export default function AddNhanVien() {
                         whitespace: true,
                       },
                     ]}
-                    // labelCol={{ span: 9 }}
-                    // wrapperCol={{ span: 15 }}
+                  // labelCol={{ span: 9 }}
+                  // wrapperCol={{ span: 15 }}
                   >
                     <Select defaultValue={""} onChange={handleProvinceChange}>
                       <Select.Option value="">
@@ -321,8 +356,8 @@ export default function AddNhanVien() {
                         whitespace: true,
                       },
                     ]}
-                    // labelCol={{ span: 9 }}
-                    // wrapperCol={{ span: 15 }}
+                  // labelCol={{ span: 9 }}
+                  // wrapperCol={{ span: 15 }}
                   >
                     <Select defaultValue={""} onChange={handleWardChange}>
                       <Select.Option value="">--Chọn Xã/Phường--</Select.Option>
@@ -352,8 +387,8 @@ export default function AddNhanVien() {
                         whitespace: true,
                       },
                     ]}
-                    // labelCol={{ span: 9 }}
-                    // wrapperCol={{ span: 15 }}
+                  // labelCol={{ span: 9 }}
+                  // wrapperCol={{ span: 15 }}
                   >
                     <Input type="date" style={{ textAlign: "center" }} />
                   </Form.Item>
@@ -373,8 +408,8 @@ export default function AddNhanVien() {
                         message: "Vui lòng nhập đúng định dạng email.",
                       },
                     ]}
-                    // labelCol={{ span: 9 }}
-                    // wrapperCol={{ span: 15 }}
+                  // labelCol={{ span: 9 }}
+                  // wrapperCol={{ span: 15 }}
                   >
                     <Input />
                   </Form.Item>
@@ -393,10 +428,10 @@ export default function AddNhanVien() {
                         message: "Vui lòng nhập số điện thoại hợp lệ.",
                       },
                     ]}
-                    // labelCol={{ span: 9 }}
-                    // wrapperCol={{ span: 15 }}
+                  // labelCol={{ span: 9 }}
+                  // wrapperCol={{ span: 15 }}
                   >
-                    <Input  />
+                    <Input />
                   </Form.Item>
                   <Form.Item
                     name="tenHuyen"
@@ -409,8 +444,8 @@ export default function AddNhanVien() {
                         whitespace: true,
                       },
                     ]}
-                    // labelCol={{ span: 9 }}
-                    // wrapperCol={{ span: 15 }}
+                  // labelCol={{ span: 9 }}
+                  // wrapperCol={{ span: 15 }}
                   >
                     <Select defaultValue={""} onChange={handleDistrictChange}>
                       <Select.Option value="">
@@ -440,10 +475,10 @@ export default function AddNhanVien() {
                         whitespace: true,
                       },
                     ]}
-                    // labelCol={{ span: 9 }}
-                    // wrapperCol={{ span: 15 }}
+                  // labelCol={{ span: 9 }}
+                  // wrapperCol={{ span: 15 }}
                   >
-                    <Input  />
+                    <Input />
                   </Form.Item>
                 </Col>
                 <Button
@@ -458,7 +493,7 @@ export default function AddNhanVien() {
                     backgroundColor: "#3366CC",
                     color: "white",
                   }}
-                  // htmlType="reset"
+                // htmlType="reset"
                 >
                   Hoàn tất
                 </Button>
@@ -472,7 +507,7 @@ export default function AddNhanVien() {
                 }}>Hủy</Link>
 
               </Row>
-      
+
             </Card>
           </Col>
         </Row>
