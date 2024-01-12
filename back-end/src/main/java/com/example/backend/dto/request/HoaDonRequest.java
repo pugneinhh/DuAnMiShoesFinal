@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 public class HoaDonRequest {
+    String id;
     String ma;
     String nhanVien;
     String khachHang;
@@ -41,6 +42,7 @@ public class HoaDonRequest {
     int trangThai;
 
     public HoaDon map(HoaDon hoaDon) {
+        hoaDon.setId(this.id);
         hoaDon.setMa(this.ma);
         hoaDon.setNhanVien(this.nhanVien);
         hoaDon.setNgayMua(this.ngayMua);
@@ -66,7 +68,6 @@ public class HoaDonRequest {
             hoaDon.setNguoiDung(null);
         } else {
             hoaDon.setNguoiDung(NguoiDung.builder().id(this.khachHang).build());
-
         }
         return hoaDon;
     }

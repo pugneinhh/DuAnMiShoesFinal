@@ -1,9 +1,12 @@
 package com.example.backend.controller;
 
+import com.example.backend.dto.request.HoaDonChiTietRequest;
 import com.example.backend.dto.request.HoaDonRequest;
 import com.example.backend.dto.response.ChiTietSanPhamRespone;
 import com.example.backend.model.AdminBanHangHDRespon;
 import com.example.backend.service.BanHangService;
+import com.example.backend.service.HoaDonChiTietService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +22,8 @@ import java.util.List;
 public class BanHangController {
     @Autowired
     BanHangService banHangService;
-
+    @Autowired
+    HoaDonChiTietService hoaDonChiTietService;
 
     @GetMapping("/getALLCTSP")
     public ResponseEntity<?> getALLctsp(){
@@ -29,6 +33,19 @@ public class BanHangController {
     @PostMapping("/add-hoa-don")
     public  ResponseEntity<?> addHD(@RequestBody HoaDonRequest hoaDonRequest){
 
-        return  ResponseEntity.ok(hoaDonRequest);
+        return  ResponseEntity.ok(banHangService.addHoaDon(hoaDonRequest));
+    }
+    @PostMapping("/addHDCT")
+    public ResponseEntity<?> addHDCT(@RequestBody HoaDonChiTietRequest request){
+        return ResponseEntity.ok(hoaDonChiTietService.addHDCT(request));
+    }
+    @GetMapping("/hien-thi-hdct/{id}")
+    public ResponseEntity<?> getHDCTByHD(@PathVariable("id") String id){
+        return ResponseEntity.ok(hoaDonChiTietService.getAllHDCTByHD(id));
+    }
+    @GetMapping("/hoa-don-chi-tiet/{idHD}/{idCTSP}")
+    public ResponseEntity<?> getOneHDCT(@PathVariable("idHD")String idHD,
+                                        @PathVariable("idCTSP")String idCTSP){
+        return ResponseEntity.ok(hoaDonChiTietService.getOneHDCT(idHD,idCTSP));
     }
 }
