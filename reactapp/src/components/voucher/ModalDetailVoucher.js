@@ -1,31 +1,27 @@
 import {
-  Button,
-  DatePicker,
-  Form,
-  Input,
-  InputNumber,
-  Modal,
-  Select,
-  Divider,
-} from "antd";
+    Button,
+    DatePicker,
+    Form,
+    Input,
+    InputNumber,
+    Modal,
+    Select,
+    Divider,
+  } from "antd";
+  import { FaTag } from "react-icons/fa";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import moment from "moment";
+import moment from 'moment';
+import { FormattedDate, IntlProvider } from 'react-intl';
 import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
-import { FaTag } from "react-icons/fa";
-import TableKhachHang from "./tableKhachHang";
-import {  useNavigate } from "react-router-dom";
-
-const ModelUpdateVoucher = (props) => {
-  const navigate = useNavigate();
-  const { id } = useParams("");
-  const [selectedValue, setSelectedValue] = useState("Tiền mặt");
+import TableNguoiDungVoucher from "./tableNguoiDungVoucher";
+const ModalDetailVoucher=(props)=>{
+    const { id } = useParams("");
   const [dataUpdate, setDataUpdate] = useState({});
-  const [khachHang, setKhachHang] = useState([]);
-
   const [form2] = Form.useForm();
-
+  const [selectedValue, setSelectedValue] = useState("Tiền mặt");
+  const [khachHang, setKhachHang] = useState([]);
+  
   const handleChange = (value) => {
     console.log(`Selected value: ${value}`);
     setSelectedValue(value);
@@ -35,8 +31,12 @@ const ModelUpdateVoucher = (props) => {
     setComponentSize(size);
   };
 
-  //lấy ra detail voucher
-  const detailVoucher = async () => {
+  useEffect(() => {
+    detailVoucher()
+  },[]);
+  
+   //lấy ra detail voucher
+   const detailVoucher = async () => {
     axios
       .get(`http://localhost:8080/voucher/detail/${id}`)
       .then((response) => {
@@ -59,8 +59,6 @@ const ModelUpdateVoucher = (props) => {
       })
       .catch((error) => console.error("Error upfate item:", error));
   };
-
-
   const handleClose = () => {
     form2.resetFields();
     setDataUpdate({});
@@ -68,69 +66,12 @@ const ModelUpdateVoucher = (props) => {
   };
   
 
-  const loadKH = async () => {
-    const x = await axios.get(
-      `http://localhost:8080/nguoi-dung-voucher/voucher/${id}`
-    );
-    console.log("id:",id)
-    console.log("id khach hang",x.data); 
-    setKhachHang(x.data);
-  };
 
-  useEffect(() => {
-    detailVoucher();
-    loadKH();
-  }, []);
 
-  const [selectedIDKH, setSelectedIDKH] = useState([]);
 
-  const handleSelectedIDKH = (selectedRowKeys) => {
-    setSelectedIDKH(selectedRowKeys);
-  };
-  const handleUpdateVoucher = (value) => {
-    axios
-      .put(`http://localhost:8080/voucher/update/${id}`, value)
-      .then((response) => {
-        navigate("/voucher");
-        toast("✔️ Cập nhật thành công!", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        props.loadVoucher();
-        form2.resetFields();
-        handleClose();
-      })
-      .catch((error) => console.error("Error upfate item:", error));
-  };
-
-  ///validate ngày
-  const validateDateKT = (_, value) => {
-    const { getFieldValue } = form2;
-    const startDate = getFieldValue("ngayBatDau");
-    if (startDate && value && value.isBefore(startDate)) {
-      return Promise.reject("Ngày kết thúc phải sau ngày bắt đầu");
-    }
-    return Promise.resolve();
-  };
-  const [checkNgay, setCheckNgay] = useState(false);
-  const validateDateBD = (_, value) => {
-    const { getFieldValue } = form2;
-    const endDate = getFieldValue("ngayKetThuc");
-    if (endDate && value && value.isAfter(endDate)) {
-      return Promise.reject("Ngày bắt đầu phải trước ngày kết thúc");
-    }
-
-    return Promise.resolve();
-  };
-
-  return (
-    <div
+    return(
+        <IntlProvider locale='vi-VN'>
+      <div
       className="container-fluid  m-2 p-3 pt-2"
       // style={{
       //   border: "1px solid #ddd", // Border color
@@ -142,7 +83,7 @@ const ModelUpdateVoucher = (props) => {
         <Divider orientation="center" color="none">
           <h4 className="text-first pt-1 fw-bold">
             <FaTag size={20} />
-            Cập nhật phiếu giảm giá
+            Chi tiết phiếu giảm giá
           </h4>
         </Divider>
         <div
@@ -174,7 +115,6 @@ const ModelUpdateVoucher = (props) => {
             style={{
               maxWidth: 1600,
             }}
-            onFinish={handleUpdateVoucher}
             form={form2}
           >
             <div className="col-md-4">
@@ -182,13 +122,7 @@ const ModelUpdateVoucher = (props) => {
                 label="Mã phiếu giảm giá"
                 style={{ paddingLeft: 0, width: 550 }}
                 name="ma"
-                hasFeedback
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng không để trống mã!",
-                  },
-                ]}
+               
               >
                 <Input
                   placeholder="Mã giảm giá"
@@ -200,13 +134,7 @@ const ModelUpdateVoucher = (props) => {
                 label="Tên phiếu giảm giá"
                 name="ten"
                 style={{ paddingLeft: 0, width: 550 }}
-                hasFeedback
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng không để trống tên!",
-                  },
-                ]}
+                
               >
                 <Input
                   placeholder="Tên phiếu giảm giá"
@@ -218,12 +146,7 @@ const ModelUpdateVoucher = (props) => {
                 label="Loại voucher"
                 name="loaiVoucher"
                 style={{ borderColor: "yellow", marginLeft: 0, width: 550 }}
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng chọn loại voucher!",
-                  },
-                ]}
+                
               >
                 <Select
                   defaultValue={"Tiền mặt"}
@@ -281,13 +204,7 @@ const ModelUpdateVoucher = (props) => {
                 label="Giảm tối đa"
                 name="giamToiDa"
                 style={{ marginLeft: 0, width: 550 }}
-                hasFeedback
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng nhập giá trị giảm tối đa!",
-                  },
-                ]}
+                
               >
                 <InputNumber
                   className="border-warning"
@@ -305,13 +222,7 @@ const ModelUpdateVoucher = (props) => {
                 label="Điều kiện"
                 name="dieuKien"
                 style={{ marginLeft: 0, width: 550 }}
-                hasFeedback
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng nhập điều kiện giảm!",
-                  },
-                ]}
+               
               >
                 <InputNumber
                   className="border-warning"
@@ -327,14 +238,7 @@ const ModelUpdateVoucher = (props) => {
                 label="Ngày bắt đầu"
                 name="ngayBatDau"
                 style={{ marginLeft: 0, width: 550 }}
-                hasFeedback
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng chọn ngày bắt đầu!",
-                  },
-                  { validator: validateDateBD },
-                ]}
+                
               >
                 <DatePicker
                   showTime
@@ -347,14 +251,7 @@ const ModelUpdateVoucher = (props) => {
                 label="Ngày kết thúc"
                 style={{ marginLeft: 0, width: 550 }}
                 name="ngayKetThuc"
-                hasFeedback
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng chọn ngày kết thúc!",
-                  },
-                  { validator: validateDateKT },
-                ]}
+               
               >
                 <DatePicker
                   showTime
@@ -366,30 +263,7 @@ const ModelUpdateVoucher = (props) => {
             </div>
             {/* <div className="col-md-4"></div>
 <div className="col-md-1"></div> */}
-            <div className="text-end">
-              <Form.Item>
-                <Button
-                  type="primary"
-                  onClick={() => {
-                    Modal.confirm({
-                      title: "Thông báo",
-                      content: "Bạn có chắc chắn muốn cập nhật không?",
-                      onOk: () => {
-                        form2.submit();
-                      },
-                      footer: (_, { OkBtn, CancelBtn }) => (
-                        <>
-                          <CancelBtn />
-                          <OkBtn />
-                        </>
-                      ),
-                    });
-                  }}
-                >
-                  Update
-                </Button>
-              </Form.Item>
-            </div>
+            
           </Form>
         </div>
         <div
@@ -406,7 +280,7 @@ const ModelUpdateVoucher = (props) => {
           <p className="fw-bold" style={{ marginTop: 10 }}>
             Khách hàng
           </p>
-          <TableKhachHang onSelectedKH={handleSelectedIDKH} suaKH={khachHang} />
+          <TableNguoiDungVoucher idV={id} />
         </div>
       </div>
       {/* <ToastContainer
@@ -423,6 +297,7 @@ const ModelUpdateVoucher = (props) => {
       />
       <ToastContainer /> */}
     </div>
-  );
-};
-export default ModelUpdateVoucher;
+    </IntlProvider>
+    )
+}
+export default ModalDetailVoucher;

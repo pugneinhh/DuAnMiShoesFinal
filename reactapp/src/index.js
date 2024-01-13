@@ -31,7 +31,7 @@ import DetailKhachHang from "./components/khachHang/DetailKhachHang";
 import BanHang from './components/banHang/BanHang';
 import AddVoucher from './components/voucher/AddVoucher';
 import ModelUpdateVoucher from './components/voucher/ModelUpdateVoucher';
-
+import ModalDetailVoucher from './components/voucher/ModalDetailVoucher';
 import { Provider } from "react-redux";
 
 import AddKhachHang from './components/khachHang/AddKhachHang';
@@ -55,7 +55,8 @@ root.render(
           <Route path='sua-khuyen-mai/:id' element = {<SuaKhuyenMai />}></Route>
           <Route path='voucher' element = {<Voucher/>}></Route>
           <Route path='themVoucher' element = {<AddVoucher/>}></Route>
-          <Route path='voucher/detail/:id' element = {<ModelUpdateVoucher/>}></Route>
+          <Route path='voucher/update/:id' element = {<ModelUpdateVoucher/>}></Route>
+          <Route path='voucher/detail/:id' element = {<ModalDetailVoucher/>}></Route>
           <Route path='danh-muc' element = {<DanhMuc/>}></Route>
           <Route path='de-giay' element = {<DeGiay/>}></Route>
           <Route path='chat-lieu' element = {<ChatLieu/>}></Route>
