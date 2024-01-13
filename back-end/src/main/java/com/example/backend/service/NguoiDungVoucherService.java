@@ -1,8 +1,10 @@
 package com.example.backend.service;
 
+import com.example.backend.dto.response.NguoiDungRespone;
 import com.example.backend.entity.NguoiDung;
 import com.example.backend.entity.NguoiDungVoucher;
 import com.example.backend.entity.Voucher;
+import com.example.backend.model.AdminKhachHangRepon;
 import com.example.backend.repository.NguoiDungRepository;
 import com.example.backend.repository.NguoiDungVoucherRepository;
 import com.example.backend.repository.VoucherRepository;
@@ -23,6 +25,9 @@ public class NguoiDungVoucherService {
     VoucherRepository voucherRepository;
     public List<String> getAllByVoucher(String id){
         return nguoiDungVoucherRepository.getIDKHByIDKM(id);
+    }
+    public List<AdminKhachHangRepon> getNguoiDungByVoucher(String id){
+        return nguoiDungVoucherRepository.getNguoiDungByVoucher(id);
     }
     public List<NguoiDungVoucher> getALL(){
         return nguoiDungVoucherRepository.findAll();

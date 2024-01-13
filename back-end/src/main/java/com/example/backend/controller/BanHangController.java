@@ -48,4 +48,5 @@ public class BanHangController {
                                         @PathVariable("idCTSP")String idCTSP){
         return ResponseEntity.ok(hoaDonChiTietService.getOneHDCT(idHD,idCTSP));
     }
+
 }
