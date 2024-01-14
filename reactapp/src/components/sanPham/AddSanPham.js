@@ -22,7 +22,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Swal from "sweetalert2";
 import FormItem from 'antd/es/form/FormItem';
-import { DeleteOutlined, InfoCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { DeleteOutlined, InfoCircleOutlined, PlusCircleFilled, PlusCircleOutlined } from '@ant-design/icons';
 import { keys } from '@antv/util';
 import { App } from 'antd';
 import tr from 'date-fns/esm/locale/tr/index.js';
@@ -141,7 +141,26 @@ export default function AddSanPham() {
         const newDataSP = optionsSP.filter((data) =>
             dataSanPham.includes(data.ten)
         );
+
+        console.log(newDataSP)
+
         if (dataKichThuoc.length > 0 && dataMauSac.length > 0) {
+
+            if (newDataCL.length <= 0 || newDataH.length <= 0 || newDataDG.length <= 0 || newDataDM.length <= 0 || newDataSP.length <= 0) {
+                toast.error('Không để trống thông tin sản phẩm', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+                form.resetFields();
+                return;
+            }
+
             let index = 1;
             const nameProduct = selectedValue
             setTableData([])
@@ -199,6 +218,7 @@ export default function AddSanPham() {
                 <Input
                     type='number'
                     rules={[{ required: true, alert: 'Không để trống số lượng', },]}
+                    min={1}
                     style={{ width: 100 }}
                     defaultValue={1}
                     onChange={(e) => onChangeSL(record, e.target.value)}
@@ -211,6 +231,7 @@ export default function AddSanPham() {
             render: (_, record) => {
                 return <>
                     <Input
+                        min={1000000}
                         formatter={(value) =>
                             `VND ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                         }
@@ -293,6 +314,39 @@ export default function AddSanPham() {
                 return;
             }
         }
+
+        for (let i = 0; i < tableData.length; i++) {
+            if (tableData[i].soLuong === "" || tableData[i].soLuong <1 ) {
+                toast.error('Không để trống số lượng ! ( Số lượng >= 1 )', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+                return;
+            }
+        }
+
+        for (let i = 0; i < tableData.length; i++) {
+            if (tableData[i].giaBan === "" || tableData[i].giaBan <1000000 ) {
+                toast.error('Không để trống giá bán ! ( Giá bán >= 1,000,000 )', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+                return;
+            }
+        }
+
 
         for (let i = 0; i < tableData.length; i++) {
             if (tableData[i].ghiChu == null) {
@@ -1175,8 +1229,8 @@ export default function AddSanPham() {
                             <hr />
                             <div className='text-start mt-3'>
                                 <Form.Item >
-                                    <Link className='btn btn-light ms-3 me-2' style={{border: 'solid 1px', fontSize: 14,color : 'black',borderColor: 'black'}} to='/san-pham'>Hủy</Link>
-                                    <Button className='bg-success text-white' onClick={() => {
+                                    <Link className='btn btn-outline-success ms-3 me-2' style={{height: 31,fontSize: 14,paddingBottom: 30}} to='/san-pham'>Hủy</Link>
+                                    <Button style={{height: 41}} className='bg-success text-white' onClick={() => {
                                         Modal.confirm({
                                             centered: 'true',
                                             title: 'Thông báo',
@@ -1189,7 +1243,7 @@ export default function AddSanPham() {
                                                 </>
                                             ),
                                         });
-                                    }}>Thêm Sản Phẩm</Button>
+                                    }}> Thêm Sản Phẩm</Button>
                                 </Form.Item>
                             </div>
                             <Table dataSource={tableData} rowKey={"key"} columns={columns}></Table>
