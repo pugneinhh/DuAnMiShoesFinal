@@ -23,7 +23,7 @@ public class KichThuocService {
                 .ma(kt.getMa())
                 .ten(kt.getTen())
                 .ngayTao(kt.getNgayTao())
-                .trangThai(1)
+                .trangThai(0)
                 .build();
         kichThuocRepository.save(kichThuoc);
         return "Done";

@@ -34,7 +34,7 @@ public class MauSacService {
                 .ma(ms.getMa())
                 .ten(ms.getTen())
                 .ngayTao(ms.getNgayTao())
-                .trangThai(1)
+                .trangThai(0)
                 .build();
         mauSacRespository.save(mauSac);
         return "Done";}

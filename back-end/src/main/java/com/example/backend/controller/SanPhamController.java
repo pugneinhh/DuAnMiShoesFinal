@@ -40,7 +40,7 @@ public class SanPhamController {
     public ResponseEntity<?> add(@RequestBody SanPham v){
         int spThem = sanPhamService.getALL().size();
         v.setMa("SP" + "-" + (spThem + 1));
-        v.setTrangThai(1);
+        v.setTrangThai(0);
         return  ResponseEntity.ok(sanPhamService.addSP(v));
 
     }
