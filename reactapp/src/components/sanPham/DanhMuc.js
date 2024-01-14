@@ -339,7 +339,7 @@ export default function DanhMuc() {
                 }}
                 onFinish={updateDanhMuc}
                 form={form1}>
-                <Form.Item label="Tên" hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
+                <Form.Item label={<b>Tên</b>} hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
                      <Input className='border' value={dmUpdate.ten} onChange={(e) => setDmUpdate({ ...dmUpdate, ten: e.target.value })}></Input>
                 </Form.Item>
                 <Form.Item label={<b>Trạng thái </b>}>

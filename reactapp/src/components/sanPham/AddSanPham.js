@@ -1175,7 +1175,7 @@ export default function AddSanPham() {
                             <hr />
                             <div className='text-start mt-3'>
                                 <Form.Item >
-                                    <Button className='ms-3 me-2' href='/san-pham'>Hủy</Button>
+                                    <Link className='btn btn-light ms-3 me-2' style={{border: 'solid 1px', fontSize: 14,color : 'black',borderColor: 'black'}} to='/san-pham'>Hủy</Link>
                                     <Button className='bg-success text-white' onClick={() => {
                                         Modal.confirm({
                                             centered: 'true',
