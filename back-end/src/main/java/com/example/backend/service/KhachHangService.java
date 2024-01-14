@@ -2,6 +2,7 @@ package com.example.backend.service;
 
 import com.example.backend.dto.impldto.KhachHangResponImplDTO;
 import com.example.backend.dto.request.KhachHangRequest;
+import com.example.backend.dto.response.DiaChiKhachHangRespon;
 import com.example.backend.dto.response.KhachHangRespon;
 import com.example.backend.entity.DiaChi;
 import com.example.backend.entity.NguoiDung;
@@ -101,7 +102,7 @@ public class KhachHangService {
         diaChi.setIdThanhPho(request.getIdThanhPho());
         diaChi.setIdHuyen(request.getIdHuyen());
         diaChi.setIdXa(request.getIdXa());
-//        diaChi.setTenNguoiNhan(request.getTen());
+        diaChi.setTenNguoiNhan(request.getTen());
         diaChi.setSoDienThoai(request.getSoDienThoai());
         diaChi.setNguoiDung(update);
         diaChi.setTrangThai(0);
@@ -118,6 +119,9 @@ public class KhachHangService {
         optional.get().setTrangThai(1);
         nguoiDungRepository.save(optional.get());
         return  new KhachHangResponImplDTO(optional.get());
+    }
+   public List<DiaChiKhachHangRespon> findDiaChiByKH(String idKH){
+        return diaChiRepository.findDiaChiByKH(idKH);
     }
 
 }

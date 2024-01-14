@@ -178,7 +178,7 @@ export default function KhachHang() {
         <Space size="middle">
           <Link to={`/detail-khach-hang/${title}`} className='btn btn-success'><BsFillEyeFill /></Link>
           <Link to={`/update-khach-hang/${title}`} className='btn btn-danger'  ><BsPencilSquare /></Link>
-          <Button style={{ width: 41, height: 37.6, backgroundColor:"#35afb1",color:"white"}} type="primary" onClick={() => setOpenModalDiaChi(true)}>
+          <Button style={{ width: 41, height: 37.6, backgroundColor: "#35afb1", color: "white" }} type="primary" onClick={() => { detailDiaChi(title) }}>
             <GrMapLocation />
           </Button>
        
@@ -188,7 +188,11 @@ export default function KhachHang() {
       center: "true",
     },
   ];
-
+  const detailDiaChi = (row) => {
+    // setMyVoucher(row);
+    setOpenModalDiaChi(true);
+   
+  }
   const [open, setOpen] = useState(false);
 
   const [bordered] = useState(false);

@@ -22,6 +22,11 @@ public class KhachHangController {
         return ResponseEntity.ok(khachHangService.getAll());
     }
 
+    @GetMapping("/dia-chi/{idKH}")
+    public  ResponseEntity<?> getALLDCbyKH(@PathVariable("idKH") String idKH){
+        return ResponseEntity.ok(khachHangService.findDiaChiByKH(idKH));
+
+    }
     @PostMapping()
     public ResponseEntity<?> add(@RequestParam("request") String request,
                                  @RequestParam(value = "file") MultipartFile file) {

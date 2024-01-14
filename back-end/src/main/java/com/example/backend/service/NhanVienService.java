@@ -101,7 +101,7 @@ public class NhanVienService {
         diaChi.setIdThanhPho(request.getIdThanhPho());
         diaChi.setIdHuyen(request.getIdHuyen());
         diaChi.setIdXa(request.getIdXa());
-//        diaChi.setTenNguoiNhan(request.getTen());
+        diaChi.setTenNguoiNhan(request.getTen());
         diaChi.setSoDienThoai(request.getSoDienThoai());
         diaChi.setNguoiDung(update);
         diaChi.setTrangThai(0);
