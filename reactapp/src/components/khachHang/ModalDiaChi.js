@@ -9,7 +9,7 @@ import { EyeOutlined } from "@ant-design/icons";
 
 import AddModalDiaChi from "./AddModalDiaChi";
 const ModalDiaChi = (props) => {
-    const { openModalDiaChi, setOpenModalDiaChi } = props;
+    const { openModalDiaChi, setOpenModalDiaChi,idKH } = props;
     const handleClose = () => {
         setOpenModalDiaChi(false);
         console.log("đóng")
@@ -18,12 +18,14 @@ const ModalDiaChi = (props) => {
     const handleCloseAddMoDalDiaChi = () => {
         setOpenModalAddDiaChi(false);
     }
-    
+    console.log("idkh",idKH);
     const [data, setData] = useState([]);
     const loadData = () => {
-        KhachHangAPI.getAddressByUser()
+        console.log("diachir")
+        KhachHangAPI.getAddressByUser(idKH)
             .then((res) => {
                 // dispatch(SetEmployee(res.data.data));
+                console.log("detail",res.data.data);
                 setData(res.data.data);
             })
             .catch((error) => {
@@ -61,6 +63,7 @@ const ModalDiaChi = (props) => {
             </div>
             <AddModalDiaChi openModalAddDiaChi={openModalAddDiaChi}
                 setOpenModalAddDiaChi={setOpenModalAddDiaChi}
+                idKH={idKH}
                 onOk={handleCloseAddMoDalDiaChi}
                 onCancel={handleCloseAddMoDalDiaChi}
             />

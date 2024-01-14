@@ -1,5 +1,6 @@
 package com.example.backend.controller;
 
+import com.example.backend.dto.request.DiaChiRequest;
 import com.example.backend.dto.request.KhachHangRequest;
 import com.example.backend.service.KhachHangService;
 import com.google.gson.Gson;
@@ -25,7 +26,10 @@ public class KhachHangController {
     @GetMapping("/dia-chi/{idKH}")
     public  ResponseEntity<?> getALLDCbyKH(@PathVariable("idKH") String idKH){
         return ResponseEntity.ok(khachHangService.findDiaChiByKH(idKH));
-
+    }
+    @PostMapping("/add-dia-chi")
+    public ResponseEntity<?> addDiaChi(@RequestBody DiaChiRequest request){
+        return ResponseEntity.ok(khachHangService.addDiaChi(request));
     }
     @PostMapping()
     public ResponseEntity<?> add(@RequestParam("request") String request,

@@ -188,8 +188,10 @@ export default function KhachHang() {
       center: "true",
     },
   ];
+  const [idKH,setIdKH]=useState("");
   const detailDiaChi = (row) => {
-    // setMyVoucher(row);
+    console.log("KH NHÂNs",row);
+    setIdKH(row);
     setOpenModalDiaChi(true);
    
   }
@@ -328,6 +330,7 @@ export default function KhachHang() {
         </div>{" "}
         <ModalDiaChi openModalDiaChi={openModalDiaChi}
           setOpenModalDiaChi={setOpenModalDiaChi}
+          idKH={idKH}
           onOk={handleCloseMoDalDiaChi}
           onCancel={handleCloseMoDalDiaChi}
         />
