@@ -4,6 +4,7 @@ import com.example.backend.dto.request.DiaChiRequest;
 import com.example.backend.dto.request.KhachHangRequest;
 import com.example.backend.service.KhachHangService;
 import com.google.gson.Gson;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/admin/khach-hang")
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 public class KhachHangController {
 
     @Autowired
