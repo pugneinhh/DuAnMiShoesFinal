@@ -1,11 +1,9 @@
 package com.example.backend.service;
 import com.example.backend.dto.request.MauSacRequest;
-import com.example.backend.dto.request.sanphamsearch.SanPhamSearch;
+import com.example.backend.dto.request.sanphamsearch.BangConSearch;
 import com.example.backend.dto.response.MauSacRespone;
 import com.example.backend.entity.MauSac;
-import com.example.backend.entity.Voucher;
 import com.example.backend.repository.MauSacRespository;
-import com.example.backend.util.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +23,8 @@ public class MauSacService {
 
     public MauSac detailMS(String id){return mauSacRespository.findById(id).get();}
 
-    public List<MauSacRespone> getTim(SanPhamSearch sanPhamSearch) {
-        return mauSacRespository.tim(sanPhamSearch);
+    public List<MauSacRespone> getTim(BangConSearch bangConSearch) {
+        return mauSacRespository.tim(bangConSearch);
     }
 
     public String addMS(MauSacRequest ms){

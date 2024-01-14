@@ -9,8 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SanPhamSearch {
+public class BangConSearch {
     String ten;
     String trangThai;
-    int soLuong;
 }
