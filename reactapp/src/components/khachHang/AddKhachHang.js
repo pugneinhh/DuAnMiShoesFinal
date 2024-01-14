@@ -96,11 +96,11 @@ export default function AddKhachHang() {
         const indexHuyen = result.indexOf(',', indexXa + 1);
 
 
-        
+
         setProvince(listProvince.filter((item) =>
             item.ProvinceName.toLowerCase().replace(/\s/g, '') === result.substring(indexHuyen + 1, sixIndex).toLowerCase().replace(/\s/g, '')
         )[0])
-        
+
         AddressApi.fetchAllProvinceDistricts(listProvince.filter((item) =>
             item.ProvinceName.toLowerCase().replace(/\s/g, '') === result.substring(indexHuyen + 1, sixIndex).toLowerCase().replace(/\s/g, '')
         )[0].ProvinceID).then(
@@ -120,7 +120,7 @@ export default function AddKhachHang() {
                 });
             }
         );
-       
+
 
         form.setFieldsValue({
             canCuocCongDan: result.substring(0, 12),
@@ -141,15 +141,15 @@ export default function AddKhachHang() {
                 if (fileImage === null) {
                     message.error("Vui lòng chọn ảnh đại diện.");
                 }
-                
+
                 const data = {
                     ...values,
                     ngaySinh: values.ngaySinh
                         ? new Date(values.ngaySinh).getTime()
                         : null,
                     idThanhPho: province.key == null ? province.ProvinceID : province.key,
-                    idHuyen: district.key==null? district.DistrictID :district.key,
-                    idXa: ward.key==null? ward.WardCode:ward.key,
+                    idHuyen: district.key == null ? district.DistrictID : district.key,
+                    idXa: ward.key == null ? ward.WardCode : ward.key,
                 };
                 const formData = new FormData();
                 formData.append(`file`, fileImage);

@@ -22,7 +22,7 @@ export default function UpdateCustumerManagement() {
     const nav = useNavigate();
     
     const [getOneEmployee, setOneEmployee] = useState(null);
- console.log(id)
+ 
     // console.log(KhachHangAPI.getOneByIdUser(id)
     console.log("dfdf",getOneEmployee)
     const getOneEmployeeById = () => {
