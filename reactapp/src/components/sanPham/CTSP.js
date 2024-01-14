@@ -4,6 +4,7 @@ import {
   DatePicker,
   Divider,
   Modal,
+  QRCode,
   Form,
   Radio,
   Input,
@@ -29,22 +30,29 @@ import { IoIosAddCircleOutline } from 'react-icons/io';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { MdAddTask } from 'react-icons/md';
+import './SanPham.scss'
+import SuaAnhCTSP from './SuaAnhCTSP';
 
 export default function CTSP() {
   //Mở detail ctsp
+  const { uuid } = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [open, setOpen] = useState(false);
-  const showModal = async (idCT) => {
-    const result = await axios.get(`http://localhost:8080/ctsp/detail/${idCT}`, {
-      validateStatus: () => {
-        return true;
-      }
+  const [ktCheck, setKtCheck] = useState('');
+  const [msCheck, setMsCheck] = useState('');
+  const thongBaoTC = () => {
+    toast('✔️ Sửa thành công!', {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
     });
-    console.log(idCT)
-    console.log(result.data)
-    setCTDatas(result.data);
-    setIsModalOpen(true);
-  };
+  }
+
   const handleOk = () => {
     setIsModalOpen(false);
   };
@@ -66,23 +74,8 @@ export default function CTSP() {
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
   };
-  const updateCT = async () => {
-    const updateData = {
-      idC: ctData.idC,
-      moTa: ctData.moTa,
-      idKT: ctData.idKT,
-      idMS: ctData.idMS,
-      idCL: ctData.idCL,
-      idDC: ctData.idDC,
-      idDM: ctData.idDM,
-      idH: ctData.idH,
-      soLuong: ctData.soLuong,
-      giaBan: ctData.giaBan,
-      trangThai: ctData.trangThai
-    }
-    console.log(updateData);
-  }
-  
+
+
   const [form] = Form.useForm();
   const [form1] = Form.useForm();
   const [form2] = Form.useForm();
@@ -92,10 +85,91 @@ export default function CTSP() {
   const [openDC, setOpenDC] = useState(false);
   const [openDM, setOpenDM] = useState(false);
   const [openH, setOpenH] = useState(false);
-  const handleChangeKT = () => {
-    setCTDatas({ ...ctData, idKT: ctData.idKT, });
-  };
   const [ctData, setCTDatas] = useState({});
+  console.log(ctData)
+
+  //Update
+  const showModal = async (idCT) => {
+    const result = await axios.get(`http://localhost:8080/ctsp/detail/${idCT}`, {
+      validateStatus: () => {
+        return true;
+      }
+    });
+    setMsCheck(result.data.mauSac)
+    setKtCheck(result.data.kichThuoc)
+    setCTDatas(result.data);
+    setIsModalOpen(true);
+  };
+  const [optionsCTSP, setOptionsCTSP] = useState([]);
+  useEffect(() => {
+    loadCTSP_Update();
+  }, []);
+  const loadCTSP_Update = async () => {
+    const result = await axios.get("http://localhost:8080/ctsp/detailsp", {
+      validateStatus: () => {
+        return true;
+      }
+    });
+    console.log(result.data);
+    setOptionsCTSP(result.data);
+  };
+
+  const updateCTSanPham = () => {
+
+    if (ctData.kichThuoc != ktCheck || ctData.mauSac != msCheck) {
+      const checkTrung = (sanPham, mauSac, kichThuoc) => {
+        return optionsCTSP.some(ctsp =>
+          ctsp.sanPham === sanPham && ctsp.mauSac === mauSac && ctsp.kichThuoc === kichThuoc
+        );
+      };
+
+      if (checkTrung(ctData.sanPham, ctData.mauSac, ctData.kichThuoc)) {
+        toast.error('Sản phẩm có kích thước và màu sắc trùng với sản phẩm khác !', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        return;
+      }
+    }
+
+    axios.put(`http://localhost:8080/ctsp/update/${ctData.id}`, ctData)
+      .then(response => {
+        console.log(response.data);
+        toast('✔️ Sửa thành công!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        loadCTSP();
+      })
+      .catch(error => console.error('Error adding item:', error));
+  }
+  //Tìm kiếm
+  const onChangeFilter = (changedValues, allValues) => {
+    console.log("All values : ", allValues)
+    timKiemCT(allValues);
+  }
+  const timKiemCT = (dataSearch) => {
+    axios.post(`http://localhost:8080/ctsp/search-ctsp/${uuid}`, dataSearch)
+      .then(response => {
+        // Update the list of items
+        setCTSPs(response.data);
+        console.log("tìm kím:", response.data);
+        console.log("UUID : ", uuid)
+      })
+      .catch(error => console.error('Error adding item:', error));
+  }
   //Load kich thước
   const [kt, setKT] = useState([]);
   useEffect(() => {
@@ -322,10 +396,18 @@ export default function CTSP() {
   useEffect(() => {
     loadCTSP();
   }, []);
-  const { uuid } = useParams();
-  console.log(`${uuid}`)
   const loadCTSP = async () => {
     const result = await axios.get(`http://localhost:8080/ctsp/showct/${uuid}`, {
+      validateStatus: () => {
+        return true;
+      }
+    });
+    console.log(result.data);
+    setCTSPs(result.data);
+  };
+
+  const loadCTKT = async () => {
+    const result = await axios.get(`http://localhost:8080/ctsp/search/${uuid}`, {
       validateStatus: () => {
         return true;
       }
@@ -394,7 +476,7 @@ export default function CTSP() {
             borderRadius: 6,
             width: 60,
             height: 25,
-          }}></div >
+          }} className='custom-div'></div >
         </>;
       }
     },
@@ -405,12 +487,12 @@ export default function CTSP() {
       render: (trang_thai) => (
         <>
           {trang_thai === 0 ? (
-            <Tag color="red">
+            <Tag color="green">
               Còn bán
             </Tag>
           ) : (
-            <Tag color="green">
-              Còn bán
+            <Tag color="red">
+              Dừng bán
             </Tag>
           )}
         </>
@@ -439,11 +521,15 @@ export default function CTSP() {
                 }}
                 onValuesChange={onFormLayoutChange}
                 size={componentSize}
-                onFinish={updateCT}
+                onFinish={updateCTSanPham}
                 form={form2}>
                 <div className='row'>
-                  <Form.Item label={<b>Tên sản phẩm </b>}>
-                    <Input readOnly value={ctData.tenSP}></Input>
+                  <Form.Item label={<b>Tên sản phẩm </b>} >
+                    <Select defaultValue={ctData.sanPham} disabled>
+                      <Select.Option key={ctData.sanPham} value={ctData.sanPham}>
+                        {ctData.tenSP}
+                      </Select.Option>
+                    </Select>
                   </Form.Item>
                 </div>
                 <div className='row'>
@@ -453,10 +539,10 @@ export default function CTSP() {
                 </div>
                 <div className='row'>
                   <div className='col-md-6'>
-                    <Form.Item label={<b>Kích thước </b>} hasFeedback rules={[{ required: true, message: 'Vui lòng chọn kích thước!', },]}>
-                      <Select placeholder="Chọn một giá trị" value={ctData.idKT} onChange={handleChangeKT}>
+                    <Form.Item label={<b>Kích thước </b>}>
+                      <Select placeholder="Chọn một giá trị" value={ctData.kichThuoc} onChange={(e) => setCTDatas({ ...ctData, kichThuoc: e })} >
                         {kt.map(item => (
-                          <Select.Option key={item.id} value={item.id} >
+                          <Select.Option key={item.id} value={item.id}>
                             {item.ten}
                           </Select.Option>
                         ))}
@@ -465,7 +551,7 @@ export default function CTSP() {
                   </div>
                   <div className='col-md-6'>
                     <Form.Item label={<b>Màu Sắc</b>}>
-                      <Select placeholder="Chọn một giá trị" value={ctData.idMS}>
+                      <Select placeholder="Chọn một giá trị" value={ctData.mauSac} onChange={(e) => setCTDatas({ ...ctData, mauSac: e })}>
                         {ms.map(item => (
                           <Select.Option key={item.id} value={item.id}>
                             {item.ten}
@@ -478,7 +564,7 @@ export default function CTSP() {
                 <div className='row'>
                   <div className='col-md-6'>
                     <Form.Item label={<b>Chất liệu </b>}>
-                      <Select placeholder="Chọn một giá trị" value={ctData.idCL}>
+                      <Select placeholder="Chọn một giá trị" value={ctData.chatLieu} onChange={(e) => setCTDatas({ ...ctData, chatLieu: e })}>
                         {cl.map(item => (
                           <Select.Option key={item.id} value={item.id}>
                             {item.ten}
@@ -489,7 +575,7 @@ export default function CTSP() {
                   </div>
                   <div className='col-md-6'>
                     <Form.Item label={<b>Độ cao</b>}>
-                      <Select placeholder="Chọn một giá trị" value={ctData.idDC}>
+                      <Select placeholder="Chọn một giá trị" value={ctData.deGiay} onChange={(e) => setCTDatas({ ...ctData, deGiay: e })}>
                         {dc.map(item => (
                           <Select.Option key={item.id} value={item.id}>
                             {item.ten}
@@ -502,7 +588,7 @@ export default function CTSP() {
                 <div className='row'>
                   <div className='col-md-6'>
                     <Form.Item label={<b>Danh mục </b>}>
-                      <Select placeholder="Chọn một giá trị" value={ctData.idDM}>
+                      <Select placeholder="Chọn một giá trị" value={ctData.danhMuc} onChange={(e) => setCTDatas({ ...ctData, danhMuc: e })}>
                         {dm.map(item => (
                           <Select.Option key={item.id} value={item.id}>
                             {item.ten}
@@ -513,7 +599,7 @@ export default function CTSP() {
                   </div>
                   <div className='col-md-6'>
                     <Form.Item label={<b>Hãng</b>}>
-                      <Select placeholder="Chọn một giá trị" value={ctData.idH}>
+                      <Select placeholder="Chọn một giá trị" value={ctData.hang} onChange={(e) => setCTDatas({ ...ctData, hang: e })}>
                         {h.map(item => (
                           <Select.Option key={item.id} value={item.id}>
                             {item.ten}
@@ -526,42 +612,57 @@ export default function CTSP() {
                 <div className='row'>
                   <div className='col-md-4'>
                     <Form.Item label={<b>Số lượng </b>}>
-                      <InputNumber min={0} placeholder='Nhập số lượng' value={ctData.soLuong}></InputNumber>
+                      <InputNumber
+                        min={0}
+                        placeholder='Nhập số lượng'
+                        value={ctData.soLuong}
+                        onChange={(e) => setCTDatas({ ...ctData, soLuong: e })}
+                      ></InputNumber>
                     </Form.Item>
                   </div>
                   <div className='col-md-4'>
                     <Form.Item label={<b>Giá bán </b>}>
-                      <InputNumber placeholder='Nhập giá bán' value={ctData.giaBan}></InputNumber>
+                      <InputNumber
+                        placeholder='Nhập giá bán'
+                        value={ctData.giaBan}
+                        onChange={(e) => setCTDatas({ ...ctData, giaBan: e })}
+                      ></InputNumber>
                     </Form.Item>
                   </div>
                   <div className='col-md-4'>
                     <Form.Item label={<b>Trạng thái </b>}>
-                      <Select value={ctData.trangThai}>
-                        <Select.Option value='1'>Còn Bán</Select.Option>
-                        <Select.Option value='0'>Dừng Bán</Select.Option>
+                      <Select defaultValue={ctData.trangThai == 0 ? 'Còn bán' : 'Dừng bán'} onChange={(e) => setCTDatas({ ...ctData, trangThai: e })}>
+                        <Select.Option value='0'>Còn Bán</Select.Option>
+                        <Select.Option value='1'>Dừng Bán</Select.Option>
                       </Select>
                     </Form.Item>
                   </div>
+                  <label className='mb-2'><b>QR Code :</b></label>
+                  <QRCode size={100} type="canvas" value={ctData.id} />
+                  <label className='mb-2'><b>Hình ảnh :</b></label>
+                  <SuaAnhCTSP></SuaAnhCTSP>
+                </div>
+                <div className='row'>
+                  <div className='container text-center'>
+                    <Button className='bg-warning text-dark rounded-pill border'
+                      onClick={() => {
+                        Modal.confirm({
+                          centered: 'true',
+                          title: 'Thông báo',
+                          content: 'Bạn có chắc chắn muốn cập nhật không?',
+                          onOk: () => { form2.submit(); },
+                          footer: (_, { OkBtn, CancelBtn }) => (
+                            <>
+                              <CancelBtn />
+                              <OkBtn />
+                            </>
+                          ),
+                        });
+                      }}><GrUpdate className='me-1' />Cập Nhật</Button>
+                  </div>
                 </div>
               </Form>
-              <div className='row'>
-                <div className='container text-center'>
-                  <Button className='bg-warning text-dark rounded-pill border'
-                    onClick={() => {
-                      Modal.confirm({
-                        title: 'Thông báo',
-                        content: 'Bạn có chắc chắn muốn cập nhật không?',
-                        onOk: () => { form2.submit(); },
-                        footer: (_, { OkBtn, CancelBtn }) => (
-                          <>
-                            <CancelBtn />
-                            <OkBtn />
-                          </>
-                        ),
-                      });
-                    }}><GrUpdate className='me-1' />Cập Nhật</Button>
-                </div>
-              </div>
+
             </Modal>
           </a>
         </Space>
@@ -591,7 +692,7 @@ export default function CTSP() {
             initialValues={{
               size: componentSize,
             }}
-            onValuesChange={onFormLayoutChange}
+            onValuesChange={onChangeFilter}
             size={componentSize}
             style={{
               maxWidth: 1600,
@@ -608,9 +709,9 @@ export default function CTSP() {
                 </Form.Item>
               </div>
               {/* Kích Thước */}
-              <div className='col-3'>
+              <div className='col-3' >
                 <Form.Item label="Kích Thước" name="idKT">
-                  <Select placeholder="Chọn một giá trị">
+                  <Select placeholder="Chọn một giá trị" >
                     {kt.map(item => (
                       <Option key={item.id} value={item.id}>
                         {item.ten}
@@ -656,7 +757,7 @@ export default function CTSP() {
                 <Form.Item label="Đế giày" name="idDC">
                   <Select placeholder="Chọn một giá trị">
                     {dc.map(item => (
-                      <Option key={item.ma} value={item.ma}>
+                      <Option key={item.ma} value={item.id}>
                         {item.ten}
                       </Option>
                     ))}
@@ -690,7 +791,7 @@ export default function CTSP() {
               {/* Trạng Thái */}
               <div className='col-md-3'>
                 <Form.Item label="Trạng thái" name="trangThaiCT">
-                  <Select placeholder="Chọn một giá trị">
+                  <Select placeholder="Chọn một giá trị" defaultValue="1">
                     <Select.Option value='1'>Còn Bán</Select.Option>
                     <Select.Option value='0'>Dừng Bán</Select.Option>
                   </Select>
@@ -706,7 +807,7 @@ export default function CTSP() {
               </div>
               <div className='col-md-6'>
                 <Form.Item label="Giá bán" name="giaBanCT">
-                  <Slider style={{ width: '400px' }} min={1} />
+                  <Slider style={{ width: '400px' }} min={1000000} max={10000000} step={1000000} />
                 </Form.Item>
               </div>
             </div>
@@ -714,7 +815,7 @@ export default function CTSP() {
 
             <div className='container-fluid'>
               <Form.Item className='text-center' style={{ paddingLeft: 360 }}>
-                <Button type="primary" htmlType='reset'>Làm mới</Button>
+                <Button type="primary" htmlType='reset' onClick={loadCTSP}>Làm mới</Button>
               </Form.Item>
             </div>
 
@@ -741,6 +842,20 @@ export default function CTSP() {
         </div>
 
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      {/* Same as */}
+      <ToastContainer />
     </div>
   )
 }

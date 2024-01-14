@@ -27,7 +27,7 @@ import moment from 'moment';
 import {PlusCircleOutlined} from '@ant-design/icons';
 import "./Voucher.scss";
 import ModelAddVoucher from "./ModelUpdateVoucher";
-import ModalDetail from "./ModalDetail";
+import ModalDetail from "./ModalDetailVoucher";
 import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { render } from '@testing-library/react';
@@ -215,21 +215,25 @@ const columns = [
     render: (record) => (
       
       <Space size="middle">
+        
         <a>
-
-        <Button shape="circle" style={{border:0}} icon={<EyeOutlined
+        <Link
+              to={`/voucher/detail/${record.id}`}
+              className="btn"
+            >
+              <EyeOutlined
                 style={{
                   fontSize: 30,
                   backgroundColor: "#ffff00",
-                  borderRadius: 90,
-                  borderWidth:10,
-                  borderColor: "#000000",
+                  
                 }}
-              />} onClick={()=>{detailVoucher(record)}} />
+              />
+            </Link>
+          
         </a>
         <a>
             <Link
-              to={`/voucher/detail/${record.id}`}
+              to={`/voucher/update/${record.id}`}
               className="btn"
             >
               <BsPencilSquare
@@ -303,11 +307,7 @@ const columns = [
       setMyVoucher({});
     }
     //mở form detail
-    const detailVoucher=(row)=>{
-      setMyVoucher(row);
-      setOpenDetail(true);
-      console.log('voucher',myVoucher);
-    }
+    
     
     // const getVoucherByID = async(id) => {
     //   await axios.get(`http://localhost:8080/voucher/detail/${id}`)
@@ -463,10 +463,7 @@ const columns = [
     </>
     </div>
     {/* hết table voucher */}
-    {/* <ModelAddVoucher id={id}  openUpdate={openUpdate} setOpenUpdate={setOpenUpdate} myVoucher={myVoucher} setMyVoucher={setMyVoucher} resetMyVoucher={resetMyVoucher} loadVoucher={loadVoucher}/> */}
-
-    <ModalDetail  openDetail={openDetail} setOpenDetail={setOpenDetail} myVoucher={myVoucher} setMyVoucher={setMyVoucher} resetMyVoucher={resetMyVoucher} loadVoucher={loadVoucher}/>
-    
+  
     <ToastContainer
 position="top-right"
 autoClose={5000}

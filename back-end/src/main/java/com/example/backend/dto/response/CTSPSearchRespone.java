@@ -1,21 +1,21 @@
-package com.example.backend.model;
+package com.example.backend.dto.response;
 
 import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
 
-public interface AdminCTSPRespon {
+public interface CTSPSearchRespone {
     @Value("#{target.idCTSP}")
     String getIdCTSP();
 
     @Value("#{target.tenSP}")
     String getTenSP();
 
-    @Value("#{target.link}")
-    String getLink();
+    @Value("#{target.linkAnh}")
+    String getLinkAnh();
 
-    @Value("#{target.tenKM}")
-    String getTenKM();
+    @Value("#{target.maMS}")
+    String getMaMS();
 
     @Value("#{target.tenKT}")
     String getTenKT();

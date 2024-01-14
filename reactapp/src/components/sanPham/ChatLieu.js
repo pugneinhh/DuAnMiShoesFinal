@@ -110,11 +110,11 @@ export default function ChatLieu() {
       render: (trang_thai) => (
         <>
           {trang_thai === 0 ? (
-            <Tag color="red">
+            <Tag color="green">
               Còn bán
             </Tag>
           ) : (
-            <Tag color="green">
+            <Tag color="red">
               Còn bán
             </Tag>
           )}
@@ -169,8 +169,8 @@ export default function ChatLieu() {
             <div className='col-md-5'>
               <Form.Item label="Trạng Thái">
                 <Select value={selectedValue} onChange={handleChange}>
-                  <Select.Option value="1">Còn Bán</Select.Option>
-                  <Select.Option value="0">Dừng Bán</Select.Option>
+                  <Select.Option value="0">Còn Bán</Select.Option>
+                  <Select.Option value="1">Dừng Bán</Select.Option>
                 </Select>
               </Form.Item>
             </div>

@@ -1,5 +1,6 @@
 package com.example.backend.service;
 import com.example.backend.dto.request.DanhMucRequest;
+import com.example.backend.dto.request.sanphamsearch.SanPhamSearch;
 import com.example.backend.dto.response.DanhMucRespone;
 import com.example.backend.entity.DanhMuc;
 import com.example.backend.repository.DanhMucRepository;
@@ -23,8 +24,16 @@ public class DanhMucService {
         return danhMucRepository.getALLDM();
     }
 
-    public List<DanhMucRespone> getTim(String key, int tt) {
-        return danhMucRepository.timDM(key, tt);
+    public DanhMuc update(String id, DanhMucRequest danhMucRequest) {
+        DanhMuc dm = danhMucRequest.mapDM(new DanhMuc());
+        dm.setId(id);
+        return danhMucRepository.save(dm);
+    }
+
+    public DanhMuc detailDM(String id){return danhMucRepository.findById(id).get();}
+
+    public List<DanhMucRespone> getTim(SanPhamSearch sanPhamSearch) {
+        return danhMucRepository.tim(sanPhamSearch);
     }
 
     public String addDM(DanhMucRequest dm) {

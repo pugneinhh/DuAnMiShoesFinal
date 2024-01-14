@@ -1,6 +1,7 @@
 package com.example.backend.service;
 
 import com.example.backend.dto.impldto.KhachHangResponImplDTO;
+import com.example.backend.dto.request.DiaChiRequest;
 import com.example.backend.dto.request.KhachHangRequest;
 import com.example.backend.dto.response.DiaChiKhachHangRespon;
 import com.example.backend.dto.response.KhachHangRespon;
@@ -123,5 +124,8 @@ public class KhachHangService {
    public List<DiaChiKhachHangRespon> findDiaChiByKH(String idKH){
         return diaChiRepository.findDiaChiByKH(idKH);
     }
-
+    public DiaChi addDiaChi(DiaChiRequest diaChiRequest){
+        DiaChi diaChi=diaChiRequest.map(new DiaChi());
+        return diaChiRepository.save(diaChi);
+    }
 }

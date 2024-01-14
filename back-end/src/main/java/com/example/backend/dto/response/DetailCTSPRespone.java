@@ -5,32 +5,32 @@ import org.springframework.beans.factory.annotation.Value;
 import java.math.BigDecimal;
 
 public interface DetailCTSPRespone {
-    @Value("#{target.idSP}")
-    String getIdSP();
+    @Value("#{target.sanPham}")
+    String getSanPham();
 
-    @Value("#{target.idC}")
-    String getIdC();
+    @Value("#{target.id}")
+    String getId();
 
     @Value("#{target.tenSP}")
     String getTenSP();
 
-    @Value("#{target.idKT}")
-    String getIdKT();
+    @Value("#{target.kichThuoc}")
+    String getKichThuoc();
 
-    @Value("#{target.idMS}")
-    String getIdMS();
+    @Value("#{target.mauSac}")
+    String getMauSac();
 
-    @Value("#{target.idCL}")
-    String getIdCL();
+    @Value("#{target.chatLieu}")
+    String getChatLieu();
 
-    @Value("#{target.idDC}")
-    String getIdDC();
+    @Value("#{target.deGiay}")
+    String getDeGiay();
 
-    @Value("#{target.IdDM}")
-    String getIdDM();
+    @Value("#{target.danhMuc}")
+    String getDanhMuc();
 
-    @Value("#{target.idH}")
-    String getIdH();
+    @Value("#{target.hang}")
+    String getHang();
 
     @Value("#{target.soLuong}")
     int getSoLuong();

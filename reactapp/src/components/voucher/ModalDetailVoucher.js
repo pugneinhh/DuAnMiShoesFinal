@@ -1,102 +1,77 @@
 import {
-  DatePicker,
-  Form,
-  Input,
-  InputNumber,
-  Select,
-  Switch,
-  Button,
-  Modal,
-  Divider,
-} from "antd";
-import { useState } from "react";
+    Button,
+    DatePicker,
+    Form,
+    Input,
+    InputNumber,
+    Modal,
+    Select,
+    Divider,
+  } from "antd";
+  import { FaTag } from "react-icons/fa";
 import axios from "axios";
-import { toast } from "react-toastify";
-import { FaTag } from "react-icons/fa";
-import { Navigate, useNavigate } from 'react-router-dom';
-
-
-import TableKhachHang from "./tableKhachHang";
-const AddVoucher = () => {
+import { useEffect, useState } from "react";
+import moment from 'moment';
+import { FormattedDate, IntlProvider } from 'react-intl';
+import { useParams } from "react-router-dom";
+import TableNguoiDungVoucher from "./tableNguoiDungVoucher";
+const ModalDetailVoucher=(props)=>{
+    const { id } = useParams("");
+  const [dataUpdate, setDataUpdate] = useState({});
+  const [form2] = Form.useForm();
   const [selectedValue, setSelectedValue] = useState("Tiền mặt");
+  const [khachHang, setKhachHang] = useState([]);
+  
   const handleChange = (value) => {
     console.log(`Selected value: ${value}`);
     setSelectedValue(value);
   };
-  const navigate = useNavigate();
-
-
   const [componentSize, setComponentSize] = useState("default");
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
   };
 
-  const [form] = Form.useForm();
-  const handleSubmit = (value) => {
+  useEffect(() => {
+    detailVoucher()
+  },[]);
+  
+   //lấy ra detail voucher
+   const detailVoucher = async () => {
     axios
-      .post("http://localhost:8080/voucher/add", value)
+      .get(`http://localhost:8080/voucher/detail/${id}`)
       .then((response) => {
-        if(selectedIDKH.length>0){
-        Promise.all(
-          selectedIDKH.map((id) =>
-            axios.post(
-              `http://localhost:8080/nguoi-dung-voucher/add/${id}`,
-              response.data
-            )
-          ) 
-        );
-      }
-        console.log(response.data);
-        navigate('/voucher');
-        toast("✔️ Thêm thành công!", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
+
+        form2.setFieldsValue({
+          id: response.data.id,
+          ma: response.data.ma,
+          ten: response.data.ten,
+          mucDo: response.data.mucDo,
+          giamToiDa: response.data.giamToiDa,
+          dieuKien: response.data.dieuKien,
+          ngayKetThuc: moment(response.data.ngayKetThuc, "YYYY-MM-DD HH:mm:ss"),
+          ngayBatDau: moment(response.data.ngayBatDau, "YYYY-MM-DD HH:mm:ss"),
+          loaiVoucher: response.data.loaiVoucher,
+          soLuong: response.data.soLuong,
         });
-        form.resetFields();
+        setDataUpdate(response.data);
+        console.log(response.data);
+        console.log(dataUpdate);
       })
+      .catch((error) => console.error("Error upfate item:", error));
   };
-
-  const [selectedIDKH, setSelectedIDKH] = useState([]);
-
-  const handleSelectedIDKH = (selectedRowKeys) => {
-    setSelectedIDKH(selectedRowKeys);
-  };
-  ///validate ngày
-  const validateDateKT = (_, value) => {
-    const { getFieldValue } = form;
-    const startDate = getFieldValue("ngayBatDau");
-    if (startDate && value && value.isBefore(startDate)) {
-      return Promise.reject("Ngày kết thúc phải sau ngày bắt đầu");
-    }
-    return Promise.resolve();
-  };
-  const [checkNgay, setCheckNgay] = useState(false);
-
-  const validateDateBD = (_, value) => {
-    const newDate = new Date();
-    // if(startDate && value && value.isAfter(moment)){
-    //   return Promise.reject('Ngày kết thúc phải sau ngày bắt đầu');
-    // }
-    const { getFieldValue } = form;
-    const endDate = getFieldValue("ngayKetThuc");
-    if (endDate && value && value.isAfter(endDate)) {
-      return Promise.reject("Ngày bắt đầu phải trước ngày kết thúc");
-    }
-    if (value && value < newDate) {
-      return Promise.reject("Ngày bắt phải sau ngày hiện tại");
-    }
-    return Promise.resolve();
+  const handleClose = () => {
+    form2.resetFields();
+    setDataUpdate({});
+    console.log("đóng");
   };
   
 
-  return (
-    <div
+
+
+
+    return(
+        <IntlProvider locale='vi-VN'>
+      <div
       className="container-fluid  m-2 p-3 pt-2"
       // style={{
       //   border: "1px solid #ddd", // Border color
@@ -106,14 +81,21 @@ const AddVoucher = () => {
     >
       <div className="row">
         <Divider orientation="center" color="none">
-          <h4 className="text-first pt-5 fw-bold">
-            <FaTag size={20} /> 
-            Thêm phiếu giảm giá
+          <h4 className="text-first pt-1 fw-bold">
+            <FaTag size={20} />
+            Chi tiết phiếu giảm giá
           </h4>
         </Divider>
         <div
           className="bg-light col-md-4"
-          style={{border: "1px solid #ddd", boxShadow: "0 3px 8px rgba(0, 0, 0, 0.1)", borderRadius: "8px", marginBottom: 10, height: 600 }}
+          orientation="center"
+          style={{
+            border: "1px solid #ddd",
+            boxShadow: "0 3px 8px rgba(0, 0, 0, 0.1)",
+            borderRadius: "8px",
+            marginBottom: 10,
+            height: 600,
+          }}
         >
           <h4 className="text-center">Thông tin phiếu giảm giá</h4>
           {/* form add voucher */}
@@ -133,21 +115,14 @@ const AddVoucher = () => {
             style={{
               maxWidth: 1600,
             }}
-            onFinish={handleSubmit}
-            form={form}
+            form={form2}
           >
             <div className="col-md-4">
               <Form.Item
                 label="Mã phiếu giảm giá"
                 style={{ paddingLeft: 0, width: 550 }}
                 name="ma"
-                hasFeedback
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng không để trống mã!",
-                  },
-                ]}
+               
               >
                 <Input
                   placeholder="Mã giảm giá"
@@ -159,13 +134,7 @@ const AddVoucher = () => {
                 label="Tên phiếu giảm giá"
                 name="ten"
                 style={{ paddingLeft: 0, width: 550 }}
-                hasFeedback
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng không để trống tên!",
-                  },
-                ]}
+                
               >
                 <Input
                   placeholder="Tên phiếu giảm giá"
@@ -177,19 +146,13 @@ const AddVoucher = () => {
                 label="Loại voucher"
                 name="loaiVoucher"
                 style={{ borderColor: "yellow", marginLeft: 0, width: 550 }}
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng chọn loại voucher!",
-                  },
-                ]}
+                
               >
                 <Select
                   defaultValue={"Tiền mặt"}
                   style={{ borderColor: "yellow", marginLeft: 20, width: 220 }}
                   onChange={handleChange}
                 >
-                  
                   <Select.Option value="Tiền mặt">Tiền mặt</Select.Option>
                   <Select.Option value="Phần trăm">Phần trăm</Select.Option>
                 </Select>
@@ -197,20 +160,19 @@ const AddVoucher = () => {
             </div>
 
             <div className="col-md-4">
-              
-                <Form.Item
-                  label="Số lượng"
-                  name="soLuong"
-                  style={{ marginLeft: 0, width: 550 }}
-                >
-                  <InputNumber
-                    className="border-warning"
-                    style={{ marginLeft: 20, width: 220 }}
-                    defaultValue={"1"}
-                    min={1}
-                  />
-                </Form.Item>
-              
+              <Form.Item
+                label="Số lượng"
+                name="soLuong"
+                style={{ marginLeft: 0, width: 550 }}
+              >
+                <InputNumber
+                  className="border-warning"
+                  style={{ marginLeft: 20, width: 220 }}
+                  defaultValue={"1"}
+                  min={1}
+                />
+              </Form.Item>
+
               <Form.Item
                 label="Mức độ"
                 style={{ marginLeft: 0, width: 550 }}
@@ -242,13 +204,7 @@ const AddVoucher = () => {
                 label="Giảm tối đa"
                 name="giamToiDa"
                 style={{ marginLeft: 0, width: 550 }}
-                hasFeedback
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng nhập giá trị giảm tối đa!",
-                  },
-                ]}
+                
               >
                 <InputNumber
                   className="border-warning"
@@ -266,13 +222,7 @@ const AddVoucher = () => {
                 label="Điều kiện"
                 name="dieuKien"
                 style={{ marginLeft: 0, width: 550 }}
-                hasFeedback
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng nhập điều kiện giảm!",
-                  },
-                ]}
+               
               >
                 <InputNumber
                   className="border-warning"
@@ -288,14 +238,7 @@ const AddVoucher = () => {
                 label="Ngày bắt đầu"
                 name="ngayBatDau"
                 style={{ marginLeft: 0, width: 550 }}
-                hasFeedback
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng chọn ngày bắt đầu!",
-                  },
-                  { validator: validateDateBD },
-                ]}
+                
               >
                 <DatePicker
                   showTime
@@ -308,14 +251,7 @@ const AddVoucher = () => {
                 label="Ngày kết thúc"
                 style={{ marginLeft: 0, width: 550 }}
                 name="ngayKetThuc"
-                hasFeedback
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng chọn ngày kết thúc!",
-                  },
-                  { validator: validateDateKT },
-                ]}
+               
               >
                 <DatePicker
                   showTime
@@ -327,46 +263,41 @@ const AddVoucher = () => {
             </div>
             {/* <div className="col-md-4"></div>
 <div className="col-md-1"></div> */}
-            <div className="text-end">
-              <Form.Item>
-                <Button
-                  type="primary"
-                  onClick={() => {
-                    Modal.confirm({
-                      title: "Thông báo",
-                      content: "Bạn có chắc chắn muốn thêm không?",
-                      onOk: () => {
-                        form.submit();
-                      },
-                      footer: (_, { OkBtn, CancelBtn }) => (
-                        <>
-                          <CancelBtn />
-                          <OkBtn />
-                        </>
-                      ),
-                    });
-                  }}
-                >
-                  Thêm
-                </Button>
-              </Form.Item>
-            </div>
+            
           </Form>
         </div>
         <div
           className="bg-light col"
-          style={{border: "1px solid #ddd", boxShadow: "0 3px 8px rgba(0, 0, 0, 0.1)", borderRadius: "8px", marginBottom: 10, marginLeft: 20 , marginRight : 15}}
+          style={{
+            border: "1px solid #ddd",
+            boxShadow: "0 3px 8px rgba(0, 0, 0, 0.1)",
+            borderRadius: "8px",
+            marginBottom: 10,
+            marginLeft: 20,
+            marginRight: 15,
+          }}
         >
           <p className="fw-bold" style={{ marginTop: 10 }}>
             Khách hàng
           </p>
-          <TableKhachHang 
-            onSelectedKH = {handleSelectedIDKH}
-          />
+          <TableNguoiDungVoucher idV={id} />
         </div>
       </div>
-
+      {/* <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      <ToastContainer /> */}
     </div>
-  );
+    </IntlProvider>
+    )
 }
-export default AddVoucher;
+export default ModalDetailVoucher;

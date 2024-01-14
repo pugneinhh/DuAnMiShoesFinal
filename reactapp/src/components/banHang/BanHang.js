@@ -1,4 +1,4 @@
-import { Button, Empty, Input, Modal, Space, Switch, Tabs, Tag } from "antd";
+import { Button, Empty, Input, Modal, Space, Switch, Tabs, Tag ,Table,InputNumber  } from "antd";
 import React, { useEffect, useRef, useState } from 'react';
 import { toast, ToastContainer } from "react-toastify";
 import { BsQrCodeScan } from "react-icons/bs";
@@ -6,6 +6,7 @@ import { FaList } from "react-icons/fa";
 import { QrReader } from 'react-qr-reader';
 import { MdOutlinePayments, MdOutlineShoppingCartCheckout } from "react-icons/md";
 import axios from "axios";
+import { DeleteFilled } from "@ant-design/icons";
 import ModalSanPham from "./ModalSanPham";
 import ModalThanhToan from "./ModalThanhToan";
 import ModalKhachHang from "./ModalKhachHang";
@@ -14,6 +15,10 @@ import {useDispatch,useSelector} from 'react-redux';
 import {v4 as uuid} from 'uuid';
 import { CreateBill, GetBill, RemoveBill } from "./reducer/Bill.reducer";
 import NhanVien from "../nhanVien/NhanVien";
+import { GetProduct, UpdateProduct } from "./reducer/Product.reducer";
+import { Image } from "cloudinary-react";
+import { GetClient } from "./reducer/Client.reducer";
+
 // import { getHoaDons } from "./redux/selector";
 const {TabPane}=Tabs;
 const BanHang = () => {
@@ -23,9 +28,23 @@ const BanHang = () => {
   // const demTab = useRef(0);
   const initState=useRef(1);
   const hoaDons=useSelector(GetBill);
- 
+  const ctspHD = useSelector(GetProduct);
+  const client = useSelector(GetClient);
+  console.log(ctspHD);
+  console.log("Client",client);
+  let data = ([""]);
+  let idHD = ("");
+  let KH = ([""]);
+
+
   const [open, setOpen] = useState(false);
   const [openSanPham, setOpenSanPham] = useState(false);
+
+  const onChangeSoLuong = (value,record) =>{
+      // update số lượng vào reducer
+      dispatch(UpdateProduct({soLuong : value,chiTietSanPham: record.chiTietSanPham, activeKey : activeKey }));
+  }
+
   const handleCloseSanPham = () => {
     setOpenSanPham(false);
   }
@@ -39,7 +58,16 @@ const BanHang = () => {
   }
   const onChange = (key) => {
     setActiveKey(key);
+
   };
+
+  const handleClickTab = (id) => {
+    console.log("Key",id)
+    if (ctspHD.length > 0) {
+   
+    // ctspHD.map((index) => {(index.hoaDon === id) ? setCTSPs(index) : console.log("Nothing")})
+    }
+  }
 ////tạo hóa đơn bằng redux
 console.log("hóa đơn:",hoaDons);
 const dispatch=useDispatch();
@@ -64,7 +92,7 @@ const handleClickAddHD=() => {
   )
   );
   initState.current++;
-  setActiveKey(maxKey+1);
+ // setActiveKey(maxKey+1);
   
     }else{
       dispatch(
@@ -73,7 +101,7 @@ const handleClickAddHD=() => {
           )
       );
       initState.current++;
-      setActiveKey(initState.current);
+   //   setActiveKey(initState.current);
     }
 
 };
@@ -112,7 +140,102 @@ const onEdit = (targetKey, action) => {
     }
   };
 
-
+  const columns = [
+    {
+      title: "STT",
+      dataIndex: "idCTSP",
+      key: "idCTSP",
+      render: (idCTSP, record, index) => {
+        ++index;
+        return index;
+      },
+      showSorterTooltip: false,
+    },
+    {
+      title: "Hình ảnh",
+      dataIndex: "linkAnh",
+      key: "linkAnh",
+      center: "true",
+      render: (linkAnh) => {
+        return (
+          <>
+            <Image
+              cloudName="dtetgawxc"
+              publicId={linkAnh}
+              width="50"
+              crop="scale"
+              href={linkAnh}
+            />
+          </>
+        );
+      },
+    },
+    {
+      title: "Tên Sản Phẩm",
+      dataIndex: "tenSP",
+      center: "true",
+      render: (text, record) => (
+        <span>{`${record.tenSP} [${record.mauSac}-${record.kichThuoc}]`}</span>
+      ),
+      sorter: (a, b) => a.ma - b.ma,
+    },
+    {
+      title: "Giá Bán",
+      dataIndex: "giaBan",
+      render: (text, record) => (
+        <span>{`${Intl.NumberFormat("en-US").format(record.giaBan)} VNĐ`}</span>
+      ),
+    },
+    {
+      title: "Số lượng",
+      dataIndex: "soLuong",
+      key: "soLuong",
+      render : (text,record) =>(
+        <InputNumber min={1} value={record.soLuong} onChange={(value) =>onChangeSoLuong(value,record)} />
+       
+        )
+      
+    },
+    {
+      title: "Kích thước",
+      dataIndex: "kichThuoc",
+    },
+    {
+      title: "Màu sắc",
+      dataIndex: "mauSac",
+    
+      render: (text, record) => {
+        return (
+          <>
+            <div
+              style={{
+                backgroundColor: `${record.mauSac}`,
+                borderRadius: 30,
+                width: 25,
+                height: 25,
+              }}
+            ></div>
+          </>
+        );
+      },
+    },
+    {
+      title: "Tổng tiền",
+      dataIndex: "total",
+      render: (text, record) => (
+        <span>{`${Intl.NumberFormat("en-US").format(record.total)} VNĐ`}</span>
+      ),
+    },
+    {
+      title: "Thao tác",
+      dataIndex: "Thao tác",
+      render : () =>(
+        <Space size="middle">
+          <button className="btn btn-danger" style={{borderRadius:30}}><DeleteFilled size={20}/></button>
+        </Space>
+      )
+      },
+  ];
 
 
   //add và remove tab
@@ -162,6 +285,7 @@ const onEdit = (targetKey, action) => {
   //   }
   // };
   ////quét QR sản phẩm
+  const  totalPrice = (0);
   const [openScan, setOpenScan] = useState(false);
   const [qrData, setQrData] = useState('');
   const handleCloseScan = () => {
@@ -192,13 +316,140 @@ const onEdit = (targetKey, action) => {
           hideAdd
           onChange={onChange}
           activeKey={activeKey}
+          defaultActiveKey={activeKey}
           type="editable-card"
-          onEdit={onEdit}
-        >
+          onEdit={onEdit}>
+      
  {hoaDons.map((tab) => (
+    data = ctspHD.filter((f)=> f.activeKey === activeKey),
+    KH = client.filter((k) => k.activeKey === activeKey),
+  
     <TabPane tab={tab.ma} key={tab.key}>
-      {tab.sanPham==null ? (
-        /* Content when tab.sanPham is empty */
+      {(data.length>0 ) ?  (
+        <>
+          <div>
+            <div className="d-flex justify-content-between align-items-center">
+            <div className="text-start">
+              <h4><FaList /> Danh sách</h4>
+            </div>
+            <div className="text-end">
+              <Button type="primary" icon={<BsQrCodeScan />} onClick={() => setOpenScan(true)}>Quét QR sản phẩm</Button>
+              <Button type="primary" className="ms-3" onClick={() => setOpenSanPham(true)}>Chọn sản phẩm</Button>
+              <ModalSanPham
+                idHD = {tab.id}
+                activeKey = {activeKey}
+                openSanPham={openSanPham}
+                setOpenSanPham={setOpenSanPham}
+                onOk={handleCloseSanPham}
+                onCancel={handleCloseSanPham}
+              />
+            </div>
+          </div>
+             <Table
+                  className="text-center"
+                  dataSource={data}
+                  columns={columns}
+                  pagination={{
+                    showQuickJumper: true,
+                    defaultPageSize: 5,
+                    position: ["bottomCenter"],
+                    defaultCurrent: 1,
+                   // total: cTSP.length,
+                  }}
+                />
+          </div>
+
+  <div className="d-flex justify-content-between align-items-center">
+          <div className="text-start">
+            <h4> Tài khoản</h4>
+          </div>
+          <div className="text-end">
+            <>
+              <Button className='me-5 bg-success' type="primary" onClick={() => setOpenKhachHang(true)}>
+                Chọn tài khoản
+              </Button>
+              <ModalKhachHang openKhachHang={openKhachHang} 
+                idHD = {tab.id}
+                activeKey = {activeKey}
+                setOpenKhachHang={setOpenKhachHang}
+                onOk={handleCloseKhachHang}
+                onCancel={handleCloseKhachHang}
+              />
+
+            </>
+          </div>
+        </div>
+        <hr></hr>
+      {/* thông tin khách hàng */}
+        <div className="mb-3">
+          <>
+         
+          {
+          (KH.length == 0) ? (
+            <p>Tên khách hàng: <Tag color="#cccccc" className="rounded-pill">Khách lẻ</Tag></p>
+          ) : (
+            <p>Tên khách hàng: <Tag bordered={false} color="processing" className="rounded-pill">{KH[0].ten}</Tag></p>
+          )
+          }
+          </>
+        </div>
+        {/* hết thông tin tài khoản */}
+        <h4>Khách hàng</h4>
+        <hr></hr>
+        <div className="container-fluid row">
+          <div className="col-md-7"></div>
+          <div className="col-md-5">
+            <h4 className="fw-bold"><MdOutlineShoppingCartCheckout />Thông tin thanh toán</h4>
+            <div className="row">
+            <h6 className="col-md-3 mt-2">Thanh toán</h6>
+              <Button className="col-md-9" icon={<MdOutlinePayments size={25} onClick={() => setOpenThanhToan(true)} />}></Button>
+              <ModalThanhToan openThanhToan={openThanhToan} setOpenThanhToan={setOpenThanhToan}
+                onOk={handleCloseThanhToan}
+                onCancel={handleCloseThanhToan} 
+                total = {data.reduce((accumulator,currentProduct) =>{
+                  return accumulator + currentProduct.total},0)} />
+            </div>
+            
+            <div className="row">
+              <h6 className="col-md-4 mt-2">Mã giảm giá:</h6>
+
+            <Space.Compact
+                className="col-md-8"
+            >
+              <Input defaultValue="Mã giảm giá" />
+              <Button className="ms-5" >Áp mã</Button>
+            </Space.Compact>
+            </div>
+            <h6 className="mt-4">Trả sau: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Switch defaultChecked /></h6>
+            <h6 className="mt-4">Giao hàng: &nbsp;&nbsp;&nbsp;<Switch /></h6>
+            <div className="row">
+              <div className="col-md-8">
+
+                <h6 className="mt-4">Tiền hàng:  {`${Intl.NumberFormat("en-US").format(data.reduce((accumulator,currentProduct) =>{
+                 return accumulator + currentProduct.total},0))}`}</h6>
+                <h6 className="mt-4">Phí vận chuyển: 0</h6>
+                <h6 className="mt-4">Giảm giá: 0</h6>
+                <h6 className="mt-4">Điểm hiện tại: <>{(KH.length > 0) ? `${KH[0].diem}` : 0}</></h6>
+                <h6 className="mt-4">Tổng tiền: {`${Intl.NumberFormat("en-US").format(data.reduce((accumulator,currentProduct) =>{
+                 return accumulator + currentProduct.total},0))} VND`}</h6>
+              </div>
+              <div className="col-md-4">
+            
+                <h6 className="mt-4">VND</h6>
+                
+                <h6 className="mt-4">VND</h6>
+                <h6 className="mt-4 text-danger">VND</h6>
+              </div>
+            </div>
+            <Button className=' mt-2 me-5 bg-success float-end bg-black' type="primary">Xác nhận đặt hàng</Button>
+          </div>
+        </div>
+
+      
+
+        </>
+      ) :
+      (
         <>
           <div className="d-flex justify-content-between align-items-center">
             <div className="text-start">
@@ -208,6 +459,8 @@ const onEdit = (targetKey, action) => {
               <Button type="primary" icon={<BsQrCodeScan />} onClick={() => setOpenScan(true)}>Quét QR sản phẩm</Button>
               <Button type="primary" className="ms-3" onClick={() => setOpenSanPham(true)}>Chọn sản phẩm</Button>
               <ModalSanPham
+                idHD = {tab.id}
+                activeKey = {activeKey}
                 openSanPham={openSanPham}
                 setOpenSanPham={setOpenSanPham}
                 onOk={handleCloseSanPham}
@@ -231,38 +484,7 @@ const onEdit = (targetKey, action) => {
             />
           </div>
           {/* Hết giỏ hàng */}
-        </>
-      ) : (
-        /* Content when tab.sanPham is not empty */
-        <>
-          <div>
-            <div className="d-flex justify-content-between align-items-center">
-            <div className="text-start">
-              <h4><FaList /> Danh sách</h4>
-            </div>
-            <div className="text-end">
-              <Button type="primary" icon={<BsQrCodeScan />} onClick={() => setOpenScan(true)}>Quét QR sản phẩm</Button>
-              <Button type="primary" className="ms-3" onClick={() => setOpenSanPham(true)}>Chọn sản phẩm</Button>
-              <ModalSanPham
-                openSanPham={openSanPham}
-                setOpenSanPham={setOpenSanPham}
-                onOk={handleCloseSanPham}
-                onCancel={handleCloseSanPham}
-              />
-            </div>
-          </div>
-            {/* Your content when tab.sanPham is not empty */}
-            (hehhee {tab.ma})
-          </div>
-        </>
-      )}
-    </TabPane>
-  ))}
-        </Tabs>
-        
-
-        {/* thông tin khách hàng */}
-        <div className="d-flex justify-content-between align-items-center">
+           <div className="d-flex justify-content-between align-items-center">
           <div className="text-start">
             <h4> Tài khoản</h4>
           </div>
@@ -272,6 +494,8 @@ const onEdit = (targetKey, action) => {
                 Chọn tài khoản
               </Button>
               <ModalKhachHang openKhachHang={openKhachHang} 
+                        idHD = {tab.id}
+                        activeKey = {activeKey}
                 setOpenKhachHang={setOpenKhachHang}
                 onOk={handleCloseKhachHang}
                 onCancel={handleCloseKhachHang}
@@ -281,11 +505,20 @@ const onEdit = (targetKey, action) => {
           </div>
         </div>
         <hr></hr>
-        {/* thông tin khách hàng */}
+    
         <div className="mb-3">
-          <p>Tên khách hàng: <Tag color="#cccccc" className="rounded-pill">Khách lẻ</Tag></p>
+        <>
+         
+         {
+         (KH.length == 0) ? (
+           <p>Tên khách hàng: <Tag color="#cccccc" className="rounded-pill">Khách lẻ</Tag></p>
+         ) : (
+           <p>Tên khách hàng: <Tag bordered={false} color="processing" className="rounded-pill">{KH[0].ten}</Tag></p>
+         )
+         }
+         </>
         </div>
-        {/* hết thông tin tài khoản */}
+       
         <h4>Khách hàng</h4>
         <hr></hr>
         <div className="container-fluid row">
@@ -297,7 +530,68 @@ const onEdit = (targetKey, action) => {
               <Button className="col-md-9" icon={<MdOutlinePayments size={25} onClick={() => setOpenThanhToan(true)} />}></Button>
               <ModalThanhToan openThanhToan={openThanhToan} setOpenThanhToan={setOpenThanhToan}
                 onOk={handleCloseThanhToan}
-                onCancel={handleCloseThanhToan}  />
+                onCancel={handleCloseThanhToan} 
+                 />
+            </div>
+            
+            <div className="row">
+              <h6 className="col-md-4 mt-2">Mã giảm giá:</h6>
+
+            <Space.Compact
+                className="col-md-8"
+            >
+              <Input defaultValue="Mã giảm giá" />
+              <Button className="ms-5" >Áp mã</Button>
+            </Space.Compact>
+            </div>
+            <h6 className="mt-4">Trả sau: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Switch defaultChecked /></h6>
+            <h6 className="mt-4">Giao hàng: &nbsp;&nbsp;&nbsp;<Switch /></h6>
+            <div className="row">
+              <div className="col-md-8">
+
+                <h6 className="mt-4">Tiền hàng: 0</h6>
+                <h6 className="mt-4">Phí vận chuyển: 0</h6>
+                <h6 className="mt-4">Giảm giá: 0</h6>
+                <h6 className="mt-4">Điểm hiện tại: <>{(KH.length > 0) ? `${KH[0].diem}` : 0}</></h6>
+                <h6 className="mt-4">Tổng tiền: 0</h6>
+              </div>
+              <div className="col-md-4">
+            
+                <h6 className="mt-4">VND</h6>
+                
+                <h6 className="mt-4">VND</h6>
+                <h6 className="mt-4 text-danger">VND</h6>
+              </div>
+            </div>
+            <Button className=' mt-2 me-5 bg-success float-end bg-black' type="primary">Xác nhận đặt hàng</Button>
+          </div>
+        </div>
+        </>
+      ) } 
+    </TabPane>
+  ))}
+
+        </Tabs>
+        
+        {(hoaDons.length === 0 || activeKey === 0 || !activeKey) ? (
+          <>
+        <div className="mb-3">
+          <p>Tên khách hàng: <Tag color="#cccccc" className="rounded-pill">Khách lẻ</Tag></p>
+        </div>
+       
+        <h4>Khách hàng</h4>
+        <hr></hr>
+        <div className="container-fluid row">
+          <div className="col-md-7"></div>
+          <div className="col-md-5">
+            <h4 className="fw-bold"><MdOutlineShoppingCartCheckout />Thông tin thanh toán</h4>
+            <div className="row">
+            <h6 className="col-md-3 mt-2">Thanh toán</h6>
+              <Button className="col-md-9" icon={<MdOutlinePayments size={25} onClick={() => setOpenThanhToan(true)} />}></Button>
+              <ModalThanhToan openThanhToan={openThanhToan} setOpenThanhToan={setOpenThanhToan}
+                onOk={handleCloseThanhToan}
+                onCancel={handleCloseThanhToan}
+                 />
             </div>
             
             <div className="row">
@@ -332,6 +626,10 @@ const onEdit = (targetKey, action) => {
             <Button className=' mt-2 me-5 bg-success float-end bg-black' type="primary">Xác nhận đặt hàng</Button>
           </div>
         </div>
+        </>
+      ) : console.error()}
+       
+       
 
       </div>
 

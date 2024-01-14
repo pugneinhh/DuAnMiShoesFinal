@@ -18,7 +18,6 @@ import TableKhachHang from "./tableKhachHang";
 import {  useNavigate } from "react-router-dom";
 
 const ModelUpdateVoucher = (props) => {
-
   const navigate = useNavigate();
   const { id } = useParams("");
   const [selectedValue, setSelectedValue] = useState("Tiền mặt");

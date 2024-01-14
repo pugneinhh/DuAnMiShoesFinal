@@ -12,7 +12,7 @@ const AddModalDiaChi = (props) => {
     const [listProvince, setListProvince] = useState([]);
     const [listDistricts, setListDistricts] = useState([]);
     const [listWard, setListWard] = useState([]);
-    const { openModalAddDiaChi, setOpenModalAddDiaChi } = props;
+    const { openModalAddDiaChi, setOpenModalAddDiaChi,idKH } = props;
     const handleClose = () => {
         setOpenModalAddDiaChi(false);
         console.log("đóng")

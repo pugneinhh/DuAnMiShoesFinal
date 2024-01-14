@@ -45,12 +45,9 @@ export default function SanPham() {
   }, []);
 
   const loadSanPham = async () => {
-    const result = await axios.get("http://localhost:8080/san-pham", {
-      validateStatus: () => {
-        return true;
-      }
-    });
+    const result = await axios.get("http://localhost:8080/san-pham");
       setSanPhams(result.data);
+      console.log(result.data)
   };
 
   const columns = [
@@ -85,12 +82,12 @@ export default function SanPham() {
         render: (trang_thai) => (
           <>
             {trang_thai === 0 ? (
-              <Tag color="red">
+              <Tag color="green">
                 Còn bán
               </Tag>
             ) : (
-              <Tag color="green">
-                Còn bán
+              <Tag color="red">
+                Dừng bán
               </Tag>
             )}
           </>
@@ -147,8 +144,8 @@ export default function SanPham() {
             <div className='col-md-5'>
               <Form.Item label="Trạng Thái">
                 <Select value={selectedValue} onChange={handleChange}>
-                  <Select.Option value="1">Còn Bán</Select.Option>
-                  <Select.Option value="0">Dừng Bán</Select.Option>
+                  <Select.Option value="0">Còn Bán</Select.Option>
+                  <Select.Option value="1">Dừng Bán</Select.Option>
                 </Select>
               </Form.Item>
             </div>
@@ -159,7 +156,7 @@ export default function SanPham() {
         </div>
 
          <div className='text-end'>
-          <a className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill" role="button" href='/them-san-pham'> <PlusCircleOutlined />  Thêm sản phẩm </a>
+          <Link to='/them-san-pham' className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill" role="button"> <PlusCircleOutlined />  Thêm sản phẩm </Link>
         </div>
         <div className=' bg-light m-2 p-3 pt-2' style={{
           border: '1px solid #ddd', // Border color

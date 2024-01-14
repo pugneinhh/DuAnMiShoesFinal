@@ -6,16 +6,25 @@ import moment from 'moment';
 import { Image } from 'cloudinary-react';
 import { toast } from "react-toastify";
 import { EyeOutlined } from "@ant-design/icons";
+import { useDispatch } from "react-redux";
+import { AddClient } from "./reducer/Client.reducer";
 
 const ModalKhachHang = (props) => {
     const { openKhachHang, setOpenKhachHang } = props;
-
-
+    const idHD = props.idHD;
+    const activeKey = props.activeKey;
     const [khachHang, setKhachHangs] = useState([]);
 
     useEffect(() => {
         loadKhachHang();
     }, []);
+    const dispatch = useDispatch()
+
+    const handleClickAddClient = (record) =>{
+        dispatch(AddClient({hoaDon:idHD,activeKey:activeKey,id:record.key,ten:record.tenND,diem:record.diem}))
+        //  result();
+        setOpenKhachHang(false);
+    }
 
     const loadKhachHang = async () => {
         const result = await axios.get("http://localhost:8080/nguoi-dung/khach-hang", {
@@ -78,11 +87,11 @@ const ModalKhachHang = (props) => {
         {
             title: "Hành động",
             key: "action",
-            render: () => (
+            render: (record) => (
                 <Space size="middle">
-                    <a>
-                        <Button type="primary" shape='round' className='bg-success text-white' icon={<EyeOutlined />}>Chọn khách hàng</Button>
-                    </a>
+                
+                        <button type="primary" shape='round' className='btn btn-success text-white' icon={<EyeOutlined />} onClick={() => handleClickAddClient(record)} >Chọn khách hàng</button>
+                
                 </Space>
             ),
 
