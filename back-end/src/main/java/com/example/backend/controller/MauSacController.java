@@ -2,7 +2,7 @@ package com.example.backend.controller;
 
 
 import com.example.backend.dto.request.MauSacRequest;
-import com.example.backend.dto.request.sanphamsearch.SanPhamSearch;
+import com.example.backend.dto.request.sanphamsearch.BangConSearch;
 import com.example.backend.service.MauSacService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +31,8 @@ public class MauSacController {
     }
 
     @PostMapping("/tim-kiem")
-    public ResponseEntity<?> search(@RequestBody SanPhamSearch sanPhamSearch){
-        return ResponseEntity.ok(mauSacService.getTim(sanPhamSearch));
+    public ResponseEntity<?> search(@RequestBody BangConSearch bangConSearch){
+        return ResponseEntity.ok(mauSacService.getTim(bangConSearch));
     }
 
     @PostMapping("/add")

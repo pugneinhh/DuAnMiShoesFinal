@@ -3,6 +3,7 @@ import {
   Button,
   DatePicker,
   Divider,
+  Slider,
   Form,
   Input,
   InputNumber,
@@ -37,6 +38,18 @@ export default function SanPham() {
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
   };
+   //Tìm kiếm
+   const onChangeFilter = (changedValues, allValues) => {
+    console.log("All values : ", allValues)
+    timKiemCT(allValues);
+  }
+  const timKiemCT = (dataSearch) => {
+    axios.post(`http://localhost:8080/san-pham/tim-kiem`, dataSearch)
+      .then(response => {
+        setSanPhams(response.data);
+      })
+      .catch(error => console.error('Error adding item:', error));
+  }
   //Table
   const [sanPham, setSanPhams] = useState([]);
 
@@ -130,27 +143,32 @@ export default function SanPham() {
             initialValues={{
               size: componentSize,
             }}
-            onValuesChange={onFormLayoutChange}
+            onValuesChange={onChangeFilter}
             size={componentSize}
             style={{
               maxWidth: 1400,
             }}
           >
-            <div className="col-md-5">
-              <Form.Item label="Tên & Mã">
+            <div className="col-md-4">
+              <Form.Item label="Tên & Mã" name="ten">
                 <Input className='rounded-pill border-warning' placeholder='Nhập tên hoặc mã' />
               </Form.Item>
             </div>
-            <div className='col-md-5'>
-              <Form.Item label="Trạng Thái">
+            <div className='col-md-4'>
+              <Form.Item placeholder="Chọn trạng thái"  label="Trạng Thái" name="trangThai">
                 <Select value={selectedValue} onChange={handleChange}>
                   <Select.Option value="0">Còn Bán</Select.Option>
                   <Select.Option value="1">Dừng Bán</Select.Option>
                 </Select>
               </Form.Item>
             </div>
-            <Form.Item className='text-center'>
-              <Button type="primary" htmlType='reset'>Làm mới</Button>
+            <div className='col-md-4'>
+                <Form.Item label="Số lượng" name="soLuong">
+                  <Slider style={{ width: '400px' }} defaultValue={1000} min={1} />
+                </Form.Item>
+              </div>
+            <Form.Item className='text-center' style={{ paddingLeft: 360 }}>
+              <Button type="primary" htmlType='reset' onClick={loadSanPham}>Làm mới</Button>
             </Form.Item>
           </Form>
         </div>

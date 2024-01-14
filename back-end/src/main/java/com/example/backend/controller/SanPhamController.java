@@ -1,6 +1,8 @@
 package com.example.backend.controller;
 
 
+import com.example.backend.dto.request.sanphamsearch.BangConSearch;
+import com.example.backend.dto.request.sanphamsearch.SanPhamSearch;
 import com.example.backend.entity.SanPham;
 import com.example.backend.service.SanPhamService;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +38,12 @@ public class SanPhamController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PostMapping("/tim-kiem")
+    public ResponseEntity<?> search(@RequestBody SanPhamSearch sanPhamSearch){
+        return ResponseEntity.ok(sanPhamService.getTim(sanPhamSearch));
+    }
+
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody SanPham v){
         int spThem = sanPhamService.getALL().size();
