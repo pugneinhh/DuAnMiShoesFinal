@@ -17,7 +17,33 @@ const AddModalDiaChi = (props) => {
         setOpenModalAddDiaChi(false);
         console.log("đóng")
     };
-
+   
+    const handleSubmit = (value) => {
+        console.log(value);
+        const data={
+            ...value,
+            idThanhPho: province.key == null ? province.ProvinceID : province.key,
+            idHuyen: district.key == null ? district.DistrictID : district.key,
+            idXa: ward.key == null ? ward.WardCode : ward.key,
+        };
+        axios
+        .post("http://localhost:8080/admin/khach-hang/add-dia-chi", data)
+        .then((response) => {
+            console.log(response.data);
+            // navigate('/voucher');
+            toast("✔️ Thêm thành công!", {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+            form.resetFields();
+        })
+    };
     const loadDataProvince = () => {
         AddressApi.fetchAllProvince().then((res) => {
             setListProvince(res.data.data);
@@ -53,6 +79,7 @@ const AddModalDiaChi = (props) => {
     };
 
     useEffect(() => {
+        form.setFieldsValue({idNguoiDung:idKH});
         loadDataProvince();
     }, []);
 
@@ -63,7 +90,21 @@ const AddModalDiaChi = (props) => {
             title="Thêm địa chỉ"
             centered
             open={openModalAddDiaChi}
-            onOk={handleClose}
+            onOk={() => {
+                Modal.confirm({
+                  title: "Thông báo",
+                  content: "Bạn có chắc chắn muốn thêm không?",
+                  onOk: () => {
+                    form.submit();
+                  },
+                  footer: (_, { OkBtn, CancelBtn }) => (
+                    <>
+                      <CancelBtn />
+                      <OkBtn />
+                    </>
+                  ),
+                });
+              }}
             onCancel={handleClose}
 
             // footer={
@@ -71,10 +112,11 @@ const AddModalDiaChi = (props) => {
             // }
             width={600}
         >
-            <Form form={form} layout="vertical">
+            <Form form={form} onFinish={handleSubmit} layout="vertical">
+                <Form.Item name="idNguoiDung" hidden></Form.Item>
 
                 <Form.Item
-                    name="ten"
+                    name="tenNguoiNhan"
                     label="Họ và tên"
                     tooltip="Họ tên đầy đủ của bạn là gì?"
 

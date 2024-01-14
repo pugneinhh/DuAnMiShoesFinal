@@ -16,8 +16,7 @@ const TableNguoiDungVoucher=(props)=>{
               
             });
             
-              setKhachHangs(result.data);
-             
+              setKhachHangs(result.data); 
           };
           loadKhachHang();
       }, []);

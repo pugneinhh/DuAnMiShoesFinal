@@ -1,43 +1,43 @@
-
 import { Button, DatePicker, Form, Input, InputNumber, Modal, Popconfirm, Select, Space, Switch, Table, Tag } from "antd";
 import axios from "axios";
-import { useEffect, useState } from "react";
-import moment from 'moment';
-import { KhachHangAPI } from "../api/user/khachHang.api";
-import { toast } from "react-toastify";
-import { EyeOutlined } from "@ant-design/icons";
-
+import React, { useState, useEffect } from "react";
 import AddModalDiaChi from "./AddModalDiaChi";
 const ModalDiaChi = (props) => {
     const { openModalDiaChi, setOpenModalDiaChi,idKH } = props;
     const handleClose = () => {
+        setData([]);
         setOpenModalDiaChi(false);
+        const loadDiaChi = async () => {
+            console.log("heheheh");
+            const result = await axios.get(`http://localhost:8080/admin/khach-hang/dia-chi/${idKH}`, {
+              
+            });
+                console.log("dc",result.data);
+              setData(result.data);  
+          };
+          loadDiaChi();
         console.log("đóng")
     };
+    
     const [openModalAddDiaChi, setOpenModalAddDiaChi] = useState(false);
     const handleCloseAddMoDalDiaChi = () => {
         setOpenModalAddDiaChi(false);
     }
     console.log("idkh",idKH);
     const [data, setData] = useState([]);
-    const loadData = () => {
-        console.log("diachir")
-        KhachHangAPI.getAddressByUser(idKH)
-            .then((res) => {
-                // dispatch(SetEmployee(res.data.data));
-                console.log("detail",res.data.data);
-                setData(res.data.data);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    };
 
     useEffect(() => {
-        loadData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-   console.log("diachine",data);
+        const loadDiaChi = async () => {
+            console.log("heheheh");
+            const result = await axios.get(`http://localhost:8080/admin/khach-hang/dia-chi/${idKH}`, {
+              
+            });
+                console.log("dc",idKH);
+              setData(result.data);  
+          };
+          loadDiaChi();
+      }, []);
+
 
     return (
         <Modal
@@ -46,7 +46,7 @@ const ModalDiaChi = (props) => {
             open={openModalDiaChi}
             onOk={handleClose}
             onCancel={handleClose}
-
+            
             // footer={
             //     <button onClick={handleClose}>Hủy</button>
             // }
