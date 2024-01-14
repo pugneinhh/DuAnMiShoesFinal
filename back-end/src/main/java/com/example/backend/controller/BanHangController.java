@@ -3,17 +3,22 @@ package com.example.backend.controller;
 import com.example.backend.dto.request.HoaDonChiTietRequest;
 import com.example.backend.dto.request.HoaDonRequest;
 import com.example.backend.dto.response.ChiTietSanPhamRespone;
+import com.example.backend.entity.ChiTietSanPham;
 import com.example.backend.model.AdminBanHangHDRespon;
+import com.example.backend.repository.CTSPRepository;
 import com.example.backend.service.BanHangService;
 import com.example.backend.service.HoaDonChiTietService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
 
 @CrossOrigin("http://localhost:3000/")
 @RestController
@@ -24,6 +29,8 @@ public class BanHangController {
     BanHangService banHangService;
     @Autowired
     HoaDonChiTietService hoaDonChiTietService;
+    @Autowired
+    CTSPRepository ctspRepository;
 
     @GetMapping("/getALLCTSP")
     public ResponseEntity<?> getALLctsp(){
@@ -32,12 +39,23 @@ public class BanHangController {
     }
     @PostMapping("/add-hoa-don")
     public  ResponseEntity<?> addHD(@RequestBody HoaDonRequest hoaDonRequest){
-
+        hoaDonRequest.setMa("HDTQ"+ RandomStringUtils.randomNumeric(6));
+        hoaDonRequest.setLoaiHoaDon(0);
         return  ResponseEntity.ok(banHangService.addHoaDon(hoaDonRequest));
     }
     @PostMapping("/addHDCT")
     public ResponseEntity<?> addHDCT(@RequestBody HoaDonChiTietRequest request){
+        String idCTSP= request.getIdSP();
+        ChiTietSanPham ctsp=ctspRepository.findById(idCTSP).get();
+        ctsp.setSoLuong(ctsp.getSoLuong()- request.getSoLuong());
+        ctspRepository.save(ctsp);
         return ResponseEntity.ok(hoaDonChiTietService.addHDCT(request));
+    }
+    @PostMapping("/thanh-toan")
+    public ResponseEntity<?> thanhToan(@RequestBody HoaDonRequest hoaDonRequest){
+        hoaDonRequest.setTrangThai(1);
+        hoaDonRequest.setNgayMua(LocalDateTime.now());
+        return ResponseEntity.ok(banHangService.addHoaDon(hoaDonRequest));
     }
     @GetMapping("/hien-thi-hdct/{id}")
     public ResponseEntity<?> getHDCTByHD(@PathVariable("id") String id){
