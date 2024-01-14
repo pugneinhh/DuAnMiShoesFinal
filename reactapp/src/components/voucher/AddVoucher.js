@@ -36,14 +36,16 @@ const AddVoucher = () => {
     axios
       .post("http://localhost:8080/voucher/add", value)
       .then((response) => {
+        if(selectedIDKH.length>0){
         Promise.all(
           selectedIDKH.map((id) =>
             axios.post(
               `http://localhost:8080/nguoi-dung-voucher/add/${id}`,
               response.data
             )
-          )
+          ) 
         );
+      }
         console.log(response.data);
         navigate('/voucher');
         toast("✔️ Thêm thành công!", {
