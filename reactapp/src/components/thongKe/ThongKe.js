@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { Pie } from '@ant-design/plots';
-import { Divider } from 'antd';
+import { Card, Divider, Table } from 'antd';
 import { RxDashboard } from 'react-icons/rx';
 import { Line } from '@ant-design/plots';
 
 import axios from 'axios';
+import { json } from 'react-router-dom';
+import { FireOutlined, LineChartOutlined, PieChartOutlined } from '@ant-design/icons';
+import { FaMoneyBillTrendUp } from 'react-icons/fa6';
+import { RiMoneyDollarCircleFill } from 'react-icons/ri';
+import { BiSolidHot } from 'react-icons/bi';
+import { FaChartLine, FaChartPie } from 'react-icons/fa';
 
 export default function ThongKe() {
     useEffect(() => {
-      loadThongKeTheoNgay();
+        loadThongKeTheoNgay();
         loadThongKeTheoThang();
         loadThongKeTheoNam();
     }, []);
@@ -57,27 +63,27 @@ export default function ThongKe() {
 
     const data = [
         {
-            type: '分类一',
+            type: 'Nike',
             value: 27,
         },
         {
-            type: '分类二',
+            type: 'Adidas',
             value: 25,
         },
         {
-            type: '分类三',
+            type: 'Rebook',
             value: 18,
         },
         {
-            type: '分类四',
+            type: 'Puma',
             value: 15,
         },
         {
-            type: '分类五',
+            type: 'Vans',
             value: 10,
         },
         {
-            type: '其他',
+            type: 'Converse',
             value: 5,
         },
     ];
@@ -86,49 +92,118 @@ export default function ThongKe() {
         data,
         angleField: 'value',
         colorField: 'type',
-        radius: 0.9,
+        radius: 1,
+        innerRadius: 0.6,
         label: {
-            type: 'inner',
-            offset: '-30%',
-            content: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
-            style: {
-                fontSize: 14,
-                textAlign: 'center',
-            },
+          type: 'inner',
+          offset: '-50%',
+          content: '{value}',
+          style: {
+            textAlign: 'center',
+            fontSize: 14,
+          },
         },
         interactions: [
-            {
-                type: 'element-active',
-            },
+          {
+            type: 'element-selected',
+          },
+          {
+            type: 'element-active',
+          },
         ],
+        statistic: {
+          title: false,
+          content: {
+            style: {
+              whiteSpace: 'pre-wrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            },
+            content: '<h5>Số lượng bán</h5>',
+          },
+        },
     };
 
     // Biểu đồ đường
-    const [dataDuong, setDataDuong] = useState([]);
+    const dataDuong = [
+        {
+            "Date": "2010-01",
+            "scales": 1998
+        },
+        {
+            "Date": "2010-02",
+            "scales": 1850
+        },
+        {
+            "Date": "2010-03",
+            "scales": 1720
+        },
+        {
+            "Date": "2010-04",
+            "scales": 1818
+        },
+        {
+            "Date": "2010-05",
+            "scales": 1920
+        },
+        {
+            "Date": "2010-06",
+            "scales": 1802
+        },
+        {
+            "Date": "2010-07",
+            "scales": 1945
+        },
+        {
+            "Date": "2010-08",
+            "scales": 1856
+        },
+        {
+            "Date": "2010-09",
+            "scales": 2107
+        },
+        {
+            "Date": "2010-10",
+            "scales": 2140
+        },
+    ];
 
-    useEffect(() => {
-      asyncFetch();
-    }, []);
-  
-    const asyncFetch = () => {
-      fetch('https://gw.alipayobjects.com/os/bmw-prod/1d565782-dde4-4bb6-8946-ea6a38ccf184.json')
-        .then((response) => response.json())
-        .then((json) => setData(json))
-        .catch((error) => {
-          console.log('fetch data failed', error);
-        });
-    };
     const configDuong = {
-      data,
-      padding: 'auto',
-      xField: 'Date',
-      yField: 'scales',
-      xAxis: {
-        tickCount: 5,
-      },
+        data: dataDuong,
+        padding: 'auto',
+        xField: 'Date',
+        yField: 'scales',
+        xAxis: {
+            tickCount: 5,
+        },
     };
 
-    return(
+    const columns = [
+        {
+          title: "STT",
+          dataIndex: "stt",
+          key: "id",
+        },
+        {
+          title: "Hình ảnh",
+          dataIndex: "hinhanh",
+        }, ,
+        {
+          title: "Tên sản phẩm",
+          dataIndex: "ten",
+        },
+        {
+          title: "Số lượng bán",
+          dataIndex: "ma",
+        },
+        {
+          title: "Tình trạng",
+          dataIndex: "tinhtrang",
+          key: "trangThai",     
+        }
+      ]
+
+    return (
         <div className='container-fluid'>
             <Divider orientation="center" color="#d0aa73"><h4 className="text-first pt-1 fw-bold"> <RxDashboard size={35} /> Quản lý thống kê</h4></Divider>
             {/* bảng thống kê */}
@@ -140,7 +215,7 @@ export default function ThongKe() {
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2 pr-2 ">
                                     <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                        <h5 style={{ color: '#8f562e' }}>Doanh số hôm nay</h5></div>
+                                        <h5 style={{ color: '#8f562e' }}><RiMoneyDollarCircleFill size={35} style={{marginBottom : 7}}/> Doanh số hôm nay</h5></div>
                                     <div class="h6 mb-0 font-weight-bold text-gray-800">{hoaDonTheoNgay} đơn hàng / {tienTheoNgay} VND</div>
                                 </div>
 
@@ -156,7 +231,7 @@ export default function ThongKe() {
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                        <h5 style={{ color: '#8f562e' }}>Doanh số theo tháng</h5>
+                                        <h5 style={{ color: '#8f562e' }}><RiMoneyDollarCircleFill size={35} style={{marginBottom : 7}}/> Doanh số theo tháng</h5>
                                     </div>
                                     <div class="row no-gutters align-items-center">
                                         <div class="col-auto">
@@ -174,25 +249,33 @@ export default function ThongKe() {
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                        <h5 style={{ color: '#8f562e' }}> Doanh số theo năm</h5></div>
+                                        <h5 style={{ color: '#8f562e' }}><RiMoneyDollarCircleFill size={35} style={{marginBottom : 7}}/>  Doanh số theo năm</h5></div>
                                     <div class="h6 mb-0 font-weight-bold text-gray-800">{hoaDonTheoNam} đơn hàng / {tienTheoNam} VND</div>
                                 </div>
-                             
+
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* biểu đồ tròn */}
-            <div className='col-md-4'>
-                <Pie {...config} />
+            <div className='row mt-4'>
+                {/* biểu đồ tròn */}
+                <Card title={<><h5><FaChartPie size={30}/> Biểu đồ tròn</h5></>} className='col-md-4 ms-4 border-left-primary shadow h-100 py-2'>
+                    <Pie {...config} />
 
-            </div>
-            <div className='col-md-4'>
-                <Line {...configDuong} />
+                </Card>
+                <Card title={<><h5><FaChartLine size={30}/> Biểu đồ đường</h5></>} className='col-md-7 ms-5 border-left-primary shadow h-100 py-2'>
+                    <Line {...configDuong} />
 
+                </Card>
             </div>
+
+             <div className='mt-4'>
+             <Card title={<><h5><BiSolidHot color='red' size={30}/> Sản Phẩm Bán Chạy</h5></>} className='border-left-primary shadow h-100 py-2'>
+                <Table columns={columns}></Table>
+                </Card>           
+             </div>
         </div>
     )
 }
