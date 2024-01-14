@@ -68,8 +68,8 @@ public class KhachHangService {
        diaChi.setIdThanhPho(request.getIdThanhPho());
        diaChi.setIdHuyen(request.getIdHuyen());
        diaChi.setIdXa(request.getIdXa());
-//       diaChi.setTenNguoiNhan(request.getTen());
-//       diaChi.setSoDienThoai(request.getSoDienThoai());
+       diaChi.setTenNguoiNhan(request.getTen());
+       diaChi.setSoDienThoai(request.getSoDienThoai());
        diaChi.setNguoiDung(add);
        diaChi.setTrangThai(0);
        diaChiRepository.save(diaChi);
