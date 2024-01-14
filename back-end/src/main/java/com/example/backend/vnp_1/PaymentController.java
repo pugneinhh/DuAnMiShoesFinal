@@ -27,10 +27,10 @@ public class PaymentController {
     @Autowired
     PayService payService;
 
-    @GetMapping("/chuyen-khoan")
-    public ResponseEntity<?> createPayment() throws UnsupportedEncodingException {
+    @GetMapping("/chuyen-khoan/{total}")
+    public ResponseEntity<?> createPayment(@PathVariable("total")String total) throws UnsupportedEncodingException {
 
-        long amount = 1000000;
+        int amount = Integer.parseInt(total) * 100;
         String vnp_TxnRef = Config.getRandomNumber(8);
         String vnp_TmnCode = Config.vnp_TmnCode;
         Map<String, String> vnp_Params = new HashMap<>();

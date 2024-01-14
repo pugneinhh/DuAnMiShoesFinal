@@ -68,8 +68,8 @@ public interface CTSPRepository extends JpaRepository<ChiTietSanPham, String> {
              JOIN duanmishoes.san_pham sp  on o.san_pham_id=sp.id
              JOIN duanmishoes.kich_thuoc kt  on o.kich_thuoc_id=kt.id
              JOIN duanmishoes.mau_sac ms  on o.mau_sac_id=ms.id
-             JOIN duanmishoes.hinh_anh ha on o.id=ha.chi_tiet_san_pham_id   \s
-             where o.trang_thai =1
+             JOIN duanmishoes.hinh_anh ha on o.id=ha.chi_tiet_san_pham_id 
+             where o.trang_thai =0
              group by o.id
             """, nativeQuery = true)
     List<ChiTietSanPhamRespone> getALLCTSPBanHang();
