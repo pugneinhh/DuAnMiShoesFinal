@@ -300,6 +300,7 @@ export default function KhachHang() {
         <ModalDiaChi openModalDiaChi={openModalDiaChi}
           setOpenModalDiaChi={setOpenModalDiaChi}
           idKH={idKH}
+          setIdKH={setIdKH}
         />
         <ToastContainer
           position="top-right"

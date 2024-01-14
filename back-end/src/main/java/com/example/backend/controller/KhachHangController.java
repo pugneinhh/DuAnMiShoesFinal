@@ -30,6 +30,7 @@ public class KhachHangController {
     }
     @PostMapping("/add-dia-chi")
     public ResponseEntity<?> addDiaChi(@RequestBody DiaChiRequest request){
+        request.setTrangThai(1);
         return ResponseEntity.ok(khachHangService.addDiaChi(request));
     }
     @PostMapping()
