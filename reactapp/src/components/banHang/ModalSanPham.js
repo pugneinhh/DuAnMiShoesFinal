@@ -38,9 +38,8 @@ import { AddProduct, productAction } from "./reducer/Product.reducer";
 
 const ModalSanPham = (props) => {
   const { openSanPham, setOpenSanPham } = props;
-  const idHD = props.idHD;
+ // const idHD = props.idHD;
   const activeKey = props.activeKey;
-  console.log(idHD);
   console.log(activeKey);
   const handleClose = () => {
     setOpenSanPham(false);
@@ -173,7 +172,7 @@ const ModalSanPham = (props) => {
     //    console.log(res.data)
     //     )
     // }
-    dispatch(AddProduct({hoaDon:idHD,chiTietSanPham:record.idCTSP,tenSP:record.tenSP,mauSac:record.maMS,linkAnh : record.linkAnh,kichThuoc:record.tenKT,giaBan: record.giaBan,activeKey:activeKey}))
+    dispatch(AddProduct({chiTietSanPham:record.idCTSP,tenSP:record.tenSP,mauSac:record.maMS,linkAnh : record.linkAnh,kichThuoc:record.tenKT,giaBan: record.giaBan,activeKey:activeKey}))
   //  result();
     setOpenSanPham(false);
   };

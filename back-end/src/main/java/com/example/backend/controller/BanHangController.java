@@ -8,11 +8,13 @@ import com.example.backend.service.BanHangService;
 import com.example.backend.service.HoaDonChiTietService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @CrossOrigin("http://localhost:3000/")
@@ -32,7 +34,10 @@ public class BanHangController {
     }
     @PostMapping("/add-hoa-don")
     public  ResponseEntity<?> addHD(@RequestBody HoaDonRequest hoaDonRequest){
-
+        System.out.println("Hóa đơn requết"+hoaDonRequest);
+        hoaDonRequest.setMa("HDTQ"+ RandomStringUtils.randomNumeric(6));
+        hoaDonRequest.setLoaiHoaDon(0);
+        hoaDonRequest.setNgayTao(LocalDateTime.now());
         return  ResponseEntity.ok(banHangService.addHoaDon(hoaDonRequest));
     }
     @PostMapping("/addHDCT")

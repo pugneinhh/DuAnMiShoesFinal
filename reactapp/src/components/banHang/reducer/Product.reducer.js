@@ -33,7 +33,7 @@ const productSlice=createSlice({
                 // giaGiam : data.giaGiam,
                 // trangThai : data.trangThai,
                 // giaSauGiam : data.giaSauGiam,
-                hoaDon : data.hoaDon,
+               // hoaDon : data.hoaDon,
                 chiTietSanPham : data.chiTietSanPham,
                 // nguoiTao: data.nguoiTao,
                 // nguoiSua : data.nguoiSua,
