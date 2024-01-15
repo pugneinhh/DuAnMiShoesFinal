@@ -1,6 +1,10 @@
 package com.example.backend.vnp_1;
 
 
+import com.example.backend.dto.request.ThanhToanRequest;
+import com.example.backend.entity.HoaDon;
+import com.example.backend.repository.HoaDonRepository;
+import com.example.backend.service.ThanhToanService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,9 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -26,10 +32,17 @@ public class PaymentController {
 
     @Autowired
     PayService payService;
-
-    @GetMapping("/chuyen-khoan/{maHD}/{total}")
-    public ResponseEntity<?> createPayment(@PathVariable("maHD") String maHD
+    @Autowired
+    HoaDonRepository hoaDonRepository;
+    @Autowired
+    ThanhToanService thanhToanService;
+    @GetMapping("/chuyen-khoan/{idHD}/{total}")
+    public ResponseEntity<?> createPayment(@PathVariable("idHD") String idHD
             ,@PathVariable("total")String total) throws UnsupportedEncodingException {
+        HoaDon hoaDon=hoaDonRepository.findById(idHD).get();
+        hoaDon.setTrangThai(4);
+        hoaDon.setNgayMua(LocalDateTime.now());
+        hoaDonRepository.save(hoaDon);
 
         int amount = Integer.parseInt(total) * 100;
         String vnp_TxnRef = Config.getRandomNumber(8);
@@ -42,7 +55,7 @@ public class PaymentController {
         vnp_Params.put("vnp_CurrCode", "VND");
         vnp_Params.put("vnp_BankCode", "NCB");
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
-        vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang:" +maHD+" - "+ vnp_TxnRef);
+        vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang:" +hoaDon.getMa()+" - "+ vnp_TxnRef);
         vnp_Params.put("vnp_ReturnUrl", "http://localhost:3000");
         vnp_Params.put("vnp_IpAddr", Config.vnp_IpAddr);
         vnp_Params.put("vnp_OrderType", Config.orderType);
@@ -88,6 +101,13 @@ public class PaymentController {
         paymentResDTO.setStatus("0k");
         paymentResDTO.setMessage("success");
         paymentResDTO.setURL(paymentUrl);
+        ThanhToanRequest request=new ThanhToanRequest();
+        request.setHoaDon(idHD);
+        request.setChuyenKhoan(BigDecimal.valueOf(amount));
+        request.setPhuongThuc(1);
+        request.setNgayTao(LocalDateTime.now());
+        request.setPhuongThucVnp(vnp_TxnRef);
+        thanhToanService.thanhToan(request);
         return ResponseEntity.status(HttpStatus.OK).body(paymentResDTO);
     }
 
