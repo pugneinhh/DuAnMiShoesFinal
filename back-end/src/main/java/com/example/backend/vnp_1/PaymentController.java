@@ -27,8 +27,9 @@ public class PaymentController {
     @Autowired
     PayService payService;
 
-    @GetMapping("/chuyen-khoan/{total}")
-    public ResponseEntity<?> createPayment(@PathVariable("total")String total) throws UnsupportedEncodingException {
+    @GetMapping("/chuyen-khoan/{maHD}/{total}")
+    public ResponseEntity<?> createPayment(@PathVariable("maHD") String maHD
+            ,@PathVariable("total")String total) throws UnsupportedEncodingException {
 
         int amount = Integer.parseInt(total) * 100;
         String vnp_TxnRef = Config.getRandomNumber(8);
@@ -41,7 +42,7 @@ public class PaymentController {
         vnp_Params.put("vnp_CurrCode", "VND");
         vnp_Params.put("vnp_BankCode", "NCB");
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
-        vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang:" + vnp_TxnRef);
+        vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang:" +maHD+" - "+ vnp_TxnRef);
         vnp_Params.put("vnp_ReturnUrl", "http://localhost:3000");
         vnp_Params.put("vnp_IpAddr", Config.vnp_IpAddr);
         vnp_Params.put("vnp_OrderType", Config.orderType);
