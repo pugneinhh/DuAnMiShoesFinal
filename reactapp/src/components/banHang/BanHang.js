@@ -13,17 +13,19 @@ import ModalKhachHang from "./ModalKhachHang";
 import { createInvoice,removeInvoice } from "./redux/Cartaction";
 import {useDispatch,useSelector} from 'react-redux';
 import {v4 as uuid} from 'uuid';
-import { CreateBill, GetBill, RemoveBill } from "./reducer/Bill.reducer";
+import { CreateBill, GetBill, GetBillByKey, RemoveBill } from "./reducer/Bill.reducer";
 import NhanVien from "../nhanVien/NhanVien";
 import { GetProduct, UpdateProduct } from "./reducer/Product.reducer";
 import { Image } from "cloudinary-react";
 import { GetClient } from "./reducer/Client.reducer";
+import moment from "moment";
 
 // import { getHoaDons } from "./redux/selector";
 const {TabPane}=Tabs;
 const BanHang = () => {
   
   const [activeKey, setActiveKey] = useState(0);
+  const [selectedTabID,setSelectedTabID] = useState("");
   // const newTabIndex = useRef(0);
   // const demTab = useRef(0);
   const initState=useRef(1);
@@ -44,6 +46,28 @@ const BanHang = () => {
       // update số lượng vào reducer
       dispatch(UpdateProduct({soLuong : value,chiTietSanPham: record.chiTietSanPham, activeKey : activeKey }));
   }
+
+// api add bill
+ const handleAddBill = (value) =>{
+  const data = hoaDons.filter((item) => item.key === value);
+  console.log("Object ",data[0]);
+  const addHD = async() => {
+    await axios.post(`http://localhost:8080/ban-hang/add-hoa-don`,data[0]);
+  }
+  addHD();
+  setOpenThanhToan(true)
+ }
+
+ const handleAddCTSP = (value) => {
+  axios.post(`http://localhost:8080/ban-hang/addHDCT`,value);
+ }
+
+ const handleThanhToan = (value) => {
+
+ }
+
+
+// end 
 
   const handleCloseSanPham = () => {
     setOpenSanPham(false);
@@ -191,7 +215,9 @@ const onEdit = (targetKey, action) => {
       dataIndex: "soLuong",
       key: "soLuong",
       render : (text,record) =>(
-        <InputNumber min={1} value={record.soLuong} onChange={(value) =>onChangeSoLuong(value,record)} />
+        <InputNumber min={1} value={record.soLuong} 
+        onChange={(value) =>onChangeSoLuong(value,record)} 
+        />
        
         )
       
@@ -336,7 +362,7 @@ const onEdit = (targetKey, action) => {
               <Button type="primary" icon={<BsQrCodeScan />} onClick={() => setOpenScan(true)}>Quét QR sản phẩm</Button>
               <Button type="primary" className="ms-3" onClick={() => setOpenSanPham(true)}>Chọn sản phẩm</Button>
               <ModalSanPham
-                idHD = {tab.id}
+               // idHD = {tab.id}
                 activeKey = {activeKey}
                 openSanPham={openSanPham}
                 setOpenSanPham={setOpenSanPham}
@@ -402,8 +428,12 @@ const onEdit = (targetKey, action) => {
             <h4 className="fw-bold"><MdOutlineShoppingCartCheckout />Thông tin thanh toán</h4>
             <div className="row">
             <h6 className="col-md-3 mt-2">Thanh toán</h6>
-              <Button className="col-md-9" icon={<MdOutlinePayments size={25} onClick={() => setOpenThanhToan(true)} />}></Button>
-              <ModalThanhToan openThanhToan={openThanhToan} setOpenThanhToan={setOpenThanhToan}
+              <Button className="col-md-9" icon={<MdOutlinePayments size={25} onClick ={ () => {
+                //handleAddBill(dispatch(GetBillByKey({activeKey})))} 
+                handleAddBill(activeKey)}
+                } />}></Button>
+              <ModalThanhToan openThanhToan={openThanhToan}       
+              setOpenThanhToan={setOpenThanhToan}
                 onOk={handleCloseThanhToan}
                 onCancel={handleCloseThanhToan} 
                 total = {data.reduce((accumulator,currentProduct) =>{
@@ -459,7 +489,7 @@ const onEdit = (targetKey, action) => {
               <Button type="primary" icon={<BsQrCodeScan />} onClick={() => setOpenScan(true)}>Quét QR sản phẩm</Button>
               <Button type="primary" className="ms-3" onClick={() => setOpenSanPham(true)}>Chọn sản phẩm</Button>
               <ModalSanPham
-                idHD = {tab.id}
+               // idHD = {tab.id}
                 activeKey = {activeKey}
                 openSanPham={openSanPham}
                 setOpenSanPham={setOpenSanPham}
@@ -494,7 +524,7 @@ const onEdit = (targetKey, action) => {
                 Chọn tài khoản
               </Button>
               <ModalKhachHang openKhachHang={openKhachHang} 
-                        idHD = {tab.id}
+                       // idHD = {tab.id}
                         activeKey = {activeKey}
                 setOpenKhachHang={setOpenKhachHang}
                 onOk={handleCloseKhachHang}

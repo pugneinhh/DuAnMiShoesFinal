@@ -8,10 +8,11 @@ import { toast } from "react-toastify";
 import { EyeOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
 import { AddClient } from "./reducer/Client.reducer";
+import { UpdateBill, UpdateKHToBill } from "./reducer/Bill.reducer";
 
 const ModalKhachHang = (props) => {
     const { openKhachHang, setOpenKhachHang } = props;
-    const idHD = props.idHD;
+   // const idHD = props.idHD;
     const activeKey = props.activeKey;
     const [khachHang, setKhachHangs] = useState([]);
 
@@ -21,7 +22,15 @@ const ModalKhachHang = (props) => {
     const dispatch = useDispatch()
 
     const handleClickAddClient = (record) =>{
-        dispatch(AddClient({hoaDon:idHD,activeKey:activeKey,id:record.key,ten:record.tenND,diem:record.diem}))
+        dispatch(AddClient({activeKey:activeKey,id:record.idND,ten:record.tenND,diem:record.diem}))
+        console.log("ID",record.idND);    
+        console.log("Diem",record.diem);    
+
+        console.log("ten",record.tenND);    
+
+        console.log("ID from ",khachHang[0].id)
+
+        dispatch(UpdateKHToBill({key:activeKey,nguoiDung:record.idND,diemSuDung:record.diem}))
         //  result();
         setOpenKhachHang(false);
     }
@@ -32,6 +41,8 @@ const ModalKhachHang = (props) => {
                 return true;
             }
         });
+        console.log(result.data);
+        console.log(result);
         setKhachHangs(result.data);
     };
     const handleClose = () => {
@@ -41,8 +52,8 @@ const ModalKhachHang = (props) => {
     const columns = [
         {
             title: "STT",
-            dataIndex: "id",
-            key: "id",
+            dataIndex: "idND",
+            key: "idND",
             render: (id, record, index) => {
                 ++index;
                 return index;

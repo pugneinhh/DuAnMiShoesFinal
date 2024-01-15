@@ -39,8 +39,12 @@ public class BanHangController {
     }
     @PostMapping("/add-hoa-don")
     public  ResponseEntity<?> addHD(@RequestBody HoaDonRequest hoaDonRequest){
+
+        System.out.println("Hóa đơn requết"+hoaDonRequest);
         hoaDonRequest.setMa("HDTQ"+ RandomStringUtils.randomNumeric(6));
         hoaDonRequest.setLoaiHoaDon(0);
+        hoaDonRequest.setNgayTao(LocalDateTime.now());
+
         return  ResponseEntity.ok(banHangService.addHoaDon(hoaDonRequest));
     }
     @PostMapping("/addHDCT")

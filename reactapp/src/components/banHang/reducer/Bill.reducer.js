@@ -4,6 +4,8 @@ import {
 import {
     v4 as uuid
 } from 'uuid';
+import moment from "moment";
+
 const initialState = [];
 const billSlice = createSlice({
     name: "bill",
@@ -16,11 +18,11 @@ const billSlice = createSlice({
             const data = action.payload;
             const newBill = {
                 stt: state.length + 1,
-                id: uuid(),
+              //  id: uuid(),
                 ma: data.ma,
                 trangThai: 0,
                 key: data.key,
-                ngayTao: new Date().getTime(),
+                //ngayTao: moment(new Date().getTime()).format("YYYY-MM-DD HH:mm:ss"),
                 loaiHoaDon: 0,
                 nhanVien: data.nhanVien,
                 nguoiDung: data.nguoiDung,
@@ -50,7 +52,7 @@ const billSlice = createSlice({
         },
         UpdateBill: (state, action) => {
             const updatedBill = action.payload; // backend
-            const index = state.findIndex((period) => period.id === updatedBill.id);
+            const index = state.findIndex((period) => period.key === updatedBill.key);
             console.log(index);
             if (index !== -1) {
                 state[index].ma = updatedBill.name;
@@ -79,9 +81,28 @@ const billSlice = createSlice({
         RemoveBill:(state, action)=>{
            return state.filter((item)=>item.key!==action.payload.key)
         },
+        GetBillByKey:(state,action) => {
+            const data = action.payload;
+            console.log("data",data.activeKey)
+            const index = state.findIndex((period) => period.key === data.activeKey);
+            console.log("index",index);
+
+            
+            return state[index];
+        },
+        UpdateKHToBill:(state,action)=>{
+            const updatedBill = action.payload; // backend
+            const index = state.findIndex((period) => period.key === updatedBill.key);
+            console.log(index);
+            console.log(updatedBill.nguoiDung);
+            if (index !== -1) {
+                state[index].nguoiDung = updatedBill.nguoiDung;
+                state[index].diemSuDung = updatedBill.diemSuDung;
+            }
+        }
     },
 });
 
-export const { SetBill, CreateBill, UpdateBill,RemoveBill } = billSlice.actions;
+export const { SetBill, CreateBill, UpdateBill,RemoveBill ,GetBillByKey , UpdateKHToBill} = billSlice.actions;
 export default billSlice.reducer;
 export const GetBill =(state)=>state.bill;

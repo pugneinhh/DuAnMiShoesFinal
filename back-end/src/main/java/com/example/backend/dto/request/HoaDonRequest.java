@@ -10,15 +10,16 @@ import lombok.ToString;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
 @ToString
 public class HoaDonRequest {
-    String id;
+   // String id;
     String ma;
     String nhanVien;
-    String khachHang;
+    String nguoiDung;
     LocalDateTime ngayMua;
     BigDecimal giaGoc;
     BigDecimal giaGiamGia;
@@ -40,9 +41,12 @@ public class HoaDonRequest {
     LocalDateTime ngayTao;
     LocalDateTime ngaySua;
     int trangThai;
+    int  key;
+    int stt;
 
     public HoaDon map(HoaDon hoaDon) {
-        hoaDon.setId(this.id);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+      //  hoaDon.setId(this.id);
         hoaDon.setMa(this.ma);
         hoaDon.setNhanVien(this.nhanVien);
         hoaDon.setNgayMua(this.ngayMua);
@@ -64,10 +68,10 @@ public class HoaDonRequest {
         hoaDon.setNgayTao(this.ngayTao);
         hoaDon.setNgaySua(this.ngaySua);
         hoaDon.setTrangThai(this.trangThai);
-        if (this.khachHang == null) {
+        if (this.nguoiDung == null) {
             hoaDon.setNguoiDung(null);
         } else {
-            hoaDon.setNguoiDung(NguoiDung.builder().id(this.khachHang).build());
+            hoaDon.setNguoiDung(NguoiDung.builder().id(this.nguoiDung).build());
         }
         return hoaDon;
     }
