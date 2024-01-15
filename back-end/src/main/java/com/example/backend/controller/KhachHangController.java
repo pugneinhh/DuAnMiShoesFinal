@@ -1,8 +1,10 @@
 package com.example.backend.controller;
 
+import com.example.backend.dto.request.DiaChiRequest;
 import com.example.backend.dto.request.KhachHangRequest;
 import com.example.backend.service.KhachHangService;
 import com.google.gson.Gson;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/admin/khach-hang")
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 public class KhachHangController {
 
     @Autowired
@@ -22,6 +24,15 @@ public class KhachHangController {
         return ResponseEntity.ok(khachHangService.getAll());
     }
 
+    @GetMapping("/dia-chi/{idKH}")
+    public  ResponseEntity<?> getALLDCbyKH(@PathVariable("idKH") String idKH){
+        return ResponseEntity.ok(khachHangService.findDiaChiByKH(idKH));
+    }
+    @PostMapping("/add-dia-chi")
+    public ResponseEntity<?> addDiaChi(@RequestBody DiaChiRequest request){
+        request.setTrangThai(1);
+        return ResponseEntity.ok(khachHangService.addDiaChi(request));
+    }
     @PostMapping()
     public ResponseEntity<?> add(@RequestParam("request") String request,
                                  @RequestParam(value = "file") MultipartFile file) {

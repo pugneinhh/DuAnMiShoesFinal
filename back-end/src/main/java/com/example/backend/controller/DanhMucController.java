@@ -2,10 +2,7 @@ package com.example.backend.controller;
 
 
 import com.example.backend.dto.request.DanhMucRequest;
-import com.example.backend.dto.request.sanphamsearch.SanPhamSearch;
-import com.example.backend.dto.request.sanphamupdate.UpdateCTSPRequest;
-import com.example.backend.dto.request.sanphamupdate.UpdateDanhMucRequest;
-import com.example.backend.entity.DanhMuc;
+import com.example.backend.dto.request.sanphamsearch.BangConSearch;
 import com.example.backend.service.DanhMucService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
 import java.time.LocalDateTime;
 
 @CrossOrigin("http://localhost:3000/")
@@ -29,7 +25,7 @@ public class DanhMucController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") String id, @RequestBody UpdateDanhMucRequest request){
+    public ResponseEntity<?> update(@PathVariable("id") String id, @RequestBody DanhMucRequest request){
         System.out.println(request);
         return ResponseEntity.ok(danhMucService.update(id,request));
     }
@@ -40,8 +36,8 @@ public class DanhMucController {
     }
 
     @PostMapping("/tim-kiem")
-    public ResponseEntity<?> search(@RequestBody SanPhamSearch sanPhamSearch){
-        return ResponseEntity.ok(danhMucService.getTim(sanPhamSearch));
+    public ResponseEntity<?> search(@RequestBody BangConSearch bangConSearch){
+        return ResponseEntity.ok(danhMucService.getTim(bangConSearch));
     }
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody DanhMucRequest v){

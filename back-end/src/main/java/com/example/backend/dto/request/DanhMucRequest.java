@@ -1,6 +1,7 @@
 package com.example.backend.dto.request;
 
 
+import com.example.backend.entity.DanhMuc;
 import lombok.*;
 
 import java.sql.Date;
@@ -27,4 +28,15 @@ public class DanhMucRequest {
     private String nguoiSua;
 
     private int trangThai;
+
+    public DanhMuc mapDM(DanhMuc dm){
+        dm.setMa(this.ma);
+        dm.setTen(this.ten);
+        dm.setNgayTao(this.ngayTao);
+        dm.setNgaySua(this.ngaySua);
+        dm.setNguoiTao(this.nguoiTao);
+        dm.setNguoiSua(this.nguoiSua);
+        dm.setTrangThai(this.trangThai);
+        return dm;
+    }
 }

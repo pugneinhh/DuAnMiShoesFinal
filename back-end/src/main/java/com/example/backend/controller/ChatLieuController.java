@@ -15,14 +15,21 @@ import java.time.LocalDateTime;
 @CrossOrigin("http://localhost:3000/")
 @RestController
 @RequestMapping("/chat-lieu")
-@RequiredArgsConstructor
+@RequiredArgsConstructor    
 public class ChatLieuController {
     @Autowired
     ChatLieuService chatLieuService;
+
     @GetMapping
     public ResponseEntity<?> getALLCL(){
         return new ResponseEntity<>(chatLieuService.getALLCL(), HttpStatus.FOUND);
     }
+
+    @GetMapping("/detail/{idCL}")
+    public ResponseEntity<?> detail(@PathVariable("idCL") String id){
+        return ResponseEntity.ok(chatLieuService.detailCL(id));
+    }
+
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody ChatLieuRequest v){
         int clThem = chatLieuService.getALL().size();

@@ -1,4 +1,7 @@
 package com.example.backend.service;
+import com.example.backend.dto.request.sanphamsearch.BangConSearch;
+import com.example.backend.dto.request.sanphamsearch.SanPhamSearch;
+import com.example.backend.dto.response.DanhMucRespone;
 import com.example.backend.dto.response.SanPhamRespone;
 import com.example.backend.entity.SanPham;
 import com.example.backend.model.AdminSanPhamRespon;
@@ -21,6 +24,9 @@ public class SanPhamService {
         return sanPhamRepository.getALLSP();
     }
 
+    public List<SanPhamRespone> getTim(SanPhamSearch sanPhamSearch) {
+        return sanPhamRepository.tim(sanPhamSearch);
+    }
 
     public boolean existByID(String id){
         return sanPhamRepository.existsById(id);

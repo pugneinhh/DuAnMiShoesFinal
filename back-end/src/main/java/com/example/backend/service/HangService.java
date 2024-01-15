@@ -23,7 +23,7 @@ public class HangService {
                 .ma(h.getMa())
                 .ten(h.getTen())
                 .ngayTao(h.getNgayTao())
-                .trangThai(1)
+                .trangThai(0)
                 .build();
         hangRepository.save(hang);
         return "Done";

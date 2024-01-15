@@ -110,12 +110,12 @@ export default function DeGiay() {
       render: (trang_thai) => (
         <>
           {trang_thai === 0 ? (
-            <Tag color="red">
+            <Tag color="green">
               Còn bán
             </Tag>
           ) : (
-            <Tag color="green">
-              Còn bán
+            <Tag color="red">
+              Dừng bán
             </Tag>
           )}
         </>
@@ -169,8 +169,8 @@ export default function DeGiay() {
             <div className='col-md-5'>
               <Form.Item label="Trạng Thái">
                 <Select value={selectedValue} onChange={handleChange}>
-                  <Select.Option value="1">Còn Bán</Select.Option>
-                  <Select.Option value="0">Dừng Bán</Select.Option>
+                  <Select.Option value="0">Còn Bán</Select.Option>
+                  <Select.Option value="1">Dừng Bán</Select.Option>
                 </Select>
               </Form.Item>
             </div>

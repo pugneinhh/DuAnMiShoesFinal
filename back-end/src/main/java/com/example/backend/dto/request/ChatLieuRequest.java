@@ -1,6 +1,8 @@
 package com.example.backend.dto.request;
 
 
+import com.example.backend.entity.ChatLieu;
+import com.example.backend.entity.DanhMuc;
 import lombok.*;
 
 import java.sql.Date;
@@ -27,4 +29,15 @@ public class ChatLieuRequest {
     private String nguoiSua;
 
     private int trangThai;
+
+    public ChatLieu mapCL(ChatLieu cl){
+        cl.setMa(this.ma);
+        cl.setTen(this.ten);
+        cl.setNgayTao(this.ngayTao);
+        cl.setNgaySua(this.ngaySua);
+        cl.setNguoiTao(this.nguoiTao);
+        cl.setNguoiSua(this.nguoiSua);
+        cl.setTrangThai(this.trangThai);
+        return cl;
+    }
 }

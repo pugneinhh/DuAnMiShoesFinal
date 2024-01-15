@@ -23,7 +23,7 @@ public class DeGiayService {
                 .ma(dg.getMa())
                 .ten(dg.getTen())
                 .ngayTao(dg.getNgayTao())
-                .trangThai(1)
+                .trangThai(0)
                 .build();
         deGiayRepository.save(deGiay);
         return "Done";

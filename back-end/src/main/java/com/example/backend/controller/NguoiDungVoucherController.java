@@ -24,6 +24,10 @@ public class NguoiDungVoucherController {
         return ResponseEntity.ok(nguoiDungVoucherService.getAllByVoucher(id));
        // return null;
     }
+    @GetMapping("/ngv/{id}")
+    public ResponseEntity<?> getNGV(@PathVariable("id") String id){
+        return ResponseEntity.ok(nguoiDungVoucherService.getNguoiDungByVoucher(id));
+    }
     @GetMapping("/nguoi-dung/{id}")
     public ResponseEntity<?> getByNguoiDung(@PathVariable("id")String id){
         return ResponseEntity.ok(nguoiDungVoucherService.getAllByNguoiDung(id));

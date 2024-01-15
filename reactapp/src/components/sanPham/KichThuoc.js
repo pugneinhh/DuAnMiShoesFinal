@@ -110,12 +110,12 @@ export default function KichThuoc() {
       render: (trang_thai) => (
         <>
           {trang_thai === 0 ? (
-            <Tag color="red">
+            <Tag color="green">
               Còn bán
             </Tag>
           ) : (
-            <Tag color="green">
-              Còn bán
+            <Tag color="red">
+              Dừng bán
             </Tag>
           )}
         </>

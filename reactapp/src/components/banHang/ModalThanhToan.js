@@ -19,7 +19,7 @@ const ModalThanhToan = (props) => {
 
     }, []);
     const linkVNP = async () => {
-        await axios.get('http://localhost:8080/vnppayment/chuyen-khoan')
+        await axios.get(`http://localhost:8080/vnppayment/chuyen-khoan/${total}`)
                 .then(response => {
                     // Update the list of items
                     setUrlCK(response.data.url);
