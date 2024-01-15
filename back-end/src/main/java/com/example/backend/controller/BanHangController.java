@@ -4,8 +4,10 @@ import com.example.backend.dto.request.HoaDonChiTietRequest;
 import com.example.backend.dto.request.HoaDonRequest;
 import com.example.backend.dto.response.ChiTietSanPhamRespone;
 import com.example.backend.entity.ChiTietSanPham;
+import com.example.backend.entity.CongThuc;
 import com.example.backend.model.AdminBanHangHDRespon;
 import com.example.backend.repository.CTSPRepository;
+import com.example.backend.repository.CongThucRepository;
 import com.example.backend.service.BanHangService;
 import com.example.backend.service.HoaDonChiTietService;
 import lombok.Getter;
@@ -31,6 +33,8 @@ public class BanHangController {
     HoaDonChiTietService hoaDonChiTietService;
     @Autowired
     CTSPRepository ctspRepository;
+    @Autowired
+    CongThucRepository congThucRepository;
 
     @GetMapping("/getALLCTSP")
     public ResponseEntity<?> getALLctsp(){
@@ -39,12 +43,12 @@ public class BanHangController {
     }
     @PostMapping("/add-hoa-don")
     public  ResponseEntity<?> addHD(@RequestBody HoaDonRequest hoaDonRequest){
-
+        CongThuc ct=congThucRepository.getCongThucByTrangThai(0);
         System.out.println("Hóa đơn requết"+hoaDonRequest);
         hoaDonRequest.setMa("HDTQ"+ RandomStringUtils.randomNumeric(6));
         hoaDonRequest.setLoaiHoaDon(0);
         hoaDonRequest.setNgayTao(LocalDateTime.now());
-
+        hoaDonRequest.setGiaTriDiem(Integer.valueOf(hoaDonRequest.getThanhTien().intValue()/ct.getTiSo().intValue()));
         return  ResponseEntity.ok(banHangService.addHoaDon(hoaDonRequest));
     }
     @PostMapping("/addHDCT")

@@ -29,4 +29,5 @@ public class BanHangService {
        HoaDon hd =hoaDonRequest.map(new HoaDon());
        return hoaDonRepository.save(hd);
     }
+
 }
