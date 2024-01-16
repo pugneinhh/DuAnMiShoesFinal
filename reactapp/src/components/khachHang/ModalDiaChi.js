@@ -1,10 +1,14 @@
-import { Button, DatePicker, Form, Input, InputNumber, Modal, Popconfirm, Select, Space, Switch, Tag, Radio } from "antd";
+import { Button, DatePicker, Form, Input, InputNumber, Modal, Popconfirm, Select, Space, Table, Tag, Radio } from "antd";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import AddModalDiaChi from "./AddModalDiaChi";
 
 const ModalDiaChi = (props) => {
     const { openModalDiaChi, setOpenModalDiaChi,idKH,setIdKH } = props;
+    const [tableLayout, setTableLayout] = useState();
+      const [top, setTop] = useState('none');
+      const [bottom, setBottom] = useState('bottomRight');
+      const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const handleClose = () => {
         setData([]);
         setIdKH("");
@@ -16,21 +20,88 @@ const ModalDiaChi = (props) => {
     const handleCloseAddMoDalDiaChi = () => {
         setOpenModalAddDiaChi(false);
     }
-    console.log("idkh",idKH);
+
     const [datas, setData] = useState([]);
     const loadDiaChi = async () => {
-        console.log("heheheh");
+      
         const result = await axios.get(`http://localhost:8080/admin/khach-hang/dia-chi/${idKH}`, {
         });
             console.log("dc",idKH);
           setData(result.data);  
+          result.data.map((item) => {
+            if(item.trangThai===0){
+                setSelectedRowKeys(item.id)
+            }
+        }
+          )
       };
 
     useEffect(() => {
           loadDiaChi();
+          
       }, [idKH]);
+     console.log("strrr",selectedRowKeys)
+      const rowSelection = {  
+            type:'radio',                
+        onChange: (selectedRowKeys, selectedRows) => {
+          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+        },
+        getCheckboxProps: (record) => ({
+            checked:record.trangThai===0
+           
+          }),
+      };
+      
+      
 
-
+      const tableProps = {
+        title: false ,
+        showHeader:false,
+        footer: false,
+        tableLayout,
+      };
+      console.log("dịa chỉ",datas);
+      const dataSource = datas.map((item, index) => ({
+        key: item.id,
+        id:item.id,
+        nguoiDung: item.nguoiDung,
+        tenNguoiNhan:item.tenNguoiNhan,
+        soDienThoai:item.soDienThoai,
+        idThanhPho:item.idThanhPho,
+        idHuyen:item.idHuyen,
+        idXa:item.idXa,
+        tenThanhPho:item.tenThanhPho,
+        tenHuyen:item.tenHuyen,
+        tenXa:item.tenXa,
+        diaChi:item.diaChi,
+        trangThai:item.trangThai
+      }));
+      const columns = [
+        // other columns...
+        {
+          title: 'Dia chi',
+          dataIndex: 'id',
+          key: 'id',
+          render: (text, record) => (
+            <div>
+              <h6>{record.tenNguoiNhan} | {record.soDienThoai}</h6>
+              <p>{record.diaChi}, {record.tenHuyen}, {record.tenThanhPho}</p>
+              {record.trangThai === 0 ? (<Tag color="red">Mặc định</Tag>) : <div></div>}
+              
+            </div>
+            
+          ),
+        },
+        {
+            title: 'Action',
+          dataIndex: 'id',
+          key: 'id',
+          render: (text, record) => (
+             <Button type="primary" className='custom-button'>Cập nhật</Button>
+            
+          ),
+        }
+      ];
     return (
         <Modal
             title="Khách hàng"
@@ -51,30 +122,27 @@ const ModalDiaChi = (props) => {
             
             <hr className="mt-4"></hr>
             <div>
-                      {
-                        datas.map((data, index) => (
-                          <tr className='pt-3 ms-2 row'>
-                            <div className="col-md-2"><Radio></Radio></div>
-                            
-                            <div className='col-md-8 '>
-                           <h6>{data.tenNguoiNhan}{" "}|{data.soDienThoai}</h6>
-                        
-                            {data.diaChi}, {data.tenHuyen}, {data.tenThanhPho}
-                            {data.trangThai==0?(<Tag color="red">Mặc định</Tag>):<div></div>}
-                            </div>
-                            <div className="col-md-2">
-                                <button className="btn btn-success">Cập nhật</button>
-                            </div>
-                            
-                            <hr></hr>
-                          </tr>
-
-                        ))
-                      }
+                      
+                       
+            
+           
+  <Table
+    rowSelection={rowSelection}
+    defaultCheckedRowKeys={selectedRowKeys}  
+        {...tableProps}
+        pagination={{
+          position: [top, bottom],
+        }}
+        columns={columns}
+        dataSource={dataSource}  
+      />
+          
             </div>
             <AddModalDiaChi openModalAddDiaChi={openModalAddDiaChi}
                 setOpenModalAddDiaChi={setOpenModalAddDiaChi}
                 idKH={idKH}
+                setIdKH={setIdKH}
+                loadDiaChi={loadDiaChi}
                 onOk={handleCloseAddMoDalDiaChi}
                 onCancel={handleCloseAddMoDalDiaChi}
             />
