@@ -12,12 +12,11 @@ const AddModalDiaChi = (props) => {
     const [listProvince, setListProvince] = useState([]);
     const [listDistricts, setListDistricts] = useState([]);
     const [listWard, setListWard] = useState([]);
-    const { openModalAddDiaChi, setOpenModalAddDiaChi,idKH } = props;
+    const { openModalAddDiaChi, setOpenModalAddDiaChi,idKH,setIdKH,loadDiaChi } = props;
     const handleClose = () => {
         setOpenModalAddDiaChi(false);
-        console.log("đóng")
     };
-   
+  
     const handleSubmit = (value) => {
         console.log(value);
         const data={
@@ -42,6 +41,10 @@ const AddModalDiaChi = (props) => {
               theme: "light",
             });
             form.resetFields();
+            form.setFieldsValue({idNguoiDung:idKH});
+            loadDiaChi();
+            handleClose();
+            
         })
     };
     const loadDataProvince = () => {
@@ -55,7 +58,7 @@ const AddModalDiaChi = (props) => {
     const [ward, setWard] = useState(null);
 
     const handleProvinceChange = (value, valueProvince) => {
-        console.log("fdfdf", valueProvince);
+      
         form.setFieldsValue({ provinceId: valueProvince.valueProvince });
         AddressApi.fetchAllProvinceDistricts(valueProvince.valueProvince).then(
             (res) => {
