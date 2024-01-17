@@ -13,33 +13,26 @@ import {
   Table,
   Space,
   Tag,
+  Badge
 } from "antd";
 import axios from "axios";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
 import { InfoCircleFilled } from "@ant-design/icons";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import moment from "moment";
-import { toast } from "react-toastify";
-// import { Button, DatePicker, Form, Input, InputNumber, Modal, Popconfirm, Select, Switch } from "antd";
-// import axios from "axios";
-// import { useEffect, useState } from "react";
-// import moment from 'moment';
-// import { toast } from "react-toastify";
-
-import { EyeOutlined } from "@ant-design/icons";
-import { SearchOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { GrUpdate } from "react-icons/gr";
 import { Image } from "cloudinary-react";
-import { AddProduct, productAction } from "./reducer/Product.reducer";
+import { AddProduct, GetProduct, UpdateApartProduct } from "./reducer/Product.reducer";
+import { AddInvoice } from "./reducer/DetailInvoice.reducer";
 
 const ModalSanPham = (props) => {
   const { openSanPham, setOpenSanPham } = props;
  // const idHD = props.idHD;
   const activeKey = props.activeKey;
+  const ctsp = useSelector(GetProduct);
+  console.log("CTSP",ctsp)
   console.log(activeKey);
   const handleClose = () => {
     setOpenSanPham(false);
@@ -151,38 +144,29 @@ const ModalSanPham = (props) => {
   useEffect(() => {
     loadCTSP();
   }, []);
-  const { uuid } = useParams();
+
   const loadCTSP = async () => {
-    const result = await axios.get(
-      "http://localhost:8080/ban-hang/getALLCTSP",
-      {
-        validateStatus: () => {
-          return true;
-        },
-      }
-    );
+    const result = await axios.get("http://localhost:8080/ban-hang/getALLCTSP");
+    result.data.map((i)=> dispatch(AddProduct({id:i.idCTSP,soLuong:i.soLuong,linkAnh:i.linkAnh,tenSP:i.tenSP,tenKT:i.tenKT,tenMS:i.tenMS,maMS:i.maMS,loaiKM:i.loaiKM,giaTriKhuyenMai: parseInt(i.giaKhuyenMai, 10),giaBan:i.giaBan,tenKM:i.tenKM})))
     console.log(result.data);
     setCTSPs(result.data);
   };
   const dispatch = useDispatch()
+
   const handleClickAddProduct = (record) => {
-    // console.log(record.idCTSP);
-    // const result = async() => {
-    //     await axios.get(`http://localhost:8080/ctsp/detail/${record.idCTSP}`).then(res =>     
-    //    console.log(res.data)
-    //     )
-    // }
-    dispatch(AddProduct({chiTietSanPham:record.idCTSP,tenSP:record.tenSP,mauSac:record.maMS,linkAnh : record.linkAnh,kichThuoc:record.tenKT,giaBan: record.giaBan,activeKey:activeKey}))
-  //  result();
+    console.log("id",record.giaSauGiam);
+    dispatch(AddInvoice({chiTietSanPham:record.id,tenSP:record.tenSP,maMS:record.maMS,linkAnh : record.linkAnh,tenKT:record.tenKT,giaBan: record.giaBan,hoaDon:activeKey,tenMS:record.tenMS,giaGiam:record.giaGiam,giaSauGiam:record.giaSauGiam,nguoiTao:record.nguoiTao,giaBan:record.giaBan,tenKM:record.tenKM,loaiKM:record.loaiKM,giaTriKhuyenMai:record.giaTriKhuyenMai}));
+
+    dispatch(UpdateApartProduct({id:record.id,soLuong:1})); 
     setOpenSanPham(false);
   };
 
   const columns = [
     {
       title: "STT",
-      dataIndex: "idCTSP",
-      key: "idCTSP",
-      render: (idCTSP, record, index) => {
+      dataIndex: "id",
+      key: "id",
+      render: (id, record, index) => {
         ++index;
         return index;
       },
@@ -193,16 +177,32 @@ const ModalSanPham = (props) => {
       dataIndex: "linkAnh",
       key: "link",
       center: "true",
-      render: (link) => {
+      render: (link,record) => {
         return (
           <>
+          {
+          (!record.tenKM) ?
+          (
+            <Image
+              cloudName="dtetgawxc"
+              publicId={link}
+              width="100" 
+              borderRadius="10"
+              crop="scale"
+              href={link}
+            /> ) : (
+              <Badge.Ribbon text= {record.loaiKM === "Tiền mặt" ? ("-"+`${Intl.NumberFormat("en-US").format(record.giaTriKhuyenMai)} VNĐ`) : ("-"+record.giaTriKhuyenMai+"%")} color="red" size="small">
             <Image
               cloudName="dtetgawxc"
               publicId={link}
               width="100"
+              borderRadius="10"
               crop="scale"
               href={link}
-            />
+            /> 
+              </Badge.Ribbon>
+            )
+            }
           </>
         );
       },
@@ -218,10 +218,24 @@ const ModalSanPham = (props) => {
     },
     {
       title: "Giá Bán",
-      dataIndex: "giaBan",
-      render: (text, record) => (
-        <span>{`${Intl.NumberFormat("en-US").format(record.giaBan)} VNĐ`}</span>
-      ),
+      dataIndex: "giaSauGiam",
+      width: 150,
+      render: (text, record) => {
+        return (
+          <>
+          {
+          (!record.tenKM) ?
+          (
+           <span>{`${Intl.NumberFormat("en-US").format(record.giaBan)} VNĐ`}</span>
+          ) : 
+          (
+            <span style={{color:"red"}}><del style={{color:"black"}}>{`${Intl.NumberFormat("en-US").format(record.giaBan)} VNĐ`}</del>
+            <br></br>{`${Intl.NumberFormat("en-US").format(record.giaBan - record.giaGiam)} VNĐ`}</span>
+          )
+    }
+    </>
+        )
+  },
     },
     {
       title: "Số lượng",
@@ -240,8 +254,8 @@ const ModalSanPham = (props) => {
             <div
               style={{
                 backgroundColor: `${record.maMS}`,
-                borderRadius: 6,
-                width: 60,
+                borderRadius: 30,
+                width: 25,
                 height: 25,
               }}
             ></div>
@@ -470,14 +484,14 @@ const ModalSanPham = (props) => {
               <div>
                 <Table
                   className="text-center"
-                  dataSource={cTSP}
+                  dataSource={ctsp}
                   columns={columns}
                   pagination={{
                     showQuickJumper: true,
                     defaultPageSize: 5,
                     position: ["bottomCenter"],
                     defaultCurrent: 1,
-                    total: 100,
+                    total: ctsp.length,
                   }}
                 />
               </div>

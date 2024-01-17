@@ -18,7 +18,7 @@ const billSlice = createSlice({
             const data = action.payload;
             const newBill = {
                 stt: state.length + 1,
-              //  id: uuid(),
+                id: data.key,
                 ma: data.ma,
                 trangThai: 0,
                 key: data.key,
