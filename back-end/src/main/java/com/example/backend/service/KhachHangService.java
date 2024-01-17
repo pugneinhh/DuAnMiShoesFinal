@@ -69,8 +69,8 @@ public class KhachHangService {
        diaChi.setIdThanhPho(request.getIdThanhPho());
        diaChi.setIdHuyen(request.getIdHuyen());
        diaChi.setIdXa(request.getIdXa());
-//       diaChi.setTenNguoiNhan(request.getTen());
-//       diaChi.setSoDienThoai(request.getSoDienThoai());
+       diaChi.setTenNguoiNhan(request.getTen());
+       diaChi.setSoDienThoai(request.getSoDienThoai());
        diaChi.setNguoiDung(add);
        diaChi.setTrangThai(0);
        diaChiRepository.save(diaChi);
@@ -126,6 +126,20 @@ public class KhachHangService {
     }
     public DiaChi addDiaChi(DiaChiRequest diaChiRequest){
         DiaChi diaChi=diaChiRequest.map(new DiaChi());
+        return diaChiRepository.save(diaChi);
+    }
+    public DiaChi updateDiaChi(String id,DiaChiRequest diaChiRequest){
+        DiaChi diaChi=diaChiRequest.map(new DiaChi());
+        diaChi.setId(id);
+        return diaChiRepository.save(diaChi);
+    }
+    public DiaChi updateTTDiaChi(String id){
+        diaChiRepository.findAll().stream().forEach(o-> {
+            o.setTrangThai(1);
+            diaChiRepository.save(o);
+        });
+        DiaChi diaChi=diaChiRepository.findById(id).get();
+        diaChi.setTrangThai(0);
         return diaChiRepository.save(diaChi);
     }
 }
