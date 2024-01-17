@@ -26,14 +26,14 @@ public class ThongKeService {
         return thongKeResponsitory.thongKeTheoNam();
     }
     public List<SanPhamBanChayRespon> getSpBanChay(){return thongKeResponsitory.getSPBanChay();}
-    public BieuDoRespon getBieuDoNgay(Date ngay){
+    public List<BieuDoRespon> getBieuDoNgay(Date ngay){
         return thongKeResponsitory.getBieuDoNgay(ngay);
     }
-    public  BieuDoRespon getBieuDoTuan(Date ngay){
+    public  List<BieuDoRespon> getBieuDoTuan(Date ngay){
         return thongKeResponsitory.getBieuDoTuan(ngay);
     }
-    public  BieuDoRespon getBieuDoThang(Date ngay){
-        return thongKeResponsitory.getBieuDoThang(ngay);
+    public  List<BieuDoRespon> getBieuDoThang(){
+        return thongKeResponsitory.getBieuDoThang();
     }
     public List<TrangThaiHoaDonRespon> getTrangThaiHoaDon(){
         return thongKeResponsitory.getTrangThaiHoaDon();

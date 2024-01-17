@@ -52,12 +52,9 @@ public class ThongKeController {
         Date date=new Date(d.getTime());
         return ResponseEntity.ok(thongKeService.getBieuDoTuan(date));
     }
-    @GetMapping("/bieu-do-thang/{ngay}")
-    public ResponseEntity<?> getBieuDoThang(@PathVariable("ngay")String ngay) throws ParseException {
-        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-        java.util.Date d=sdf.parse(ngay);
-        Date date=new Date(d.getTime());
-        return ResponseEntity.ok(thongKeService.getBieuDoThang(date));
+    @GetMapping("/bieu-do-thang")
+    public ResponseEntity<?> getBieuDoThang() throws ParseException {
+        return ResponseEntity.ok(thongKeService.getBieuDoThang());
     }
     @GetMapping("/trang-thai-hoa-don")
     public ResponseEntity<?> getTrangThaiHD(){
