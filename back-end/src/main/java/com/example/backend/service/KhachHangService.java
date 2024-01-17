@@ -128,4 +128,18 @@ public class KhachHangService {
         DiaChi diaChi=diaChiRequest.map(new DiaChi());
         return diaChiRepository.save(diaChi);
     }
+    public DiaChi updateDiaChi(String id,DiaChiRequest diaChiRequest){
+        DiaChi diaChi=diaChiRequest.map(new DiaChi());
+        diaChi.setId(id);
+        return diaChiRepository.save(diaChi);
+    }
+    public DiaChi updateTTDiaChi(String id){
+        diaChiRepository.findAll().stream().forEach(o-> {
+            o.setTrangThai(1);
+            diaChiRepository.save(o);
+        });
+        DiaChi diaChi=diaChiRepository.findById(id).get();
+        diaChi.setTrangThai(0);
+        return diaChiRepository.save(diaChi);
+    }
 }
