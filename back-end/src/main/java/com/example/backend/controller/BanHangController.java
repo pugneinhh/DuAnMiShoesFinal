@@ -2,6 +2,7 @@ package com.example.backend.controller;
 
 import com.example.backend.dto.request.HoaDonChiTietRequest;
 import com.example.backend.dto.request.HoaDonRequest;
+import com.example.backend.dto.response.ChiTietSanPhamForBanHang;
 import com.example.backend.dto.response.ChiTietSanPhamRespone;
 import com.example.backend.entity.ChiTietSanPham;
 import com.example.backend.entity.CongThuc;
@@ -38,7 +39,7 @@ public class BanHangController {
 
     @GetMapping("/getALLCTSP")
     public ResponseEntity<?> getALLctsp(){
-        List<ChiTietSanPhamRespone> list=banHangService.getALLCTSPBanHang();
+        List<ChiTietSanPhamForBanHang> list=banHangService.getALLCTSPBanHang();
         return ResponseEntity.ok(list);
     }
     @PostMapping("/add-hoa-don")
@@ -49,13 +50,18 @@ public class BanHangController {
         hoaDonRequest.setLoaiHoaDon(0);
         hoaDonRequest.setNgayTao(LocalDateTime.now());
         hoaDonRequest.setGiaTriDiem(Integer.valueOf(hoaDonRequest.getThanhTien().intValue()/ct.getTiSo().intValue()));
+
         return  ResponseEntity.ok(banHangService.addHoaDon(hoaDonRequest));
     }
     @PostMapping("/addHDCT")
     public ResponseEntity<?> addHDCT(@RequestBody HoaDonChiTietRequest request){
-        String idCTSP= request.getIdSP();
+        System.out.println("Hóa đơn chi tiet requết"+request);
+        System.out.println("re quet"+request.getChiTietSanPham());
+        request.setNgayTao(LocalDateTime.now());
+        String idCTSP= request.getChiTietSanPham();
         ChiTietSanPham ctsp=ctspRepository.findById(idCTSP).get();
         ctsp.setSoLuong(ctsp.getSoLuong()- request.getSoLuong());
+        System.out.println("CTSP"+ctsp.toString());
         ctspRepository.save(ctsp);
         return ResponseEntity.ok(hoaDonChiTietService.addHDCT(request));
     }

@@ -1,4 +1,4 @@
-import { Button, Empty, Input, Modal, Space, Switch, Tabs, Tag ,Table,InputNumber  } from "antd";
+import { Button, Empty, Input, Modal, Space, Switch, Tabs, Tag ,Table,InputNumber,Badge  } from "antd";
 import React, { useEffect, useRef, useState } from 'react';
 import { toast, ToastContainer } from "react-toastify";
 import { BsQrCodeScan } from "react-icons/bs";
@@ -10,17 +10,16 @@ import { DeleteFilled } from "@ant-design/icons";
 import ModalSanPham from "./ModalSanPham";
 import ModalThanhToan from "./ModalThanhToan";
 import ModalKhachHang from "./ModalKhachHang";
-import { createInvoice,removeInvoice } from "./redux/Cartaction";
+import { createInvoice } from "./redux/Cartaction";
 import {useDispatch,useSelector} from 'react-redux';
 import {v4 as uuid} from 'uuid';
 import { CreateBill, GetBill, GetBillByKey, RemoveBill } from "./reducer/Bill.reducer";
 import NhanVien from "../nhanVien/NhanVien";
-import { GetProduct, UpdateProduct } from "./reducer/Product.reducer";
+import { GetProduct, GetQuantityProduct, UpdateApartProduct, UpdatePushProduct } from "./reducer/Product.reducer";
 import { Image } from "cloudinary-react";
 import { GetClient } from "./reducer/Client.reducer";
-import moment from "moment";
+import { GetInvoice, UpdateInvoice, RemoveInvoice  } from "./reducer/DetailInvoice.reducer";
 
-// import { getHoaDons } from "./redux/selector";
 const {TabPane}=Tabs;
 const BanHang = () => {
   
@@ -30,12 +29,12 @@ const BanHang = () => {
   // const demTab = useRef(0);
   const initState=useRef(1);
   const hoaDons=useSelector(GetBill);
-  const ctspHD = useSelector(GetProduct);
+  const ctspHD = useSelector(GetInvoice);
+  const ctsp = useSelector(GetProduct);
   const client = useSelector(GetClient);
-  console.log(ctspHD);
-  console.log("Client",client);
+  const [soLuong, setSoLuong] = useState(1);
+
   let data = ([""]);
-  let idHD = ("");
   let KH = ([""]);
 
 
@@ -43,23 +42,75 @@ const BanHang = () => {
   const [openSanPham, setOpenSanPham] = useState(false);
 
   const onChangeSoLuong = (value,record) =>{
-      // update số lượng vào reducer
-      dispatch(UpdateProduct({soLuong : value,chiTietSanPham: record.chiTietSanPham, activeKey : activeKey }));
+
+    if (value === 0 || !value){
+
+      Modal.confirm({
+        title: "Thông báo",
+        content: "Bạn có chắc chắn muốn xóa sản phẩm này ra khỏi giỏ hàng không không?",
+        onOk: () => {
+          dispatch(RemoveInvoice(({chiTietSanPham:record.id,hoaDon:activeKey})));
+          dispatch(UpdatePushProduct({id:record.chiTietSanPham,soLuong:record.soLuong })); 
+          data = ctspHD.filter((f)=> f.hoaDon === activeKey);
+          toast("✔️ Cập nhật giỏ hàng thành công!", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          // form.finish();
+        },
+        onCancel:() => {
+          
+        }
+        ,
+        footer: (_, { OkBtn, CancelBtn }) => (
+          <>
+            <CancelBtn />
+            <OkBtn />
+          </>
+        ),
+      });
+    } else {
+      dispatch(UpdateInvoice({soLuong : value,chiTietSanPham: record.chiTietSanPham, hoaDon : activeKey }));
+      dispatch(UpdateApartProduct({id:record.chiTietSanPham,soLuong:value-record.soLuong })); 
+      setSoLuong(value);
+      //  maxSoLuong = ctsp.map((item)=> item.id === record.chiTietSanPham).soLuong
+      // ctsp.filter((item)=> item.id === record.chiTietSanPham)[0].soLuong;
+    }
+    
   }
 
 // api add bill
  const handleAddBill = (value) =>{
-  const data = hoaDons.filter((item) => item.key === value);
-  console.log("Object ",data[0]);
+  const dataHoaDon = hoaDons.filter((item) => item.key === value);
+  console.log(dataHoaDon[0]);
   const addHD = async() => {
-    await axios.post(`http://localhost:8080/ban-hang/add-hoa-don`,data[0]);
+    const dataAdd =  await axios.post(`http://localhost:8080/ban-hang/add-hoa-don`,dataHoaDon[0]);
+    const ctsp = ctspHD.filter((f)=> f.hoaDon === activeKey);
+    Promise.all(ctsp.map(value => 
+      axios.post(`http://localhost:8080/ban-hang/addHDCT`,value)));
+   // console.log("ID Hóa đơn ",dataAdd.data.id);  
+  //  ctspHD.filter((f)=> f.activeKey === activeKey).map(i=> dispatch(UpdateHDToProduct({hoaDon:dataAdd.data.id,chiTietSanPham:i.idCTSP,activeKey:activeKey}))) 
+  //  idHD = dataAdd.data.id;
   }
   addHD();
   setOpenThanhToan(true)
- }
+ // handleAddCTSP();
 
- const handleAddCTSP = (value) => {
-  axios.post(`http://localhost:8080/ban-hang/addHDCT`,value);
+}
+
+
+
+ const handleAddCTSP = () => {
+  
+  const ctsp = ctspHD.filter((f)=> f.activeKey === activeKey);
+  const responses =  Promise.all(ctsp.map(value => 
+    axios.post(`http://localhost:8080/ban-hang/addHDCT`,value)));
  }
 
  const handleThanhToan = (value) => {
@@ -112,7 +163,7 @@ const handleClickAddHD=() => {
   if(maxKey>0){
   dispatch(
     CreateBill(
-    {id:uuid(),ma:`HDTQ${maxKey+1}`,nhanVien:'Phanh',nguoiDung:null,voucher:null,ngayMua:null,giaGoc:null,giaGiamGia:null,thanhTien:null,diemSuDung:null,giaTriDiem:null,tenNguoiNhan:null,soDienThoai:null,diaChi:null,qrCode:null,ghiChu:null,ngayDuKienNhan:null,ngayNhan:'null',ngayTraHang:null,nguoiTao:'Phanh',nguoiSua:null,ngaySua:null,trangThai:0,key:`${maxKey+1}`}
+    {id:uuid(),ma:`HDTQ${maxKey+1}`,nhanVien:'Phanh',nguoiDung:null,voucher:null,ngayMua:null,giaGoc:null,giaGiamGia:null,thanhTien:null,diemSuDung:null,giaTriDiem:null,tenNguoiNhan:null,soDienThoai:null,diaChi:null,qrCode:null,ghiChu:null,ngayDuKienNhan:null,ngayNhan:'null',ngayTraHang:null,nguoiTao:'Phanh',nguoiSua:null,ngaySua:null,trangThai:0,key:uuid()}
   )
   );
   initState.current++;
@@ -121,7 +172,9 @@ const handleClickAddHD=() => {
     }else{
       dispatch(
         CreateBill(
-          {id:uuid(),ma:`HDTQ${initState.current}`,nhanVien:'Phanh',nguoiDung:null,voucher:null,ngayMua:null,giaGoc:null,giaGiamGia:null,thanhTien:null,diemSuDung:null,giaTriDiem:null,tenNguoiNhan:null,soDienThoai:null,diaChi:null,qrCode:null,ghiChu:null,ngayDuKienNhan:null,ngayNhan:'null',ngayTraHang:null,nguoiTao:'Phanh',nguoiSua:null,ngaySua:null,trangThai:0,key:`${initState.current}`}
+          {id:uuid(),ma:`HDTQ${initState.current}`,nhanVien:'Phanh',nguoiDung:null,voucher:null,ngayMua:null,giaGoc:null,giaGiamGia:null,thanhTien:null,diemSuDung:null,giaTriDiem:null,tenNguoiNhan:null,soDienThoai:null,diaChi:null,qrCode:null,ghiChu:null,ngayDuKienNhan:null,ngayNhan:'null',ngayTraHang:null,nguoiTao:'Phanh',nguoiSua:null,ngaySua:null,trangThai:0,key:uuid()
+          //key:`${initState.current}`
+        }
           )
       );
       initState.current++;
@@ -167,9 +220,9 @@ const onEdit = (targetKey, action) => {
   const columns = [
     {
       title: "STT",
-      dataIndex: "idCTSP",
-      key: "idCTSP",
-      render: (idCTSP, record, index) => {
+      dataIndex: "chiTietSanPham",
+      key: "chiTietSanPham",
+      render: (chiTietSanPham, record, index) => {
         ++index;
         return index;
       },
@@ -180,16 +233,32 @@ const onEdit = (targetKey, action) => {
       dataIndex: "linkAnh",
       key: "linkAnh",
       center: "true",
-      render: (linkAnh) => {
+      render: (linkAnh,record) => {
         return (
           <>
+          {
+          (!record.tenKM) ?
+          (
             <Image
               cloudName="dtetgawxc"
               publicId={linkAnh}
-              width="50"
+              width="100" 
+              borderRadius="10"
               crop="scale"
               href={linkAnh}
-            />
+            /> ) : (
+              <Badge.Ribbon text= {record.loaiKM === "Tiền mặt" ? ("-"+`${Intl.NumberFormat("en-US").format(record.giaTriKhuyenMai)} VNĐ`) : ("-"+record.giaTriKhuyenMai+"%")} color="red" size="small">
+            <Image
+              cloudName="dtetgawxc"
+              publicId={linkAnh}
+              width="100"
+              borderRadius="10"
+              crop="scale"
+              href={linkAnh}
+            /> 
+              </Badge.Ribbon>
+            )
+            }
           </>
         );
       },
@@ -199,24 +268,40 @@ const onEdit = (targetKey, action) => {
       dataIndex: "tenSP",
       center: "true",
       render: (text, record) => (
-        <span>{`${record.tenSP} [${record.mauSac}-${record.kichThuoc}]`}</span>
+        <span>{`${record.tenSP} [${record.tenMS}-${record.tenKT}]`}</span>
       ),
       sorter: (a, b) => a.ma - b.ma,
     },
     {
       title: "Giá Bán",
       dataIndex: "giaBan",
-      render: (text, record) => (
-        <span>{`${Intl.NumberFormat("en-US").format(record.giaBan)} VNĐ`}</span>
-      ),
+      render: (text, record) => {
+        return (
+          <>
+          {
+          (!record.tenKM) ?
+          (
+           <span>{`${Intl.NumberFormat("en-US").format(record.giaBan)} VNĐ`}</span>
+          ) : 
+          (
+            <span style={{color:"red"}}><del style={{color:"black"}}>{`${Intl.NumberFormat("en-US").format(record.giaBan)} VNĐ`}</del>
+            <br></br>{`${Intl.NumberFormat("en-US").format(record.giaBan - record.giaGiam)} VNĐ`}</span>
+          )
+    }
+    </>
+        )
+      },
     },
     {
       title: "Số lượng",
       dataIndex: "soLuong",
       key: "soLuong",
       render : (text,record) =>(
-        <InputNumber min={1} value={record.soLuong} 
-        onChange={(value) =>onChangeSoLuong(value,record)} 
+        <InputNumber min={0} 
+        //value={record.soLuong} 
+        value={soLuong}
+        onChange={(value) => onChangeSoLuong(value,record)} 
+       // onChange={onChangeSoLuong(record)}
         />
        
         )
@@ -224,18 +309,18 @@ const onEdit = (targetKey, action) => {
     },
     {
       title: "Kích thước",
-      dataIndex: "kichThuoc",
+      dataIndex: "tenKT",
     },
     {
       title: "Màu sắc",
-      dataIndex: "mauSac",
+      dataIndex: "tenMS",
     
       render: (text, record) => {
         return (
           <>
             <div
               style={{
-                backgroundColor: `${record.mauSac}`,
+                backgroundColor: `${record.maMS}`,
                 borderRadius: 30,
                 width: 25,
                 height: 25,
@@ -254,10 +339,35 @@ const onEdit = (targetKey, action) => {
     },
     {
       title: "Thao tác",
-      dataIndex: "Thao tác",
-      render : () =>(
+      render : (record) =>(
         <Space size="middle">
-          <button className="btn btn-danger" style={{borderRadius:30}}><DeleteFilled size={20}/></button>
+          <button className="btn btn-danger" style={{borderRadius:30}} onClick={ () => { 
+        Modal.confirm({
+        title: "Thông báo",
+        content: "Bạn có chắc chắn muốn xóa sản phẩm này ra khỏi giỏ hàng không không?",
+        onOk: () => {
+          dispatch(RemoveInvoice(({chiTietSanPham:record.id,hoaDon:activeKey})));
+          dispatch(UpdatePushProduct({id:record.chiTietSanPham,soLuong:record.soLuong })); 
+          data = ctspHD.filter((f)=> f.hoaDon === activeKey);
+          toast("✔️ Cập nhật giỏ hàng thành công!", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          // form.finish();
+        },
+        footer: (_, { OkBtn, CancelBtn }) => (
+          <>
+            <CancelBtn />
+            <OkBtn />
+          </>
+        ),
+          })}}><DeleteFilled size={20}/></button>
         </Space>
       )
       },
@@ -347,7 +457,7 @@ const onEdit = (targetKey, action) => {
           onEdit={onEdit}>
       
  {hoaDons.map((tab) => (
-    data = ctspHD.filter((f)=> f.activeKey === activeKey),
+    data = ctspHD.filter((f)=> f.hoaDon === activeKey),
     KH = client.filter((k) => k.activeKey === activeKey),
   
     <TabPane tab={tab.ma} key={tab.key}>
@@ -395,7 +505,7 @@ const onEdit = (targetKey, action) => {
                 Chọn tài khoản
               </Button>
               <ModalKhachHang openKhachHang={openKhachHang} 
-                idHD = {tab.id}
+               // idHD = {tab.id}
                 activeKey = {activeKey}
                 setOpenKhachHang={setOpenKhachHang}
                 onOk={handleCloseKhachHang}
