@@ -10,25 +10,34 @@ const clientSlice=createSlice({
         },
         AddClient: (state,action) =>{
             const data = action.payload;
-            const exitsItem = state.findIndex((item) => item.activeKey === data.activeKey && item.idKH === data.idKH);
-            if (exitsItem !== -1) {
-                console.log("Khách hàng đang được chọn");
-            } else {
+            const exitsItem = state.findIndex((item) => item.id === data.id);
+            if (exitsItem === -1) {
                 const newClient = {
+                    stt: state.length +1,
                     id : data.id,
                     ten : data.ten,
                     diem : data.diem,
-                    hoaDon : data.hoaDon,
-                    activeKey : data.activeKey,
+                    soDienThoai: data.soDienThoai,
+                    email : data.email,
+                    ngaySinh : data.ngaySinh,
+                    cccd: data.cccd,
+                    anh: data.anh,
+                    gioiTinh: data.gioiTinh,
+                    ma: data.ma,
+                    trangThai: data.trangThai,
                 }
                 state.unshift(newClient);
                 state.forEach((item, index) => {
                     item.stt = index + 1;
                 });
             }
+        },
+        RemoveClient : (state,action)=> {
+            return state.filter((item) => item.id === action.payload.id )
+
         }
     }
 })
-export const {AddClient} = clientSlice.actions;
+export const {AddClient,RemoveClient} = clientSlice.actions;
 export default clientSlice.reducer;
 export const GetClient = (state) => state.client

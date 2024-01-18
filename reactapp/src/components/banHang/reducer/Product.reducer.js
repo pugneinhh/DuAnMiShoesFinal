@@ -61,7 +61,7 @@ const productSlice=createSlice({
             }
         },
         RemoveProduct : (state,action) =>{
-            return state.filter((item) => item.key !== action.payload.key)
+            return state.filter((item) => item.id !== action.payload.id)
         },
         UpdateApartProduct : (state,action)=>{
             const updateProduct = action.payload;
