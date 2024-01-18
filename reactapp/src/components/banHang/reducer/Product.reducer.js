@@ -4,74 +4,81 @@ const initialState = [];
 const productSlice=createSlice({
     name:"product",
     initialState, 
-    // : {
-    //     itemsList: [],
-    //     totalQuantity: 0,
-    // },
     reducers: {
         SetProduct: (state,action) =>{
             return action.payload;
         },
         AddProduct: (state,action)=>{
             const data = action.payload ;
-            const exitsItem = state.findIndex((item) => item.chiTietSanPham === data.chiTietSanPham  && item.activeKey === data.activeKey)
-            console.log(exitsItem);
-            if (exitsItem !== -1) {
-                state[exitsItem].soLuong++;
-                state[exitsItem].total += data.giaBan
-              } else {
+            const index = state.findIndex((item)=> item.id === data.id);
+            if (index === -1){
                 const newProduct ={
                 stt: state.length +1,
-                soLuong: 1,
+                id: data.id,
+                soLuong: data.soLuong,
                 linkAnh: data.linkAnh,
                 tenSP : data.tenSP,
-                kichThuoc : data.kichThuoc,
-                mauSac : data.mauSac,
+                tenKT : data.tenKT,
+                tenMS : data.tenMS,
+                maMS : data.maMS,
                 giaBan : data.giaBan,
-                activeKey : data.activeKey,
-                total: data.giaBan,
-                // giaGiam : data.giaGiam,
-                // trangThai : data.trangThai,
-                // giaSauGiam : data.giaSauGiam,
+                giaNhap: data.giaNhap, 
+                gioiTinh : data.gioiTinh,
+                trangThai : data.trangThai,
+                chatLieu : data.chatLieu,
+                danhMuc : data.danhMuc,
+                deGiay: data.deGiay,
+                ghiChu : data.ghiChu,
                 hoaDon : data.hoaDon,
+                tenKM : data.tenKM,
                 chiTietSanPham : data.chiTietSanPham,
-                // nguoiTao: data.nguoiTao,
-                // nguoiSua : data.nguoiSua,
-                // ngayTao : data.ngayTao,
-                // ngaySua : data.ngaySua,
+                nguoiTao: data.nguoiTao,
+                nguoiSua : data.nguoiSua,
+                ngayTao : data.ngayTao,
+                ngaySua : data.ngaySua,
+                moTa : data.moTa,
+                qrCode : data.qrCode,
+                sanPham : data.sanPham,
+                loaiKM : data.loaiKM,
+                giaTriKhuyenMai : data.giaTriKhuyenMai,
+                giaGiam : (data.tenKM !== null) ?(data.loaiKM === 'Tiền mặt' ? data.giaTriKhuyenMai :  (data.giaBan * data.giaTriKhuyenMai / 100)) : 0,
+                giaSauGiam : data.giaBan - ((data.tenKM !== null) ?(data.loaiKM === 'Tiền mặt' ? data.giaTriKhuyenMai :  (data.giaBan * data.giaTriKhuyenMai / 100)) : 0 )
                 }
-                // state.totalQuantity++;
+            
                 state.unshift(newProduct);
                 state.forEach((item, index) => {
                     item.stt = index + 1;
                 });
-           // };
             }
+            },
 
-        },UpdateProduct :(state,action) =>{
+     
+        UpdatePushProduct:(state,action)=>{
             const updateProduct = action.payload;
-            const index = state.findIndex((i) => i.chiTietSanPham === updateProduct.chiTietSanPham && i.activeKey === updateProduct.activeKey); 
-            if (index !== -1){
-                state[index].soLuong = updateProduct.soLuong;
-                state[index].total = updateProduct.soLuong * state[index].giaBan;
+            const index = state.findIndex((i) => i.id === updateProduct.id); 
+            if (index !== -1){               
+                state[index].soLuong = state[index].soLuong + updateProduct.soLuong;
             }
         },
-
         RemoveProduct : (state,action) =>{
-            return state.filter((item) => item.key !== action.payload.key)
+            return state.filter((item) => item.id !== action.payload.id)
         },
-        TotalPrice:(state,action) => {
-            // const product = action.payload;
-            // const index = state.findIndex(item => item.activeKey === action.activeKey);
-            // if (index.length > 0){
-            //     for (let i = 0 ; i < index.length ; i++){
-                    
-            //     }
-            // }
+        UpdateApartProduct : (state,action)=>{
+            const updateProduct = action.payload;
+            const index = state.findIndex((i) => i.id === updateProduct.id); 
+            if (index !== -1){               
+                state[index].soLuong = state[index].soLuong - updateProduct.soLuong;
+            }
+        } ,
+        GetQuantityProduct : (state,action)=>{
+            const data = action.payload;
+            const index = state.findIndex((i) => i.id === data.id);             
+                return state[index].soLuong ;
+         
         }
-    },
+    }
+
 });
-export const {AddProduct,UpdateProduct} = productSlice.actions;
+export const {AddProduct,RemoveProduct,UpdatePushProduct,UpdateApartProduct,GetQuantityProduct} = productSlice.actions;
 export default productSlice.reducer;
-// export const {SetProduct,CreateProduct,UpdateProduct,RemoveProduct} = productSlice;
  export const GetProduct = (state) => state.product

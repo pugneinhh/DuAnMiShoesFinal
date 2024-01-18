@@ -44,7 +44,7 @@ public class HoaDonServicee {
 
     }
     public HoaDon findHoaDonbyID(String id){
-        return  hoaDonRepository.getById(id);
+        return  hoaDonRepository.findById(id).get();
     }
 
     public List<AdminHoaDonSanPham> detailHDSanPham(String  key){
@@ -53,7 +53,6 @@ public class HoaDonServicee {
     public HoaDon add(HoaDonRequest hoaDonRequest){
         HoaDon hoaDon= hoaDonRequest.map(new HoaDon());
         return  hoaDonRepository.save(hoaDon);
-
 
     }
 //    public LichSuHoaDon update(LichSuHoaDon kh, String ma){

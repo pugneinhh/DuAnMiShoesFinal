@@ -15,10 +15,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-
+@ToString
 public class HoaDonChiTietRequest {
-    private String idHD;
-    private String idSP;
+    private String hoaDon;
+    private String chiTietSanPham;
     private int soLuong;
     private BigDecimal giaSauGiam;
     private BigDecimal giaGiam;
@@ -29,8 +29,8 @@ public class HoaDonChiTietRequest {
     private int trangThai;
     public HoaDonChiTiet map(HoaDonChiTiet hdct){
         IDHoaDonChiTiet id=new IDHoaDonChiTiet();
-        id.setHoaDon(HoaDon.builder().id(this.idHD).build());
-        id.setChiTietSanPham(ChiTietSanPham.builder().id(this.idSP).build());
+        id.setHoaDon(HoaDon.builder().id(this.hoaDon).build());
+        id.setChiTietSanPham(ChiTietSanPham.builder().id(this.chiTietSanPham).build());
         hdct.setId(id);
         hdct.setSoLuong(this.soLuong);
         hdct.setGiaGiam(this.giaGiam);

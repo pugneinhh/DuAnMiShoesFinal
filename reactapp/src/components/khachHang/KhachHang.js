@@ -2,31 +2,26 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   Button,
-  DatePicker,
   Form,
   Input,
   Divider,
-  InputNumber,
   Select,
   Space,
   Table,
   Tag,
   Image,
 } from "antd";
-import { FilterFilled, UnorderedListOutlined } from "@ant-design/icons";
+import { FilterFilled } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import { IoInformation } from "react-icons/io5";
 import { BsFillEyeFill, BsPencilSquare } from "react-icons/bs";
-import { FaTag } from "react-icons/fa";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { ToastContainer, toast } from "react-toastify";
 import { BiSolidUserBadge } from "react-icons/bi";
-import { useAppDispatch } from "../api/Hook";
-import { KhachHangAPI } from "../api/user/khachHang.api";
 import { GrMapLocation } from "react-icons/gr";
 import ModalDiaChi from "./ModalDiaChi";
+
 export default function KhachHang() {
-  const dispatch = useAppDispatch();
+  
   const [khachHang, setKhachHang] = useState([]);
 
   const [componentSize, setComponentSize] = useState("default");
@@ -35,26 +30,7 @@ export default function KhachHang() {
   };
 
   const [openModalDiaChi, setOpenModalDiaChi] = useState(false);
-  const handleCloseMoDalDiaChi = () => {
-    setOpenModalDiaChi(false);
-  }
-  const [data, setData] = useState([]);
-  const loadData = () => {
-    KhachHangAPI.getALLKH()
-      .then((res) => {
-        // dispatch(SetEmployee(res.data.data));
-        setData(res.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  useEffect(() => {
-    loadData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
-
+ 
   
   const [form] = Form.useForm();
 
@@ -70,11 +46,6 @@ export default function KhachHang() {
   
     console.log(result.data);
   };
-
-  // console.log("111",khachHang);
-
-  // console.log("112", data);
-
 
   const columns = [
     {
@@ -190,12 +161,10 @@ export default function KhachHang() {
   ];
   const [idKH,setIdKH]=useState("");
   const detailDiaChi = (row) => {
-    console.log("KH NHÂNs",row);
     setIdKH(row);
     setOpenModalDiaChi(true);
-   
   }
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
 
   const [bordered] = useState(false);
   const [size] = useState("large");
@@ -327,12 +296,11 @@ export default function KhachHang() {
             dataSource={hasData ? khachHang : []}
             scroll={scroll}
           />
-        </div>{" "}
+        </div>
         <ModalDiaChi openModalDiaChi={openModalDiaChi}
           setOpenModalDiaChi={setOpenModalDiaChi}
           idKH={idKH}
-          onOk={handleCloseMoDalDiaChi}
-          onCancel={handleCloseMoDalDiaChi}
+          setIdKH={setIdKH}
         />
         <ToastContainer
           position="top-right"

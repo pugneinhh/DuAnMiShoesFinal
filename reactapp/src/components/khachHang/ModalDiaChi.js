@@ -1,66 +1,168 @@
-
-import { Button, DatePicker, Form, Input, InputNumber, Modal, Popconfirm, Select, Space, Switch, Table, Tag } from "antd";
+import { Button, DatePicker, Form, Input, InputNumber, Modal, Popconfirm, Select, Space, Table, Tag, Radio } from "antd";
 import axios from "axios";
-import { useEffect, useState } from "react";
-import moment from 'moment';
-import { KhachHangAPI } from "../api/user/khachHang.api";
-import { toast } from "react-toastify";
-import { EyeOutlined } from "@ant-design/icons";
-
+import React, { useState, useEffect } from "react";
 import AddModalDiaChi from "./AddModalDiaChi";
+import { ToastContainer, toast } from "react-toastify";
+import ModalUpdateDiaChi from "./ModalUpdateDiaChi";
+
 const ModalDiaChi = (props) => {
-    const { openModalDiaChi, setOpenModalDiaChi,idKH } = props;
+    const { openModalDiaChi, setOpenModalDiaChi, idKH, setIdKH } = props;
+    const [tableLayout, setTableLayout] = useState();
+    const [top, setTop] = useState('none');
+    const [bottom, setBottom] = useState('bottomRight');
+    const [nowAddress, setNowAddress] = useState("");
+
     const handleClose = () => {
-        setDiaChiKH([]);
+        setData([]);
+        setIdKH("");
         setOpenModalDiaChi(false);
-        // console.log("đóng")
+        console.log("đóng")
     };
+    console.log("modal địa chỉ", openModalDiaChi);
+    const handleUpdateTT = () => {
+        console.log("diachimacdinhmoi", nowAddress)
+        axios
+            .post(`http://localhost:8080/admin/khach-hang/update-tt-dc/${nowAddress}`)
+            .then((response) => {
+                console.log("update", response.data);
+                toast("✔️ Cập nhật dịa chỉ mặc định thành công!", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+                loadDiaChi();
+
+            })
+    }
     const [openModalAddDiaChi, setOpenModalAddDiaChi] = useState(false);
     const handleCloseAddMoDalDiaChi = () => {
-      
         setOpenModalAddDiaChi(false);
+    }
+    const [openModalUpdateDiaChi, setOpenModalUpdateDiaChi] = useState(false);
+    const handleOpenUpdateDiaChi = () => {
+        setOpenModalUpdateDiaChi(true);
+    }
+    console.log("idkh", idKH)
+    const [datas, setData] = useState([]);
+
+    const loadDiaChi = () => {
+        console.log("heheheh");
+        axios.get(`http://localhost:8080/admin/khach-hang/dia-chi/${idKH}`).then((respone) => {
+            setData(respone.data);
+            respone.data.map((item) => {
+                if (item.trangThai === 0) {
+                    setNowAddress(item.id);
+                }
+            })
+        })
+
+
+
 
     }
-    // console.log("idkh",idKH);
-    // const [data, setData] = useState([]);
-    // const loadData = () => {
-    //     console.log("diachir")
-    //     KhachHangAPI.getAddressByUser(idKH)
-    //         .then((res) => {
-    //             // dispatch(SetEmployee(res.data.data));
-    //             console.log("detail",res.data.data);
-    //             setData(res.data.data);
-    //         })
-    //         .catch((error) => {
-    //             console.log(error);
-    //         });
+
+    useEffect(() => {
+        if (idKH != null && idKH != undefined) {
+            loadDiaChi();
+        }
+    }, [idKH]);
+
+
+
+    // const rowSelection = {  
+    //       type:'radio',                
+    //   onChange: (selectedRowKeys, selectedRows) => {
+    //     console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+    //   },
+    //   getCheckboxProps: (record) => ({
+    //       checked:record.trangThai===0
+
+    //     }),
     // };
 
-    // useEffect(() => {
-    //     loadData();
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, []);
-    const [DiaChiKH, setDiaChiKH] = useState([])
-    useEffect(() => {
-        loadDCKH();
-    }, []);
 
-    const loadDCKH = async () => {
-        axios
-            .get(`http://localhost:8080/admin/khach-hang/dia-chi/${idKH}`)
-            .then((response) => {
-                setDiaChiKH(response.data);
-                console.log("11",response.data);           
-            })
-            .catch((error) => console.error("Error upfate item:", error));
+
+    const tableProps = {
+        title: false,
+        showHeader: false,
+        footer: false,
+        tableLayout,
     };
-    console.log(DiaChiKH);
+    console.log("dịa chỉ", datas);
+    const dataSource = datas.map((item, index) => ({
+        key: item.id,
+        id: item.id,
+        nguoiDung: item.nguoiDung,
+        tenNguoiNhan: item.tenNguoiNhan,
+        soDienThoai: item.soDienThoai,
+        idThanhPho: item.idThanhPho,
+        idHuyen: item.idHuyen,
+        idXa: item.idXa,
+        tenThanhPho: item.tenThanhPho,
+        tenHuyen: item.tenHuyen,
+        tenXa: item.tenXa,
+        diaChi: item.diaChi,
+        trangThai: item.trangThai
+    }));
+    const columns = [
+        // other columns...
+        {
+            render: (text, record) => (
+                <Radio
+                    checked={nowAddress === record.id}
+                    onChange={() => setNowAddress(record.id)}
+                />
+            )
+        },
+        {
+            title: 'Dia chi',
+            dataIndex: 'id',
+            key: 'id',
+            render: (text, record) => (
+                <div>
+                    <h6>{record.tenNguoiNhan} | {record.soDienThoai}</h6>
+                    <p>{record.diaChi}, {record.tenHuyen}, {record.tenThanhPho}</p>
+                    {record.trangThai === 0 ? (<Tag color="red">Mặc định</Tag>) : <div></div>}
+
+                </div>
+
+            ),
+        },
+        {
+            title: 'Action',
+            dataIndex: 'id',
+            key: 'id',
+            render: (text, record) => (
+                <Button type="primary" className='custom-button' onClick={handleOpenUpdateDiaChi}>Cập nhật</Button>
+
+            ),
+        }
+    ];
     return (
         <Modal
-            title="Khách hàng"
+            title="Địa chỉ"
             centered
             open={openModalDiaChi}
-            onOk={handleClose}
+            onOk={() => {
+                Modal.confirm({
+                    title: "Thông báo",
+                    content: "Bạn có chắc chắn muốn thay đổi địa chỉ mặc định không?",
+                    onOk: () => {
+                        handleUpdateTT();
+                    },
+                    footer: (_, { OkBtn, CancelBtn }) => (
+                        <>
+                            <CancelBtn />
+                            <OkBtn />
+                        </>
+                    ),
+                });
+            }}
             onCancel={handleClose}
 
             // footer={
@@ -68,22 +170,61 @@ const ModalDiaChi = (props) => {
             // }
             width={600}
         >
-           
-            <Button style={{marginLeft:400}} type="primary" onClick={() => setOpenModalAddDiaChi(true)}>
+
+            <Button style={{ marginLeft: 400 }} type="primary" onClick={() => setOpenModalAddDiaChi(true)}>
                 +Thêm địa chỉ mới
             </Button>
-            
+
             <hr className="mt-4"></hr>
             <div>
-                
+
+
+
+
+                <Table
+                    // rowSelection={rowSelection}
+                    // defaultCheckedRowKeys={selectedRowKeys}  
+                    //  {...tableProps}
+                    pagination={{
+                        position: [top, bottom],
+                    }}
+                    columns={columns}
+                    dataSource={dataSource}
+                />
+                <ToastContainer
+                    position="top-right"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="light"
+                />
+                {/* Same as */}
+                <ToastContainer />
             </div>
             <AddModalDiaChi openModalAddDiaChi={openModalAddDiaChi}
                 setOpenModalAddDiaChi={setOpenModalAddDiaChi}
                 idKH={idKH}
+                setIdKH={setIdKH}
+                loadDiaChi={loadDiaChi}
                 onOk={handleCloseAddMoDalDiaChi}
                 onCancel={handleCloseAddMoDalDiaChi}
             />
+            <ModalUpdateDiaChi
+                openModalUpdateDiaChi={openModalUpdateDiaChi}
+                setOpenModalUpdateDiaChi={setOpenModalUpdateDiaChi}
+                idKH={idKH}
+                setIdKH={setIdKH}
+                idDC={nowAddress}
+                loadDiaChi={loadDiaChi}
+                setIdDC={setNowAddress}
+            />
         </Modal>
+
     )
 }
 export default ModalDiaChi;

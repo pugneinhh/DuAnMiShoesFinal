@@ -2,19 +2,19 @@
 import { Button, DatePicker, Form, Input, InputNumber, Modal, Popconfirm, Select, Space, Switch, Table, Tag } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import moment from 'moment';
+
 import { AddressApi } from "../api/address/AddressApi";
 import { toast } from "react-toastify";
-import { EyeOutlined } from "@ant-design/icons";
 
-const AddModalDiaChi = (props) => {
+
+const ModalUpdateDiaChi = (props) => {
     const [form] = Form.useForm();
     const [listProvince, setListProvince] = useState([]);
     const [listDistricts, setListDistricts] = useState([]);
     const [listWard, setListWard] = useState([]);
-    const { openModalAddDiaChi, setOpenModalAddDiaChi,idKH,setIdKH,loadDiaChi } = props;
+    const { openModalUpdateDiaChi, setOpenModalUpdateDiaChi,idKH,setIdKH,idDC,loadDiaChi } = props;
     const handleClose = () => {
-        setOpenModalAddDiaChi(false);
+        setOpenModalUpdateDiaChi(false);
     };
   
     const handleSubmit = (value) => {
@@ -26,11 +26,11 @@ const AddModalDiaChi = (props) => {
             idXa: ward.key == null ? ward.WardCode : ward.key,
         };
         axios
-        .post("http://localhost:8080/admin/khach-hang/add-dia-chi", data)
+        .post("http://localhost:8080/admin/khach-hang/update-dia-chi", data)
         .then((response) => {
             console.log(response.data);
             // navigate('/voucher');
-            toast("✔️ Thêm thành công!", {
+            toast("✔️ Cập nhật thành công!", {
               position: "top-right",
               autoClose: 5000,
               hideProgressBar: false,
@@ -90,13 +90,13 @@ const AddModalDiaChi = (props) => {
 
     return (
         <Modal
-            title="Thêm địa chỉ"
+            title="Cập nhật địa chỉ"
             centered
-            open={openModalAddDiaChi}
+            open={openModalUpdateDiaChi}
             onOk={() => {
                 Modal.confirm({
                   title: "Thông báo",
-                  content: "Bạn có chắc chắn muốn thêm không?",
+                  content: "Bạn có chắc chắn muốn cập nhật không?",
                   onOk: () => {
                     form.submit();
                   },
@@ -283,4 +283,4 @@ const AddModalDiaChi = (props) => {
         </Modal>
     )
 }
-export default AddModalDiaChi;
+export default ModalUpdateDiaChi;

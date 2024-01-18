@@ -7,7 +7,7 @@ export const store = configureStore({
     reducer: {
       bill:BillReducer,
       product:ProductReducer,
-      // detailInvoiceL:DetailInvoiceReducer,
+       invoice:DetailInvoiceReducer,
        client:ClientReducer,
     },
   });
