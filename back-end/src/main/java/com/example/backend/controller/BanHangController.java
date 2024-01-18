@@ -49,7 +49,7 @@ public class BanHangController {
         hoaDonRequest.setMa("HDTQ"+ RandomStringUtils.randomNumeric(6));
         hoaDonRequest.setLoaiHoaDon(0);
         hoaDonRequest.setNgayTao(LocalDateTime.now());
-        hoaDonRequest.setGiaTriDiem(Integer.valueOf(hoaDonRequest.getThanhTien().intValue()/ct.getTiSo().intValue()));
+      //  hoaDonRequest.setGiaTriDiem(Integer.valueOf(hoaDonRequest.getThanhTien().intValue()/ct.getTiSo().intValue()));
 
         return  ResponseEntity.ok(banHangService.addHoaDon(hoaDonRequest));
     }

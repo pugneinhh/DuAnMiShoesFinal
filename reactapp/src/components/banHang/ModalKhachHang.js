@@ -46,8 +46,8 @@ const ModalKhachHang = (props) => {
     dispatch(
       UpdateKHToBill({
         key: activeKey,
-        nguoiDung: record.ten,
-        idNguoiDung: record.id,
+        nguoiDung: record.id,
+        tenNguoiDung: record.ten,
         gtNguoiDung: record.gioiTinh,
         diemNguoiDung: record.diem,
       })
@@ -148,7 +148,7 @@ const ModalKhachHang = (props) => {
               <button
                 type="primary"
                 shape="round"
-                className="btn btn-warning text-white"
+                className="btn btn-d text-white"
                 icon={<EyeOutlined />}
                 onClick={() => handleClickRemoveClient(record)}
               >

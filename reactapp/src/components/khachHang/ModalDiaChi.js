@@ -4,11 +4,12 @@ import React, { useState, useEffect } from "react";
 import AddModalDiaChi from "./AddModalDiaChi";
 
 const ModalDiaChi = (props) => {
-    const { openModalDiaChi, setOpenModalDiaChi,idKH,setIdKH } = props;
+    const { openModalDiaChi, setOpenModalDiaChi,idKH,setIdKH} = props;
     const [tableLayout, setTableLayout] = useState();
       const [top, setTop] = useState('none');
       const [bottom, setBottom] = useState('bottomRight');
-      const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+      const [nowAddress,setNowAddress] = useState("");
+      console.log("now",nowAddress);
     const handleClose = () => {
         setData([]);
         setIdKH("");
@@ -30,7 +31,7 @@ const ModalDiaChi = (props) => {
           setData(result.data);  
           result.data.map((item) => {
             if(item.trangThai===0){
-                setSelectedRowKeys(item.id)
+              setNowAddress(item.id);
             }
         }
           )
@@ -40,17 +41,19 @@ const ModalDiaChi = (props) => {
           loadDiaChi();
           
       }, [idKH]);
-     console.log("strrr",selectedRowKeys)
-      const rowSelection = {  
-            type:'radio',                
-        onChange: (selectedRowKeys, selectedRows) => {
-          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-        },
-        getCheckboxProps: (record) => ({
-            checked:record.trangThai===0
+
+
+
+      // const rowSelection = {  
+      //       type:'radio',                
+      //   onChange: (selectedRowKeys, selectedRows) => {
+      //     console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+      //   },
+      //   getCheckboxProps: (record) => ({
+      //       checked:record.trangThai===0
            
-          }),
-      };
+      //     }),
+      // };
       
       
 
@@ -78,6 +81,14 @@ const ModalDiaChi = (props) => {
       }));
       const columns = [
         // other columns...
+        {
+          render :(text,record) => (
+            <Radio 
+            checked={nowAddress === record.id}
+             onChange = {() => setNowAddress(record.id)}
+            />
+          )
+        },
         {
           title: 'Dia chi',
           dataIndex: 'id',
@@ -127,9 +138,9 @@ const ModalDiaChi = (props) => {
             
            
   <Table
-    rowSelection={rowSelection}
-    defaultCheckedRowKeys={selectedRowKeys}  
-        {...tableProps}
+    // rowSelection={rowSelection}
+    // defaultCheckedRowKeys={selectedRowKeys}  
+      //  {...tableProps}
         pagination={{
           position: [top, bottom],
         }}
