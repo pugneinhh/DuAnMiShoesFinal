@@ -521,10 +521,10 @@ const onEdit = (targetKey, action) => {
           <>
          
           {
-          (KH.length == 0) ? (
-            <p>Tên khách hàng: <Tag color="#cccccc" className="rounded-pill">Khách lẻ</Tag></p>
+          (!tab.nguoiDung) ? (
+            <p>Tên khách hàng: <Tag color="#cccccc"  className="rounded-pill">Khách lẻ</Tag></p>
           ) : (
-            <p>Tên khách hàng: <Tag bordered={false} color="processing" className="rounded-pill">{KH[0].ten}</Tag></p>
+            <p>Tên khách hàng: <Tag bordered={false} color={tab.gtNguoiDung === "true" ?"processing" : "#FFB6C1"} className="rounded-pill">{tab.nguoiDung}</Tag></p>
           )
           }
           </>
@@ -569,7 +569,7 @@ const onEdit = (targetKey, action) => {
                  return accumulator + currentProduct.total},0))}`}</h6>
                 <h6 className="mt-4">Phí vận chuyển: 0</h6>
                 <h6 className="mt-4">Giảm giá: 0</h6>
-                <h6 className="mt-4">Điểm hiện tại: <>{(KH.length > 0) ? `${KH[0].diem}` : 0}</></h6>
+                <h6 className="mt-4">Điểm hiện tại: <>{(tab.nguoiDung !== null) ? tab.diemNguoiDung : 0}</></h6>
                 <h6 className="mt-4">Tổng tiền: {`${Intl.NumberFormat("en-US").format(data.reduce((accumulator,currentProduct) =>{
                  return accumulator + currentProduct.total},0))} VND`}</h6>
               </div>
@@ -649,13 +649,13 @@ const onEdit = (targetKey, action) => {
         <div className="mb-3">
         <>
          
-         {
-         (KH.length == 0) ? (
-           <p>Tên khách hàng: <Tag color="#cccccc" className="rounded-pill">Khách lẻ</Tag></p>
-         ) : (
-           <p>Tên khách hàng: <Tag bordered={false} color="processing" className="rounded-pill">{KH[0].ten}</Tag></p>
-         )
-         }
+        {
+          (!tab.nguoiDung) ? (
+            <p>Tên khách hàng: <Tag color="#cccccc"  className="rounded-pill">Khách lẻ</Tag></p>
+          ) : (
+            <p>Tên khách hàng: <Tag bordered={false} color={tab.gtNguoiDung === "true" ?"processing" : "#FFB6C1"} className="rounded-pill">{tab.nguoiDung}</Tag></p>
+          )
+          }
          </>
         </div>
        
@@ -692,7 +692,7 @@ const onEdit = (targetKey, action) => {
                 <h6 className="mt-4">Tiền hàng: 0</h6>
                 <h6 className="mt-4">Phí vận chuyển: 0</h6>
                 <h6 className="mt-4">Giảm giá: 0</h6>
-                <h6 className="mt-4">Điểm hiện tại: <>{(KH.length > 0) ? `${KH[0].diem}` : 0}</></h6>
+                <h6 className="mt-4">Điểm hiện tại: <>{(tab.nguoiDung !== null) ? `${tab.diemNguoiDung}` : 0}</></h6>
                 <h6 className="mt-4">Tổng tiền: 0</h6>
               </div>
               <div className="col-md-4">
