@@ -11,34 +11,50 @@ import AddModalDiaChi from "./AddModalDiaChi";
 const ModalDiaChi = (props) => {
     const { openModalDiaChi, setOpenModalDiaChi,idKH } = props;
     const handleClose = () => {
+        setDiaChiKH([]);
         setOpenModalDiaChi(false);
-        console.log("đóng")
+        // console.log("đóng")
     };
     const [openModalAddDiaChi, setOpenModalAddDiaChi] = useState(false);
     const handleCloseAddMoDalDiaChi = () => {
+      
         setOpenModalAddDiaChi(false);
+
     }
-    console.log("idkh",idKH);
-    const [data, setData] = useState([]);
-    const loadData = () => {
-        console.log("diachir")
-        KhachHangAPI.getAddressByUser(idKH)
-            .then((res) => {
-                // dispatch(SetEmployee(res.data.data));
-                console.log("detail",res.data.data);
-                setData(res.data.data);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    };
+    // console.log("idkh",idKH);
+    // const [data, setData] = useState([]);
+    // const loadData = () => {
+    //     console.log("diachir")
+    //     KhachHangAPI.getAddressByUser(idKH)
+    //         .then((res) => {
+    //             // dispatch(SetEmployee(res.data.data));
+    //             console.log("detail",res.data.data);
+    //             setData(res.data.data);
+    //         })
+    //         .catch((error) => {
+    //             console.log(error);
+    //         });
+    // };
 
+    // useEffect(() => {
+    //     loadData();
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, []);
+    const [DiaChiKH, setDiaChiKH] = useState([])
     useEffect(() => {
-        loadData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        loadDCKH();
     }, []);
-   console.log("diachine",data);
 
+    const loadDCKH = async () => {
+        axios
+            .get(`http://localhost:8080/admin/khach-hang/dia-chi/${idKH}`)
+            .then((response) => {
+                setDiaChiKH(response.data);
+                console.log("11",response.data);           
+            })
+            .catch((error) => console.error("Error upfate item:", error));
+    };
+    console.log(DiaChiKH);
     return (
         <Modal
             title="Khách hàng"
