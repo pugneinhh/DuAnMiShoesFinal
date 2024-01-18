@@ -87,7 +87,7 @@ const BanHang = () => {
 
 // api add bill
  const handleAddBill = (value) =>{
-  const dataHoaDon = hoaDons.filter((item) => item.key === value);
+  const dataHoaDon = hoaDons.filter((item) => item.id === value);
   console.log(dataHoaDon[0]);
   const addHD = async() => {
     const dataAdd =  await axios.post(`http://localhost:8080/ban-hang/add-hoa-don`,dataHoaDon[0]);
@@ -163,7 +163,7 @@ const handleClickAddHD=() => {
   if(maxKey>0){
   dispatch(
     CreateBill(
-    {id:uuid(),ma:`HDTQ${maxKey+1}`,nhanVien:'Phanh',nguoiDung:null,voucher:null,ngayMua:null,giaGoc:null,giaGiamGia:null,thanhTien:null,diemSuDung:null,giaTriDiem:null,tenNguoiNhan:null,soDienThoai:null,diaChi:null,qrCode:null,ghiChu:null,ngayDuKienNhan:null,ngayNhan:'null',ngayTraHang:null,nguoiTao:'Phanh',nguoiSua:null,ngaySua:null,trangThai:0,key:uuid()}
+    {id:uuid(),ma:`HDTQ${maxKey+1}`,nhanVien:'Phanh',nguoiDung:null,voucher:null,ngayMua:null,giaGoc:0,giaGiamGia:0,thanhTien:0,diemSuDung:null,giaTriDiem:null,tenNguoiNhan:null,soDienThoai:null,diaChi:null,qrCode:null,ghiChu:null,ngayDuKienNhan:null,ngayNhan:'null',ngayTraHang:null,nguoiTao:'Phanh',nguoiSua:null,ngaySua:null,trangThai:0,key:uuid()}
   )
   );
   initState.current++;
@@ -172,7 +172,7 @@ const handleClickAddHD=() => {
     }else{
       dispatch(
         CreateBill(
-          {id:uuid(),ma:`HDTQ${initState.current}`,nhanVien:'Phanh',nguoiDung:null,voucher:null,ngayMua:null,giaGoc:null,giaGiamGia:null,thanhTien:null,diemSuDung:null,giaTriDiem:null,tenNguoiNhan:null,soDienThoai:null,diaChi:null,qrCode:null,ghiChu:null,ngayDuKienNhan:null,ngayNhan:'null',ngayTraHang:null,nguoiTao:'Phanh',nguoiSua:null,ngaySua:null,trangThai:0,key:uuid()
+          {id:uuid(),ma:`HDTQ${initState.current}`,nhanVien:'Phanh',nguoiDung:null,voucher:null,ngayMua:null,giaGoc:0,giaGiamGia:0,thanhTien:0,diemSuDung:0,giaTriDiem:null,tenNguoiNhan:null,soDienThoai:null,diaChi:null,qrCode:null,ghiChu:null,ngayDuKienNhan:null,ngayNhan:'null',ngayTraHang:null,nguoiTao:'Phanh',nguoiSua:null,ngaySua:null,trangThai:0,key:uuid()
           //key:`${initState.current}`
         }
           )
@@ -524,7 +524,7 @@ const onEdit = (targetKey, action) => {
           (!tab.nguoiDung) ? (
             <p>Tên khách hàng: <Tag color="#cccccc"  className="rounded-pill">Khách lẻ</Tag></p>
           ) : (
-            <p>Tên khách hàng: <Tag bordered={false} color={tab.gtNguoiDung === "true" ?"processing" : "#FFB6C1"} className="rounded-pill">{tab.nguoiDung}</Tag></p>
+            <p>Tên khách hàng: <Tag bordered={false} color={tab.gtNguoiDung === "true" ?"processing" : "#FFB6C1"} className="rounded-pill">{tab.tenNguoiDung}</Tag></p>
           )
           }
           </>
@@ -653,7 +653,7 @@ const onEdit = (targetKey, action) => {
           (!tab.nguoiDung) ? (
             <p>Tên khách hàng: <Tag color="#cccccc"  className="rounded-pill">Khách lẻ</Tag></p>
           ) : (
-            <p>Tên khách hàng: <Tag bordered={false} color={tab.gtNguoiDung === "true" ?"processing" : "#FFB6C1"} className="rounded-pill">{tab.nguoiDung}</Tag></p>
+            <p>Tên khách hàng: <Tag bordered={false} color={tab.gtNguoiDung === "true" ?"processing" : "#FFB6C1"} className="rounded-pill">{tab.tenNguoiDung}</Tag></p>
           )
           }
          </>

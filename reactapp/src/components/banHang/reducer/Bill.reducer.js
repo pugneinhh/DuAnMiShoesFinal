@@ -23,7 +23,7 @@ const billSlice = createSlice({
                 ma: data.ma,
                 trangThai: 0,
                 key: data.key,
-                idNguoiDung : null,
+                tenNguoiDung : null,
                 //ngayTao: moment(new Date().getTime()).format("YYYY-MM-DD HH:mm:ss"),
                 loaiHoaDon: 0,
                 nhanVien: data.nhanVien,
@@ -63,7 +63,7 @@ const billSlice = createSlice({
                 state[index].ngaySua = updatedBill.ngaySua;
                 state[index].ngayThanhToan = updatedBill.ngayThanhToan;
                 state[index].nguoiDung = updatedBill.nguoiDung;
-                state[index].idNguoiDung = updatedBill.idNguoiDung;
+                state[index].tenNguoiDung = updatedBill.tenNguoiDung;
                 state[index].voucher = updatedBill.voucher;
                 state[index].ngayMua = updatedBill.ngayMua;
                 state[index].giaGoc = updatedBill.giaGoc;
@@ -104,7 +104,7 @@ const billSlice = createSlice({
             console.log(updatedBill)
             if (index !== -1) {
                 state[index].nguoiDung = updatedBill.nguoiDung;
-                state[index].idNguoiDung = updatedBill.idNguoiDung;
+                state[index].tenNguoiDung = updatedBill.tenNguoiDung;
                 state[index].gtNguoiDung = updatedBill.gtNguoiDung;
                 state[index].diemNguoiDung = updatedBill.diemNguoiDung;
             }
@@ -114,7 +114,7 @@ const billSlice = createSlice({
             const index = state.findIndex((period) => period.key === updatedBill.key);
             if (index !== -1) {
                 state[index].nguoiDung = null; 
-                state[index].idNguoiDung = null;
+                state[index].tenNguoiDung = null;
                 state[index].gtNguoiDung = null;
                 state[index].diemNguoiDung = null;
             }
