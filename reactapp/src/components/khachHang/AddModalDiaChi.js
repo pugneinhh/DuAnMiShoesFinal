@@ -4,7 +4,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import moment from 'moment';
 import { AddressApi } from "../api/address/AddressApi";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import { EyeOutlined } from "@ant-design/icons";
 
 const AddModalDiaChi = (props) => {
@@ -280,7 +280,22 @@ const AddModalDiaChi = (props) => {
                     <Input />
                 </Form.Item>
             </Form>
+            <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      /><ToastContainer />
         </Modal>
+        
+     
+      
     )
 }
 export default AddModalDiaChi;

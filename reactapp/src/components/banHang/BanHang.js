@@ -633,13 +633,13 @@ const onEdit = (targetKey, action) => {
               <Button className='me-5 bg-success' type="primary" onClick={() => setOpenKhachHang(true)}>
                 Chọn tài khoản
               </Button>
-              <ModalKhachHang openKhachHang={openKhachHang} 
+              {/* <ModalKhachHang openKhachHang={openKhachHang} 
                        // idHD = {tab.id}
                         activeKey = {activeKey}
                 setOpenKhachHang={setOpenKhachHang}
                 onOk={handleCloseKhachHang}
                 onCancel={handleCloseKhachHang}
-              />
+              /> */}
 
             </>
           </div>
