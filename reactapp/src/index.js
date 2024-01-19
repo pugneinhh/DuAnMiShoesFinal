@@ -37,6 +37,7 @@ import { Provider } from "react-redux";
 import AddKhachHang from './components/khachHang/AddKhachHang';
 
 import { store } from './components/banHang/redux/store';
+import Admin from './components/admin/Admin';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -62,7 +63,7 @@ root.render(
           <Route path='chat-lieu' element = {<ChatLieu/>}></Route>
           <Route path='kich-thuoc' element = {<KichThuoc/>}></Route>
           <Route path='mau-sac' element = {<MauSac/>}></Route>
-<Route path='hang' element = {<Hang/>}></Route>
+          <Route path='hang' element = {<Hang/>}></Route>
           <Route path='san-pham' element = {<SanPham/>}></Route>
           <Route path='showct/:uuid' element = {<ChiTietSanPham/>}></Route>
             <Route path="nhan-vien" element={<NhanVien />}></Route>
@@ -75,7 +76,9 @@ root.render(
           <Route path="update-khach-hang/:id" element={<UpdateKhachHang />}></Route>
           <Route path='them-san-pham' element = {<AddSanPham/>}></Route>
 
-          <Route path='/admin/ban-hang' element={<BanHang/>}></Route>
+          <Route path='/admin/ban-hang' element={
+          <BanHang/>
+          }></Route>
           
         </Route>
       </Routes>

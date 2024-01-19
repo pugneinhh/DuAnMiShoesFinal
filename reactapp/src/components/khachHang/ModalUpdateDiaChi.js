@@ -4,7 +4,9 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 import { AddressApi } from "../api/address/AddressApi";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
+import { da } from "date-fns/locale";
+
 
 
 const ModalUpdateDiaChi = (props) => {
@@ -12,21 +14,23 @@ const ModalUpdateDiaChi = (props) => {
     const [listProvince, setListProvince] = useState([]);
     const [listDistricts, setListDistricts] = useState([]);
     const [listWard, setListWard] = useState([]);
-    const { openModalUpdateDiaChi, setOpenModalUpdateDiaChi,idKH,setIdKH,idDC,loadDiaChi } = props;
+    const { openModalUpdateDiaChi, setOpenModalUpdateDiaChi,diaChiUpdate,setDiaChiUpdate,loadDiaChi } = props;
     const handleClose = () => {
         setOpenModalUpdateDiaChi(false);
+        
     };
   
-    const handleSubmit = (value) => {
-        console.log(value);
+    const handleUpdateDC = (value) => {
+        // console.log("phanh oi",province.key);
+        
         const data={
             ...value,
-            idThanhPho: province.key == null ? province.ProvinceID : province.key,
-            idHuyen: district.key == null ? district.DistrictID : district.key,
-            idXa: ward.key == null ? ward.WardCode : ward.key,
+            // idThanhPho: province === null ? null : province.key,
+            // idHuyen: district === null ? null : district.key,
+            // idXa: ward === null ? null : ward.key,
         };
         axios
-        .post("http://localhost:8080/admin/khach-hang/update-dia-chi", data)
+        .post(`http://localhost:8080/admin/khach-hang/update-dia-chi/${data.id}`, data)
         .then((response) => {
             console.log(response.data);
             // navigate('/voucher');
@@ -41,12 +45,13 @@ const ModalUpdateDiaChi = (props) => {
               theme: "light",
             });
             form.resetFields();
-            form.setFieldsValue({idNguoiDung:idKH});
             loadDiaChi();
             handleClose();
             
         })
     };
+   
+  
     const loadDataProvince = () => {
         AddressApi.fetchAllProvince().then((res) => {
             setListProvince(res.data.data);
@@ -80,11 +85,27 @@ const ModalUpdateDiaChi = (props) => {
         form.setFieldsValue({ wardCode: valueWard.valueWard });
         setWard(valueWard);
     };
-
+    console.log("diacji",diaChiUpdate)
     useEffect(() => {
-        form.setFieldsValue({idNguoiDung:idKH});
+    console.log("updatesss")
+       form.setFieldsValue(
+        {id:diaChiUpdate.id,
+        idNguoiDung:diaChiUpdate.nguoiDung,
+        diaChi:diaChiUpdate.diaChi,
+        tenNguoiNhan:diaChiUpdate.tenNguoiNhan,
+        soDienThoai:diaChiUpdate.soDienThoai,
+        tenThanhPho:diaChiUpdate.tenThanhPho,
+        tenHuyen:diaChiUpdate.tenHuyen,
+        tenXa:diaChiUpdate.tenXa,
+        trangThai:diaChiUpdate.trangThai,
+        idXa:diaChiUpdate.idXa,
+        idHuyen:diaChiUpdate.idHuyen,
+        idThanhPho:diaChiUpdate.idThanhPho,
+        }
+       )
         loadDataProvince();
-    }, []);
+        // loadDetailDiaChi();
+    }, [diaChiUpdate]);
 
 
 
@@ -93,12 +114,15 @@ const ModalUpdateDiaChi = (props) => {
             title="Cập nhật địa chỉ"
             centered
             open={openModalUpdateDiaChi}
+            
             onOk={() => {
                 Modal.confirm({
                   title: "Thông báo",
                   content: "Bạn có chắc chắn muốn cập nhật không?",
+                  style:{zIndex:2000},
                   onOk: () => {
                     form.submit();
+                   
                   },
                   footer: (_, { OkBtn, CancelBtn }) => (
                     <>
@@ -107,17 +131,32 @@ const ModalUpdateDiaChi = (props) => {
                     </>
                   ),
                 });
+                
               }}
             onCancel={handleClose}
-
+            zIndex={1000}
             // footer={
             //     <button onClick={handleClose}>Hủy</button>
             // }
             width={600}
         >
-            <Form form={form} onFinish={handleSubmit} layout="vertical">
-                <Form.Item name="idNguoiDung" hidden></Form.Item>
-
+            <Form form={form} onFinish={handleUpdateDC} layout="vertical">
+                <Form.Item name="idNguoiDung" hidden >
+                    <Input></Input>
+                </Form.Item>
+                <Form.Item name="trangThai" hidden >
+                    <Input></Input>
+                </Form.Item>
+                <Form.Item name="idXa" hidden >
+                    <Input></Input>
+                </Form.Item>
+                <Form.Item name="idHuyen" hidden >
+                    <Input></Input>
+                </Form.Item>
+                <Form.Item name="idThanhPho" hidden >
+                    <Input></Input>
+                </Form.Item>
+                <Form.Item name="id" hidden></Form.Item>
                 <Form.Item
                     name="tenNguoiNhan"
                     label="Họ và tên"
@@ -280,6 +319,18 @@ const ModalUpdateDiaChi = (props) => {
                     <Input />
                 </Form.Item>
             </Form>
+            <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      /><ToastContainer />
         </Modal>
     )
 }
