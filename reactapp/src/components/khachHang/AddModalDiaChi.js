@@ -17,6 +17,7 @@ const AddModalDiaChi = (props) => {
         setOpenModalAddDiaChi(false);
     };
   
+
     const handleSubmit = (value) => {
         console.log(value);
         const data={
@@ -97,6 +98,8 @@ const AddModalDiaChi = (props) => {
                 Modal.confirm({
                   title: "Thông báo",
                   content: "Bạn có chắc chắn muốn thêm không?",
+                  centered: true,
+                  getContainer:() => document.getElementById('modal-root'),
                   onOk: () => {
                     form.submit();
                   },
@@ -109,13 +112,15 @@ const AddModalDiaChi = (props) => {
                 });
               }}
             onCancel={handleClose}
-
+            style={{zIndex:0}}
             // footer={
             //     <button onClick={handleClose}>Hủy</button>
             // }
             width={600}
         >
-            <Form form={form} onFinish={handleSubmit} layout="vertical">
+            <Form form={form} 
+            onFinish={handleSubmit} 
+            layout="vertical">
                 <Form.Item name="idNguoiDung" hidden></Form.Item>
 
                 <Form.Item
@@ -280,6 +285,7 @@ const AddModalDiaChi = (props) => {
                     <Input />
                 </Form.Item>
             </Form>
+            <div id="modal-root"></div>
             <ToastContainer
         position="top-right"
         autoClose={5000}
