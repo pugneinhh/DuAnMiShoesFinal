@@ -40,7 +40,7 @@ const ModalKhachHang = (props) => {
   const dispatch = useDispatch();
   const client = useSelector(GetClient);
   const bill = useSelector(GetBill);
-  const idKH = bill.filter((item)=> item.id === activeKey)[0].idNguoiDung;
+  const idKH = bill.filter((item)=> item.id === activeKey)[0].nguoiDung;
 
   const handleClickAddClient = (record) => {
     dispatch(
@@ -148,7 +148,7 @@ const ModalKhachHang = (props) => {
               <button
                 type="primary"
                 shape="round"
-                className="btn btn-d text-white"
+                className="btn btn-warning text-white"
                 icon={<EyeOutlined />}
                 onClick={() => handleClickRemoveClient(record)}
               >

@@ -4,10 +4,16 @@ import { useEffect, useState } from "react";
 import moment from 'moment';
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { GetPayDetail } from "./reducer/PayDetail.reducer";
 
 const ModalThanhToan = (props) => {
     const { openThanhToan, setOpenThanhToan } = props;
     const total = props.total;
+    const hoaDon = props.hoaDon;
+    console.log(hoaDon);
+    const payDetail = useSelector(GetPayDetail);
+    const data = payDetail.filter((item)=> item.hoaDon === hoaDon);
 
     const handleClose = () => {
         setOpenThanhToan(false);
@@ -33,26 +39,26 @@ const ModalThanhToan = (props) => {
     const columns = [
         {
             title: 'STT',
-            dataIndex: 'id',
-            key: 'id',
-            render: (id, record, index) => { ++index; return index },
+            dataIndex: 'stt',
+            key: 'stt',
+            render: (stt, record, index) => { ++index; return index },
             showSortTooltip: false,
 
         },
-        {
-            title: 'Mã giao dịch',
-            dataIndex: 'trangThai',
-            key: 'trangThai',
-        },
+        // {
+        //     title: 'Mã giao dịch',
+        //     dataIndex: 'trangThai',
+        //     key: 'trangThai',
+        // },
         {
             title: 'Số tiền',
-            dataIndex: 'trangThai',
-            key: 'trangThai',
+            dataIndex: 'soTien',
+            key: 'soTien',
         },
         {
             title: 'Phương thức',
-            dataIndex: 'ngayTao',
-            center: "true",
+            dataIndex: 'phuongThuc',
+            key: 'phuongThuc',
 
         },
         {
@@ -91,7 +97,9 @@ const ModalThanhToan = (props) => {
                 <div className="col-md-5"></div>
                 <h6 className="col-md-4 text-end text-danger fw-bold" style={{ paddingRight: '25px' }}> {`${Intl.NumberFormat("en-US").format(total)} VNĐ`}</h6>
             </div>
-            <Table  columns={columns} style={{ marginTop: '10px' }} pagination={{}} />
+            <Table  columns={columns} 
+            dataSource={data} 
+            style={{ marginTop: '10px' }} pagination={{}} />
 
             <div className="row mt-3">
                 <h6 className="col-md-3 mt-2 fw-bold">Khách thanh toán</h6>

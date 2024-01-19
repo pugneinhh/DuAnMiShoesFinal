@@ -547,7 +547,8 @@ const onEdit = (targetKey, action) => {
                 onOk={handleCloseThanhToan}
                 onCancel={handleCloseThanhToan} 
                 total = {data.reduce((accumulator,currentProduct) =>{
-                  return accumulator + currentProduct.total},0)} />
+                  return accumulator + currentProduct.total},0)} 
+                  hoaDon = {activeKey}/>
             </div>
             
             <div className="row">
