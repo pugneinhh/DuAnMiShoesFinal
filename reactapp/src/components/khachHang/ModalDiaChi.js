@@ -113,7 +113,7 @@ const ModalDiaChi = (props) => {
           )
         },
         {
-          title: 'Dia chi',
+          title: 'Địa chỉ giao hàng',
           dataIndex: 'id',
           key: 'id',
           render: (text, record) => (

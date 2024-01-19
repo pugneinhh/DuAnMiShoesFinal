@@ -29,9 +29,9 @@ export default function HoaDon() {
                 })
                 .catch(error => console.error('Error adding item:', error));
     
-        console.log(moment(values.ngayBD));
-        console.log(moment(values.ngayKT).format('YYYY-MM-DD'));
-        console.log(moment(values.ngayKT));
+        console.log("bd",moment(values.ngayBD));
+        // console.log(moment(values.ngayKT).format('YYYY-MM-DD'));
+        console.log("kt",moment(values.ngayKT));
     }
 
     const [hoaDon, setHoaDons] = useState([])
