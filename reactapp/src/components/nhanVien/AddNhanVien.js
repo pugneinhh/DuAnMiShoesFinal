@@ -511,8 +511,7 @@ export default function AddNhanVien() {
             </Card>
           </Col>
         </Row>
-      </Form>
-      <ToastContainer
+        <ToastContainer
         position="top-right"
         autoClose={5000}
         hideProgressBar={false}
@@ -525,6 +524,8 @@ export default function AddNhanVien() {
         theme="light"
       />
       <ToastContainer />
+      </Form>
+
     </>
 
   )

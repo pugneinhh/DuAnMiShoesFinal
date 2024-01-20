@@ -19,8 +19,9 @@ export default function HoaDon() {
 
     const tim = (values) => {
         // Send a POST request to the backend
-            // Send a POST request to the backend
-            axios.get(`http://localhost:8080/hoa-don/tim-kiem/${values.key}/${values.timLoai}/${moment(values.ngayBD).format('YYYY-MM-DD')}/${moment(values.ngayKT).format('YYYY-MM-DD')}`)
+            // Send a POST request to the backen
+            console.log("tim",values)
+            axios.get('http://localhost:8080/hoa-don/tim-kiem',values)
                 .then(response => {
                     // Update the list of items
                     setHoaDons(response.data);
@@ -29,9 +30,11 @@ export default function HoaDon() {
                 })
                 .catch(error => console.error('Error adding item:', error));
     
-        console.log("bd",moment(values.ngayBD));
+        console.log("bd",moment(values.ngayBDHD).format('YYYY-MM-DD'));
+        
+        console.log("bd",values.ngayBDHD);
         // console.log(moment(values.ngayKT).format('YYYY-MM-DD'));
-        console.log("kt",moment(values.ngayKT));
+        console.log("kt",moment(values.ngayKTHD).format('YYYY-MM-DD'));
     }
 
     const [hoaDon, setHoaDons] = useState([])
@@ -520,10 +523,10 @@ export default function HoaDon() {
                     form={form}
                 >
                     <div className="col-md-6">
-                        <Form.Item label="Tìm kiếm" name='hehe'>
+                        <Form.Item label="Tìm kiếm" name='tenHD'>
                             <Input required className="rounded-pill border-warning" />
                         </Form.Item>
-                        <Form.Item label="Loại HD" className="rounded-pill border-warning" name='timLoai'>
+                        <Form.Item label="Loại HD" className="rounded-pill border-warning" name='loaiHD'>
                             <Select className="rounded-pill border-warning" >
                                 <Select.Option className="rounded-pill border-warning" value="1">Tại quầy</Select.Option>
                                 <Select.Option className="rounded-pill border-warning" value="0">Online</Select.Option>
@@ -532,12 +535,12 @@ export default function HoaDon() {
                     </div>
                     <div className='col-md-6'>
                         <div className='col-md-12'>
-                            <Form.Item label="Ngày bắt đầu" name='ngayBD'>
+                            <Form.Item label="Ngày bắt đầu" name='ngayBDHD'>
                                 <DatePicker className='rounded-pill border-warning' placeholder='Ngày bắt đầu' style={{ width: '100%' }} />
                             </Form.Item>
                         </div>
                         <div className='col-md-12'>
-                            <Form.Item label="Ngày kết thúc" name='ngayKT'>
+                            <Form.Item label="Ngày kết thúc" name='ngayKTHD'>
                                 <DatePicker className='rounded-pill border-warning' placeholder='Ngày kết thúc' style={{ width: '100%' }} />
                             </Form.Item>
                         </div>
