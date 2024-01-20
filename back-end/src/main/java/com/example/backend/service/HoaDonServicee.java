@@ -1,5 +1,6 @@
 package com.example.backend.service;
 import com.example.backend.dto.request.HoaDonRequest;
+import com.example.backend.dto.request.hoadonsearch.HoaDonSearch;
 import com.example.backend.dto.response.AdminHoaDonDetailRespon;
 import com.example.backend.dto.response.AdminHoaDonResponn;
 import com.example.backend.entity.HoaDon;
@@ -27,8 +28,8 @@ public class HoaDonServicee {
     public List<AdminHoaDonResponn> getALLTT(int tt) {
         return hoaDonRepository.getALLHDTT(tt);
     }
-    public List<AdminHoaDonResponn> timHoaDon(String tim, int loai, java.sql.Date bd, Date kt){
-        return hoaDonRepository.search(tim,loai,bd,kt);
+    public List<AdminHoaDonResponn> timHoaDon(HoaDonSearch hoaDonSearch){
+        return hoaDonRepository.search(hoaDonSearch);
     }
     public AdminHoaDonDetailRespon getByID(String id){
         return hoaDonRepository.detailHD(id);

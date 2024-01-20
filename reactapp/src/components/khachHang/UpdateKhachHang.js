@@ -114,7 +114,7 @@ export default function UpdateCustumerManagement() {
            
             KhachHangAPI.update(formData)
                 .then(() => {
-                    toast('🦄 Thêm Thành công!', {
+                    toast('🦄 Update Thành công!', {
                         position: "top-right",
                         autoClose: 3000,
                         hideProgressBar: false,

@@ -547,7 +547,8 @@ const onEdit = (targetKey, action) => {
                 onOk={handleCloseThanhToan}
                 onCancel={handleCloseThanhToan} 
                 total = {data.reduce((accumulator,currentProduct) =>{
-                  return accumulator + currentProduct.total},0)} />
+                  return accumulator + currentProduct.total},0)} 
+                  hoaDon = {activeKey}/>
             </div>
             
             <div className="row">
@@ -633,13 +634,13 @@ const onEdit = (targetKey, action) => {
               <Button className='me-5 bg-success' type="primary" onClick={() => setOpenKhachHang(true)}>
                 Chọn tài khoản
               </Button>
-              <ModalKhachHang openKhachHang={openKhachHang} 
+              {/* <ModalKhachHang openKhachHang={openKhachHang} 
                        // idHD = {tab.id}
                         activeKey = {activeKey}
                 setOpenKhachHang={setOpenKhachHang}
                 onOk={handleCloseKhachHang}
                 onCancel={handleCloseKhachHang}
-              />
+              /> */}
 
             </>
           </div>

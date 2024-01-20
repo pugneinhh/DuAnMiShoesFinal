@@ -33,6 +33,10 @@ public class KhachHangController {
         request.setTrangThai(1);
         return ResponseEntity.ok(khachHangService.addDiaChi(request));
     }
+    @GetMapping("/detailDC/{id}")
+    public ResponseEntity<?> detailDiaChi(@PathVariable("id")String id){
+        return ResponseEntity.ok(khachHangService.detailDiaChi(id));
+    }
     @PostMapping("/update-dia-chi/{id}")
     public ResponseEntity<?> updateDiaChi(@PathVariable("id")String id,@RequestBody DiaChiRequest request){
         return ResponseEntity.ok(khachHangService.updateDiaChi(id,request));

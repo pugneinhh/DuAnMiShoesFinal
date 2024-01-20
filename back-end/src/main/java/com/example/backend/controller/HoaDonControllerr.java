@@ -3,6 +3,7 @@ package com.example.backend.controller;
 
 import com.example.backend.dto.request.HoaDonRequest;
 import com.example.backend.dto.request.LichSuHoaDonRequest;
+import com.example.backend.dto.request.hoadonsearch.HoaDonSearch;
 import com.example.backend.entity.HoaDon;
 import com.example.backend.entity.LichSuHoaDon;
 import com.example.backend.service.HoaDonServicee;
@@ -44,17 +45,9 @@ public class HoaDonControllerr {
     public ResponseEntity<?> detailHD(@PathVariable("idHD") String id){
         return  ResponseEntity.ok(hoaDonService.getByID(id));
     }
-    @GetMapping("/hoa-don/tim-kiem/{hehe}/{loaiHD}/{BD}/{KT}")
-    public ResponseEntity<?> timHoaDon(@PathVariable("hehe") String tim,
-                                       @PathVariable("loaiHD")int loai,
-                                       @PathVariable("BD") String bd,
-                                       @PathVariable("KT") String kt) throws ParseException {
-        SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd");
-        Date d1= sdf.parse(bd);
-        Date d2= sdf.parse(kt);
-        java.sql.Date BD= new java.sql.Date(d1.getTime());
-        java.sql.Date KT= new java.sql.Date(d2.getTime());
-        return  ResponseEntity.ok(hoaDonService.timHoaDon(tim,loai,BD,KT));
+    @GetMapping("/hoa-don/tim-kiem")
+    public ResponseEntity<?> timHoaDon(@RequestBody HoaDonSearch hoaDonSearch)  {
+        return  ResponseEntity.ok(hoaDonService.timHoaDon(hoaDonSearch));
     }
     @PutMapping("/update-hoa-don/{idHD}")
     public ResponseEntity<?> updateTTHDvaADDLSHD(@RequestBody LichSuHoaDonRequest ls, @PathVariable("idHD") String id, HoaDon hd){
