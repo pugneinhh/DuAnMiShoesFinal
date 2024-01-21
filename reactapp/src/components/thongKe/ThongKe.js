@@ -306,7 +306,7 @@ export default function ThongKe() {
         lineHeight: '160px',
         textAlign: 'center',
         background: '#d0aa73',
-        borderRadius: '10px'
+        marginTop: '10px',
       };
 
     
@@ -552,15 +552,16 @@ export default function ThongKe() {
             </div>
 
             <div className='mt-4'>
-                <Card title={<><h5 style={{ marginLeft: 530 }}> <IoStatsChart className='mb-2' /> Biểu Đồ Thống Kê Hóa Đơn và Sản Phẩm </h5></>} className='border-left-primary shadow h-100 py-2'>
+                <Card title={<><h5 style={{ marginLeft: 350 }}> <IoStatsChart className='mb-2' /> Biểu Đồ Thống Kê Hóa Đơn và Sản Phẩm </h5></>} className='border-left-primary shadow h-100 py-2'>
                     <Column {...configCot}></Column>
                 </Card>
             </div>
 
-            <div className='row container-fluid mt-4'>
-                <Card className='col-md-7 ms-5 border-left-primary shadow h-100 py-2'>
-                    <h5 style={{ marginLeft: 310}}><BiSolidHot color='red' size={30} style={{ marginBottom: 7 }} /> Sản Phẩm Bán Chạy</h5>
+            <div className='row mt-4'>
+                <Card style={{ marginLeft: 13,width:790}}  className='col-md-7 border-left-primary shadow h-100 py-2'>
+                    <h5 style={{ marginLeft: 240,marginTop: 5}}><BiSolidHot color='red' size={30} style={{ marginBottom: 10}} /> Sản Phẩm Bán Chạy</h5>
                     <Table 
+                    className='border rounded shadow'
                     dataSource={SPBanChay}
                     columns={columns} pagination={{
                         showQuickJumper: true,
@@ -569,8 +570,8 @@ export default function ThongKe() {
                         defaultCurrent: 1,
                         total: 100,
                     }}></Table><br />
-                    <h5 style={{ marginLeft: 310, marginTop: 20 }}><HiMiniShieldExclamation color='red' size={30} style={{ marginBottom: 7 }} /> Sản Phẩm Sắp Hết</h5>
-                    <Table columns={columns} pagination={{
+                    <h5 style={{ marginLeft: 240,marginTop: 7}}><HiMiniShieldExclamation color='red' size={30} style={{ marginBottom: 7 }} /> Sản Phẩm Sắp Hết</h5>
+                    <Table className='border rounded shadow' columns={columns} pagination={{
                         showQuickJumper: true,
                         defaultPageSize: 5,
                         position: ['bottomCenter'],
@@ -578,12 +579,15 @@ export default function ThongKe() {
                         total: 100,
                     }}></Table>
                 </Card>
-                <Card className='col-md-4 ms-4 border-left-primary shadow h-100 py-2'>
+                <Card style={{ marginLeft: 10}} className='col-md-4 border-left-primary shadow h-100 py-2'>
                     {/* biểu đồ tròn */}
-                    <h5 style={{ marginLeft: 50 ,marginTop:12}}><RiBillLine size={30} style={{ marginBottom: 7 }} /> Tổng Hợp Đơn Trong Tháng</h5>
-                    <Pie {...config} />
-                    <h5 style={{ marginLeft: 40, marginTop: 30 }}><FaArrowTrendUp size={30} style={{ marginBottom: 7 }} /> Tốc Độ Tăng Trưởng Cửa Hàng</h5>
-                    <Carousel style={{width: 450}} autoplay autoplaySpeed={1000}>
+                    <h6 style={{marginLeft: 20,marginTop:12}}><RiBillLine size={30} style={{ marginBottom: 7 }} /> Tổng Hợp Đơn Trong Tháng</h6>
+                    <div className='border rounded shadow'>
+                     <Pie {...config} />    
+                    </div>
+                    <h6 style={{marginTop:14}}><FaArrowTrendUp size={30} style={{ marginBottom: 7 }} /> Tốc Độ Tăng Trưởng Cửa Hàng</h6>
+                    <div className='border rounded shadow'>
+                    <Carousel style={{width: 331}} autoplay autoplaySpeed={1000}>
                         <div>
                             <h6 style={contentStyle}><RiMoneyDollarCircleFill size={25} style={{ marginBottom: 5 }} /> Doanh Thu Ngày : {tienTheoNgay} VND {tienTheoNgay>=tienNgayTruoc?(
                             <span style={{ color: '#49d16d' }}>
@@ -660,6 +664,7 @@ export default function ThongKe() {
                             </span>)}</h6>
                         </div>
                     </Carousel>
+                </div>
                 </Card>
             </div>
         </div>
