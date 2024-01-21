@@ -37,6 +37,7 @@ public class ThongKeService {
     public List<SanPhamBanChayRespon> getSpBanChayNgay(){return thongKeResponsitory.getSPBanChayNgay();}
     public List<SanPhamBanChayRespon> getSpBanChayThang(){return thongKeResponsitory.getSPBanChayThang();}
     public List<SanPhamBanChayRespon> getSpBanChayNam(){return thongKeResponsitory.getSPBanChayNam();}
+    public List<SanPhamBanChayRespon> getSpBanSapHet(){return thongKeResponsitory.getSPSapHet();}
     public List<SanPhamBanChayRespon> getSpBanChayTuan(){return thongKeResponsitory.getSPBanChayTuan();}
     public List<BieuDoRespon> getBieuDoNgay(){
         return thongKeResponsitory.getBieuDoNgay();
@@ -61,6 +62,12 @@ public class ThongKeService {
     }
     public List<TrangThaiHoaDonRespon> getTrangThaiHoaDonTuan(){
         return thongKeResponsitory.getTrangThaiHoaDonTuan();
+    }
+    public Integer getSPBanNgay(){
+        return thongKeResponsitory.getSPBanNgay();
+    }
+    public Integer getSPBanNgayTruoc(){
+        return thongKeResponsitory.getSPBanNgayTruoc();
     }
 
 }
