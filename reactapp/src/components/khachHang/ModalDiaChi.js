@@ -43,6 +43,7 @@ const ModalDiaChi = (props) => {
     const handleCloseAddMoDalDiaChi = () => {
         setOpenModalAddDiaChi(false);
     }
+
     const handleCloseModalDiaChi = () => {
       setOpenModalDiaChi(false);
   }
@@ -58,6 +59,7 @@ const ModalDiaChi = (props) => {
         setOpenModalUpdateDiaChi(true);
        
     }
+
 
     const [datas, setData] = useState([]);
     

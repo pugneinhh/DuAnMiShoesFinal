@@ -1,7 +1,7 @@
 package com.example.backend.controller;
 
 
-import com.example.backend.dto.request.KichThuocRequest;
+import com.example.backend.dto.request.sanpham.KichThuocRequest;
 import com.example.backend.service.KichThuocService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

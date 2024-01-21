@@ -197,8 +197,6 @@ export default function AddSanPham() {
     useEffect(() => {
         loadDuLieuThem()
     }, [dataKichThuoc, dataMauSac]);
-
-    console.log(tableData)
     //Load table
     const columns = [
         {

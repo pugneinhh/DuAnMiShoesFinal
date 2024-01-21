@@ -1,7 +1,7 @@
 package com.example.backend.service;
-import com.example.backend.dto.request.MauSacRequest;
+import com.example.backend.dto.request.sanpham.MauSacRequest;
 import com.example.backend.dto.request.sanphamsearch.BangConSearch;
-import com.example.backend.dto.response.MauSacRespone;
+import com.example.backend.dto.response.sanpham.MauSacRespone;
 import com.example.backend.entity.MauSac;
 import com.example.backend.repository.MauSacRespository;
 import org.springframework.beans.factory.annotation.Autowired;

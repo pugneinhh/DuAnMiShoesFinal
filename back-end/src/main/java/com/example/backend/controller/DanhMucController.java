@@ -1,7 +1,7 @@
 package com.example.backend.controller;
 
 
-import com.example.backend.dto.request.DanhMucRequest;
+import com.example.backend.dto.request.sanpham.DanhMucRequest;
 import com.example.backend.dto.request.sanphamsearch.BangConSearch;
 import com.example.backend.service.DanhMucService;
 import lombok.RequiredArgsConstructor;

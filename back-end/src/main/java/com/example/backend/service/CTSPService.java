@@ -1,10 +1,10 @@
 package com.example.backend.service;
 import com.example.backend.dto.request.sanphamsearch.CTSPSearch;
-import com.example.backend.dto.request.ChiTietSanPhamRequest;
+import com.example.backend.dto.request.sanpham.ChiTietSanPhamRequest;
 import com.example.backend.dto.request.sanphamupdate.UpdateCTSPRequest;
-import com.example.backend.dto.response.CTSPSearchRespone;
-import com.example.backend.dto.response.ChiTietSanPhamRespone;
-import com.example.backend.dto.response.DetailCTSPRespone;
+import com.example.backend.dto.response.sanpham.CTSPSearchRespone;
+import com.example.backend.dto.response.sanpham.ChiTietSanPhamRespone;
+import com.example.backend.dto.response.sanpham.DetailCTSPRespone;
 import com.example.backend.entity.ChiTietSanPham;
 import com.example.backend.entity.KhuyenMai;
 import com.example.backend.model.*;
@@ -32,6 +32,12 @@ public class CTSPService {
     public List<DetailCTSPRespone> detail(){return ctspRepository.detail();}
 
     public ChiTietSanPham update(String id, UpdateCTSPRequest request) {
+        ChiTietSanPham ct = request.map(new ChiTietSanPham());
+        ct.setId(id);
+        return ctspRepository.save(ct);
+    }
+
+    public ChiTietSanPham updateNhanh(String id, UpdateCTSPRequest request) {
         ChiTietSanPham ct = request.map(new ChiTietSanPham());
         ct.setId(id);
         return ctspRepository.save(ct);
