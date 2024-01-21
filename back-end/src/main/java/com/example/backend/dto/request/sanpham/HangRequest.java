@@ -1,4 +1,4 @@
-package com.example.backend.dto.request;
+package com.example.backend.dto.request.sanpham;
 
 
 import lombok.*;
@@ -12,7 +12,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 
-public class DeGiayRequest {
+public class HangRequest {
+
     private String ma;
 
     private String ten;

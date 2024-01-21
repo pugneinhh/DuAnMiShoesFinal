@@ -1,10 +1,9 @@
-package com.example.backend.dto.response;
-
+package com.example.backend.dto.response.sanpham;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
 
-public interface DeGiayRespone {
+public interface ChatLieuRespone {
     public String getId();
 
     public String getMa();

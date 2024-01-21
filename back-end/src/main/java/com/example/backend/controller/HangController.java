@@ -1,8 +1,7 @@
 package com.example.backend.controller;
 
 
-import com.example.backend.dto.request.HangRequest;
-import com.example.backend.entity.Hang;
+import com.example.backend.dto.request.sanpham.HangRequest;
 import com.example.backend.service.HangService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

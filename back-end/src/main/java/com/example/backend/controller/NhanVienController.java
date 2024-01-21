@@ -1,6 +1,7 @@
 package com.example.backend.controller;
 
 import com.example.backend.dto.request.KhachHangRequest;
+import com.example.backend.dto.request.NguoiDungSeacrh;
 import com.example.backend.dto.request.NhanVienRequest;
 import com.example.backend.service.NhanVienService;
 import com.google.gson.Gson;
@@ -45,5 +46,10 @@ public class NhanVienController {
     public ResponseEntity<?> getById(@PathVariable("id") String id) {
         return ResponseEntity.ok(nhanVienService.getByID(id));
 
+    }
+
+    @PostMapping ("/search")
+    public ResponseEntity<?> search(@RequestBody NguoiDungSeacrh nguoiDungSeacrh){
+        return ResponseEntity.ok(nhanVienService.getSearchNhanVien(nguoiDungSeacrh));
     }
 }

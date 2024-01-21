@@ -1,6 +1,6 @@
 package com.example.backend.repository;
 import com.example.backend.dto.request.sanphamsearch.BangConSearch;
-import com.example.backend.dto.response.MauSacRespone;
+import com.example.backend.dto.response.sanpham.MauSacRespone;
 import com.example.backend.entity.MauSac;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

@@ -1,7 +1,8 @@
 package com.example.backend.controller;
 
 
-import com.example.backend.dto.request.*;
+import com.example.backend.dto.request.sanpham.ChiTietSanPhamRequest;
+import com.example.backend.dto.request.sanpham.HinhAnhRequest;
 import com.example.backend.dto.request.sanphamsearch.CTSPSearch;
 import com.example.backend.dto.request.sanphamupdate.UpdateCTSPRequest;
 import com.example.backend.entity.ChiTietSanPham;
@@ -81,7 +82,7 @@ public class CTSPController {
 
 
     @PostMapping("/add")
-    public ResponseEntity<String> add(@RequestBody ChiTietSanPhamRequest request,HinhAnhRequest ha) {
+    public ResponseEntity<String> add(@RequestBody ChiTietSanPhamRequest request, HinhAnhRequest ha) {
         request.setTrangThai(0);
         request.setNgayTao(LocalDateTime.now());
         request.setGioiTinh(true);

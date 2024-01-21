@@ -13,7 +13,7 @@ import {
   Tag,
 } from 'antd';
 import { Link } from "react-router-dom";
-import { InfoCircleFilled, PlusCircleOutlined } from "@ant-design/icons";
+import { InfoCircleFilled, PlusCircleOutlined, RetweetOutlined } from "@ant-design/icons";
 import { DeleteFilled } from "@ant-design/icons";
 import { PlusCircleFilled } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
@@ -24,6 +24,7 @@ import { BsBoxSeamFill, BsFillEyeFill } from 'react-icons/bs';
 import { FaTshirt } from 'react-icons/fa';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import './SanPham.scss'
 
 export default function SanPham() {
   //Form
@@ -164,11 +165,11 @@ export default function SanPham() {
             </div>
             <div className='col-md-4'>
                 <Form.Item label="Số lượng" name="soLuong">
-                  <Slider style={{ width: '400px' }} defaultValue={1000} min={1} />
+                  <Slider defaultValue={1000} min={1} />
                 </Form.Item>
               </div>
-            <Form.Item className='text-center' style={{ paddingLeft: 360 }}>
-              <Button type="primary" htmlType='reset' onClick={loadSanPham}>Làm mới</Button>
+            <Form.Item className='text-center' style={{ paddingLeft: 200 }}>
+              <Button type="primary" htmlType='reset' onClick={loadSanPham} icon={<RetweetOutlined/>}>Làm mới</Button>
             </Form.Item>
           </Form>
         </div>
