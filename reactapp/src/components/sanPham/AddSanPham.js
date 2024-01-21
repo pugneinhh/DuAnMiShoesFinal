@@ -716,7 +716,7 @@ export default function AddSanPham() {
                             <hr />
                             {/* Sản Phẩm  */}
                             <div className='row'>
-                                <Form.Item className='col' style={{ paddingLeft: 235 }} name='sanPham' label={<b>Tên Sản Phẩm </b>}
+                                <Form.Item className='col' style={{ paddingLeft: 150 }} name='sanPham' label={<b>Tên Sản Phẩm </b>}
                                     hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên sản phẩm!', },]}>
                                     <Select
                                         onChange={onChangeSP}
@@ -739,7 +739,7 @@ export default function AddSanPham() {
                                     </Select>
                                 </Form.Item>
                                 <Form.Item className='col mt-1' style={{ paddingLeft: 140 }} >
-                                    <Button className='bg-success text-white' onClick={() => setOpenSP(true)}> <b>+</b> </Button>
+                                    <Button className='bg-success text-white' onClick={() => setOpenSP(true)} icon={<PlusCircleOutlined/>}></Button>
                                     <Modal
                                         title="Thêm Sản Phẩm"
                                         centered
@@ -791,16 +791,16 @@ export default function AddSanPham() {
                             {/* Mô Tả */}
                             <Form.Item name='moTa' label={<b>Mô tả </b>}
                                 hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống mô tả!', },]}>
-                                <TextArea rows={5} value={dataMoTa} onChange={onChangeMT} placeholder='Nhập mô tả sản phẩm' className='w-75' />
+                                <TextArea style={{width: 613,marginLeft: 10}} rows={5} value={dataMoTa} onChange={onChangeMT} placeholder='Nhập mô tả sản phẩm'/>
                             </Form.Item>
                             {/* Chất liệu & Hãng */}
                             <div className='row'>
-                                <div className='col'>
+                                <div className='col-md-6'>
                                     {/* Chất Liệu */}
                                     <div className='row'>
-                                        <Form.Item className='col' style={{ paddingLeft: 180, height: 10 }} name='chatLieu' label={<b>Chất liệu </b>}
+                                        <Form.Item className='col-md-10' style={{paddingLeft: 87}} name='chatLieu' label={<b>Chất liệu </b>}
                                             hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống chất liệu !', },]}>
-                                            <Select placeholder="Chọn một giá trị" style={{ width: 250 }} onChange={onChangeCL}>
+                                            <Select placeholder="Chọn một giá trị" style={{width: 307}} onChange={onChangeCL}>
                                                 {cl.map(item => (
                                                     <Select.Option key={item.id} value={item.ten}>
                                                         {item.ten}
@@ -808,8 +808,13 @@ export default function AddSanPham() {
                                                 ))}
                                             </Select>
                                         </Form.Item>
-                                        <Form.Item style={{ paddingLeft: 323 }}>
-                                            <Button style={{ width: 250, height: 30, }} className='bg-success text-white' onClick={() => setOpenCL(true)}> <b>Thêm chất liệu </b></Button>
+                                        <Form.Item className="col-md-2">
+                                            <Button 
+                                            className='bg-success text-white' 
+                                            onClick={() => setOpenCL(true)} 
+                                            icon={<PlusCircleOutlined/>}
+                                            >
+                                            </Button>
                                             <Modal
                                                 title="Thêm Chất Liệu"
                                                 centered
@@ -860,11 +865,11 @@ export default function AddSanPham() {
                                     </div>
                                 </div>
                                 {/* Hãng */}
-                                <div className='col'>
+                                <div className='col-md-6'>
                                     <div className='row'>
-                                        <Form.Item className='col' style={{ paddingRight: 410, height: 10 }} name='hang' label={<b>Hãng </b>}
+                                        <Form.Item className='col-md-8' style={{paddingLeft: 54}} name='hang' label={<b>Hãng </b>}
                                             hasFeedback rules={[{ required: true, message: '', },]}>
-                                            <Select placeholder="Chọn một giá trị" style={{ width: 250 }} className='me-2' onChange={onChangeH}>
+                                            <Select placeholder="Chọn một giá trị" style={{width: 307}} onChange={onChangeH}>
                                                 {h.map(item => (
                                                     <Select.Option key={item.id} value={item.ten}>
                                                         {item.ten}
@@ -872,8 +877,8 @@ export default function AddSanPham() {
                                                 ))}
                                             </Select>
                                         </Form.Item>
-                                        <Form.Item style={{ paddingLeft: 100 }}>
-                                            <Button style={{ width: 250, height: 30, }} className='bg-success text-white w-1' onClick={() => setOpenH(true)}> <b>Thêm hãng</b> </Button>
+                                        <Form.Item className='col-md-4' style={{paddingLeft: 62}}>
+                                            <Button className='bg-success text-white' onClick={() => setOpenH(true)} icon={<PlusCircleOutlined/>}></Button>
                                             <Modal
                                                 title="Thêm Hãng"
                                                 centered
@@ -927,11 +932,11 @@ export default function AddSanPham() {
                             {/* Đế giày & Danh mục */}
                             {/* Đế giày*/}
                             <div className='row'>
-                                <div className='col'>
+                                <div className='col-md-6'>
                                     <div className='row'>
-                                        <Form.Item className='col' style={{ paddingLeft: 180, height: 10 }} name='deGiay' label={<b>Đế giày </b>}
+                                        <Form.Item className='col-md-10' style={{paddingLeft: 87}} name='deGiay' label={<b>Đế giày </b>}
                                             hasFeedback rules={[{ required: true, message: '', },]}>
-                                            <Select placeholder="Chọn một giá trị" style={{ width: 250 }} className='me-2' onChange={onChangeDG}>
+                                            <Select placeholder="Chọn một giá trị" style={{ width: 307 }} className='me-2' onChange={onChangeDG}>
                                                 {dc.map(item => (
                                                     <Select.Option key={item.id} value={item.ten}>
                                                         {item.ten}
@@ -939,8 +944,8 @@ export default function AddSanPham() {
                                                 ))}
                                             </Select>
                                         </Form.Item>
-                                        <Form.Item style={{ paddingLeft: 323 }}>
-                                            <Button style={{ width: 250, height: 30, }} className='bg-success text-white' onClick={() => setOpenDC(true)}><b>Thêm đế giày</b></Button>
+                                        <Form.Item className='col-md-2'>
+                                            <Button className='bg-success text-white' onClick={() => setOpenDC(true)} icon={<PlusCircleOutlined/>}></Button>
                                             <Modal
                                                 title="Thêm Độ Cao"
                                                 centered
@@ -991,11 +996,11 @@ export default function AddSanPham() {
                                     </div>
                                 </div>
                                 {/* Danh mục */}
-                                <div className='col'>
+                                <div className='col-md-6'>
                                     <div className='row'>
-                                        <Form.Item className='col' style={{ paddingRight: 410, height: 10 }} name='danhMuc' label={<b>Danh mục </b>}
+                                        <Form.Item className='col-md-9' style={{paddingLeft: 39}} name='danhMuc' label={<b>Danh mục</b>}
                                             hasFeedback rules={[{ required: true, message: '', },]}>
-                                            <Select placeholder="Chọn một giá trị" style={{ width: 250 }} className='me-2' onChange={onChangeDM}>
+                                            <Select placeholder="Chọn một giá trị" style={{ width: 307}} className='me-2' onChange={onChangeDM}>
                                                 {dm.map(item => (
                                                     <Select.Option key={item.id} value={item.ten}>
                                                         {item.ten}
@@ -1004,8 +1009,8 @@ export default function AddSanPham() {
                                             </Select>
 
                                         </Form.Item>
-                                        <Form.Item style={{ paddingLeft: 100 }}>
-                                            <Button style={{ width: 250, height: 30, }} className='bg-success text-white w-1' onClick={() => setOpenDM(true)}><b>Thêm danh mục</b></Button>
+                                        <Form.Item className='col-md-3'>
+                                            <Button className='bg-success text-white w-1' onClick={() => setOpenDM(true)} icon={<PlusCircleOutlined/>}></Button>
                                             <Modal
                                                 title="Thêm Danh Mục"
                                                 centered
@@ -1068,12 +1073,12 @@ export default function AddSanPham() {
                             <h5><MdAddTask size={30} /> Kích thước và màu sắc</h5>
                             <hr />
                             {/* Kích Thước */}
-                            <div className='row' style={{ paddingLeft: 219 }}>
+                            <div className='row' style={{ paddingLeft: 150 }}>
                                 <div className='col'>
                                     <Form.Item label={<b>Kích thước </b>} name="kichThuoc"
                                         hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống kích thước!', },]}>
                                         <Select style={{
-                                            width: 650,
+                                            width: 613,
                                             height: '50px'
                                         }}
                                             mode="multiple"
@@ -1089,9 +1094,9 @@ export default function AddSanPham() {
                                         </Select>
                                     </Form.Item>
                                 </div>
-                                <div className='col' style={{ paddingLeft: 150, paddingTop: 10 }}>
+                                <div className='col' style={{ paddingLeft: 137, paddingTop: 10 }}>
                                     <Form.Item>
-                                        <Button className='bg-success text-white w-1' onClick={() => setOpenKT(true)}> + </Button>
+                                        <Button className='bg-success text-white w-1' onClick={() => setOpenKT(true)} icon={<PlusCircleOutlined/>}></Button>
                                         <Modal
                                             title="Thêm Kích Thước"
                                             centered
@@ -1142,11 +1147,11 @@ export default function AddSanPham() {
                                 </div>
                             </div>
                             {/* Màu Sắc */}
-                            <div className='row' style={{ paddingLeft: 219 }}>
+                            <div className='row' style={{ paddingLeft: 150 }}>
                                 <div className='col'>
                                     <Form.Item label={<b>Màu sắc </b>} name="mauSac" hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống màu sắc!', },]}>
                                         <Select style={{
-                                            width: 650,
+                                            width: 613,
                                             height: '50px'
                                         }}
                                             mode="multiple"
@@ -1162,9 +1167,9 @@ export default function AddSanPham() {
                                         </Select>
                                     </Form.Item>
                                 </div>
-                                <div className='col' style={{ paddingLeft: 150, paddingTop: 10 }}>
+                                <div className='col' style={{ paddingLeft: 137, paddingTop: 10 }}>
                                     <Form.Item>
-                                        <Button className='bg-success text-white w-1' onClick={() => setOpenMS(true)}> + </Button>
+                                        <Button className='bg-success text-white w-1' onClick={() => setOpenMS(true)}icon={<PlusCircleOutlined/>}></Button>
                                         <Modal
                                             title="Thêm Màu Sắc"
                                             centered

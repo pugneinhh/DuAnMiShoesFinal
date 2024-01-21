@@ -16,7 +16,7 @@ import {
   Tag,
 } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import { HighlightOutlined, InfoCircleFilled, InfoCircleOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import { HighlightOutlined, InfoCircleFilled, InfoCircleOutlined, PlusCircleOutlined, RetweetOutlined } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
 import { EyeOutlined } from "@ant-design/icons";
@@ -812,13 +812,13 @@ export default function CTSP() {
             {/* Các Thuộc Tính Dòng 1 */}
             <div className='row mt-3'>
               {/* Tên & Mã */}
-              <div className="col-3">
+              <div className="col-md-4">
                 <Form.Item label="Tên & Mã" name="tenCT">
                   <Input className="border" />
                 </Form.Item>
               </div>
               {/* Kích Thước */}
-              <div className='col-3' >
+              <div className='col-md-4' >
                 <Form.Item label="Kích Thước" name="idKT">
                   <Select placeholder="Chọn một giá trị" >
                     {kt.map(item => (
@@ -830,7 +830,7 @@ export default function CTSP() {
                 </Form.Item>
               </div>
               {/* Màu Sắc */}
-              <div className='col-3'>
+              <div className='col-md-4'>
                 <Form.Item label="Màu Sắc" name="idMS">
                   <Select placeholder="Chọn một giá trị">
                     {ms.map(item => (
@@ -845,9 +845,14 @@ export default function CTSP() {
                     ))}
                   </Select>
                 </Form.Item>
-              </div>
-              {/* Chất Liệu */}
-              <div className='col-3' >
+              </div> 
+             </div>
+            
+          
+            {/* Các Thuộc Tính Dòng 2 */}
+            <div className='row'>  
+            {/* Chất Liệu */}
+              <div className='col-md-4' >
                 <Form.Item label="Chất Liệu" name="idCL">
                   <Select placeholder="Chọn một giá trị">
                     {cl.map(item => (
@@ -858,11 +863,8 @@ export default function CTSP() {
                   </Select>
                 </Form.Item>
               </div>
-            </div>
-            {/* Các Thuộc Tính Dòng 2 */}
-            <div className='row'>
               {/* Độ Cao */}
-              <div className='col-md-3'>
+              <div className='col-md-4'>
                 <Form.Item label="Đế giày" name="idDC">
                   <Select placeholder="Chọn một giá trị">
                     {dc.map(item => (
@@ -874,7 +876,7 @@ export default function CTSP() {
                 </Form.Item>
               </div>
               {/* Danh Mục */}
-              <div className='col-md-3'>
+              <div className='col-md-4'>
                 <Form.Item label="Danh Mục" name="idDM">
                   <Select placeholder="Chọn một giá trị">
                     {dm.map(item => (
@@ -885,8 +887,12 @@ export default function CTSP() {
                   </Select>
                 </Form.Item>
               </div>
-              {/* Hãng */}
-              <div className='col-md-3'>
+            </div> 
+          
+            {/* Các Thuộc Tính Dòng 3 */}
+            <div className='row'>  
+             {/* Hãng */}
+              <div className='col-md-4'>
                 <Form.Item label="Hãng" name="idH">
                   <Select placeholder="Chọn một giá trị">
                     {h.map(item => (
@@ -898,7 +904,7 @@ export default function CTSP() {
                 </Form.Item>
               </div>
               {/* Trạng Thái */}
-              <div className='col-md-3'>
+              <div className='col-md-4'>
                 <Form.Item label="Trạng thái" name="trangThaiCT">
                   <Select placeholder="Chọn một giá trị" defaultValue="1">
                     <Select.Option value='1'>Còn Bán</Select.Option>
@@ -906,25 +912,22 @@ export default function CTSP() {
                   </Select>
                 </Form.Item>
               </div>
-            </div>
-            {/* Các Thuộc Tính Dòng 3 */}
-            <div className='row'>
-              <div className='col-md-6'>
+              <div className='col-md-4'>
                 <Form.Item label="Số lượng" name="soLuongCT">
-                  <Slider style={{ width: '400px' }} min={1} />
+                  <Slider style={{ width: '200px' }} min={1} />
                 </Form.Item>
               </div>
-              <div className='col-md-6'>
-                <Form.Item label="Giá bán" name="giaBanCT">
-                  <Slider style={{ width: '400px' }} min={1000000} max={10000000} step={1000000} />
+            </div> 
+            <div className='col'>
+                <Form.Item style={{ marginLeft:100 }} label="Giá bán" name="giaBanCT">
+                  <Slider style={{ width: '430px' }} min={1000000} max={10000000} step={1000000} />
                 </Form.Item>
               </div>
-            </div>
 
 
             <div className='container-fluid'>
               <Form.Item className='text-center' style={{ paddingLeft: 360 }}>
-                <Button type="primary" htmlType='reset' onClick={loadCTSP}>Làm mới</Button>
+                <Button type="primary" htmlType='reset' onClick={loadCTSP}  icon={<RetweetOutlined/>}>Làm mới</Button>
               </Form.Item>
             </div>
 
