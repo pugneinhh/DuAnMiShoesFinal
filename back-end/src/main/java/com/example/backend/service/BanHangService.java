@@ -1,9 +1,7 @@
 package com.example.backend.service;
 
 import com.example.backend.dto.request.HoaDonRequest;
-import com.example.backend.dto.response.sanpham.ChiTietSanPhamRespone;
 import com.example.backend.dto.response.ChiTietSanPhamForBanHang;
-import com.example.backend.dto.response.ChiTietSanPhamRespone;
 import com.example.backend.entity.HoaDon;
 import com.example.backend.repository.CTSPRepository;
 import com.example.backend.repository.HoaDonRepository;
