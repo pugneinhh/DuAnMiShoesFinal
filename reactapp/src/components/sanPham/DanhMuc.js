@@ -12,7 +12,7 @@ import {
   Tag,
   Modal
 } from 'antd';
-import { PlusCircleOutlined } from "@ant-design/icons";
+import { PlusCircleOutlined, RetweetOutlined } from "@ant-design/icons";
 import { DeleteFilled } from "@ant-design/icons";
 import { InfoCircleFilled } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
@@ -258,8 +258,8 @@ export default function DanhMuc() {
                 </Select>
               </Form.Item>
             </div>
-            <Form.Item className='text-center' style={{ paddingLeft: 360 }}>
-              <Button type="primary" htmlType='reset' onClick={loadDanhMuc}>Làm mới</Button>
+            <Form.Item className='text-center' style={{ paddingLeft: 200 }}>
+              <Button type="primary" htmlType='reset'  icon={<RetweetOutlined/>} onClick={loadDanhMuc}>Làm mới</Button>
             </Form.Item>
           </Form>
         </div>
