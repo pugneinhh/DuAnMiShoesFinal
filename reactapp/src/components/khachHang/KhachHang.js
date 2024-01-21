@@ -11,6 +11,7 @@ import {
   Tag,
   Image,
 } from "antd";
+import { SiMicrosoftexcel } from "react-icons/si";
 import { FilterFilled } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { BsFillEyeFill, BsPencilSquare } from "react-icons/bs";
@@ -19,6 +20,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { BiSolidUserBadge } from "react-icons/bi";
 import { GrMapLocation } from "react-icons/gr";
 import ModalDiaChi from "./ModalDiaChi";
+import { CSVLink } from "react-csv";
 
 export default function KhachHang() {
   
@@ -215,6 +217,38 @@ export default function KhachHang() {
     tableLayout,
   };
 
+  // xuất excel
+ const [dataExport,setDataExport]= useState([]);
+  const xuatExcel=(event,done)=>{
+    let result = [];
+    if(khachHang && khachHang.length > 0) {
+      result.push(["STT","Ảnh","Mã khách hàng","Tên KH","Chứng minh thư","SDT","Ngày sinh","Trạng thái"]);
+      khachHang.map((item,index)=>{
+        let arr=[];
+        arr[0]=index+1;
+        arr[1]=item.anh;
+         arr[2]=item.maND;
+        arr[3] = item.tenND;
+        arr[4] = item.cccd;
+        arr[5] = item.sdt;
+        arr[6] = new Date(item.ngaySinh * 1).toLocaleDateString();
+        arr[7] = item.trangThai;
+        result.push(arr);
+      })
+      setDataExport(result);
+      toast("✔️ Xuất excel thành công!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      done();
+    }
+  }
   return (
     <div className="container">
       <div className="container-fluid">
@@ -292,6 +326,16 @@ export default function KhachHang() {
             {" "}
             <PlusCircleOutlined /> Thêm{" "}
           </Link>
+
+          <CSVLink 
+          filename={"ExportKhachHang.csv"}
+            className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill"
+          data={dataExport}
+          asyncOnClick={true}
+          onClick={xuatExcel}
+          >
+            <SiMicrosoftexcel /> Ex
+          </CSVLink>
         </div>
       </div>
       <div className="container-fluid mt-4">

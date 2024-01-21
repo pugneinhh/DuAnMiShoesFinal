@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@CrossOrigin("*")
+@CrossOrigin("http://localhost:3000/")
 @RestController
 @RequestMapping("/admin/khach-hang")
 @RequiredArgsConstructor
