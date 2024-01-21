@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Setter
 public class ThanhToan {
     @Id
-   //@GeneratedValue(strategy = GenerationType.UUID)
+   @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     @ManyToOne
     @JoinColumn(name = "hoa_don_id")
