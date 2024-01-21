@@ -35,6 +35,18 @@ public class KhachHangController {
         request.setTrangThai(1);
         return ResponseEntity.ok(khachHangService.addDiaChi(request));
     }
+    @GetMapping("/detailDC/{id}")
+    public ResponseEntity<?> detailDiaChi(@PathVariable("id")String id){
+        return ResponseEntity.ok(khachHangService.detailDiaChi(id));
+    }
+    @PostMapping("/update-dia-chi/{id}")
+    public ResponseEntity<?> updateDiaChi(@PathVariable("id")String id,@RequestBody DiaChiRequest request){
+        return ResponseEntity.ok(khachHangService.updateDiaChi(id,request));
+    }
+    @PostMapping("/update-tt-dc/{id}")
+    public ResponseEntity<?> updateTTDC(@PathVariable("id")String id){
+        return ResponseEntity.ok(khachHangService.updateTTDiaChi(id));
+    }
     @PostMapping()
     public ResponseEntity<?> add(@RequestParam("request") String request,
                                  @RequestParam(value = "file") MultipartFile file) {
@@ -52,8 +64,6 @@ public class KhachHangController {
         Gson gson = new Gson();
 //        System.out.println(gson);
         KhachHangRequest zzzzzzzzz = gson.fromJson(request, KhachHangRequest.class);
-//        System.out.println(khachHangRequest);
-//        System.out.println(file);
         return ResponseEntity.ok(khachHangService.update(zzzzzzzzz, file));
 
     }

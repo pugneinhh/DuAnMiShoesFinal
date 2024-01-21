@@ -39,10 +39,10 @@ export class KhachHangAPI {
             url: `/admin/khach-hang/${id}`,
         });
     };
-    static getAddressByUser = (id) => {
-        return requestAdmin({
-            method: "GET",
-            url: `/admin/khach-hang/dia-chi/${id}`,
-        });
-    };
+    // static getAddressByUser = (id) => {
+    //     return requestAdmin({
+    //         method: "GET",
+    //         url: `/admin/khach-hang/dia-chi/${id}`,
+    //     });
+    // };
 }

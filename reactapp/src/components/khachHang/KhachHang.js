@@ -157,11 +157,11 @@ export default function KhachHang() {
       title: "Action",
       key: "action",
       dataIndex: 'idND',
-      render: (title) => (
+      render: (record) => (
         <Space size="middle">
-          <Link to={`/detail-khach-hang/${title}`} className='btn btn-success'><BsFillEyeFill /></Link>
-          <Link to={`/update-khach-hang/${title}`} className='btn btn-danger'  ><BsPencilSquare /></Link>
-          <Button style={{ width: 41, height: 37.6, backgroundColor: "#35afb1", color: "white" }} type="primary" onClick={() => { detailDiaChi(title) }}>
+          <Link to={`/detail-khach-hang/${record}`} className='btn btn-success'><BsFillEyeFill /></Link>
+          <Link to={`/update-khach-hang/${record}`} className='btn btn-danger'  ><BsPencilSquare /></Link>
+          <Button style={{ width: 41, height: 37.6, backgroundColor: "#35afb1", color: "white" }} type="primary" onClick={()=>detailDiaChi(record)}>
             <GrMapLocation />
           </Button>
        
@@ -173,6 +173,7 @@ export default function KhachHang() {
   ];
   const [idKH,setIdKH]=useState("");
   const detailDiaChi = (row) => {
+    console.log("click",row)
     setIdKH(row);
     setOpenModalDiaChi(true);
   }
@@ -309,11 +310,11 @@ export default function KhachHang() {
             scroll={scroll}
           />
         </div>
-        <ModalDiaChi openModalDiaChi={openModalDiaChi}
+        {idKH&&<ModalDiaChi openModalDiaChi={openModalDiaChi}
           setOpenModalDiaChi={setOpenModalDiaChi}
           idKH={idKH}
           setIdKH={setIdKH}
-        />
+        />}
         <ToastContainer
           position="top-right"
           autoClose={5000}

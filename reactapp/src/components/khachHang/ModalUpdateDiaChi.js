@@ -2,38 +2,41 @@
 import { Button, DatePicker, Form, Input, InputNumber, Modal, Popconfirm, Select, Space, Switch, Table, Tag } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import moment from 'moment';
+
 import { AddressApi } from "../api/address/AddressApi";
 import { ToastContainer, toast } from "react-toastify";
-import { EyeOutlined } from "@ant-design/icons";
+import { da } from "date-fns/locale";
 
-const AddModalDiaChi = (props) => {
+
+
+const ModalUpdateDiaChi = (props) => {
     const [form] = Form.useForm();
     const [listProvince, setListProvince] = useState([]);
     const [listDistricts, setListDistricts] = useState([]);
     const [listWard, setListWard] = useState([]);
-    const { openModalAddDiaChi, setOpenModalAddDiaChi,idKH,setIdKH,loadDiaChi } = props;
+    const { openModalUpdateDiaChi, setOpenModalUpdateDiaChi,diaChiUpdate,setDiaChiUpdate,loadDiaChi } = props;
     const handleClose = () => {
-        setOpenModalAddDiaChi(false);
+        setOpenModalUpdateDiaChi(false);
+        
     };
   
-
-    const handleSubmit = (value) => {
-        console.log(value);
+    const handleUpdateDC = (value) => {
+        // console.log("phanh oi",province.key);
+        
         const data={
             ...value,
-            idThanhPho: province.key == null ? province.ProvinceID : province.key,
-            idHuyen: district.key == null ? district.DistrictID : district.key,
-            idXa: ward.key == null ? ward.WardCode : ward.key,
+            // idThanhPho: province === null ? null : province.key,
+            // idHuyen: district === null ? null : district.key,
+            // idXa: ward === null ? null : ward.key,
         };
         axios
-        .post("http://localhost:8080/admin/khach-hang/add-dia-chi", data)
+        .post(`http://localhost:8080/admin/khach-hang/update-dia-chi/${data.id}`, data)
         .then((response) => {
             console.log(response.data);
             // navigate('/voucher');
-            toast("✔️ Thêm thành công!", {
+            toast("✔️ Cập nhật địa chỉ thành công!", {
               position: "top-right",
-              autoClose: 5000,
+              autoClose: 1000,
               hideProgressBar: false,
               closeOnClick: true,
               pauseOnHover: true,
@@ -42,12 +45,13 @@ const AddModalDiaChi = (props) => {
               theme: "light",
             });
             form.resetFields();
-            form.setFieldsValue({idNguoiDung:idKH});
             loadDiaChi();
             handleClose();
             
         })
     };
+   
+  
     const loadDataProvince = () => {
         AddressApi.fetchAllProvince().then((res) => {
             setListProvince(res.data.data);
@@ -81,27 +85,45 @@ const AddModalDiaChi = (props) => {
         form.setFieldsValue({ wardCode: valueWard.valueWard });
         setWard(valueWard);
     };
-
+    console.log("diacji",diaChiUpdate)
     useEffect(() => {
-        form.setFieldsValue({idNguoiDung:idKH});
+    console.log("updatesss")
+       form.setFieldsValue(
+        {id:diaChiUpdate.id,
+        idNguoiDung:diaChiUpdate.nguoiDung,
+        diaChi:diaChiUpdate.diaChi,
+        tenNguoiNhan:diaChiUpdate.tenNguoiNhan,
+        soDienThoai:diaChiUpdate.soDienThoai,
+        tenThanhPho:diaChiUpdate.tenThanhPho,
+        tenHuyen:diaChiUpdate.tenHuyen,
+        tenXa:diaChiUpdate.tenXa,
+        trangThai:diaChiUpdate.trangThai,
+        idXa:diaChiUpdate.idXa,
+        idHuyen:diaChiUpdate.idHuyen,
+        idThanhPho:diaChiUpdate.idThanhPho,
+        }
+       )
         loadDataProvince();
-    }, []);
+        // loadDetailDiaChi();
+    }, [diaChiUpdate]);
 
 
 
     return (
         <Modal
-            title="Thêm địa chỉ"
+            title="Cập nhật địa chỉ"
             centered
-            open={openModalAddDiaChi}
+            open={openModalUpdateDiaChi}
+            
             onOk={() => {
                 Modal.confirm({
                   title: "Thông báo",
-                  content: "Bạn có chắc chắn muốn thêm không?",
+                  content: "Bạn có chắc chắn muốn cập nhật không?",
                   centered: true,
                   getContainer:() => document.getElementById('modal-root'),
                   onOk: () => {
                     form.submit();
+                   
                   },
                   footer: (_, { OkBtn, CancelBtn }) => (
                     <>
@@ -110,6 +132,7 @@ const AddModalDiaChi = (props) => {
                     </>
                   ),
                 });
+                
               }}
             onCancel={handleClose}
             style={{zIndex:0}}
@@ -118,11 +141,23 @@ const AddModalDiaChi = (props) => {
             // }
             width={600}
         >
-            <Form form={form} 
-            onFinish={handleSubmit} 
-            layout="vertical">
-                <Form.Item name="idNguoiDung" hidden></Form.Item>
-
+            <Form form={form} onFinish={handleUpdateDC} layout="vertical">
+                <Form.Item name="idNguoiDung" hidden >
+                    <Input></Input>
+                </Form.Item>
+                <Form.Item name="trangThai" hidden >
+                    <Input></Input>
+                </Form.Item>
+                <Form.Item name="idXa" hidden >
+                    <Input></Input>
+                </Form.Item>
+                <Form.Item name="idHuyen" hidden >
+                    <Input></Input>
+                </Form.Item>
+                <Form.Item name="idThanhPho" hidden >
+                    <Input></Input>
+                </Form.Item>
+                <Form.Item name="id" hidden></Form.Item>
                 <Form.Item
                     name="tenNguoiNhan"
                     label="Họ và tên"
@@ -285,7 +320,7 @@ const AddModalDiaChi = (props) => {
                     <Input />
                 </Form.Item>
             </Form>
-            <div id="modal-root"></div>
+         
             <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -298,10 +333,8 @@ const AddModalDiaChi = (props) => {
         pauseOnHover
         theme="light"
       /><ToastContainer />
+         <div id="modal-root"></div>
         </Modal>
-        
-     
-      
     )
 }
-export default AddModalDiaChi;
+export default ModalUpdateDiaChi;

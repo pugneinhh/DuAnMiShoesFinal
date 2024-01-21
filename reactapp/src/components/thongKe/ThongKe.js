@@ -5,7 +5,7 @@ import { Button, Card, Divider, Table, Carousel } from 'antd';
 import { RxDashboard } from 'react-icons/rx';
 import { Line } from '@ant-design/plots';
 import { Column } from '@ant-design/plots';
-
+import { Image } from "cloudinary-react";
 import axios from 'axios';
 import { json } from 'react-router-dom';
 import { ExportOutlined } from '@ant-design/icons';
@@ -20,6 +20,9 @@ export default function ThongKe() {
         loadThongKeTheoNgay();
         loadThongKeTheoThang();
         loadThongKeTheoNam();
+        loadBieuDoThang();
+        loadTrangThaiHoaDon();
+        loadSPBanChay();
     }, []);
     const [hoaDonTheoNgay, sethoaDonTheoNgay] = useState([]);
     const [tienTheoNgay, settienTheoNgay] = useState([]);
@@ -60,6 +63,59 @@ export default function ThongKe() {
             })
             .catch(error => console.error('Error adding item:', error));
     };
+    //biểu đồ đường
+    const [chartData, setChartData] = useState([]);
+    const loadBieuDoThang = async () => {
+
+        await axios.get('http://localhost:8080/thong-ke/bieu-do-thang')
+            .then(response => {
+                // Update the list of items
+                
+                const bieudo=response.data.flatMap(item => {
+                    return [
+                      { ten: 'Hóa Đơn', ngay: item.ngay, soLuong: item.tongHoaDon },
+                      { ten: 'Sản Phẩm', ngay: item.ngay, soLuong: item.tongSanPham }
+                    ];
+                  });
+                  
+                  setChartData(bieudo)
+            })
+            .catch(error => console.error('Error adding item:', error));
+    };
+    ///trạng thái hóa đơn
+    const [trangThaiData, setTrangThaiData] = useState([]);
+    const loadTrangThaiHoaDon = async () => {
+        await axios.get('http://localhost:8080/thong-ke/trang-thai-hoa-don')
+            .then(response => {
+                // Update the list of items
+                const totalHoaDon = response.data.reduce((total, item) => total + item.soLuong, 0);
+
+                const trangThaiHD=response.data.flatMap(item => {
+                    return [
+                      { type: item.trangThai==0?"Chờ xác nhận":item.trangThai==1?"Xác nhận":item.trangThai==2?"Chờ vận chuyển":item.trangThai==3?"Đang vận chuyển":
+                      item.trangThai==4?"Đã thanh toán":"Thành công", value: (item.soLuong/totalHoaDon)*100 },
+                    ];
+                  });
+                  
+                  setTrangThaiData(trangThaiHD);
+                 
+            })
+            .catch(error => console.error('Error adding item:', error));
+    };
+    ///sản phẩm bán chạy
+    const [SPBanChay, setSPBanChay] = useState([]);
+    const loadSPBanChay = async () => {
+
+        await axios.get('http://localhost:8080/thong-ke/san-pham-ban-chay')
+            .then(response => {
+                // Update the list of items
+                console.log("spbc",response.data)
+                  
+                  setSPBanChay(response.data)
+            })
+            .catch(error => console.error('Error adding item:', error));
+    };
+
 
     const contentStyle = {
         height: '160px',
@@ -70,47 +126,10 @@ export default function ThongKe() {
         borderRadius: '10px'
       };
 
-    const data = [
-        {
-            type: 'Thành Công',
-            value: 27,
-        },
-        {
-            type: 'Vận Chuyển',
-            value: 25,
-        },
-        {
-            type: 'Hóa Đơn Chờ',
-            value: 13,
-        },
-        {
-            type: 'Trả Hàng',
-            value: 5,
-        },
-        {
-            type: 'Chờ Xác Nhận',
-            value: 10,
-        },
-        {
-            type: 'Xác Nhận',
-            value: 5,
-        },
-        {
-            type: 'Đã Hủy',
-            value: 5,
-        },
-        {
-            type: 'Chờ Vận Chuyển',
-            value: 5,
-        },
-        {
-            type: 'Đã Thanh Toán',
-            value: 5,
-        },
-    ];
+    
     const config = {
         appendPadding: 10,
-        data,
+        data: trangThaiData.length > 0 ? trangThaiData : [{ type: 'Default', value: 1 }],
         angleField: 'value',
         colorField: 'type',
         radius: 0.9,
@@ -131,94 +150,13 @@ export default function ThongKe() {
     };
 
     // Biểu đồ đường
-    const dataCot = [
-        {
-            name: 'Hóa Đơn',
-            Month: 'Jan.',
-            Quantity: 18,
-        },
-        {
-            name: 'Hóa Đơn',
-            Month: 'Feb.',
-            Quantity: 28,
-        },
-        {
-            name: 'Hóa Đơn',
-            Month: 'Mar.',
-            Quantity: 39,
-        },
-        {
-            name: 'Hóa Đơn',
-            Month: 'Apr.',
-            Quantity: 81,
-        },
-        {
-            name: 'Hóa Đơn',
-            Month: 'May',
-            Quantity: 47,
-        },
-        {
-            name: 'Hóa Đơn',
-            Month: 'Jun.',
-            Quantity: 20,
-        },
-        {
-            name: 'Hóa Đơn',
-            Month: 'Jul.',
-            Quantity: 24,
-        },
-        {
-            name: 'Hóa Đơn',
-            Month: 'Aug.',
-            Quantity: 35,
-        },
-        {
-            name: 'Sản Phẩm',
-            Month: 'Jan.',
-            Quantity: 12,
-        },
-        {
-            name: 'Sản Phẩm',
-            Month: 'Feb.',
-            Quantity: 23,
-        },
-        {
-            name: 'Sản Phẩm',
-            Month: 'Mar.',
-            Quantity: 34,
-        },
-        {
-            name: 'Sản Phẩm',
-            Month: 'Apr.',
-            Quantity: 99,
-        },
-        {
-            name: 'Sản Phẩm',
-            Month: 'May',
-            Quantity: 52,
-        },
-        {
-            name: 'Sản Phẩm',
-            Month: 'Jun.',
-            Quantity: 35,
-        },
-        {
-            name: 'Sản Phẩm',
-            Month: 'Jul.',
-            Quantity: 37,
-        },
-        {
-            name: 'Sản Phẩm',
-            Month: 'Aug.',
-            Quantity: 42,
-        },
-    ];
+    
     const configCot = {
-        data: dataCot,
+        data: chartData,
         isGroup: true,
-        xField: 'Month',
-        yField: 'Quantity',
-        seriesField: 'name',
+        xField: 'ngay',
+        yField: 'soLuong',
+        seriesField: 'ten',
         label: {
             position: 'middle',
             layout: [
@@ -239,25 +177,43 @@ export default function ThongKe() {
         {
             title: "STT",
             dataIndex: "stt",
-            key: "id",
+            key: "idSP",
+            render: (idSP,record,index) => {++index; return index},
+            showSortTooltip:false,
         },
         {
             title: "Hình ảnh",
-            dataIndex: "hinhanh",
+            dataIndex: "linkAnh",
+            render: (link) => {
+                return (
+                  <>
+                    <Image
+                      cloudName="dtetgawxc"
+                      publicId={link}
+                      width="100"
+                      crop="scale"
+                      href={link}
+                    />
+                  </>
+                );
+              },
         }, ,
         {
             title: "Tên sản phẩm",
             dataIndex: "ten",
+            center: "true",
+            render: (text, record) => (
+              <span>{`${record.tenSp} [${record.mauSac}-${record.kichThuoc}]`}</span>
+            ),
+        },
+        {
+            title: "Gía bán",
+            dataIndex: "giaBan",
         },
         {
             title: "Số lượng bán",
-            dataIndex: "ma",
+            dataIndex: "soLuong",
         },
-        {
-            title: "Tình trạng",
-            dataIndex: "tinhtrang",
-            key: "trangThai",
-        }
     ]
 
     return (
@@ -333,7 +289,9 @@ export default function ThongKe() {
             <div className='row container-fluid mt-4'>
                 <Card className='col-md-7 ms-5 border-left-primary shadow h-100 py-2'>
                     <h5 style={{ marginLeft: 310}}><BiSolidHot color='red' size={30} style={{ marginBottom: 7 }} /> Sản Phẩm Bán Chạy</h5>
-                    <Table columns={columns} pagination={{
+                    <Table 
+                    dataSource={SPBanChay}
+                    columns={columns} pagination={{
                         showQuickJumper: true,
                         defaultPageSize: 5,
                         position: ['bottomCenter'],

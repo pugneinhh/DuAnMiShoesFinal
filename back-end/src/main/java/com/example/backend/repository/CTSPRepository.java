@@ -5,6 +5,10 @@ import com.example.backend.dto.request.sanphamsearch.CTSPSearch;
 import com.example.backend.dto.response.sanpham.CTSPSearchRespone;
 import com.example.backend.dto.response.sanpham.ChiTietSanPhamRespone;
 import com.example.backend.dto.response.sanpham.DetailCTSPRespone;
+import com.example.backend.dto.response.CTSPSearchRespone;
+import com.example.backend.dto.response.ChiTietSanPhamForBanHang;
+import com.example.backend.dto.response.ChiTietSanPhamRespone;
+import com.example.backend.dto.response.DetailCTSPRespone;
 import com.example.backend.entity.ChiTietSanPham;
 import com.example.backend.model.AdminCTSPForKhuyenMai;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -63,16 +67,17 @@ public interface CTSPRepository extends JpaRepository<ChiTietSanPham, String> {
 
     @Query(value = """
             SELECT distinct o.id AS idCTSP,MIN(ha.url) AS linkAnh ,sp.ten AS tenSP ,kt.ten AS tenKT,ms.ten AS tenMS,ms.ma AS maMS,
-             o.so_luong AS soLuong,o.gia_ban AS giaBan,o.trang_thai AS trangThai
+             o.so_luong AS soLuong,o.gia_ban AS giaBan,o.trang_thai AS trangThai, km.ten as tenKM , km.gia_tri_khuyen_mai as giaKhuyenMai , km.loai as loaiKM
              FROM duanmishoes.chi_tiet_san_pham o
              JOIN duanmishoes.san_pham sp  on o.san_pham_id=sp.id
              JOIN duanmishoes.kich_thuoc kt  on o.kich_thuoc_id=kt.id
              JOIN duanmishoes.mau_sac ms  on o.mau_sac_id=ms.id
              JOIN duanmishoes.hinh_anh ha on o.id=ha.chi_tiet_san_pham_id 
+             LEFT JOIN duanmishoes.khuyen_mai km on o.khuyen_mai_id = km.id
              where o.trang_thai =0
              group by o.id
             """, nativeQuery = true)
-    List<ChiTietSanPhamRespone> getALLCTSPBanHang();
+    List<ChiTietSanPhamForBanHang> getALLCTSPBanHang();
 
 
     @Query(value = """

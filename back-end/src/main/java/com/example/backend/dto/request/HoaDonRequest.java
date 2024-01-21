@@ -16,7 +16,7 @@ import java.time.format.DateTimeFormatter;
 @Setter
 @ToString
 public class HoaDonRequest {
-   // String id;
+    String id;
     String ma;
     String nhanVien;
     String nguoiDung;
@@ -41,12 +41,11 @@ public class HoaDonRequest {
     LocalDateTime ngayTao;
     LocalDateTime ngaySua;
     int trangThai;
-    int  key;
     int stt;
-
+    String key;
     public HoaDon map(HoaDon hoaDon) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-      //  hoaDon.setId(this.id);
+        hoaDon.setId(this.id);
         hoaDon.setMa(this.ma);
         hoaDon.setNhanVien(this.nhanVien);
         hoaDon.setNgayMua(this.ngayMua);

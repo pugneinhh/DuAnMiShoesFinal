@@ -312,7 +312,7 @@ export default function HoaDonDetail() {
 
     <div className='container mt-4 radius  ' >
       <div className='container-fuild  row pt-3 pb-4 bg-light rounded border-danger '>
-        <div>
+        <div className='hoa-don-cuon-ngang'>
           {/* hóa đơn time line */}
           <Timeline minEvents={6} index={trangThai} placeholder >
             {trangThai == 0 ?
