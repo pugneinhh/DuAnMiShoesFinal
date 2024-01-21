@@ -2,9 +2,7 @@ package com.example.backend.controller;
 
 import com.example.backend.dto.request.HoaDonChiTietRequest;
 import com.example.backend.dto.request.HoaDonRequest;
-import com.example.backend.dto.response.sanpham.ChiTietSanPhamRespone;
 import com.example.backend.dto.response.ChiTietSanPhamForBanHang;
-import com.example.backend.dto.response.ChiTietSanPhamRespone;
 import com.example.backend.entity.ChiTietSanPham;
 import com.example.backend.entity.CongThuc;
 import com.example.backend.repository.CTSPRepository;

@@ -256,7 +256,7 @@ export default function KhachHang() {
             }}
             form={form}
           >
-            <div className="col-md-4">
+            <div className="col-md-6">
               <Form.Item label="Tìm kiếm" name="ten">
                 <Input
                   className="rounded-pill border-warning"
@@ -264,7 +264,7 @@ export default function KhachHang() {
                 />
               </Form.Item>
             </div>
-            <div className="col-md-4">
+            <div className="col-md-6">
               <Form.Item label="Trạng thái" name="trangThai">
                 <Select
                   defaultValue={"Tất cả"}
@@ -276,7 +276,7 @@ export default function KhachHang() {
               </Form.Item>
             </div>
             <Form.Item className="text-end ">
-              <Button type="primary" htmlType="reset" onClick={loadKhachHang()}>
+              <Button type="primary" htmlType="reset" onClick={loadKhachHang}>
                 Làm mới
               </Button>
             </Form.Item>

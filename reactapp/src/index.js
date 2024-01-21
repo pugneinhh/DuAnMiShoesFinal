@@ -46,70 +46,36 @@ root.render(
   <Provider store={store}>
     <BrowserRouter>
       <Routes>
-
-        <Route path='/' element={<App />}>
-
-          <Route path='thong-ke' element={<ThongKe />}></Route>
-          <Route path='hoa-don' element={<HoaDon />}>   </Route>
-          <Route path='detail-hoa-don/:id' element={<HoaDonDetail />}></Route>
-          <Route path='khuyen-mai' element={<KhuyenMai />}></Route>
-          <Route path='frm-khuyen-mai' element={<ThemKhuyenMai />}></Route>
-          <Route path='sua-khuyen-mai/:id' element={<SuaKhuyenMai />}></Route>
-          <Route path='voucher' element={<Voucher />}></Route>
-          <Route path='themVoucher' element={<AddVoucher />}></Route>
-          <Route path='voucher/update/:id' element={<ModelUpdateVoucher />}></Route>
-          <Route path='voucher/detail/:id' element={<ModalDetailVoucher />}></Route>
-          <Route path='danh-muc' element={<DanhMuc />}></Route>
-          <Route path='de-giay' element={<DeGiay />}></Route>
-          <Route path='chat-lieu' element={<ChatLieu />}></Route>
-          <Route path='kich-thuoc' element={<KichThuoc />}></Route>
-          <Route path='mau-sac' element={<MauSac />}></Route>
-          <Route path='hang' element={<Hang />}></Route>
-          <Route path='san-pham' element={<SanPham />}></Route>
-          <Route path='showct/:uuid' element={<ChiTietSanPham />}></Route>
-          <Route path="nhan-vien" element={<NhanVien />}></Route>
-          <Route path="themNhanVien" element={<AddNhanVien />}></Route>
-
-        <Route path = '/' element = {<App/>}>
-          
-        <Route path='thong-ke' element={<ThongKe/>}></Route>
-          <Route path='hoa-don' element = {<HoaDon/>}>   </Route>
-        <Route path='detail-hoa-don/:id' element={<HoaDonDetail/>}></Route>
-          <Route path='khuyen-mai' element = {<KhuyenMai/>}></Route>
-          <Route path='frm-khuyen-mai' element = {<ThemKhuyenMai />}></Route>
-          <Route path='sua-khuyen-mai/:id' element = {<SuaKhuyenMai />}></Route>
-          <Route path='voucher' element = {<Voucher/>}></Route>
-          <Route path='themVoucher' element = {<AddVoucher/>}></Route>
-          <Route path='voucher/update/:id' element = {<ModelUpdateVoucher/>}></Route>
-          <Route path='voucher/detail/:id' element = {<ModalDetailVoucher/>}></Route>
-          <Route path='danh-muc' element = {<DanhMuc/>}></Route>
-          <Route path='de-giay' element = {<DeGiay/>}></Route>
-          <Route path='chat-lieu' element = {<ChatLieu/>}></Route>
-          <Route path='kich-thuoc' element = {<KichThuoc/>}></Route>
-          <Route path='mau-sac' element = {<MauSac/>}></Route>
-          <Route path='hang' element = {<Hang/>}></Route>
-          <Route path='san-pham' element = {<SanPham/>}></Route>
-          <Route path='showct/:uuid' element = {<ChiTietSanPham/>}></Route>
+          <Route path='/' element={<App />}>
+            <Route path='thong-ke' element={<ThongKe />}></Route>
+            <Route path='hoa-don' element={<HoaDon />}>   </Route>
+            <Route path='detail-hoa-don/:id' element={<HoaDonDetail />}></Route>
+            <Route path='khuyen-mai' element={<KhuyenMai />}></Route>
+            <Route path='frm-khuyen-mai' element={<ThemKhuyenMai />}></Route>
+            <Route path='sua-khuyen-mai/:id' element={<SuaKhuyenMai />}></Route>
+            <Route path='voucher' element={<Voucher />}></Route>
+            <Route path='themVoucher' element={<AddVoucher />}></Route>
+            <Route path='voucher/update/:id' element={<ModelUpdateVoucher />}></Route>
+            <Route path='voucher/detail/:id' element={<ModalDetailVoucher />}></Route>
+            <Route path='danh-muc' element={<DanhMuc />}></Route>
+            <Route path='de-giay' element={<DeGiay />}></Route>
+            <Route path='chat-lieu' element={<ChatLieu />}></Route>
+            <Route path='kich-thuoc' element={<KichThuoc />}></Route>
+            <Route path='mau-sac' element={<MauSac />}></Route>
+            <Route path='hang' element={<Hang />}></Route>
+            <Route path='san-pham' element={<SanPham />}></Route>
+            <Route path='showct/:uuid' element={<ChiTietSanPham />}></Route>
             <Route path="nhan-vien" element={<NhanVien />}></Route>
-        <Route path="themNhanVien" element={<AddNhanVien />}></Route>
-
-          <Route path="detail-nhan-vien/:id" element={<DetailNhanVien />}></Route>
-          <Route path="update-nhan-vien/:id" element={<UpdateNhanVien />}></Route>
-          <Route path="khach-hang" element={<KhachHang />}></Route>
-          <Route path="themKhachHang" element={<AddKhachHang />}></Route>
-          <Route path="detail-khach-hang/:id" element={<DetailKhachHang />}></Route>
-          <Route path="update-khach-hang/:id" element={<UpdateKhachHang />}></Route>
-          <Route path='them-san-pham' element={<AddSanPham />}></Route>
-
-          <Route path='/admin/ban-hang' element={<BanHang />}></Route>
-
-
-          <Route path='/admin/ban-hang' element={
-          <BanHang/>
-          }></Route>
-          
-
-        </Route>
+            <Route path="themNhanVien" element={<AddNhanVien />}></Route>
+            <Route path="detail-nhan-vien/:id" element={<DetailNhanVien />}></Route>
+            <Route path="update-nhan-vien/:id" element={<UpdateNhanVien />}></Route>
+            <Route path="khach-hang" element={<KhachHang />}></Route>
+            <Route path="themKhachHang" element={<AddKhachHang />}></Route>
+            <Route path="detail-khach-hang/:id" element={<DetailKhachHang />}></Route>
+            <Route path="update-khach-hang/:id" element={<UpdateKhachHang />}></Route>
+            <Route path='them-san-pham' element={<AddSanPham />}></Route>
+            <Route path='/admin/ban-hang' element={<BanHang />}></Route>
+          </Route>
       </Routes>
 
     </BrowserRouter>
