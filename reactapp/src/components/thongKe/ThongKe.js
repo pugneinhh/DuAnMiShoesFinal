@@ -27,6 +27,9 @@ export default function ThongKe() {
         loadDoanhThuNgayTruoc();
         loadDoanhThuThangTruoc();
         loadDoanhThuNamTruoc();
+        loadSanPhamTheoNgay();
+        loadSanPhamTheoNgayTruoc();
+        loadSPSapHet();
     }, []);
     const [hoaDonTheoNgay, sethoaDonTheoNgay] = useState([]);
     const [tienTheoNgay, settienTheoNgay] = useState([]);
@@ -299,6 +302,18 @@ export default function ThongKe() {
             })
             .catch(error => console.error('Error adding item:', error));
     };
+    const [SPSapHet, setSPSapHet] = useState([]);
+    const loadSPSapHet = async () => {
+
+        await axios.get('http://localhost:8080/thong-ke/san-pham-sap-het')
+            .then(response => {
+                // Update the list of items
+                
+                  
+                  setSPSapHet(response.data)
+            })
+            .catch(error => console.error('Error adding item:', error));
+    };
 
     const contentStyle = {
         height: '160px',
@@ -398,6 +413,7 @@ export default function ThongKe() {
             dataIndex: "soLuong",
         },
     ]
+
     const [clickCountThang, setClickCountThang] = useState(0);
     const handleClickThang = () => {
         // Tăng giá trị biến đếm sau mỗi lần click
@@ -486,7 +502,31 @@ export default function ThongKe() {
           // Xác định loại button dựa trên giá trị biến đếm
           return clickCountTuan % 2 === 0 ? 'default' : 'primary';
         };
+        //sản phẩm bán theo ngày
+        const [sanPhamTheoNgay, setSanPhamTheoNgay] = useState(0);
+        const loadSanPhamTheoNgay = async () => {
 
+            await axios.get('http://localhost:8080/thong-ke/san-pham-ban-ngay')
+                .then(response => {
+                    // Update the list of items
+                   setSanPhamTheoNgay(response.data);
+                   
+    
+                })
+                .catch(error => console.error('Error adding item:', error));
+        };
+        const [sanPhamTheoNgayTruoc, setSanPhamTheoNgayTruoc] = useState(0);
+        const loadSanPhamTheoNgayTruoc = async () => {
+
+            await axios.get('http://localhost:8080/thong-ke/san-pham-ban-ngay-truoc')
+                .then(response => {
+                    // Update the list of items
+                   setSanPhamTheoNgayTruoc(response.data);
+                  
+    
+                })
+                .catch(error => console.error('Error adding item:', error));
+        };
     return (
         <div className='container-fluid'>
             <Divider orientation="center" color="#d0aa73"><h4 className="text-first pt-1 fw-bold"> <RxDashboard size={35} /> Quản lý thống kê</h4></Divider>
@@ -570,8 +610,9 @@ export default function ThongKe() {
                         defaultCurrent: 1,
                         total: 100,
                     }}></Table><br />
-                    <h5 style={{ marginLeft: 240,marginTop: 7}}><HiMiniShieldExclamation color='red' size={30} style={{ marginBottom: 7 }} /> Sản Phẩm Sắp Hết</h5>
-                    <Table className='border rounded shadow' columns={columns} pagination={{
+
+                    <h5 style={{ marginLeft: 310, marginTop: 20 }}><HiMiniShieldExclamation color='red' size={30} style={{ marginBottom: 7 }} /> Sản Phẩm Sắp Hết</h5>
+                    <Table dataSource={SPSapHet} columns={columns} pagination={{
                         showQuickJumper: true,
                         defaultPageSize: 5,
                         position: ['bottomCenter'],
@@ -633,7 +674,19 @@ export default function ThongKe() {
                             </span>)}</h6>
                         </div>
                         <div>
-                            <h6 style={contentStyle}><RiProductHuntFill size={25} style={{ marginBottom: 5 }} /> Sản Phẩm Tháng :</h6>
+                            <h6 style={contentStyle}><RiProductHuntFill size={25} style={{ marginBottom: 5 }} /> Sản Phẩm Tháng: {sanPhamTheoNgay} sản phẩm 
+                            {sanPhamTheoNgay>=sanPhamTheoNgayTruoc?(
+                            <span style={{ color: '#49d16d' }}>
+                             <PiChartLineUpBold size={35} color='#49d16d' /> 
+                             {sanPhamTheoNgay > 0 ? (
+                                ((sanPhamTheoNgay - sanPhamTheoNgayTruoc) / 100).toFixed(2) + '%'
+                                ) : ('0%'
+                            )}
+                            </span>):(
+                            <span style={{ color: '#49d16d' }}>
+                             <PiChartLineDownBold size={35} color='#49d16d' /> 
+                                {((sanPhamTheoNgayTruoc - sanPhamTheoNgay) / 100).toFixed(2)}%
+                            </span>)}</h6>
                         </div>
                         <div>
                             <h6 style={contentStyle}><RiBillFill size={25} style={{ marginBottom: 5 }} /> Hóa Đơn Ngày : {hoaDonTheoNgay} Hóa đơn {hoaDonTheoNgay>=hoaDonNgayTruoc?(

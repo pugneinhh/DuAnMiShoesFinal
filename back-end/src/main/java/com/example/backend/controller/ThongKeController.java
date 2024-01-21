@@ -95,4 +95,16 @@ public class ThongKeController {
     public ResponseEntity<?> getTrangThaiHDTuan(){
         return ResponseEntity.ok(thongKeService.getTrangThaiHoaDonTuan());
     }
+    @GetMapping("/san-pham-ban-ngay")
+    public ResponseEntity<?> getSPBanNgay(){
+        return ResponseEntity.ok(thongKeService.getSPBanNgay());
+    }
+    @GetMapping("/san-pham-ban-ngay-truoc")
+    public ResponseEntity<?> getSPBanNgayTruoc(){
+        return ResponseEntity.ok(thongKeService.getSPBanNgayTruoc());
+    }
+    @GetMapping("/san-pham-sap-het")
+    public ResponseEntity<?> getSPSapHet(){
+        return ResponseEntity.ok(thongKeService.getSpBanSapHet());
+    }
 }
