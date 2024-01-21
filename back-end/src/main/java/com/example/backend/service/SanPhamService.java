@@ -1,17 +1,12 @@
 package com.example.backend.service;
-import com.example.backend.dto.request.sanphamsearch.BangConSearch;
 import com.example.backend.dto.request.sanphamsearch.SanPhamSearch;
-import com.example.backend.dto.response.DanhMucRespone;
-import com.example.backend.dto.response.SanPhamRespone;
+import com.example.backend.dto.response.sanpham.SanPhamRespone;
 import com.example.backend.entity.SanPham;
-import com.example.backend.model.AdminSanPhamRespon;
 import com.example.backend.repository.SanPhamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.SimpleTimeZone;
-import java.util.UUID;
 
 @Service
 public class SanPhamService {

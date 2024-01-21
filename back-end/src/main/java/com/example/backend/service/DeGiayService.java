@@ -1,6 +1,6 @@
 package com.example.backend.service;
-import com.example.backend.dto.request.DeGiayRequest;
-import com.example.backend.dto.response.DeGiayRespone;
+import com.example.backend.dto.request.sanpham.DeGiayRequest;
+import com.example.backend.dto.response.sanpham.DeGiayRespone;
 import com.example.backend.entity.DeGiay;
 import com.example.backend.repository.DeGiayRepository;
 import org.springframework.beans.factory.annotation.Autowired;

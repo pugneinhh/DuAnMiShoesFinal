@@ -1,10 +1,10 @@
-package com.example.backend.dto.response;
+package com.example.backend.dto.response.sanpham;
 
 
 import java.sql.Date;
 import java.time.LocalDateTime;
 
-public interface KichThuocRespone {
+public interface DanhMucRespone {
     public String getId();
 
     public String getMa();

@@ -1,6 +1,6 @@
 package com.example.backend.repository;
 
-import com.example.backend.dto.response.ChatLieuRespone;
+import com.example.backend.dto.response.sanpham.ChatLieuRespone;
 import com.example.backend.entity.ChatLieu;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

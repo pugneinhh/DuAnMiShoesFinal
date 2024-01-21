@@ -3,8 +3,11 @@ package com.example.backend.service;
 import com.example.backend.dto.impldto.KhachHangResponImplDTO;
 import com.example.backend.dto.request.DiaChiRequest;
 import com.example.backend.dto.request.KhachHangRequest;
+import com.example.backend.dto.request.NguoiDungSeacrh;
+import com.example.backend.dto.request.sanphamsearch.CTSPSearch;
 import com.example.backend.dto.response.DiaChiKhachHangRespon;
 import com.example.backend.dto.response.KhachHangRespon;
+import com.example.backend.dto.response.sanpham.CTSPSearchRespone;
 import com.example.backend.entity.DiaChi;
 import com.example.backend.entity.NguoiDung;
 import com.example.backend.model.AdminKhachHangRepon;
@@ -115,6 +118,11 @@ public class KhachHangService {
         return optional;
 
     }
+
+    public List<AdminKhachHangRepon> getSearchKhachHang(NguoiDungSeacrh nguoiDungSeacrh){
+        return nguoiDungRepository.getTimKhachHang(nguoiDungSeacrh);
+    }
+
     public  KhachHangResponImplDTO updateStatus(String id,String status){
         Optional<NguoiDung> optional =nguoiDungRepository.findById(id);
         optional.get().setTrangThai(1);

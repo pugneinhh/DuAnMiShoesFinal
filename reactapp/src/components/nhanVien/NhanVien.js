@@ -48,6 +48,20 @@ export default function NhanVien() {
     console.log(result.data);
   };
 
+  //Tìm nhân viên
+  const onChangeFilter = (changedValues, allValues) => {
+    console.log("All values : ", allValues)
+    timKiemNV(allValues);
+  }
+  const timKiemNV = (dataSearch) => {
+    axios.post(`http://localhost:8080/admin/nhan-vien/search`, dataSearch)
+      .then(response => {
+        console.log(response.data)
+        setNhanVien(response.data);
+      })
+      .catch(error => console.error('Error adding item:', error));
+  }
+
   const columns = [
     {
       title: "#",
@@ -230,23 +244,23 @@ export default function NhanVien() {
             initialValues={{
               size: componentSize,
             }}
-            // onValuesChange={onChangeFilter}
+            onValuesChange={onChangeFilter}
             size={componentSize}
             style={{
               maxWidth: 1400,
             }}
             form={form}
           >
-            <div className="col-md-4">
-              <Form.Item label="Tìm kiếm" name="tenVoucher">
+            <div className="col-md-6">
+              <Form.Item label="Tìm kiếm" name="ten">
                 <Input
                   className="rounded-pill border-warning"
                   placeholder="Nhập mã hoặc tên hoặc sđt ..."
                 />
               </Form.Item>
             </div>
-            <div className="col-md-4">
-              <Form.Item label="Trạng thái" name="trangThaiVoucher">
+            <div className="col-md-6">
+              <Form.Item label="Trạng thái" name="trangThai">
                 <Select
                   defaultValue={"Tất cả"}
                   style={{ borderColor: "yellow" }}
@@ -257,7 +271,7 @@ export default function NhanVien() {
               </Form.Item>
             </div>
             <Form.Item className="text-end ">
-              <Button type="primary" htmlType="reset">
+              <Button type="primary" htmlType="reset" onClick={loadNhanVien}>
                 Làm mới
               </Button>
             </Form.Item>

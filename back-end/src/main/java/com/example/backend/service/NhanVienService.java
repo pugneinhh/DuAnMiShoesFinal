@@ -1,10 +1,12 @@
 package com.example.backend.service;
 
 import com.example.backend.dto.impldto.NhanVienResponseImplDTO;
+import com.example.backend.dto.request.NguoiDungSeacrh;
 import com.example.backend.dto.request.NhanVienRequest;
 import com.example.backend.dto.response.NhanVienRespon;
 import com.example.backend.entity.DiaChi;
 import com.example.backend.entity.NguoiDung;
+import com.example.backend.model.AdminKhachHangRepon;
 import com.example.backend.model.AdminNhanVienRespon;
 import com.example.backend.repository.DiaChiRepository;
 import com.example.backend.repository.NguoiDungRepository;
@@ -113,5 +115,9 @@ public class NhanVienService {
         NhanVienRespon optional = nguoiDungRepository.findByIdNhanVien(id);
         return optional;
 
+    }
+
+    public List<AdminNhanVienRespon> getSearchNhanVien(NguoiDungSeacrh nguoiDungSeacrh){
+        return nguoiDungRepository.getTimNhanVien(nguoiDungSeacrh);
     }
 }

@@ -312,7 +312,7 @@ export default function ThongKe() {
                     <h5 style={{ marginLeft: 50 ,marginTop:12}}><RiBillLine size={30} style={{ marginBottom: 7 }} /> Tổng Hợp Đơn Trong Tháng</h5>
                     <Pie {...config} />
                     <h5 style={{ marginLeft: 40, marginTop: 30 }}><FaArrowTrendUp size={30} style={{ marginBottom: 7 }} /> Tốc Độ Tăng Trưởng Cửa Hàng</h5>
-                    <Carousel style={{width: 450}} autoplay>
+                    <Carousel style={{width: 450}} autoplay autoplaySpeed={1000}>
                         <div>
                             <h6 style={contentStyle}><RiMoneyDollarCircleFill size={25} style={{ marginBottom: 5 }} /> Doanh Thu Ngày :</h6>
                         </div>

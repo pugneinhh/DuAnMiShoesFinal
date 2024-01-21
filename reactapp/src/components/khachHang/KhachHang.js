@@ -43,9 +43,21 @@ export default function KhachHang() {
    
     });
       setKhachHang(result.data);
-  
-    console.log(result.data);
   };
+
+  //Tìm khách hàng
+  const onChangeFilter = (changedValues, allValues) => {
+    console.log("All values : ", allValues)
+    timKiemKH(allValues);
+  }
+  const timKiemKH = (dataSearch) => {
+    axios.post(`http://localhost:8080/admin/khach-hang/search`, dataSearch)
+      .then(response => {
+        console.log(response.data)
+        setKhachHang(response.data);
+      })
+      .catch(error => console.error('Error adding item:', error));
+  }
 
   const columns = [
     {
@@ -237,23 +249,23 @@ export default function KhachHang() {
             initialValues={{
               size: componentSize,
             }}
-            // onValuesChange={onChangeFilter}
+            onValuesChange={onChangeFilter}
             size={componentSize}
             style={{
               maxWidth: 1400,
             }}
             form={form}
           >
-            <div className="col-md-4">
-              <Form.Item label="Tìm kiếm" name="tenVoucher">
+            <div className="col-md-6">
+              <Form.Item label="Tìm kiếm" name="ten">
                 <Input
                   className="rounded-pill border-warning"
                   placeholder="Nhập mã hoặc tên hoặc sđt ..."
                 />
               </Form.Item>
             </div>
-            <div className="col-md-4">
-              <Form.Item label="Trạng thái" name="trangThaiVoucher">
+            <div className="col-md-6">
+              <Form.Item label="Trạng thái" name="trangThai">
                 <Select
                   defaultValue={"Tất cả"}
                   style={{ borderColor: "yellow" }}
@@ -264,7 +276,7 @@ export default function KhachHang() {
               </Form.Item>
             </div>
             <Form.Item className="text-end ">
-              <Button type="primary" htmlType="reset">
+              <Button type="primary" htmlType="reset" onClick={loadKhachHang}>
                 Làm mới
               </Button>
             </Form.Item>
