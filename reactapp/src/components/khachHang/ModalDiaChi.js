@@ -16,7 +16,6 @@ const ModalDiaChi = (props) => {
     const handleCloseAddMoDalDiaChi = () => {
         setOpenModalAddDiaChi(false);
     }
-    console.log("idkh",idKH);
     const [datas, setData] = useState([]);
     const loadDiaChi = async () => {
         console.log("heheheh");

@@ -2,9 +2,9 @@ package com.example.backend.repository;
 
 
 import com.example.backend.dto.request.sanphamsearch.CTSPSearch;
-import com.example.backend.dto.response.CTSPSearchRespone;
-import com.example.backend.dto.response.ChiTietSanPhamRespone;
-import com.example.backend.dto.response.DetailCTSPRespone;
+import com.example.backend.dto.response.sanpham.CTSPSearchRespone;
+import com.example.backend.dto.response.sanpham.ChiTietSanPhamRespone;
+import com.example.backend.dto.response.sanpham.DetailCTSPRespone;
 import com.example.backend.entity.ChiTietSanPham;
 import com.example.backend.model.AdminCTSPForKhuyenMai;
 import org.springframework.data.jpa.repository.JpaRepository;

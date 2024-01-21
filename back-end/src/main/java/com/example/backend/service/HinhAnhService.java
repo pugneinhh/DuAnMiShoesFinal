@@ -1,6 +1,6 @@
 package com.example.backend.service;
 
-import com.example.backend.dto.request.HinhAnhRequest;
+import com.example.backend.dto.request.sanpham.HinhAnhRequest;
 import com.example.backend.entity.HinhAnh;
 import com.example.backend.repository.HinhAnhRepository;
 import org.springframework.beans.factory.annotation.Autowired;

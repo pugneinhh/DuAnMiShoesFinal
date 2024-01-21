@@ -1,7 +1,6 @@
-package com.example.backend.dto.request;
+package com.example.backend.dto.request.sanpham;
 
 
-import com.example.backend.util.Status;
 import lombok.*;
 
 import java.sql.Date;
@@ -12,8 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MauSacRequest {
-
+public class KichThuocRequest {
     private String ma;
 
     private String ten;
@@ -26,5 +24,5 @@ public class MauSacRequest {
 
     private String nguoiSua;
 
-    private Status trangThai;
+    private int trangThai;
 }

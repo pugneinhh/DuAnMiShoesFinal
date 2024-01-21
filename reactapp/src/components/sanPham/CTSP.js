@@ -16,7 +16,7 @@ import {
   Tag,
 } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import { InfoCircleFilled, InfoCircleOutlined } from "@ant-design/icons";
+import { HighlightOutlined, InfoCircleFilled, InfoCircleOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
 import { EyeOutlined } from "@ant-design/icons";
@@ -86,8 +86,77 @@ export default function CTSP() {
   const [openDM, setOpenDM] = useState(false);
   const [openH, setOpenH] = useState(false);
   const [ctData, setCTDatas] = useState({});
-  console.log(ctData)
+  const [updateNhanh, setUpdateNhanh] = useState([]);
 
+  //CheckBox Dong
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const onSelectChange = (newSelectedRowKeys) => {
+    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+    setSelectedRowKeys(newSelectedRowKeys);
+
+  };
+
+  const loadUpdateNhanh = async () => {
+    if (selectedRowKeys) {
+      console.log(selectedRowKeys);
+      for (let i = 0; i < selectedRowKeys.length; i++) {
+        const result = await axios.get(`http://localhost:8080/ctsp/detail/${selectedRowKeys[i]}`, {
+          validateStatus: () => {
+            return true;
+          }
+        });
+        setUpdateNhanh((prevData) => [...prevData, result.data]);
+      }
+    }
+  };
+
+  useEffect(() => {
+    loadUpdateNhanh();
+  }, [selectedRowKeys]);
+
+  console.log(updateNhanh)
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
+
+  const onChangeSL = (record, value) => {
+    const newData = [...updateNhanh];
+    const index = newData.findIndex(item => item.id === record.key);
+    if (index > -1) {
+      newData[index].soLuong = value;
+      setUpdateNhanh(newData);
+    }
+  };
+  //Update nhanh
+  const UpdateNhanh = () => {
+    if (selectedRowKeys.length <= 0) {
+      toast.warning('Chưa chọn sản phẩm để sửa !', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } else {
+      Modal.confirm({
+        centered: 'true',
+        title: 'Thông báo',
+        content: 'Bạn có chắc chắn muốn cập nhật không?',
+        onOk: () => { form2.submit(); },
+        footer: (_, { OkBtn, CancelBtn }) => (
+          <>
+            <CancelBtn />
+            <OkBtn />
+          </>
+        ),
+      });
+    }
+  }
   //Update
   const showModal = async (idCT) => {
     const result = await axios.get(`http://localhost:8080/ctsp/detail/${idCT}`, {
@@ -102,6 +171,7 @@ export default function CTSP() {
   };
   const [optionsCTSP, setOptionsCTSP] = useState([]);
   useEffect(() => {
+
     loadCTSP_Update();
   }, []);
   const loadCTSP_Update = async () => {
@@ -394,6 +464,7 @@ export default function CTSP() {
   const [cTSP, setCTSPs] = useState([]);
 
   useEffect(() => {
+    setCTDatas(dataSource)
     loadCTSP();
   }, []);
   const loadCTSP = async () => {
@@ -406,6 +477,22 @@ export default function CTSP() {
     setCTSPs(result.data);
   };
 
+  const dataSource = cTSP.map((item) => ({
+    idCTSP: item.idCTSP,
+    key: item.idCTSP,
+    linkAnh: item.linkAnh,
+    tenSP: item.tenSP,
+    giaBan: item.giaBan,
+    soLuong: item.soLuong,
+    tenKT: item.tenKT,
+    tenMS: item.tenMS,
+    maMS: item.maMS,
+    trangThai: item.trangThai
+  }));
+
+
+
+  // console.log(dataSource)
   const loadCTKT = async () => {
     const result = await axios.get(`http://localhost:8080/ctsp/search/${uuid}`, {
       validateStatus: () => {
@@ -430,7 +517,6 @@ export default function CTSP() {
     {
       title: "Hình ảnh",
       dataIndex: "linkAnh",
-      key: "link",
       center: "true",
       render: (link) => {
         return <><Image
@@ -454,13 +540,38 @@ export default function CTSP() {
     {
       title: "Giá Bán",
       dataIndex: "giaBan",
-      render: (text, record) => (
-        <span>{`${Intl.NumberFormat('en-US').format(record.giaBan)} VNĐ`}</span>
-      ),
+      render: (text, record) => {
+        const isCTSelected = selectedRowKeys.some((selectedItem) => selectedItem === record.idCTSP);
+        return isCTSelected ? (
+          <InputNumber
+            value={record.giaBan}
+            formatter={(value) =>
+              `VND ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+            }
+            parser={(value) => value.replace(/\VND\s?|(,*)/g, "")}
+            style={{ marginLeft: 20, width: 160 }}
+          />
+        ) : (
+          <span>{`${Intl.NumberFormat('en-US').format(record.giaBan)} VNĐ`}</span>
+        );
+      },
     },
     {
       title: "Số lượng",
       dataIndex: "soLuong",
+      render: (_, record) => {
+        const isCTSelected = selectedRowKeys.some((selectedItem) => selectedItem === record.idCTSP);
+        return isCTSelected ? (
+          <Input
+            type='number'
+            defaultValue={record.soLuong}
+            style={{ marginLeft: 20, width: 160 }}
+            onChange={(e) => onChangeSL(record, e.target.value)}
+          />
+        ) : (
+          <span>{`${Intl.NumberFormat('en-US').format(record.soLuong)}`}</span>
+        );
+      },
     },
     {
       title: "Kích thước",
@@ -483,7 +594,6 @@ export default function CTSP() {
     {
       title: "Trạng thái",
       dataIndex: "trangThai",
-      key: "trangThai",
       render: (trang_thai) => (
         <>
           {trang_thai === 0 ? (
@@ -500,7 +610,6 @@ export default function CTSP() {
     },
     {
       title: "Action",
-      key: "action",
       dataIndex: "idCTSP",
       render: (title) => (
         <Space size="middle">
@@ -828,15 +937,18 @@ export default function CTSP() {
         }}>
           <h5><BookFilled size={30} /> Danh sách chi tiết sản phẩm</h5>
           <hr />
+          <div className='text-end'>
+            <a onClick={UpdateNhanh} className="btn btn-success bg-gradient fw-bold nut-them rounded-pill" role="button"> <HighlightOutlined />  Sửa sản phẩm </a>
+          </div>
           <div className="container-fluid mt-4">
             <div>
-              <Table className='text-center' dataSource={cTSP} columns={columns} pagination={{
+              <Table className='text-center' dataSource={dataSource} columns={columns} pagination={{
                 showQuickJumper: true,
                 defaultPageSize: 5,
                 position: ['bottomCenter'],
                 defaultCurrent: 1,
                 total: 100,
-              }} />
+              }} rowSelection={rowSelection} />
             </div>
           </div>
         </div>

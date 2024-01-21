@@ -2,6 +2,8 @@ package com.example.backend.controller;
 
 import com.example.backend.dto.request.DiaChiRequest;
 import com.example.backend.dto.request.KhachHangRequest;
+import com.example.backend.dto.request.NguoiDungSeacrh;
+import com.example.backend.dto.request.sanphamsearch.CTSPSearch;
 import com.example.backend.service.KhachHangService;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +56,11 @@ public class KhachHangController {
 //        System.out.println(file);
         return ResponseEntity.ok(khachHangService.update(zzzzzzzzz, file));
 
+    }
+
+    @PostMapping ("/search")
+    public ResponseEntity<?> search(@RequestBody NguoiDungSeacrh nguoiDungSeacrh){
+        return ResponseEntity.ok(khachHangService.getSearchKhachHang(nguoiDungSeacrh));
     }
 
     @GetMapping("/{id}")

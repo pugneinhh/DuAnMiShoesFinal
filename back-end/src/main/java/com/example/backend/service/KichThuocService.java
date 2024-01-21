@@ -1,6 +1,6 @@
 package com.example.backend.service;
-import com.example.backend.dto.request.KichThuocRequest;
-import com.example.backend.dto.response.KichThuocRespone;
+import com.example.backend.dto.request.sanpham.KichThuocRequest;
+import com.example.backend.dto.response.sanpham.KichThuocRespone;
 import com.example.backend.entity.KichThuoc;
 import com.example.backend.repository.KichThuocRepository;
 import org.springframework.beans.factory.annotation.Autowired;

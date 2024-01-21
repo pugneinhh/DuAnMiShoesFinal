@@ -1,7 +1,7 @@
 package com.example.backend.controller;
 
 
-import com.example.backend.dto.request.MauSacRequest;
+import com.example.backend.dto.request.sanpham.MauSacRequest;
 import com.example.backend.dto.request.sanphamsearch.BangConSearch;
 import com.example.backend.service.MauSacService;
 import lombok.RequiredArgsConstructor;

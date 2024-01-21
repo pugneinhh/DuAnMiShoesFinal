@@ -1,9 +1,7 @@
 package com.example.backend.repository;
 
-import com.example.backend.dto.request.sanphamsearch.BangConSearch;
 import com.example.backend.dto.request.sanphamsearch.SanPhamSearch;
-import com.example.backend.dto.response.DanhMucRespone;
-import com.example.backend.dto.response.SanPhamRespone;
+import com.example.backend.dto.response.sanpham.SanPhamRespone;
 import com.example.backend.entity.SanPham;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

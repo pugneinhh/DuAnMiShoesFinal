@@ -2,25 +2,21 @@ package com.example.backend.controller;
 
 import com.example.backend.dto.request.HoaDonChiTietRequest;
 import com.example.backend.dto.request.HoaDonRequest;
-import com.example.backend.dto.response.ChiTietSanPhamRespone;
+import com.example.backend.dto.response.sanpham.ChiTietSanPhamRespone;
 import com.example.backend.entity.ChiTietSanPham;
 import com.example.backend.entity.CongThuc;
-import com.example.backend.model.AdminBanHangHDRespon;
 import com.example.backend.repository.CTSPRepository;
 import com.example.backend.repository.CongThucRepository;
 import com.example.backend.service.BanHangService;
 import com.example.backend.service.HoaDonChiTietService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Random;
 
 @CrossOrigin("http://localhost:3000/")
 @RestController
