@@ -77,7 +77,7 @@ const TableSanPham = ({onSelectedSanPham , suaIDSP}) => {
           key: "trangThai",
           render: (trangThai) => (
             <>
-              {trangThai === "0" ? (
+              {trangThai === 0 || trangThai === "0" ? (
                 <Tag
                   color="#87d068
                     "
