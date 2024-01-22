@@ -200,7 +200,7 @@ const handleClickRemoveHD=(targetKey) => {
   );
   
   initState.current--;
-  setActiveKey(initState.current);
+ // setActiveKey(initState.current);
     }
 };
 // onedit sự kiện
