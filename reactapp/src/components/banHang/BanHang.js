@@ -13,7 +13,7 @@ import ModalKhachHang from "./ModalKhachHang";
 import { createInvoice } from "./redux/Cartaction";
 import {useDispatch,useSelector} from 'react-redux';
 import {v4 as uuid} from 'uuid';
-import { CreateBill, GetBill, GetBillByKey, RemoveBill } from "./reducer/Bill.reducer";
+import { CreateBill, GetBill, GetBillByKey, RemoveBill, UpdateBill } from "./reducer/Bill.reducer";
 import NhanVien from "../nhanVien/NhanVien";
 import { GetProduct, GetQuantityProduct, UpdateApartProduct, UpdatePushProduct } from "./reducer/Product.reducer";
 import { Image } from "cloudinary-react";
@@ -32,7 +32,7 @@ const BanHang = () => {
   const ctspHD = useSelector(GetInvoice);
   const ctsp = useSelector(GetProduct);
   const client = useSelector(GetClient);
-  const [soLuong, setSoLuong] = useState(1);
+  const [prevValue,setPrevValue] = useState(undefined);
 
   let data = ([""]);
   let KH = ([""]);
@@ -42,19 +42,51 @@ const BanHang = () => {
   const [openSanPham, setOpenSanPham] = useState(false);
 
   const onChangeSoLuong = (value,record) =>{
-
-    if (value === 0 || !value){
-
-      Modal.confirm({
-        title: "Thông báo",
-        content: "Bạn có chắc chắn muốn xóa sản phẩm này ra khỏi giỏ hàng không không?",
-        onOk: () => {
-          dispatch(RemoveInvoice(({chiTietSanPham:record.id,hoaDon:activeKey})));
-          dispatch(UpdatePushProduct({id:record.chiTietSanPham,soLuong:record.soLuong })); 
-          data = ctspHD.filter((f)=> f.hoaDon === activeKey);
-          toast("✔️ Cập nhật giỏ hàng thành công!", {
+    console.log("value",value)
+    console.log("prevvlue",prevValue)
+      if (prevValue === 0) {
+        setPrevValue(undefined)
+        return;
+      } 
+      if (value === 0 || !value){
+        setPrevValue(0);
+        Modal.confirm({
+          title: "Thông báo",
+          content: "Bạn có chắc chắn muốn xóa sản phẩm này ra khỏi giỏ hàng không không?",
+          onOk: () => {
+            dispatch(RemoveInvoice(({chiTietSanPham:record.id,hoaDon:activeKey})));
+            dispatch(UpdatePushProduct({id:record.chiTietSanPham,soLuong:record.soLuong })); 
+            data = ctspHD.filter((f)=> f.hoaDon === activeKey);
+            toast("✔️ Cập nhật giỏ hàng thành công!", {
+              position: "top-right",
+              autoClose: 1000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+          },
+          onCancel:() => {
+           
+          //  setSoLuong(prevValue);
+          }
+          ,
+          footer: (_, { OkBtn, CancelBtn }) => (
+            <>
+              <CancelBtn/>
+              <OkBtn />
+            </>
+          ),
+        });
+      } else {
+        const slt = ctsp.filter((i)=> i.id === record.chiTietSanPham)[0].soLuong;
+        console.log("Số lượng tồn",slt);
+        if (slt < value) {
+          toast("Số lượng tồn không thỏa mãn yêu cầu!", {
             position: "top-right",
-            autoClose: 5000,
+            autoClose: 1000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
@@ -62,64 +94,27 @@ const BanHang = () => {
             progress: undefined,
             theme: "light",
           });
-          // form.finish();
-        },
-        onCancel:() => {
-          
+          value = slt;
+          dispatch(UpdateInvoice({soLuong : value,chiTietSanPham: record.chiTietSanPham, hoaDon : activeKey }));
+          dispatch(UpdateApartProduct({id:record.chiTietSanPham,soLuong:value-record.soLuong })); 
+
+        } else {
+        dispatch(UpdateInvoice({soLuong : value,chiTietSanPham: record.chiTietSanPham, hoaDon : activeKey }));
+        dispatch(UpdateApartProduct({id:record.chiTietSanPham,soLuong:value-record.soLuong })); 
         }
-        ,
-        footer: (_, { OkBtn, CancelBtn }) => (
-          <>
-            <CancelBtn />
-            <OkBtn />
-          </>
-        ),
-      });
-    } else {
-      dispatch(UpdateInvoice({soLuong : value,chiTietSanPham: record.chiTietSanPham, hoaDon : activeKey }));
-      dispatch(UpdateApartProduct({id:record.chiTietSanPham,soLuong:value-record.soLuong })); 
-      setSoLuong(value);
-      //  maxSoLuong = ctsp.map((item)=> item.id === record.chiTietSanPham).soLuong
-      // ctsp.filter((item)=> item.id === record.chiTietSanPham)[0].soLuong;
-    }
+
+      }
     
   }
 
-// api add bill
- const handleAddBill = (value) =>{
-  const dataHoaDon = hoaDons.filter((item) => item.id === value);
-  console.log(dataHoaDon[0]);
-  const addHD = async() => {
-    const dataAdd =  await axios.post(`http://localhost:8080/ban-hang/add-hoa-don`,dataHoaDon[0]);
-    const ctsp = ctspHD.filter((f)=> f.hoaDon === activeKey);
-    Promise.all(ctsp.map(value => 
-      axios.post(`http://localhost:8080/ban-hang/addHDCT`,value)));
-   // console.log("ID Hóa đơn ",dataAdd.data.id);  
-  //  ctspHD.filter((f)=> f.activeKey === activeKey).map(i=> dispatch(UpdateHDToProduct({hoaDon:dataAdd.data.id,chiTietSanPham:i.idCTSP,activeKey:activeKey}))) 
-  //  idHD = dataAdd.data.id;
-  }
-  addHD();
+
+
+ const handleAddBill = () =>{
+  dispatch(UpdateBill({key:activeKey,giaGoc:data.reduce((accumulator,currentProduct) =>{
+    return accumulator + currentProduct.total},0)}));
   setOpenThanhToan(true)
- // handleAddCTSP();
 
-}
-
-
-
- const handleAddCTSP = () => {
-  
-  const ctsp = ctspHD.filter((f)=> f.activeKey === activeKey);
-  const responses =  Promise.all(ctsp.map(value => 
-    axios.post(`http://localhost:8080/ban-hang/addHDCT`,value)));
- }
-
- const handleThanhToan = (value) => {
-
- }
-
-
-// end 
-
+  }
   const handleCloseSanPham = () => {
     setOpenSanPham(false);
   }
@@ -298,10 +293,8 @@ const onEdit = (targetKey, action) => {
       key: "soLuong",
       render : (text,record) =>(
         <InputNumber min={0} 
-        //value={record.soLuong} 
-        value={soLuong}
-        onChange={(value) => onChangeSoLuong(value,record)} 
-       // onChange={onChangeSoLuong(record)}
+        value={record.soLuong} 
+        onChange={(value) => onChangeSoLuong(value,record)}
         />
        
         )
@@ -502,7 +495,7 @@ const onEdit = (targetKey, action) => {
           <div className="text-end">
             <>
               <Button className='me-5 bg-success' type="primary" onClick={() => setOpenKhachHang(true)}>
-                Chọn tài khoản
+                Chọn khách hàng
               </Button>
               <ModalKhachHang openKhachHang={openKhachHang} 
                // idHD = {tab.id}
