@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
 
@@ -38,6 +39,18 @@ public interface VoucherRepository extends JpaRepository<Voucher,String> {
 """,nativeQuery = true)
     List<AdminVoucher> searchVoucher(VoucherSearch voucherSearch);
 
-
+    @Query(value = """
+            SELECT id, ma
+                   CASE
+                       WHEN loai_voucher = 'Phần trăm' THEN MAX((:tien * muc_do)/100)
+                       ELSE MAX(giam_toi_da)
+                   END AS max_giam_toi_da
+            FROM voucher
+            WHERE dieu_kien <= 200000 and trang_thai=0
+            GROUP BY id,ma
+            ORDER BY max_giam_toi_da DESC
+            LIMIT 1;
+            """,nativeQuery = true)
+            Voucher getVoucherHopLe(BigDecimal tien);
 
 }
