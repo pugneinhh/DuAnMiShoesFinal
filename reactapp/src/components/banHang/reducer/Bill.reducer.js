@@ -7,25 +7,34 @@ import {
 import moment from "moment";
 import { NULL } from "sass";
 
-const initialState = [];
+const initialState = () => {
+    const id = uuid();
+    return [
+        {
+       
+        stt:1,id:id,ma:`HDTQ1`,nhanVien:'Phanh',nguoiDung:null,voucher:null,ngayMua:null,giaGoc:0,giaGiamGia:0,thanhTien:0,diemSuDung:0,giaTriDiem:null,tenNguoiNhan:null,soDienThoai:null,diaChi:null,qrCode:null,ghiChu:null,ngayDuKienNhan:null,ngayNhan:'null',ngayTraHang:null,nguoiTao:'Phanh',nguoiSua:null,ngaySua:null,trangThai:0,key:id
+    }        
+    ]
+};
 const billSlice = createSlice({
     name: "bill",
-    initialState,
+    initialState : initialState(),
     reducers: {
         SetBill: (state, action) => {
             return action.payload;
         },
         CreateBill: (state, action) => {
+            console.log("Dài",state.length);
             const data = action.payload;
             const newBill = {
                 stt: state.length + 1,
                 id: data.key,
-                ma: data.ma,
+                ma: "HDTQ"+(state.length+1),
                 trangThai: 0,
                 key: data.key,
                 tenNguoiDung : null,
                 //ngayTao: moment(new Date().getTime()).format("YYYY-MM-DD HH:mm:ss"),
-                loaiHoaDon: 0,
+                loaiHoaDon: 1,
                 nhanVien: data.nhanVien,
                 nguoiDung: null,
                 voucher: data.voucher,
@@ -57,32 +66,17 @@ const billSlice = createSlice({
         UpdateBill: (state, action) => {
             const updatedBill = action.payload; // backend
             const index = state.findIndex((period) => period.key === updatedBill.key);
-            console.log(index);
+            console.log(updatedBill.giaGoc);
             if (index !== -1) {
-                state[index].ma = updatedBill.name;
                 state[index].ngaySua = updatedBill.ngaySua;
                 state[index].ngayThanhToan = updatedBill.ngayThanhToan;
-                state[index].nguoiDung = updatedBill.nguoiDung;
-                state[index].tenNguoiDung = updatedBill.tenNguoiDung;
                 state[index].voucher = updatedBill.voucher;
                 state[index].ngayMua = updatedBill.ngayMua;
                 state[index].giaGoc = updatedBill.giaGoc;
                 state[index].giaGiam = updatedBill.giaGiam;
-                state[index].thanhTien = updatedBill.thanhTien;
+                state[index].thanhTien = parseFloat(!updatedBill.giaGoc ? 0 : updatedBill.giaGoc) - parseFloat(!updatedBill.giaGiamGiam ? 0 : updatedBill.giaGiam)
                 state[index].diemSuDung = updatedBill.diemSuDung;
                 state[index].giaTriDiem = updatedBill.giaTriDiem;
-                state[index].tenNguoiNhan= updatedBill.tenNguoiNhan;
-                state[index].soDienThoai= updatedBill.soDienThoai;
-                state[index].diaChi= updatedBill.diaChi;
-                state[index].qrCode= updatedBill.qrCode;
-                state[index].ghiChu= updatedBill.ghiChu;
-                state[index].ngayDuKienNhan= updatedBill.ngayDuKienNhan;
-                state[index].ngayNhan= updatedBill.ngayNhan;
-                state[index].ngayTraHang= updatedBill.ngayTraHang;
-                state[index].nguoiSua= updatedBill.nguoiSua;
-                state[index].ngaySua= updatedBill.ngaySua;
-                state[index].gtNguoiDung= updatedBill.gtNguoiDung;
-                state[index].diemNguoiDung = updatedBill.diemNguoiDung; //
             }
         },
         RemoveBill:(state, action)=>{
@@ -90,11 +84,9 @@ const billSlice = createSlice({
         },
         GetBillByKey:(state,action) => {
             const data = action.payload;
-            console.log("data",data.activeKey)
             const index = state.findIndex((period) => period.key === data.activeKey);
-            console.log("index",index);
 
-            
+            console.log("Bill",state[index]);
             return state[index];
         },
         UpdateKHToBill:(state,action)=>{

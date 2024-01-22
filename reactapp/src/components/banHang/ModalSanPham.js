@@ -25,13 +25,15 @@ import { useParams } from "react-router-dom";
 import { GrUpdate } from "react-icons/gr";
 import { Image } from "cloudinary-react";
 import { AddProduct, GetProduct, UpdateApartProduct } from "./reducer/Product.reducer";
-import { AddInvoice } from "./reducer/DetailInvoice.reducer";
+import { AddInvoice, GetInvoice } from "./reducer/DetailInvoice.reducer";
+import { UpdateBill } from "./reducer/Bill.reducer";
 
 const ModalSanPham = (props) => {
   const { openSanPham, setOpenSanPham } = props;
  // const idHD = props.idHD;
   const activeKey = props.activeKey;
   const ctsp = useSelector(GetProduct);
+  const invoice = useSelector(GetInvoice)
   console.log("CTSP",ctsp)
   console.log(activeKey);
   const handleClose = () => {
@@ -156,7 +158,7 @@ const ModalSanPham = (props) => {
   const handleClickAddProduct = (record) => {
     console.log("id",record.giaSauGiam);
     dispatch(AddInvoice({chiTietSanPham:record.id,tenSP:record.tenSP,maMS:record.maMS,linkAnh : record.linkAnh,tenKT:record.tenKT,giaBan: record.giaBan,hoaDon:activeKey,tenMS:record.tenMS,giaGiam:record.giaGiam,giaSauGiam:record.giaSauGiam,nguoiTao:record.nguoiTao,giaBan:record.giaBan,tenKM:record.tenKM,loaiKM:record.loaiKM,giaTriKhuyenMai:record.giaTriKhuyenMai}));
-
+    console.log("Giá",record.giaSauGiam)
     dispatch(UpdateApartProduct({id:record.id,soLuong:1})); 
     setOpenSanPham(false);
   };
@@ -283,10 +285,20 @@ const ModalSanPham = (props) => {
       //dataIndex: "idCTSP",
       render: (record) => (
         <Space size="middle">
-          <button className="btn btn-danger" onClick={() => handleClickAddProduct(record)
-            }>
-            Chọn
-          </button>
+          <>
+          {
+            (record.soLuong < 1) ? (
+              <button className="btn btn-danger" disabled>
+              Hết hàng
+            </button>
+            ) : (
+              <button className="btn btn-danger" onClick={() => handleClickAddProduct(record)
+              }>
+              Chọn
+            </button>
+            )
+          }
+          </>
         </Space>
       ),
     },

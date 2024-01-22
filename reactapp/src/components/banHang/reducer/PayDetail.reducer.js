@@ -14,7 +14,7 @@ const payDetailSlice = createSlice({
             const data = action.payload;
             const index = state.findIndex((item)=> item.hoaDon === data.hoaDon && item.phuongThuc === data.phuongThuc);
             if (index !== -1){
-                state[index].soTien = state[index].soTien + data.soTien;
+                state[index].soTien = parseFloat(state[index].soTien) + parseFloat(data.soTien);
             }else {
                 const newPayDetail = {
                     stt:state.length + 1,
@@ -27,9 +27,12 @@ const payDetailSlice = createSlice({
                     item.stt = index +1;
                 });
             }
+        },
+        RemovePayDetail:(state,action) => {
+            return state.filter((item) => (item.hoaDon === action.payload.hoaDon && item.phuongThuc !== action.payload.phuongThuc) || (item.hoaDon === action.payload.hoaDon && item.hoaDon !== action.payload.hoaDon));
         }
     }
 })
-export const {AddPayDetail} = payDetailSlice.actions;
+export const {AddPayDetail,RemovePayDetail} = payDetailSlice.actions;
 export default payDetailSlice.reducer;
 export const GetPayDetail = (state) => state.payDetail;

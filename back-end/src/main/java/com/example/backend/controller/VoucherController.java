@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,6 +31,11 @@ public class VoucherController {
     public ResponseEntity<?> getALL(){
 //        vs.checkHan();
         return ResponseEntity.ok(vs.getAll());
+    }
+    @GetMapping("/voucher-hop-le/{total}")
+    public ResponseEntity<?> getVoucherHopLe(@PathVariable("total")String total){
+        BigDecimal tien=BigDecimal.valueOf(Double.valueOf(total));
+        return ResponseEntity.ok(vs.getVoucherHopLe(tien));
     }
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody VoucherRequest request){
