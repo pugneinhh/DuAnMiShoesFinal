@@ -15,7 +15,8 @@ import { IoStatsChart } from 'react-icons/io5';
 import { HiMiniShieldExclamation } from "react-icons/hi2";
 import { FaArrowTrendUp } from 'react-icons/fa6';
 import { PiChartLineUpBold,PiChartLineDownBold  } from "react-icons/pi";
-
+import { ToastContainer, toast } from "react-toastify";
+import * as XLSX from 'xlsx';
 export default function ThongKe() {
     useEffect(() => {
         loadThongKeTheoNgay();
@@ -530,6 +531,76 @@ export default function ThongKe() {
                 })
                 .catch(error => console.error('Error adding item:', error));
         };
+
+
+          // xuất excel
+
+  // const reSult=[];
+  const exportToExcel = () => {
+    let result = [];
+    let result1 = [];
+    //danh sách hóa đơn
+    if (chartData && chartData.length > 0) {
+      // result.push(["Danh sách khách hàng", "", "", "", "", "", "", ""]); 
+      result.push(["STT", "Tên", "Số lượng", "Ngày"]);
+      chartData.map((item, index) => {
+        let arr = [];
+        arr[0] = index + 1;
+        arr[1] = item.ten;
+        arr[2] = item.soLuong;
+        arr[3] = item.ngay;
+        result.push(arr);
+      })
+    }
+    if (SPBanChay && SPBanChay.length > 0) {
+        // result.push(["Danh sách khách hàng", "", "", "", "", "", "", ""]); 
+        result1.push(["STT", "Tên sản phẩm", "Số lượng", "Giá bán","Ảnh"]);
+        SPBanChay.map((item1, index) => {
+          let arr = [];
+          arr[0] = index + 1;
+          arr[1] = item1.tenSp +' '+item1.mauSac+' '+item1.kichThuoc;
+          arr[2] = item1.soLuong;
+          arr[3] = item1.giaBan;
+          arr[4] = item1.linkAnh;
+          result1.push(arr);
+        })
+      }
+    
+    console.log(result);
+    const wb = XLSX.utils.book_new("Danh sách thống hóa đơn");
+    // const wb1 = XLSX.utils.book_new("Danh sách thống sản phẩm bán chạy");
+    const ws = XLSX.utils.json_to_sheet(result);
+    const ws1 = XLSX.utils.json_to_sheet(result1);
+    ws['!cols'] = [{ wpx: 40 }, { wpx: 100 }, { wpx: 120 }, { wpx: 150 }, { wpx: 150 }, { wpx: 120 }, { wpx: 120 }, { wpx: 150 }];
+    ws['!rows'] = [{ hpx: 40 , fs:30 ,}];
+   
+    ws['A1'].s = { font: { size: 32, color: { rgb: '#FF0000' } }, alignment: { horizontal: 'center', vertical: 'center' } };
+      ws['A1'].v='Danh sách hóa đơn';
+      // ws['A2'].v='';
+    ws["!merges"] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 7 } }];
+  
+
+    ws1['!cols'] = [{ wpx: 40 }, { wpx: 300}, { wpx: 50 }, { wpx: 100 }, { wpx: 1000 }, { wpx: 120 }, { wpx: 120 }, { wpx: 150 }];
+    ws1['!rows'] = [{ hpx: 40 , fs:30 ,}];
+   
+      ws1['A1'].v='Danh sách sản phẩm bán chạy';
+      // ws['A2'].v='';
+    ws1["!merges"] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 7 } }];
+    XLSX.utils.book_append_sheet(wb, ws, 'DanhSachHoaDon');
+    XLSX.utils.book_append_sheet(wb, ws1, 'SanPhamBanChay');
+    XLSX.writeFile(wb, 'DanhSachThongKe.xlsx');
+    toast("✔️ Xuất excel thành công!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+   
+  };
     return (
         <div className='container-fluid'>
             <Divider orientation="center" color="#d0aa73"><h4 className="text-first pt-1 fw-bold"> <RxDashboard size={35} /> Quản lý thống kê</h4></Divider>
@@ -587,7 +658,7 @@ export default function ThongKe() {
             </div>
 
             <div className='text-end'>
-                <a className="btn btn-success me-2" role="button"> <ExportOutlined />  Export Excel </a>
+                <a className="btn btn-success me-2" role="button" onClick={exportToExcel}> <ExportOutlined />  Export Excel </a>
                 <Button className=" me-2" type={getButtonNgayType()} onClick={handleClickNgay}> Ngày </Button>
                 <Button className=" me-2" type={getButtonTuanType()} onClick={handleClickTuan}> Tuần </Button>
                 <Button className=" me-2" type={getButtonThangType()} onClick={handleClickThang}> Tháng </Button>
@@ -723,6 +794,20 @@ export default function ThongKe() {
                 </div>
                 </Card>
             </div>
+            <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
+        {/* Same as */}
+        <ToastContainer />
         </div>
     )
 }
