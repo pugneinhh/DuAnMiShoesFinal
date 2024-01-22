@@ -405,8 +405,11 @@ export default function ThongKe() {
             ),
         },
         {
-            title: "Gía bán",
+            title: "Giá bán",
             dataIndex: "giaBan",
+            render: (_,record) => (
+                <span>{`${Intl.NumberFormat('en-US').format(record.giaBan)} VNĐ`}</span>
+            )
         },
         {
             title: "Số lượng bán",
