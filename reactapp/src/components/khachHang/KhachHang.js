@@ -240,9 +240,9 @@ export default function KhachHang() {
     }
     console.log(result);
     const wb = XLSX.utils.book_new("Danh sách khách hàng");
-    const ws = XLSX.utils.json_to_sheet(result);
+    const ws = XLSX.utils.json_to_sheet(khachHang);
     // ws.A2.s = { fill: { bgColor: { indexed: 64 }, fgColor: { rgb: '#1a8ba8' } } }; // Customize background color
-    ws["!merges"] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 7 } }];
+    // ws["!merges"] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 7 } }];
     XLSX.utils.book_append_sheet(wb, ws, 'DanhSachKhachHang');
     XLSX.writeFile(wb, 'DanhSachKhachHang.xlsx');
     toast("✔️ Xuất excel thành công!", {
@@ -336,7 +336,7 @@ export default function KhachHang() {
           </Link>
 
     
-          <Button onClick={exportToExcel} className="btn btn-primary bg-gradient fw-bold nut-them rounded-pill"><SiMicrosoftexcel /></Button>
+          <Button onClick={exportToExcel} className="btn btn-primary bg-gradient fw-bold rounded-pill"><SiMicrosoftexcel /> Export</Button>
         </div>
       </div>
       <div className="container-fluid mt-4">
