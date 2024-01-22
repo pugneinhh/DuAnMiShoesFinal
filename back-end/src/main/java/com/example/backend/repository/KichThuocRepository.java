@@ -1,6 +1,6 @@
 package com.example.backend.repository;
 
-import com.example.backend.dto.response.KichThuocRespone;
+import com.example.backend.dto.response.sanpham.KichThuocRespone;
 import com.example.backend.entity.KichThuoc;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

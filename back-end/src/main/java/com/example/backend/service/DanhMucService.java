@@ -1,7 +1,7 @@
 package com.example.backend.service;
-import com.example.backend.dto.request.DanhMucRequest;
+import com.example.backend.dto.request.sanpham.DanhMucRequest;
 import com.example.backend.dto.request.sanphamsearch.BangConSearch;
-import com.example.backend.dto.response.DanhMucRespone;
+import com.example.backend.dto.response.sanpham.DanhMucRespone;
 import com.example.backend.entity.DanhMuc;
 import com.example.backend.repository.DanhMucRepository;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +41,7 @@ public class DanhMucService {
                 .ma(dm.getMa())
                 .ten(dm.getTen())
                 .ngayTao(dm.getNgayTao())
-                .trangThai(1)
+                .trangThai(0)
                 .build();
         danhMucRepository.save(danhMuc);
         return "Done";

@@ -34,9 +34,9 @@ const ModalUpdateDiaChi = (props) => {
         .then((response) => {
             console.log(response.data);
             // navigate('/voucher');
-            toast("✔️ Cập nhật thành công!", {
+            toast("✔️ Cập nhật địa chỉ thành công!", {
               position: "top-right",
-              autoClose: 5000,
+              autoClose: 1000,
               hideProgressBar: false,
               closeOnClick: true,
               pauseOnHover: true,
@@ -119,7 +119,8 @@ const ModalUpdateDiaChi = (props) => {
                 Modal.confirm({
                   title: "Thông báo",
                   content: "Bạn có chắc chắn muốn cập nhật không?",
-                  style:{zIndex:2000},
+                  centered: true,
+                  getContainer:() => document.getElementById('modal-root'),
                   onOk: () => {
                     form.submit();
                    
@@ -134,7 +135,7 @@ const ModalUpdateDiaChi = (props) => {
                 
               }}
             onCancel={handleClose}
-            zIndex={1000}
+            style={{zIndex:0}}
             // footer={
             //     <button onClick={handleClose}>Hủy</button>
             // }
@@ -319,6 +320,7 @@ const ModalUpdateDiaChi = (props) => {
                     <Input />
                 </Form.Item>
             </Form>
+         
             <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -331,6 +333,7 @@ const ModalUpdateDiaChi = (props) => {
         pauseOnHover
         theme="light"
       /><ToastContainer />
+         <div id="modal-root"></div>
         </Modal>
     )
 }

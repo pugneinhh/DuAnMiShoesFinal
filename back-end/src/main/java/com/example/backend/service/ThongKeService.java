@@ -25,18 +25,49 @@ public class ThongKeService {
     public  ThongKeRespon thongKeTheoNam(){
         return thongKeResponsitory.thongKeTheoNam();
     }
-    public List<SanPhamBanChayRespon> getSpBanChay(){return thongKeResponsitory.getSPBanChay();}
-    public List<BieuDoRespon> getBieuDoNgay(Date ngay){
-        return thongKeResponsitory.getBieuDoNgay(ngay);
+    public  ThongKeRespon getDoanhThuNgayTruoc(){
+        return thongKeResponsitory.doanhThuNgayTruoc();
     }
-    public  List<BieuDoRespon> getBieuDoTuan(Date ngay){
-        return thongKeResponsitory.getBieuDoTuan(ngay);
+    public  ThongKeRespon getDoanhThuThangTruoc(){
+        return thongKeResponsitory.doanhThuThangTruoc();
+    }
+    public  ThongKeRespon getDoanhThuNamTruoc(){
+        return thongKeResponsitory.doanhThuNamTruoc();
+    }
+    public List<SanPhamBanChayRespon> getSpBanChayNgay(){return thongKeResponsitory.getSPBanChayNgay();}
+    public List<SanPhamBanChayRespon> getSpBanChayThang(){return thongKeResponsitory.getSPBanChayThang();}
+    public List<SanPhamBanChayRespon> getSpBanChayNam(){return thongKeResponsitory.getSPBanChayNam();}
+    public List<SanPhamBanChayRespon> getSpBanSapHet(){return thongKeResponsitory.getSPSapHet();}
+    public List<SanPhamBanChayRespon> getSpBanChayTuan(){return thongKeResponsitory.getSPBanChayTuan();}
+    public List<BieuDoRespon> getBieuDoNgay(){
+        return thongKeResponsitory.getBieuDoNgay();
+    }
+    public  List<BieuDoRespon> getBieuDoTuan(){
+        return thongKeResponsitory.getBieuDoTuan();
     }
     public  List<BieuDoRespon> getBieuDoThang(){
         return thongKeResponsitory.getBieuDoThang();
     }
-    public List<TrangThaiHoaDonRespon> getTrangThaiHoaDon(){
-        return thongKeResponsitory.getTrangThaiHoaDon();
+    public  List<BieuDoRespon> getBieuDoNam(){
+        return thongKeResponsitory.getBieuDoNam();
+    }
+    public List<TrangThaiHoaDonRespon> getTrangThaiHoaDonNgay(){
+        return thongKeResponsitory.getTrangThaiHoaDonNgay();
+    }
+    public List<TrangThaiHoaDonRespon> getTrangThaiHoaDonThang(){
+        return thongKeResponsitory.getTrangThaiHoaDonThang();
+    }
+    public List<TrangThaiHoaDonRespon> getTrangThaiHoaDonNam(){
+        return thongKeResponsitory.getTrangThaiHoaDonNam();
+    }
+    public List<TrangThaiHoaDonRespon> getTrangThaiHoaDonTuan(){
+        return thongKeResponsitory.getTrangThaiHoaDonTuan();
+    }
+    public Integer getSPBanNgay(){
+        return thongKeResponsitory.getSPBanNgay();
+    }
+    public Integer getSPBanNgayTruoc(){
+        return thongKeResponsitory.getSPBanNgayTruoc();
     }
 
 }

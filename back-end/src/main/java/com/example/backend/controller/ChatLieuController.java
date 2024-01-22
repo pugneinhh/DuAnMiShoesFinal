@@ -1,8 +1,7 @@
 package com.example.backend.controller;
 
 
-import com.example.backend.dto.request.ChatLieuRequest;
-import com.example.backend.entity.ChatLieu;
+import com.example.backend.dto.request.sanpham.ChatLieuRequest;
 import com.example.backend.service.ChatLieuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

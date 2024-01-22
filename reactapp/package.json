@@ -29,8 +29,10 @@
     "jspdf-autotable": "^3.7.1",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.43",
+    "papaparse": "^5.4.1",
     "react": "^18.2.0",
     "react-bootstrap": "^2.9.1",
+    "react-csv": "^2.2.2",
     "react-dom": "^18.2.0",
     "react-hooks": "^1.0.1",
     "react-icons": "^4.11.0",
@@ -55,7 +57,8 @@
     "tinycolor2": "^1.6.0",
     "until": "^0.1.1",
     "uuid": "^9.0.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "xlsx": "^0.18.5"
   },
   "scripts": {
     "start": "react-scripts start http://localhost:3000/admin/ban-hang",

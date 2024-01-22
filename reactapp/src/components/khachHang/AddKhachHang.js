@@ -189,22 +189,7 @@ export default function AddKhachHang() {
             });
     };
 
-    // ////quét QR sản phẩm
-    // const [openScan, setOpenScan] = useState(false);
-    // const [qrData, setQrData] = useState('');
-    // const handleCloseScan = () => {
-    //     setOpenScan(false);
-    // }
-    // const handleScan = (data) => {
-    //     if (data) {
-    //         setQrData(data);
-    //         // Gửi dữ liệu mã QR lên server ở đây
-    //     }
-    // };
 
-    // const handleError = (err) => {
-    //     console.error(err);
-    // };
     return (
         <>
             <h1>

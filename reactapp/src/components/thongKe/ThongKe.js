@@ -14,6 +14,7 @@ import { BiSolidHot } from 'react-icons/bi';
 import { IoStatsChart } from 'react-icons/io5';
 import { HiMiniShieldExclamation } from "react-icons/hi2";
 import { FaArrowTrendUp } from 'react-icons/fa6';
+import { PiChartLineUpBold,PiChartLineDownBold  } from "react-icons/pi";
 
 export default function ThongKe() {
     useEffect(() => {
@@ -23,6 +24,12 @@ export default function ThongKe() {
         loadBieuDoThang();
         loadTrangThaiHoaDon();
         loadSPBanChay();
+        loadDoanhThuNgayTruoc();
+        loadDoanhThuThangTruoc();
+        loadDoanhThuNamTruoc();
+        loadSanPhamTheoNgay();
+        loadSanPhamTheoNgayTruoc();
+        loadSPSapHet();
     }, []);
     const [hoaDonTheoNgay, sethoaDonTheoNgay] = useState([]);
     const [tienTheoNgay, settienTheoNgay] = useState([]);
@@ -50,16 +57,56 @@ export default function ThongKe() {
             })
             .catch(error => console.error('Error adding item:', error));
     };
+
     const [hoaDonTheoNam, sethoaDonTheoNam] = useState([]);
     const [tienTheoNam, settienTheoNam] = useState([]);
     const loadThongKeTheoNam = async () => {
 
-        await axios.get('http://localhost:8080/thong-ke/thang')
+        await axios.get('http://localhost:8080/thong-ke/nam')
             .then(response => {
                 // Update the list of items
                 sethoaDonTheoNam(response.data.tongHoaDonThongKe);
                 settienTheoNam(response.data.tongTienThongKe);
 
+            })
+            .catch(error => console.error('Error adding item:', error));
+    };
+    const [hoaDonNgayTruoc, sethoaDonNgayTruoc] = useState([]);
+    const [tienNgayTruoc, setTienNgayTruoc] = useState([]);
+    const loadDoanhThuNgayTruoc = async () => {
+
+        await axios.get('http://localhost:8080/thong-ke/doanh-thu-ngay-truoc')
+            .then(response => {
+                // Update the list of items
+                sethoaDonNgayTruoc(response.data.tongHoaDonThongKe);
+                setTienNgayTruoc(response.data.tongTienThongKe);
+               
+            })
+            .catch(error => console.error('Error adding item:', error));
+    };
+    const [hoaDonThangTruoc, sethoaDonThangTruoc] = useState([]);
+    const [tienThangTruoc, setTienThangTruoc] = useState([]);
+    const loadDoanhThuThangTruoc = async () => {
+
+        await axios.get('http://localhost:8080/thong-ke/doanh-thu-thang-truoc')
+            .then(response => {
+                // Update the list of items
+                sethoaDonThangTruoc(response.data.tongHoaDonThongKe);
+                setTienThangTruoc(response.data.tongTienThongKe);
+                
+            })
+            .catch(error => console.error('Error adding item:', error));
+    };
+    const [hoaDonNamTruoc, sethoaDonNamTruoc] = useState([]);
+    const [tienNamTruoc, setTienNamTruoc] = useState([]);
+    const loadDoanhThuNamTruoc = async () => {
+
+        await axios.get('http://localhost:8080/thong-ke/doanh-thu-nam-truoc')
+            .then(response => {
+                // Update the list of items
+                sethoaDonNamTruoc(response.data.tongHoaDonThongKe);
+                setTienNamTruoc(response.data.tongTienThongKe);
+               
             })
             .catch(error => console.error('Error adding item:', error));
     };
@@ -82,10 +129,117 @@ export default function ThongKe() {
             })
             .catch(error => console.error('Error adding item:', error));
     };
+    const loadBieuDoNgay = async () => {
+
+        await axios.get('http://localhost:8080/thong-ke/bieu-do-ngay')
+            .then(response => {
+                // Update the list of items
+                
+                const bieudo=response.data.flatMap(item => {
+                    return [
+                      { ten: 'Hóa Đơn', ngay: item.ngay, soLuong: item.tongHoaDon },
+                      { ten: 'Sản Phẩm', ngay: item.ngay, soLuong: item.tongSanPham }
+                    ];
+                  });
+                 
+                  setChartData(bieudo)
+                  
+            })
+            .catch(error => console.error('Error adding item:', error));
+    };
+    const loadBieuDoTuan = async () => {
+
+        await axios.get('http://localhost:8080/thong-ke/bieu-do-tuan')
+            .then(response => {
+                // Update the list of items
+                
+                const bieudo=response.data.flatMap(item => {
+                    return [
+                      { ten: 'Hóa Đơn', ngay: item.ngay, soLuong: item.tongHoaDon },
+                      { ten: 'Sản Phẩm', ngay: item.ngay, soLuong: item.tongSanPham }
+                    ];
+                  });
+                 
+                  setChartData(bieudo)
+            })
+            .catch(error => console.error('Error adding item:', error));
+    };
+    const loadBieuDoNam = async () => {
+
+        await axios.get('http://localhost:8080/thong-ke/bieu-do-nam')
+            .then(response => {
+                // Update the list of items
+                
+                const bieudo=response.data.flatMap(item => {
+                    return [
+                      { ten: 'Hóa Đơn', ngay: new Date().getFullYear(), soLuong: item.tongHoaDon },
+                      { ten: 'Sản Phẩm', ngay: new Date().getFullYear(), soLuong: item.tongSanPham }
+                    ];
+                  });
+                  
+                  setChartData(bieudo)
+            })
+            .catch(error => console.error('Error adding item:', error));
+    };
+    
     ///trạng thái hóa đơn
     const [trangThaiData, setTrangThaiData] = useState([]);
     const loadTrangThaiHoaDon = async () => {
-        await axios.get('http://localhost:8080/thong-ke/trang-thai-hoa-don')
+        await axios.get('http://localhost:8080/thong-ke/trang-thai-hoa-don-thang')
+            .then(response => {
+                // Update the list of items
+                const totalHoaDon = response.data.reduce((total, item) => total + item.soLuong, 0);
+
+                const trangThaiHD=response.data.flatMap(item => {
+                    return [
+                      { type: item.trangThai==0?"Chờ xác nhận":item.trangThai==1?"Xác nhận":item.trangThai==2?"Chờ vận chuyển":item.trangThai==3?"Đang vận chuyển":
+                      item.trangThai==4?"Đã thanh toán":"Thành công", value: (item.soLuong/totalHoaDon)*100 },
+                    ];
+                  });
+                  
+                  setTrangThaiData(trangThaiHD);
+                 
+            })
+            .catch(error => console.error('Error adding item:', error));
+    };
+    const loadTrangThaiHoaDonNgay = async () => {
+        await axios.get('http://localhost:8080/thong-ke/trang-thai-hoa-don-ngay')
+            .then(response => {
+                // Update the list of items
+                const totalHoaDon = response.data.reduce((total, item) => total + item.soLuong, 0);
+
+                const trangThaiHD=response.data.flatMap(item => {
+                    return [
+                      { type: item.trangThai==0?"Chờ xác nhận":item.trangThai==1?"Xác nhận":item.trangThai==2?"Chờ vận chuyển":item.trangThai==3?"Đang vận chuyển":
+                      item.trangThai==4?"Đã thanh toán":"Thành công", value: (item.soLuong/totalHoaDon)*100 },
+                    ];
+                  });
+                  
+                  setTrangThaiData(trangThaiHD);
+                 
+            })
+            .catch(error => console.error('Error adding item:', error));
+    };
+    const loadTrangThaiHoaDonTuan = async () => {
+        await axios.get('http://localhost:8080/thong-ke/trang-thai-hoa-don-tuan')
+            .then(response => {
+                // Update the list of items
+                const totalHoaDon = response.data.reduce((total, item) => total + item.soLuong, 0);
+
+                const trangThaiHD=response.data.flatMap(item => {
+                    return [
+                      { type: item.trangThai==0?"Chờ xác nhận":item.trangThai==1?"Xác nhận":item.trangThai==2?"Chờ vận chuyển":item.trangThai==3?"Đang vận chuyển":
+                      item.trangThai==4?"Đã thanh toán":"Thành công", value: (item.soLuong/totalHoaDon)*100 },
+                    ];
+                  });
+                  
+                  setTrangThaiData(trangThaiHD);
+                 
+            })
+            .catch(error => console.error('Error adding item:', error));
+    };
+    const loadTrangThaiHoaDonNam = async () => {
+        await axios.get('http://localhost:8080/thong-ke/trang-thai-hoa-don-nam')
             .then(response => {
                 // Update the list of items
                 const totalHoaDon = response.data.reduce((total, item) => total + item.soLuong, 0);
@@ -106,16 +260,60 @@ export default function ThongKe() {
     const [SPBanChay, setSPBanChay] = useState([]);
     const loadSPBanChay = async () => {
 
-        await axios.get('http://localhost:8080/thong-ke/san-pham-ban-chay')
+        await axios.get('http://localhost:8080/thong-ke/san-pham-ban-chay-thang')
             .then(response => {
                 // Update the list of items
-                console.log("spbc",response.data)
+                
                   
                   setSPBanChay(response.data)
             })
             .catch(error => console.error('Error adding item:', error));
     };
+    const loadSPBanChayNgay = async () => {
 
+        await axios.get('http://localhost:8080/thong-ke/san-pham-ban-chay-ngay')
+            .then(response => {
+                // Update the list of items
+                
+                  
+                  setSPBanChay(response.data)
+            })
+            .catch(error => console.error('Error adding item:', error));
+    };
+    const loadSPBanChayNam = async () => {
+
+        await axios.get('http://localhost:8080/thong-ke/san-pham-ban-chay-nam')
+            .then(response => {
+                // Update the list of items
+                
+                  
+                  setSPBanChay(response.data)
+            })
+            .catch(error => console.error('Error adding item:', error));
+    };
+    const loadSPBanChayTuan = async () => {
+
+        await axios.get('http://localhost:8080/thong-ke/san-pham-ban-chay-tuan')
+            .then(response => {
+                // Update the list of items
+               
+                  
+                  setSPBanChay(response.data)
+            })
+            .catch(error => console.error('Error adding item:', error));
+    };
+    const [SPSapHet, setSPSapHet] = useState([]);
+    const loadSPSapHet = async () => {
+
+        await axios.get('http://localhost:8080/thong-ke/san-pham-sap-het')
+            .then(response => {
+                // Update the list of items
+                
+                  
+                  setSPSapHet(response.data)
+            })
+            .catch(error => console.error('Error adding item:', error));
+    };
 
     const contentStyle = {
         height: '160px',
@@ -123,7 +321,7 @@ export default function ThongKe() {
         lineHeight: '160px',
         textAlign: 'center',
         background: '#d0aa73',
-        borderRadius: '10px'
+        marginTop: '10px',
       };
 
     
@@ -207,8 +405,11 @@ export default function ThongKe() {
             ),
         },
         {
-            title: "Gía bán",
+            title: "Giá bán",
             dataIndex: "giaBan",
+            render: (_,record) => (
+                <span>{`${Intl.NumberFormat('en-US').format(record.giaBan)} VNĐ`}</span>
+            )
         },
         {
             title: "Số lượng bán",
@@ -216,6 +417,119 @@ export default function ThongKe() {
         },
     ]
 
+    const [clickCountThang, setClickCountThang] = useState(0);
+    const handleClickThang = () => {
+        // Tăng giá trị biến đếm sau mỗi lần click
+        setClickCountThang(prevCount => prevCount + 1);
+        loadBieuDoThang();
+        loadSPBanChay();
+        loadTrangThaiHoaDon();
+        if(clickCountNam%2!=0){
+            setClickCountNam(prevCount=>prevCount + 1);
+        }
+        if(clickCountNgay%2!=0){
+            setClickCountNgay(prevCount=>prevCount + 1);
+        }
+        if(clickCountTuan%2!=0){
+            setClickCountTuan(prevCount=>prevCount + 1);
+        }
+      };
+    
+      const getButtonThangType = () => {
+        // Xác định loại button dựa trên giá trị biến đếm
+        return clickCountThang % 2 === 0 ? 'primary' : 'default';
+      };
+      const [clickCountNgay, setClickCountNgay] = useState(0);
+    const handleClickNgay = () => {
+        // Tăng giá trị biến đếm sau mỗi lần click
+        setClickCountNgay(prevCount => prevCount + 1);
+        loadBieuDoNgay();
+        loadSPBanChayNgay();
+        loadTrangThaiHoaDonNgay();
+        if(clickCountNam%2!=0){
+            setClickCountNam(prevCount=>prevCount + 1);
+        }
+        if(clickCountTuan%2!=0){
+            setClickCountTuan(prevCount=>prevCount + 1);
+        }
+        if(clickCountThang%2===0){
+            setClickCountThang(prevCount=>prevCount + 1);
+        }
+      };
+    
+      const getButtonNgayType = () => {
+        // Xác định loại button dựa trên giá trị biến đếm
+        return clickCountNgay % 2 === 0 ? 'default' : 'primary';
+      };
+      const [clickCountNam, setClickCountNam] = useState(0);
+    const handleClickNam = () => {
+        // Tăng giá trị biến đếm sau mỗi lần click
+        setClickCountNam(prevCount => prevCount + 1);
+        loadBieuDoNam();
+        loadSPBanChayNam();
+        loadTrangThaiHoaDonNam();
+        if(clickCountTuan%2!=0){
+            setClickCountTuan(prevCount=>prevCount + 1);
+        }
+        if(clickCountNgay%2!=0){
+            setClickCountNgay(prevCount=>prevCount + 1);
+        }
+        if(clickCountThang%2===0){
+            setClickCountThang(prevCount=>prevCount + 1);
+        }
+      };
+    
+      const getButtonNamType = () => {
+        // Xác định loại button dựa trên giá trị biến đếm
+        return clickCountNam % 2 === 0 ? 'default' : 'primary';
+      };
+      const [clickCountTuan, setClickCountTuan] = useState(0);
+      const handleClickTuan = () => {
+          // Tăng giá trị biến đếm sau mỗi lần click
+          setClickCountTuan(prevCount => prevCount + 1);
+          loadBieuDoTuan();
+        loadSPBanChayTuan();
+        loadTrangThaiHoaDonTuan();
+        if(clickCountNam%2!=0){
+            setClickCountNam(prevCount=>prevCount + 1);
+        }
+        if(clickCountNgay%2!=0){
+            setClickCountNgay(prevCount=>prevCount + 1);
+        }
+        if(clickCountThang%2===0){
+            setClickCountThang(prevCount=>prevCount + 1);
+        }
+        };
+      
+        const getButtonTuanType = () => {
+          // Xác định loại button dựa trên giá trị biến đếm
+          return clickCountTuan % 2 === 0 ? 'default' : 'primary';
+        };
+        //sản phẩm bán theo ngày
+        const [sanPhamTheoNgay, setSanPhamTheoNgay] = useState(0);
+        const loadSanPhamTheoNgay = async () => {
+
+            await axios.get('http://localhost:8080/thong-ke/san-pham-ban-ngay')
+                .then(response => {
+                    // Update the list of items
+                   setSanPhamTheoNgay(response.data);
+                   
+    
+                })
+                .catch(error => console.error('Error adding item:', error));
+        };
+        const [sanPhamTheoNgayTruoc, setSanPhamTheoNgayTruoc] = useState(0);
+        const loadSanPhamTheoNgayTruoc = async () => {
+
+            await axios.get('http://localhost:8080/thong-ke/san-pham-ban-ngay-truoc')
+                .then(response => {
+                    // Update the list of items
+                   setSanPhamTheoNgayTruoc(response.data);
+                  
+    
+                })
+                .catch(error => console.error('Error adding item:', error));
+        };
     return (
         <div className='container-fluid'>
             <Divider orientation="center" color="#d0aa73"><h4 className="text-first pt-1 fw-bold"> <RxDashboard size={35} /> Quản lý thống kê</h4></Divider>
@@ -274,22 +588,23 @@ export default function ThongKe() {
 
             <div className='text-end'>
                 <a className="btn btn-success me-2" role="button"> <ExportOutlined />  Export Excel </a>
-                <a className="btn btn-outline-primary me-2" role="button"> Ngày </a>
-                <a className="btn btn-outline-primary me-2" role="button"> Tuần </a>
-                <a className="btn btn-outline-primary me-2" role="button"> Tháng </a>
-                <a className="btn btn-outline-primary me-2" role="button"> Năm </a>
+                <Button className=" me-2" type={getButtonNgayType()} onClick={handleClickNgay}> Ngày </Button>
+                <Button className=" me-2" type={getButtonTuanType()} onClick={handleClickTuan}> Tuần </Button>
+                <Button className=" me-2" type={getButtonThangType()} onClick={handleClickThang}> Tháng </Button>
+                <Button className=" me-2" type={getButtonNamType()} onClick={handleClickNam}> Năm </Button>
             </div>
 
             <div className='mt-4'>
-                <Card title={<><h5 style={{ marginLeft: 530 }}> <IoStatsChart className='mb-2' /> Biểu Đồ Thống Kê Hóa Đơn và Sản Phẩm </h5></>} className='border-left-primary shadow h-100 py-2'>
+                <Card title={<><h5 style={{ marginLeft: 350 }}> <IoStatsChart className='mb-2' /> Biểu Đồ Thống Kê Hóa Đơn và Sản Phẩm </h5></>} className='border-left-primary shadow h-100 py-2'>
                     <Column {...configCot}></Column>
                 </Card>
             </div>
 
-            <div className='row container-fluid mt-4'>
-                <Card className='col-md-7 ms-5 border-left-primary shadow h-100 py-2'>
-                    <h5 style={{ marginLeft: 310}}><BiSolidHot color='red' size={30} style={{ marginBottom: 7 }} /> Sản Phẩm Bán Chạy</h5>
+            <div className='row mt-4'>
+                <Card style={{ marginLeft: 13,width:790}}  className='col-md-7 border-left-primary shadow h-100 py-2'>
+                    <h5 style={{ marginLeft: 240,marginTop: 5}}><BiSolidHot color='red' size={30} style={{ marginBottom: 10}} /> Sản Phẩm Bán Chạy</h5>
                     <Table 
+                    className='border rounded shadow'
                     dataSource={SPBanChay}
                     columns={columns} pagination={{
                         showQuickJumper: true,
@@ -298,8 +613,9 @@ export default function ThongKe() {
                         defaultCurrent: 1,
                         total: 100,
                     }}></Table><br />
+
                     <h5 style={{ marginLeft: 310, marginTop: 20 }}><HiMiniShieldExclamation color='red' size={30} style={{ marginBottom: 7 }} /> Sản Phẩm Sắp Hết</h5>
-                    <Table columns={columns} pagination={{
+                    <Table dataSource={SPSapHet} columns={columns} pagination={{
                         showQuickJumper: true,
                         defaultPageSize: 5,
                         position: ['bottomCenter'],
@@ -307,31 +623,104 @@ export default function ThongKe() {
                         total: 100,
                     }}></Table>
                 </Card>
-                <Card className='col-md-4 ms-4 border-left-primary shadow h-100 py-2'>
+                <Card style={{ marginLeft: 10}} className='col-md-4 border-left-primary shadow h-100 py-2'>
                     {/* biểu đồ tròn */}
-                    <h5 style={{ marginLeft: 50 ,marginTop:12}}><RiBillLine size={30} style={{ marginBottom: 7 }} /> Tổng Hợp Đơn Trong Tháng</h5>
-                    <Pie {...config} />
-                    <h5 style={{ marginLeft: 40, marginTop: 30 }}><FaArrowTrendUp size={30} style={{ marginBottom: 7 }} /> Tốc Độ Tăng Trưởng Cửa Hàng</h5>
-                    <Carousel style={{width: 450}} autoplay>
+                    <h6 style={{marginLeft: 20,marginTop:12}}><RiBillLine size={30} style={{ marginBottom: 7 }} /> Tổng Hợp Đơn Trong Tháng</h6>
+                    <div className='border rounded shadow'>
+                     <Pie {...config} />    
+                    </div>
+                    <h6 style={{marginTop:14}}><FaArrowTrendUp size={30} style={{ marginBottom: 7 }} /> Tốc Độ Tăng Trưởng Cửa Hàng</h6>
+                    <div className='border rounded shadow'>
+                    <Carousel style={{width: 331}} autoplay autoplaySpeed={1000}>
                         <div>
-                            <h6 style={contentStyle}><RiMoneyDollarCircleFill size={25} style={{ marginBottom: 5 }} /> Doanh Thu Ngày :</h6>
+                            <h6 style={contentStyle}><RiMoneyDollarCircleFill size={25} style={{ marginBottom: 5 }} /> Doanh Thu Ngày : {tienTheoNgay} VND {tienTheoNgay>=tienNgayTruoc?(
+                            <span style={{ color: '#49d16d' }}>
+                             <PiChartLineUpBold size={35} color='#49d16d' /> 
+                             {tienTheoNgay > 0 ? (
+                                ((tienTheoNgay - tienNgayTruoc) / 100).toFixed(2) + '%'
+                                ) : ('0%'
+                            )}
+                            </span>):(
+                            <span style={{ color: '#49d16d' }}>
+                             <PiChartLineDownBold size={35} color='#49d16d' /> 
+                                {((tienNgayTruoc - tienTheoNgay) / 100).toFixed(2)}%
+                            </span>)}</h6>
+                            
                         </div>
                         <div>
-                            <h6 style={contentStyle}><RiMoneyDollarCircleFill size={25} style={{ marginBottom: 5 }} /> Doanh Thu Tháng :</h6>
+                            <h6 style={contentStyle}><RiMoneyDollarCircleFill size={25} style={{ marginBottom: 5 }} /> Doanh Thu Tháng : {tienTheoThang} VND {tienTheoThang>=tienThangTruoc?(
+                            <span style={{ color: '#49d16d' }}>
+                             <PiChartLineUpBold size={35} color='#49d16d' /> 
+                             {tienTheoThang > 0 ? (
+                                ((tienTheoThang - tienThangTruoc) / 100).toFixed(2) + '%'
+                                ) : ('0%'
+                            )}
+                            </span>):(
+                            <span style={{ color: '#49d16d' }}>
+                             <PiChartLineDownBold size={35} color='#49d16d' /> 
+                                {((tienThangTruoc - tienTheoThang) / 100).toFixed(2)}%
+                            </span>)}</h6>
+                            
                         </div>
                         <div>
-                            <h6 style={contentStyle}><RiMoneyDollarCircleFill size={25} style={{ marginBottom: 5 }} /> Doanh Thu Năm :</h6>
+                            <h6 style={contentStyle}><RiMoneyDollarCircleFill size={25} style={{ marginBottom: 5 }} /> Doanh Thu Năm : {tienTheoNam} VND {tienTheoNam>=tienNamTruoc?(
+                            <span style={{ color: '#49d16d' }}>
+                            <PiChartLineUpBold size={35} color='#49d16d' /> 
+                            {tienTheoNam > 0 ? (
+                               ((tienTheoNam - tienNamTruoc) / 100).toFixed(2) + '%'
+                               ) : ('0%'
+                           )}
+                           </span>):(
+                            <span style={{ color: '#49d16d' }}>
+                             <PiChartLineDownBold size={35} color='#49d16d' /> 
+                                {((tienNamTruoc - tienTheoNam) / 100).toFixed(2)}%
+                            </span>)}</h6>
                         </div>
                         <div>
-                            <h6 style={contentStyle}><RiProductHuntFill size={25} style={{ marginBottom: 5 }} /> Sản Phẩm Tháng :</h6>
+                            <h6 style={contentStyle}><RiProductHuntFill size={25} style={{ marginBottom: 5 }} /> Sản Phẩm Tháng: {sanPhamTheoNgay} sản phẩm 
+                            {sanPhamTheoNgay>=sanPhamTheoNgayTruoc?(
+                            <span style={{ color: '#49d16d' }}>
+                             <PiChartLineUpBold size={35} color='#49d16d' /> 
+                             {sanPhamTheoNgay > 0 ? (
+                                ((sanPhamTheoNgay - sanPhamTheoNgayTruoc) / 100).toFixed(2) + '%'
+                                ) : ('0%'
+                            )}
+                            </span>):(
+                            <span style={{ color: '#49d16d' }}>
+                             <PiChartLineDownBold size={35} color='#49d16d' /> 
+                                {((sanPhamTheoNgayTruoc - sanPhamTheoNgay) / 100).toFixed(2)}%
+                            </span>)}</h6>
                         </div>
                         <div>
-                            <h6 style={contentStyle}><RiBillFill size={25} style={{ marginBottom: 5 }} /> Hóa Đơn Ngày :</h6>
+                            <h6 style={contentStyle}><RiBillFill size={25} style={{ marginBottom: 5 }} /> Hóa Đơn Ngày : {hoaDonTheoNgay} Hóa đơn {hoaDonTheoNgay>=hoaDonNgayTruoc?(
+                            <span style={{ color: '#49d16d' }}>
+                             <PiChartLineUpBold size={35} color='#49d16d' /> 
+                             {hoaDonTheoNgay > 0 ? (
+                                ((hoaDonTheoNgay - hoaDonNgayTruoc) / 100).toFixed(2) + '%'
+                                ) : ('0%'
+                            )}
+                            </span>):(
+                            <span style={{ color: '#49d16d' }}>
+                             <PiChartLineDownBold size={35} color='#49d16d' /> 
+                                {((hoaDonNgayTruoc - hoaDonTheoNgay) / 100).toFixed(2)}%
+                            </span>)}</h6>
                         </div>
                         <div>
-                            <h6 style={contentStyle}><RiBillFill size={25} style={{ marginBottom: 5 }} /> Hóa Đơn Tháng :</h6>
+                            <h6 style={contentStyle}><RiBillFill size={25} style={{ marginBottom: 5 }} /> Hóa Đơn Tháng : {hoaDonTheoThang} Hóa đơn {hoaDonTheoThang>=hoaDonThangTruoc?(
+                            <span style={{ color: '#49d16d' }}>
+                             <PiChartLineUpBold size={35} color='#49d16d' /> 
+                             {hoaDonTheoThang > 0 ? (
+                                ((hoaDonTheoThang - hoaDonThangTruoc) / 100).toFixed(2) + '%'
+                                ) : ('0%'
+                            )}
+                            </span>):(
+                            <span style={{ color: '#49d16d' }}>
+                             <PiChartLineDownBold size={35} color='#49d16d' /> 
+                                {((hoaDonThangTruoc - hoaDonTheoThang) / 100).toFixed(2)}%
+                            </span>)}</h6>
                         </div>
                     </Carousel>
+                </div>
                 </Card>
             </div>
         </div>

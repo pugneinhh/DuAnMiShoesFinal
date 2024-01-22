@@ -49,17 +49,13 @@ const Voucher = ()=>{
      const[voucher,setVouchers]=useState([])
 
     const onChangeFilter=(changedValues, allValues)=>{
-      
-      console.log("hi",changedValues);
-      console.log("hi2",allValues);
-      // console.log("gtri",value);
       setDataSearch(allValues);
-      // setDataSearch(e);
-      console.log(dataSearch);
+      
       timKiemVoucher(allValues);
     }
     //call api tìm kiếm
     const timKiemVoucher=(dataSearch)=>{
+      console.log("voucher tim",dataSearch);
       axios.post('http://localhost:8080/voucher/search-voucher',dataSearch)
       .then(response => {
             setVouchers(response.data);

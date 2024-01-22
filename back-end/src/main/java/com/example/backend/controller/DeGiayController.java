@@ -1,8 +1,7 @@
 package com.example.backend.controller;
 
 
-import com.example.backend.dto.request.DeGiayRequest;
-import com.example.backend.entity.DeGiay;
+import com.example.backend.dto.request.sanpham.DeGiayRequest;
 import com.example.backend.service.DeGiayService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

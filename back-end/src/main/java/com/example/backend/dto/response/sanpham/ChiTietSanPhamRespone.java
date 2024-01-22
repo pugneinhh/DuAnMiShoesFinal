@@ -1,4 +1,4 @@
-package com.example.backend.dto.response;
+package com.example.backend.dto.response.sanpham;
 
 
 import org.springframework.beans.factory.annotation.Value;

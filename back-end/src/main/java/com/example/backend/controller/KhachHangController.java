@@ -2,6 +2,8 @@ package com.example.backend.controller;
 
 import com.example.backend.dto.request.DiaChiRequest;
 import com.example.backend.dto.request.KhachHangRequest;
+import com.example.backend.dto.request.NguoiDungSeacrh;
+import com.example.backend.dto.request.sanphamsearch.CTSPSearch;
 import com.example.backend.service.KhachHangService;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@CrossOrigin("*")
+@CrossOrigin("http://localhost:3000/")
 @RestController
 @RequestMapping("/admin/khach-hang")
 @RequiredArgsConstructor
@@ -64,6 +66,11 @@ public class KhachHangController {
         KhachHangRequest zzzzzzzzz = gson.fromJson(request, KhachHangRequest.class);
         return ResponseEntity.ok(khachHangService.update(zzzzzzzzz, file));
 
+    }
+
+    @PostMapping ("/search")
+    public ResponseEntity<?> search(@RequestBody NguoiDungSeacrh nguoiDungSeacrh){
+        return ResponseEntity.ok(khachHangService.getSearchKhachHang(nguoiDungSeacrh));
     }
 
     @GetMapping("/{id}")

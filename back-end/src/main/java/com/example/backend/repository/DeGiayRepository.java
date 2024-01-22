@@ -1,6 +1,6 @@
 package com.example.backend.repository;
 
-import com.example.backend.dto.response.DeGiayRespone;
+import com.example.backend.dto.response.sanpham.DeGiayRespone;
 import com.example.backend.entity.DeGiay;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

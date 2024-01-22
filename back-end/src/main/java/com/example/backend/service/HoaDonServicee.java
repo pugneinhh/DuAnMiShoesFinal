@@ -1,7 +1,10 @@
 package com.example.backend.service;
 import com.example.backend.dto.request.HoaDonRequest;
+import com.example.backend.dto.request.hoadonsearch.HoaDonSearch;
+import com.example.backend.dto.request.sanphamsearch.BangConSearch;
 import com.example.backend.dto.response.AdminHoaDonDetailRespon;
 import com.example.backend.dto.response.AdminHoaDonResponn;
+import com.example.backend.dto.response.sanpham.DanhMucRespone;
 import com.example.backend.entity.HoaDon;
 import com.example.backend.model.AdminHoaDonSanPham;
 import com.example.backend.repository.HoaDonRepository;
@@ -27,9 +30,7 @@ public class HoaDonServicee {
     public List<AdminHoaDonResponn> getALLTT(int tt) {
         return hoaDonRepository.getALLHDTT(tt);
     }
-    public List<AdminHoaDonResponn> timHoaDon(String tim, int loai, java.sql.Date bd, Date kt){
-        return hoaDonRepository.search(tim,loai,bd,kt);
-    }
+
     public AdminHoaDonDetailRespon getByID(String id){
         return hoaDonRepository.detailHD(id);
     }
@@ -54,6 +55,11 @@ public class HoaDonServicee {
         HoaDon hoaDon= hoaDonRequest.map(new HoaDon());
         return  hoaDonRepository.save(hoaDon);
 
+    }
+
+    public List<AdminHoaDonResponn> getTim(HoaDonSearch hoaDonSearch)
+    {
+        return hoaDonRepository.timKiemHoaDon(hoaDonSearch);
     }
 //    public LichSuHoaDon update(LichSuHoaDon kh, String ma){
 //        Optional<LichSuHoaDon> optional =khachHangRespon.findById(ma);

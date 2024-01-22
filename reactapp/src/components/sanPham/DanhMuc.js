@@ -12,7 +12,7 @@ import {
   Tag,
   Modal
 } from 'antd';
-import { PlusCircleOutlined } from "@ant-design/icons";
+import { PlusCircleOutlined, RetweetOutlined } from "@ant-design/icons";
 import { DeleteFilled } from "@ant-design/icons";
 import { InfoCircleFilled } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
@@ -41,8 +41,11 @@ export default function DanhMuc() {
   const [open, setOpen] = useState(false);
   const [bordered] = useState(false);
   const addDanhMuc = (value) => {
-    console.log(value);
-    axios.post('http://localhost:8080/danh-muc/add', value)
+    const checkTrung = (code) => {
+      return danhMuc.some(dm => dm.ten === code);
+    };
+    if(!(checkTrung(value.ten))){
+      axios.post('http://localhost:8080/danh-muc/add', value)
       .then(response => {
         console.log(response.data);
         toast('✔️ Thêm thành công!', {
@@ -61,6 +64,19 @@ export default function DanhMuc() {
       })
       .catch(error => console.error('Error adding item:', error));
 
+    }else{
+      toast.error('Danh mục đã tồn tại!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  
   }
   //Update
   const [openUpdate, setOpenUpdate] = useState(false);
@@ -242,8 +258,8 @@ export default function DanhMuc() {
                 </Select>
               </Form.Item>
             </div>
-            <Form.Item className='text-center'>
-              <Button type="primary" htmlType='reset' onClick={loadDanhMuc}>Làm mới</Button>
+            <Form.Item className='text-center' style={{ paddingLeft: 200 }}>
+              <Button type="primary" htmlType='reset'  icon={<RetweetOutlined/>} onClick={loadDanhMuc}>Làm mới</Button>
             </Form.Item>
           </Form>
         </div>
