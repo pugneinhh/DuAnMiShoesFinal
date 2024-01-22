@@ -33,10 +33,11 @@ const AddVoucher = () => {
 
   const [form] = Form.useForm();
   const handleSubmit = (value) => {
+    console.log("Value",value);
     axios
       .post("http://localhost:8080/voucher/add", value)
       .then((response) => {
-        if(selectedIDKH.length>0){
+        if(selectedIDKH){
         Promise.all(
           selectedIDKH.map((id) =>
             axios.post(
