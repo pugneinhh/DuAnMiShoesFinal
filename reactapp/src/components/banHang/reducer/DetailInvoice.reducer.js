@@ -55,9 +55,21 @@ const detailInvoiceSlice=createSlice({
         }, 
         RemoveInvoice: (state,action) => {
             return state.filter((item)=>item.chiTietSanPham === action.payload.chiTietSanPham && item.hoaDon === action.payload.hoaDon )
+        },
+        GetInvoiceByHoaDon:(state,action) => {
+            const data = action.payload;
+            console.log("data",data.activeKey)
+            const index = state.findIndex((period) => period.hoaDon === data.hoaDon);
+            console.log("index",index);
+
+            
+            return state[index];
+        },
+        RemoveInvoiceByHoaDon: (state,action) =>{
+            return state.filter((item)=> item.hoaDon !== action.payload.hoaDon )
         }
     }
 })
-export const {AddInvoice,UpdateInvoice,RemoveInvoice} = detailInvoiceSlice.actions;
+export const {AddInvoice,UpdateInvoice,RemoveInvoice,GetInvoiceByHoaDon,RemoveInvoiceByHoaDon} = detailInvoiceSlice.actions;
 export default detailInvoiceSlice.reducer;
 export const GetInvoice = (state) => state.invoice;

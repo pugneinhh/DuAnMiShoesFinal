@@ -47,8 +47,10 @@ public class BanHangController {
         CongThuc ct=congThucRepository.getCongThucByTrangThai(0);
         System.out.println("Hóa đơn requết"+hoaDonRequest);
         hoaDonRequest.setMa("HDTQ"+ RandomStringUtils.randomNumeric(6));
-        hoaDonRequest.setLoaiHoaDon(0);
+        hoaDonRequest.setLoaiHoaDon(1);
         hoaDonRequest.setNgayTao(LocalDateTime.now());
+        hoaDonRequest.setTrangThai(1);
+        hoaDonRequest.setNgayMua(LocalDateTime.now());
       //  hoaDonRequest.setGiaTriDiem(Integer.valueOf(hoaDonRequest.getThanhTien().intValue()/ct.getTiSo().intValue()));
 
         return  ResponseEntity.ok(banHangService.addHoaDon(hoaDonRequest));
@@ -66,7 +68,7 @@ public class BanHangController {
         return ResponseEntity.ok(hoaDonChiTietService.addHDCT(request));
     }
     @PostMapping("/thanh-toan")
-    public ResponseEntity<?> thanhToan(@RequestBody HoaDonRequest hoaDonRequest){
+    public ResponseEntity<?> thanhToan(@PathVariable HoaDonRequest hoaDonRequest){
         hoaDonRequest.setTrangThai(1);
         hoaDonRequest.setNgayMua(LocalDateTime.now());
         return ResponseEntity.ok(banHangService.addHoaDon(hoaDonRequest));
