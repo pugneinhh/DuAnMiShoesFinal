@@ -20,7 +20,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { BiSolidUserBadge } from "react-icons/bi";
 import { GrMapLocation } from "react-icons/gr";
 import ModalDiaChi from "./ModalDiaChi";
-import { CSVLink } from "react-csv";
+
 import * as XLSX from 'xlsx';
 export default function KhachHang() {
   
@@ -223,7 +223,7 @@ export default function KhachHang() {
   const exportToExcel = () => {
     let result = [];
     if (khachHang && khachHang.length > 0) {
-      result.push(["Danh sách khách hàng", "", "", "", "", "", "", ""]); 
+      // result.push(["Danh sách khách hàng", "", "", "", "", "", "", ""]); 
       result.push(["STT", "Ảnh", "Mã khách hàng", "Tên KH", "Chứng minh thư", "SDT", "Ngày sinh", "Trạng thái"]);
       khachHang.map((item, index) => {
         let arr = [];
@@ -241,8 +241,14 @@ export default function KhachHang() {
     console.log(result);
     const wb = XLSX.utils.book_new("Danh sách khách hàng");
     const ws = XLSX.utils.json_to_sheet(result);
-    // ws.A2.s = { fill: { bgColor: { indexed: 64 }, fgColor: { rgb: '#1a8ba8' } } }; // Customize background color
+    ws['!cols'] = [{ wpx: 40 }, { wpx: 100 }, { wpx: 120 }, { wpx: 150 }, { wpx: 150 }, { wpx: 120 }, { wpx: 120 }, { wpx: 150 }];
+    ws['!rows'] = [{ hpx: 40 , fs:30 ,}];
+   
+    ws['A1'].s = { font: { size: 32, color: { rgb: '#FF0000' } }, alignment: { horizontal: 'center', vertical: 'center' } };
+      ws['A1'].v='Danh sách khách hàng';
+      // ws['A2'].v='';
     ws["!merges"] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 7 } }];
+  
     XLSX.utils.book_append_sheet(wb, ws, 'DanhSachKhachHang');
     XLSX.writeFile(wb, 'DanhSachKhachHang.xlsx');
     toast("✔️ Xuất excel thành công!", {
