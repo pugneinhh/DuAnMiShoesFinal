@@ -156,24 +156,27 @@ const handleClickAddHD=() => {
           });
   }
   if(maxKey>0){
+    const idHD = uuid();
   dispatch(
     CreateBill(
-    {id:uuid(),ma:`HDTQ${maxKey+1}`,nhanVien:'Phanh',nguoiDung:null,voucher:null,ngayMua:null,giaGoc:0,giaGiamGia:0,thanhTien:0,diemSuDung:null,giaTriDiem:null,tenNguoiNhan:null,soDienThoai:null,diaChi:null,qrCode:null,ghiChu:null,ngayDuKienNhan:null,ngayNhan:'null',ngayTraHang:null,nguoiTao:'Phanh',nguoiSua:null,ngaySua:null,trangThai:0,key:uuid()}
+    {id:idHD,ma:`HDTQ${maxKey+1}`,nhanVien:'Phanh',nguoiDung:null,voucher:null,ngayMua:null,giaGoc:0,giaGiamGia:0,thanhTien:0,diemSuDung:null,giaTriDiem:null,tenNguoiNhan:null,soDienThoai:null,diaChi:null,qrCode:null,ghiChu:null,ngayDuKienNhan:null,ngayNhan:'null',ngayTraHang:null,nguoiTao:'Phanh',nguoiSua:null,ngaySua:null,trangThai:0,key:idHD}
   )
   );
   initState.current++;
- // setActiveKey(maxKey+1);
+  setActiveKey(idHD);
   
     }else{
+      const idHD = uuid();
       dispatch(
+        
         CreateBill(
-          {id:uuid(),ma:`HDTQ${initState.current}`,nhanVien:'Phanh',nguoiDung:null,voucher:null,ngayMua:null,giaGoc:0,giaGiamGia:0,thanhTien:0,diemSuDung:0,giaTriDiem:null,tenNguoiNhan:null,soDienThoai:null,diaChi:null,qrCode:null,ghiChu:null,ngayDuKienNhan:null,ngayNhan:'null',ngayTraHang:null,nguoiTao:'Phanh',nguoiSua:null,ngaySua:null,trangThai:0,key:uuid()
+          {id:idHD,ma:`HDTQ${initState.current}`,nhanVien:'Phanh',nguoiDung:null,voucher:null,ngayMua:null,giaGoc:0,giaGiamGia:0,thanhTien:0,diemSuDung:0,giaTriDiem:null,tenNguoiNhan:null,soDienThoai:null,diaChi:null,qrCode:null,ghiChu:null,ngayDuKienNhan:null,ngayNhan:'null',ngayTraHang:null,nguoiTao:'Phanh',nguoiSua:null,ngaySua:null,trangThai:0,key:idHD
           //key:`${initState.current}`
         }
           )
       );
       initState.current++;
-   //   setActiveKey(initState.current);
+     setActiveKey(idHD);
     }
 
 };
