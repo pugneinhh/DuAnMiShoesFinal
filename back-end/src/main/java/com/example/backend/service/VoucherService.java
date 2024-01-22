@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -64,7 +65,9 @@ public class VoucherService {
     public List<AdminVoucher> getSearch(VoucherSearch voucherSearch) {
         return vr.searchVoucher(voucherSearch);
     }
-
+    public Voucher getVoucherHopLe(BigDecimal tien){
+        return vr.getVoucherHopLe(tien);
+    }
     public LocalDateTime convertTime(LocalDateTime ldt0){
         ZoneId utc = ZoneId.of("UTC");
         ZoneId plus7Zone = ZoneId.of("Asia/Bangkok");
