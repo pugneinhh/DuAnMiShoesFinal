@@ -7,20 +7,29 @@ import {
 import moment from "moment";
 import { NULL } from "sass";
 
-const initialState = [];
+const initialState = () => {
+    const id = uuid();
+    return [
+        {
+       
+        stt:1,id:id,ma:`HDTQ1`,nhanVien:'Phanh',nguoiDung:null,voucher:null,ngayMua:null,giaGoc:0,giaGiamGia:0,thanhTien:0,diemSuDung:0,giaTriDiem:null,tenNguoiNhan:null,soDienThoai:null,diaChi:null,qrCode:null,ghiChu:null,ngayDuKienNhan:null,ngayNhan:'null',ngayTraHang:null,nguoiTao:'Phanh',nguoiSua:null,ngaySua:null,trangThai:0,key:id
+    }        
+    ]
+};
 const billSlice = createSlice({
     name: "bill",
-    initialState,
+    initialState : initialState(),
     reducers: {
         SetBill: (state, action) => {
             return action.payload;
         },
         CreateBill: (state, action) => {
+            console.log("Dài",state.length);
             const data = action.payload;
             const newBill = {
                 stt: state.length + 1,
                 id: data.key,
-                ma: data.ma,
+                ma: "HDTQ"+(state.length+1),
                 trangThai: 0,
                 key: data.key,
                 tenNguoiDung : null,
