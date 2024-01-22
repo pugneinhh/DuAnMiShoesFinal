@@ -45,9 +45,10 @@ public class HoaDonControllerr {
     public ResponseEntity<?> detailHD(@PathVariable("idHD") String id){
         return  ResponseEntity.ok(hoaDonService.getByID(id));
     }
-    @GetMapping("/hoa-don/tim-kiem")
+    @PostMapping("/hoa-don/search")
     public ResponseEntity<?> timHoaDon(@RequestBody HoaDonSearch hoaDonSearch)  {
-        return  ResponseEntity.ok(hoaDonService.timHoaDon(hoaDonSearch));
+        System.out.println(hoaDonSearch.toString());
+        return  ResponseEntity.ok(hoaDonService.getTim(hoaDonSearch));
     }
     @PutMapping("/update-hoa-don/{idHD}")
     public ResponseEntity<?> updateTTHDvaADDLSHD(@RequestBody LichSuHoaDonRequest ls, @PathVariable("idHD") String id, HoaDon hd){
