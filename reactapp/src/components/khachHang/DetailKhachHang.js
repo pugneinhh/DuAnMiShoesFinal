@@ -9,7 +9,7 @@ import moment from "moment";
 import { ToastContainer, toast } from "react-toastify";
 import { FaMoneyBills } from "react-icons/fa6";
 
-export default function UpdateCustumerManagement() {
+export default function DetailKhachHang() {
     const [form] = Form.useForm();
     var { id } = useParams();
     const [fileImage, setFileIamge] = useState(null);
