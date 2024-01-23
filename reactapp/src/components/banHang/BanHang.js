@@ -10,7 +10,7 @@ import { DeleteFilled } from "@ant-design/icons";
 import ModalSanPham from "./ModalSanPham";
 import ModalThanhToan from "./ModalThanhToan";
 import ModalKhachHang from "./ModalKhachHang";
-import { createInvoice } from "./redux/Cartaction";
+import { createInvoice } from "../../store/redux/Cartaction";
 import {useDispatch,useSelector} from 'react-redux';
 import {v4 as uuid} from 'uuid';
 import { CreateBill, GetBill, GetBillByKey, RemoveBill, UpdateBill } from "./reducer/Bill.reducer";
