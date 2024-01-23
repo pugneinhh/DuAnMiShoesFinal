@@ -2,21 +2,18 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   Button,
-  DatePicker,
   Form,
   Input,
   Divider,
-  InputNumber,
   Select,
   Space,
   Table,
   Tag,
   Image,
 } from "antd";
-import { FilterFilled, UnorderedListOutlined } from "@ant-design/icons";
+import { FilterFilled } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { BsFillEyeFill, BsPencilSquare } from "react-icons/bs";
-import { FaTag } from "react-icons/fa";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { ToastContainer, toast } from "react-toastify";
 import { BiSolidUserBadge } from "react-icons/bi";
@@ -162,8 +159,8 @@ export default function NhanVien() {
       
       render: (title) => (
         <Space size="middle">
-          <Link to={`/detail-nhan-vien/${title}`} className='btn btn-success'><BsFillEyeFill /></Link>
-          <Link to={`/update-nhan-vien/${title}`} className='btn btn-danger'><BsPencilSquare /></Link>
+          <Link to={`/admin-detail-nhan-vien/${title}`} className='btn btn-success'><BsFillEyeFill /></Link>
+          <Link to={`/admin-update-nhan-vien/${title}`} className='btn btn-danger'><BsPencilSquare /></Link>
         </Space>
       ),
       center: "true",
@@ -280,7 +277,7 @@ export default function NhanVien() {
         {/* view add nhân viên */}
         <div className=" text-end mt-3">
           <Link
-            to="/themNhanVien"
+            to="/admin-them-nhan-vien"
             className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill"
           >
             {" "}

@@ -1,6 +1,5 @@
 package com.example.backend.controller.admin;
 
-import com.example.backend.dto.request.KhachHangRequest;
 import com.example.backend.dto.request.NguoiDungSeacrh;
 import com.example.backend.dto.request.NhanVienRequest;
 import com.example.backend.service.NhanVienService;
@@ -12,10 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@CrossOrigin("*")
+@CrossOrigin("http://localhost:3000/")
 @RestController
 @RequestMapping("/admin/nhan-vien")
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 public class NhanVienController {
     @Autowired
     NhanVienService nhanVienService;

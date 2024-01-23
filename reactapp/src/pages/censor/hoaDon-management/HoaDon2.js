@@ -10,7 +10,7 @@ import Input from 'antd/es/input/Input';
 import { FormattedNumber, IntlProvider } from 'react-intl';
 import { FaMoneyBills } from 'react-icons/fa6';
 import { FilterFilled, RetweetOutlined, UnorderedListOutlined } from '@ant-design/icons';
-import { Container } from 'react-bootstrap';
+// import { Container } from 'react-bootstrap';
 
 
 
@@ -22,7 +22,7 @@ export default function HoaDon() {
         timKiemHD(allValues);
     }
     const timKiemHD = (dataSearch) => {
-        axios.post(`http://localhost:8080/hoa-don/search`, dataSearch)
+        axios.post(`http://localhost:8080/admin/hoa-don/search`, dataSearch)
             .then(response => {
                 setHoaDons(response.data);
             })
@@ -43,7 +43,7 @@ export default function HoaDon() {
     // load full hóa đơn
     const loadHoaDon = async () => {
 
-        const result = await axios.get('http://localhost:8080/hoa-don', {
+        const result = await axios.get('http://localhost:8080/admin/hoa-don/hien-thi', {
             validateStatus: () => {
                 return true;
             },
@@ -367,7 +367,7 @@ export default function HoaDon() {
 
             render: (title) => (
                 <Space size="middle">
-                    <Link to={`/detail-hoa-don/${title}`} className='btn btn-danger'><BsFillEyeFill /></Link>
+                    <Link to={`/admin-detail-hoa-don/${title}`} className='btn btn-danger'><BsFillEyeFill /></Link>
                 </Space>
             ),
             center: 'true',

@@ -33,11 +33,11 @@ public class HoaDonControllerr {
     private LichSuHoaDonService lichSuHoaDonService;
 
 
-    @GetMapping()
+    @GetMapping("/hien-thi")
     public ResponseEntity<?> getALL(){
         return new ResponseEntity<>(hoaDonService.getALL(), HttpStatus.FOUND);
     }
-    @GetMapping("/{tt}")
+    @GetMapping("/hien-thi/{tt}")
     public ResponseEntity<?> getALLTT(@PathVariable("tt") int tt){
         return new ResponseEntity<>(hoaDonService.getALLTT(tt),HttpStatus.FOUND);
     }

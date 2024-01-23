@@ -51,7 +51,7 @@ export default function HoaDonDetail() {
   }, []);
 
   const loadHoaDon = async () => {
-    await axios.get(`http://localhost:8080/detail-hoa-don/${id}`)
+    await axios.get(`http://localhost:8080/admin/hoa-don/detail-hoa-don/${id}`)
       .then(response => {
         // Update the list of items
         setHoaDondetail(response.data);
@@ -71,7 +71,7 @@ export default function HoaDonDetail() {
   const handleSubmit = (values) => {
 
 
-    axios.put(`http://localhost:8080/update-hoa-don/${id}`, values)
+    axios.put(`http://localhost:8080/admin/hoa-don/update-hoa-don/${id}`, values)
       .then(response => {
         // Update the list of items
 
@@ -106,7 +106,7 @@ export default function HoaDonDetail() {
   }, []);
 
   const loadlichsuhoadon = async () => {
-    await axios.get(`http://localhost:8080/detail-lich-su-hoa-don/${id}`)
+    await axios.get(`http://localhost:8080/admin/hoa-don/detail-lich-su-hoa-don/${id}`)
       .then(response => {
         // Update the list of items
         setLichSuHoaDon(response.data);
@@ -125,7 +125,7 @@ export default function HoaDonDetail() {
   const ngay = ngayTimeLine.map((item) => item.hdtimeLine);
   const loadNgayTimeLine = async () => {
 
-    await axios.get(`http://localhost:8080/ngay-hoa-don-time-line/${id}`)
+    await axios.get(`http://localhost:8080/admin/hoa-don/ngay-hoa-don-time-line/${id}`)
       .then(response => {
         // Update the list of items
         setngayTimeLine(response.data);
@@ -272,7 +272,7 @@ export default function HoaDonDetail() {
 
   useEffect(() => {
     // Sử dụng giá trị `id` để thực hiện các thao tác cần thiết
-    axios.get(`http://localhost:8080/detail-hoa-don/${id}`)
+    axios.get(`http://localhost:8080/admin/hoa-don/detail-hoa-don/${id}`)
       .then(response => {
         setTrangThai(response.data.trangThai);
         setLoaiHD(response.data.loaiHD);
@@ -292,7 +292,7 @@ export default function HoaDonDetail() {
   },[]);
 
   const loadListSanPhams = async () => {
-    await axios.get(`http://localhost:8080/hoa-don-san-pham/${id}`)
+    await axios.get(`http://localhost:8080/admin/hoa-don/hoa-don-san-pham/${id}`)
       .then(response => {
         // Update the list of items
         setlistSanPhams(response.data);

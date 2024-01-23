@@ -161,8 +161,8 @@ export default function KhachHang() {
       dataIndex: 'idND',
       render: (record) => (
         <Space size="middle">
-          <Link to={`/detail-khach-hang/${record}`} className='btn btn-success'><BsFillEyeFill /></Link>
-          <Link to={`/update-khach-hang/${record}`} className='btn btn-danger'  ><BsPencilSquare /></Link>
+          <Link to={`/admin/detail-khach-hang/${record}`} className='btn btn-success'><BsFillEyeFill /></Link>
+          <Link to={`/admin-update-khach-hang/${record}`} className='btn btn-danger'  ><BsPencilSquare /></Link>
           <Button style={{ width: 41, height: 37.6, backgroundColor: "#35afb1", color: "white" }} type="primary" onClick={()=>detailDiaChi(record)}>
             <GrMapLocation />
           </Button>
@@ -334,7 +334,7 @@ export default function KhachHang() {
         {/* view add nhân viên */}
         <div className=" text-end mt-3">
           <Link
-            to="/themKhachHang"
+            to="/admin-them-khach-hang"
             className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill"
           >
             {" "}
