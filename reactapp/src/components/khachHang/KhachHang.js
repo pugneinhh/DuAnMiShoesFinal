@@ -21,9 +21,13 @@ import { BiSolidUserBadge } from "react-icons/bi";
 import { GrMapLocation } from "react-icons/gr";
 import ModalDiaChi from "./ModalDiaChi";
 
+<<<<<<< HEAD
 import * as XLSX from 'xlsx';
 export default function KhachHang() {
 
+=======
+                    
+>>>>>>> de4f49785d29c91689cb2d1ddace4ba4cab67fa0
   const [khachHang, setKhachHang] = useState([]);
 
   const [componentSize, setComponentSize] = useState("default");
@@ -223,7 +227,9 @@ export default function KhachHang() {
   const exportToExcel = () => {
     let result = [];
     if (khachHang && khachHang.length > 0) {
+
       // result.push(["Danh sách khách hàng", "", "", "", "", "", "", ""]); 
+
       result.push(["STT", "Ảnh", "Mã khách hàng", "Tên KH", "Chứng minh thư", "SDT", "Ngày sinh", "Trạng thái"]);
       khachHang.map((item, index) => {
         let arr = [];
@@ -240,6 +246,14 @@ export default function KhachHang() {
     }
     console.log(result);
     const wb = XLSX.utils.book_new("Danh sách khách hàng");
+<<<<<<< HEAD
+=======
+
+    const ws = XLSX.utils.json_to_sheet(khachHang);
+    // ws.A2.s = { fill: { bgColor: { indexed: 64 }, fgColor: { rgb: '#1a8ba8' } } }; // Customize background color
+    // ws["!merges"] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 7 } }];
+
+>>>>>>> de4f49785d29c91689cb2d1ddace4ba4cab67fa0
     const ws = XLSX.utils.json_to_sheet(result);
     ws['!cols'] = [{ wpx: 40 }, { wpx: 100 }, { wpx: 120 }, { wpx: 150 }, { wpx: 150 }, { wpx: 120 }, { wpx: 120 }, { wpx: 150 }];
     ws['!rows'] = [{ hpx: 40, fs: 30, }];
@@ -248,6 +262,10 @@ export default function KhachHang() {
     ws['A1'].v = 'Danh sách khách hàng';
     // ws['A2'].v='';
     ws["!merges"] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 7 } }];
+<<<<<<< HEAD
+=======
+  
+>>>>>>> de4f49785d29c91689cb2d1ddace4ba4cab67fa0
 
     XLSX.utils.book_append_sheet(wb, ws, 'DanhSachKhachHang');
     XLSX.writeFile(wb, 'DanhSachKhachHang.xlsx');
@@ -343,6 +361,10 @@ export default function KhachHang() {
 
 
           <Button onClick={exportToExcel} className="btn btn-primary bg-gradient fw-bold nut-them rounded-pill"><SiMicrosoftexcel /></Button>
+<<<<<<< HEAD
+=======
+
+>>>>>>> de4f49785d29c91689cb2d1ddace4ba4cab67fa0
         </div>
       </div>
       <div className="container-fluid mt-4">
