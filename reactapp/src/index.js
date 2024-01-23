@@ -24,7 +24,10 @@ import AddSanPham from './components/sanPham/AddSanPham';
 import KhachHang from "./components/khachHang/KhachHang";
 import NhanVien from "./components/nhanVien/NhanVien";
 import AddNhanVien from "./components/nhanVien/AddNhanVien";
+import UpdateNhanVien from "./components/nhanVien/UpdateNhanVien";
+import DetailNhanVien from "./components/nhanVien/DetailNhanVien";
 import UpdateKhachHang from "./components/khachHang/UpdateKhachHang";
+import DetailKhachHang from "./components/khachHang/DetailKhachHang";
 import BanHang from './components/banHang/BanHang';
 import AddVoucher from './components/voucher/AddVoucher';
 import ModelUpdateVoucher from './components/voucher/ModelUpdateVoucher';
@@ -63,11 +66,11 @@ root.render(
           <Route path='showct/:uuid' element = {<ChiTietSanPham/>}></Route>
             <Route path="nhan-vien" element={<NhanVien />}></Route>
         <Route path="themNhanVien" element={<AddNhanVien />}></Route>
-          {/* <Route path="detail-nhan-vien/:id" element={<AddNhanVien />}></Route>
-          <Route path="update-nhan-vien/:id" element={<AddNhanVien />}></Route> */}
+          <Route path="detail-nhan-vien/:id" element={<DetailNhanVien />}></Route>
+          <Route path="update-nhan-vien/:id" element={<UpdateNhanVien />}></Route>
         <Route path="khach-hang" element={<KhachHang />}></Route>
           <Route path="themKhachHang" element={<AddKhachHang />}></Route>
-          {/* <Route path="detail-khach-hang/:id" element={<AddNhanVien />}></Route> */}
+          <Route path="detail-khach-hang/:id" element={<DetailKhachHang />}></Route>
           <Route path="update-khach-hang/:id" element={<UpdateKhachHang />}></Route>
           <Route path='them-san-pham' element = {<AddSanPham/>}></Route>
 

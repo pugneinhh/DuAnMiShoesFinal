@@ -56,7 +56,7 @@ public interface ThongKeResponsitory extends JpaRepository<HoaDon, String> {
     @Query(value = """
              SELECT  CASE WHEN sum(thanh_tien) IS NULL  THEN 0 ELSE sum(thanh_tien) END  as tongTienThongKe
             , count(ma) AS tongHoaDonThongKe
-                FROM duanmishoes.hoa_don where year(ngay_tao)=year(curdate()- INTERVAL 1 DAY)  and (hoa_don.trang_thai=4 or hoa_don.trang_thai=5)
+FROM duanmishoes.hoa_don where year(ngay_tao)=year(curdate()- INTERVAL 1 DAY)  and (hoa_don.trang_thai=4 or hoa_don.trang_thai=5)
                         """, nativeQuery = true)
     ThongKeRespon doanhThuNamTruoc();
 
@@ -90,7 +90,6 @@ public interface ThongKeResponsitory extends JpaRepository<HoaDon, String> {
             "group by hoa_don_chi_tiet.chi_tiet_san_pham_id,chi_tiet_san_pham.gia_ban,hinh_anh.url,mau_sac.ten,san_pham.ten,kich_thuoc.ten,hang.ten\n" +
             "order by sum(hoa_don_chi_tiet.so_luong) desc limit 5", nativeQuery = true)
     List<SanPhamBanChayRespon> getSPBanChayNam();
-
     @Query(value = "select sum(hoa_don_chi_tiet.so_luong) as soLuong,hoa_don_chi_tiet.chi_tiet_san_pham_id as idSP, chi_tiet_san_pham.gia_ban as giaBan,min(hinh_anh.url) as linkAnh,san_pham.ten as tenSp,mau_sac.ten as mauSac,kich_thuoc.ten as kichThuoc,hang.ten as hang\n" +
             "from hoa_don_chi_tiet join hoa_don on hoa_don.id=hoa_don_chi_tiet.hoa_don_id\n" +
             "join chi_tiet_san_pham on chi_tiet_san_pham.id =hoa_don_chi_tiet.chi_tiet_san_pham_id\n" +
@@ -113,7 +112,7 @@ public interface ThongKeResponsitory extends JpaRepository<HoaDon, String> {
             "join mau_sac on mau_sac.id=chi_tiet_san_pham.mau_sac_id\n" +
             "join kich_thuoc on kich_thuoc.id=chi_tiet_san_pham.kich_thuoc_id\n" +
             "join hang on hang.id=chi_tiet_san_pham.hang_id\n" +
-            "WHERE hoa_don_chi_tiet.ngay_tao = CURDATE()\n" +
+            "WHERE date(hoa_don_chi_tiet.ngay_tao) = CURDATE()\n" +
             "and (hoa_don.trang_thai=4 or hoa_don.trang_thai=5)\n" +
             "group by hoa_don_chi_tiet.chi_tiet_san_pham_id,chi_tiet_san_pham.gia_ban,hinh_anh.url,mau_sac.ten,san_pham.ten,kich_thuoc.ten,hang.ten\n" +
             "order by sum(hoa_don_chi_tiet.so_luong) desc limit 5", nativeQuery = true)
@@ -122,7 +121,7 @@ public interface ThongKeResponsitory extends JpaRepository<HoaDon, String> {
             select chi_tiet_san_pham.so_luong as soLuong,chi_tiet_san_pham.id as idSP, chi_tiet_san_pham.gia_ban as giaBan,min(hinh_anh.url) as linkAnh,san_pham.ten as tenSp,mau_sac.ten as mauSac,kich_thuoc.ten as kichThuoc,hang.ten as hang
             from chi_tiet_san_pham\s
             join hinh_anh on hinh_anh.chi_tiet_san_pham_id=chi_tiet_san_pham.id
-            join san_pham on san_pham.id=chi_tiet_san_pham.san_pham_id
+join san_pham on san_pham.id=chi_tiet_san_pham.san_pham_id
             join mau_sac on mau_sac.id=chi_tiet_san_pham.mau_sac_id
             join kich_thuoc on kich_thuoc.id=chi_tiet_san_pham.kich_thuoc_id
             join hang on hang.id=chi_tiet_san_pham.hang_id
@@ -130,8 +129,8 @@ public interface ThongKeResponsitory extends JpaRepository<HoaDon, String> {
             group by chi_tiet_san_pham.id,chi_tiet_san_pham.gia_ban,hinh_anh.url,mau_sac.ten,san_pham.ten,kich_thuoc.ten,hang.ten
             """,nativeQuery = true)
     List<SanPhamBanChayRespon> getSPSapHet();
-    @Query(value = "Select DATE(hoa_don_chi_tiet.ngay_tao) AS ngay,count(distinct hoa_don_chi_tiet.hoa_don_id) as tongHoaDon,sum(hoa_don_chi_tiet.so_luong) as tongSanPham from hoa_don_chi_tiet \n" +
-            "where hoa_don_chi_tiet.ngay_tao=current_date()  group by hoa_don_chi_tiet.ngay_tao", nativeQuery = true)
+    @Query(value = "Select DATE(hoa_don_chi_tiet.ngay_tao) AS ngay, count(distinct hoa_don_chi_tiet.hoa_don_id) as tongHoaDon,sum(hoa_don_chi_tiet.so_luong) as tongSanPham from hoa_don_chi_tiet \n" +
+            "where date(hoa_don_chi_tiet.ngay_tao)= current_date()  group by hoa_don_chi_tiet.ngay_tao", nativeQuery = true)
     List<BieuDoRespon> getBieuDoNgay();
 
     @Query(value = "Select DATE(hoa_don_chi_tiet.ngay_tao) AS ngay, count(distinct hoa_don_chi_tiet.hoa_don_id) as tongHoaDon,sum(hoa_don_chi_tiet.so_luong) as tongSanPham from hoa_don_chi_tiet \n" +
@@ -159,7 +158,7 @@ public interface ThongKeResponsitory extends JpaRepository<HoaDon, String> {
     List<TrangThaiHoaDonRespon> getTrangThaiHoaDonNam();
 
     @Query(value = "select case when hoa_don.trang_thai IS NULL  THEN 0 else hoa_don.trang_thai end as trangThai,count(hoa_don.id) as soLuong from hoa_don \n" +
-            "where hoa_don.ngay_tao=current_date()\n" +
+            "where date(hoa_don.ngay_tao)=current_date()\n" +
             "group by hoa_don.trang_thai", nativeQuery = true)
     List<TrangThaiHoaDonRespon> getTrangThaiHoaDonNgay();
 
