@@ -29,7 +29,7 @@ import {
   SidebarHeader,
   SidebarFooter,
 } from "react-pro-sidebar";
-import { Avatar, Badge, Button,  Layout, theme ,Image} from "antd";
+import { Avatar, Badge, Button,  Layout, theme ,Image,FloatButton } from "antd";
 import { IoNotifications } from "react-icons/io5";
 import { FaUserAlt } from "react-icons/fa";
 
@@ -94,7 +94,7 @@ const DashboardCensor = ({ children }) => {
                             icon={<RxDashboard color='#f7faf9' size={20} />}
                         >
                             Dashboard
-                            <Link to="/thong-ke"></Link>
+                            <Link to="/admin-thong-ke"></Link>
                         </MenuItem>
                     </Menu>
                     <Menu iconShape="circle">
@@ -102,7 +102,7 @@ const DashboardCensor = ({ children }) => {
                             icon={<FaCartShopping color='#f7faf9' size={20} />}
                         >
                             Bán Hàng Tại Quầy
-                            <Link to="/admin/ban-hang"></Link>
+                            <Link to="/admin-ban-hang"></Link>
                         </MenuItem>
                     </Menu>
                     <Menu iconShape="circle">
@@ -112,31 +112,31 @@ const DashboardCensor = ({ children }) => {
                         >
                             <MenuItem icon={<FaTshirt color='#f7faf9' size={20}/>}>
                                 Sản Phẩm
-                                <Link to='/san-pham'></Link>
+                                <Link to='/admin-san-pham'></Link>
                             </MenuItem>
                             <MenuItem icon={<BiSolidCategory color='#f7faf9' size={20} />}>
                                 Danh Mục
-                                <Link to='/danh-muc'></Link>
+                                <Link to='/admin-danh-muc'></Link>
                             </MenuItem>
                             <MenuItem icon={<AiOutlineColumnHeight color='#f7faf9' size={20} />}>
                                 Đế giày
-                                <Link to='/de-giay'></Link>
+                                <Link to='/admin-de-giay'></Link>
                             </MenuItem>
                             <MenuItem icon={<GiMaterialsScience color='#f7faf9' size={20}/>}>
                                 Chất Liệu
-                                <Link to='/chat-lieu'></Link>
+                                <Link to='/admin-chat-lieu'></Link>
                             </MenuItem>
                             <MenuItem icon={<GoNumber color='#f7faf9' size={20} />}>
                                 Kích thước
-                                <Link to='/kich-thuoc'></Link>
+                                <Link to='/admin-kich-thuoc'></Link>
                             </MenuItem>
                             <MenuItem icon={<IoColorPalette color='#f7faf9' size={20}/>}>
                                 Màu Sắc
-                                <Link to='/mau-sac'></Link>
+                                <Link to='/admin-mau-sac'></Link>
                             </MenuItem>
                             <MenuItem icon={<PiTrademarkFill color='#f7faf9' size={20} />}>
                                 Hãng
-                                <Link to='/hang'></Link>
+                                <Link to='/admin-hang'></Link>
                             </MenuItem>
                             
                         </SubMenu>
@@ -148,11 +148,11 @@ const DashboardCensor = ({ children }) => {
                         >
                             <MenuItem icon={<BiSolidUserBadge color='#f7faf9' size={20}/>}>
                                 Nhân Viên
-                                <Link to='/nhan-vien'></Link>
+                                <Link to='/admin-nhan-vien'></Link>
                             </MenuItem>
                             <MenuItem icon={<BiSolidUserDetail color='#f7faf9' size={25} />}>
                                 Khách Hàng
-                                 <Link to='/khach-hang'></Link>
+                                 <Link to='/admin-khach-hang'></Link>
                             </MenuItem>
                            
                         </SubMenu>
@@ -163,7 +163,7 @@ const DashboardCensor = ({ children }) => {
                             suffix={<Badge pill bg="light" text="dark">New</Badge>}
                         >
                             Hóa Đơn
-                            <Link to='/hoa-don'></Link>
+                            <Link to='/admin-hoa-don'></Link>
                         </MenuItem>
                     </Menu>
                     <Menu iconShape="circle">
@@ -176,7 +176,7 @@ const DashboardCensor = ({ children }) => {
                             icon={<LuBadgePercent color='#f7faf9' size={25} />}
                         >
                             Đợt giảm giá
-                            <Link to = '/khuyen-mai'></Link>
+                            <Link to = '/admin-khuyen-mai'></Link>
                         </MenuItem>
                     
                     
@@ -184,7 +184,7 @@ const DashboardCensor = ({ children }) => {
                             icon={<FaTag color='#f7faf9'size={20} />}
                         >
                             Phiếu giảm giá
-                            <Link to='/voucher'></Link>
+                            <Link to='/admin-voucher'></Link>
                         </MenuItem>
                     
                     </SubMenu>
@@ -287,6 +287,7 @@ const DashboardCensor = ({ children }) => {
           {children}
         </Content>
       </Layout>
+      <FloatButton.BackTop />
     </Layout>
   );
 };
