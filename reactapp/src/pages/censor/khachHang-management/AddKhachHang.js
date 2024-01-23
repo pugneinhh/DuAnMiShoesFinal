@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react'
-
 import { Button, Card, Col, Divider, Form, Input, message, Row, Select} from 'antd';
 import { FaMoneyBills} from 'react-icons/fa6';
 import UpLoadImage from '../nhanVien-management/UploadAnh';
 import { AddressApi } from '../api/address/AddressApi';
 import { Link, useNavigate } from 'react-router-dom';
 import { KhachHangAPI } from '../api/user/khachHang.api';
-
 import { ToastContainer, toast } from 'react-toastify';
 import QRScannerModal from '../api/QR_Code/QrCode';
 import moment from 'moment';
