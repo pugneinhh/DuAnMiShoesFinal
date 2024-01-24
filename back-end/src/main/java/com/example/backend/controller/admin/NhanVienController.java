@@ -21,7 +21,7 @@ public class NhanVienController {
 
     @GetMapping
     public ResponseEntity<?> getAll() {
-        return new ResponseEntity<>(nhanVienService.getAll(), HttpStatus.FOUND);
+        return  ResponseEntity.ok(nhanVienService.getAll());
     }
 
     @PostMapping()

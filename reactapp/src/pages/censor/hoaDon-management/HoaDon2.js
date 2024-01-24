@@ -43,7 +43,7 @@ export default function HoaDon() {
     // load full hóa đơn
     const loadHoaDon = async () => {
 
-        const result = await axios.get('http://localhost:8080/admin/hoa-don/hien-thi', {
+        const result = await axios.get('http://localhost:8080/admin/hoa-don', {
             validateStatus: () => {
                 return true;
             },
