@@ -187,11 +187,13 @@ const ModelUpdateVoucher = (props) => {
                     message: "Vui lòng không để trống mã!",
                   },
                 ]}
+                labelCol={{ span: 6 }}
+                wrapperCol={{ span: 10 }}
               >
                 <Input
                   placeholder="Mã giảm giá"
                   className="border-warning"
-                  style={{ marginLeft: 20, width: 220 }}
+  
                 />
               </Form.Item>
               <Form.Item
@@ -205,11 +207,13 @@ const ModelUpdateVoucher = (props) => {
                     message: "Vui lòng không để trống tên!",
                   },
                 ]}
+                labelCol={{ span: 6 }}
+                wrapperCol={{ span: 10 }}
               >
                 <Input
                   placeholder="Tên phiếu giảm giá"
                   className="border-warning"
-                  style={{ marginLeft: 20, width: 220 }}
+      
                 />
               </Form.Item>
               <Form.Item
@@ -222,10 +226,12 @@ const ModelUpdateVoucher = (props) => {
                     message: "Vui lòng chọn loại voucher!",
                   },
                 ]}
+                labelCol={{ span: 6 }}
+                wrapperCol={{ span: 10 }}
               >
                 <Select
                   defaultValue={"Tiền mặt"}
-                  style={{ borderColor: "yellow", marginLeft: 20, width: 220 }}
+                  style={{ borderColor: "yellow" }}
                   onChange={handleChange}
                 >
                   <Select.Option value="Tiền mặt">Tiền mặt</Select.Option>
@@ -238,11 +244,11 @@ const ModelUpdateVoucher = (props) => {
               <Form.Item
                 label="Số lượng"
                 name="soLuong"
-                style={{ marginLeft: 0, width: 550 }}
+                labelCol={{ span: 20 }}
               >
                 <InputNumber
                   className="border-warning"
-                  style={{ marginLeft: 20, width: 220 }}
+                  style={{ marginLeft: 30, width:230}}
                   defaultValue={"1"}
                   min={1}
                 />
@@ -250,7 +256,7 @@ const ModelUpdateVoucher = (props) => {
 
               <Form.Item
                 label="Mức độ"
-                style={{ marginLeft: 0, width: 550 }}
+                labelCol={{ span: 20 }}
                 name="mucDo"
               >
                 {selectedValue === "Tiền mặt" ? (
@@ -261,7 +267,7 @@ const ModelUpdateVoucher = (props) => {
                       `VND ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                     }
                     parser={(value) => value.replace(/\VND\s?|(,*)/g, "")}
-                    style={{ marginLeft: 20, width: 220 }}
+                    style={{ marginLeft: 30, width:230}}
                   />
                 ) : (
                   <InputNumber
@@ -271,14 +277,15 @@ const ModelUpdateVoucher = (props) => {
                     max={100}
                     formatter={(value) => `${value}%`}
                     parser={(value) => value.replace("%", "")}
-                    style={{ marginLeft: 20, width: 220 }}
+                    style={{ marginLeft: 30, width:230}}
                   />
                 )}
               </Form.Item>
               <Form.Item
                 label="Giảm tối đa"
                 name="giamToiDa"
-                style={{ marginLeft: 0, width: 550 }}
+                labelCol={{ span: 20 }}
+                wrapperCol={{ span: 10 }}
                 hasFeedback
                 rules={[
                   {
@@ -294,7 +301,7 @@ const ModelUpdateVoucher = (props) => {
                     `VND ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                   }
                   parser={(value) => value.replace(/\VND\s?|(,*)/g, "")}
-                  style={{ marginLeft: 20, width: 220 }}
+                  style={{ marginLeft: 30, width:230}}
                 />
               </Form.Item>
             </div>
@@ -302,7 +309,8 @@ const ModelUpdateVoucher = (props) => {
               <Form.Item
                 label="Điều kiện"
                 name="dieuKien"
-                style={{ marginLeft: 0, width: 550 }}
+                labelCol={{ span: 20 }}
+                wrapperCol={{ span: 10 }}
                 hasFeedback
                 rules={[
                   {
@@ -318,13 +326,14 @@ const ModelUpdateVoucher = (props) => {
                     `VND ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                   }
                   parser={(value) => value.replace(/\VND\s?|(,*)/g, "")}
-                  style={{ marginLeft: 20, width: 220 }}
+                  style={{ marginLeft: 30, width:230}}
                 />
               </Form.Item>
               <Form.Item
                 label="Ngày bắt đầu"
                 name="ngayBatDau"
-                style={{ marginLeft: 0, width: 550 }}
+                labelCol={{ span: 20 }}
+                wrapperCol={{ span: 10 }}
                 hasFeedback
                 rules={[
                   {
@@ -336,14 +345,15 @@ const ModelUpdateVoucher = (props) => {
               >
                 <DatePicker
                   showTime
-                  style={{ marginLeft: 20, width: 220 }}
+                  style={{ marginLeft: 30, width:230}}
                   className="border-warning"
                   placeholder="Ngày bắt đầu"
                 />
               </Form.Item>
               <Form.Item
                 label="Ngày kết thúc"
-                style={{ marginLeft: 0, width: 550 }}
+                labelCol={{ span: 20 }}
+                wrapperCol={{ span: 10 }}
                 name="ngayKetThuc"
                 hasFeedback
                 rules={[
@@ -356,7 +366,7 @@ const ModelUpdateVoucher = (props) => {
               >
                 <DatePicker
                   showTime
-                  style={{ marginLeft: 20, width: 220 }}
+                  style={{ marginLeft: 30, width:230}}
                   className="border-warning"
                   placeholder="Ngày kết thúc"
                 />

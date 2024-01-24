@@ -1,12 +1,11 @@
 
-import { Button, DatePicker, Form, Input, InputNumber, Modal, Popconfirm, Select, Space, Switch, Table, Tag } from "antd";
+import {  Form, Input,  Modal, Select } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
 import { AddressApi } from "../api/address/AddressApi";
 import { ToastContainer, toast } from "react-toastify";
-import { da } from "date-fns/locale";
-
+import { KhachHangAPI } from "../api/user/khachHang.api";
 
 
 const ModalUpdateDiaChi = (props) => {
@@ -14,41 +13,36 @@ const ModalUpdateDiaChi = (props) => {
     const [listProvince, setListProvince] = useState([]);
     const [listDistricts, setListDistricts] = useState([]);
     const [listWard, setListWard] = useState([]);
-    const { openModalUpdateDiaChi, setOpenModalUpdateDiaChi,diaChiUpdate,setDiaChiUpdate,loadDiaChi } = props;
+    const { openModalUpdateDiaChi, setOpenModalUpdateDiaChi,diaChiUpdate,loadDiaChi } = props;
     const handleClose = () => {
         setOpenModalUpdateDiaChi(false);
         
     };
   
-    const handleUpdateDC = (value) => {
-        // console.log("phanh oi",province.key);
-        
+  // update dia chi by id 
+     const handleUpdateDC = (value) => {
         const data={
             ...value,
-            // idThanhPho: province === null ? null : province.key,
-            // idHuyen: district === null ? null : district.key,
-            // idXa: ward === null ? null : ward.key,
         };
-        axios
-        .post(`http://localhost:8080/admin/khach-hang/update-dia-chi/${data.id}`, data)
-        .then((response) => {
-            console.log(response.data);
-            // navigate('/voucher');
-            toast("✔️ Cập nhật địa chỉ thành công!", {
-              position: "top-right",
-              autoClose: 1000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-            });
-            form.resetFields();
+        KhachHangAPI.updateDiaChiByID(data.id,data)
+        .then((result) => {
+                          toast("✔️ Cập nhật dịa chỉ mặc định thành công!", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+                        form.resetFields();
             loadDiaChi();
             handleClose();
-            
         })
+        .catch((error) => {
+          console.log(error);
+        });
     };
    
   

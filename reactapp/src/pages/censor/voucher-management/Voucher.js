@@ -339,7 +339,7 @@ const columns = [
             <div className=' bg-light m-2 p-3 pt-2' style={{border: '1px solid #ddd', // Border color
     boxShadow: '0 3px 8px rgba(0, 0, 0, 0.1)', // Box shadow
     borderRadius: '8px'}}>
-            <h5><FilterFilled size={30}/> Bộ lọc</h5>
+            <h5 className='text-start'><FilterFilled size={30}/> Bộ lọc</h5>
             <hr/>
             <Form className="row col-md-12"
               labelCol={{
@@ -416,7 +416,7 @@ const columns = [
       <div style={{border: '1px solid #ddd', // Border color
     boxShadow: '0 3px 6px rgba(0, 0, 0, 0.1)', // Box shadow
     borderRadius: '8px',padding:'10px'}}>
-         <div className="text-first fw-bold">
+         <div className="text-start fw-bold">
             <p><UnorderedListOutlined size={30}/> Danh sách phiếu giảm giá </p>
           </div>
      <>

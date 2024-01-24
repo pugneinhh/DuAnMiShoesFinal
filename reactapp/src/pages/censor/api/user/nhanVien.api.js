@@ -27,13 +27,13 @@ export class NhanVienAPI {
         });
     };
 
-    // static updateStatus = (data) => {
-    //     return requestAdmin({
-    //         method: "POST",
-    //         url: `/admin/employee/update`,
-    //         data: data,
-    //     });
-    // };
+    static updateStatus = (data) => {
+        return requestAdmin({
+            method: "POST",
+            url: `/admin/employee/update`,
+            data: data,
+        });
+    };
 
     static getOneByIdUser = (id) => {
         return requestAdmin({

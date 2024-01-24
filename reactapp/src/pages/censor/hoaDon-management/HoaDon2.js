@@ -10,7 +10,7 @@ import Input from 'antd/es/input/Input';
 import { FormattedNumber, IntlProvider } from 'react-intl';
 import { FaMoneyBills } from 'react-icons/fa6';
 import { FilterFilled, RetweetOutlined, UnorderedListOutlined } from '@ant-design/icons';
-// import { Container } from 'react-bootstrap';
+import { HoaDonAPI } from '../api/hoaDon/hoaDon.api';
 
 
 
@@ -21,16 +21,20 @@ export default function HoaDon() {
         console.log("All values : ", allValues)
         timKiemHD(allValues);
     }
+    // const timKiemHD = (dataSearch) => {
+    //     axios.post(`http://localhost:8080/admin/hoa-don/search`, dataSearch)
+    //         .then(response => {
+    //             setHoaDons(response.data);
+    //         })
+    //         .catch(error => console.error('Error adding item:', error));
+    // }
     const timKiemHD = (dataSearch) => {
-        axios.post(`http://localhost:8080/admin/hoa-don/search`, dataSearch)
-            .then(response => {
-                setHoaDons(response.data);
-            })
-            .catch(error => console.error('Error adding item:', error));
+        HoaDonAPI.search(dataSearch)
+        .then((res)=>{
+            setHoaDons(res.data);
+              console.log("22",res.data);
+        })
     }
-
-
-    const [hoaDon, setHoaDons] = useState([])
     useEffect(() => {
         loadHoaDon();
         loadHoaDonCho();
@@ -41,109 +45,70 @@ export default function HoaDon() {
         loadHoaDonXN();
     }, []);
     // load full hóa đơn
+    const [hoaDon, setHoaDons] = useState([])
     const loadHoaDon = async () => {
-
-        const result = await axios.get('http://localhost:8080/admin/hoa-don', {
-            validateStatus: () => {
-                return true;
-            },
-        });
-        if (result.status === 302) {
-            setHoaDons(result.data);
-        }
-
-
+        HoaDonAPI.getAll()
+        .then((res)=>{
+            setHoaDons(res.data);
+              console.log("22",res.data);
+        })
     };
+    //load hoa don cho
     const [hoaDonCho, setHoaDonsCho] = useState([])
-
     const loadHoaDonCho = async () => {
-
-        const result = await axios.get('http://localhost:8080/hoa-don/0', {
-            validateStatus: () => {
-                return true;
-            },
-        });
-        if (result.status === 302) {
-            setHoaDonsCho(result.data);
-
-        }
-
+        HoaDonAPI.getAllbyTT(0)
+        .then((res)=>{
+            setHoaDonsCho(res.data);
+              console.log("22",res.data);
+        })
 
     };
-    console.log(hoaDonCho);
+ //load hoa xac nhan
     const [hoaDonXN, setHoaDonsXN] = useState([])
-
     const loadHoaDonXN = async () => {
-
-        const result = await axios.get('http://localhost:8080/hoa-don/1', {
-            validateStatus: () => {
-                return true;
-            },
-        });
-        if (result.status === 302) {
-            setHoaDonsXN(result.data);
-        }
         // console.log(result.data);
-
+        HoaDonAPI.getAllbyTT(1)
+        .then((res)=>{
+            setHoaDonsXN(res.data);
+              console.log("22",res.data);
+        })
     };
+     //load hoa chờ vận chuyển
     const [hoaDonCVC, setHoaDonCVC] = useState([])
-
     const loadHoaDonCVC = async () => {
-
-        const result = await axios.get('http://localhost:8080/hoa-don/2', {
-            validateStatus: () => {
-                return true;
-            },
-        });
-        if (result.status === 302) {
-            setHoaDonCVC(result.data);
-        }
-        // console.log(result.data);
+        HoaDonAPI.getAllbyTT(2)
+        .then((res)=>{
+            setHoaDonCVC(res.data);
+              console.log("22",res.data);
+        })
 
     };
+    // load hóa đơn vận chuyển
     const [hoaDonVC, setHoaDonVC] = useState([])
-
     const loadHoaDonVC = async () => {
-
-        const result = await axios.get('http://localhost:8080/hoa-don/3', {
-            validateStatus: () => {
-                return true;
-            },
-        });
-        if (result.status === 302) {
-            setHoaDonVC(result.data);
-        }
-        // console.log(result.data);
-
+        HoaDonAPI.getAllbyTT(3)
+        .then((res)=>{
+            setHoaDonVC(res.data);
+              console.log("22",res.data);
+        })
     };
+    //load hóa đơn thanh toán
     const [hoaDonTT, setHoaDonTT] = useState([])
-
     const loadHoaDonTT = async () => {
-
-        const result = await axios.get('http://localhost:8080/hoa-don/4', {
-            validateStatus: () => {
-                return true;
-            },
-        });
-        if (result.status === 302) {
-            setHoaDonTT(result.data);
-        }
-        // console.log(result.data);
-
+        HoaDonAPI.getAllbyTT(4)
+        .then((res)=>{
+            setHoaDonTT(res.data);
+              console.log("22",res.data);
+        })
     };
+    //load hóa đơn thành công
     const [hoaDonHT, setHoaDonHT] = useState([])
-
     const loadHoaDonHT = async () => {
-
-        const result = await axios.get('http://localhost:8080/hoa-don/5', {
-            validateStatus: () => {
-                return true;
-            },
-        });
-        if (result.status === 302) {
-            setHoaDonHT(result.data);
-        }
-        // console.log(result.data);
+        HoaDonAPI.getAllbyTT(5)
+        .then((res)=>{
+            setHoaDonHT(res.data);
+              console.log("22",res.data);
+        })
 
     };
     const columns = [
@@ -165,48 +130,14 @@ export default function HoaDon() {
         {
             title: 'Mã NV',
             dataIndex: 'maNV',
-            filters: [
-                {
-                    text: 'London',
-                    value: 'London',
-                },
-                {
-                    text: 'New York',
-                    value: 'New York',
-                },
-            ],
-
-            onFilter: (value, record) => record.address.indexOf(value) === 0,
         },
         {
             title: 'Khách hàng',
             dataIndex: 'tenKH',
-            filters: [
-                {
-                    text: 'London',
-                    value: 'London',
-                },
-                {
-                    text: 'New York',
-                    value: 'New York',
-                },
-            ],
-            onFilter: (value, record) => record.address.indexOf(value) === 0,
         },
         {
             title: 'SDT KH',
             dataIndex: 'sdt',
-            filters: [
-                {
-                    text: 'London',
-                    value: 'London',
-                },
-                {
-                    text: 'New York',
-                    value: 'New York',
-                },
-            ],
-            onFilter: (value, record) => record.address.indexOf(value) === 0,
         },
         {
             title: 'Loại HĐ',
@@ -249,17 +180,6 @@ export default function HoaDon() {
             render: (ngayMua) => (
                 <>{moment(ngayMua).format("hh:mm:ss DD/MM/YYYY")}</>
             ),
-            filters: [
-                {
-                    text: 'London',
-                    value: 'London',
-                },
-                {
-                    text: 'New York',
-                    value: 'New York',
-                },
-            ],
-            onFilter: (value, record) => record.address.indexOf(value) === 0,
         },
         {
             title: 'Thành tiền ',
@@ -276,18 +196,6 @@ export default function HoaDon() {
                     </div>
                 </IntlProvider>
             ),
-
-            filters: [
-                {
-                    text: 'London',
-                    value: 'London',
-                },
-                {
-                    text: 'New York',
-                    value: 'New York',
-                },
-            ],
-            onFilter: (value, record) => record.address.indexOf(value) === 0,
         },
         {
             title: 'Trạng thái',
@@ -482,7 +390,7 @@ export default function HoaDon() {
     return (
         <div className='container-fluid'>
             <Divider orientation="center" color="none">
-                <h2 className="text-first pt-1 fw-bold">
+                <h2 className="text-start pt-1 fw-bold">
                     <FaMoneyBills /> Quản lý hóa đơn
                 </h2>
             </Divider>
@@ -494,7 +402,7 @@ export default function HoaDon() {
                 boxShadow: '0 3px 8px rgba(0, 0, 0, 0.1)', // Box shadow
                 borderRadius: '8px'
             }}>
-                <h5><FilterFilled size={30} /> Bộ lọc</h5>
+                <h5 className='text-start'><FilterFilled size={30} /> Bộ lọc</h5>
                 <hr />
                 <Form className="row col-md-12"
                     labelCol={{
@@ -553,7 +461,7 @@ export default function HoaDon() {
                 boxShadow: '0 3px 6px rgba(0, 0, 0, 0.1)', // Box shadow
                 borderRadius: '8px', padding: '10px'
             }}>
-                <div className="text-first fw-bold">
+                <div className="text-start fw-bold">
                     <p><UnorderedListOutlined size={30} /> Danh sách hóa đơn </p>
                 </div>
                 <>

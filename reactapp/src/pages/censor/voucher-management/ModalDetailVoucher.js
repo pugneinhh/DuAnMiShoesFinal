@@ -89,7 +89,7 @@ const ModalDetailVoucher=(props)=>{
         </Divider>
         <div
           className="bg-light col-md-4"
-          orientation="center"
+          
           style={{
             border: "1px solid #ddd",
             boxShadow: "0 3px 8px rgba(0, 0, 0, 0.1)",
@@ -116,43 +116,47 @@ const ModalDetailVoucher=(props)=>{
             style={{
               maxWidth: 1600,
             }}
+            className="mt-3"
             form={form2}
           >
             <div className="col-md-4">
               <Form.Item
                 label="Mã phiếu giảm giá"
-                style={{ paddingLeft: 0, width: 550 }}
+    
                 name="ma"
-               
+                labelCol={{ span:25 }}
+                wrapperCol={{ span: 10 }}
               >
                 <Input
                   placeholder="Mã giảm giá"
                   className="border-warning"
-                  style={{ marginLeft: 20, width: 220 }}
+                 style={{ marginLeft: 10, width:230}}
                 />
               </Form.Item>
               <Form.Item
                 label="Tên phiếu giảm giá"
                 name="ten"
-                style={{ paddingLeft: 0, width: 550 }}
+                labelCol={{ span:25 }}
+                wrapperCol={{ span: 10 }}
                 
               >
                 <Input
                   placeholder="Tên phiếu giảm giá"
                   className="border-warning"
-                  style={{ marginLeft: 20, width: 220 }}
+                  style={{ marginLeft: 10, width:230}}
                 />
               </Form.Item>
               <Form.Item
                 label="Loại voucher"
                 name="loaiVoucher"
-                style={{ borderColor: "yellow", marginLeft: 0, width: 550 }}
-                
+                labelCol={{ span:25 }}
+                wrapperCol={{ span: 10 }}
               >
                 <Select
                   defaultValue={"Tiền mặt"}
-                  style={{ borderColor: "yellow", marginLeft: 20, width: 220 }}
+                  style={{ borderColor: "yellow", marginLeft: 50, width: 230 }}
                   onChange={handleChange}
+                  
                 >
                   <Select.Option value="Tiền mặt">Tiền mặt</Select.Option>
                   <Select.Option value="Phần trăm">Phần trăm</Select.Option>
@@ -164,11 +168,12 @@ const ModalDetailVoucher=(props)=>{
               <Form.Item
                 label="Số lượng"
                 name="soLuong"
-                style={{ marginLeft: 0, width: 550 }}
+                labelCol={{ span:25 }}
+                wrapperCol={{ span: 10 }}
               >
                 <InputNumber
                   className="border-warning"
-                  style={{ marginLeft: 20, width: 220 }}
+                  style={{ marginLeft: 72, width:230}}
                   defaultValue={"1"}
                   min={1}
                 />
@@ -176,7 +181,8 @@ const ModalDetailVoucher=(props)=>{
 
               <Form.Item
                 label="Mức độ"
-                style={{ marginLeft: 0, width: 550 }}
+                labelCol={{ span:25 }}
+                wrapperCol={{ span: 10 }}
                 name="mucDo"
               >
                 {selectedValue === "Tiền mặt" ? (
@@ -187,7 +193,7 @@ const ModalDetailVoucher=(props)=>{
                       `VND ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                     }
                     parser={(value) => value.replace(/\VND\s?|(,*)/g, "")}
-                    style={{ marginLeft: 20, width: 220 }}
+                    style={{ marginLeft: 82, width:230}}
                   />
                 ) : (
                   <InputNumber
@@ -197,14 +203,15 @@ const ModalDetailVoucher=(props)=>{
                     max={100}
                     formatter={(value) => `${value}%`}
                     parser={(value) => value.replace("%", "")}
-                    style={{ marginLeft: 20, width: 220 }}
+                    style={{ marginLeft: 80 , width:230}}
                   />
                 )}
               </Form.Item>
               <Form.Item
                 label="Giảm tối đa"
                 name="giamToiDa"
-                style={{ marginLeft: 0, width: 550 }}
+                labelCol={{ span:25 }}
+                wrapperCol={{ span: 10 }}
                 
               >
                 <InputNumber
@@ -214,7 +221,7 @@ const ModalDetailVoucher=(props)=>{
                     `VND ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                   }
                   parser={(value) => value.replace(/\VND\s?|(,*)/g, "")}
-                  style={{ marginLeft: 20, width: 220 }}
+                  style={{ marginLeft: 57, width:230}}
                 />
               </Form.Item>
             </div>
@@ -222,7 +229,8 @@ const ModalDetailVoucher=(props)=>{
               <Form.Item
                 label="Điều kiện"
                 name="dieuKien"
-                style={{ marginLeft: 0, width: 550 }}
+                labelCol={{ span:25 }}
+                wrapperCol={{ span: 10 }}
                
               >
                 <InputNumber
@@ -232,31 +240,33 @@ const ModalDetailVoucher=(props)=>{
                     `VND ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                   }
                   parser={(value) => value.replace(/\VND\s?|(,*)/g, "")}
-                  style={{ marginLeft: 20, width: 220 }}
+                  style={{ marginLeft: 72, width:230}}
                 />
               </Form.Item>
               <Form.Item
                 label="Ngày bắt đầu"
                 name="ngayBatDau"
-                style={{ marginLeft: 0, width: 550 }}
+                labelCol={{ span:25 }}
+                wrapperCol={{ span: 10 }}
                 
               >
                 <DatePicker
                   showTime
-                  style={{ marginLeft: 20, width: 220 }}
+                  style={{ marginLeft: 45, width:230}}
                   className="border-warning"
                   placeholder="Ngày bắt đầu"
                 />
               </Form.Item>
               <Form.Item
                 label="Ngày kết thúc"
-                style={{ marginLeft: 0, width: 550 }}
+                labelCol={{ span:25 }}
+                wrapperCol={{ span: 10 }}
                 name="ngayKetThuc"
                
               >
                 <DatePicker
                   showTime
-                  style={{ marginLeft: 20, width: 220 }}
+                  style={{ marginLeft: 40, width:230}}
                   className="border-warning"
                   placeholder="Ngày kết thúc"
                 />

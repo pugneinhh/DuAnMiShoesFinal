@@ -16,7 +16,7 @@ import { Image } from 'cloudinary-react';
 import {useReactToPrint} from 'react-to-print';
 import logo from '../../../assets/images/logo.png';
 import { FormattedNumber, IntlProvider } from 'react-intl';
-
+import { HoaDonAPI } from '../api/hoaDon/hoaDon.api';
 export default function HoaDonDetail() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [open, setOpen] = useState(false);
@@ -49,17 +49,15 @@ export default function HoaDonDetail() {
     loadHoaDon();
     loadNgayTimeLine();
   }, []);
-
+// load hóa đơn
   const loadHoaDon = async () => {
-    await axios.get(`http://localhost:8080/admin/hoa-don/detail-hoa-don/${id}`)
-      .then(response => {
-        // Update the list of items
-        setHoaDondetail(response.data);
-
-      })
-      .catch(error => console.error('Error adding item:', error));
-
+    HoaDonAPI.detailHD(id)
+        .then((res)=>{
+          setHoaDondetail(res.data);
+              console.log("22",res.data);
+        })
   };
+
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -68,37 +66,27 @@ export default function HoaDonDetail() {
     setIsModalOpen(false);
   };
   const [form] = Form.useForm();
+  // update trạng thái hóa đơn
   const handleSubmit = (values) => {
-
-
-    axios.put(`http://localhost:8080/admin/hoa-don/update-hoa-don/${id}`, values)
-      .then(response => {
-        // Update the list of items
-
-        loadHoaDon();
-        loadlichsuhoadon();
-        loadNgayTimeLine();
-        setTrangThai(response.data.trangThai);
-        form.resetFields();
-        setIsModalOpen(false);
-        toast('🦄 Thành công!', {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-
-      })
-      .catch(error => console.error('Error adding item:', error));
-
-
-
-
-
+    HoaDonAPI.updateTTHoaDon(id,values)
+    .then((res)=>{
+      loadHoaDon();
+      loadlichsuhoadon();
+      loadNgayTimeLine();
+      setTrangThai(res.data.trangThai);
+      form.resetFields();
+      setIsModalOpen(false);
+      toast('🦄 Thành công!', {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    })
   }
   const [LichSuHoaDon, setLichSuHoaDon] = useState([])
   useEffect(() => {

@@ -1,16 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import {
-  Button,
-  Form,
-  Input,
-  Divider,
-  Select,
-  Space,
-  Table,
-  Tag,
-  Image,
-} from "antd";
+import {Button,Form,Input,Divider,Select,Space,Table,Tag,Image,} from "antd";
 import { SiMicrosoftexcel } from "react-icons/si";
 import { FilterFilled } from "@ant-design/icons";
 import { Link } from "react-router-dom";
@@ -20,7 +10,6 @@ import { ToastContainer, toast } from "react-toastify";
 import { BiSolidUserBadge } from "react-icons/bi";
 import { GrMapLocation } from "react-icons/gr";
 import ModalDiaChi from "./ModalDiaChi";
-
 import * as XLSX from 'xlsx';
 import { KhachHangAPI } from "../api/user/khachHang.api";
 export default function KhachHang() {
@@ -33,7 +22,7 @@ export default function KhachHang() {
  
   
   const [form] = Form.useForm();
-
+//load khach hang
   useEffect(() => {
     loadKhachHang();
   }, []);
@@ -52,14 +41,12 @@ export default function KhachHang() {
     timKiemKH(allValues);
   }
   const timKiemKH = (dataSearch) => {
-    axios.post(`http://localhost:8080/admin/khach-hang/search`, dataSearch)
-      .then(response => {
-        console.log(response.data)
-        setKhachHang(response.data);
-      })
-      .catch(error => console.error('Error adding item:', error));
+    KhachHangAPI.timKiem(dataSearch)
+    .then((res)=>{
+      setKhachHang(res.data);
+          console.log("22",res.data);
+    })
   }
-
   const columns = [
     {
       title: "#",
@@ -280,7 +267,7 @@ export default function KhachHang() {
             borderRadius: "8px",
           }}
         >
-          <h5>
+          <h5 className="text-start">
             <FilterFilled size={30} /> Bộ lọc
           </h5>
           <hr />
@@ -341,7 +328,7 @@ export default function KhachHang() {
           </Link>
 
     
-          <Button onClick={exportToExcel} className="btn btn-primary bg-gradient fw-bold nut-them rounded-pill"><SiMicrosoftexcel /></Button>
+          <Link onClick={exportToExcel} className="btn btn-primary bg-gradient fw-bold nut-them rounded-pill"><SiMicrosoftexcel />Export Excel</Link>
         </div>
       </div>
       <div className="container-fluid mt-4">
