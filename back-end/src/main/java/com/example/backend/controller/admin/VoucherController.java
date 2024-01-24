@@ -27,7 +27,7 @@ public class VoucherController {
     VoucherService vs;
     @Autowired
     NguoiDungVoucherService nguoiDungVoucherService;
-    @GetMapping("/hien-thi")
+    @GetMapping()
     public ResponseEntity<?> getALL(){
 //        vs.checkHan();
         return ResponseEntity.ok(vs.getAll());

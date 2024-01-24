@@ -101,7 +101,7 @@ export default function DetailNhanVien() {
 
 
                 <h3 className="text-first  text-center fw-bold">
-                    <FaMoneyBills /> Detail khách hàng
+                    <FaMoneyBills /> Detail nhan
                 </h3>
 
 

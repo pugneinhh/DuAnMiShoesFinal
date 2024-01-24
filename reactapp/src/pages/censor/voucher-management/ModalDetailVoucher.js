@@ -15,6 +15,8 @@ import moment from 'moment';
 import { FormattedDate, IntlProvider } from 'react-intl';
 import { useParams } from "react-router-dom";
 import TableNguoiDungVoucher from "./tableNguoiDungVoucher";
+import { VoucherAPI } from "../api/voucher/voucher.api";
+
 const ModalDetailVoucher=(props)=>{
     const { id } = useParams("");
   const [dataUpdate, setDataUpdate] = useState({});
@@ -37,8 +39,7 @@ const ModalDetailVoucher=(props)=>{
   
    //lấy ra detail voucher
    const detailVoucher = async () => {
-    axios
-      .get(`http://localhost:8080/voucher/detail/${id}`)
+    VoucherAPI.detail(id)
       .then((response) => {
 
         form2.setFieldsValue({

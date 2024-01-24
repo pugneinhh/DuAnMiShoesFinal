@@ -5,21 +5,20 @@ import {
   Form,
   Input,
 } from "antd";
-
+import { KhachHangAPI } from "../api/user/khachHang.api";
 
 const TableKhachHang = ({onSelectedKH,suaKH}) => {
     const [khachHang, setKhachHangs] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
     useEffect(() => {
-        const loadKhachHang = async () => {
-            const result = await axios.get("http://localhost:8080/admin/khach-hang", {
-              
-            });
-            
+        const loadKhachHang =  () => {
+             KhachHangAPI.getAll().then((result) => {
               setKhachHangs(result.data);
-              console.log(result.data);
-          };
+              console.log("khacgs",result.data);
+          
+        });
+      }
           loadKhachHang();
       }, []);
      
