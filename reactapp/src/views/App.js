@@ -5,30 +5,30 @@ import { Suspense } from "react";
 import AuthGuard from "../guard/AuthGuard";
 import DashboardCensor from "../layout/censor/DashboardCensor";
 import NotFoud from "../pages/404/NotFoud";
-
+import { DashboardClient } from "../layout/user/DashboardClient";
 import { GetLoading } from "../store/reducer/Loading.reducer";
 import { useAppSelector } from "../store/redux/hook";
 import loading from "../assets/images/logo.png";
 
-// quanh nguu 
-import DanhMuc from '../pages/censor/sanPham-management/DanhMuc';
-import DeGiay from '../pages/censor/sanPham-management/DeGiay';
-import ChatLieu from '../pages/censor/sanPham-management/ChatLieu';
-import KichThuoc from '../pages/censor/sanPham-management/KichThuoc';
-import MauSac from '../pages/censor/sanPham-management/MauSac';
-import Hang from '../pages/censor/sanPham-management/Hang';
-import SanPham from '../pages/censor/sanPham-management/SanPham';
-import ChiTietSanPham from '../pages/censor/sanPham-management/CTSP';
-import AddSanPham from '../pages/censor/sanPham-management/AddSanPham';
-//hoa don 
+// quanh nguu
+import DanhMuc from "../pages/censor/sanPham-management/DanhMuc";
+import DeGiay from "../pages/censor/sanPham-management/DeGiay";
+import ChatLieu from "../pages/censor/sanPham-management/ChatLieu";
+import KichThuoc from "../pages/censor/sanPham-management/KichThuoc";
+import MauSac from "../pages/censor/sanPham-management/MauSac";
+import Hang from "../pages/censor/sanPham-management/Hang";
+import SanPham from "../pages/censor/sanPham-management/SanPham";
+import ChiTietSanPham from "../pages/censor/sanPham-management/CTSP";
+import AddSanPham from "../pages/censor/sanPham-management/AddSanPham";
+//hoa don
 import HoaDon from "../pages/censor/hoaDon-management/HoaDon2";
-import HoaDonDetail from '../pages/censor/hoaDon-management/HoaDonDetail';
+import HoaDonDetail from "../pages/censor/hoaDon-management/HoaDonDetail";
 
 //khachhang
 import KhachHang from "../pages/censor/khachHang-management/KhachHang";
 import UpdateKhachHang from "../pages/censor/khachHang-management/UpdateKhachHang";
 import DetailKhachHang from "../pages/censor/khachHang-management/DetailKhachHang";
-import AddKhachHang from '../pages/censor/khachHang-management/AddKhachHang';
+import AddKhachHang from "../pages/censor/khachHang-management/AddKhachHang";
 
 //nhanvien
 import NhanVien from "../pages/censor/nhanVien-management/NhanVien";
@@ -36,18 +36,19 @@ import DetailNhanVien from "../pages/censor/nhanVien-management/DetailNhanVien";
 import AddNhanVien from "../pages/censor/nhanVien-management/AddNhanVien";
 import UpdateNhanVien from "../pages/censor/nhanVien-management/UpdateNhanVien";
 //khuyenmai
-import KhuyenMai from '../pages/censor/khuyenmai-management/KhuyenMai'; 
-import ThemKhuyenMai from '../pages/censor/khuyenmai-management/ThemKhuyenMai'
-import SuaKhuyenMai from '../pages/censor/khuyenmai-management/SuaKhuyenMai'
+import KhuyenMai from "../pages/censor/khuyenmai-management/KhuyenMai";
+import ThemKhuyenMai from "../pages/censor/khuyenmai-management/ThemKhuyenMai";
+import SuaKhuyenMai from "../pages/censor/khuyenmai-management/SuaKhuyenMai";
 //voucher
 import Voucher from "../pages/censor/voucher-management/Voucher";
 import AddVoucher from "../pages/censor/voucher-management/AddVoucher";
 import ModalDetailVoucher from "../pages/censor/voucher-management/ModalDetailVoucher";
 import ModelUpdateVoucher from "../pages/censor/voucher-management/ModelUpdateVoucher";
 // thong ke
-import ThongKe from '../pages/censor/thongKe-management/ThongKe';
+import ThongKe from "../pages/censor/thongKe-management/ThongKe";
 // ban hang
-import BanHang from '../pages/censor/banHang-management/BanHang';
+import BanHang from "../pages/censor/banHang-management/BanHang";
+import GuestGuard from "../guard/GuestGuard";
 function App() {
   const isLoading = useAppSelector(GetLoading);
 
@@ -75,7 +76,7 @@ function App() {
               element={
                 <AuthGuard>
                   <DashboardCensor>
-                    <ThongKe/>
+                    <ThongKe />
                   </DashboardCensor>
                 </AuthGuard>
               }
@@ -160,7 +161,7 @@ function App() {
                 </AuthGuard>
               }
             />
-              <Route
+            <Route
               path="/admin-detail-nhan-vien/:id"
               element={
                 <AuthGuard>
@@ -200,7 +201,7 @@ function App() {
                 </AuthGuard>
               }
             />
-                 <Route
+            <Route
               path="/admin-detail-khach-hang/:id"
               element={
                 <AuthGuard>
@@ -250,7 +251,7 @@ function App() {
                 </AuthGuard>
               }
             />
-                <Route
+            <Route
               path="/admin-kich-thuoc"
               element={
                 <AuthGuard>
@@ -260,7 +261,7 @@ function App() {
                 </AuthGuard>
               }
             />
-                      <Route
+            <Route
               path="/admin-mau-sac"
               element={
                 <AuthGuard>
@@ -270,7 +271,7 @@ function App() {
                 </AuthGuard>
               }
             />
-              <Route
+            <Route
               path="/admin-san-pham"
               element={
                 <AuthGuard>
@@ -280,7 +281,7 @@ function App() {
                 </AuthGuard>
               }
             />
-                      <Route
+            <Route
               path="/admin-add-san-pham"
               element={
                 <AuthGuard>
@@ -291,7 +292,6 @@ function App() {
               }
             />
             <Route
- 
               path="/admin-hoa-don"
               element={
                 <AuthGuard>
@@ -301,7 +301,7 @@ function App() {
                 </AuthGuard>
               }
             />
-             <Route
+            <Route
               path="/admin-detail-hoa-don/:id"
               element={
                 <AuthGuard>
@@ -321,7 +321,7 @@ function App() {
                 </AuthGuard>
               }
             />
-                <Route
+            <Route
               path="/admin-them-khuyen-mai"
               element={
                 <AuthGuard>
@@ -331,7 +331,7 @@ function App() {
                 </AuthGuard>
               }
             />
-               <Route
+            <Route
               path="/admin-update-khuyen-mai/:id"
               element={
                 <AuthGuard>
@@ -341,7 +341,7 @@ function App() {
                 </AuthGuard>
               }
             />
-                     <Route
+            <Route
               path="/admin-ban-hang"
               element={
                 <AuthGuard>
@@ -349,6 +349,18 @@ function App() {
                     <BanHang />
                   </DashboardCensor>
                 </AuthGuard>
+              }
+            />
+
+            {/* Màn client */}
+            <Route
+              path="/home"
+              element={
+                <GuestGuard>
+                  <DashboardClient>
+                    
+                  </DashboardClient>
+                </GuestGuard>
               }
             />
           </Routes>

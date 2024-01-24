@@ -1,11 +1,9 @@
 import axios from "axios";
 import { AppConfig, AppConfigAddress } from "./AppConFig";
-import { store } from "./store";
-import {
-    SetLoadingFalse,
-    SetLoadingTrue,
-} from "../api/Loading";
+
 import { message } from "antd";
+import { SetLoadingFalse, SetLoadingTrue } from "../../../store/reducer/Loading.reducer";
+import { store } from "../../../store/redux/store";
 
 export const requestAdmin = axios.create({
     baseURL: AppConfig.apiUrl,

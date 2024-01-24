@@ -1,16 +1,13 @@
-import { Button, DatePicker, Form, Input, InputNumber, Modal, Popconfirm, Select, Space, Switch, Table } from "antd";
+import { Button,  Modal, Space, Table } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import moment from 'moment';
 import { toast, ToastContainer } from "react-toastify";
 import { Link , useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AddPayDetail, GetPayDetail, RemovePayDetail } from "../../../store/reducer/PayDetail.reducer";
-import { dispatch } from "../api/store";
 import { AddPay, GetPay } from "../../../store/reducer/Pay.reducer";
-import { SoundTwoTone } from "@ant-design/icons";
-import { GetBill, GetBillByKey, RemoveBill } from "../../../store/reducer/Bill.reducer";
-import { GetInvoice, GetInvoiceByHoaDon, RemoveInvoice, RemoveInvoiceByHoaDon } from "../../../../src/store/reducer/DetailInvoice.reducer";
+import { GetBill, RemoveBill } from "../../../store/reducer/Bill.reducer";
+import { GetInvoice, RemoveInvoiceByHoaDon } from "../../../../src/store/reducer/DetailInvoice.reducer";
 
 const ModalThanhToan = (props) => {
     const { openThanhToan, setOpenThanhToan } = props;

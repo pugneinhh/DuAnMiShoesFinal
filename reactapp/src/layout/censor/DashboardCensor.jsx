@@ -160,7 +160,7 @@ const DashboardCensor = ({ children }) => {
                     <Menu iconShape="circle">
                         <MenuItem
                             icon={<FaMoneyBills color='#f7faf9' size={20}/>}
-                            suffix={<Badge pill bg="light" text="dark">New</Badge>}
+                            suffix={<Badge pill bg="light" text="dark"></Badge>}
                         >
                             Hóa Đơn
                             <Link to='/admin-hoa-don'></Link>
