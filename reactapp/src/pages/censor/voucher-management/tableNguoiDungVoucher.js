@@ -5,18 +5,18 @@ import {
   Form,
   Input,
 } from "antd";
+import { NguoiDungVoucherAPI } from "../api/voucher/nguoiDungVoucher.api";
 
 const TableNguoiDungVoucher=(props)=>{
     const {idV}=props;
     const [khachHang, setKhachHangs] = useState([]);
   
     useEffect(() => {
-        const loadKhachHang = async () => {
-            const result = await axios.get(`http://localhost:8080/nguoi-dung-voucher/ngv/${idV}`, {
-              
-            });
+        const loadKhachHang = () => {
+            NguoiDungVoucherAPI.getNguoiDungVoucher(idV).then((result) => {
             
               setKhachHangs(result.data); 
+            });
           };
           loadKhachHang();
       }, []);

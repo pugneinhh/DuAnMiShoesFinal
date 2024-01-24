@@ -16,6 +16,9 @@ import { toast } from "react-toastify";
 import { FaTag } from "react-icons/fa";
 import TableKhachHang from "./tableKhachHang";
 import {  useNavigate } from "react-router-dom";
+import { VoucherAPI } from "../api/voucher/voucher.api";
+import { NguoiDungVoucherAPI } from "../api/voucher/nguoiDungVoucher.api";
+
 
 const ModelUpdateVoucher = (props) => {
   const navigate = useNavigate();
@@ -37,8 +40,7 @@ const ModelUpdateVoucher = (props) => {
 
   //lấy ra detail voucher
   const detailVoucher = async () => {
-    axios
-      .get(`http://localhost:8080/voucher/detail/${id}`)
+   VoucherAPI.detail(id)
       .then((response) => {
 
         form2.setFieldsValue({
@@ -68,13 +70,10 @@ const ModelUpdateVoucher = (props) => {
   };
   
 
-  const loadKH = async () => {
-    const x = await axios.get(
-      `http://localhost:8080/nguoi-dung-voucher/voucher/${id}`
-    );
-    console.log("id:",id)
-    console.log("id khach hang",x.data); 
+  const loadKH = () => {
+    NguoiDungVoucherAPI.getAllByVoucher(id).then((x)=>{
     setKhachHang(x.data);
+  });
   };
 
   useEffect(() => {
@@ -88,10 +87,9 @@ const ModelUpdateVoucher = (props) => {
     setSelectedIDKH(selectedRowKeys);
   };
   const handleUpdateVoucher = (value) => {
-    axios
-      .put(`http://localhost:8080/voucher/update/${id}`, value)
+    VoucherAPI.update(id,value)
       .then((response) => {
-        navigate("/voucher");
+        navigate("/admin-voucher");
         toast("✔️ Cập nhật thành công!", {
           position: "top-right",
           autoClose: 5000,

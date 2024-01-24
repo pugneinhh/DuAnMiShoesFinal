@@ -14,9 +14,10 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { FaTag } from "react-icons/fa";
 import { Navigate, useNavigate } from 'react-router-dom';
-
-
+import { VoucherAPI } from "../api/voucher/voucher.api";
+import { NguoiDungVoucherAPI } from "../api/voucher/nguoiDungVoucher.api";
 import TableKhachHang from "./tableKhachHang";
+
 const AddVoucher = () => {
   const [selectedValue, setSelectedValue] = useState("Tiền mặt");
   const handleChange = (value) => {
@@ -33,22 +34,18 @@ const AddVoucher = () => {
 
   const [form] = Form.useForm();
   const handleSubmit = (value) => {
-    console.log("Value",value);
-    axios
-      .post("http://localhost:8080/voucher/add", value)
+    
+      VoucherAPI.create(value)
       .then((response) => {
         if(selectedIDKH){
         Promise.all(
           selectedIDKH.map((id) =>
-            axios.post(
-              `http://localhost:8080/nguoi-dung-voucher/add/${id}`,
-              response.data
-            )
+          NguoiDungVoucherAPI.create(id,response.data)
           ) 
         );
       }
         console.log(response.data);
-        navigate('/voucher');
+        navigate('/admin-voucher');
         toast("✔️ Thêm thành công!", {
           position: "top-right",
           autoClose: 5000,
