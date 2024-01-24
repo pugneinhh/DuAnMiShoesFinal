@@ -39,10 +39,39 @@ export class KhachHangAPI {
             url: `/admin/khach-hang/${id}`,
         });
     };
-    // static getAddressByUser = (id) => {
-    //     return requestAdmin({
-    //         method: "GET",
-    //         url: `/admin/khach-hang/dia-chi/${id}`,
-    //     });
-    // };
+    static timKiem = (data) => {
+        return requestAdmin({
+            method: "POST",
+            url: `/admin/khach-hang/search`,
+            data: data,
+        });
+    }; 
+    static getDiaChiByKH= (id) => {
+        return requestAdmin({
+            method: "GET",
+            url: `/admin/khach-hang/dia-chi/${id}`,
+        });
+    };
+    static updateDiaChiMacDinh= (id) => {
+        return requestAdmin({
+            method: "POST",
+            url: `/admin/khach-hang/update-tt-dc/${id}`,
+        });
+    };
+
+    static updateDiaChiByID= (id,data) => {
+        return requestAdmin({
+            method: "POST",
+            url: `/admin/khach-hang/update-dia-chi/${id}`,
+            data: data,
+        });
+    };
+
+    static addDCKH = (data) => {
+        return requestAdmin({
+            method: "POST",
+            url: `/admin/khach-hang/add-dia-chi`,
+            data: data,
+        });
+    }; 
 }
