@@ -25,6 +25,24 @@ export class HoaDonAPI {
             url: `/admin/hoa-don/detail-hoa-don/${id}`,
         });
     };
+        static detailSanPham = (id) => {
+        return requestAdmin({
+            method: "GET",
+            url: `/admin/hoa-don/hoa-don-san-pham/${id}`,
+        });
+    };
+    static getAllLichSuHoaDon = (id) => {
+        return requestAdmin({
+            method: "GET",
+            url: `/admin/hoa-don/detail-lich-su-hoa-don/${id}`,
+        });
+    };
+       static getAllTimeLine = (id) => {
+        return requestAdmin({
+            method: "GET",
+            url: `/admin/hoa-don/ngay-hoa-don-time-line/${id}`,
+        });
+    };
     static updateTTHoaDon = (id,data) => {
         return requestAdmin({
             method: "PUT",

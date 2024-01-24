@@ -17,15 +17,23 @@ import {useReactToPrint} from 'react-to-print';
 import logo from '../../../assets/images/logo.png';
 import { FormattedNumber, IntlProvider } from 'react-intl';
 import { HoaDonAPI } from '../api/hoaDon/hoaDon.api';
+import ModalTimeLine from "./ModalTimeLine";
 export default function HoaDonDetail() {
+  const { id } = useParams();
+  const [openModalTimeLine, setOpenModalTimeLine] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [open, setOpen] = useState(false);
+  const showModalTimeLine = () => {
+    setOpenModalTimeLine(true);
+  };
+
   const handleOk = () => {
     setIsModalOpen(false);
+    setOpenModalTimeLine(false);
 
   };
   const handleCancel = () => {
     setIsModalOpen(false);
+    setOpenModalTimeLine(false);
   };
   const [openXuat, setOpenXuat] = useState(false);
   const componnentRef=useRef();
@@ -48,13 +56,21 @@ export default function HoaDonDetail() {
   useEffect(() => {
     loadHoaDon();
     loadNgayTimeLine();
+     loadListSanPhams();
+
   }, []);
 // load hóa đơn
   const loadHoaDon = async () => {
     HoaDonAPI.detailHD(id)
         .then((res)=>{
           setHoaDondetail(res.data);
-              console.log("22",res.data);
+                    setTrangThai(res.data.trangThai);
+        setLoaiHD(res.data.loaiHD);
+        setTenKH(res.data.tenKH);
+        setsdtKH(res.data.sdt);
+        setdiaChiKH(res.data.diaChi)
+        setThanhTienHD(res.data.thanhTien)
+        setGhiChuHD(res.data.ghiChuHD)
         })
   };
 
@@ -62,16 +78,13 @@ export default function HoaDonDetail() {
   const showModal = () => {
     setIsModalOpen(true);
   };
-  const closeshowModal = () => {
-    setIsModalOpen(false);
-  };
+
   const [form] = Form.useForm();
   // update trạng thái hóa đơn
   const handleSubmit = (values) => {
     HoaDonAPI.updateTTHoaDon(id,values)
     .then((res)=>{
       loadHoaDon();
-      loadlichsuhoadon();
       loadNgayTimeLine();
       setTrangThai(res.data.trangThai);
       form.resetFields();
@@ -88,117 +101,19 @@ export default function HoaDonDetail() {
       });
     })
   }
-  const [LichSuHoaDon, setLichSuHoaDon] = useState([])
-  useEffect(() => {
-    loadlichsuhoadon();
-  }, []);
-
-  const loadlichsuhoadon = async () => {
-    await axios.get(`http://localhost:8080/admin/hoa-don/detail-lich-su-hoa-don/${id}`)
-      .then(response => {
-        // Update the list of items
-        setLichSuHoaDon(response.data);
-
-      })
-      .catch(error => console.error('Error adding item:', error));
-
-  };
-
+ 
+ // giờ time line
   const [ngayTimeLine, setngayTimeLine] = useState([])
-  useEffect(() => {
-    loadNgayTimeLine();
 
-  }, []);
-  // const myValue[] = ngayTimeLine.key;
   const ngay = ngayTimeLine.map((item) => item.hdtimeLine);
-  const loadNgayTimeLine = async () => {
-
-    await axios.get(`http://localhost:8080/admin/hoa-don/ngay-hoa-don-time-line/${id}`)
-      .then(response => {
-        // Update the list of items
-        setngayTimeLine(response.data);
+  const loadNgayTimeLine =  (idHD) => {
+     HoaDonAPI.getAllTimeLine(idHD)
+          .then((res) => {
+              setngayTimeLine(res.data);
+            console.log("ngayTimeLine", res.data);
+          })
       
-      })
-      .catch(error => console.error('Error adding item:', error));
   };
-
-
-  const columns = [
-    {
-      title: 'STT',
-      dataIndex: 'id',
-      key: 'id',
-      render: (id, record, index) => { ++index; return index },
-      showSortTooltip: false,
-
-    },
-    {
-      title: 'Trạng thái',
-      dataIndex: 'trangThai',
-      key: 'trangThai',
-      render: (trangThai) => (
-        <>
-          {
-            (trangThai == 0) ?
-              (
-                <Tag color="purple">
-                  Chờ xác nhận
-                </Tag>
-              ) :
-              (trangThai == 1) ?
-                (
-                  <Tag color="red">
-                    Xác nhận
-                  </Tag>
-                ) :
-                (trangThai == 2) ?
-                  (
-                    <Tag color="blue">
-                      Chờ vận chuyển
-                    </Tag>
-                  ) :
-                  (trangThai == 3) ?
-                    (
-                      <Tag color="cyan">
-                        Đang Vận chuyển
-                      </Tag>
-                    ) :
-                    (trangThai == 4) ?
-                      (
-                        <Tag color="orange">
-                          Đã Thanh toán
-                        </Tag>
-                      ) :
-                      (
-                        <Tag color="green">
-                          Thành công
-                        </Tag>
-                      )
-          }
-
-        </>),
-    },
-    {
-      title: 'Ngày',
-      dataIndex: 'ngayTao',
-      center: "true",
-      render: (ngayTao) => (
-        <>{moment(ngayTao).format("hh:mm:ss DD/MM/YYYY")}</>
-      ),
-    },
-    {
-      title: 'Người xác nhận',
-      dataIndex: 'nguoiTao',
-      center: "true",
-    },
-    {
-      title: 'Ghi chú',
-      dataIndex: 'motaHoatDong',
-      center: "true",
-    },
-
-  ];
-
   const columLichSuHoaDon = [
     {
       title: 'STT',
@@ -256,41 +171,15 @@ export default function HoaDonDetail() {
   const [diaChi, setdiaChiKH] = useState([])
   const [thanhTienHD, setThanhTienHD] = useState([])
   const [ghiChuHD, setGhiChuHD] = useState([])
-  const { id } = useParams();
-
-  useEffect(() => {
-    // Sử dụng giá trị `id` để thực hiện các thao tác cần thiết
-    axios.get(`http://localhost:8080/admin/hoa-don/detail-hoa-don/${id}`)
-      .then(response => {
-        setTrangThai(response.data.trangThai);
-        setLoaiHD(response.data.loaiHD);
-        setTenKH(response.data.tenKH);
-        setsdtKH(response.data.sdt);
-        setdiaChiKH(response.data.diaChi)
-        setThanhTienHD(response.data.thanhTien)
-        setGhiChuHD(response.data.ghiChuHD)
-      })
-      .catch(error => {
-        // Xử lý lỗi
-      });
-  }, [id]);
   const [listSanPhams, setlistSanPhams] = useState([])
-  useEffect(() => {
-    loadListSanPhams();
-  },[]);
 
-  const loadListSanPhams = async () => {
-    await axios.get(`http://localhost:8080/admin/hoa-don/hoa-don-san-pham/${id}`)
-      .then(response => {
-        // Update the list of items
-        setlistSanPhams(response.data);
-     
-
-      })
-      .catch(error => console.error('Error adding item:', error));
+    const loadListSanPhams =  () => {
+    HoaDonAPI.detailSanPham(id)
+        .then((res)=>{
+ setlistSanPhams(res.data);
+        })
 
   };
-
   const VALUES = ['Chờ xác nhận', 'Xác nhận', 'Chờ vận chuyển', 'Đang vận chuyển', 'Đã thanh toán', 'Thành công'];
   const textButton = ['Xác nhận', 'Chờ vận chuyển', 'Đang vận chuyển', 'Đã thanh toán', 'Thành công'];
   const icon = [GiNotebook, SlNotebook, RiTruckFill, FaTruckFast, GiPiggyBank, FaCheckCircle];
@@ -856,19 +745,14 @@ export default function HoaDonDetail() {
         <div className='col-md-2 text-end'>
 
           <>
-            <Button className='me-5 bg-success' type="primary" onClick={() => setOpen(true)}>
+            <Button className='me-5 bg-success' type="primary" onClick={() => setOpenModalTimeLine(true)}>
               Lịch sử
             </Button>
-            <Modal
-              title="Lịch sử hóa đơn"
-              centered
-              open={open}
-              onOk={() => setOpen(false)}
-              onCancel={() => setOpen(false)}
-              width={800}
-            >
-              <Table dataSource={LichSuHoaDon} columns={columns} style={{ marginTop: '25px' }} pagination={{}} />
-            </Modal>
+            {/* <Button style={{ width: 41, height: 37.6, backgroundColor: "#35afb1", color: "white" }} type="primary" onClick={() => detailDiaChi(record)}>
+              <GrMapLocation />
+            </Button> */}
+
+        
           </>
 
 
@@ -1094,8 +978,14 @@ export default function HoaDonDetail() {
         </tr>
       </div>
 
-    
-       
+      <ModalTimeLine openModalTimeLine={openModalTimeLine}
+        setOpenModalTimeLine={setOpenModalTimeLine}
+        idHD={id}
+        setHD={id}
+        // loadDiaChi={loadDiaChi}
+        onOk={handleCancel}
+        onCancel={handleCancel}
+      />
 
       <ToastContainer
         position="top-right"

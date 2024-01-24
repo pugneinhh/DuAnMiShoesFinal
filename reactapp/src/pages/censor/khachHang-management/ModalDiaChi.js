@@ -81,11 +81,6 @@ const ModalDiaChi = (props) => {
             loadDiaChi();
         }
     }, [idKH]);
-
-
-
-
-
     const dataSource = datas.map((item, index) => ({
         key: item.id,
         id: item.id,
@@ -168,14 +163,7 @@ const ModalDiaChi = (props) => {
 
             <hr className="mt-4"></hr>
             <div>
-
-
-
-
                 <Table
-                    // rowSelection={rowSelection}
-                    // defaultCheckedRowKeys={selectedRowKeys}  
-                    //  {...tableProps}
                     pagination={{
                         position: [top, bottom],
                     }}
