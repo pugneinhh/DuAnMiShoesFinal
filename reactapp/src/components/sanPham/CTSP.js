@@ -93,7 +93,6 @@ export default function CTSP() {
   const onSelectChange = (newSelectedRowKeys) => {
     console.log('selectedRowKeys changed: ', newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
-
   };
 
   const loadUpdateNhanh = async () => {
@@ -111,6 +110,7 @@ export default function CTSP() {
   };
 
   useEffect(() => {
+    setUpdateNhanh([]);
     loadUpdateNhanh();
   }, [selectedRowKeys]);
 
@@ -126,6 +126,14 @@ export default function CTSP() {
     const index = newData.findIndex(item => item.id === record.key);
     if (index > -1) {
       newData[index].soLuong = value;
+      setUpdateNhanh(newData);
+    }
+  };
+  const onChangeGB = (record, value) => {
+    const newData = [...updateNhanh];
+    const index = newData.findIndex(item => item.id === record.key);
+    if (index > -1) {
+      newData[index].giaBan = value;
       setUpdateNhanh(newData);
     }
   };
@@ -147,7 +155,24 @@ export default function CTSP() {
         centered: 'true',
         title: 'Thông báo',
         content: 'Bạn có chắc chắn muốn cập nhật không?',
-        onOk: () => { form2.submit(); },
+        onOk: () => {
+          axios.put(`http://localhost:8080/ctsp/update/${updateNhanh[0].id}`,updateNhanh[0])
+            .then(response => {
+              console.log(response.data);
+              toast('✔️ Sửa thành công!', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              });
+              loadCTSP();
+            })
+            .catch(error => console.error('Error adding item:', error));
+        },
         footer: (_, { OkBtn, CancelBtn }) => (
           <>
             <CancelBtn />
@@ -544,12 +569,13 @@ export default function CTSP() {
         const isCTSelected = selectedRowKeys.some((selectedItem) => selectedItem === record.idCTSP);
         return isCTSelected ? (
           <InputNumber
-            value={record.giaBan}
+            defaultValue={record.giaBan}
             formatter={(value) =>
               `VND ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
             }
             parser={(value) => value.replace(/\VND\s?|(,*)/g, "")}
             style={{ marginLeft: 20, width: 160 }}
+            onChange={(e) => onChangeGB(record, e.target.value)}
           />
         ) : (
           <span>{`${Intl.NumberFormat('en-US').format(record.giaBan)} VNĐ`}</span>
@@ -582,12 +608,18 @@ export default function CTSP() {
       dataIndex: "maMS",
       render: (text, record) => {
         return <>
-          <div style={{
-            backgroundColor: `${record.maMS}`,
-            borderRadius: 6,
-            width: 60,
-            height: 25,
-          }} className='custom-div'></div >
+          <div
+            className='custom-div'
+            style={{
+              backgroundColor: record.maMS,
+              borderRadius: 6,
+              width: 70,
+              height: 25,
+              color: 'white',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}><b>{record.maMS}</b></div >
         </>;
       }
     },
@@ -845,13 +877,13 @@ export default function CTSP() {
                     ))}
                   </Select>
                 </Form.Item>
-              </div> 
-             </div>
-            
-          
+              </div>
+            </div>
+
+
             {/* Các Thuộc Tính Dòng 2 */}
-            <div className='row'>  
-            {/* Chất Liệu */}
+            <div className='row'>
+              {/* Chất Liệu */}
               <div className='col-md-4' >
                 <Form.Item label="Chất Liệu" name="idCL">
                   <Select placeholder="Chọn một giá trị">
@@ -887,11 +919,11 @@ export default function CTSP() {
                   </Select>
                 </Form.Item>
               </div>
-            </div> 
-          
+            </div>
+
             {/* Các Thuộc Tính Dòng 3 */}
-            <div className='row'>  
-             {/* Hãng */}
+            <div className='row'>
+              {/* Hãng */}
               <div className='col-md-4'>
                 <Form.Item label="Hãng" name="idH">
                   <Select placeholder="Chọn một giá trị">
@@ -917,17 +949,17 @@ export default function CTSP() {
                   <Slider style={{ width: '200px' }} min={1} />
                 </Form.Item>
               </div>
-            </div> 
+            </div>
             <div className='col'>
-                <Form.Item style={{ marginLeft:100 }} label="Giá bán" name="giaBanCT">
-                  <Slider style={{ width: '430px' }} min={1000000} max={10000000} step={1000000} />
-                </Form.Item>
-              </div>
+              <Form.Item style={{ marginLeft: 100 }} label="Giá bán" name="giaBanCT">
+                <Slider style={{ width: '430px' }} min={1000000} max={10000000} step={1000000} />
+              </Form.Item>
+            </div>
 
 
             <div className='container-fluid'>
               <Form.Item className='text-center' style={{ paddingLeft: 360 }}>
-                <Button type="primary" htmlType='reset' onClick={loadCTSP}  icon={<RetweetOutlined/>}>Làm mới</Button>
+                <Button type="primary" htmlType='reset' onClick={loadCTSP} icon={<RetweetOutlined />}>Làm mới</Button>
               </Form.Item>
             </div>
 
