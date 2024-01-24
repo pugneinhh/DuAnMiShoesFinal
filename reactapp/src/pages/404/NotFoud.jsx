@@ -5,7 +5,7 @@ export default function NotFoud() {
   const nav = useNavigate();
 
   const handleClick = () => {
-    nav(`dashboard-management`);
+    nav(`admin-thong-ke`);
   };
   return (
     <div>

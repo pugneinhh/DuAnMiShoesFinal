@@ -22,10 +22,8 @@ import { GrMapLocation } from "react-icons/gr";
 import ModalDiaChi from "./ModalDiaChi";
 
 import * as XLSX from 'xlsx';
+import { KhachHangAPI } from "../api/user/khachHang.api";
 export default function KhachHang() {
-  
-  const [khachHang, setKhachHang] = useState([]);
-
   const [componentSize, setComponentSize] = useState("default");
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
@@ -39,12 +37,13 @@ export default function KhachHang() {
   useEffect(() => {
     loadKhachHang();
   }, []);
-
-  const loadKhachHang = async () => {
-    const result = await axios.get("http://localhost:8080/admin/khach-hang", {
-   
-    });
-      setKhachHang(result.data);
+  const [khachHang, setKhachHang] = useState([]);
+  const loadKhachHang =  () => {
+      KhachHangAPI.getAll()
+      .then((res)=>{
+        setKhachHang(res.data);
+            console.log("22",res.data);
+      })
   };
 
   //Tìm khách hàng
@@ -161,7 +160,7 @@ export default function KhachHang() {
       dataIndex: 'idND',
       render: (record) => (
         <Space size="middle">
-          <Link to={`/admin/detail-khach-hang/${record}`} className='btn btn-success'><BsFillEyeFill /></Link>
+          <Link to={`/admin-detail-khach-hang/${record}`} className='btn btn-success'><BsFillEyeFill /></Link>
           <Link to={`/admin-update-khach-hang/${record}`} className='btn btn-danger'  ><BsPencilSquare /></Link>
           <Button style={{ width: 41, height: 37.6, backgroundColor: "#35afb1", color: "white" }} type="primary" onClick={()=>detailDiaChi(record)}>
             <GrMapLocation />

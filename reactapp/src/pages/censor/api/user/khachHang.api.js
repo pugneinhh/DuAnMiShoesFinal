@@ -1,7 +1,7 @@
 import { requestAdmin } from "../request";
 
 export class KhachHangAPI {
-    static getALLKH = () => {
+    static getAll = () => {
         return requestAdmin({
             method: "GET",
             url: `/admin/khach-hang`,

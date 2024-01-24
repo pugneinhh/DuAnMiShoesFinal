@@ -1,9 +1,6 @@
 import { Button, Card, Col, Form, Input, Row, Select, message } from "antd";
 // import "./CustumerManagement.model.css";
 import { useEffect, useState } from "react";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faQrcode } from "@fortawesome/free-solid-svg-icons";
-// import QRScannerModal from "../../../util/QR-code/BarcodeScanner ";
 import { AddressApi } from "../api/address/AddressApi";
 import { useNavigate, useParams } from "react-router-dom";
 import UpLoadImageUpdate from "../api/UpdateImage/UploadImageUpdate";

@@ -1,48 +1,34 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import {
-  Button,
-  Form,
-  Input,
-  Divider,
-  Select,
-  Space,
-  Table,
-  Tag,
-  Image,
-} from "antd";
+import {Button,Form,Input,Divider,Select,Space,Table,Tag,Image} from "antd";
 import { FilterFilled } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { BsFillEyeFill, BsPencilSquare } from "react-icons/bs";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { ToastContainer, toast } from "react-toastify";
 import { BiSolidUserBadge } from "react-icons/bi";
+import { NhanVienAPI } from "../api/user/nhanVien.api";
 
 export default function NhanVien() {
-  const [nhanVien, setNhanVien] = useState([]);
-
   const [componentSize, setComponentSize] = useState("default");
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
   };
 
   const [form] = Form.useForm();
-
+// load nhan vien
   useEffect(() => {
     loadNhanVien();
   }, []);
-
-  const loadNhanVien = async () => {
-    const result = await axios.get("http://localhost:8080/admin/nhan-vien", {
-      validateStatus: () => {
-        return true;
-      },
-    });
-    if (result.status === 302) {
-      setNhanVien(result.data);
-    }
-    console.log(result.data);
+  const [nhanVien, setNhanVien] = useState([]);
+  const loadNhanVien = () => {
+     NhanVienAPI.getAll()
+    .then((res)=>{
+      setNhanVien(res.data);
+          // console.log("22",res.data);
+    })
   };
+  
 
   //Tìm nhân viên
   const onChangeFilter = (changedValues, allValues) => {
@@ -50,12 +36,11 @@ export default function NhanVien() {
     timKiemNV(allValues);
   }
   const timKiemNV = (dataSearch) => {
-    axios.post(`http://localhost:8080/admin/nhan-vien/search`, dataSearch)
-      .then(response => {
-        console.log(response.data)
-        setNhanVien(response.data);
-      })
-      .catch(error => console.error('Error adding item:', error));
+    NhanVienAPI.timKiem(dataSearch)
+    .then((res)=>{
+      setNhanVien(res.data);
+          console.log("22",res.data);
+    })
   }
 
   const columns = [
@@ -93,11 +78,6 @@ export default function NhanVien() {
       dataIndex: "tenND",
       sorter: (a, b) => a.ten - b.ten,
     },
-    // {
-    //   title: "Email",
-    //   dataIndex: "email",
-    //   sorter: (a, b) => a.email - b.email,
-    // },
     {
       title: "CCCD",
       dataIndex: "cccd",
@@ -167,14 +147,10 @@ export default function NhanVien() {
     },
   ];
 
-  const [open, setOpen] = useState(false);
-  const [openUpdate, setOpenUpdate] = useState(false);
-  const [openDetail, setOpenDetail] = useState(false);
   const [bordered] = useState(false);
   const [size] = useState("large");
   const [expandable] = useState(undefined);
   const [showHeader] = useState(true);
-  const [hasData] = useState(true);
   const [tableLayout] = useState();
   const [top] = useState("none");
   const [bottom] = useState("bottomCenter");
@@ -224,7 +200,7 @@ export default function NhanVien() {
             borderRadius: "8px",
           }}
         >
-          <h5>
+          <h5 className="text-start">
             <FilterFilled size={30} /> Bộ lọc
           </h5>
           <hr />
@@ -296,8 +272,8 @@ export default function NhanVien() {
               defaultCurrent: 1,
               total: 100,
             }}
-            columns={tableColumns}
-            dataSource={hasData ? nhanVien : []}
+            columns={columns}
+            dataSource={nhanVien}
             scroll={scroll}
           />
         </div>{" "}

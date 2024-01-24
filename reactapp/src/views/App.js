@@ -141,7 +141,7 @@ function App() {
               }
             />
             <Route
-              path="/admin-add-nhan-vien"
+              path="/admin-them-nhan-vien"
               element={
                 <AuthGuard>
                   <DashboardCensor>
