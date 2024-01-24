@@ -1,3 +1,4 @@
+/*
 package com.example.backend.infrastructure.listener;
 
 import com.tiinstore.entity.base.PrimaryEntity;
@@ -13,3 +14,4 @@ public class CreatePrimaryEntityListener {
         entity.setId(UUID.randomUUID().toString());
     }
 }
+*/

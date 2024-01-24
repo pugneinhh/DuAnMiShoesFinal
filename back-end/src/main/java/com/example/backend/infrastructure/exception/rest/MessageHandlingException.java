@@ -1,10 +1,13 @@
+/*
 package com.example.backend.infrastructure.exception.rest;
 
 import com.tiinstore.infrastructure.constant.Message;
 
+*/
 /**
  * @author Nguyễn Vinh
- */
+ *//*
+
 public class MessageHandlingException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
@@ -31,3 +34,4 @@ public class MessageHandlingException extends RuntimeException {
         this.message = message;
     }
 }
+*/

@@ -77,7 +77,7 @@ const KhuyenMai = () => {
     setKhuyenMais(updatedData);
   };
   const loadKhuyenMai = async () => {
-    const result = await axios.get("http://localhost:8080/khuyen-mai").then(
+    const result = await axios.get("http://localhost:8080/khuyen-mai/hien-thi").then(
       response => {setKhuyenMais(response.data);
       console.log(response.data);})
       .catch(error => 
@@ -550,7 +550,7 @@ const timKiemKhuyenMai=(dataSearch)=>{
             </a> */}
             <br />
             <Link
-              to="/frm-khuyen-mai"
+              to="/admin-them-khuyen-mai"
               className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill"
             >
               <PlusCircleOutlined /> Thêm đợt giảm giá

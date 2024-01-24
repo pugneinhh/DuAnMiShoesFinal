@@ -550,7 +550,7 @@ const timKiemKhuyenMai=(dataSearch)=>{
             </a> */}
             <br />
             <Link
-              to="/frm-khuyen-mai"
+              to="/admin-them-khuyen-mai"
               className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill"
             >
               <PlusCircleOutlined /> Thêm đợt giảm giá

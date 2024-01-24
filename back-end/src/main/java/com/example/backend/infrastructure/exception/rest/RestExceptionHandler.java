@@ -1,3 +1,4 @@
+/*
 package com.example.backend.infrastructure.exception.rest;
 
 import com.tiinstore.util.ResponseObject;
@@ -18,9 +19,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+*/
 /**
  * @author Nguyễn Vinh
- */
+ *//*
+
 @RestControllerAdvice
 public final class RestExceptionHandler extends
         ShoseExceptionRestHandler<ConstraintViolationException> {
@@ -90,3 +93,4 @@ public final class RestExceptionHandler extends
     }
 }
 
+*/

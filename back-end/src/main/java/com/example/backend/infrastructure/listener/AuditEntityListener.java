@@ -1,3 +1,4 @@
+/*
 package com.example.backend.infrastructure.listener;
 
 import com.tiinstore.entity.base.AuditEntity;
@@ -26,3 +27,4 @@ public class AuditEntityListener {
         return Calendar.getInstance().getTimeInMillis();
     }
 }
+*/
