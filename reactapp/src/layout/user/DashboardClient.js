@@ -1,3 +1,16 @@
+
+import React from 'react';
+import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import NavDropdown from 'react-bootstrap/NavDropdown';
+const { Header, Content, Footer } = Layout;
+const items = new Array(4).fill(null).map((_, index) => ({
+  key: index + 1,
+  label: `nav ${index + 1}`,
+}));
+
 import React from "react";
 import { Breadcrumb, Layout, Menu, theme, Image } from "antd";
 import { Link } from "react-router-dom";
@@ -11,6 +24,7 @@ import "./client.css";
 const { Search } = Input;
 const { Header, Content, Footer } = Layout;
 export const DashboardClient = ({ children }) => {
+
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -64,6 +78,7 @@ export const DashboardClient = ({ children }) => {
   return (
     <Layout className="container">
       {/* tiêu đề */}
+
       <Header
         style={{
           display: "flex",
@@ -77,6 +92,7 @@ export const DashboardClient = ({ children }) => {
         }}
       >
         <div className="demo-logo" />
+
         <div className="menu row ">
           {/* logo SHOP */}
           <Image className="col" width={200} src={logoShop} />
@@ -127,6 +143,7 @@ export const DashboardClient = ({ children }) => {
             />
           </div> */}
         </div>
+
       </Header>
       <Content
         style={{
@@ -161,5 +178,7 @@ export const DashboardClient = ({ children }) => {
         Ant Design ©{new Date().getFullYear()} Created by Ant UED
       </Footer>
     </Layout>
+
   );
+
 };

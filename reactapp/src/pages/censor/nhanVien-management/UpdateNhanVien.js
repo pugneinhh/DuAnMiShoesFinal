@@ -111,7 +111,7 @@ export default function UpdateNhanVien() {
 
             NhanVienAPI.update(formData)
                 .then(() => {
-                    toast('🦄 Thêm Thành công!', {
+                    toast('🦄 Update Thành công!', {
                         position: "top-right",
                         autoClose: 3000,
                         hideProgressBar: false,
@@ -122,7 +122,7 @@ export default function UpdateNhanVien() {
                         theme: "light",
 
                     });
-                    nav("/nhan-vien");
+                    nav("admin-nhan-vien");
 
                 })
                 .catch((error) => {

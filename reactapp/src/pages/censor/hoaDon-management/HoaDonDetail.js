@@ -203,15 +203,12 @@ export default function HoaDonDetail() {
                 />
                 <TimelineEvent
                   color='#e6e3e3'
-                 
                 />
                 <TimelineEvent
                   color='#e6e3e3'
-
                 />
                 <TimelineEvent
                   color='#e6e3e3'
-
                 />
                 <TimelineEvent
                   color='#e6e3e3'
@@ -230,7 +227,6 @@ export default function HoaDonDetail() {
                     isOpenEnding={true}
                     title={VALUES[trangThai - 1]}
                     subtitle={moment(ngay[trangThai - 1]).format('hh:mm:ss DD/MM/YYYY')}
-
                   />
                   <TimelineEvent
                     color='#3d874d'
@@ -243,12 +239,10 @@ export default function HoaDonDetail() {
                     subtitle={moment(ngay[trangThai]).format('hh:mm:ss DD/MM/YYYY')}
                   />
                   <TimelineEvent
-                    color='#e6e3e3'
-                  
+                    color='#e6e3e3'       
                   />
                   <TimelineEvent
                     color='#e6e3e3'
-
                   />
                   <TimelineEvent
                     color='#e6e3e3'
@@ -352,8 +346,7 @@ export default function HoaDonDetail() {
                       <Flex horizontal>
                         <TimelineEvent
                           color='#3d874d'
-                          icon={icon[trangThai - 4]}
-                        
+                          icon={icon[trangThai - 4]}                       
                           index={trangThai - 4}
                           values={trangThai - 4}
                           // indexClick={({ trangThai }) => setValue({ trangThai })}
@@ -361,7 +354,6 @@ export default function HoaDonDetail() {
                           title={VALUES[trangThai - 4]}
                           subtitle={moment(ngay[trangThai - 4]).format('hh:mm:ss DD/MM/YYYY')}
                         />
-
                         <TimelineEvent
                           color='#3d874d'
                           icon={icon[trangThai - 3]}
@@ -417,9 +409,7 @@ export default function HoaDonDetail() {
                           // indexClick={({ trangThai }) => setValue({ trangThai })}
                           isOpenEnding={true}
                           title={VALUES[trangThai - 5]}
-                          subtitle={moment(ngay[trangThai - 5]).format('hh:mm:ss DD/MM/YYYY')}
-                        
-                        
+                          subtitle={moment(ngay[trangThai - 5]).format('hh:mm:ss DD/MM/YYYY')}                                          
                         />
                         <TimelineEvent
                           color='#3d874d'
@@ -472,13 +462,12 @@ export default function HoaDonDetail() {
                           subtitle={moment(ngay[trangThai]).format('hh:mm:ss DD/MM/YYYY')}
                         />
                       </Flex>
-
-
             }
-
           </Timeline>
         </div>
+
           </div>
+
         {/* xác nhận đơn hàng */}
         <div className='col-md-2 '>
              < >
@@ -527,8 +516,6 @@ export default function HoaDonDetail() {
                 </Form>
               </Modal >
             </>
-
-      
         </div>
         <div className='col-md-2 '>
              < >
@@ -742,9 +729,7 @@ export default function HoaDonDetail() {
                     </tr>
                   </div>
 
-                </div>
-           
-
+                </div>     
                 <button className='bg-primary text-light rounded-pill mt-5 fs-5' style={{marginLeft:420}} onClick={handlePrint}>Xuất hóa đơn</button>
                 </>
             </Modal>
@@ -754,24 +739,13 @@ export default function HoaDonDetail() {
         <div className='col-md-2'></div>
         <div className='col-md-2'></div>
         <div className='col-md-2 text-end'>
-
-          <>
+         <>
             <Button className='me-5 bg-success' type="primary" onClick={() => setOpenModalTimeLine(true)}>
               Lịch sử
             </Button>
-            {/* <Button style={{ width: 41, height: 37.6, backgroundColor: "#35afb1", color: "white" }} type="primary" onClick={() => detailDiaChi(record)}>
-              <GrMapLocation />
-            </Button> */}
-
-        
           </>
-
-
         </div>
-
       </div>
-
-
       {/* Lịch sử thanh toán */}
       <div className='container-fuild row mt-3 bg-light radius'>
         <h5 style={{ marginTop: '20px', paddingTop: '20px' }}>Lịch sử thanh toán</h5>
@@ -782,7 +756,8 @@ export default function HoaDonDetail() {
       <div className='container-fuild mt-3 row bg-light radius'>
         <h5 style={{ marginTop: '20px', paddingTop: '20px' }}>Thông tin đơn hàng</h5>
         <hr />
-        <div className='col-md-3'>
+        <div className='col-md-3'>      
+
           <div className='ps-4'>
             <h6>Trạng thái:</h6>
           </div>
@@ -832,7 +807,6 @@ export default function HoaDonDetail() {
                           </Tag>
                         )
             }
-
           </div>
           <div className='mt-4'>
             {(loaiHD == 0) ? (<Tag color="orange">Online</Tag>) : (<Tag color="red">Tại quầy</Tag>)}
