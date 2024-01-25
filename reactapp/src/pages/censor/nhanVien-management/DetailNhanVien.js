@@ -88,13 +88,9 @@ export default function DetailNhanVien() {
     return (
         <div>
             <h1>
-
-
                 <h3 className="text-first  text-center fw-bold">
                     <FaMoneyBills /> Detail nhân viên
                 </h3>
-
-
             </h1>
             {getOneEmployee !== null && (
                 <Form form={form} initialValues={getOneEmployee} layout="vertical">
