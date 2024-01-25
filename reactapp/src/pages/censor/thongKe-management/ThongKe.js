@@ -36,7 +36,7 @@ export default function ThongKe() {
     const [tienTheoNgay, settienTheoNgay] = useState([]);
     const loadThongKeTheoNgay = async () => {
 
-        await axios.get('http://localhost:8080/thong-ke/ngay')
+        await axios.get('http://localhost:8080/admin/thong-ke/ngay')
             .then(response => {
                 // Update the list of items
                 sethoaDonTheoNgay(response.data.tongHoaDonThongKe);
@@ -49,7 +49,7 @@ export default function ThongKe() {
     const [tienTheoThang, settienTheoThang] = useState([]);
     const loadThongKeTheoThang = async () => {
 
-        await axios.get('http://localhost:8080/thong-ke/thang')
+        await axios.get('http://localhost:8080/admin/thong-ke/thang')
             .then(response => {
                 // Update the list of items
                 sethoaDonTheoThang(response.data.tongHoaDonThongKe);
@@ -63,7 +63,7 @@ export default function ThongKe() {
     const [tienTheoNam, settienTheoNam] = useState([]);
     const loadThongKeTheoNam = async () => {
 
-        await axios.get('http://localhost:8080/thong-ke/nam')
+        await axios.get('http://localhost:8080/admin/thong-ke/nam')
             .then(response => {
                 // Update the list of items
                 sethoaDonTheoNam(response.data.tongHoaDonThongKe);
@@ -76,7 +76,7 @@ export default function ThongKe() {
     const [tienNgayTruoc, setTienNgayTruoc] = useState([]);
     const loadDoanhThuNgayTruoc = async () => {
 
-        await axios.get('http://localhost:8080/thong-ke/doanh-thu-ngay-truoc')
+        await axios.get('http://localhost:8080/admin/thong-ke/doanh-thu-ngay-truoc')
             .then(response => {
                 // Update the list of items
                 sethoaDonNgayTruoc(response.data.tongHoaDonThongKe);
@@ -89,7 +89,7 @@ export default function ThongKe() {
     const [tienThangTruoc, setTienThangTruoc] = useState([]);
     const loadDoanhThuThangTruoc = async () => {
 
-        await axios.get('http://localhost:8080/thong-ke/doanh-thu-thang-truoc')
+        await axios.get('http://localhost:8080/admin/thong-ke/doanh-thu-thang-truoc')
             .then(response => {
                 // Update the list of items
                 sethoaDonThangTruoc(response.data.tongHoaDonThongKe);
@@ -102,7 +102,7 @@ export default function ThongKe() {
     const [tienNamTruoc, setTienNamTruoc] = useState([]);
     const loadDoanhThuNamTruoc = async () => {
 
-        await axios.get('http://localhost:8080/thong-ke/doanh-thu-nam-truoc')
+        await axios.get('http://localhost:8080/admin/thong-ke/doanh-thu-nam-truoc')
             .then(response => {
                 // Update the list of items
                 sethoaDonNamTruoc(response.data.tongHoaDonThongKe);
@@ -115,7 +115,7 @@ export default function ThongKe() {
     const [chartData, setChartData] = useState([]);
     const loadBieuDoThang = async () => {
 
-        await axios.get('http://localhost:8080/thong-ke/bieu-do-thang')
+        await axios.get('http://localhost:8080/admin/thong-ke/bieu-do-thang')
             .then(response => {
                 // Update the list of items
                 
@@ -132,7 +132,7 @@ export default function ThongKe() {
     };
     const loadBieuDoNgay = async () => {
 
-        await axios.get('http://localhost:8080/thong-ke/bieu-do-ngay')
+        await axios.get('http://localhost:8080/admin/thong-ke/bieu-do-ngay')
             .then(response => {
                 // Update the list of items
                 
@@ -150,7 +150,7 @@ export default function ThongKe() {
     };
     const loadBieuDoTuan = async () => {
 
-        await axios.get('http://localhost:8080/thong-ke/bieu-do-tuan')
+        await axios.get('http://localhost:8080/admin/thong-ke/bieu-do-tuan')
             .then(response => {
                 // Update the list of items
                 
@@ -167,7 +167,7 @@ export default function ThongKe() {
     };
     const loadBieuDoNam = async () => {
 
-        await axios.get('http://localhost:8080/thong-ke/bieu-do-nam')
+        await axios.get('http://localhost:8080/admin/thong-ke/bieu-do-nam')
             .then(response => {
                 // Update the list of items
                 
@@ -186,7 +186,7 @@ export default function ThongKe() {
     ///trạng thái hóa đơn
     const [trangThaiData, setTrangThaiData] = useState([]);
     const loadTrangThaiHoaDon = async () => {
-        await axios.get('http://localhost:8080/thong-ke/trang-thai-hoa-don-thang')
+        await axios.get('http://localhost:8080/admin/thong-ke/trang-thai-hoa-don-thang')
             .then(response => {
                 // Update the list of items
                 const totalHoaDon = response.data.reduce((total, item) => total + item.soLuong, 0);
@@ -204,7 +204,7 @@ export default function ThongKe() {
             .catch(error => console.error('Error adding item:', error));
     };
     const loadTrangThaiHoaDonNgay = async () => {
-        await axios.get('http://localhost:8080/thong-ke/trang-thai-hoa-don-ngay')
+        await axios.get('http://localhost:8080/admin/thong-ke/trang-thai-hoa-don-ngay')
             .then(response => {
                 // Update the list of items
                 const totalHoaDon = response.data.reduce((total, item) => total + item.soLuong, 0);
@@ -222,7 +222,7 @@ export default function ThongKe() {
             .catch(error => console.error('Error adding item:', error));
     };
     const loadTrangThaiHoaDonTuan = async () => {
-        await axios.get('http://localhost:8080/thong-ke/trang-thai-hoa-don-tuan')
+        await axios.get('http://localhost:8080/admin/thong-ke/trang-thai-hoa-don-tuan')
             .then(response => {
                 // Update the list of items
                 const totalHoaDon = response.data.reduce((total, item) => total + item.soLuong, 0);
@@ -240,7 +240,7 @@ export default function ThongKe() {
             .catch(error => console.error('Error adding item:', error));
     };
     const loadTrangThaiHoaDonNam = async () => {
-        await axios.get('http://localhost:8080/thong-ke/trang-thai-hoa-don-nam')
+        await axios.get('http://localhost:8080/admin/thong-ke/trang-thai-hoa-don-nam')
             .then(response => {
                 // Update the list of items
                 const totalHoaDon = response.data.reduce((total, item) => total + item.soLuong, 0);
@@ -261,7 +261,7 @@ export default function ThongKe() {
     const [SPBanChay, setSPBanChay] = useState([]);
     const loadSPBanChay = async () => {
 
-        await axios.get('http://localhost:8080/thong-ke/san-pham-ban-chay-thang')
+        await axios.get('http://localhost:8080/admin/thong-ke/san-pham-ban-chay-thang')
             .then(response => {
                 // Update the list of items
                 
@@ -272,7 +272,7 @@ export default function ThongKe() {
     };
     const loadSPBanChayNgay = async () => {
 
-        await axios.get('http://localhost:8080/thong-ke/san-pham-ban-chay-ngay')
+        await axios.get('http://localhost:8080/admin/thong-ke/san-pham-ban-chay-ngay')
             .then(response => {
                 // Update the list of items
                 
@@ -283,7 +283,7 @@ export default function ThongKe() {
     };
     const loadSPBanChayNam = async () => {
 
-        await axios.get('http://localhost:8080/thong-ke/san-pham-ban-chay-nam')
+        await axios.get('http://localhost:8080/admin/thong-ke/san-pham-ban-chay-nam')
             .then(response => {
                 // Update the list of items
                 
@@ -294,7 +294,7 @@ export default function ThongKe() {
     };
     const loadSPBanChayTuan = async () => {
 
-        await axios.get('http://localhost:8080/thong-ke/san-pham-ban-chay-tuan')
+        await axios.get('http://localhost:8080/admin/thong-ke/san-pham-ban-chay-tuan')
             .then(response => {
                 // Update the list of items
                
@@ -306,7 +306,7 @@ export default function ThongKe() {
     const [SPSapHet, setSPSapHet] = useState([]);
     const loadSPSapHet = async () => {
 
-        await axios.get('http://localhost:8080/thong-ke/san-pham-sap-het')
+        await axios.get('http://localhost:8080/admin/thong-ke/san-pham-sap-het')
             .then(response => {
                 // Update the list of items
                 
@@ -510,7 +510,7 @@ export default function ThongKe() {
         const [sanPhamTheoNgay, setSanPhamTheoNgay] = useState(0);
         const loadSanPhamTheoNgay = async () => {
 
-            await axios.get('http://localhost:8080/thong-ke/san-pham-ban-ngay')
+            await axios.get('http://localhost:8080/admin/thong-ke/san-pham-ban-ngay')
                 .then(response => {
                     // Update the list of items
                    setSanPhamTheoNgay(response.data);
@@ -522,7 +522,7 @@ export default function ThongKe() {
         const [sanPhamTheoNgayTruoc, setSanPhamTheoNgayTruoc] = useState(0);
         const loadSanPhamTheoNgayTruoc = async () => {
 
-            await axios.get('http://localhost:8080/thong-ke/san-pham-ban-ngay-truoc')
+            await axios.get('http://localhost:8080/admin/thong-ke/san-pham-ban-ngay-truoc')
                 .then(response => {
                     // Update the list of items
                    setSanPhamTheoNgayTruoc(response.data);

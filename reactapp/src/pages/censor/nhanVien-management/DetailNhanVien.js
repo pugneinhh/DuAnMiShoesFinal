@@ -16,8 +16,6 @@ export default function DetailNhanVien() {
     const [listProvince, setListProvince] = useState([]);
     const [listDistricts, setListDistricts] = useState([]);
     const [listWard, setListWard] = useState([]);
-    const nav = useNavigate();
-
     const [getOneEmployee, setOneEmployee] = useState(null);
     console.log(id)
     // console.log(KhachHangAPI.getOneByIdUser(id)
@@ -47,14 +45,6 @@ export default function DetailNhanVien() {
     };
 
     const [showModal, setShowModal] = useState(false);
-
-    const handleScanButtonClick = () => {
-        setShowModal(true);
-    };
-
-    const handleModalClose = () => {
-        setShowModal(false);
-    };
 
     const loadDataProvince = () => {
         AddressApi.fetchAllProvince().then((res) => {
@@ -101,7 +91,7 @@ export default function DetailNhanVien() {
 
 
                 <h3 className="text-first  text-center fw-bold">
-                    <FaMoneyBills /> Detail nhan
+                    <FaMoneyBills /> Detail nhân viên
                 </h3>
 
 

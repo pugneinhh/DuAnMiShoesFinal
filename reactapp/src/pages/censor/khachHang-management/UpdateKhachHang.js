@@ -223,8 +223,8 @@ export default function UpdateKhachHang() {
                                                     message: "Họ và tên chỉ được phép chứa chữ cái.",
                                                 },
                                             ]}
-                                            labelCol={{ span: 9 }}
-                                            wrapperCol={{ span: 15 }}
+                                            // labelCol={{ span: 9 }}
+                                            // wrapperCol={{ span: 15 }}
                                         >
                                             <Input
                                                 onKeyPress={(e) => {
@@ -250,8 +250,8 @@ export default function UpdateKhachHang() {
                                                     message: "Căn cước công dân cần phải 12 chữ số.",
                                                 },
                                             ]}
-                                            labelCol={{ span: 9 }}
-                                            wrapperCol={{ span: 15 }}
+                                            // labelCol={{ span: 9 }}
+                                            // wrapperCol={{ span: 15 }}
                                         >
                                             <Input style={{ textAlign: "center" }} />
                                         </Form.Item>
@@ -266,8 +266,8 @@ export default function UpdateKhachHang() {
                                                     whitespace: true,
                                                 },
                                             ]}
-                                            labelCol={{ span: 9 }}
-                                            wrapperCol={{ span: 15 }}
+                                            // labelCol={{ span: 9 }}
+                                            // wrapperCol={{ span: 15 }}
                                         >
                                             <Select
                                                 defaultValue={getOneEmployee.gioiTinh ? "true" : "false"}
@@ -288,8 +288,8 @@ export default function UpdateKhachHang() {
                                                     whitespace: true,
                                                 },
                                             ]}
-                                            labelCol={{ span: 9 }}
-                                            wrapperCol={{ span: 15 }}
+                                            // labelCol={{ span: 9 }}
+                                            // wrapperCol={{ span: 15 }}
                                         >
                                             <Select defaultValue={""} onChange={handleProvinceChange}>
                                                 <Select.Option value="">
@@ -319,8 +319,8 @@ export default function UpdateKhachHang() {
                                                     whitespace: true,
                                                 },
                                             ]}
-                                            labelCol={{ span: 9 }}
-                                            wrapperCol={{ span: 15 }}
+                                            // labelCol={{ span: 9 }}
+                                            // wrapperCol={{ span: 15 }}
                                         >
                                             <Select defaultValue={""} onChange={handleWardChange}>
                                                 <Select.Option value="">
@@ -352,8 +352,8 @@ export default function UpdateKhachHang() {
                                                     whitespace: true,
                                                 },
                                             ]}
-                                            labelCol={{ span: 9 }}
-                                            wrapperCol={{ span: 15 }}
+                                            // labelCol={{ span: 9 }}
+                                            // wrapperCol={{ span: 15 }}
                                         >
                                             <Input type="date" style={{ textAlign: "center" }} />
                                         </Form.Item>
@@ -373,8 +373,8 @@ export default function UpdateKhachHang() {
                                                     message: "Vui lòng nhập đúng định dạng email.",
                                                 },
                                             ]}
-                                            labelCol={{ span: 9 }}
-                                            wrapperCol={{ span: 15 }}
+                                            // labelCol={{ span: 9 }}
+                                            // wrapperCol={{ span: 15 }}
                                         >
                                             <Input style={{ textAlign: "center" }} />
                                         </Form.Item>
@@ -393,8 +393,8 @@ export default function UpdateKhachHang() {
                                                     message: "Vui lòng nhập số điện thoại hợp lệ.",
                                                 },
                                             ]}
-                                            labelCol={{ span: 9 }}
-                                            wrapperCol={{ span: 15 }}
+                                            // labelCol={{ span: 9 }}
+                                            // wrapperCol={{ span: 15 }}
                                         >
                                             <Input style={{ textAlign: "center" }} />
                                         </Form.Item>
@@ -409,8 +409,8 @@ export default function UpdateKhachHang() {
                                                     whitespace: true,
                                                 },
                                             ]}
-                                            labelCol={{ span: 9 }}
-                                            wrapperCol={{ span: 15 }}
+                                            // labelCol={{ span: 9 }}
+                                            // wrapperCol={{ span: 15 }}
                                         >
                                             <Select defaultValue={""} onChange={handleDistrictChange}>
                                                 <Select.Option value="">
@@ -440,8 +440,8 @@ export default function UpdateKhachHang() {
                                                     whitespace: true,
                                                 },
                                             ]}
-                                            labelCol={{ span: 9 }}
-                                            wrapperCol={{ span: 15 }}
+                                            // labelCol={{ span: 9 }}
+                                            // wrapperCol={{ span: 15 }}
                                         >
                                             <Input style={{ textAlign: "center" }} />
                                         </Form.Item>
