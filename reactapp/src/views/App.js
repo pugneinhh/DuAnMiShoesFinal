@@ -20,6 +20,7 @@ import Hang from "../pages/censor/sanPham-management/Hang";
 import SanPham from "../pages/censor/sanPham-management/SanPham";
 import ChiTietSanPham from "../pages/censor/sanPham-management/CTSP";
 import AddSanPham from "../pages/censor/sanPham-management/AddSanPham";
+import CTSP from "../pages/censor/sanPham-management/CTSP";
 //hoa don
 import HoaDon from "../pages/censor/hoaDon-management/HoaDon2";
 import HoaDonDetail from "../pages/censor/hoaDon-management/HoaDonDetail";
@@ -281,8 +282,18 @@ function App() {
                 </AuthGuard>
               }
             />
+               <Route
+              path="/admin-showct/:id"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <CTSP />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
             <Route
-              path="/admin-add-san-pham"
+              path="/admin-them-san-pham"
               element={
                 <AuthGuard>
                   <DashboardCensor>
@@ -331,8 +342,9 @@ function App() {
                 </AuthGuard>
               }
             />
-            <Route
-              path="/admin-update-khuyen-mai/:id"
+
+               <Route
+              path="/admin-sua-khuyen-mai/:id"
               element={
                 <AuthGuard>
                   <DashboardCensor>

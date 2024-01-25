@@ -21,7 +21,7 @@ public class KichThuocController {
 
     @GetMapping
     public ResponseEntity<?> getALLKT() {
-        return new ResponseEntity<>(kichThuocService.getALLKT(), HttpStatus.FOUND);
+        return  ResponseEntity.ok(kichThuocService.getALLKT());
     }
 
     @PostMapping("/add")

@@ -22,7 +22,7 @@ public class MauSacController {
 
     @GetMapping
     public ResponseEntity<?> getALLMS() {
-        return new ResponseEntity<>(mauSacService.getALLMS(), HttpStatus.FOUND);
+        return  ResponseEntity.ok(mauSacService.getALLMS());
     }
 
     @GetMapping("/detail/{idMS}")

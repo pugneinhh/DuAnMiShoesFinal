@@ -1,31 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Button,
-  DatePicker,
-  Divider,
-  Form,
-  Input,
-  InputNumber,
-  Select,
-  Space,
-  Table,
-  Tag,
-  Modal
-} from 'antd';
-import { InfoCircleFilled, PlusCircleOutlined } from "@ant-design/icons";
-import { DeleteFilled } from "@ant-design/icons";
-import { PlusCircleFilled } from "@ant-design/icons";
+import {Button,Divider,Form,Input,Select,Space,Table,Tag,Modal} from 'antd';
+import { PlusCircleOutlined } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
-import { MdSearch } from 'react-icons/md';
-import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Swal from "sweetalert2";
-import FormItem from 'antd/es/form/FormItem';
 import { AiOutlineColumnHeight } from 'react-icons/ai';
 import { BsFillEyeFill } from 'react-icons/bs';
-
+import { DeGiayAPI } from '../api/SanPham/deGiay.api';
 export default function DeGiay() {
   //Form
   const [selectedValue, setSelectedValue] = useState('1');
@@ -40,29 +22,23 @@ export default function DeGiay() {
   const [form] = Form.useForm();
   //Ấn add 
   const [open, setOpen] = useState(false);
-  const [openUpdate, setOpenUpdate] = useState(false);
-  const [bordered] = useState(false);
   const addDeGiay = (value) => {
-    console.log(value);
-    axios.post('http://localhost:8080/de-giay/add', value)
-      .then(response => {
-        console.log(response.data);
-        toast('✔️ Thêm thành công!', {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        loadDeGiay();
-        form.resetFields();
-
-      })
-      .catch(error => console.error('Error adding item:', error));
-
+    DeGiayAPI.create(value)
+    .then((res)=>{
+      toast('✔️ Thêm thành công!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+            loadDeGiay();
+      setOpen(false);
+      form.resetFields();
+    })
   }
   //Table
   const [deGiay, setDeGiays] = useState([]);
@@ -72,14 +48,10 @@ export default function DeGiay() {
   }, []);
 
   const loadDeGiay = async () => {
-    const result = await axios.get("http://localhost:8080/de-giay", {
-      validateStatus: () => {
-        return true;
-      }
-    });
-    if (result.status === 302) {
-      setDeGiays(result.data);
-    }
+    DeGiayAPI.getAll()
+    .then((res)=>{
+      setDeGiays(res.data); 
+    })
   };
 
   const columns = [

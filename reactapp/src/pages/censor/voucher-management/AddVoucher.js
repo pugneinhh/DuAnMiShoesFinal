@@ -4,16 +4,14 @@ import {
   Input,
   InputNumber,
   Select,
-  Switch,
   Button,
   Modal,
   Divider,
 } from "antd";
 import { useState } from "react";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { FaTag } from "react-icons/fa";
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { VoucherAPI } from "../api/voucher/voucher.api";
 import { NguoiDungVoucherAPI } from "../api/voucher/nguoiDungVoucher.api";
 import TableKhachHang from "./tableKhachHang";

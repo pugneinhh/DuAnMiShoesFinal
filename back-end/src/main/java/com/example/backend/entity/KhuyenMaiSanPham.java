@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ChitietspKhuyenmai {
+public class KhuyenMaiSanPham {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;

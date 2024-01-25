@@ -6,6 +6,7 @@ import { Link , useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AddPayDetail, GetPayDetail, RemovePayDetail } from "../../../store/reducer/PayDetail.reducer";
 import { AddPay, GetPay } from "../../../store/reducer/Pay.reducer";
+import {SellAPI} from "../../censor/api/sell/sell.api"
 import { GetBill, RemoveBill } from "../../../store/reducer/Bill.reducer";
 import { GetInvoice, RemoveInvoiceByHoaDon } from "../../../../src/store/reducer/DetailInvoice.reducer";
 
@@ -63,11 +64,11 @@ const ModalThanhToan = (props) => {
         console.log(dataHoaDon[0]);
         // Hóa đơn 
         const addHD = async() => {
-          const dataAdd =  await axios.post(`http://localhost:8080/ban-hang/add-hoa-don`,dataHoaDon[0]);
+          const dataAdd =  await SellAPI.addBill(dataHoaDon[0]);
         // Chi tiết hóa đơn
           const ctsp = ctspHD.filter((f)=> f.hoaDon === hoaDon);
           Promise.all(ctsp.map(value => 
-            axios.post(`http://localhost:8080/ban-hang/addHDCT`,value)));
+           SellAPI.addInvoice(value)));
         }
         addHD();
         // axios.post(`http://localhost:8080/ban-hang/thanh-toan`,dataHoaDon[0]);
@@ -103,7 +104,7 @@ const ModalThanhToan = (props) => {
 
 
     const linkVNP =  () => {
-           axios.get(`http://localhost:8080/vnppayment/chuyen-khoan/${hoaDon}/${money}`).then((res) => {
+           SellAPI.getLinkVnpay(hoaDon,money).then((res) => {
               dispatch(AddPay({hoaDon: hoaDon,phuongThuc:1,chuyenKhoan:money,phuongThucVNP:res.data.url}));
               window.open(res.data.url, '_blank');
           });
@@ -190,8 +191,6 @@ const ModalThanhToan = (props) => {
                 <Button className="col-md-6 rounded-pill" type="primary" onClick={handleTienMat}> Tiền mặt</Button>
 
                 <Link 
-               // to={linkVNP()} 
-                //target="_blank"
                 className="col-md-6 rounded-pill btn btn-primary" type="primary" onClick={handleChuyenKhoan}
                 > Chuyển khoản</Link>
             </div>

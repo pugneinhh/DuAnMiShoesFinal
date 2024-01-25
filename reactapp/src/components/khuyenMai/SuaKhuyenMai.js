@@ -17,7 +17,6 @@ import {
   HomeOutlined,
 } from "@ant-design/icons";
 import { BiSolidDiscount } from "react-icons/bi";
-
 import { LuBadgePercent } from "react-icons/lu";
 import {toast } from "react-toastify";
 import TableSanPham from "./tableSanPham";
@@ -61,8 +60,7 @@ const SuaKhuyenMai = () => {
         });
         console.log("Res KM ", response.data);
         setDataUpdate(response.data); // set cho DataUpdate
-        // loadCTSP();
-        // loadSP();
+
       })
       .catch((error) => console.error("Error adding item:", error));
   };

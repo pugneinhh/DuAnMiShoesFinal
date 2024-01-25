@@ -30,7 +30,7 @@ public class KhuyenMaiController {
     @Autowired
     CTSPService ctspService;
 //    private ScheduledCheck scheduledCheck;
-    @GetMapping
+    @GetMapping("hien-thi")
     public ResponseEntity<?> getALL(){
 //        scheduledCheck.checkKhuyenMai();
         return new ResponseEntity<>(khuyenMaiService.getAllKhuyenMai(), HttpStatus.OK);

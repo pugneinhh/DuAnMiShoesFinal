@@ -21,7 +21,7 @@ public class DanhMucController {
     private DanhMucService danhMucService;
     @GetMapping
     public ResponseEntity<?> getALLDM(){
-        return new ResponseEntity<>(danhMucService.getALLDM(), HttpStatus.FOUND);
+        return  ResponseEntity.ok(danhMucService.getALLDM());
     }
 
     @PutMapping("/update/{id}")
