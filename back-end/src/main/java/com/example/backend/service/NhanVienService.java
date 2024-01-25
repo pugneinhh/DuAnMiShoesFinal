@@ -10,7 +10,7 @@ import com.example.backend.model.AdminKhachHangRepon;
 import com.example.backend.model.AdminNhanVienRespon;
 import com.example.backend.repository.DiaChiRepository;
 import com.example.backend.repository.NguoiDungRepository;
-import com.example.backend.util.EmailServiceImpl;
+//import com.example.backend.util.EmailServiceImpl;
 import com.example.backend.util.cloudinary.UploadImageToCloudinary;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +29,8 @@ public class NhanVienService {
     NguoiDungRepository nguoiDungRepository;
     @Autowired
     DiaChiRepository diaChiRepository;
-    @Autowired
-    private EmailServiceImpl emailService;
+  //  @Autowired
+  //  private EmailServiceImpl emailService;
     @Autowired
     private UploadImageToCloudinary uploadImageToCloudinary;
 
@@ -42,7 +42,7 @@ public class NhanVienService {
         String password = RandomStringUtils.random(8, true, true);
         String url = uploadImageToCloudinary.uploadImage(file);
         int size = nguoiDungRepository.getAllNhanVien().size() + 1;
-        emailService.sendEmailPasword(request.getEmail(), "Mật khẩu bạn là ", password);
+      //  emailService.sendEmailPasword(request.getEmail(), "Mật khẩu bạn là ", password);
         NguoiDung add = new NguoiDung();
         add.setTen(request.getTen());
         add.setMa("NV" + size);

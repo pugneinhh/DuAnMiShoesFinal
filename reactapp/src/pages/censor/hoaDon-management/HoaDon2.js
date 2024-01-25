@@ -50,7 +50,7 @@ export default function HoaDon() {
         HoaDonAPI.getAll()
         .then((res)=>{
             setHoaDons(res.data);
-              console.log("22",res.data);
+              
         })
     };
     //load hoa don cho

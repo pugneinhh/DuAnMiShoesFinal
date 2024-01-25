@@ -6,7 +6,6 @@ import { SlNotebook } from "react-icons/sl";
 import { GiNotebook, GiPiggyBank } from "react-icons/gi";
 import { FaTruckFast } from "react-icons/fa6";
 import { Button, Modal, Table, Tag, Input, Flex, Form } from 'antd';
-import axios from "axios";
 import { useParams } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -22,9 +21,6 @@ export default function HoaDonDetail() {
   const { id } = useParams();
   const [openModalTimeLine, setOpenModalTimeLine] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const showModalTimeLine = () => {
-    setOpenModalTimeLine(true);
-  };
 
   const handleOk = () => {
     setIsModalOpen(false);
@@ -189,6 +185,7 @@ export default function HoaDonDetail() {
 
     <div className='container mt-4 radius  ' >
       <div className='container-fuild  row pt-3 pb-4 bg-light rounded border-danger '>
+        <div className='scroll-hoa-don mb-4'>
         <div className='hoa-don-cuon-ngang'>
           {/* hóa đơn time line */}
           <Timeline minEvents={6} index={trangThai} placeholder >
@@ -468,8 +465,12 @@ export default function HoaDonDetail() {
             }
           </Timeline>
         </div>
+<<<<<<< HEAD
+=======
+          </div>
+>>>>>>> developer
         {/* xác nhận đơn hàng */}
-        <div className='col-md-2'>
+        <div className='col-md-2 '>
              < >
               <>
                 {trangThai == 0 ? <Button className='ms-5 ' type="primary" onClick={showModal}>{textButton[trangThai]}</Button>
@@ -516,6 +517,21 @@ export default function HoaDonDetail() {
                 </Form>
               </Modal >
             </>
+        </div>
+        <div className='col-md-2 '>
+             < >
+              <>
+                {trangThai == 0 ? <Button className='ms-5 btn btn-danger ' type="primary">Hủy</Button>
+                  : trangThai == 1 ? <Button className='ms-5 btn btn-danger ' type="primary" >Hủy</Button>
+                    : trangThai == 2 ? <Button className='ms-5 btn btn-danger ' type="primary" >Hủy</Button>
+                          : <></>}
+
+
+              </>
+
+            </>
+
+      
         </div>
         <div className='col-md-2'> 
           <>
@@ -721,7 +737,6 @@ export default function HoaDonDetail() {
           </>
         </div>
         {/* lịch sử hóa đơn */}
-        <div className='col-md-2'></div>
         <div className='col-md-2'></div>
         <div className='col-md-2'></div>
         <div className='col-md-2 text-end'>

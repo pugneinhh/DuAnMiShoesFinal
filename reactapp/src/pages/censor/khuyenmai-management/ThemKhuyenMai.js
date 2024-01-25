@@ -1,5 +1,4 @@
 import React, { useState, useEffect} from "react";
-import axios from "axios";
 import {
   Form,
   Input,
@@ -22,11 +21,14 @@ import {useNavigate } from 'react-router-dom';
 import TableSanPham from "./tableSanPham";
 import TableChiTietSanPham from "./tableChiTietSanPham";
 import moment from "moment-timezone";
+import {PromotionAPI} from "../../censor/api/promotion/promotion.api";
+
+
 const ThemKhuyenMai = () => {
 
   const navigate = useNavigate();
 
-  const [selectedDate, setSelectedDate] = useState(null);
+
 
   moment.tz.setDefault("America/New_York");
 
@@ -53,22 +55,19 @@ const ThemKhuyenMai = () => {
 
   const handleSubmit = (value) => {
     console.log(value);
-    axios
-      .post(`http://localhost:8080/khuyen-mai/add`, value)
+   PromotionAPI.create(value)
       .then((response) => {
         setIDKM(response.data);
         if (selectedIDCTSP.length > 0){
         Promise.all(
           selectedIDCTSP.map((id) =>
-            axios.put(
-              `http://localhost:8080/ctsp/updateKM/${id}`,
-              response.data
-            )
+            PromotionAPI.updateProductByPromotion(id,response.data)
+            
           )
         );
             }
         // console.log("Thêm res", response.data.id);
-        navigate('/khuyen-mai');
+        navigate('/admin-khuyen-mai');
         
         toast("✔️ Thêm thành công!", {
           position: "top-right",
@@ -87,8 +86,6 @@ const ThemKhuyenMai = () => {
 
       })
       .catch((error) => console.error("Error adding item:", error));
-
-    // Promise.all(selectedIDCTSP.map(id => axios.put(`http://localhost:8080/ctsp/updateKM/${id}`,idKM)));
   };
 
   const [selectedIDSP, setSelectedIDSP] = useState([]);
@@ -109,7 +106,7 @@ const ThemKhuyenMai = () => {
   }, []);
 
   const loadKhuyenMai = async () => {
-    const result = await axios.get("http://localhost:8080/khuyen-mai").then(response => {setKhuyenMais(response.data);}).catch(error => console.error('Error adding item:',error));
+    const result = await PromotionAPI.getAll().then(response => {setKhuyenMais(response.data);}).catch(error => console.error('Error adding item:',error));
   };
 
   // Validate ngày
@@ -121,7 +118,7 @@ const ThemKhuyenMai = () => {
     }
     return Promise.resolve();
   };
-  const [checkNgay, setCheckNgay] = useState(false);
+
   const validateDateBD = (_, value) => {
     const { getFieldValue } = formThemKhuyenMai;
     const endDate = getFieldValue("ngay_ket_thuc");
@@ -139,11 +136,11 @@ const ThemKhuyenMai = () => {
       style={{marginTop: "10px"}}
     items={[
       {
-        href: '/admin/ban-hang',
+        href: '/admin-ban-hang',
         title: <HomeOutlined />,
       },
       {
-        href: 'http://localhost:3000/admin/ban-hang',
+        href: 'http://localhost:3000/admin-ban-hang',
         title: (
           <>
             <BiSolidDiscount size={15} style={{paddingBottom:2}}/> 
@@ -152,7 +149,7 @@ const ThemKhuyenMai = () => {
         ),
       },
       {
-        href: 'http://localhost:3000/khuyen-mai',
+        href: 'http://localhost:3000/admin-khuyen-mai',
         title: (
           <>
           <LuBadgePercent size={15} style={{paddingBottom:2}}/> 
@@ -384,19 +381,7 @@ const ThemKhuyenMai = () => {
             </div>
           </div>
         </div>
-        {/* <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-        />
-        <ToastContainer /> */}
+
       </div>
     </div>
   );

@@ -24,7 +24,7 @@ import TableSanPham from "./tableSanPham";
 import TableChiTietSanPham from "./tableChiTietSanPham";
 import { useNavigate } from "react-router-dom";
 import dayjs from 'dayjs';
-
+import {PromotionAPI} from "../../censor/api/promotion/promotion.api";
 
 const SuaKhuyenMai = () => {
 
@@ -40,8 +40,7 @@ const SuaKhuyenMai = () => {
 
   const loadDetailKhuyenMai = async () => {
     // Lấy ra chi tiết khuyến mại
-    await axios
-      .get(`http://localhost:8080/khuyen-mai/detail/${id}`)
+    await PromotionAPI.detail(id)
       .then((response) => {
         formSuaKhuyenMai.setFieldsValue({
           id: response.data.id,
@@ -61,21 +60,20 @@ const SuaKhuyenMai = () => {
         });
         console.log("Res KM ", response.data);
         setDataUpdate(response.data); // set cho DataUpdate
-        // loadCTSP();
-        // loadSP();
       })
       .catch((error) => console.error("Error adding item:", error));
   };
 
   const loadCTSP = async () => {
-    const x = await axios.get(`http://localhost:8080/ctsp/showKM/${id}`);
+    const x = await PromotionAPI.showProductByPromotion(id)
     console.log("id ctsp",x.data); 
-    setCTSP(x.data);
-    x.data.map(idCTSP =>
-      axios.get(`http://localhost:8080/san-pham/showSP/${idCTSP}`).then(resp1 =>  
-      setIDSP(resp1.data)
-      ),   
-    );
+     setCTSP(x.data);
+    const SP = await Promise.all(x.data.map(idCTSP =>
+      PromotionAPI.showSPByProduct(idCTSP)));
+      SP.map((res)=>( setIDSP(prevData  => 
+        (res.data.includes(prevData) ? console.log("trùng:" ,prevData) : 
+        [...prevData,...res.data]))));
+
   };
 
 
@@ -111,26 +109,22 @@ const SuaKhuyenMai = () => {
   }, []);
 
   const loadKhuyenMai = async () => {
-    const result = await axios.get("http://localhost:8080/khuyen-mai").then(response => {setKhuyenMais(response.data);}).catch(error => console.error('Error adding item:',error));
+    const result = await PromotionAPI.getAll().then(response => {setKhuyenMais(response.data);}).catch(error => console.error('Error adding item:',error));
   };
 
   const handleSubmit = (value) => {
-    axios
-      .put(`http://localhost:8080/khuyen-mai/update/${id}`, value)
+    PromotionAPI.update(id,value)
       .then((response) => {
         setIDKM(response.data);
         if (selectedIDCTSP.length > 0){
         Promise.all(
           selectedIDCTSP.map((id) =>
-            axios.put(
-              `http://localhost:8080/ctsp/updateKM/${id}`,
-              response.data
-            )
+          PromotionAPI.updateProductByPromotion(id,response.data)
           )
         ); 
             }
             loadKhuyenMai();
-        navigate("/khuyen-mai");
+        navigate("/admin-khuyen-mai");
 
         toast("✔️ Sửa thành công!", {
           position: "top-right",
@@ -169,7 +163,7 @@ const SuaKhuyenMai = () => {
     }
     return Promise.resolve();
   };
-  const [checkNgay, setCheckNgay] = useState(false);
+
   const validateDateBD = (_, value) => {
     const { getFieldValue } = formSuaKhuyenMai;
     const endDate = getFieldValue("ngay_ket_thuc");
@@ -187,11 +181,11 @@ const SuaKhuyenMai = () => {
       style={{marginTop: "10px"}}
     items={[
       {
-        href: '/admin/ban-hang',
+        href: '/admin-ban-hang',
         title: <HomeOutlined />,
       },
       {
-        href: 'http://localhost:3000/admin/ban-hang',
+        href: 'http://localhost:3000/admin-ban-hang',
         title: (
           <>
             <BiSolidDiscount size={15} style={{paddingBottom:2}}/> 
@@ -200,7 +194,7 @@ const SuaKhuyenMai = () => {
         ),
       },
       {
-        href: 'http://localhost:3000/khuyen-mai',
+        href: 'http://localhost:3000/admin-khuyen-mai',
         title: (
           <>
           <LuBadgePercent size={15} style={{paddingBottom:2}}/> 

@@ -1,30 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Button,
-  DatePicker,
-  Divider,
-  Form,
-  Input,
-  InputNumber,
-  Select,
-  Space,
-  Table,
-  Tag,
-  Modal
-} from 'antd';
+import {Button,Divider,Form,Input,Select,Space,Table,Tag,Modal} from 'antd';
 import { PlusCircleOutlined, RetweetOutlined } from "@ant-design/icons";
-import { DeleteFilled } from "@ant-design/icons";
-import { InfoCircleFilled } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
-import { MdSearch } from 'react-icons/md';
-import axios from 'axios';
 import { BiSolidCategory } from 'react-icons/bi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Swal from "sweetalert2";
-import FormItem from 'antd/es/form/FormItem';
 import { BsFillEyeFill } from 'react-icons/bs';
+import { DanhMucAPI } from '../api/SanPham/danhMuc.api';
 
 export default function DanhMuc() {
   //Form
@@ -45,9 +28,8 @@ export default function DanhMuc() {
       return danhMuc.some(dm => dm.ten === code);
     };
     if(!(checkTrung(value.ten))){
-      axios.post('http://localhost:8080/danh-muc/add', value)
-      .then(response => {
-        console.log(response.data);
+      DanhMucAPI.create(value)
+      .then((res)=>{
         toast('✔️ Thêm thành công!', {
           position: "top-right",
           autoClose: 5000,
@@ -59,11 +41,9 @@ export default function DanhMuc() {
           theme: "light",
         });
         loadDanhMuc();
+        setOpen(false);
         form.resetFields();
-
       })
-      .catch(error => console.error('Error adding item:', error));
-
     }else{
       toast.error('Danh mục đã tồn tại!', {
         position: "top-right",
@@ -82,15 +62,25 @@ export default function DanhMuc() {
   const [openUpdate, setOpenUpdate] = useState(false);
   const [dmUpdate, setDmUpdate] = useState(false);
   const [tenCheck, setTenCheck] = useState(false);
+  // const showModal = async (id) => {
+  //   const result = await axios.get(`http://localhost:8080/admin/danh-muc/detail/${id}`, {
+  //     validateStatus: () => {
+  //       return true;
+  //     }
+  //   });;
+  
+  //   setTenCheck(result.data.ten)
+  //   setDmUpdate(result.data)
+  //   setOpenUpdate(true);
+  // };
   const showModal = async (id) => {
-    const result = await axios.get(`http://localhost:8080/danh-muc/detail/${id}`, {
-      validateStatus: () => {
-        return true;
-      }
-    });;
-    setTenCheck(result.data.ten)
-    setDmUpdate(result.data)
     setOpenUpdate(true);
+    DanhMucAPI.detailDM(id)
+    .then((res)=>{
+        setTenCheck(res.data.ten)
+    setDmUpdate(res.data)
+    })
+  
   };
   console.log(dmUpdate)
   const updateDanhMuc = () => {
@@ -116,10 +106,8 @@ export default function DanhMuc() {
           return;
         }
       }
-      
-    axios.put(`http://localhost:8080/danh-muc/update/${dmUpdate.id}`, dmUpdate)
-      .then(response => {
-        console.log(response.data);
+      DanhMucAPI.updateDM(dmUpdate.id, dmUpdate)
+      .then((res)=>{
         toast('✔️ Sửa thành công!', {
           position: "top-right",
           autoClose: 5000,
@@ -131,8 +119,8 @@ export default function DanhMuc() {
           theme: "light",
         });
         loadDanhMuc();
+        setOpenUpdate(false);
       })
-      .catch(error => console.error('Error adding item:', error));
   }
   //Tìm kiếm
   const onChangeFilter = (changedValues, allValues) => {
@@ -140,11 +128,10 @@ export default function DanhMuc() {
     timKiemCT(allValues);
   }
   const timKiemCT = (dataSearch) => {
-    axios.post(`http://localhost:8080/danh-muc/tim-kiem`, dataSearch)
-      .then(response => {
-        setDanhMucs(response.data);
+      DanhMucAPI.search(dataSearch)
+      .then((res)=>{
+        setDanhMucs(res.data); 
       })
-      .catch(error => console.error('Error adding item:', error));
   }
   //Table
   const [danhMuc, setDanhMucs] = useState([]);
@@ -153,15 +140,11 @@ export default function DanhMuc() {
     loadDanhMuc();
   }, []);
 
-  const loadDanhMuc = async () => {
-    const result = await axios.get("http://localhost:8080/danh-muc", {
-      validateStatus: () => {
-        return true;
-      }
-    });
-    if (result.status === 302) {
-      setDanhMucs(result.data);
-    }
+  const loadDanhMuc =  () => {
+    DanhMucAPI.getAll()
+    .then((res)=>{
+      setDanhMucs(res.data); 
+    })
   };
 
   const columns = [

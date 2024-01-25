@@ -1,35 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Button,
-  DatePicker,
-  Divider,
-  Modal,
-  QRCode,
-  Form,
-  Radio,
-  Input,
-  InputNumber,
-  Select,
-  Slider,
-  Space,
-  Table,
-  Tag,
-} from 'antd';
+import {Button,Divider,Modal,QRCode,Form,Input,InputNumber,Select,Slider, Space,Table,Tag,} from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { HighlightOutlined, InfoCircleFilled, InfoCircleOutlined, PlusCircleOutlined, RetweetOutlined } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
 import { EyeOutlined } from "@ant-design/icons";
-import { SearchOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
 import { useParams } from 'react-router-dom';
 import { GrUpdate } from "react-icons/gr";
 import { Image } from 'cloudinary-react';
 import axios from 'axios';
-import { IoIosAddCircleOutline } from 'react-icons/io';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { MdAddTask } from 'react-icons/md';
 import './SanPham.scss'
 import SuaAnhCTSP from './SuaAnhCTSP';
 
@@ -37,21 +18,8 @@ export default function CTSP() {
   //Mở detail ctsp
   const { uuid } = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [open, setOpen] = useState(false);
   const [ktCheck, setKtCheck] = useState('');
   const [msCheck, setMsCheck] = useState('');
-  const thongBaoTC = () => {
-    toast('✔️ Sửa thành công!', {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
-  }
 
   const handleOk = () => {
     setIsModalOpen(false);

@@ -1,42 +1,30 @@
 import {
   Button,
-  DatePicker,
-  Form,
-  Input,
-  InputNumber,
   Modal,
-  Popconfirm,
-  Select,
   Space,
-  Switch,
   Table,
-  Tag,
+  Input
 } from "antd";
-import axios from "axios";
 import { useEffect, useState } from "react";
-import moment from "moment";
 import { Image } from "cloudinary-react";
-import { toast } from "react-toastify";
 import { EyeOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { AddClient, GetClient } from "../../../store/reducer/Client.reducer";
 import {
   GetBill,
-  UpdateBill,
   UpdateKHToBill,
   UpdateNullClient,
 } from "../../../store/reducer/Bill.reducer";
-
+import {SellAPI} from "../../censor/api/sell/sell.api";
 
 const ModalKhachHang = (props) => {
   const { openKhachHang, setOpenKhachHang } = props;
-  // const idHD = props.idHD;
   const activeKey = props.activeKey;
-  const [khachHang, setKhachHangs] = useState([]);
 
   useEffect(() => {
     loadKhachHang();
   }, []);
+
   const dispatch = useDispatch();
   const client = useSelector(GetClient);
   const bill = useSelector(GetBill);
@@ -61,9 +49,7 @@ const ModalKhachHang = (props) => {
   };
 
   const loadKhachHang = async () => {
-    const result = await axios.get(
-      "http://localhost:8080/nguoi-dung/khach-hang"
-    );
+    const result = await SellAPI.getAllCustomers();
     result.data.map((i) =>
       dispatch(
         AddClient({
@@ -81,11 +67,10 @@ const ModalKhachHang = (props) => {
         })
       )
     );
-    setKhachHangs(result.data);
+  
   };
   const handleClose = () => {
     setOpenKhachHang(false);
-    console.log("đóng");
   };
   const columns = [
     {
@@ -179,9 +164,6 @@ const ModalKhachHang = (props) => {
       open={openKhachHang}
       onOk={handleClose}
       onCancel={handleClose}
-      // footer={
-      //     <button onClick={handleClose}>Hủy</button>
-      // }
       width={1300}
     >
       <div className="container">

@@ -1,5 +1,4 @@
-import React, { useState, useEffect, Text, View } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
 import {
   Space,
   Table,
@@ -10,35 +9,30 @@ import {
   DatePicker,
   Divider,
   Modal,
-  Breadcrumb ,
+  Breadcrumb,
 } from "antd";
 import "./KhuyenMai.scss";
 import { BiSolidDiscount } from "react-icons/bi";
 import {
   HomeOutlined,
-  UserOutlined,
   EyeOutlined,
   PlusCircleOutlined,
   UnorderedListOutlined,
   FilterFilled,
   PlayCircleOutlined,
   PauseCircleOutlined,
-  ReloadOutlined
+  ReloadOutlined,
 } from "@ant-design/icons";
 import { LuBadgePercent } from "react-icons/lu";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import { dayjs } from "dayjs";
-
+import { PromotionAPI } from "../../censor/api/promotion/promotion.api";
+import BanHang from "../../censor/banHang-management/BanHang";
 
 const KhuyenMai = () => {
   const currentTime = moment(); // thời gian hiện tại
-  const [current, setCurrent] = React.useState(1);
 
-  const pageSizeRef = React.useRef(10);
-
- 
   const onChange = (value) => {
     console.log("changed", value);
   };
@@ -57,89 +51,93 @@ const KhuyenMai = () => {
 
   const [khuyenMai, setKhuyenMais] = useState([]);
 
-
-
   const checkAndUpdateStatus = () => {
     const currentDate = new Date();
     // Lặp qua dữ liệu và kiểm tra điều kiện
-    const updatedData = khuyenMai.map(item => {
-      if ((new Date(item.ngay_bat_dau) < currentDate) && (new Date(item.ngay_ket_thuc) > currentDate) && (item.trang_thai !== 2)){
-        item.trang_thai = 1
-        return { ...item, status: 'Hoạt động' };
+    const updatedData = khuyenMai.map((item) => {
+      if (
+        new Date(item.ngay_bat_dau) < currentDate &&
+        new Date(item.ngay_ket_thuc) > currentDate &&
+        item.trang_thai !== 2
+      ) {
+        item.trang_thai = 1;
+        return { ...item, status: "Hoạt động" };
+      } else if (new Date(item.ngay_ket_thuc) < currentDate) {
+        item.trang_thai = 2;
+        return { ...item, status: "Hết hạn" };
       }
-      else if (new Date(item.ngay_ket_thuc) < currentDate) {
-        item.trang_thai = 2
-        return { ...item, status: 'Hết hạn' };
-      } 
       return item;
     });
 
     setKhuyenMais(updatedData);
   };
   const loadKhuyenMai = async () => {
-    const result = await axios.get("http://localhost:8080/khuyen-mai").then(
-      response => {setKhuyenMais(response.data);
-      console.log(response.data);})
-      .catch(error => 
-        console.error('Error adding item:',error));
+    const result = await PromotionAPI.getAll()
+      .then((response) => {
+        setKhuyenMais(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => console.error("Error adding item:", error));
   };
 
-// tự update
+  // tự update
   useEffect(() => {
-      loadKhuyenMai();
-  },[]);
+    loadKhuyenMai();
+  }, []);
 
   useEffect(() => {
     const handleUpdateStatus = (status) => {
       const currentTime = new Date();
-      khuyenMai.forEach( x => {
-       (currentTime > new Date(x.ngay_bat_dau) && currentTime < new Date(x.ngay_ket_thuc)) ?
-        axios.put(`http://localhost:8080/khuyen-mai/updateTrangThai1/${x.id}`, x)
-       : ( currentTime > new Date(x.ngay_ket_thuc))
-        ?
-        axios.put(`http://localhost:8080/khuyen-mai/updateTrangThai/${x.id}`, x)
-        : console.log('Không có dữ liệu update');      
+      khuyenMai.forEach((x) => {
+        currentTime > new Date(x.ngay_bat_dau) &&
+        currentTime < new Date(x.ngay_ket_thuc)
+          ? PromotionAPI.updateAutoStart(x.id, x)
+          : currentTime > new Date(x.ngay_ket_thuc)
+          ? PromotionAPI.updateAutoClose(x.id, x)
+          : console.log("Không có dữ liệu update");
       });
-      if (!dataSearch.ma
-          && !dataSearch.ten  && !dataSearch.ngay_bat_dau && !dataSearch.ngay_ket_thuc && !dataSearch.loai && !dataSearch.gia_tri_khuyen_mai){
-      loadKhuyenMai();
-          }
-  }
-    const time = setInterval(handleUpdateStatus , 10000)
+      if (
+        !dataSearch.ma &&
+        !dataSearch.ten &&
+        !dataSearch.ngay_bat_dau &&
+        !dataSearch.ngay_ket_thuc &&
+        !dataSearch.loai &&
+        !dataSearch.gia_tri_khuyen_mai
+      ) {
+        loadKhuyenMai();
+      }
+    };
+    const time = setInterval(handleUpdateStatus, 10000);
     return () => {
       clearInterval(time);
-    }
-  
-  },[khuyenMai]);
+    };
+  }, [khuyenMai]);
 
-// tìm kiếm
+  // tìm kiếm
 
-const [dataSearch,setDataSearch]=useState({});
-const onChangeFilter=(changedValues, allValues)=>{
-  console.log("hi",changedValues);
-  console.log("ob",allValues);
-  timKiemKhuyenMai(allValues);
-  setDataSearch(allValues); 
-}
+  const [dataSearch, setDataSearch] = useState({});
+  const onChangeFilter = (changedValues, allValues) => {
+    console.log("hi", changedValues);
+    console.log("ob", allValues);
+    timKiemKhuyenMai(allValues);
+    setDataSearch(allValues);
+  };
 
-const timKiemKhuyenMai=(dataSearch)=>{
-  axios.post('http://localhost:8080/khuyen-mai/search-khuyen-mai',dataSearch)
-  .then(response => {
-    console.log(response.data);
-      setKhuyenMais(response.data);
-  })
-  .catch(error => console.error('Error adding item:', error));
-}
-    
-// hết tìm kiếm
-
-
-  const updateTrangThai = async(id, value) => {
-   await axios
-      .put(`http://localhost:8080/khuyen-mai/updateTrangThai2/${id}`, value)
+  const timKiemKhuyenMai = (dataSearch) => {
+    PromotionAPI.search(dataSearch)
       .then((response) => {
-        if (response.status === 200) {
-          loadKhuyenMai();
+        console.log(response.data);
+        setKhuyenMais(response.data);
+      })
+      .catch((error) => console.error("Error adding item:", error));
+  };
+
+  // hết tìm kiếm
+
+  const updateTrangThai = async (id, value) => {
+    await PromotionAPI.updateClosePromotion(id, value).then((response) => {
+      if (response.status === 200) {
+        loadKhuyenMai();
         toast("✔️ Cập nhật thành công!", {
           position: "top-right",
           autoClose: 5000,
@@ -151,15 +149,13 @@ const timKiemKhuyenMai=(dataSearch)=>{
           theme: "light",
         });
       }
-      });
+    });
   };
 
-  const updateTrangThai1 = async(id, value) => {
-    await axios
-      .put(`http://localhost:8080/khuyen-mai/updateTrangThai3/${id}`, value)
-      .then((response) => {
-        if (response.status === 200) {
-          loadKhuyenMai();
+  const updateTrangThai1 = async (id, value) => {
+    await PromotionAPI.updateOpenPromotion(id, value).then((response) => {
+      if (response.status === 200) {
+        loadKhuyenMai();
         toast("✔️ Cập nhật thành công!", {
           position: "top-right",
           autoClose: 5000,
@@ -171,10 +167,8 @@ const timKiemKhuyenMai=(dataSearch)=>{
           theme: "light",
         });
       }
-      });
+    });
   };
-
-
 
   const columns = [
     {
@@ -267,8 +261,7 @@ const timKiemKhuyenMai=(dataSearch)=>{
             <Tag color="#ff0000">Đã kết thúc</Tag>
           ) : (
             <Tag color="#000000">Tạm dừng</Tag>
-          )
-        }
+          )}
         </>
       ),
       filters: [
@@ -299,7 +292,7 @@ const timKiemKhuyenMai=(dataSearch)=>{
         <Space size="middle">
           <a>
             <Link
-              to={{ pathname: `/sua-khuyen-mai/${record.id}` }}
+              to={{ pathname: `/admin-sua-khuyen-mai/${record.id}` }}
               className="btn rounded-pill"
             >
               <EyeOutlined
@@ -307,7 +300,7 @@ const timKiemKhuyenMai=(dataSearch)=>{
                   fontSize: 30,
                   backgroundColor: "#ffff00",
                   borderRadius: 90,
-                  borderWidth:10,
+                  borderWidth: 10,
                   borderColor: "#000000",
                 }}
               />
@@ -316,24 +309,26 @@ const timKiemKhuyenMai=(dataSearch)=>{
           <>
             {new Date(record.ngay_ket_thuc) > currentTime ? (
               record.trangThai === 3 ? (
-                <a className="btn rounded-pill" 
-                //onClick={() =>updateTrangThai1(record.id,record)}
-                onClick={() => {
-                  Modal.confirm({
-                    title: "Thông báo",
-                    content: "Bạn có chắc chắn muốn sửa không?",
-                    onOk: () => {
-                      updateTrangThai1(record.id,record)
-                      // form.finish();
-                    },
-                    footer: (_, { OkBtn, CancelBtn }) => (
-                      <>
-                        <CancelBtn />
-                        <OkBtn />
-                      </>
-                    ),
-                  });
-                }}>
+                <a
+                  className="btn rounded-pill"
+                  //onClick={() =>updateTrangThai1(record.id,record)}
+                  onClick={() => {
+                    Modal.confirm({
+                      title: "Thông báo",
+                      content: "Bạn có chắc chắn muốn sửa không?",
+                      onOk: () => {
+                        updateTrangThai1(record.id, record);
+                        // form.finish();
+                      },
+                      footer: (_, { OkBtn, CancelBtn }) => (
+                        <>
+                          <CancelBtn />
+                          <OkBtn />
+                        </>
+                      ),
+                    });
+                  }}
+                >
                   <PlayCircleOutlined
                     style={{
                       fontSize: 30,
@@ -343,24 +338,24 @@ const timKiemKhuyenMai=(dataSearch)=>{
                   />
                 </a>
               ) : (
-                <a className="btn rounded-pill" 
-                //onClick={() =>updateTrangThai(record.id,record)}>
-                onClick={() => {
-                  Modal.confirm({
-                    title: "Thông báo",
-                    content: "Bạn có chắc chắn muốn sửa không?",
-                    onOk: () => {
-                      updateTrangThai(record.id,record)
-                      // form.finish();
-                    },
-                    footer: (_, { OkBtn, CancelBtn }) => (
-                      <>
-                        <CancelBtn />
-                        <OkBtn />
-                      </>
-                    ),
-                  });
-                }}>
+                <a
+                  className="btn rounded-pill"
+                  onClick={() => {
+                    Modal.confirm({
+                      title: "Thông báo",
+                      content: "Bạn có chắc chắn muốn sửa không?",
+                      onOk: () => {
+                        updateTrangThai(record.id, record);
+                      },
+                      footer: (_, { OkBtn, CancelBtn }) => (
+                        <>
+                          <CancelBtn />
+                          <OkBtn />
+                        </>
+                      ),
+                    });
+                  }}
+                >
                   <PauseCircleOutlined
                     style={{
                       fontSize: 30,
@@ -388,37 +383,36 @@ const timKiemKhuyenMai=(dataSearch)=>{
     },
   ];
 
-
-
   return (
-
     <div className="container">
-
       <Breadcrumb
-      style={{marginTop: "10px"}}
-    items={[
-      {
-        href: '/admin/ban-hang',
-        title: <HomeOutlined />,
-      },
-      {
-       href:'/admin/ban-hang',
-        title: (
-          <>
-            <BiSolidDiscount size={15} style={{paddingBottom:2}}/> 
-        
-            <span>Giảm giá</span>
-          </>
-        ),
-      },
-      {
-        title: (
-          <>
-          <LuBadgePercent size={15} style={{paddingBottom:2}}/> 
-          <span>Đợt giảm giá</span>       </> )
-      },
-    ]}
-  />
+        style={{ marginTop: "10px" }}
+        items={[
+          {
+             href: '/admin-ban-hang',
+            //path: '/admin-ban-hang',
+            title:  <HomeOutlined />,
+          },
+          {
+            href: "/admin-khuyen-mai",
+            title: (
+              <>
+                <BiSolidDiscount size={15} style={{ paddingBottom: 2 }} />
+
+                <span>Giảm giá</span>
+              </>
+            ),
+          },
+          {
+            title: (
+              <>
+                <LuBadgePercent size={15} style={{ paddingBottom: 2 }} />
+                <span>Đợt giảm giá</span>{" "}
+              </>
+            ),
+          },
+        ]}
+      />
       <div>
         <div className="container-fluid">
           <Divider orientation="center" color="none">
@@ -444,7 +438,7 @@ const timKiemKhuyenMai=(dataSearch)=>{
               initialValues={{
                 size: componentSize,
               }}
-             onValuesChange={onChangeFilter}
+              onValuesChange={onChangeFilter}
               // onChange={timKiem}
               size={componentSize}
               style={{
@@ -513,7 +507,7 @@ const timKiemKhuyenMai=(dataSearch)=>{
               <div className="col-md-4">
                 <Form.Item label="Ngày bắt đầu" name="ngay_bat_dau">
                   <DatePicker
-                  showTime  
+                    showTime
                     style={{ width: "100%" }}
                     placeholder="Ngày bắt đầu"
                     format="YYYY-MM-DD HH:mm:ss"
@@ -522,7 +516,7 @@ const timKiemKhuyenMai=(dataSearch)=>{
                 </Form.Item>
                 <Form.Item label="Ngày kết thúc" name="ngay_ket_thuc">
                   <DatePicker
-                  showTime
+                    showTime
                     style={{ width: "100%" }}
                     placeholder="Ngày kết thúc"
                     format="YYYY-MM-DD HH:mm:ss"
@@ -534,10 +528,8 @@ const timKiemKhuyenMai=(dataSearch)=>{
               <div className="col-md-1"></div>
               <div className="col-md-4">
                 <Form.Item className="text-center">
-                  {/* <Button className="btn btn-warning nut-tim-kiem">Tìm kiếm</Button> */}
                   <button className="btn btn-warning nut-tim-kiem rounded-pill fw-bold">
                     <ReloadOutlined />
-                    
                     Làm mới
                   </button>
                 </Form.Item>
@@ -546,11 +538,9 @@ const timKiemKhuyenMai=(dataSearch)=>{
           </div>
 
           <div className="text-end">
-            {/* <a name="" id="" class="btn btn-warning bg-gradient fw-bold nut-them" role="button">                
-            </a> */}
             <br />
             <Link
-              to="/frm-khuyen-mai"
+              to="/admin-them-khuyen-mai"
               className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill"
             >
               <PlusCircleOutlined /> Thêm đợt giảm giá
@@ -570,8 +560,8 @@ const timKiemKhuyenMai=(dataSearch)=>{
                 id="bang"
                 pagination={{
                   showQuickJumper: true,
-                  defaultCurrentPage:1, 
-                  defaultPageSize:5,
+                  defaultCurrentPage: 1,
+                  defaultPageSize: 5,
                   total: khuyenMai.length,
                 }}
               />

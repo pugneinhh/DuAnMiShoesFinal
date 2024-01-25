@@ -1,30 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Button,
-  DatePicker,
-  Divider,
-  Form,
-  Input,
-  InputNumber,
-  Select,
-  Space,
-  Table,
-  Tag,
-  Modal
-} from 'antd';
-import { InfoCircleFilled, PlusCircleOutlined } from "@ant-design/icons";
-import { DeleteFilled } from "@ant-design/icons";
-import { PlusCircleFilled } from "@ant-design/icons";
+import {Button,Divider,Form,Input,Select,Space,Table,Tag,Modal} from 'antd';
+import {  PlusCircleOutlined } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
-import { MdSearch } from 'react-icons/md';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Swal from "sweetalert2";
-import FormItem from 'antd/es/form/FormItem';
 import { BsFillEyeFill } from 'react-icons/bs';
 import { PiTrademarkFill } from 'react-icons/pi';
+import { HangAPI } from '../api/SanPham/hang.api';
 
 export default function Hang() {
   //Form
@@ -43,26 +27,22 @@ export default function Hang() {
   const [openUpdate, setOpenUpdate] = useState(false);
   const [bordered] = useState(false);
   const addHang = (value) => {
-    console.log(value);
-    axios.post('http://localhost:8080/hang/add', value)
-      .then(response => {
-        console.log(response.data);
-        toast('✔️ Thêm thành công!', {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        loadHang();
-        form.resetFields();
-
-      })
-      .catch(error => console.error('Error adding item:', error));
-
+    HangAPI.create(value)
+        .then((res)=>{
+          toast('✔️ Thêm thành công!', {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          loadHang();
+          setOpen(false);
+          form.resetFields();
+        })
   }
   //Table
   const [hang, setHangs] = useState([]);
@@ -72,14 +52,10 @@ export default function Hang() {
   }, []);
 
   const loadHang = async () => {
-    const result = await axios.get("http://localhost:8080/hang", {
-      validateStatus: () => {
-        return true;
-      }
-    });
-    if (result.status === 302) {
-      setHangs(result.data);
-    }
+    HangAPI.getAll()
+    .then((res)=>{
+      setHangs(res.data); 
+    })
   };
 
   const columns = [

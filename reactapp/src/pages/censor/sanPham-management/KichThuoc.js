@@ -1,30 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Button,
-  DatePicker,
-  Divider,
-  Form,
-  Input,
-  InputNumber,
-  Select,
-  Space,
-  Table,
-  Tag,
-  Modal
-} from 'antd';
-import { InfoCircleFilled, PlusCircleOutlined } from "@ant-design/icons";
-import { DeleteFilled } from "@ant-design/icons";
-import { PlusCircleFilled } from "@ant-design/icons";
+import {Button,Divider,Form,Input,Select,Space,Table,Tag,Modal} from 'antd';
+import { PlusCircleOutlined } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
-import {MdSearch} from 'react-icons/md';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Swal from "sweetalert2";
-import FormItem from 'antd/es/form/FormItem';
 import { BsFillEyeFill } from 'react-icons/bs';
 import { GoNumber } from 'react-icons/go';
+import { KichThuocAPI } from '../api/SanPham/kichThuoc.api';
 
 export default function KichThuoc() {
   //Form
@@ -40,13 +24,11 @@ export default function KichThuoc() {
   const [form] = Form.useForm();
   //Ấn Add
   const [open, setOpen] = useState(false);
-  const [openUpdate, setOpenUpdate] = useState(false);
+
   const [bordered] = useState(false);
   const addKichThuoc = (value) => {
-    console.log(value);
-    axios.post('http://localhost:8080/kich-thuoc/add', value)
-      .then(response => {
-        console.log(response.data);
+      KichThuocAPI.create(value)
+      .then((res)=>{
         toast('✔️ Thêm thành công!', {
           position: "top-right",
           autoClose: 5000,
@@ -58,11 +40,9 @@ export default function KichThuoc() {
           theme: "light",
         });
         loadKichThuoc();
+        setOpen(false);
         form.resetFields();
-
       })
-      .catch(error => console.error('Error adding item:', error));
-
   }
   //Table
   const [kichThuoc, setKichThuocs] = useState([]);
@@ -71,15 +51,11 @@ export default function KichThuoc() {
     loadKichThuoc();
   }, []);
 
-  const loadKichThuoc = async () => {
-    const result = await axios.get("http://localhost:8080/kich-thuoc", {
-      validateStatus: () => {
-        return true;
-      }
-    });
-    if (result.status === 302) {
-      setKichThuocs(result.data);
-    }
+  const loadKichThuoc = () => {
+    KichThuocAPI.getAll()
+    .then((res)=>{
+      setKichThuocs(res.data); 
+    })
   };
 
   const columns = [
