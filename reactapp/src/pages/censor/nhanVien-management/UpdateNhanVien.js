@@ -122,7 +122,7 @@ export default function UpdateNhanVien() {
                         theme: "light",
 
                     });
-                    nav("admin-nhan-vien");
+                    nav("/admin-nhan-vien");
 
                 })
                 .catch((error) => {

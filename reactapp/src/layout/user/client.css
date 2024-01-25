@@ -3,5 +3,8 @@
     text-align: center;
 }
 .menu>a:hover{
-    background-color: orangered;
+    background-color: #d0aa73;
+}
+.ms-10{
+    margin-left: 500px;
 }
