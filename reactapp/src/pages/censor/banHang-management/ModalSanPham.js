@@ -1,15 +1,11 @@
 import {
   Button,
-  DatePicker,
   Divider,
   Form,
   Input,
-  InputNumber,
   Modal,
-  Popconfirm,
   Select,
   Slider,
-  Switch,
   Table,
   Space,
   Tag,
@@ -24,28 +20,28 @@ import { useDispatch, useSelector } from "react-redux";
 import { Image } from "cloudinary-react";
 import { AddProduct, GetProduct, UpdateApartProduct } from "../../../store/reducer/Product.reducer";
 import { AddInvoice, GetInvoice } from "../../../store/reducer/DetailInvoice.reducer";
-// import { UpdateBill } from "../../../store/reducer/Bill.reducer";
+import {SellAPI} from "../../censor/api/sell/sell.api"
+
 
 const ModalSanPham = (props) => {
   const { openSanPham, setOpenSanPham } = props;
- // const idHD = props.idHD;
   const activeKey = props.activeKey;
   const ctsp = useSelector(GetProduct);
   const invoice = useSelector(GetInvoice)
-  console.log("CTSP",ctsp)
-  console.log(activeKey);
+
+
   const handleClose = () => {
     setOpenSanPham(false);
-    console.log("đóng");
+
   };
   const { Option } = Select;
 
   //Form
-  const [selectedValue, setSelectedValue] = useState("");
-  const handleChange = (value) => {
-    console.log(`Selected value: ${value}`);
-    setSelectedValue(value);
-  };
+  // const [selectedValue, setSelectedValue] = useState("");
+  // const handleChange = (value) => {
+  //   console.log(`Selected value: ${value}`);
+  //   setSelectedValue(value);
+  // };
   const [componentSize, setComponentSize] = useState("default");
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
@@ -56,11 +52,7 @@ const ModalSanPham = (props) => {
     loadKT();
   }, []);
   const loadKT = async () => {
-    const result = await axios.get("http://localhost:8080/kich-thuoc", {
-      validateStatus: () => {
-        return true;
-      },
-    });
+    const result = await SellAPI.getAllSizes();
     if (result.status === 302) {
       setKT(result.data);
     }
@@ -71,11 +63,7 @@ const ModalSanPham = (props) => {
     loadMS();
   }, []);
   const loadMS = async () => {
-    const result = await axios.get("http://localhost:8080/mau-sac", {
-      validateStatus: () => {
-        return true;
-      },
-    });
+    const result = await SellAPI.getAllColors();
     if (result.status === 302) {
       setMS(result.data);
     }
@@ -86,26 +74,18 @@ const ModalSanPham = (props) => {
     loadCL();
   }, []);
   const loadCL = async () => {
-    const result = await axios.get("http://localhost:8080/chat-lieu", {
-      validateStatus: () => {
-        return true;
-      },
-    });
+    const result = await SellAPI.getAllMeterials();
     if (result.status === 302) {
       setCL(result.data);
     }
   };
-  //Load Độ Cao
+  //Load Độ Cao -- Đế Giầy
   const [dc, setDC] = useState([]);
   useEffect(() => {
     loadDC();
   }, []);
   const loadDC = async () => {
-    const result = await axios.get("http://localhost:8080/de-giay", {
-      validateStatus: () => {
-        return true;
-      },
-    });
+    const result = await SellAPI.getAllSoles();
     if (result.status === 302) {
       setDC(result.data);
     }
@@ -116,11 +96,7 @@ const ModalSanPham = (props) => {
     loadDM();
   }, []);
   const loadDM = async () => {
-    const result = await axios.get("http://localhost:8080/danh-muc", {
-      validateStatus: () => {
-        return true;
-      },
-    });
+    const result = await SellAPI.getAllCategories();
     setDM(result.data);
   };
   //Load Chất Liệu
@@ -129,34 +105,29 @@ const ModalSanPham = (props) => {
     loadH();
   }, []);
   const loadH = async () => {
-    const result = await axios.get("http://localhost:8080/hang", {
-      validateStatus: () => {
-        return true;
-      },
-    });
+    const result = await SellAPI.getAllBrands();
     if (result.status === 302) {
       setH(result.data);
     }
   };
-  //Table
-  const [cTSP, setCTSPs] = useState([]);
+ 
 
   useEffect(() => {
     loadCTSP();
   }, []);
 
   const loadCTSP = async () => {
-    const result = await axios.get("http://localhost:8080/ban-hang/getALLCTSP");
+    const result = await SellAPI.getAllProducts();
     result.data.map((i)=> dispatch(AddProduct({id:i.idCTSP,soLuong:i.soLuong,linkAnh:i.linkAnh,tenSP:i.tenSP,tenKT:i.tenKT,tenMS:i.tenMS,maMS:i.maMS,loaiKM:i.loaiKM,giaTriKhuyenMai: parseInt(i.giaKhuyenMai, 10),giaBan:i.giaBan,tenKM:i.tenKM})))
-    console.log(result.data);
-    setCTSPs(result.data);
+
+
   };
   const dispatch = useDispatch()
 
   const handleClickAddProduct = (record) => {
-    console.log("id",record.giaSauGiam);
+
     dispatch(AddInvoice({chiTietSanPham:record.id,tenSP:record.tenSP,maMS:record.maMS,linkAnh : record.linkAnh,tenKT:record.tenKT,giaBan: record.giaBan,hoaDon:activeKey,tenMS:record.tenMS,giaGiam:record.giaGiam,giaSauGiam:record.giaSauGiam,nguoiTao:record.nguoiTao,giaBan:record.giaBan,tenKM:record.tenKM,loaiKM:record.loaiKM,giaTriKhuyenMai:record.giaTriKhuyenMai}));
-    console.log("Giá",record.giaSauGiam)
+ 
     dispatch(UpdateApartProduct({id:record.id,soLuong:1})); 
     setOpenSanPham(false);
   };
@@ -280,7 +251,7 @@ const ModalSanPham = (props) => {
     {
       title: "Action",
       key: "action",
-      //dataIndex: "idCTSP",
+  
       render: (record) => (
         <Space size="middle">
           <>

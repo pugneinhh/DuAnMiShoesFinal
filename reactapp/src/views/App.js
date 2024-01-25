@@ -331,8 +331,9 @@ function App() {
                 </AuthGuard>
               }
             />
-            <Route
-              path="/admin-update-khuyen-mai/:id"
+
+               <Route
+              path="/admin-sua-khuyen-mai/:id"
               element={
                 <AuthGuard>
                   <DashboardCensor>

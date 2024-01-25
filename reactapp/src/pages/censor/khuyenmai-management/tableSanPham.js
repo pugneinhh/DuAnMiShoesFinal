@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import {
   Table,
   Tag,
@@ -7,7 +6,7 @@ import {
   Input,
 } from "antd";
 import "./KhuyenMai.scss";
-
+import {PromotionAPI} from "../../censor/api/promotion/promotion.api";
 
 const TableSanPham = ({onSelectedSanPham , suaIDSP}) => {
     const [sanPham, setSanPhams] = useState([]);
@@ -16,7 +15,7 @@ const TableSanPham = ({onSelectedSanPham , suaIDSP}) => {
 
     useEffect(() => {
         const loadSanPham = async () => {
-            await axios.get("http://localhost:8080/san-pham")
+            await PromotionAPI.loadSP()
             .then(response =>{
               setSanPhams(response.data)
               console.log("idSP  =", suaIDSP);
@@ -29,10 +28,7 @@ const TableSanPham = ({onSelectedSanPham , suaIDSP}) => {
           loadSanPham();
       }, [suaIDSP]);
      
-      // useEffect(() =>{
-      //   setSelectedRowKeys(suaIDSP);
-      //   onSelectedSanPham(suaIDSP); 
-      // },[]);
+
       
       const handleCheckboxChange = (selectedKeys , selectedRowKeys) => {
         console.log("selected row key",selectedRowKeys);
@@ -100,10 +96,7 @@ const TableSanPham = ({onSelectedSanPham , suaIDSP}) => {
 
       const rowSelection = {
         selectedRowKeys,
-        // type : 'checkbox',
         onChange: handleCheckboxChange,
-        // selectedRowKeys : selectedRowKeys,
-       // defultSelectedRowKeys : suaIDSP
       };
 
 
