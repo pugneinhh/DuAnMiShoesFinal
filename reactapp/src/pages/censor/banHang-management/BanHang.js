@@ -116,6 +116,7 @@ const BanHang = () => {
     setOpenSanPham(false);
   }
   const [openKhachHang, setOpenKhachHang] = useState(false);
+
   const handleCloseKhachHang = () => {
     setOpenKhachHang(false);
   }
@@ -128,15 +129,15 @@ const BanHang = () => {
 
   };
 
-  const handleClickTab = (id) => {
-    console.log("Key",id)
-    if (ctspHD.length > 0) {
+  // const handleClickTab = (id) => {
+
+  //   if (ctspHD.length > 0) {
    
-    // ctspHD.map((index) => {(index.hoaDon === id) ? setCTSPs(index) : console.log("Nothing")})
-    }
-  }
+  //   // ctspHD.map((index) => {(index.hoaDon === id) ? setCTSPs(index) : console.log("Nothing")})
+  //   }
+  // }
 ////tạo hóa đơn bằng redux
-console.log("hóa đơn:",hoaDons);
+
 const dispatch=useDispatch();
 const handleClickAddHD=() => {
   const maxKey=Math.max(...hoaDons.map((hd)=>hd.key));
@@ -179,8 +180,7 @@ const handleClickAddHD=() => {
 };
 // ///remove hóa đơn bằng redux
 const handleClickRemoveHD=(targetKey) => {
-  console.log(targetKey);
-  console.log(hoaDons.filter((hoaDon)=>hoaDon.key==targetKey)[0]);
+
   if(hoaDons.length<=0){
     return toast.error('Không còn hóa đơn!', {
             position: "top-right",
@@ -497,7 +497,8 @@ const onEdit = (targetKey, action) => {
               <Button className='me-5 bg-success' type="primary" onClick={() => setOpenKhachHang(true)}>
                 Chọn khách hàng
               </Button>
-              <ModalKhachHang openKhachHang={openKhachHang} 
+              <ModalKhachHang 
+              openKhachHang={openKhachHang} 
                // idHD = {tab.id}
                 activeKey = {activeKey}
                 setOpenKhachHang={setOpenKhachHang}
@@ -627,13 +628,14 @@ const onEdit = (targetKey, action) => {
               <Button className='me-5 bg-success' type="primary" onClick={() => setOpenKhachHang(true)}>
                 Chọn tài khoản
               </Button>
-              {/* <ModalKhachHang openKhachHang={openKhachHang} 
+              <ModalKhachHang openKhachHang={openKhachHang} 
                        // idHD = {tab.id}
                         activeKey = {activeKey}
                 setOpenKhachHang={setOpenKhachHang}
                 onOk={handleCloseKhachHang}
                 onCancel={handleCloseKhachHang}
-              /> */}
+                style={{marginLeft:600}}
+              />
 
             </>
           </div>

@@ -160,11 +160,13 @@ const ModalKhachHang = (props) => {
   return (
     <Modal
       title="Khách hàng"
-      centered
       open={openKhachHang}
       onOk={handleClose}
       onCancel={handleClose}
-      width={1300}
+      height={300}
+      width={1500}
+      zIndex={10000}
+      style={{top:50}}
     >
       <div className="container">
         <div className="row mt-4">
@@ -177,7 +179,8 @@ const ModalKhachHang = (props) => {
           </Button>
         </div>
         <Table
-          style={{ justifyContent: "center" }}
+          style={{ justifyContent: "right" }}
+
           className="text-center mt-4"
           dataSource={client}
           columns={columns}
