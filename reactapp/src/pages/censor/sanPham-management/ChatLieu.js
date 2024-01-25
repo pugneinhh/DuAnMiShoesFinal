@@ -1,31 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Button,
-  DatePicker,
-  Divider,
-  Form,
-  Input,
-  InputNumber,
-  Select,
-  Space,
-  Table,
-  Tag,
-  Modal
-} from 'antd';
-import { InfoCircleFilled, PlusCircleOutlined } from "@ant-design/icons";
-import { DeleteFilled } from "@ant-design/icons";
-import { PlusCircleFilled } from "@ant-design/icons";
+import {Button,Divider,Form,Input,Select,Space,Table,Tag,Modal} from 'antd';
+import {  PlusCircleOutlined } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
-import { MdSearch } from 'react-icons/md';
-import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Swal from "sweetalert2";
-import FormItem from 'antd/es/form/FormItem';
 import { GiMaterialsScience } from 'react-icons/gi';
 import { BsFillEyeFill } from 'react-icons/bs';
-
+import { ChatLieuAPI } from '../api/SanPham/chatLieu.api';
 export default function ChatLieu() {
   //Form
   const [selectedValue, setSelectedValue] = useState('1');
@@ -40,13 +22,11 @@ export default function ChatLieu() {
   const [form] = Form.useForm();
   //Ấn Add
   const [open, setOpen] = useState(false);
-  const [openUpdate, setOpenUpdate] = useState(false);
   const [bordered] = useState(false);
   const addChatLieu = (value) => {
-    console.log(value);
-    axios.post('http://localhost:8080/chat-lieu/add', value)
-      .then(response => {
-        console.log(response.data);
+
+      ChatLieuAPI.create(value)
+      .then((res)=>{
         toast('✔️ Thêm thành công!', {
           position: "top-right",
           autoClose: 5000,
@@ -58,11 +38,9 @@ export default function ChatLieu() {
           theme: "light",
         });
         loadChatLieu();
+        setOpen(false);
         form.resetFields();
-
       })
-      .catch(error => console.error('Error adding item:', error));
-
   }
   //Table
   const [chatLieu, setChatLieus] = useState([]);
@@ -71,15 +49,11 @@ export default function ChatLieu() {
     loadChatLieu();
   }, []);
 
-  const loadChatLieu = async () => {
-    const result = await axios.get("http://localhost:8080/chat-lieu", {
-      validateStatus: () => {
-        return true;
-      }
-    });
-    if (result.status === 302) {
-      setChatLieus(result.data);
-    }
+  const loadChatLieu =  () => {
+    ChatLieuAPI.getAll()
+    .then((res)=>{
+      setChatLieus(res.data); 
+    })
   };
 
   const columns = [

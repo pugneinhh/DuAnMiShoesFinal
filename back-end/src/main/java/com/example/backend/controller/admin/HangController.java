@@ -21,7 +21,7 @@ public class HangController {
 
     @GetMapping
     public ResponseEntity<?> getALLH() {
-        return new ResponseEntity<>(hangService.getALLH(), HttpStatus.FOUND);
+        return  ResponseEntity.ok(hangService.getALLH());
     }
 
     @PostMapping("/add")

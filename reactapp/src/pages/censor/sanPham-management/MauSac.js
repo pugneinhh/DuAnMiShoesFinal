@@ -1,35 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Button,
-  DatePicker,
-  Divider,
-  Form,
-  Input,
-  InputNumber,
-  Badge,
-  Select,
-  Space,
-  Table,
-  Tag,
-  Modal
-} from 'antd';
-import { InfoCircleFilled, PlusCircleOutlined } from "@ant-design/icons";
-import { DeleteFilled } from "@ant-design/icons";
-import { PlusCircleFilled } from "@ant-design/icons";
+import {Button,Divider,Form,Input,Select,Space,Table,Tag,Modal} from 'antd';
+import {PlusCircleOutlined } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
-import { MdSearch } from 'react-icons/md';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Swal from "sweetalert2";
-import FormItem from 'antd/es/form/FormItem';
-import tinycolor from 'tinycolor2';
 import { BsFillEyeFill } from 'react-icons/bs';
 import { IoColorPalette } from 'react-icons/io5';
 import convert from 'color-convert';
 import './SanPham.scss'
-
+import { MauSacAPI } from '../api/SanPham/mauSac.api';
 export default function MauSac() {
   //Form
   const [selectedValue, setSelectedValue] = useState('1');
@@ -63,11 +44,10 @@ export default function MauSac() {
     timKiemCT(allValues);
   }
   const timKiemCT = (dataSearch) => {
-    axios.post(`http://localhost:8080/mau-sac/tim-kiem`, dataSearch)
-      .then(response => {
-        setMauSacs(response.data);
+      MauSacAPI.search(dataSearch)
+      .then((res)=>{
+        setMauSacs(res.data); 
       })
-      .catch(error => console.error('Error adding item:', error));
   }
   //Ấn Add
   const [open, setOpen] = useState(false);
@@ -83,10 +63,8 @@ export default function MauSac() {
       const rgb = convert.hex.rgb(hexCode);
       const colorName = convert.rgb.keyword(rgb);
       value.ten = colorName;
-      console.log(value.ten);
-      axios.post('http://localhost:8080/mau-sac/add', value)
-        .then(response => {
-          console.log(response.data);
+        MauSacAPI.create(value)
+        .then((res)=>{
           toast('✔️ Thêm thành công!', {
             position: "top-right",
             autoClose: 5000,
@@ -98,11 +76,9 @@ export default function MauSac() {
             theme: "light",
           });
           loadMauSac();
+          setOpen(false);
           form.resetFields();
-
         })
-        .catch(error => console.error('Error adding item:', error));
-
     } else {
       console.log('hehe');
       toast.error('Mã màu đã tồn tại!', {
@@ -120,7 +96,7 @@ export default function MauSac() {
   //Update
   const [msUpdate, setmsUpdates] = useState({});
   const showModal = async (id) => {
-    const result = await axios.get(`http://localhost:8080/mau-sac/detail/${id}`, {
+    const result = await axios.get(`http://localhost:8080/admin/mau-sac/detail/${id}`, {
       validateStatus: () => {
         return true;
       }
@@ -128,6 +104,15 @@ export default function MauSac() {
     setmsUpdates(result.data)
     setOpenUpdate(true);
   };
+  // const showModal = async (id) => {
+  //   setOpenUpdate(true);
+  //   MauSacAPI.detail(id)
+  //   .then((res)=>{
+  //       // setTenCheck(res.data.ten)
+  //       setmsUpdates(res.data)
+  //   })
+  
+  // };
   //Table
   const [mauSac, setMauSacs] = useState([]);
 
@@ -135,15 +120,11 @@ export default function MauSac() {
     loadMauSac();
   }, []);
 
-  const loadMauSac = async () => {
-    const result = await axios.get("http://localhost:8080/mau-sac", {
-      validateStatus: () => {
-        return true;
-      }
-    });
-    if (result.status === 302) {
-      setMauSacs(result.data);
-    }
+  const loadMauSac =  () => {
+    MauSacAPI.getAll()
+    .then((res)=>{
+      setMauSacs(res.data); 
+    })
   };
 
   const columns = [

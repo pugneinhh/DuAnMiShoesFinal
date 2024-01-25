@@ -21,7 +21,7 @@ public class ChatLieuController {
 
     @GetMapping
     public ResponseEntity<?> getALLCL(){
-        return new ResponseEntity<>(chatLieuService.getALLCL(), HttpStatus.FOUND);
+        return  ResponseEntity.ok(chatLieuService.getALLCL());
     }
 
     @GetMapping("/detail/{idCL}")
