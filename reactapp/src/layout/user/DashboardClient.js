@@ -1,16 +1,3 @@
-
-import React from 'react';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
-const { Header, Content, Footer } = Layout;
-const items = new Array(4).fill(null).map((_, index) => ({
-  key: index + 1,
-  label: `nav ${index + 1}`,
-}));
-
 import React from "react";
 import { Breadcrumb, Layout, Menu, theme, Image } from "antd";
 import { Link } from "react-router-dom";
