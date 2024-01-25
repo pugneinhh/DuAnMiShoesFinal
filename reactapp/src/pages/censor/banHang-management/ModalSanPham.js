@@ -11,7 +11,6 @@ import {
   Tag,
   Badge
 } from "antd";
-import axios from "axios";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
 import { InfoCircleFilled } from "@ant-design/icons";
@@ -47,69 +46,64 @@ const ModalSanPham = (props) => {
     setComponentSize(size);
   };
   //Load kich thước
-  const [kt, setKT] = useState([]);
-  useEffect(() => {
-    loadKT();
-  }, []);
-  const loadKT = async () => {
-    const result = await SellAPI.getAllSizes();
-    if (result.status === 302) {
-      setKT(result.data);
-    }
-  };
-  //Load Màu Sắc
-  const [ms, setMS] = useState([]);
-  useEffect(() => {
-    loadMS();
-  }, []);
-  const loadMS = async () => {
-    const result = await SellAPI.getAllColors();
-    if (result.status === 302) {
-      setMS(result.data);
-    }
-  };
-  //Load Chất Liệu
-  const [cl, setCL] = useState([]);
-  useEffect(() => {
-    loadCL();
-  }, []);
-  const loadCL = async () => {
-    const result = await SellAPI.getAllMeterials();
-    if (result.status === 302) {
-      setCL(result.data);
-    }
-  };
-  //Load Độ Cao -- Đế Giầy
-  const [dc, setDC] = useState([]);
-  useEffect(() => {
-    loadDC();
-  }, []);
-  const loadDC = async () => {
-    const result = await SellAPI.getAllSoles();
-    if (result.status === 302) {
-      setDC(result.data);
-    }
-  };
-  //Load Danh Mục
+   const [kt, setKT] = useState([]);
+  // useEffect(() => {
+  //   loadKT();
+  // }, []);
+  // const loadKT =  () => {
+  //   const result =  SellAPI.getAllSizes();
+  //     console.log(result.data);
+    
+ // };
+  // //Load Màu Sắc
+   const [ms, setMS] = useState([]);
+  // useEffect(() => {
+  //   loadMS();
+  // }, []);
+  // const loadMS = async () => {
+  //   const result = await SellAPI.getAllColors();
+  //     setMS(result.data);
+    
+  // };
+  // //Load Chất Liệu
+   const [cl, setCL] = useState([]);
+  // useEffect(() => {
+  //   loadCL();
+  // }, []);
+  // const loadCL = async () => {
+  //   const result = await SellAPI.getAllMeterials();
+  //     setCL(result.data);
+    
+  // };
+  // //Load Độ Cao -- Đế Giầy
+   const [dc, setDC] = useState([]);
+  // useEffect(() => {
+  //   loadDC();
+  // }, []);
+  // const loadDC = async () => {
+  //   const result = await SellAPI.getAllSoles();
+  //     setDC(result.data);
+    
+  // };
+  // //Load Danh Mục
   const [dm, setDM] = useState([]);
-  useEffect(() => {
-    loadDM();
-  }, []);
-  const loadDM = async () => {
-    const result = await SellAPI.getAllCategories();
-    setDM(result.data);
-  };
-  //Load Chất Liệu
-  const [h, setH] = useState([]);
-  useEffect(() => {
-    loadH();
-  }, []);
-  const loadH = async () => {
-    const result = await SellAPI.getAllBrands();
-    if (result.status === 302) {
-      setH(result.data);
-    }
-  };
+  // useEffect(() => {
+  //   loadDM();
+  // }, []);
+  // const loadDM = async () => {
+  //   const result = await SellAPI.getAllCategories();
+  //   setDM(result.data);
+  // };
+  // //Load Chất Liệu
+   const [h, setH] = useState([]);
+  // useEffect(() => {
+  //   loadH();
+  // }, []);
+  // const loadH = async () => {
+  //   const result = await SellAPI.getAllBrands();
+  //     setH(result.data);
+    
+  // };
  
 
   useEffect(() => {
@@ -283,8 +277,11 @@ const ModalSanPham = (props) => {
           Hủy
         </button>
       }
-      width={1100}
-      height={600}
+      
+      height={300}
+      width={1500}
+      zIndex={10000}
+      style={{top:-200}}
     >
       <div className="container-fluid" style={{ borderRadius: 20 }}>
         <div className="container-fluid">
