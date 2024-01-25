@@ -35,6 +35,10 @@
   
   
    */
+   .nav-sidebar {
+    position: fixed;
+    height: 100%;
+}
    .admin-right{
     display: flex;
     justify-content: end;
@@ -55,4 +59,9 @@
   .pro-sidebar-layout::-webkit-scrollbar-track{
     background-color: white;
     background-origin: 100rem;
+  }
+  .icon-hoa-don{
+    background-color: white;
+    border-radius: 40px 40px;
+    border: 2px solid white;
   }
