@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, DatePicker, Form, Select, Space, Table, Divider } from 'antd';
+import { Button, DatePicker, Form, Select, Space, Table, Divider, Badge } from 'antd';
 import './HoaDon.scss';
 import { Tabs, Tag } from 'antd';
 import { BsFillEyeFill } from 'react-icons/bs';
@@ -45,16 +45,18 @@ export default function HoaDon() {
     }, []);
     // load full hóa đơn
     const [hoaDon, setHoaDons] = useState([])
-    const loadHoaDon = async () => {
+    const [hoaDonLength, sethoaDonLength] = useState();
+    const loadHoaDon =  () => {
         HoaDonAPI.getAll()
         .then((res)=>{
             setHoaDons(res.data);
-              
+             const demHD = res.data.length;
+             sethoaDonLength(demHD);
         })
     };
     //load hoa don cho
     const [hoaDonCho, setHoaDonsCho] = useState([])
-    const loadHoaDonCho = async () => {
+    const loadHoaDonCho =  () => {
         HoaDonAPI.getAllbyTT(0)
         .then((res)=>{
             setHoaDonsCho(res.data);
@@ -64,7 +66,7 @@ export default function HoaDon() {
     };
  //load hoa xac nhan
     const [hoaDonXN, setHoaDonsXN] = useState([])
-    const loadHoaDonXN = async () => {
+    const loadHoaDonXN =  () => {
         // console.log(result.data);
         HoaDonAPI.getAllbyTT(1)
         .then((res)=>{
@@ -74,7 +76,7 @@ export default function HoaDon() {
     };
      //load hoa chờ vận chuyển
     const [hoaDonCVC, setHoaDonCVC] = useState([])
-    const loadHoaDonCVC = async () => {
+    const loadHoaDonCVC =  () => {
         HoaDonAPI.getAllbyTT(2)
         .then((res)=>{
             setHoaDonCVC(res.data);
@@ -84,7 +86,7 @@ export default function HoaDon() {
     };
     // load hóa đơn vận chuyển
     const [hoaDonVC, setHoaDonVC] = useState([])
-    const loadHoaDonVC = async () => {
+    const loadHoaDonVC =  () => {
         HoaDonAPI.getAllbyTT(3)
         .then((res)=>{
             setHoaDonVC(res.data);
@@ -93,7 +95,7 @@ export default function HoaDon() {
     };
     //load hóa đơn thanh toán
     const [hoaDonTT, setHoaDonTT] = useState([])
-    const loadHoaDonTT = async () => {
+    const loadHoaDonTT =  () => {
         HoaDonAPI.getAllbyTT(4)
         .then((res)=>{
             setHoaDonTT(res.data);
@@ -102,7 +104,7 @@ export default function HoaDon() {
     };
     //load hóa đơn thành công
     const [hoaDonHT, setHoaDonHT] = useState([])
-    const loadHoaDonHT = async () => {
+    const loadHoaDonHT =  () => {
         HoaDonAPI.getAllbyTT(5)
         .then((res)=>{
             setHoaDonHT(res.data);
@@ -286,95 +288,143 @@ export default function HoaDon() {
         console.log(key);
     };
     const items = [
-        {
-            key: '1',
-            label: 'Tất cả',
-            children: <Table dataSource={hoaDon} columns={columns}
-                pagination={{
-                    showQuickJumper: true,
-                    position: ['bottomCenter'],
-                    defaultPageSize: 5,
-                    defaultCurrent: 1,
-                    total: 100,
-                }} />,
-        },
-        {
-            key: '2',
-            label: 'Chờ xác nhận',
-            children: <Table dataSource={hoaDonCho} columns={columns} pagination={{
-                showQuickJumper: true,
-                position: ['bottomCenter'],
-                defaultPageSize: 5,
-                defaultCurrent: 1,
-                total: 100,
-            }} />,
-        },
-        {
-            key: '3',
-            label: 'Xác nhận',
-            children: <Table dataSource={hoaDonXN} columns={columns} pagination={{
-                showQuickJumper: true,
-                position: ['bottomCenter'],
-                defaultPageSize: 5,
-                defaultCurrent: 1,
-                total: 100,
-            }} />,
-        },
-        {
-            key: '4',
-            label: 'Chờ vận chuyển',
-            children: <Table dataSource={hoaDonCVC} columns={columns} pagination={{
-                showQuickJumper: true,
-                position: ['bottomCenter'],
-                defaultPageSize: 5,
-                defaultCurrent: 1,
-                total: 100,
-            }} />,
-        },
-        {
-            key: '5',
-            label: 'Vận chuyển',
-            children: <Table dataSource={hoaDonVC} columns={columns} pagination={{
-                showQuickJumper: true,
-                position: ['bottomCenter'],
-                defaultPageSize: 5,
-                defaultCurrent: 1,
-                total: 100,
-            }} />,
-        },
-        {
-            key: '6',
-            label: 'Thanh toán',
-            children: <Table dataSource={hoaDonTT} columns={columns} pagination={{
-                showQuickJumper: true,
-                position: ['bottomCenter'],
-                defaultPageSize: 5,
-                defaultCurrent: 1,
-                total: 100,
-            }} />,
-        },
-        {
-            key: '7',
-            label: 'Hoàn thành',
-            children: <Table dataSource={hoaDonHT} columns={columns} pagination={{
-                showQuickJumper: true,
-                position: ['bottomCenter'],
-                defaultPageSize: 5,
-                defaultCurrent: 1,
-                total: 100,
-            }} />,
-        },
-        {
-            key: '8',
-            label: 'Hủy',
-            children: <Table dataSource={hoaDonXN} columns={columns} pagination={{
-                showQuickJumper: true,
-                position: ['bottomCenter'],
-                defaultPageSize: 5,
-                defaultCurrent: 1,
-                total: 100,
-            }} />,
-        },
+      {
+        key: "1",
+
+        label: <Badge count={hoaDonLength}>Tất cả</Badge>,
+        children: (
+          <Table
+            dataSource={hoaDon}
+            columns={columns}
+            pagination={{
+              showQuickJumper: true,
+              position: ["bottomCenter"],
+              defaultPageSize: 5,
+              defaultCurrent: 1,
+              total: 100,
+            }}
+          />
+        ),
+      },
+      {
+        key: "2",
+        label: <Badge count={5}>Chờ xác nhận</Badge>,
+        children: (
+          <Table
+            dataSource={hoaDonCho}
+            columns={columns}
+            pagination={{
+              showQuickJumper: true,
+              position: ["bottomCenter"],
+              defaultPageSize: 5,
+              defaultCurrent: 1,
+              total: 100,
+            }}
+          />
+        ),
+      },
+      {
+        key: "3",
+        label: <Badge count={5}>xác nhận</Badge>,
+        children: (
+          <Table
+            dataSource={hoaDonXN}
+            columns={columns}
+            pagination={{
+              showQuickJumper: true,
+              position: ["bottomCenter"],
+              defaultPageSize: 5,
+              defaultCurrent: 1,
+              total: 100,
+            }}
+          />
+        ),
+      },
+      {
+        key: "4",
+        label: <Badge count={5}>Chờ vận chuyển</Badge>,
+        children: (
+          <Table
+            dataSource={hoaDonCVC}
+            columns={columns}
+            pagination={{
+              showQuickJumper: true,
+              position: ["bottomCenter"],
+              defaultPageSize: 5,
+              defaultCurrent: 1,
+              total: 100,
+            }}
+          />
+        ),
+      },
+      {
+        key: "5",
+        label: <Badge count={5}>Vận chuyển</Badge>,
+        children: (
+          <Table
+            dataSource={hoaDonVC}
+            columns={columns}
+            pagination={{
+              showQuickJumper: true,
+              position: ["bottomCenter"],
+              defaultPageSize: 5,
+              defaultCurrent: 1,
+              total: 100,
+            }}
+          />
+        ),
+      },
+      {
+        key: "6",
+        label: <Badge count={5}>Thanh toán</Badge>,
+        children: (
+          <Table
+            dataSource={hoaDonTT}
+            columns={columns}
+            pagination={{
+              showQuickJumper: true,
+              position: ["bottomCenter"],
+              defaultPageSize: 5,
+              defaultCurrent: 1,
+              total: 100,
+            }}
+          />
+        ),
+      },
+      {
+        key: "7",
+        label: <Badge count={5}>Hoàn thành</Badge>,
+        children: (
+          <Table
+            dataSource={hoaDonHT}
+            columns={columns}
+            pagination={{
+              showQuickJumper: true,
+              position: ["bottomCenter"],
+              defaultPageSize: 5,
+              defaultCurrent: 1,
+              total: 100,
+            }}
+          />
+        ),
+      },
+      {
+        key: "8",
+        label: <Badge count={5}>Hủy</Badge>,
+        children: (
+          <Table
+            dataSource={hoaDonXN}
+            columns={columns}
+            pagination={{
+              showQuickJumper: true,
+              position: ["bottomCenter"],
+              defaultPageSize: 5,
+              defaultCurrent: 1,
+              total: 100,
+            }}
+          />
+        ),
+      },
     ];
 
     const [componentSize, setComponentSize] = useState('default');
