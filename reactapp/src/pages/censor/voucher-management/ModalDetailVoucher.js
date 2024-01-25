@@ -1,18 +1,8 @@
-import {
-    Button,
-    DatePicker,
-    Form,
-    Input,
-    InputNumber,
-    Modal,
-    Select,
-    Divider,
-  } from "antd";
-  import { FaTag } from "react-icons/fa";
-import axios from "axios";
+import {DatePicker,Form,Input,InputNumber,Select,Divider,} from "antd";
+import { FaTag } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import moment from 'moment';
-import { FormattedDate, IntlProvider } from 'react-intl';
+import { IntlProvider } from 'react-intl';
 import { useParams } from "react-router-dom";
 import TableNguoiDungVoucher from "./tableNguoiDungVoucher";
 import { VoucherAPI } from "../api/voucher/voucher.api";
@@ -22,7 +12,7 @@ const ModalDetailVoucher=(props)=>{
   const [dataUpdate, setDataUpdate] = useState({});
   const [form2] = Form.useForm();
   const [selectedValue, setSelectedValue] = useState("Tiền mặt");
-  const [khachHang, setKhachHang] = useState([]);
+
   
   const handleChange = (value) => {
     console.log(`Selected value: ${value}`);
@@ -60,12 +50,6 @@ const ModalDetailVoucher=(props)=>{
       })
       .catch((error) => console.error("Error upfate item:", error));
   };
-  const handleClose = () => {
-    form2.resetFields();
-    setDataUpdate({});
-    console.log("đóng");
-  };
-  
 
 
 

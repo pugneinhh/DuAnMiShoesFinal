@@ -1,30 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Button,
-  DatePicker,
-  Divider,
-  Slider,
-  Form,
-  Input,
-  InputNumber,
-  Select,
-  Space,
-  Table,
-  Tag,
-} from 'antd';
+import {Button,Divider,Slider,Form,Input,Select,Space,Table,Tag,} from 'antd';
 import { Link } from "react-router-dom";
-import { InfoCircleFilled, PlusCircleOutlined, RetweetOutlined } from "@ant-design/icons";
-import { DeleteFilled } from "@ant-design/icons";
-import { PlusCircleFilled } from "@ant-design/icons";
+import { PlusCircleOutlined, RetweetOutlined } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
-import {MdSearch} from 'react-icons/md';
 import axios from 'axios';
-import { BsBoxSeamFill, BsFillEyeFill } from 'react-icons/bs';
+import {  BsFillEyeFill } from 'react-icons/bs';
 import { FaTshirt } from 'react-icons/fa';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './SanPham.scss'
+import { SanPhamAPI } from '../api/SanPham/sanPham.api';
 
 export default function SanPham() {
   //Form
@@ -44,12 +30,17 @@ export default function SanPham() {
     console.log("All values : ", allValues)
     timKiemCT(allValues);
   }
-  const timKiemCT = (dataSearch) => {
-    axios.post(`http://localhost:8080/san-pham/tim-kiem`, dataSearch)
-      .then(response => {
-        setSanPhams(response.data);
+  const timKiemCT =  (dataSearch) => {
+    // axios.post(`http://localhost:8080/admin/san-pham/tim-kiem`, dataSearch)
+    //   .then(response => {
+    //     setSanPhams(response.data);
+    //   })
+    //   .catch(error => console.error('Error adding item:', error));
+      SanPhamAPI.getAll(dataSearch)
+      .then((res)=>{
+        setSanPhams(res.data); 
+        console.log(res.data);
       })
-      .catch(error => console.error('Error adding item:', error));
   }
   //Table
   const [sanPham, setSanPhams] = useState([]);
@@ -58,10 +49,12 @@ export default function SanPham() {
     loadSanPham();
   }, []);
 
-  const loadSanPham = async () => {
-    const result = await axios.get("http://localhost:8080/san-pham");
-      setSanPhams(result.data);
-      console.log(result.data)
+  const loadSanPham =  () => {
+      SanPhamAPI.getAll()
+      .then((res)=>{
+        setSanPhams(res.data); 
+        console.log(res.data);
+      })
   };
 
   const columns = [
@@ -115,7 +108,7 @@ export default function SanPham() {
         render: (title) => (
           <Space size="middle">
              <a>
-            <Link to={`/showct/${title}`} className='btn btn-danger'><BsFillEyeFill className='mb-1'/></Link>
+            <Link to={`/admin-showct/${title}`} className='btn btn-danger'><BsFillEyeFill className='mb-1'/></Link>
           </a>
           </Space>
         ),
@@ -175,7 +168,7 @@ export default function SanPham() {
         </div>
 
          <div className='text-end'>
-          <Link to='/them-san-pham' className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill" role="button"> <PlusCircleOutlined />  Thêm sản phẩm </Link>
+          <Link to='/admin-them-san-pham' className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill" role="button"> <PlusCircleOutlined />  Thêm sản phẩm </Link>
         </div>
         <div className=' bg-light m-2 p-3 pt-2' style={{
           border: '1px solid #ddd', // Border color

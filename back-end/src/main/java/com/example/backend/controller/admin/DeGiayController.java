@@ -21,7 +21,7 @@ public class DeGiayController {
 
     @GetMapping
     public ResponseEntity<?> getALLDC() {
-        return new ResponseEntity<>(deGiayService.getALLDC(), HttpStatus.FOUND);
+        return  ResponseEntity.ok(deGiayService.getALLDC());
     }
 
     @PostMapping("/add")
