@@ -45,7 +45,7 @@ export default function DanhMuc() {
       return danhMuc.some(dm => dm.ten === code);
     };
     if(!(checkTrung(value.ten))){
-      axios.post('http://localhost:8080/danh-muc/add', value)
+      axios.post('http://localhost:8080/admin/danh-muc/add', value)
       .then(response => {
         console.log(response.data);
         toast('✔️ Thêm thành công!', {
@@ -83,7 +83,7 @@ export default function DanhMuc() {
   const [dmUpdate, setDmUpdate] = useState(false);
   const [tenCheck, setTenCheck] = useState(false);
   const showModal = async (id) => {
-    const result = await axios.get(`http://localhost:8080/danh-muc/detail/${id}`, {
+    const result = await axios.get(`http://localhost:8080/admin/danh-muc/detail/${id}`, {
       validateStatus: () => {
         return true;
       }
@@ -117,7 +117,7 @@ export default function DanhMuc() {
         }
       }
       
-    axios.put(`http://localhost:8080/danh-muc/update/${dmUpdate.id}`, dmUpdate)
+    axios.put(`http://localhost:8080/admin/danh-muc/update/${dmUpdate.id}`, dmUpdate)
       .then(response => {
         console.log(response.data);
         toast('✔️ Sửa thành công!', {
@@ -140,7 +140,7 @@ export default function DanhMuc() {
     timKiemCT(allValues);
   }
   const timKiemCT = (dataSearch) => {
-    axios.post(`http://localhost:8080/danh-muc/tim-kiem`, dataSearch)
+    axios.post(`http://localhost:8080/admin/danh-muc/tim-kiem`, dataSearch)
       .then(response => {
         setDanhMucs(response.data);
       })
@@ -149,12 +149,8 @@ export default function DanhMuc() {
   //Table
   const [danhMuc, setDanhMucs] = useState([]);
 
-  useEffect(() => {
-    loadDanhMuc();
-  }, []);
-
   const loadDanhMuc = async () => {
-    const result = await axios.get("http://localhost:8080/danh-muc", {
+    const result = await axios.get("http://localhost:8080/admin/danh-muc", {
       validateStatus: () => {
         return true;
       }
@@ -163,6 +159,10 @@ export default function DanhMuc() {
       setDanhMucs(result.data);
     }
   };
+  
+  useEffect(() => {
+    loadDanhMuc();
+  }, []);
 
   const columns = [
     {

@@ -45,7 +45,7 @@ export default function SanPham() {
     timKiemCT(allValues);
   }
   const timKiemCT = (dataSearch) => {
-    axios.post(`http://localhost:8080/san-pham/tim-kiem`, dataSearch)
+    axios.post(`http://localhost:8080/admin/san-pham/tim-kiem`, dataSearch)
       .then(response => {
         setSanPhams(response.data);
       })
@@ -59,7 +59,7 @@ export default function SanPham() {
   }, []);
 
   const loadSanPham = async () => {
-    const result = await axios.get("http://localhost:8080/san-pham");
+    const result = await axios.get("http://localhost:8080/admin/san-pham");
       setSanPhams(result.data);
       console.log(result.data)
   };

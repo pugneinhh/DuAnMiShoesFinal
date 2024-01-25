@@ -17,6 +17,7 @@ import { FaArrowTrendUp } from 'react-icons/fa6';
 import { PiChartLineUpBold,PiChartLineDownBold  } from "react-icons/pi";
 import { ToastContainer, toast } from "react-toastify";
 import * as XLSX from 'xlsx';
+import { ThongKeAPI } from '../api/thongKe/thongKe.api';
 export default function ThongKe() {
     useEffect(() => {
         loadThongKeTheoNgay();
@@ -34,288 +35,203 @@ export default function ThongKe() {
     }, []);
     const [hoaDonTheoNgay, sethoaDonTheoNgay] = useState([]);
     const [tienTheoNgay, settienTheoNgay] = useState([]);
-    const loadThongKeTheoNgay = async () => {
-
-        await axios.get('http://localhost:8080/thong-ke/ngay')
-            .then(response => {
-                // Update the list of items
-                sethoaDonTheoNgay(response.data.tongHoaDonThongKe);
-                settienTheoNgay(response.data.tongTienThongKe);
-
-            })
-            .catch(error => console.error('Error adding item:', error));
+    const loadThongKeTheoNgay = async  => {
+        ThongKeAPI.getAllThongKeNgay()
+        .then((res)=>{
+            sethoaDonTheoNgay(res.data.tongHoaDonThongKe);
+            settienTheoNgay(res.data.tongTienThongKe);
+        })
     };
     const [hoaDonTheoThang, sethoaDonTheoThang] = useState([]);
     const [tienTheoThang, settienTheoThang] = useState([]);
-    const loadThongKeTheoThang = async () => {
-
-        await axios.get('http://localhost:8080/thong-ke/thang')
-            .then(response => {
-                // Update the list of items
-                sethoaDonTheoThang(response.data.tongHoaDonThongKe);
-                settienTheoThang(response.data.tongTienThongKe);
-
-            })
-            .catch(error => console.error('Error adding item:', error));
+    const loadThongKeTheoThang =  () => {
+        ThongKeAPI.getAllThongKeThang()
+        .then((res)=>{
+            sethoaDonTheoThang(res.data.tongHoaDonThongKe);
+            settienTheoThang(res.data.tongTienThongKe);
+        })
     };
 
     const [hoaDonTheoNam, sethoaDonTheoNam] = useState([]);
     const [tienTheoNam, settienTheoNam] = useState([]);
-    const loadThongKeTheoNam = async () => {
-
-        await axios.get('http://localhost:8080/thong-ke/nam')
-            .then(response => {
-                // Update the list of items
-                sethoaDonTheoNam(response.data.tongHoaDonThongKe);
-                settienTheoNam(response.data.tongTienThongKe);
-
-            })
-            .catch(error => console.error('Error adding item:', error));
+    const loadThongKeTheoNam = () => {
+        ThongKeAPI.getAllThongKeNam()
+        .then((res)=>{
+            sethoaDonTheoNam(res.data.tongHoaDonThongKe);
+            settienTheoNam(res.data.tongTienThongKe);
+        })
     };
     const [hoaDonNgayTruoc, sethoaDonNgayTruoc] = useState([]);
     const [tienNgayTruoc, setTienNgayTruoc] = useState([]);
     const loadDoanhThuNgayTruoc = async () => {
-
-        await axios.get('http://localhost:8080/thong-ke/doanh-thu-ngay-truoc')
-            .then(response => {
-                // Update the list of items
-                sethoaDonNgayTruoc(response.data.tongHoaDonThongKe);
-                setTienNgayTruoc(response.data.tongTienThongKe);
-               
-            })
-            .catch(error => console.error('Error adding item:', error));
+        ThongKeAPI.getDoanhThuNgayTruoc()
+        .then((res)=>{
+            sethoaDonNgayTruoc(res.data.tongHoaDonThongKe);
+            setTienNgayTruoc(res.data.tongTienThongKe);
+        })
     };
     const [hoaDonThangTruoc, sethoaDonThangTruoc] = useState([]);
     const [tienThangTruoc, setTienThangTruoc] = useState([]);
     const loadDoanhThuThangTruoc = async () => {
-
-        await axios.get('http://localhost:8080/thong-ke/doanh-thu-thang-truoc')
-            .then(response => {
-                // Update the list of items
-                sethoaDonThangTruoc(response.data.tongHoaDonThongKe);
-                setTienThangTruoc(response.data.tongTienThongKe);
-                
-            })
-            .catch(error => console.error('Error adding item:', error));
+        ThongKeAPI.getDoanhThuThangTruoc()
+        .then((res)=>{
+            sethoaDonThangTruoc(res.data.tongHoaDonThongKe);
+            setTienThangTruoc(res.data.tongTienThongKe);
+        })
+       
     };
     const [hoaDonNamTruoc, sethoaDonNamTruoc] = useState([]);
     const [tienNamTruoc, setTienNamTruoc] = useState([]);
-    const loadDoanhThuNamTruoc = async () => {
-
-        await axios.get('http://localhost:8080/thong-ke/doanh-thu-nam-truoc')
-            .then(response => {
-                // Update the list of items
-                sethoaDonNamTruoc(response.data.tongHoaDonThongKe);
-                setTienNamTruoc(response.data.tongTienThongKe);
-               
-            })
-            .catch(error => console.error('Error adding item:', error));
+    const loadDoanhThuNamTruoc =  () => {
+        ThongKeAPI.getDoanhThuNamTruoc()
+        .then((res)=>{
+            sethoaDonNamTruoc(res.data.tongHoaDonThongKe);
+            setTienNamTruoc(res.data.tongTienThongKe);
+        })
     };
     //biểu đồ đường
     const [chartData, setChartData] = useState([]);
-    const loadBieuDoThang = async () => {
+    const loadBieuDoThang =  () => {
+        ThongKeAPI.bieuDoThang()
+        .then((res) => {
+            console.log("res data",res.data);
+            const bieudo = res.data.flatMap(item => [
+                { ten: 'Hóa Đơn', ngay: item.ngay, soLuong: item.tongHoaDon },
+                { ten: 'Sản Phẩm', ngay: item.ngay, soLuong: item.tongSanPham }
+            ]);
 
-        await axios.get('http://localhost:8080/thong-ke/bieu-do-thang')
-            .then(response => {
-                // Update the list of items
-                
-                const bieudo=response.data.flatMap(item => {
-                    return [
-                      { ten: 'Hóa Đơn', ngay: item.ngay, soLuong: item.tongHoaDon },
-                      { ten: 'Sản Phẩm', ngay: item.ngay, soLuong: item.tongSanPham }
-                    ];
-                  });
-                  
-                  setChartData(bieudo)
-            })
-            .catch(error => console.error('Error adding item:', error));
+            setChartData(bieudo);
+        })
     };
     const loadBieuDoNgay = async () => {
+        ThongKeAPI.bieuDoNgay()
+        .then((res) => {
+            console.log("res data",res.data);
+            const bieudo = res.data.flatMap(item => [
+                { ten: 'Hóa Đơn', ngay: item.ngay, soLuong: item.tongHoaDon },
+                { ten: 'Sản Phẩm', ngay: item.ngay, soLuong: item.tongSanPham }
+            ]);
 
-        await axios.get('http://localhost:8080/thong-ke/bieu-do-ngay')
-            .then(response => {
-                // Update the list of items
-                
-                const bieudo=response.data.flatMap(item => {
-                    return [
-                      { ten: 'Hóa Đơn', ngay: item.ngay, soLuong: item.tongHoaDon },
-                      { ten: 'Sản Phẩm', ngay: item.ngay, soLuong: item.tongSanPham }
-                    ];
-                  });
-                 console.log("bieu do ngay",bieudo);
-                  setChartData(bieudo)
-                  
-            })
-            .catch(error => console.error('Error adding item:', error));
+            setChartData(bieudo);
+        })
+
     };
-    const loadBieuDoTuan = async () => {
+    const loadBieuDoTuan =  () => {
+        ThongKeAPI.bieuDoTuan()
+        .then((res) => {
+            const bieudo = res.data.flatMap(item => [
+                { ten: 'Hóa Đơn', ngay: item.ngay, soLuong: item.tongHoaDon },
+                { ten: 'Sản Phẩm', ngay: item.ngay, soLuong: item.tongSanPham }
+            ]);
 
-        await axios.get('http://localhost:8080/thong-ke/bieu-do-tuan')
-            .then(response => {
-                // Update the list of items
-                
-                const bieudo=response.data.flatMap(item => {
-                    return [
-                      { ten: 'Hóa Đơn', ngay: item.ngay, soLuong: item.tongHoaDon },
-                      { ten: 'Sản Phẩm', ngay: item.ngay, soLuong: item.tongSanPham }
-                    ];
-                  });
-                 
-                  setChartData(bieudo)
-            })
-            .catch(error => console.error('Error adding item:', error));
+            setChartData(bieudo);
+        })
+
     };
-    const loadBieuDoNam = async () => {
+    const loadBieuDoNam =  () => {
+        ThongKeAPI.bieuDoNam()
+        .then((res) => {
+            const bieudo = res.data.flatMap(item => [
+                { ten: 'Hóa Đơn', ngay: new Date().getFullYear(), soLuong: item.tongHoaDon },
+                { ten: 'Sản Phẩm', ngay: new Date().getFullYear(), soLuong: item.tongSanPham }
+            ]);
 
-        await axios.get('http://localhost:8080/thong-ke/bieu-do-nam')
-            .then(response => {
-                // Update the list of items
-                
-                const bieudo=response.data.flatMap(item => {
-                    return [
-                      { ten: 'Hóa Đơn', ngay: new Date().getFullYear(), soLuong: item.tongHoaDon },
-                      { ten: 'Sản Phẩm', ngay: new Date().getFullYear(), soLuong: item.tongSanPham }
-                    ];
-                  });
-                  
-                  setChartData(bieudo)
-            })
-            .catch(error => console.error('Error adding item:', error));
+            setChartData(bieudo);
+        })
     };
     
     ///trạng thái hóa đơn
     const [trangThaiData, setTrangThaiData] = useState([]);
-    const loadTrangThaiHoaDon = async () => {
-        await axios.get('http://localhost:8080/thong-ke/trang-thai-hoa-don-thang')
-            .then(response => {
-                // Update the list of items
-                const totalHoaDon = response.data.reduce((total, item) => total + item.soLuong, 0);
-
-                const trangThaiHD=response.data.flatMap(item => {
-                    return [
-                      { type: item.trangThai==0?"Chờ xác nhận":item.trangThai==1?"Xác nhận":item.trangThai==2?"Chờ vận chuyển":item.trangThai==3?"Đang vận chuyển":
-                      item.trangThai==4?"Đã thanh toán":"Thành công", value: (item.soLuong/totalHoaDon)*100 },
-                    ];
-                  });
-                  
-                  setTrangThaiData(trangThaiHD);
-                 
-            })
-            .catch(error => console.error('Error adding item:', error));
+    const loadTrangThaiHoaDon =  () => {
+        ThongKeAPI.trangThaiHoaDonThang()
+        .then((res) => {
+            const totalHoaDon = res.data.reduce((total, item) => total + item.soLuong, 0);
+            const trangThaiHD=res.data.flatMap(item => {
+                return [
+                  { type: item.trangThai==0?"Chờ xác nhận":item.trangThai==1?"Xác nhận":item.trangThai==2?"Chờ vận chuyển":item.trangThai==3?"Đang vận chuyển":
+                  item.trangThai==4?"Đã thanh toán":"Thành công", value: (item.soLuong/totalHoaDon)*100 },
+                ];
+              });
+              
+              setTrangThaiData(trangThaiHD);
+        })
     };
-    const loadTrangThaiHoaDonNgay = async () => {
-        await axios.get('http://localhost:8080/thong-ke/trang-thai-hoa-don-ngay')
-            .then(response => {
-                // Update the list of items
-                const totalHoaDon = response.data.reduce((total, item) => total + item.soLuong, 0);
+    const loadTrangThaiHoaDonNgay =  () => {
+        ThongKeAPI.trangThaiHoaDonNgay()
+        .then((res) => {
+            const totalHoaDon = res.data.reduce((total, item) => total + item.soLuong, 0);
 
-                const trangThaiHD=response.data.flatMap(item => {
-                    return [
-                      { type: item.trangThai==0?"Chờ xác nhận":item.trangThai==1?"Xác nhận":item.trangThai==2?"Chờ vận chuyển":item.trangThai==3?"Đang vận chuyển":
-                      item.trangThai==4?"Đã thanh toán":"Thành công", value: (item.soLuong/totalHoaDon)*100 },
-                    ];
-                  });
-                  
-                  setTrangThaiData(trangThaiHD);
-                 
-            })
-            .catch(error => console.error('Error adding item:', error));
+            const trangThaiHD=res.data.flatMap(item => {
+                return [
+                  { type: item.trangThai==0?"Chờ xác nhận":item.trangThai==1?"Xác nhận":item.trangThai==2?"Chờ vận chuyển":item.trangThai==3?"Đang vận chuyển":
+                  item.trangThai==4?"Đã thanh toán":"Thành công", value: (item.soLuong/totalHoaDon)*100 },
+                ];
+              });
+              
+              setTrangThaiData(trangThaiHD);
+        })
     };
-    const loadTrangThaiHoaDonTuan = async () => {
-        await axios.get('http://localhost:8080/thong-ke/trang-thai-hoa-don-tuan')
-            .then(response => {
-                // Update the list of items
-                const totalHoaDon = response.data.reduce((total, item) => total + item.soLuong, 0);
-
-                const trangThaiHD=response.data.flatMap(item => {
-                    return [
-                      { type: item.trangThai==0?"Chờ xác nhận":item.trangThai==1?"Xác nhận":item.trangThai==2?"Chờ vận chuyển":item.trangThai==3?"Đang vận chuyển":
-                      item.trangThai==4?"Đã thanh toán":"Thành công", value: (item.soLuong/totalHoaDon)*100 },
-                    ];
-                  });
-                  
-                  setTrangThaiData(trangThaiHD);
-                 
-            })
-            .catch(error => console.error('Error adding item:', error));
+    const loadTrangThaiHoaDonTuan =  () => {
+        ThongKeAPI.trangThaiHoaDonTuan()
+        .then((res) => {
+            const totalHoaDon = res.data.reduce((total, item) => total + item.soLuong, 0);
+            const trangThaiHD=res.data.flatMap(item => {
+                return [
+                  { type: item.trangThai==0?"Chờ xác nhận":item.trangThai==1?"Xác nhận":item.trangThai==2?"Chờ vận chuyển":item.trangThai==3?"Đang vận chuyển":
+                  item.trangThai==4?"Đã thanh toán":"Thành công", value: (item.soLuong/totalHoaDon)*100 },
+                ];
+              });
+              
+              setTrangThaiData(trangThaiHD);
+        })
     };
-    const loadTrangThaiHoaDonNam = async () => {
-        await axios.get('http://localhost:8080/thong-ke/trang-thai-hoa-don-nam')
-            .then(response => {
-                // Update the list of items
-                const totalHoaDon = response.data.reduce((total, item) => total + item.soLuong, 0);
-
-                const trangThaiHD=response.data.flatMap(item => {
-                    return [
-                      { type: item.trangThai==0?"Chờ xác nhận":item.trangThai==1?"Xác nhận":item.trangThai==2?"Chờ vận chuyển":item.trangThai==3?"Đang vận chuyển":
-                      item.trangThai==4?"Đã thanh toán":"Thành công", value: (item.soLuong/totalHoaDon)*100 },
-                    ];
-                  });
-                  
-                  setTrangThaiData(trangThaiHD);
-                 
-            })
-            .catch(error => console.error('Error adding item:', error));
+    const loadTrangThaiHoaDonNam =  () => {
+        ThongKeAPI.trangThaiHoaDonNam()
+        .then((res) => {
+            const totalHoaDon = res.data.reduce((total, item) => total + item.soLuong, 0);
+            const trangThaiHD=res.data.flatMap(item => {
+                return [
+                  { type: item.trangThai==0?"Chờ xác nhận":item.trangThai==1?"Xác nhận":item.trangThai==2?"Chờ vận chuyển":item.trangThai==3?"Đang vận chuyển":
+                  item.trangThai==4?"Đã thanh toán":"Thành công", value: (item.soLuong/totalHoaDon)*100 },
+                ];
+              });
+              
+              setTrangThaiData(trangThaiHD);
+        })
     };
     ///sản phẩm bán chạy
     const [SPBanChay, setSPBanChay] = useState([]);
-    const loadSPBanChay = async () => {
-
-        await axios.get('http://localhost:8080/thong-ke/san-pham-ban-chay-thang')
-            .then(response => {
-                // Update the list of items
-                
-                  
-                  setSPBanChay(response.data)
-            })
-            .catch(error => console.error('Error adding item:', error));
+    const loadSPBanChay =  () => {
+        ThongKeAPI.sanPhamBanChayThang()
+        .then((res) => {
+            setSPBanChay(res.data)
+        })
     };
-    const loadSPBanChayNgay = async () => {
-
-        await axios.get('http://localhost:8080/thong-ke/san-pham-ban-chay-ngay')
-            .then(response => {
-                // Update the list of items
-                
-                  
-                  setSPBanChay(response.data)
-            })
-            .catch(error => console.error('Error adding item:', error));
+    const loadSPBanChayNgay =  () => {
+        ThongKeAPI.sanPhamBanChayNgay()
+        .then((res) => {
+            setSPBanChay(res.data)
+        })
     };
-    const loadSPBanChayNam = async () => {
-
-        await axios.get('http://localhost:8080/thong-ke/san-pham-ban-chay-nam')
-            .then(response => {
-                // Update the list of items
-                
-                  
-                  setSPBanChay(response.data)
-            })
-            .catch(error => console.error('Error adding item:', error));
+    const loadSPBanChayNam =  () => {
+        ThongKeAPI.sanPhamBanChayNam()
+        .then((res) => {
+            setSPBanChay(res.data)
+        })
     };
-    const loadSPBanChayTuan = async () => {
-
-        await axios.get('http://localhost:8080/thong-ke/san-pham-ban-chay-tuan')
-            .then(response => {
-                // Update the list of items
-               
-                  
-                  setSPBanChay(response.data)
-            })
-            .catch(error => console.error('Error adding item:', error));
+    const loadSPBanChayTuan =  () => {
+        ThongKeAPI.sanPhamBanChayTuan()
+        .then((res) => {
+            setSPBanChay(res.data)
+        })
     };
     const [SPSapHet, setSPSapHet] = useState([]);
     const loadSPSapHet = async () => {
-
-        await axios.get('http://localhost:8080/thong-ke/san-pham-sap-het')
-            .then(response => {
-                // Update the list of items
-                
-                  
-                  setSPSapHet(response.data)
-            })
-            .catch(error => console.error('Error adding item:', error));
+        ThongKeAPI.sanPhamSapHet()
+        .then((res) => {
+            setSPSapHet(res.data)
+        })
     };
-
     const contentStyle = {
         height: '160px',
         color: 'black',
@@ -508,28 +424,18 @@ export default function ThongKe() {
         };
         //sản phẩm bán theo ngày
         const [sanPhamTheoNgay, setSanPhamTheoNgay] = useState(0);
-        const loadSanPhamTheoNgay = async () => {
-
-            await axios.get('http://localhost:8080/thong-ke/san-pham-ban-ngay')
-                .then(response => {
-                    // Update the list of items
-                   setSanPhamTheoNgay(response.data);
-                   
-    
-                })
-                .catch(error => console.error('Error adding item:', error));
+        const loadSanPhamTheoNgay =  () => {
+            ThongKeAPI.loadSanPhamNgay()
+            .then((res) => {
+                setSanPhamTheoNgay(res.data)
+            })
         };
         const [sanPhamTheoNgayTruoc, setSanPhamTheoNgayTruoc] = useState(0);
-        const loadSanPhamTheoNgayTruoc = async () => {
-
-            await axios.get('http://localhost:8080/thong-ke/san-pham-ban-ngay-truoc')
-                .then(response => {
-                    // Update the list of items
-                   setSanPhamTheoNgayTruoc(response.data);
-                  
-    
-                })
-                .catch(error => console.error('Error adding item:', error));
+        const loadSanPhamTheoNgayTruoc =  () => {
+            ThongKeAPI.loadSanPhamNgayTruoc()
+            .then((res) => {
+                setSanPhamTheoNgayTruoc(res.data)
+            })
         };
 
 
