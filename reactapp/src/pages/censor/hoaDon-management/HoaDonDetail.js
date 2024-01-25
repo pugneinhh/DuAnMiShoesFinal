@@ -465,10 +465,9 @@ export default function HoaDonDetail() {
             }
           </Timeline>
         </div>
-<<<<<<< HEAD
-=======
+
           </div>
->>>>>>> developer
+
         {/* xác nhận đơn hàng */}
         <div className='col-md-2 '>
              < >
