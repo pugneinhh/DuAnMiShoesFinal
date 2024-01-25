@@ -1,15 +1,12 @@
 
 import React from "react";
-import { Breadcrumb, Layout, Menu, theme, Image } from "antd";
+import { Breadcrumb, Layout, theme, Image, Badge, Avatar } from "antd";
 import { Link } from "react-router-dom";
-import { ProSidebar, MenuItem } from "react-pro-sidebar";
-import { DownOutlined, SmileOutlined } from "@ant-design/icons";
+import { DownOutlined, SmileOutlined, UserOutlined } from "@ant-design/icons";
 import { Dropdown, Space, Input } from "antd";
-
+import { TbShoppingCartHeart } from "react-icons/tb";
 import logoShop from "../../assets/images/logoNgang.png";
 import "./client.css";
-
-const { Search } = Input;
 const { Header, Content, Footer } = Layout;
 export const DashboardClient = ({ children }) => {
 
@@ -81,9 +78,9 @@ export const DashboardClient = ({ children }) => {
       >
         <div className="demo-logo" />
 
-        <div className="menu row ">
+        <div className="menu row d-flex  ">
           {/* logo SHOP */}
-          <Image className="col" width={200} src={logoShop} />
+          <Image className="col" width={170} src={logoShop} />
           <Dropdown menu={{ items }} className="col">
             <a onClick={(e) => e.preventDefault()}>
               <Space>
@@ -121,17 +118,15 @@ export const DashboardClient = ({ children }) => {
             </a>
           </Dropdown>
 
-          {/* <div className="col-md-4">
-            <Search
-              placeholder="input search text"
-              allowClear
-              enterButton="Search"
-              size="large"
-              // onSearch={onSearch}
-            />
-          </div> */}
+          <Link className="col ms-10  justify-content-end">
+            <Badge count={10}>
+              <TbShoppingCartHeart size={25} />
+            </Badge>
+          </Link>
+          <Link className="col ">
+            <Avatar size={40} icon={<UserOutlined />} />
+          </Link>
         </div>
-
       </Header>
       <Content
         style={{
@@ -166,7 +161,6 @@ export const DashboardClient = ({ children }) => {
         Ant Design ©{new Date().getFullYear()} Created by Ant UED
       </Footer>
     </Layout>
-
   );
 
 
