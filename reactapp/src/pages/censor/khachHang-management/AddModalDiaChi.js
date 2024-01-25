@@ -1,21 +1,19 @@
 
 import {  Form, Input, Modal, Select } from "antd";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { AddressApi } from "../api/address/AddressApi";
 import { ToastContainer, toast } from "react-toastify";
-
+import { KhachHangAPI } from "../api/user/khachHang.api";
 const AddModalDiaChi = (props) => {
     const [form] = Form.useForm();
     const [listProvince, setListProvince] = useState([]);
     const [listDistricts, setListDistricts] = useState([]);
     const [listWard, setListWard] = useState([]);
-    const { openModalAddDiaChi, setOpenModalAddDiaChi,idKH,setIdKH,loadDiaChi } = props;
+    const { openModalAddDiaChi, setOpenModalAddDiaChi,idKH,loadDiaChi } = props;
     const handleClose = () => {
         setOpenModalAddDiaChi(false);
     };
-  
-
+    //add dia chi khach hang
     const handleSubmit = (value) => {
         console.log(value);
         const data={
@@ -24,27 +22,26 @@ const AddModalDiaChi = (props) => {
             idHuyen: district.key == null ? district.DistrictID : district.key,
             idXa: ward.key == null ? ward.WardCode : ward.key,
         };
-        axios
-        .post("http://localhost:8080/admin/khach-hang/add-dia-chi", data)
-        .then((response) => {
-            console.log(response.data);
-            // navigate('/voucher');
-            toast("✔️ Thêm thành công!", {
-              position: "top-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-            });
-            form.resetFields();
+        KhachHangAPI.addDCKH(data)
+        .then((result) => {
+                          toast("✔️ Thêm địa chỉ thành công!", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+                form.resetFields();
             form.setFieldsValue({idNguoiDung:idKH});
             loadDiaChi();
             handleClose();
-            
         })
+        .catch((error) => {
+          console.log(error);
+        });
     };
     const loadDataProvince = () => {
         AddressApi.fetchAllProvince().then((res) => {

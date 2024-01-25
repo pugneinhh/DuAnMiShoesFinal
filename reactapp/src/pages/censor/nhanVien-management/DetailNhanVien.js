@@ -1,4 +1,4 @@
-import { Button, Card, Col, Form, Input, Row, Select, message } from "antd";
+import {  Card, Col, Form, Input, Row, Select } from "antd";
 // import "./CustumerManagement.model.css";
 import { useEffect, useState } from "react";
 import { AddressApi } from "../api/address/AddressApi";
@@ -101,7 +101,7 @@ export default function DetailNhanVien() {
 
 
                 <h3 className="text-first  text-center fw-bold">
-                    <FaMoneyBills /> Detail khách hàng
+                    <FaMoneyBills /> Detail nhan
                 </h3>
 
 

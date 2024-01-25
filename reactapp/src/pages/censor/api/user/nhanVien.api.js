@@ -1,10 +1,12 @@
-import { requestAdmin } from "../request";
+import {
+    requestAdmin
+} from "../request";
 
 export class NhanVienAPI {
-    static fetchAll = () => {
+    static getAll = () => {
         return requestAdmin({
             method: "GET",
-            url: `/admin/employee`,
+            url: `admin/nhan-vien`,
             //   params: filter,
         });
     };
@@ -39,4 +41,11 @@ export class NhanVienAPI {
             url: `/admin/nhan-vien/${id}`,
         });
     };
+   static timKiem = (data) => {
+        return requestAdmin({
+            method: "POST",
+            url: `/admin/nhan-vien/search`,
+            data: data,
+        });
+    }; 
 }

@@ -1,22 +1,10 @@
-import React, { useState, useEffect, Text, View } from "react";
+import React, { useState, useEffect} from "react";
 import axios from "axios";
-import {
-  Space,
-  Table,
-  Tag,
-  Form,
-  Input,
-  InputNumber,
-  DatePicker,
-  Divider,
-  Modal,
-  Breadcrumb ,
-} from "antd";
+import {Space,Table,Tag,Form,Input,InputNumber,DatePicker,Divider,Modal,Breadcrumb } from "antd";
 import "./KhuyenMai.scss";
 import { BiSolidDiscount } from "react-icons/bi";
 import {
   HomeOutlined,
-  UserOutlined,
   EyeOutlined,
   PlusCircleOutlined,
   UnorderedListOutlined,
@@ -29,16 +17,11 @@ import { LuBadgePercent } from "react-icons/lu";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import { dayjs } from "dayjs";
-
+import { PromotionAPI} from "../../pages/censor/api/promotion/promotion.api";
 
 const KhuyenMai = () => {
   const currentTime = moment(); // thời gian hiện tại
-  const [current, setCurrent] = React.useState(1);
 
-  const pageSizeRef = React.useRef(10);
-
- 
   const onChange = (value) => {
     console.log("changed", value);
   };
@@ -51,6 +34,7 @@ const KhuyenMai = () => {
   const [form] = Form.useForm();
 
   const [componentSize, setComponentSize] = useState("default");
+
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
   };
@@ -77,7 +61,8 @@ const KhuyenMai = () => {
     setKhuyenMais(updatedData);
   };
   const loadKhuyenMai = async () => {
-    const result = await axios.get("http://localhost:8080/khuyen-mai/hien-thi").then(
+    
+    const result = await PromotionAPI.getAll().then(
       response => {setKhuyenMais(response.data);
       console.log(response.data);})
       .catch(error => 
@@ -546,8 +531,6 @@ const timKiemKhuyenMai=(dataSearch)=>{
           </div>
 
           <div className="text-end">
-            {/* <a name="" id="" class="btn btn-warning bg-gradient fw-bold nut-them" role="button">                
-            </a> */}
             <br />
             <Link
               to="/admin-them-khuyen-mai"

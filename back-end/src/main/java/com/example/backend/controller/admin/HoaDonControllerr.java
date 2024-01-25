@@ -35,11 +35,11 @@ public class HoaDonControllerr {
 
     @GetMapping()
     public ResponseEntity<?> getALL(){
-        return new ResponseEntity<>(hoaDonService.getALL(), HttpStatus.FOUND);
+        return  ResponseEntity.ok(hoaDonService.getALL());
     }
     @GetMapping("/{tt}")
     public ResponseEntity<?> getALLTT(@PathVariable("tt") int tt){
-        return new ResponseEntity<>(hoaDonService.getALLTT(tt),HttpStatus.FOUND);
+        return  ResponseEntity.ok(hoaDonService.getALLTT(tt));
     }
     @GetMapping("/detail-hoa-don/{idHD}")
     public ResponseEntity<?> detailHD(@PathVariable("idHD") String id){

@@ -19,15 +19,12 @@ import {BsPencilSquare} from 'react-icons/bs';
 import axios from 'axios';
 import moment from 'moment';
 import {PlusCircleOutlined} from '@ant-design/icons';
-import ModelAddVoucher from "./ModelUpdateVoucher";
-import ModalDetail from "./ModalDetailVoucher";
 import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { render } from '@testing-library/react';
 import { FaTag } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import { da } from 'date-fns/locale';
-
+import { VoucherAPI } from '../api/voucher/voucher.api';
 
 const Voucher = ()=>{
     // const [dataSearch,setDataSearch]=useState({
@@ -49,7 +46,7 @@ const Voucher = ()=>{
     //call api tìm kiếm
     const timKiemVoucher=(dataSearch)=>{
       console.log("voucher tim",dataSearch);
-      axios.post('http://localhost:8080/voucher/search-voucher',dataSearch)
+      VoucherAPI.search(dataSearch)
       .then(response => {
             setVouchers(response.data);
       })
@@ -57,7 +54,7 @@ const Voucher = ()=>{
     }
     const loadVoucher=async()=>{
        
-      await axios.get('http://localhost:8080/voucher/hien-thi')
+      VoucherAPI.getAll()
       .then(response => {
         // Update the list of items
         setVouchers(response.data);
@@ -76,10 +73,10 @@ const Voucher = ()=>{
         if (!dataSearch.tenVoucher  && !dataSearch.trangThaiVoucher && !dataSearch.ngayKTVoucher && !dataSearch.ngayBDVoucher && !dataSearch.loaiVoucher){
         voucher.forEach( x => {
          (currentTime > new Date(x.ngayBatDau) && currentTime < new Date(x.ngayKetThuc)) ?
-          axios.put(`http://localhost:8080/voucher/updateTTHD/${x.id}`, x)
+          VoucherAPI.updateTTHD(x.id,x)
          : ( currentTime > new Date(x.ngayKetThuc))
           ?
-          axios.put(`http://localhost:8080/voucher/updateTTNgung/${x.id}`, x)
+          VoucherAPI.updateTTNgung(x.id,x)
           // : (currentTime < new Date(x.ngayBatDau)) ?
           // axios.put(`http://localhost:8080/voucher/updateTTSap/${x.id}`, x)
           : console.log('Không có dữ liệu update');      
@@ -165,13 +162,13 @@ const columns = [
             render: (trangThai) => (
                 <>
                     {
-                        (trangThai == 'SAP_DIEN_RA') ?
+                        (trangThai === 'SAP_DIEN_RA') ?
                             (
                                 <Tag color="yellow">
                                   Sắp hoạt động
                                 </Tag>
 
-                            )  : (trangThai=='DANG_HOAT_DONG')?(
+                            )  : (trangThai==='DANG_HOAT_DONG')?(
                             <Tag color="green">
                             Hoạt động
                             </Tag>):(
@@ -207,7 +204,7 @@ const columns = [
         
         <a>
         <Link
-              to={`/detail-voucher-management/${record.id}`}
+              to={`/admin-detail-voucher/${record.id}`}
               className="btn"
             >
               <EyeOutlined
@@ -222,7 +219,7 @@ const columns = [
         </a>
         <a>
             <Link
-              to={`update-voucher-management/${record.id}`}
+              to={`/admin-update-voucher/${record.id}`}
               className="btn"
             >
               <BsPencilSquare
@@ -298,19 +295,7 @@ const columns = [
     //mở form detail
     
     
-    // const getVoucherByID = async(id) => {
-    //   await axios.get(`http://localhost:8080/voucher/detail/${id}`)
-    //   .then(response => {
-    //     // Update the list of items
-    //     setMyVoucher(response.data);
-    // })
-    // .catch(error => console.error('Error adding item:', error));
-  
-    
-    // };
-    // const [id,setID]=useState('');
-    
-    
+
     ///validate ngày 
     const validateDateKT = (_, value) => {
       const { getFieldValue } = form;
@@ -354,7 +339,7 @@ const columns = [
             <div className=' bg-light m-2 p-3 pt-2' style={{border: '1px solid #ddd', // Border color
     boxShadow: '0 3px 8px rgba(0, 0, 0, 0.1)', // Box shadow
     borderRadius: '8px'}}>
-            <h5><FilterFilled size={30}/> Bộ lọc</h5>
+            <h5 className='text-start'><FilterFilled size={30}/> Bộ lọc</h5>
             <hr/>
             <Form className="row col-md-12"
               labelCol={{
@@ -408,7 +393,7 @@ const columns = [
               </div>
            
               <Form.Item className='text-end '>
-                      <Button type="primary" htmlType='reset'>Làm mới</Button>
+                      <Button type="primary" htmlType='reset' onClick={loadVoucher}>Làm mới</Button>
                   </Form.Item>
           </Form>
       
@@ -419,7 +404,7 @@ const columns = [
      {/* view add voucher */}
      <div className=' text-end mt-3'>
              
-     <Link to='/themVoucher' className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill"> <PlusCircleOutlined /> Thêm </Link>
+     <Link to='/admin-add-voucher' className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill"> <PlusCircleOutlined /> Thêm </Link>
         
             
                
@@ -431,7 +416,7 @@ const columns = [
       <div style={{border: '1px solid #ddd', // Border color
     boxShadow: '0 3px 6px rgba(0, 0, 0, 0.1)', // Box shadow
     borderRadius: '8px',padding:'10px'}}>
-         <div className="text-first fw-bold">
+         <div className="text-start fw-bold">
             <p><UnorderedListOutlined size={30}/> Danh sách phiếu giảm giá </p>
           </div>
      <>

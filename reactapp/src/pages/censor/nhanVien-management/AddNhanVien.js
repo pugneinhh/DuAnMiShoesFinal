@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Card, Col, DatePicker, Divider, Form, Input, message, Modal, Radio, Row, Select, Upload } from 'antd';
-import { FaMoneyBills, FaQrcode } from 'react-icons/fa6';
-import { QrReader } from 'react-qr-reader';
-import { BsQrCodeScan } from 'react-icons/bs';
+import { Button, Card, Col, Divider, Form, Input, message, Row, Select } from 'antd';
+import { FaMoneyBills } from 'react-icons/fa6';
 import UpLoadImage from './UploadAnh';
 import { AddressApi } from '../api/address/AddressApi';
 import { Link, useNavigate } from 'react-router-dom';

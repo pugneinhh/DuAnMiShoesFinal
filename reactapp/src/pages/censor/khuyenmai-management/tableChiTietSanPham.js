@@ -5,26 +5,29 @@ import {
   Tag,
 } from "antd";
 import "./KhuyenMai.scss";
-
+import {PromotionAPI} from "../../censor/api/promotion/promotion.api";
 
 const TableChiTietSanPham = ({selectedIDSPs,onSelectedCTSanPham,suaIDCTSP}) => {
   const [ctsp, setCTSP] = useState([]);
   const [idSanPham, setIDSanPham] = useState([]);
- // const [selectedRowCTSP, setSelectedRowCTSP] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   useEffect(() => {
     const getCTSPByIDSP = async () => {
       try {
         if (selectedIDSPs.length === 1) {
-          const response = await axios.get(`http://localhost:8080/ctsp/showCTSP/${selectedIDSPs[0]}`)
+          const response = await PromotionAPI.loadCTSPBySP(selectedIDSPs[0]);
           setCTSP(response.data);
           setIDSanPham(selectedIDSPs);
         }
         else if (selectedIDSPs.length > 1) {
-          const filterArrray = selectedIDSPs.filter((element) => !idSanPham.includes(element));
+          const filterArrray = selectedIDSPs.filter((value, index, self) => {
+            return self.indexOf(value) === index;
+          });
+          console.log("fillterArray",filterArrray);
           if (filterArrray.length !== 0 ) {
-           const responses = await Promise.all(filterArrray.map(id => axios.get(`http://localhost:8080/ctsp/showCTSP/${id}`)));
+           const responses = await Promise.all(filterArrray.map(id => 
+            PromotionAPI.loadCTSPBySP(id)));
             const responseData = responses.map((response) => (
               setCTSP(prevData  => response.data.includes(prevData) ? console.log("trùng:" ,prevData) : 
                 [...prevData ,...response.data])));
@@ -32,7 +35,8 @@ const TableChiTietSanPham = ({selectedIDSPs,onSelectedCTSanPham,suaIDCTSP}) => {
         
           } else {
             console.log("Xóa");
-            const responses = await Promise.all(selectedIDSPs.map(id => axios.get(`http://localhost:8080/ctsp/showCTSP/${id}`)));
+            const responses = await Promise.all(selectedIDSPs.map(id => 
+              PromotionAPI.loadCTSPBySP(id)));
             for (let i = 0 ; i < responses.length ; i++){
               if (i === 0) setCTSP(responses[0].data);
               else setCTSP((prevData) => [...prevData,...responses[i].data]);
@@ -55,8 +59,8 @@ const TableChiTietSanPham = ({selectedIDSPs,onSelectedCTSanPham,suaIDCTSP}) => {
 
   useEffect(() => {
     setSelectedRowKeys(suaIDCTSP);
-    console.log("CTSP from tblSP: " , suaIDCTSP);
-    onSelectedCTSanPham(suaIDCTSP);
+   console.log("CTSP from tblSP: " , suaIDCTSP);
+   onSelectedCTSanPham(suaIDCTSP);
   },[suaIDCTSP]);
   const columnsChiTietSanPham = [
     {

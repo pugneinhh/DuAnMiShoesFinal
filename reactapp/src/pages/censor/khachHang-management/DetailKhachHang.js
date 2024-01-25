@@ -1,4 +1,4 @@
-import { Button, Card, Col, Form, Input, Row, Select, message } from "antd";
+import {  Card, Col, Form, Input, Row, Select } from "antd";
 // import "./CustumerManagement.model.css";
 import { useEffect, useState } from "react";
 import { AddressApi } from "../api/address/AddressApi";
@@ -107,7 +107,7 @@ export default function DetailKhachHang() {
 
             </h1>
             {getOneEmployee !== null && (
-                <Form form={form} initialValues={getOneEmployee}>
+                <Form form={form} initialValues={getOneEmployee} layout="vertical">
                     <Row gutter={16} style={{ marginTop: "30px" }}>
                         <Col span={7}>
                             <Card style={{ height: "100%" }}>

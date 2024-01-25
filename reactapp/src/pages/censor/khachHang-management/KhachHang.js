@@ -1,16 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import {
-  Button,
-  Form,
-  Input,
-  Divider,
-  Select,
-  Space,
-  Table,
-  Tag,
-  Image,
-} from "antd";
+import {Button,Form,Input,Divider,Select,Space,Table,Tag,Image,} from "antd";
 import { SiMicrosoftexcel } from "react-icons/si";
 import { FilterFilled } from "@ant-design/icons";
 import { Link } from "react-router-dom";
@@ -20,12 +10,9 @@ import { ToastContainer, toast } from "react-toastify";
 import { BiSolidUserBadge } from "react-icons/bi";
 import { GrMapLocation } from "react-icons/gr";
 import ModalDiaChi from "./ModalDiaChi";
-
 import * as XLSX from 'xlsx';
+import { KhachHangAPI } from "../api/user/khachHang.api";
 export default function KhachHang() {
-  
-  const [khachHang, setKhachHang] = useState([]);
-
   const [componentSize, setComponentSize] = useState("default");
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
@@ -35,16 +22,17 @@ export default function KhachHang() {
  
   
   const [form] = Form.useForm();
-
+//load khach hang
   useEffect(() => {
     loadKhachHang();
   }, []);
-
-  const loadKhachHang = async () => {
-    const result = await axios.get("http://localhost:8080/admin/khach-hang", {
-   
-    });
-      setKhachHang(result.data);
+  const [khachHang, setKhachHang] = useState([]);
+  const loadKhachHang =  () => {
+      KhachHangAPI.getAll()
+      .then((res)=>{
+        setKhachHang(res.data);
+            console.log("22",res.data);
+      })
   };
 
   //Tìm khách hàng
@@ -53,14 +41,12 @@ export default function KhachHang() {
     timKiemKH(allValues);
   }
   const timKiemKH = (dataSearch) => {
-    axios.post(`http://localhost:8080/admin/khach-hang/search`, dataSearch)
-      .then(response => {
-        console.log(response.data)
-        setKhachHang(response.data);
-      })
-      .catch(error => console.error('Error adding item:', error));
+    KhachHangAPI.timKiem(dataSearch)
+    .then((res)=>{
+      setKhachHang(res.data);
+          console.log("22",res.data);
+    })
   }
-
   const columns = [
     {
       title: "#",
@@ -161,8 +147,8 @@ export default function KhachHang() {
       dataIndex: 'idND',
       render: (record) => (
         <Space size="middle">
-          <Link to={`/detail-khach-hang/${record}`} className='btn btn-success'><BsFillEyeFill /></Link>
-          <Link to={`/update-khach-hang/${record}`} className='btn btn-danger'  ><BsPencilSquare /></Link>
+          <Link to={`/admin-detail-khach-hang/${record}`} className='btn btn-success'><BsFillEyeFill /></Link>
+          <Link to={`/admin-update-khach-hang/${record}`} className='btn btn-danger'  ><BsPencilSquare /></Link>
           <Button style={{ width: 41, height: 37.6, backgroundColor: "#35afb1", color: "white" }} type="primary" onClick={()=>detailDiaChi(record)}>
             <GrMapLocation />
           </Button>
@@ -281,7 +267,7 @@ export default function KhachHang() {
             borderRadius: "8px",
           }}
         >
-          <h5>
+          <h5 className="text-start">
             <FilterFilled size={30} /> Bộ lọc
           </h5>
           <hr />
@@ -334,7 +320,7 @@ export default function KhachHang() {
         {/* view add nhân viên */}
         <div className=" text-end mt-3">
           <Link
-            to="/themKhachHang"
+            to="/admin-them-khach-hang"
             className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill"
           >
             {" "}
@@ -342,7 +328,7 @@ export default function KhachHang() {
           </Link>
 
     
-          <Button onClick={exportToExcel} className="btn btn-primary bg-gradient fw-bold nut-them rounded-pill"><SiMicrosoftexcel /></Button>
+          <Link onClick={exportToExcel} className="btn btn-primary bg-gradient fw-bold nut-them rounded-pill"><SiMicrosoftexcel />Export Excel</Link>
         </div>
       </div>
       <div className="container-fluid mt-4">

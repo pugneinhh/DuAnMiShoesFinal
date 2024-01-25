@@ -146,7 +146,7 @@ export default function UpdateKhachHang() {
 
             </h1>
             {getOneEmployee !== null && (
-                <Form form={form} initialValues={getOneEmployee}>
+                <Form form={form} initialValues={getOneEmployee} layout="vertical">
                     <Row gutter={16} style={{ marginTop: "30px" }}>
                         <Col span={7}>
                             <Card style={{ height: "100%" }}>

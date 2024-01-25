@@ -21,9 +21,13 @@ import { BiSolidUserBadge } from "react-icons/bi";
 import { GrMapLocation } from "react-icons/gr";
 import ModalDiaChi from "./ModalDiaChi";
 
+<<<<<<< HEAD
 import * as XLSX from 'xlsx';
 export default function KhachHang() {
-  
+
+=======
+                    
+>>>>>>> de4f49785d29c91689cb2d1ddace4ba4cab67fa0
   const [khachHang, setKhachHang] = useState([]);
 
   const [componentSize, setComponentSize] = useState("default");
@@ -32,8 +36,8 @@ export default function KhachHang() {
   };
 
   const [openModalDiaChi, setOpenModalDiaChi] = useState(false);
- 
-  
+
+
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -42,9 +46,9 @@ export default function KhachHang() {
 
   const loadKhachHang = async () => {
     const result = await axios.get("http://localhost:8080/admin/khach-hang", {
-   
+
     });
-      setKhachHang(result.data);
+    setKhachHang(result.data);
   };
 
   //Tìm khách hàng
@@ -134,7 +138,7 @@ export default function KhachHang() {
           {trang_thai == 1 ? (
 
             <Tag color="red">
-               Không hoạt động
+              Không hoạt động
             </Tag>
           ) : (
             <Tag color="green">
@@ -163,19 +167,19 @@ export default function KhachHang() {
         <Space size="middle">
           <Link to={`/detail-khach-hang/${record}`} className='btn btn-success'><BsFillEyeFill /></Link>
           <Link to={`/update-khach-hang/${record}`} className='btn btn-danger'  ><BsPencilSquare /></Link>
-          <Button style={{ width: 41, height: 37.6, backgroundColor: "#35afb1", color: "white" }} type="primary" onClick={()=>detailDiaChi(record)}>
+          <Button style={{ width: 41, height: 37.6, backgroundColor: "#35afb1", color: "white" }} type="primary" onClick={() => detailDiaChi(record)}>
             <GrMapLocation />
           </Button>
-       
+
 
         </Space>
       ),
       center: "true",
     },
   ];
-  const [idKH,setIdKH]=useState("");
+  const [idKH, setIdKH] = useState("");
   const detailDiaChi = (row) => {
-    console.log("click",row)
+    console.log("click", row)
     setIdKH(row);
     setOpenModalDiaChi(true);
   }
@@ -223,7 +227,9 @@ export default function KhachHang() {
   const exportToExcel = () => {
     let result = [];
     if (khachHang && khachHang.length > 0) {
+
       // result.push(["Danh sách khách hàng", "", "", "", "", "", "", ""]); 
+
       result.push(["STT", "Ảnh", "Mã khách hàng", "Tên KH", "Chứng minh thư", "SDT", "Ngày sinh", "Trạng thái"]);
       khachHang.map((item, index) => {
         let arr = [];
@@ -240,15 +246,27 @@ export default function KhachHang() {
     }
     console.log(result);
     const wb = XLSX.utils.book_new("Danh sách khách hàng");
+<<<<<<< HEAD
+=======
+
+    const ws = XLSX.utils.json_to_sheet(khachHang);
+    // ws.A2.s = { fill: { bgColor: { indexed: 64 }, fgColor: { rgb: '#1a8ba8' } } }; // Customize background color
+    // ws["!merges"] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 7 } }];
+
+>>>>>>> de4f49785d29c91689cb2d1ddace4ba4cab67fa0
     const ws = XLSX.utils.json_to_sheet(result);
     ws['!cols'] = [{ wpx: 40 }, { wpx: 100 }, { wpx: 120 }, { wpx: 150 }, { wpx: 150 }, { wpx: 120 }, { wpx: 120 }, { wpx: 150 }];
-    ws['!rows'] = [{ hpx: 40 , fs:30 ,}];
-   
+    ws['!rows'] = [{ hpx: 40, fs: 30, }];
+
     ws['A1'].s = { font: { size: 32, color: { rgb: '#FF0000' } }, alignment: { horizontal: 'center', vertical: 'center' } };
-      ws['A1'].v='Danh sách khách hàng';
-      // ws['A2'].v='';
+    ws['A1'].v = 'Danh sách khách hàng';
+    // ws['A2'].v='';
     ws["!merges"] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 7 } }];
+<<<<<<< HEAD
+=======
   
+>>>>>>> de4f49785d29c91689cb2d1ddace4ba4cab67fa0
+
     XLSX.utils.book_append_sheet(wb, ws, 'DanhSachKhachHang');
     XLSX.writeFile(wb, 'DanhSachKhachHang.xlsx');
     toast("✔️ Xuất excel thành công!", {
@@ -261,7 +279,7 @@ export default function KhachHang() {
       progress: undefined,
       theme: "light",
     });
-   
+
   };
   return (
     <div className="container">
@@ -341,8 +359,12 @@ export default function KhachHang() {
             <PlusCircleOutlined /> Thêm{" "}
           </Link>
 
-    
+
           <Button onClick={exportToExcel} className="btn btn-primary bg-gradient fw-bold nut-them rounded-pill"><SiMicrosoftexcel /></Button>
+<<<<<<< HEAD
+=======
+
+>>>>>>> de4f49785d29c91689cb2d1ddace4ba4cab67fa0
         </div>
       </div>
       <div className="container-fluid mt-4">
@@ -361,7 +383,7 @@ export default function KhachHang() {
             scroll={scroll}
           />
         </div>
-        {idKH&&<ModalDiaChi openModalDiaChi={openModalDiaChi}
+        {idKH && <ModalDiaChi openModalDiaChi={openModalDiaChi}
           setOpenModalDiaChi={setOpenModalDiaChi}
           idKH={idKH}
           setIdKH={setIdKH}
