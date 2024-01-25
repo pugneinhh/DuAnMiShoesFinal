@@ -150,7 +150,7 @@ export const DashboardClient = ({ children }) => {
             borderRadius: borderRadiusLG,
           }}
         >
-          Content
+          {children}
         </div>
       </Content>
       <Footer

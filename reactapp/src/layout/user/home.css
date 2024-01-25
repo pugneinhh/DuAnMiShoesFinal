@@ -1,0 +1,43 @@
+body{
+    font: normal 300 1.4rem/1.86 Poppins,sans-serif;
+}
+.intro-content{
+    position: absolute;
+    z-index: 2;
+    top:27%;
+    margin-left:50px;
+}
+.intro-subtitle{
+    font-size: 2 rem;
+    font-weight: 300;
+    letter-spacing: -.01rem;
+}
+.intro-title{
+    font-size: 3rem;
+    margin-left: -2px;
+    margin-bottom: 0.2rem;
+    font-weight: 700;
+    letter-spacing: -.03em;
+    line-height: 1.1;
+    
+}
+.intro-price{
+    font-weight: 300;
+    font-size: 1.2rem;
+    line-height: 1.2;
+    letter-spacing: -.03em;
+    margin-bottom: 1.3rem;
+}
+.intro-content .btn{
+    color: #445f84;
+    background-color: #fff;
+    border-color: #fff;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border-radius: 3rem;
+}
+.intro-content .btn:hover{
+background-color: #445f84;
+color: #fff;
+border-color: #445f84;
+}
