@@ -279,7 +279,7 @@ const ModalSanPham = (props) => {
       }
       
       height={300}
-      width={1500}
+      width={1200}
       zIndex={10000}
       style={{top:-200}}
     >

@@ -55,60 +55,74 @@ export default function HoaDon() {
         })
     };
     //load hoa don cho
-    const [hoaDonCho, setHoaDonsCho] = useState([])
+    const [hoaDonCho, setHoaDonsCho] = useState([]);
+    const [tongHDchoXN, settongHDchoXN] = useState([]);
     const loadHoaDonCho =  () => {
         HoaDonAPI.getAllbyTT(0)
         .then((res)=>{
             setHoaDonsCho(res.data);
               console.log("22",res.data);
+              const demHD = res.data.length;
+              settongHDchoXN(demHD);
         })
 
     };
  //load hoa xac nhan
     const [hoaDonXN, setHoaDonsXN] = useState([])
+    const [tongHDXacNhan, settongHDXacNhan] = useState([]);
     const loadHoaDonXN =  () => {
         // console.log(result.data);
         HoaDonAPI.getAllbyTT(1)
         .then((res)=>{
             setHoaDonsXN(res.data);
-              console.log("22",res.data);
+            const demHD = res.data.length;
+            settongHDXacNhan(demHD);
         })
     };
      //load hoa chờ vận chuyển
     const [hoaDonCVC, setHoaDonCVC] = useState([])
+    const [tongHDChoVanChuyen, settongHDChoVanChuyen] = useState([]);
     const loadHoaDonCVC =  () => {
         HoaDonAPI.getAllbyTT(2)
         .then((res)=>{
             setHoaDonCVC(res.data);
-              console.log("22",res.data);
+            const demHD = res.data.length;
+            settongHDChoVanChuyen(demHD);
         })
 
     };
     // load hóa đơn vận chuyển
     const [hoaDonVC, setHoaDonVC] = useState([])
+    const [tongHDVanChuyen, settongHDVanChuyen] = useState([]);
     const loadHoaDonVC =  () => {
         HoaDonAPI.getAllbyTT(3)
         .then((res)=>{
             setHoaDonVC(res.data);
-              console.log("22",res.data);
+            const demHD = res.data.length;
+            settongHDVanChuyen(demHD);
         })
     };
     //load hóa đơn thanh toán
-    const [hoaDonTT, setHoaDonTT] = useState([])
+    const [hoaDonTT, setHoaDonTT] = useState([]);
+    const [tongHDThanhToan, settongHDThanhToan] = useState([]);
     const loadHoaDonTT =  () => {
         HoaDonAPI.getAllbyTT(4)
         .then((res)=>{
             setHoaDonTT(res.data);
-              console.log("22",res.data);
+           
+              const demHD = res.data.length;
+              settongHDThanhToan(demHD);
         })
     };
     //load hóa đơn thành công
-    const [hoaDonHT, setHoaDonHT] = useState([])
+    const [hoaDonHT, setHoaDonHT] = useState([]);
+    const [tongHDThanhCong, settongHDThanhCong] = useState([]);
     const loadHoaDonHT =  () => {
         HoaDonAPI.getAllbyTT(5)
         .then((res)=>{
             setHoaDonHT(res.data);
-              console.log("22",res.data);
+            const demHD = res.data.length;
+            settongHDThanhCong(demHD);
         })
 
     };
@@ -291,7 +305,7 @@ export default function HoaDon() {
       {
         key: "1",
 
-        label: <Badge count={hoaDonLength}>Tất cả</Badge>,
+        label: <Badge count={hoaDonLength} offset={[8, 1]}>Tất cả</Badge>,
         children: (
           <Table
             dataSource={hoaDon}
@@ -308,7 +322,7 @@ export default function HoaDon() {
       },
       {
         key: "2",
-        label: <Badge count={5}>Chờ xác nhận</Badge>,
+        label: <Badge count={tongHDchoXN} offset={[8, 1]}>Chờ xác nhận</Badge>,
         children: (
           <Table
             dataSource={hoaDonCho}
@@ -325,7 +339,7 @@ export default function HoaDon() {
       },
       {
         key: "3",
-        label: <Badge count={5}>xác nhận</Badge>,
+        label: <Badge count={tongHDXacNhan} offset={[8, 1]}>xác nhận</Badge>,
         children: (
           <Table
             dataSource={hoaDonXN}
@@ -342,7 +356,7 @@ export default function HoaDon() {
       },
       {
         key: "4",
-        label: <Badge count={5}>Chờ vận chuyển</Badge>,
+        label: <Badge count={tongHDChoVanChuyen} offset={[8, 1]}>Chờ vận chuyển</Badge>,
         children: (
           <Table
             dataSource={hoaDonCVC}
@@ -359,7 +373,7 @@ export default function HoaDon() {
       },
       {
         key: "5",
-        label: <Badge count={5}>Vận chuyển</Badge>,
+        label: <Badge count={tongHDVanChuyen} offset={[8, 1]}>Vận chuyển</Badge>,
         children: (
           <Table
             dataSource={hoaDonVC}
@@ -376,7 +390,7 @@ export default function HoaDon() {
       },
       {
         key: "6",
-        label: <Badge count={5}>Thanh toán</Badge>,
+        label: <Badge count={tongHDThanhToan} offset={[8, 1]}>Thanh toán</Badge>,
         children: (
           <Table
             dataSource={hoaDonTT}
@@ -393,7 +407,7 @@ export default function HoaDon() {
       },
       {
         key: "7",
-        label: <Badge count={5}>Hoàn thành</Badge>,
+        label: <Badge count={tongHDThanhCong} offset={[8, 1]}>Hoàn thành</Badge>,
         children: (
           <Table
             dataSource={hoaDonHT}
@@ -410,7 +424,7 @@ export default function HoaDon() {
       },
       {
         key: "8",
-        label: <Badge count={5}>Hủy</Badge>,
+        label: <Badge count={0} offset={[8, 1]}>Hủy</Badge>,
         children: (
           <Table
             dataSource={hoaDonXN}

@@ -181,7 +181,7 @@ const ModalThanhToan = (props) => {
             onOk={handleThanhToan}
             onCancel={handleClose}
             height={300}
-            width={1500}
+            width={700}
             zIndex={10000}
             style={{top:-200}}
         >

@@ -41,3 +41,8 @@ background-color: #445f84;
 color: #fff;
 border-color: #445f84;
 }
+.menuButton:hover{
+    cursor: pointer;
+    color:  #d0aa73;
+    
+}
