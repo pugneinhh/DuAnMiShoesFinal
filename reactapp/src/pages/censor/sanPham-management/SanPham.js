@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import {Button,Divider,Slider,Form,Input,Select,Space,Table,Tag,} from 'antd';
+import { Button, Divider, Slider, Form, Input, Select, Space, Table, Tag, } from 'antd';
 import { Link } from "react-router-dom";
 import { PlusCircleOutlined, RetweetOutlined } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
 import axios from 'axios';
-import {  BsFillEyeFill } from 'react-icons/bs';
+import { BsFillEyeFill } from 'react-icons/bs';
 import { FaTshirt } from 'react-icons/fa';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -25,22 +25,20 @@ export default function SanPham() {
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
   };
-   //Tìm kiếm
-   const onChangeFilter = (changedValues, allValues) => {
+  //Tìm kiếm
+  const onChangeFilter = (changedValues, allValues) => {
     console.log("All values : ", allValues)
     timKiemCT(allValues);
   }
-  const timKiemCT =  (dataSearch) => {
-    // axios.post(`http://localhost:8080/admin/san-pham/tim-kiem`, dataSearch)
-    //   .then(response => {
-    //     setSanPhams(response.data);
-    //   })
-    //   .catch(error => console.error('Error adding item:', error));
-      SanPhamAPI.getAll(dataSearch)
-      .then((res)=>{
-        setSanPhams(res.data); 
-        console.log(res.data);
+  const timKiemCT = (dataSearch) => {
+    axios.post(`http://localhost:8080/admin/san-pham/tim-kiem`, dataSearch)
+      .then(response => {
+        setSanPhams(response.data);
+        console.log(response.data);
+        console.log(response.data.lenght);
       })
+      .catch(error => console.error('Error adding item:', error));
+      
   }
   //Table
   const [sanPham, setSanPhams] = useState([]);
@@ -49,14 +47,13 @@ export default function SanPham() {
     loadSanPham();
   }, []);
 
-  const loadSanPham =  () => {
-      SanPhamAPI.getAll()
-      .then((res)=>{
-        setSanPhams(res.data); 
-        console.log(res.data);
+  const loadSanPham = () => {
+    SanPhamAPI.getAll()
+      .then((res) => {
+        setSanPhams(res.data);
+       
       })
   };
-
   const columns = [
     {
       title: "STT",
@@ -73,53 +70,53 @@ export default function SanPham() {
       dataIndex: "ma",
       center: "true",
       sorter: (a, b) => a.ma - b.ma,
-    }, 
+    },
     {
       title: "Tên",
       dataIndex: "ten",
     },
     {
-        title: "Số Lượng",
-        dataIndex: "soLuong",
-      },
-      {
-        title: "Trạng thái",
-        dataIndex: "trangThai",
-        key: "trangThai",
-        render: (trang_thai) => (
-          <>
-            {trang_thai === 0 ? (
-              <Tag color="green">
-                Còn bán
-              </Tag>
-            ) : (
-              <Tag color="red">
-                Dừng bán
-              </Tag>
-            )}
-          </>
-        ),
-      },
-      {
-        title: "Action",
-        key: "action",
-        dataIndex: "idSP",
+      title: "Số Lượng",
+      dataIndex: "soLuong",
+    },
+    {
+      title: "Trạng thái",
+      dataIndex: "trangThai",
+      key: "trangThai",
+      render: (trang_thai) => (
+        <>
+          {trang_thai === 0 ? (
+            <Tag color="green">
+              Còn bán
+            </Tag>
+          ) : (
+            <Tag color="red">
+              Dừng bán
+            </Tag>
+          )}
+        </>
+      ),
+    },
+    {
+      title: "Action",
+      key: "action",
+      dataIndex: "idSP",
 
-        render: (title) => (
-          <Space size="middle">
-             <a>
-            <Link to={`/admin-showct/${title}`} className='btn btn-danger'><BsFillEyeFill className='mb-1'/></Link>
+      render: (title) => (
+        <Space size="middle">
+          <a>
+            <Link to={`/admin-showct/${title}`} className='btn btn-danger'><BsFillEyeFill className='mb-1' /></Link>
           </a>
-          </Space>
-        ),
+        </Space>
+      ),
     },
   ]
 
   return (
     <div className='container-fluid' style={{ borderRadius: 20 }}>
       <div className="container-fluid">
-      <Divider orientation="center" color="#d0aa73"><h4 className="text-first pt-1 fw-bold"> <FaTshirt size={35} /> Quản lý sản phẩm</h4></Divider>
-      <div className=' bg-light m-2 p-3 pt-2' style={{
+        <Divider orientation="center" color="#d0aa73"><h4 className="text-first pt-1 fw-bold"> <FaTshirt size={35} /> Quản lý sản phẩm</h4></Divider>
+        <div className=' bg-light m-2 p-3 pt-2' style={{
           border: '1px solid #ddd', // Border color
           boxShadow: '0 3px 8px rgba(0, 0, 0, 0.1)', // Box shadow
           borderRadius: '8px'
@@ -149,7 +146,7 @@ export default function SanPham() {
               </Form.Item>
             </div>
             <div className='col-md-4'>
-              <Form.Item placeholder="Chọn trạng thái"  label="Trạng Thái" name="trangThai">
+              <Form.Item placeholder="Chọn trạng thái" label="Trạng Thái" name="trangThai">
                 <Select value={selectedValue} onChange={handleChange}>
                   <Select.Option value="0">Còn Bán</Select.Option>
                   <Select.Option value="1">Dừng Bán</Select.Option>
@@ -157,17 +154,17 @@ export default function SanPham() {
               </Form.Item>
             </div>
             <div className='col-md-4'>
-                <Form.Item label="Số lượng" name="soLuong">
-                  <Slider defaultValue={1000} min={1} />
-                </Form.Item>
-              </div>
+              <Form.Item label="Số lượng" name="soLuong">
+                <Slider defaultValue={1000} min={1} />
+              </Form.Item>
+            </div>
             <Form.Item className='text-center' style={{ paddingLeft: 200 }}>
-              <Button type="primary" htmlType='reset' onClick={loadSanPham} icon={<RetweetOutlined/>}>Làm mới</Button>
+              <Button type="primary" htmlType='reset' onClick={loadSanPham} icon={<RetweetOutlined />}>Làm mới</Button>
             </Form.Item>
           </Form>
         </div>
 
-         <div className='text-end'>
+        <div className='text-end'>
           <Link to='/admin-them-san-pham' className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill" role="button"> <PlusCircleOutlined />  Thêm sản phẩm </Link>
         </div>
         <div className=' bg-light m-2 p-3 pt-2' style={{
