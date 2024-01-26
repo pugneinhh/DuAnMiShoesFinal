@@ -149,7 +149,7 @@ export default function KhachHang() {
         <Space size="middle">
           <Link to={`/admin-detail-khach-hang/${record}`} className='btn btn-success'><BsFillEyeFill /></Link>
           <Link to={`/admin-update-khach-hang/${record}`} className='btn btn-danger'  ><BsPencilSquare /></Link>
-          <Button style={{ width: 41, height: 37.6, backgroundColor: "#35afb1", color: "white" }} type="primary" onClick={()=>detailDiaChi(record)}>
+          <Button style={{ width: 41, height: 37.6, backgroundColor: "#35afb1", color: "white" }} className='btn ' type="primary" onClick={()=>detailDiaChi(record)}>
             <GrMapLocation />
           </Button>
        

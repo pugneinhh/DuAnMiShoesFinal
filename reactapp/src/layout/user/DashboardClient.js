@@ -1,16 +1,15 @@
-import React from "react";
-import { Breadcrumb, Layout, Menu, theme, Image } from "antd";
-import { Link } from "react-router-dom";
-import { ProSidebar, MenuItem } from "react-pro-sidebar";
-import { DownOutlined, SmileOutlined } from "@ant-design/icons";
-import { Dropdown, Space, Input } from "antd";
 
+import React from "react";
+import { Breadcrumb, Layout, theme, Image, Badge, Avatar } from "antd";
+import { Link } from "react-router-dom";
+import { DownOutlined, SmileOutlined, UserOutlined } from "@ant-design/icons";
+import { Dropdown, Space, Input } from "antd";
+import { TbShoppingCartHeart } from "react-icons/tb";
 import logoShop from "../../assets/images/logoNgang.png";
 import "./client.css";
-
-const { Search } = Input;
 const { Header, Content, Footer } = Layout;
 export const DashboardClient = ({ children }) => {
+
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -64,6 +63,7 @@ export const DashboardClient = ({ children }) => {
   return (
     <Layout className="container">
       {/* tiêu đề */}
+
       <Header
         style={{
           display: "flex",
@@ -77,9 +77,10 @@ export const DashboardClient = ({ children }) => {
         }}
       >
         <div className="demo-logo" />
-        <div className="menu row ">
+
+        <div className="menu row d-flex  ">
           {/* logo SHOP */}
-          <Image className="col" width={200} src={logoShop} />
+          <Image className="col" width={170} src={logoShop} />
           <Dropdown menu={{ items }} className="col">
             <a onClick={(e) => e.preventDefault()}>
               <Space>
@@ -117,15 +118,14 @@ export const DashboardClient = ({ children }) => {
             </a>
           </Dropdown>
 
-          {/* <div className="col-md-4">
-            <Search
-              placeholder="input search text"
-              allowClear
-              enterButton="Search"
-              size="large"
-              // onSearch={onSearch}
-            />
-          </div> */}
+          <Link className="col ms-10  justify-content-end">
+            <Badge count={10}>
+              <TbShoppingCartHeart size={25} />
+            </Badge>
+          </Link>
+          <Link className="col ">
+            <Avatar size={40} icon={<UserOutlined />} />
+          </Link>
         </div>
       </Header>
       <Content
@@ -150,7 +150,7 @@ export const DashboardClient = ({ children }) => {
             borderRadius: borderRadiusLG,
           }}
         >
-          Content
+          {children}
         </div>
       </Content>
       <Footer
@@ -162,4 +162,8 @@ export const DashboardClient = ({ children }) => {
       </Footer>
     </Layout>
   );
+
+
 };
+
+

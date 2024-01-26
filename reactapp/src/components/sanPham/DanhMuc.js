@@ -155,7 +155,9 @@ export default function DanhMuc() {
         return true;
       }
     });
+    if (result.status === 302) {
       setDanhMucs(result.data);
+    }
   };
   
   useEffect(() => {

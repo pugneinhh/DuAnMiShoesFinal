@@ -180,8 +180,10 @@ const ModalThanhToan = (props) => {
             open={openThanhToan}
             onOk={handleThanhToan}
             onCancel={handleClose}
-
-            width={800}
+            height={300}
+            width={1500}
+            zIndex={10000}
+            style={{top:-200}}
         >
             <div className="row mt-4">
                 <h6 className="col-md-2 mt-2 fw-bold">Số tiền</h6>

@@ -50,6 +50,7 @@ import ThongKe from "../pages/censor/thongKe-management/ThongKe";
 // ban hang
 import BanHang from "../pages/censor/banHang-management/BanHang";
 import GuestGuard from "../guard/GuestGuard";
+import { Home } from "../layout/user/home";
 function App() {
   const isLoading = useAppSelector(GetLoading);
 
@@ -370,7 +371,7 @@ function App() {
               element={
                 <GuestGuard>
                   <DashboardClient>
-                    
+                    <Home/>
                   </DashboardClient>
                 </GuestGuard>
               }
