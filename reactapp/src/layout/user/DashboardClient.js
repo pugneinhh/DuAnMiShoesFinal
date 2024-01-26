@@ -1,9 +1,8 @@
 
 import React from "react";
-import { Breadcrumb, Layout, theme, Image, Badge, Avatar } from "antd";
+import { Breadcrumb, Layout, theme, Image, Badge, Avatar, Dropdown, Space  } from "antd";
 import { Link } from "react-router-dom";
 import { DownOutlined, SmileOutlined, UserOutlined } from "@ant-design/icons";
-import { Dropdown, Space, Input } from "antd";
 import { TbShoppingCartHeart } from "react-icons/tb";
 import logoShop from "../../assets/images/logoNgang.png";
 import "./client.css";
@@ -118,14 +117,14 @@ export const DashboardClient = ({ children }) => {
             </a>
           </Dropdown>
 
-          <Link className="col ms-10  justify-content-end">
-            <Badge count={10}>
-              <TbShoppingCartHeart size={25} />
+          <p className="col ms-10 me-2 justify-content-end ">
+            <Badge count={10}  offset={[8, 1]} className="menuButton">
+              <TbShoppingCartHeart size={30}  className="menuButton"/>
             </Badge>
-          </Link>
-          <Link className="col ">
-            <Avatar size={40} icon={<UserOutlined />} />
-          </Link>
+          </p>
+          <Link to={'/login'}  className="col ms-1 " >
+            <Avatar size={40} className="menuButton" icon={<UserOutlined />} /> 
+            </Link>
         </div>
       </Header>
       <Content

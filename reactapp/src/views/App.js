@@ -51,6 +51,7 @@ import ThongKe from "../pages/censor/thongKe-management/ThongKe";
 import BanHang from "../pages/censor/banHang-management/BanHang";
 import GuestGuard from "../guard/GuestGuard";
 import { Home } from "../layout/user/home";
+import { Login } from "../layout/login/login";
 function App() {
   const isLoading = useAppSelector(GetLoading);
 
@@ -283,7 +284,7 @@ function App() {
                 </AuthGuard>
               }
             />
-               <Route
+            <Route
               path="/admin-showct/:id"
               element={
                 <AuthGuard>
@@ -344,7 +345,7 @@ function App() {
               }
             />
 
-               <Route
+            <Route
               path="/admin-sua-khuyen-mai/:id"
               element={
                 <AuthGuard>
@@ -371,8 +372,19 @@ function App() {
               element={
                 <GuestGuard>
                   <DashboardClient>
-                    <Home/>
+                    <Home />
                   </DashboardClient>
+                </GuestGuard>
+              }
+            />
+
+
+            {/* Màn login */}
+            <Route
+              path="/login"
+              element={
+                <GuestGuard>
+                 <Login/>
                 </GuestGuard>
               }
             />
