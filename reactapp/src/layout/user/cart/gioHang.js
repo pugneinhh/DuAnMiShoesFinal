@@ -26,7 +26,7 @@ export const GioHang = ({ children }) => {
   };
   return (
     <div>
-      <div className="banner-gio-hang">
+      <div className="banner-gio-hang-san-pham">
         <img src="https://d-themes.com/react/molla/demo-10/images/page-header-bg.jpg?fbclid=IwAR1a29UEcWcX-xX8mdyf6lSt9-lm8LB4tzbz4wscKg5yBPhlzyzWfIcjmF0"></img>
         <h1 className="text-center" style={{ marginTop: -130 }}>
           Giỏ hàng
@@ -53,7 +53,7 @@ export const GioHang = ({ children }) => {
                 <Tag color="red">Mặc định</Tag>
               </span>
               <Button
-                style={{ marginLeft: 80 }}
+                style={{ marginLeft: 30 }}
                 onClick={() => setOpenModalDiaChi(true)}
               >
                 Thay đổi
@@ -83,7 +83,7 @@ export const GioHang = ({ children }) => {
                       src="https://res-console.cloudinary.com/dm0w2qws8/thumbnails/v1/image/upload/v1705931217/eTN5eGM4bHdkdHZvYWZkZ21ucmE=/preview"
                     ></img>
                   </div>
-                  <div className="col-md-5 fw-bold">
+                  <div className="col-md-5 fw-bold" style={{ paddingLeft: 20 }}>
                     <h6> Nike Adidas Grand Court</h6>
                     <h6 className="mt-2"> 40</h6>
                     <div
@@ -107,7 +107,10 @@ export const GioHang = ({ children }) => {
                 </td>
                 <td>
                   <div style={{ marginTop: "30px" }}>
-                    <button onClick={giamSL} style={{ width: 35 }}>
+                    <button
+                      onClick={giamSL}
+                      style={{ width: 35, borderRadius: 10 }}
+                    >
                       -
                     </button>
                     <input
@@ -116,7 +119,10 @@ export const GioHang = ({ children }) => {
                       style={{ width: 35 }}
                       min={0}
                     ></input>
-                    <button onClick={tangSL} style={{ width: 35 }}>
+                    <button
+                      onClick={tangSL}
+                      style={{ width: 35, borderRadius: 10 }}
+                    >
                       +
                     </button>
                   </div>
@@ -143,7 +149,7 @@ export const GioHang = ({ children }) => {
                       src="https://res-console.cloudinary.com/dm0w2qws8/thumbnails/v1/image/upload/v1705931217/eTN5eGM4bHdkdHZvYWZkZ21ucmE=/preview"
                     ></img>
                   </div>
-                  <div className="col-md-5 fw-bold">
+                  <div className="col-md-5 fw-bold" style={{ paddingLeft: 20 }}>
                     <h6> Nike Adidas Grand Court</h6>
                     <h6 className="mt-2"> 40</h6>
                     <div
@@ -167,7 +173,10 @@ export const GioHang = ({ children }) => {
                 </td>
                 <td>
                   <div style={{ marginTop: "30px" }}>
-                    <button onClick={giamSL} style={{ width: 35 }}>
+                    <button
+                      onClick={giamSL}
+                      style={{ width: 35, borderRadius: 10 }}
+                    >
                       -
                     </button>
                     <input
@@ -176,7 +185,10 @@ export const GioHang = ({ children }) => {
                       style={{ width: 35 }}
                       min={0}
                     ></input>
-                    <button onClick={tangSL} style={{ width: 35 }}>
+                    <button
+                      onClick={tangSL}
+                      style={{ width: 35, borderRadius: 10 }}
+                    >
                       +
                     </button>
                   </div>
