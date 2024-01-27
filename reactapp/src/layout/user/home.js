@@ -42,13 +42,17 @@ export const Home = ({ children }) => {
     },
   ];
   return (
+
     <div className="container">
+
       <Carousel style={contentStyle}>
         <div>
           <img
             src="https://d-themes.com/react/molla/demo-10/images/home/sliders/slide-1.jpg"
+         
             height={"400px"}
             width={"1152px"}
+
           />
           <div class="intro-content">
             <div class="css-sanqhm">
@@ -69,6 +73,7 @@ export const Home = ({ children }) => {
             src="https://d-themes.com/react/molla/demo-10/images/home/sliders/slide-3.jpg"
             height={"400px"}
             width={"1152px"}
+
           />
           <div class="intro-content">
             <div class="css-sanqhm">
@@ -89,6 +94,7 @@ export const Home = ({ children }) => {
             src="http://res.cloudinary.com/dm0w2qws8/image/upload/v1706200379/rry3semtlkngaf9ktaqw.jpg"
             height={"400px"}
             width={"1152px"}
+
           />
           <div class="intro-content">
             <div class="css-sanqhm">
@@ -105,6 +111,7 @@ export const Home = ({ children }) => {
           </div>
         </div>
       </Carousel>
+
       <div className="ms-1 mt-2">
         <div className="  row">
           <div className="col-lg-8">

@@ -41,10 +41,9 @@ background-color: #445f84;
 color: #fff;
 border-color: #445f84;
 }
-.menuButton:hover{
-    cursor: pointer;
-    color:  #d0aa73;
-    
+
+.slick-dots.slick-dots-bottom{
+    margin-top: 200px;
 }
 .banner-group .banner-content {
     position: absolute;
