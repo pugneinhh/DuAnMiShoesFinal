@@ -1,5 +1,5 @@
 {
-  "homepage": "http://localhost:3000/admin-thong-ke",
+  "homepage": "http://localhost:3000/login",
   "name": "reactapp",
   "version": "0.1.0",
   "private": true,
@@ -68,7 +68,7 @@
     "xlsx": "^0.18.5"
   },
   "scripts": {
-    "start": "react-scripts start http://localhost:3000/admin/ban-hang",
+    "start": "react-scripts start http://localhost:3000/login",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
