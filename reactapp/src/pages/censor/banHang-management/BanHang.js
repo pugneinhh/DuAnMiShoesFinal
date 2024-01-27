@@ -15,7 +15,7 @@ import { CreateBill, GetBill,  RemoveBill, UpdateBill } from "../../../store/red
 import { GetProduct,  UpdateApartProduct, UpdatePushProduct } from "../../../store/reducer/Product.reducer";
 import { Image } from "cloudinary-react";
 import { GetClient } from "../../../store/reducer/Client.reducer";
-import { GetInvoice, UpdateInvoice, RemoveInvoice  } from "../../../store/reducer/DetailInvoice.reducer";
+import { GetInvoice, UpdateInvoice, RemoveInvoice, GetLengthListByBill  } from "../../../store/reducer/DetailInvoice.reducer";
 
 const {TabPane}=Tabs;
 const BanHang = () => {
@@ -30,7 +30,7 @@ const BanHang = () => {
   const ctsp = useSelector(GetProduct);
   const client = useSelector(GetClient);
   const [prevValue,setPrevValue] = useState(undefined);
-
+  let lengthSP = (0);
   let data = ([""]);
   let KH = ([""]);
 
@@ -452,8 +452,18 @@ const onEdit = (targetKey, action) => {
  {hoaDons.map((tab) => (
     data = ctspHD.filter((f)=> f.hoaDon === activeKey),
     KH = client.filter((k) => k.activeKey === activeKey),
-  
-    <TabPane tab={tab.ma} key={tab.key}>
+    lengthSP = ctspHD.filter((f)=> f.hoaDon === tab.key).reduce((accumulator, object) => parseFloat(accumulator) + parseFloat(object.soLuong), 0),
+    console.log("Length",lengthSP),
+    <TabPane tab={
+    <>{<Space>
+     {/* <span>{tab.ma}  <span style={{color:"red",
+      backgroundColor:"yellow",borderRadius:30,marginLeft:10,}}>
+        <Badge count={lengthSP} />
+        </span></span> */}
+        <span>{tab.ma}</span>
+        <Badge count={lengthSP === 0 ? 0 : lengthSP}></Badge>
+        </Space>}</>
+    } key={tab.key}>
       {(data.length>0 ) ?  (
         <>
           <div>
@@ -516,9 +526,15 @@ const onEdit = (targetKey, action) => {
          
           {
           (!tab.nguoiDung) ? (
+            <span>
             <p>Tên khách hàng: <Tag color="#cccccc"  className="rounded-pill">Khách lẻ</Tag></p>
+            <p>Số điện thoại: <Tag color="#cccccc"  className="rounded-pill">000-0000-000</Tag></p>
+            </span>
           ) : (
+            <span>
             <p>Tên khách hàng: <Tag bordered={false} color={tab.gtNguoiDung === "true" ?"processing" : "#FFB6C1"} className="rounded-pill">{tab.tenNguoiDung}</Tag></p>
+            <p>Số điện thoại: <Tag bordered={false} color={tab.gtNguoiDung === "true" ?"processing" : "#FFB6C1"} className="rounded-pill">{client.filter((i) => i.id === tab.nguoiDung)[0].soDienThoai}</Tag></p>
+            </span>
           )
           }
           </>
@@ -634,7 +650,7 @@ const onEdit = (targetKey, action) => {
                 setOpenKhachHang={setOpenKhachHang}
                 onOk={handleCloseKhachHang}
                 onCancel={handleCloseKhachHang}
-                style={{marginLeft:600}}
+                
               />
 
             </>
@@ -646,10 +662,16 @@ const onEdit = (targetKey, action) => {
         <>
          
         {
-          (!tab.nguoiDung) ? (
+           (!tab.nguoiDung) ? (
+            <span>
             <p>Tên khách hàng: <Tag color="#cccccc"  className="rounded-pill">Khách lẻ</Tag></p>
+            <p>Số điện thoại: <Tag color="#cccccc"  className="rounded-pill">000-0000-000</Tag></p>
+            </span>
           ) : (
+            <span>
             <p>Tên khách hàng: <Tag bordered={false} color={tab.gtNguoiDung === "true" ?"processing" : "#FFB6C1"} className="rounded-pill">{tab.tenNguoiDung}</Tag></p>
+            <p>Số điện thoại: <Tag bordered={false} color={tab.gtNguoiDung === "true" ?"processing" : "#FFB6C1"} className="rounded-pill">{client.filter((i) => i.id === tab.nguoiDung)[0].soDienThoai}</Tag></p>
+            </span>
           )
           }
          </>
@@ -705,6 +727,7 @@ const onEdit = (targetKey, action) => {
         </>
       ) } 
     </TabPane>
+   
   ))}
 
         </Tabs>
@@ -712,7 +735,10 @@ const onEdit = (targetKey, action) => {
         {(hoaDons.length === 0 || activeKey === 0 || !activeKey) ? (
           <>
         <div className="mb-3">
+          <span>
           <p>Tên khách hàng: <Tag color="#cccccc" className="rounded-pill">Khách lẻ</Tag></p>
+          <p>Số điện thoại: <Tag color="#cccccc" className="rounded-pill">000-0000-000</Tag></p>,
+          </span>
         </div>
        
         <h4>Khách hàng</h4>
