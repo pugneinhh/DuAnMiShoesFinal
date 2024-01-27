@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 // import AddModalDiaChi from "./AddModalDiaChi";
 import { ToastContainer, toast } from "react-toastify";
 // import ModalUpdateDiaChi from "./ModalUpdateDiaChi";
-import { KhachHangAPI } from "../../../pages/censor/api/user/khachHang.api";
 const ModalDiaChi = (props) => {
   const { openModalDiaChi, setOpenModalDiaChi } = props;
   const [top, setTop] = useState("none");

@@ -2,9 +2,13 @@ import React, { useState } from "react";
 import "./gioHang.css";
 import { Button, Tag } from "antd";
 import { FaRegTrashAlt, FaMapMarkerAlt } from "react-icons/fa";
+import { BiSolidDiscount } from "react-icons/bi";
 import ModalDiaChi from "./modalDiaChi";
+import ModalVoucher from "./modalVoucher";
+import { Link } from "react-router-dom";
 export const GioHang = ({ children }) => {
     const [openModalDiaChi, setOpenModalDiaChi] = useState(false);
+    const [openModalVoucher, setOpenModalVoucher] = useState(false);
       const detailDiaChi = (row) => {
         console.log("click", row);
         // setIdKH(row);
@@ -32,14 +36,13 @@ export const GioHang = ({ children }) => {
       <div className="row mt-5">
         {/* kẻ ngang */}
         <div className="xBNaac"></div>
-        <div className="mt-2 row">
+        <div className="mt-4 row">
           {/* địa chỉ  */}
           <h5 style={{ color: "red" }}>
-            {" "}
             <FaMapMarkerAlt size={25} className="text-danger" />
             <span className="ms-2"> Địa Chỉ Nhận Hàng</span>
           </h5>
-          <div className="row mt-3">
+          <div className="row mt-1">
             <h6 className="col-md-12">
               <b> Nguyễn Tùng Dương |09883537xx</b>
               <span style={{ marginLeft: 40 }}>
@@ -195,17 +198,77 @@ export const GioHang = ({ children }) => {
             </tbody>
           </table>
         </div>
-        <div className="col-md-4 donHangOL"  >
+        <div className="col-md-4 donHangOL">
           <h4 className="text-center">Hóa đơn</h4>
-          <hr style={{height:2,backgroundColor:'black',fontWeight:'bold'}}></hr>
+          <hr
+            style={{ height: 2, backgroundColor: "black", fontWeight: "bold" }}
+          ></hr>
+          <div
+            className="row ps-2 pb-2"
+            style={{ borderBottom: "1px dashed black" }}
+          >
+            <div className="col ps-4">
+              <h6 style={{ marginTop: 4 }}>
+                <BiSolidDiscount /> <span>Voucher</span> : Khuyến mãi 1
+              </h6>
+            </div>
+            <div className="col">
+              <a
+                style={{
+                  marginLeft: 80,
+                  color: "blue",
+                  fontWeight: "bold",
+                }}
+                className="cusor-pointer"
+                onClick={() => setOpenModalVoucher(true)}
+              >
+                Chọn voucher
+              </a>
+            </div>
+          </div>
+          <div
+            className="row ps-2 pb-2 mt-3"
+            // style={{ borderBottom: "1px dashed black"}}
+          >
+            <div className="col-md-7" style={{ marginLeft: 40 }}>
+              <span>Đơn hàng </span>
+            </div>
+            <div className="col-md-4">
+              <span style={{ color: "blue" }}>0 </span> <span>VND</span>
+            </div>
+          </div>
+          <div
+            className="row ps-2 pb-2 mt-3"
+            style={{ borderBottom: "1px dashed black" }}
+          >
+            <div className="col-md-7" style={{ marginLeft: 40 }}>
+              <span>Giảm </span>
+            </div>
+            <div className="col-md-4">
+              <span style={{ color: "blue" }}>0 </span> <span>VND</span>
+            </div>
+          </div>
+          <div
+            className="row ps-2 pb-2 mt-3"
+            // style={{ borderBottom: "1px dashed black" }}
+          >
+            <h5 className="col-md-7" style={{ marginLeft: 40 }}>
+              <span>Tổng tiền </span>
+            </h5>
+            <h5 className="col-md-4">
+              <span style={{ color: "blue" }}>0 </span> <span>VND</span>
+            </h5>
+          </div>
         </div>
       </div>
-      
-        <ModalDiaChi
-          openModalDiaChi={openModalDiaChi}
-          setOpenModalDiaChi={setOpenModalDiaChi}
-        />
-  
+      <ModalDiaChi
+        openModalDiaChi={openModalDiaChi}
+        setOpenModalDiaChi={setOpenModalDiaChi}
+      />
+      <ModalVoucher
+        openModalVoucher={openModalVoucher}
+        setOpenModalVoucher={setOpenModalVoucher}
+      />
     </div>
   );
 };
