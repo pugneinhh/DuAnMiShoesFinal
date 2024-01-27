@@ -47,19 +47,19 @@ border-color: #445f84;
 }
 .banner-group .banner-content {
     position: absolute;
-    top: 89%;
+    top: 68%;
     color: #fff;
-    margin-left: 160px;
+    margin-left: 185px;
 }
 .banner-group .banner-content-left {
     position: absolute;
-    top: 90%;
+    top: 68%;
     color: #fff;
     margin-left: 20px;
 }
 .banner-group .banner-content-middle {
     position: absolute;
-    top: 127%;
+    top: 97%;
     color: #fff;
     margin-left: 50px;
 }
