@@ -47,21 +47,21 @@ border-color: #445f84;
 }
 .banner-group .banner-content {
     position: absolute;
-    top: 84%;
+    top: 89%;
     color: #fff;
-    margin-left: 150px;
+    margin-left: 160px;
 }
 .banner-group .banner-content-left {
     position: absolute;
-    top: 84%;
+    top: 90%;
     color: #fff;
     margin-left: 20px;
 }
 .banner-group .banner-content-middle {
     position: absolute;
-    top: 116%;
+    top: 127%;
     color: #fff;
-    margin-left: 30px;
+    margin-left: 50px;
 }
 .banner-subtitle{
     font-weight: 300;

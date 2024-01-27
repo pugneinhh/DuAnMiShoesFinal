@@ -148,7 +148,7 @@ export const Home = ({ children }) => {
             <div className="banner-group p-2">
               <img
                 src="https://res.cloudinary.com/dm0w2qws8/image/upload/v1706367750/py3zfnmo5nlc2tl7hkrw.jpg"
-                width={"745px"}
+                width={"746px"}
                 height={"235px"}
               />
               <div class="banner-content-middle">
