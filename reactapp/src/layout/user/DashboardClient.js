@@ -69,7 +69,7 @@ export const DashboardClient = ({ children }) => {
     },
   ];
   return (
-    <Layout >
+    <Layout  >
       {/* tiêu đề */}
 
       <Header

@@ -24,7 +24,7 @@ const text = `
 `;
   return (
     <div>
-      <div className="banner-san-pham">
+      <div className="banner-san-pham-shop">
         <img src="https://d-themes.com/react/molla/demo-10/images/page-header-bg.jpg?fbclid=IwAR1a29UEcWcX-xX8mdyf6lSt9-lm8LB4tzbz4wscKg5yBPhlzyzWfIcjmF0"></img>
         <h1 className="text-center" style={{ marginTop: -130 }}>
           Sản phẩm
