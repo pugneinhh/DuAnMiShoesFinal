@@ -9,6 +9,7 @@ import com.example.backend.repository.CTSPRepository;
 import com.example.backend.repository.CongThucRepository;
 import com.example.backend.service.BanHangService;
 import com.example.backend.service.HoaDonChiTietService;
+import com.example.backend.service.VoucherService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,8 @@ public class BanHangController {
     CTSPRepository ctspRepository;
     @Autowired
     CongThucRepository congThucRepository;
+    @Autowired
+    VoucherService voucherService;
 
     @GetMapping("/getALLCTSP")
     public ResponseEntity<?> getALLctsp(){
@@ -47,7 +50,6 @@ public class BanHangController {
         hoaDonRequest.setTrangThai(4);
         hoaDonRequest.setNgayMua(LocalDateTime.now());
       //  hoaDonRequest.setGiaTriDiem(Integer.valueOf(hoaDonRequest.getThanhTien().intValue()/ct.getTiSo().intValue()));
-
         return  ResponseEntity.ok(banHangService.addHoaDon(hoaDonRequest));
     }
     @PostMapping("/addHDCT")
@@ -78,4 +80,8 @@ public class BanHangController {
         return ResponseEntity.ok(hoaDonChiTietService.getOneHDCT(idHD,idCTSP));
     }
 
+    @GetMapping("/voucher/{idND}")
+    public ResponseEntity<?> getOneHDCT(@PathVariable("idND")String idND){
+        return ResponseEntity.ok(voucherService.getVoucherBanHang(idND));
+    }
 }

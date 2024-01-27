@@ -2,6 +2,7 @@ package com.example.backend.service;
 
 import com.example.backend.dto.request.VoucherRequest;
 import com.example.backend.dto.response.AdminVoucher;
+import com.example.backend.dto.response.VoucherRespone;
 import com.example.backend.entity.NguoiDungVoucher;
 import com.example.backend.entity.Voucher;
 import com.example.backend.dto.request.VoucherSearch;
@@ -16,6 +17,7 @@ import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -75,6 +77,14 @@ public class VoucherService {
         ZonedDateTime plus7ZonedDateTime = utcZonedDateTime.withZoneSameInstant(plus7Zone);
         LocalDateTime plus7DateTime = plus7ZonedDateTime.toLocalDateTime();
         return plus7DateTime;
+    }
+    public List<VoucherRespone> getVoucherBanHang(String id){
+        List<VoucherRespone> listAll=vr.getVoucherTatCa();
+        List<VoucherRespone> listVoucherNguoiDung=nguoiDungVoucherService.getVoucherByNguoiDung(id);
+        List<VoucherRespone> list=new ArrayList<>();
+        list.addAll(listAll);
+        list.addAll(listVoucherNguoiDung);
+        return list;
     }
 //    @Scheduled(cron = "0 * * * * *",zone = "Asia/Saigon")
 //    public void checkHan(){
