@@ -38,6 +38,7 @@ public class NguoiDungVoucherService {
     }
     public NguoiDungVoucher add(String idKH, Voucher v){
         NguoiDung nd=nguoiDungRepository.findById(idKH).get();
+        System.out.println("Người dùng"+nd);
         NguoiDungVoucher ndv=new NguoiDungVoucher();
         ndv.setNguoiDung(nd);
         ndv.setVoucher(v);
@@ -54,18 +55,22 @@ public class NguoiDungVoucherService {
     public NguoiDungVoucher updateTrangThai_ChuaBatDau(String idKH, String idV){
         NguoiDungVoucher n = nguoiDungVoucherRepository.getNguoiDungVoucherByVoucherAndKHhachHang(idV,idKH);
         n.setTrangThai(Status.SAP_DIEN_RA);
+        nguoiDungVoucherRepository.save(n);
         return n;
     }
 
     public NguoiDungVoucher updateTrangThai_DangDienRa(String idKH, String idV){
         NguoiDungVoucher n = nguoiDungVoucherRepository.getNguoiDungVoucherByVoucherAndKHhachHang(idV,idKH);
         n.setTrangThai(Status.DANG_SU_DUNG);
+        nguoiDungVoucherRepository.save(n);
         return n;
     }
 
     public NguoiDungVoucher updateTrangThai_DaKetThuc(String idKH, String idV){
         NguoiDungVoucher n = nguoiDungVoucherRepository.getNguoiDungVoucherByVoucherAndKHhachHang(idV,idKH);
+        System.out.println("N"+n.getId());
         n.setTrangThai(Status.NGUNG_HOAT_DONG);
+        nguoiDungVoucherRepository.save(n);
         return n;
     }
 }

@@ -20,6 +20,7 @@ import { Image } from "cloudinary-react";
 import { AddProduct, GetProduct, UpdateApartProduct } from "../../../store/reducer/Product.reducer";
 import { AddInvoice, GetInvoice } from "../../../store/reducer/DetailInvoice.reducer";
 import {SellAPI} from "../../censor/api/sell/sell.api"
+import axios from "axios";
 
 
 const ModalSanPham = (props) => {
@@ -47,14 +48,16 @@ const ModalSanPham = (props) => {
   };
   //Load kich thước
    const [kt, setKT] = useState([]);
-  // useEffect(() => {
-  //   loadKT();
-  // }, []);
-  // const loadKT =  () => {
-  //   const result =  SellAPI.getAllSizes();
-  //     console.log(result.data);
+
+  const loadKT =  async() => {
+    const result = await axios.get("http://localhost:8080/admin/kich-thuoc").then((response) => setKT(response.data));
     
- // };
+    
+ };
+
+   useEffect(() => {
+    loadKT();
+  }, []);
   // //Load Màu Sắc
    const [ms, setMS] = useState([]);
   // useEffect(() => {
