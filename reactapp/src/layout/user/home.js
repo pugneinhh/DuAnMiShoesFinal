@@ -7,7 +7,7 @@ import { IoIosInformationCircleOutline } from "react-icons/io";
 import { MdOutlineSupport } from "react-icons/md";
 import {ProductCard} from "./productCard";
 const contentStyle = {
-  height: "400px",
+  height: "450px",
   color: "#fff",
   //   lineHeight: "160px",
   //   textAlign: "center",
@@ -44,14 +44,13 @@ export const Home = ({ children }) => {
   return (
 
     <div className="container">
-
       <Carousel style={contentStyle}>
         <div>
           <img
             src="https://d-themes.com/react/molla/demo-10/images/home/sliders/slide-1.jpg"
          
-            height={"400px"}
-            width={"1152px"}
+            height={"450px"}
+            width={"1296px"}
 
           />
           <div class="intro-content">
@@ -71,9 +70,8 @@ export const Home = ({ children }) => {
         <div>
           <img
             src="https://d-themes.com/react/molla/demo-10/images/home/sliders/slide-3.jpg"
-            height={"400px"}
-            width={"1152px"}
-
+            height={"450px"}
+            width={"1296px"}
           />
           <div class="intro-content">
             <div class="css-sanqhm">
@@ -92,9 +90,8 @@ export const Home = ({ children }) => {
         <div>
           <img
             src="http://res.cloudinary.com/dm0w2qws8/image/upload/v1706200379/rry3semtlkngaf9ktaqw.jpg"
-            height={"400px"}
-            width={"1152px"}
-
+            height={"450px"}
+            width={"1296px"}
           />
           <div class="intro-content">
             <div class="css-sanqhm">
@@ -117,7 +114,8 @@ export const Home = ({ children }) => {
           <div className="col-lg-8">
             <div className="row">
               <div className="col-sm-6 banner-group p-2">
-                <img src="https://d-themes.com/react/molla/demo-10/images/home/banners/banner-1.jpg" />
+                <img src="https://d-themes.com/react/molla/demo-10/images/home/banners/banner-1.jpg" width={"420px"}
+                  height={"250px"} />
                 <div class="banner-content ">
                   <h4 class="banner-subtitle">New Arrivals</h4>
                   <h3 class="banner-title text-white">
@@ -132,7 +130,7 @@ export const Home = ({ children }) => {
               <div className="col-sm-6 banner-group p-2">
                 <img
                   src="https://res.cloudinary.com/dm0w2qws8/image/upload/v1706366863/dzdho3purfpnaryldhqz.jpg"
-                  width={"375px"}
+                  width={"420px"}
                   height={"250px"}
                 />
                 <div class="banner-content-left ">
@@ -145,11 +143,11 @@ export const Home = ({ children }) => {
                 </div>
               </div>
             </div>
-            <div className="banner-group p-2">
+            <div className="banner-group">
               <img
                 src="https://res.cloudinary.com/dm0w2qws8/image/upload/v1706367750/py3zfnmo5nlc2tl7hkrw.jpg"
-                width={"746px"}
-                height={"235px"}
+                width={"855px"}
+                height={"255px"}
               />
               <div class="banner-content-middle">
                 <h4 class="banner-subtitle text-dark">On Sale</h4>
@@ -164,8 +162,8 @@ export const Home = ({ children }) => {
           <div className="col-lg-4 banner-group p-2">
             <img
               src="https://res.cloudinary.com/dm0w2qws8/image/upload/v1706369319/z5112262374541_8cb528ffa3d8249cb5bc7f9016e6d84a_geadua.jpg"
-              width={"362px"}
-              height={"500px"}
+              width={"410px"}
+              height={"520px"}
             />
             <div class="banner-content-middle ">
               <h4 class="banner-subtitle text-white">Clearance</h4>

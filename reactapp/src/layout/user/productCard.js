@@ -13,7 +13,7 @@ export const ProductCard = ({ product }) => {
 
   return (
     <div
-      className="product-card col-sm-3"
+      className="product-card col-sm-3 m-3"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
