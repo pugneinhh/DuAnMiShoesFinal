@@ -1,6 +1,7 @@
 package com.example.backend.service;
 
 import com.example.backend.dto.response.NguoiDungRespone;
+import com.example.backend.dto.response.VoucherRespone;
 import com.example.backend.entity.NguoiDung;
 import com.example.backend.entity.NguoiDungVoucher;
 import com.example.backend.entity.Voucher;
@@ -32,7 +33,9 @@ public class NguoiDungVoucherService {
     public List<NguoiDungVoucher> getALL(){
         return nguoiDungVoucherRepository.findAll();
     }
-
+    public List<VoucherRespone> getVoucherByNguoiDung(String id){
+        return nguoiDungVoucherRepository.getVoucherByNguoiDung(id);
+    }
     public List<NguoiDungVoucher> getAllByNguoiDung(String nguoiDung){
         return nguoiDungVoucherRepository.getAllByNguoiDungLike(nguoiDung);
     }

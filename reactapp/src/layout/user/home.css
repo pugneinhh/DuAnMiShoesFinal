@@ -46,3 +46,39 @@ border-color: #445f84;
     color:  #d0aa73;
     
 }
+.banner-content {
+    position: absolute;
+    right: 950px;
+    top: 84%;
+    color: #fff;
+}
+.banner-subtitle{
+    font-weight: 300;
+    letter-spacing: -.01em;
+    margin-bottom: 0.4rem;
+    color: #ebebeb;
+}
+.banner-title{
+    font-weight: 600;
+    font-size: 2rem;
+    line-height: 1.25;
+    margin-bottom: 0.1rem;
+    letter-spacing: -.01em;
+}
+.banner-link{
+    font-size: 1rem;
+    line-height: 1;
+    padding: 0.8rem 1.4rem;
+    min-width: 0;
+    text-transform: uppercase;
+    text-decoration: none!important;
+}
+.btn-outline-white{
+    color: #fff;
+    background-color: transparent;
+    background-image: none;
+    border-color: #fff;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+
+}
