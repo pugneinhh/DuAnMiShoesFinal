@@ -1,6 +1,7 @@
 package com.example.backend.service;
 
 import com.example.backend.dto.response.NguoiDungRespone;
+import com.example.backend.dto.response.VoucherRespone;
 import com.example.backend.entity.NguoiDung;
 import com.example.backend.entity.NguoiDungVoucher;
 import com.example.backend.entity.Voucher;
@@ -32,12 +33,15 @@ public class NguoiDungVoucherService {
     public List<NguoiDungVoucher> getALL(){
         return nguoiDungVoucherRepository.findAll();
     }
-
+    public List<VoucherRespone> getVoucherByNguoiDung(String id){
+        return nguoiDungVoucherRepository.getVoucherByNguoiDung(id);
+    }
     public List<NguoiDungVoucher> getAllByNguoiDung(String nguoiDung){
         return nguoiDungVoucherRepository.getAllByNguoiDungLike(nguoiDung);
     }
     public NguoiDungVoucher add(String idKH, Voucher v){
         NguoiDung nd=nguoiDungRepository.findById(idKH).get();
+        System.out.println("Người dùng"+nd);
         NguoiDungVoucher ndv=new NguoiDungVoucher();
         ndv.setNguoiDung(nd);
         ndv.setVoucher(v);
@@ -54,18 +58,22 @@ public class NguoiDungVoucherService {
     public NguoiDungVoucher updateTrangThai_ChuaBatDau(String idKH, String idV){
         NguoiDungVoucher n = nguoiDungVoucherRepository.getNguoiDungVoucherByVoucherAndKHhachHang(idV,idKH);
         n.setTrangThai(Status.SAP_DIEN_RA);
+        nguoiDungVoucherRepository.save(n);
         return n;
     }
 
     public NguoiDungVoucher updateTrangThai_DangDienRa(String idKH, String idV){
         NguoiDungVoucher n = nguoiDungVoucherRepository.getNguoiDungVoucherByVoucherAndKHhachHang(idV,idKH);
         n.setTrangThai(Status.DANG_SU_DUNG);
+        nguoiDungVoucherRepository.save(n);
         return n;
     }
 
     public NguoiDungVoucher updateTrangThai_DaKetThuc(String idKH, String idV){
         NguoiDungVoucher n = nguoiDungVoucherRepository.getNguoiDungVoucherByVoucherAndKHhachHang(idV,idKH);
+        System.out.println("N"+n.getId());
         n.setTrangThai(Status.NGUNG_HOAT_DONG);
+        nguoiDungVoucherRepository.save(n);
         return n;
     }
 }

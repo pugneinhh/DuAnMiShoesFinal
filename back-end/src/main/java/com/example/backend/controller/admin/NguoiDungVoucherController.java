@@ -45,17 +45,17 @@ public class NguoiDungVoucherController {
 
     @PutMapping("/update/sap-bat-dau/{idV}/{idKH}")
     public ResponseEntity<?> updateSapBatDau(@PathVariable("idV") String idV,@PathVariable("idKH")String idKH){
-        return ResponseEntity.ok(nguoiDungVoucherService.updateTrangThai_ChuaBatDau(idV,idKH));
+        return ResponseEntity.ok(nguoiDungVoucherService.updateTrangThai_ChuaBatDau(idKH , idV));
     }
 
     @PutMapping("/update/dang-dien-ra/{idV}/{idKH}")
     public ResponseEntity<?> updateDangDienRa(@PathVariable("idV") String idV,@PathVariable("idKH")String idKH) {
-        return ResponseEntity.ok(nguoiDungVoucherService.updateTrangThai_DangDienRa(idV, idKH));
+        return ResponseEntity.ok(nguoiDungVoucherService.updateTrangThai_DangDienRa(idKH, idV));
     }
 
 
     @PutMapping("/update/da-ket-thuc/{idV}/{idKH}")
     public ResponseEntity<?> updateDaKetThuc(@PathVariable("idV") String idV,@PathVariable("idKH")String idKH) {
-        return ResponseEntity.ok(nguoiDungVoucherService.updateTrangThai_DaKetThuc(idV, idKH));
+        return ResponseEntity.ok(nguoiDungVoucherService.updateTrangThai_DaKetThuc(idKH, idV));
     }
 }
