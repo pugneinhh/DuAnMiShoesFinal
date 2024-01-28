@@ -51,7 +51,9 @@ public class VoucherService {
         return vr.save(v);
     }
     public Voucher updateTTHD(String id,VoucherRequest request){
+        System.out.println("Vào update TTHD");
         Voucher v=request.map(new Voucher());
+        System.out.println("V"+v);
         v.setId(id);
         v.setTrangThai(Status.DANG_HOAT_DONG);
         return vr.save(v);
@@ -64,6 +66,9 @@ public class VoucherService {
     }
     public Voucher detailVoucher(String id){return vr.findById(id).get();}
 
+    public Voucher add (Voucher v){
+        return vr.save(v);
+    }
     public List<AdminVoucher> getSearch(VoucherSearch voucherSearch) {
         return vr.searchVoucher(voucherSearch);
     }

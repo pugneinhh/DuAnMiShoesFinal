@@ -15,7 +15,7 @@ import java.util.List;
 
 @Repository
 public interface NguoiDungVoucherRepository extends JpaRepository<NguoiDungVoucher,String> {
-    @Query(value = "select nguoi_dung_id from nguoidung_voucher where voucher_id=:id and trang_thai ='DANG_SU_DUNG' " ,nativeQuery = true)
+    @Query(value = "select nguoi_dung_id from nguoidung_voucher where voucher_id=:id " ,nativeQuery = true)
     List<String> getIDKHByIDKM(String id);
 
     @Query(value = """

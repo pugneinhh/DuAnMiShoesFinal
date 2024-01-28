@@ -17,6 +17,7 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @CrossOrigin("http://localhost:3000/")
 @RestController
@@ -49,7 +50,7 @@ public class VoucherController {
         }else{
             request.setTrangThai(Status.DANG_HOAT_DONG);
         }
-        request.setNgayTao(LocalDateTime.now());
+        request.setNgayTao(new java.util.Date());
         return  ResponseEntity.ok(vs.addVoucher(request));
     }
     @PutMapping("/update/{id}")
@@ -70,7 +71,7 @@ public class VoucherController {
         }else{
             request.setTrangThai(Status.NGUNG_HOAT_DONG);
         }
-        request.setNgaySua(LocalDateTime.now());
+        request.setNgaySua(new java.util.Date());
         return  ResponseEntity.ok(vs.addVoucher(request));
     }
     @GetMapping("/detail/{idV}")
@@ -91,20 +92,32 @@ public class VoucherController {
     }
     @PostMapping("/search-voucher")
     public ResponseEntity<?> search(@RequestBody VoucherSearch voucherSearch){
-        System.out.println(voucherSearch.getNgayBDVoucher());
+        System.out.println(voucherSearch.getNgayBatDau());
         return ResponseEntity.ok(vs.getSearch(voucherSearch));
     }
     @PutMapping("/updateTTHD/{id}")
     public ResponseEntity<?> updateTTHD(@PathVariable("id")String id,@RequestBody VoucherRequest request){
-
-        return ResponseEntity.ok(vs.updateTTHD(id,request));
+        System.out.println("Vào update TTHD");
+        Voucher v=request.map(new Voucher());
+        System.out.println("V"+v);
+        v.setId(id);
+        v.setTrangThai(Status.DANG_HOAT_DONG);
+        return ResponseEntity.ok(vs.add(v));
     }
     @PutMapping("/updateTTNgung/{id}")
     public ResponseEntity<?> updateTTNgung(@PathVariable("id")String id,@RequestBody VoucherRequest request){
+        LocalDateTime ngayBD =  vs.convertTime(request.getNgayBatDau());
+        LocalDateTime ngayKT = vs.convertTime(request.getNgayKetThuc());
+        request.setNgayBatDau(ngayBD);
+        request.setNgayKetThuc(ngayKT);
         return ResponseEntity.ok(vs.updateTTNgung(id,request));
     }
     @PutMapping("/updateTTSap/{id}")
     public ResponseEntity<?> updateTTSap(@PathVariable("id")String id,@RequestBody VoucherRequest request){
+        LocalDateTime ngayBD =  vs.convertTime(request.getNgayBatDau());
+        LocalDateTime ngayKT = vs.convertTime(request.getNgayKetThuc());
+        request.setNgayBatDau(ngayBD);
+        request.setNgayKetThuc(ngayKT);
         return ResponseEntity.ok(vs.updateTTSap(id,request));
     }
 }

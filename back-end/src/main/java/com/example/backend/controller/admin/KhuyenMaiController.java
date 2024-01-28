@@ -136,9 +136,6 @@ public class KhuyenMaiController {
     }
     @PostMapping("/search-khuyen-mai")
     public ResponseEntity<?> search(@RequestBody KhuyenMaiSearch khuyenMaiSearch){
-        System.out.println(khuyenMaiSearch.getNgay_bat_dau());
-        System.out.println(khuyenMaiSearch.getNgay_ket_thuc());
-        System.out.println(khuyenMaiSearch.getMa());
         return ResponseEntity.ok(khuyenMaiService.getSearch(khuyenMaiSearch));
     }
 }

@@ -42,6 +42,7 @@ public class NguoiDungVoucherService {
     public NguoiDungVoucher add(String idKH, Voucher v){
         NguoiDung nd=nguoiDungRepository.findById(idKH).get();
         System.out.println("Người dùng"+nd);
+        System.out.println("Voucher"+v);
         NguoiDungVoucher ndv=new NguoiDungVoucher();
         ndv.setNguoiDung(nd);
         ndv.setVoucher(v);

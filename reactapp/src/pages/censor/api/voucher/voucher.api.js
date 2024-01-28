@@ -22,7 +22,7 @@ export class VoucherAPI {
     static update = (id,data) => {
         return requestAdmin({
             method: "PUT",
-            url: `admin/voucher/update/${id}`,
+            url: `/admin/voucher/update/${id}`,
             data: data,
         });
     };
@@ -30,21 +30,21 @@ export class VoucherAPI {
     static updateTTHD = (id,data) => {
         return requestAdmin({
             method: "PUT",
-            url: `admin/voucher/updateTTHD/${id}`,
+            url: `/admin/voucher/updateTTHD/${id}`,
             data: data,
         });
     };
     static updateTTNgung = (id,data) => {
         return requestAdmin({
             method: "PUT",
-            url: `admin/voucher/updateTTNgung/${id}`,
+            url: `/admin/voucher/updateTTNgung/${id}`,
             data: data,
         });
     };
     static updateTTSap = (id,data) => {
         return requestAdmin({
             method: "PUT",
-            url: `admin/voucher/updateTTSap/${id}`,
+            url: `/admin/voucher/updateTTSap/${id}`,
             data: data,
         });
     };

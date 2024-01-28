@@ -3,16 +3,16 @@ package com.example.backend.dto.request;
 import com.example.backend.entity.Voucher;
 import com.example.backend.util.Status;
 import lombok.*;
-
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class VoucherRequest {
     private String id;
     private String ma;
@@ -26,8 +26,8 @@ public class VoucherRequest {
     private int soLuong;
     private String nguoiTao;
     private String nguoiSua;
-    private LocalDateTime ngayTao;
-    private LocalDateTime ngaySua;
+    private Date ngayTao;
+    private Date ngaySua;
     private Status trangThai;
     public Voucher map(Voucher v){
         v.setId(this.id);
