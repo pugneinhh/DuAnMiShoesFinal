@@ -52,6 +52,8 @@ import BanHang from "../pages/censor/banHang-management/BanHang";
 import GuestGuard from "../guard/GuestGuard";
 import { Home } from "../layout/user/home";
 import { Login } from "../layout/login/login";
+import { GioHang } from "../layout/user/cart/gioHang";
+import { Shop } from "../layout/user/shop/shop";
 function App() {
   const isLoading = useAppSelector(GetLoading);
 
@@ -377,14 +379,32 @@ function App() {
                 </GuestGuard>
               }
             />
-
-
+            <Route
+              path="/gio-hang"
+              element={
+                <GuestGuard>
+                  <DashboardClient>
+                    <GioHang />
+                  </DashboardClient>
+                </GuestGuard>
+              }
+            />
+            <Route
+              path="/san-pham"
+              element={
+                <GuestGuard>
+                  <DashboardClient>
+                    <Shop />
+                  </DashboardClient>
+                </GuestGuard>
+              }
+            />
             {/* Màn login */}
             <Route
               path="/login"
               element={
                 <GuestGuard>
-                 <Login/>
+                  <Login />
                 </GuestGuard>
               }
             />

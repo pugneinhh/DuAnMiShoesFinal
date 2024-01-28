@@ -29,7 +29,7 @@ import {
   SidebarHeader,
   SidebarFooter,
 } from "react-pro-sidebar";
-import { Avatar, Badge, Button,  Layout, theme ,Image,FloatButton } from "antd";
+import { Avatar, Badge, Button, Layout, theme, Image, FloatButton } from "antd";
 import { IoNotifications } from "react-icons/io5";
 import { FaUserAlt } from "react-icons/fa";
 
@@ -42,193 +42,178 @@ const DashboardCensor = ({ children }) => {
   } = theme.useToken();
   return (
     <Layout className="layout-censor">
-      <Sider trigger={null} collapsible collapsed={collapsed} width={235}  >
-       
-          
-        
+      <Sider trigger={null} collapsible collapsed={collapsed} width={235}>
         <div className="demo-logo-vertical" />
         <ProSidebar
-        className={`nav-sidebar`}
-        //image={sidebarBg}
-        collapsed={collapsed}
-        width={235}
-        breakPoint="md"
-        
-        image="https://i.pinimg.com/564x/40/81/08/4081083e8895a9a620ada4b0fac3d436.jpg?fbclid=IwAR0HZwn_m42pqnvest56DrS32EKJXbpfIQvedmzUNReYtTiipdjSBjz6r-o"
-      >
-            <SidebarHeader>
-                    <div
-                        style={{
-                            alignItems : 'center',
-                            display : 'flex',   
-                            flexDirection : 'column ',
-                            padding: '20px',
-                            textTransform: 'uppercase',
-                            fontWeight: 'bold',
-                            fontSize: 18,
-                            letterSpacing: '1px',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap',
-                            
-                        }}
-                    >
-                        <div className='logo_slibar'>
-                            {!collapsed ? 
-                            (
-                              <div>
-                            <Image width={100} src={logoShop} />
-                            <br></br>
-                            <span> Mi Shoes</span> 
-                            </div>
-                            )
-                            :( <Image src={logoShop} rounded /> )}
-
-                        </div>
-
-                    </div>
-                </SidebarHeader>
-                <Menu iconShape="circle">
-          
-                        <MenuItem
-                            icon={<RxDashboard color='#f7faf9' size={20} />}
-                        >
-                            Dashboard
-                            <Link to="/admin-thong-ke"></Link>
-                        </MenuItem>
-                    </Menu>
-                    <Menu iconShape="circle">
-                        <MenuItem
-                            icon={<FaCartShopping color='#f7faf9' size={20} />}
-                        >
-                            Bán Hàng Tại Quầy
-                            <Link to="/admin-ban-hang"></Link>
-                        </MenuItem>
-                    </Menu>
-                    <Menu iconShape="circle">
-                    <SubMenu
-                            icon={<BsBoxSeamFill color='#f7faf9' size={20}/>}
-                            title="Quản Lý Sản Phẩm"
-                        >
-                            <MenuItem icon={<FaTshirt color='#f7faf9' size={20}/>}>
-                                Sản Phẩm
-                                <Link to='/admin-san-pham'></Link>
-                            </MenuItem>
-                            <MenuItem icon={<BiSolidCategory color='#f7faf9' size={20} />}>
-                                Danh Mục
-                                <Link to='/admin-danh-muc'></Link>
-                            </MenuItem>
-                            <MenuItem icon={<AiOutlineColumnHeight color='#f7faf9' size={20} />}>
-                                Đế giày
-                                <Link to='/admin-de-giay'></Link>
-                            </MenuItem>
-                            <MenuItem icon={<GiMaterialsScience color='#f7faf9' size={20}/>}>
-                                Chất Liệu
-                                <Link to='/admin-chat-lieu'></Link>
-                            </MenuItem>
-                            <MenuItem icon={<GoNumber color='#f7faf9' size={20} />}>
-                                Kích thước
-                                <Link to='/admin-kich-thuoc'></Link>
-                            </MenuItem>
-                            <MenuItem icon={<IoColorPalette color='#f7faf9' size={20}/>}>
-                                Màu Sắc
-                                <Link to='/admin-mau-sac'></Link>
-                            </MenuItem>
-                            <MenuItem icon={<PiTrademarkFill color='#f7faf9' size={20} />}>
-                                Hãng
-                                <Link to='/admin-hang'></Link>
-                            </MenuItem>
-                            
-                        </SubMenu>
-                    </Menu>
-                    <Menu iconShape="circle">
-                    <SubMenu
-                            icon={<RiAccountCircleFill color='#f7faf9' size={20}/>}
-                            title="Quản Lý Tài Khoản"
-                        >
-                            <MenuItem icon={<BiSolidUserBadge color='#f7faf9' size={20}/>}>
-                                Nhân Viên
-                                <Link to='/admin-nhan-vien'></Link>
-                            </MenuItem>
-                            <MenuItem icon={<BiSolidUserDetail color='#f7faf9' size={25} />}>
-                                Khách Hàng
-                                 <Link to='/admin-khach-hang'></Link>
-                            </MenuItem>
-                           
-                        </SubMenu>
-                    </Menu>
-                    <Menu iconShape="circle">
-                        <MenuItem
-                            icon={<FaMoneyBills color='#f7faf9' size={20}/>}
-                            suffix={<Badge className="icon-hoa-don" pill bg="red" text="red">New</Badge>}
-                        >
-                            Hóa Đơn
-                            <Link to='/admin-hoa-don'></Link>
-                        </MenuItem>
-                    </Menu>
-                    <Menu iconShape="circle">
-                    
-                    <SubMenu
-                            icon={<BiSolidDiscount  color='#f7faf9' size={20}/>}
-                            title="Giảm giá"
-                        >
-                        <MenuItem
-                            icon={<LuBadgePercent color='#f7faf9' size={25} />}
-                        >
-                            Đợt giảm giá
-                            <Link to = '/admin-khuyen-mai'></Link>
-                        </MenuItem>
-                    
-                    
-                        <MenuItem
-                            icon={<FaTag color='#f7faf9'size={20} />}
-                        >
-                            Phiếu giảm giá
-                            <Link to='/admin-voucher'></Link>
-                        </MenuItem>
-                    
-                    </SubMenu>
-                    </Menu>
-        <SidebarFooter style={{ textAlign: "center" }}>
-          <div
-            className="sidebar-btn-wrapper"
-            style={{
-              padding: "20px 24px",
-            }}
-          >
-            {collapsed ? (
-              <a
-                href="#"
-                target="_blank"
-                className="sidebar-btn"
-                rel="noopener noreferrer"
+          className={`nav-sidebar`}
+          //image={sidebarBg}
+          collapsed={collapsed}
+          width={235}
+          breakPoint="md"
+          image="https://i.pinimg.com/564x/40/81/08/4081083e8895a9a620ada4b0fac3d436.jpg?fbclid=IwAR0HZwn_m42pqnvest56DrS32EKJXbpfIQvedmzUNReYtTiipdjSBjz6r-o"
+        >
+          <SidebarHeader>
+            <div
+              style={{
+                alignItems: "center",
+                display: "flex",
+                flexDirection: "column ",
+                padding: "20px",
+                textTransform: "uppercase",
+                fontWeight: "bold",
+                fontSize: 18,
+                letterSpacing: "1px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              <div className="logo_slibar">
+                {!collapsed ? (
+                  <div>
+                    <Image width={100} src={logoShop} />
+                    <br></br>
+                    <span> Mi Shoes</span>
+                  </div>
+                ) : (
+                  <Image src={logoShop} rounded />
+                )}
+              </div>
+            </div>
+          </SidebarHeader>
+          <Menu iconShape="circle">
+            <MenuItem icon={<RxDashboard color="#f7faf9" size={20} />}>
+              Dashboard
+              <Link to="/admin-thong-ke"></Link>
+            </MenuItem>
+          </Menu>
+          <Menu iconShape="circle">
+            <MenuItem icon={<FaCartShopping color="#f7faf9" size={20} />}>
+              Bán Hàng Tại Quầy
+              <Link to="/admin-ban-hang"></Link>
+            </MenuItem>
+          </Menu>
+          <Menu iconShape="circle">
+            <SubMenu
+              icon={<BsBoxSeamFill color="#f7faf9" size={20} />}
+              title="Quản Lý Sản Phẩm"
+            >
+              <MenuItem icon={<FaTshirt color="#f7faf9" size={20} />}>
+                Sản Phẩm
+                <Link to="/admin-san-pham"></Link>
+              </MenuItem>
+              <MenuItem icon={<BiSolidCategory color="#f7faf9" size={20} />}>
+                Danh Mục
+                <Link to="/admin-danh-muc"></Link>
+              </MenuItem>
+              <MenuItem
+                icon={<AiOutlineColumnHeight color="#f7faf9" size={20} />}
               >
-                <FaGithub color="#f7faf9" size={20} />
-              </a>
-            ) : (
-              <a
-                href="#"
-                target="_blank"
-                className="sidebar-btn link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
-                rel="noopener noreferrer"
-              >
-                <FaGithub color="#f7faf9" size={20} className="text-center" />
-                &ensp;
-                <span
-                  style={{
-                    whiteSpace: "nowrap",
-                    textOverflow: "ellipsis",
-                    overflow: "hidden",
-                    color: "white",
-                  }}
+                Đế giày
+                <Link to="/admin-de-giay"></Link>
+              </MenuItem>
+              <MenuItem icon={<GiMaterialsScience color="#f7faf9" size={20} />}>
+                Chất Liệu
+                <Link to="/admin-chat-lieu"></Link>
+              </MenuItem>
+              <MenuItem icon={<GoNumber color="#f7faf9" size={20} />}>
+                Kích thước
+                <Link to="/admin-kich-thuoc"></Link>
+              </MenuItem>
+              <MenuItem icon={<IoColorPalette color="#f7faf9" size={20} />}>
+                Màu Sắc
+                <Link to="/admin-mau-sac"></Link>
+              </MenuItem>
+              <MenuItem icon={<PiTrademarkFill color="#f7faf9" size={20} />}>
+                Hãng
+                <Link to="/admin-hang"></Link>
+              </MenuItem>
+            </SubMenu>
+          </Menu>
+          <Menu iconShape="circle">
+            <SubMenu
+              icon={<RiAccountCircleFill color="#f7faf9" size={20} />}
+              title="Quản Lý Tài Khoản"
+            >
+              <MenuItem icon={<BiSolidUserBadge color="#f7faf9" size={20} />}>
+                Nhân Viên
+                <Link to="/admin-nhan-vien"></Link>
+              </MenuItem>
+              <MenuItem icon={<BiSolidUserDetail color="#f7faf9" size={25} />}>
+                Khách Hàng
+                <Link to="/admin-khach-hang"></Link>
+              </MenuItem>
+            </SubMenu>
+          </Menu>
+          <Menu iconShape="circle">
+            <MenuItem
+              icon={<FaMoneyBills color="#f7faf9" size={20} />}
+              suffix={
+                <Badge className="icon-hoa-don" pill bg="red" text="red">
+                  New
+                </Badge>
+              }
+            >
+              Hóa Đơn
+              <Link to="/admin-hoa-don"></Link>
+            </MenuItem>
+          </Menu>
+          <Menu iconShape="circle">
+            <SubMenu
+              icon={<BiSolidDiscount color="#f7faf9" size={20} />}
+              title="Giảm giá"
+            >
+              <MenuItem icon={<LuBadgePercent color="#f7faf9" size={25} />}>
+                Đợt giảm giá
+                <Link to="/admin-khuyen-mai"></Link>
+              </MenuItem>
+
+              <MenuItem icon={<FaTag color="#f7faf9" size={20} />}>
+                Phiếu giảm giá
+                <Link to="/admin-voucher"></Link>
+              </MenuItem>
+            </SubMenu>
+          </Menu>
+          <SidebarFooter style={{ textAlign: "center" }}>
+            <div
+              className="sidebar-btn-wrapper"
+              style={{
+                padding: "20px 24px",
+              }}
+            >
+              {collapsed ? (
+                <a
+                  href="#"
+                  target="_blank"
+                  className="sidebar-btn"
+                  rel="noopener noreferrer"
                 >
-                 Mi Shoes
-                </span>
-              </a>
-            )}
-          </div>
-        </SidebarFooter>
-      </ProSidebar>
+                  <FaGithub color="#f7faf9" size={20} />
+                </a>
+              ) : (
+                <a
+                  href="#"
+                  target="_blank"
+                  className="sidebar-btn link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+                  rel="noopener noreferrer"
+                >
+                  <FaGithub color="#f7faf9" size={20} className="text-center" />
+                  &ensp;
+                  <span
+                    style={{
+                      whiteSpace: "nowrap",
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      color: "white",
+                    }}
+                  >
+                    Mi Shoes
+                  </span>
+                </a>
+              )}
+            </div>
+          </SidebarFooter>
+        </ProSidebar>
       </Sider>
       <Layout>
         <Header
@@ -251,7 +236,18 @@ const DashboardCensor = ({ children }) => {
               height: 64,
             }}
           />
-          <marquee style={{width:"600px" , color:"Red" , fontSize:"Bold" , marginRight:30}} direction="left" scrollamount="5">Ưu đãi khủng cho hóa đơn từ 20.000.000 VND ! Mua ngay </marquee>
+          <marquee
+            style={{
+              width: "600px",
+              color: "Red",
+              fontSize: "Bold",
+              marginRight: 30,
+            }}
+            direction="left"
+            scrollamount="5"
+          >
+            Ưu đãi khủng cho hóa đơn từ 20.000.000 VND ! Mua ngay{" "}
+          </marquee>
           <div className="admin-right float-end">
             <a href="#">
               <Badge count={5} color="red">
@@ -271,7 +267,7 @@ const DashboardCensor = ({ children }) => {
               icon={<FaUserAlt size={20} />}
               style={{ marginLeft: 40 }}
             />
-            </div>
+          </div>
         </Header>
         <Content
           style={{
