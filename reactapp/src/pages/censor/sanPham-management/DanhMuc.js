@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {Button,Divider,Form,Input,Select,Space,Table,Tag,Modal} from 'antd';
+import { Button, Divider, Form, Input, Select, Space, Table, Tag, Modal } from 'antd';
 import { PlusCircleOutlined, RetweetOutlined } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
@@ -20,31 +20,39 @@ export default function DanhMuc() {
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
   };
+  const formItemLayout = {
+    labelCol: {
+     span: 4
+    },
+    wrapperCol: {
+    span: 20
+    },
+  };
   //Ấn add 
   const [open, setOpen] = useState(false);
   const [bordered] = useState(false);
   const addDanhMuc = (value) => {
     const checkTrung = (code) => {
-      return danhMuc.some(dm => dm.ten === code);
+      return danhMuc.some(dm => dm.ten.trim().toLowerCase() === code.trim().toLowerCase());
     };
-    if(!(checkTrung(value.ten))){
+    if (!(checkTrung(value.ten))) {
       DanhMucAPI.create(value)
-      .then((res)=>{
-        toast('✔️ Thêm thành công!', {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        loadDanhMuc();
-        setOpen(false);
-        form.resetFields();
-      })
-    }else{
+        .then((res) => {
+          toast('✔️ Thêm thành công!', {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          loadDanhMuc();
+          setOpen(false);
+          form.resetFields();
+        })
+    } else {
       toast.error('Danh mục đã tồn tại!', {
         position: "top-right",
         autoClose: 5000,
@@ -56,58 +64,48 @@ export default function DanhMuc() {
         theme: "light",
       });
     }
-  
+
   }
   //Update
   const [openUpdate, setOpenUpdate] = useState(false);
   const [dmUpdate, setDmUpdate] = useState(false);
   const [tenCheck, setTenCheck] = useState(false);
-  // const showModal = async (id) => {
-  //   const result = await axios.get(`http://localhost:8080/admin/danh-muc/detail/${id}`, {
-  //     validateStatus: () => {
-  //       return true;
-  //     }
-  //   });;
-  
-  //   setTenCheck(result.data.ten)
-  //   setDmUpdate(result.data)
-  //   setOpenUpdate(true);
-  // };
+
   const showModal = async (id) => {
     setOpenUpdate(true);
     DanhMucAPI.detailDM(id)
-    .then((res)=>{
+      .then((res) => {
         setTenCheck(res.data.ten)
-    setDmUpdate(res.data)
-    })
-  
+        setDmUpdate(res.data)
+      })
+
   };
   console.log(dmUpdate)
   const updateDanhMuc = () => {
 
-      if(dmUpdate.ten != tenCheck){
-        const checkTrung = (ten) => {
-          return danhMuc.some(dm =>
-            dm.ten === ten
-          );
-        };
-  
-        if (checkTrung(dmUpdate.ten)) {
-          toast.error('Sản phẩm có tên trùng với sản phẩm khác !', {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
-          return;
-        }
+    if (dmUpdate.ten != tenCheck) {
+      const checkTrung = (ten) => {
+        return danhMuc.some(dm =>
+          dm.ten === ten
+        );
+      };
+
+      if (checkTrung(dmUpdate.ten)) {
+        toast.error('Sản phẩm có tên trùng với sản phẩm khác !', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        return;
       }
-      DanhMucAPI.updateDM(dmUpdate.id, dmUpdate)
-      .then((res)=>{
+    }
+    DanhMucAPI.updateDM(dmUpdate.id, dmUpdate)
+      .then((res) => {
         toast('✔️ Sửa thành công!', {
           position: "top-right",
           autoClose: 5000,
@@ -128,9 +126,9 @@ export default function DanhMuc() {
     timKiemCT(allValues);
   }
   const timKiemCT = (dataSearch) => {
-      DanhMucAPI.search(dataSearch)
-      .then((res)=>{
-        setDanhMucs(res.data); 
+    DanhMucAPI.search(dataSearch)
+      .then((res) => {
+        setDanhMucs(res.data);
       })
   }
   //Table
@@ -140,11 +138,11 @@ export default function DanhMuc() {
     loadDanhMuc();
   }, []);
 
-  const loadDanhMuc =  () => {
+  const loadDanhMuc = () => {
     DanhMucAPI.getAll()
-    .then((res)=>{
-      setDanhMucs(res.data); 
-    })
+      .then((res) => {
+        setDanhMucs(res.data);
+      })
   };
 
   const columns = [
@@ -192,7 +190,7 @@ export default function DanhMuc() {
       dataIndex: "id",
       render: (title) => (
         <Space size="middle">
-          <a className='btn btn-danger'><BsFillEyeFill className='mb-1' onClick={() => showModal(`${title}`)}/></a>
+          <a className='btn btn-danger'><BsFillEyeFill className='mb-1' onClick={() => showModal(`${title}`)} /></a>
         </Space>
       ),
     },
@@ -210,7 +208,8 @@ export default function DanhMuc() {
         }}>
           <h5><FilterFilled size={30} /> Bộ lọc</h5>
           <hr />
-          <Form className="row"
+          <Form
+            className="row"
             labelCol={{
               span: 10,
             }}
@@ -234,7 +233,7 @@ export default function DanhMuc() {
               </Form.Item>
             </div>
             <div className='col-md-5'>
-              <Form.Item placeholder="Chọn trạng thái"  label="Trạng Thái" name="trangThai">
+              <Form.Item placeholder="Chọn trạng thái" label="Trạng Thái" name="trangThai">
                 <Select value={selectedValue} onChange={handleChange}>
                   <Select.Option value="0">Còn Bán</Select.Option>
                   <Select.Option value="1">Dừng Bán</Select.Option>
@@ -242,7 +241,7 @@ export default function DanhMuc() {
               </Form.Item>
             </div>
             <Form.Item className='text-center' style={{ paddingLeft: 200 }}>
-              <Button type="primary" htmlType='reset'  icon={<RetweetOutlined/>} onClick={loadDanhMuc}>Làm mới</Button>
+              <Button type="primary" htmlType='reset' icon={<RetweetOutlined />} onClick={loadDanhMuc}>Làm mới</Button>
             </Form.Item>
           </Form>
         </div>
@@ -296,7 +295,7 @@ export default function DanhMuc() {
                 onFinish={addDanhMuc}
                 form={form1}>
                 <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
-                     <Input className='border'></Input>
+                  <Input className='border'></Input>
                 </Form.Item>
               </Form>
             </Modal>
@@ -328,6 +327,7 @@ export default function DanhMuc() {
               width={500}
             >
               <Form
+                {...formItemLayout}
                 initialValues={{
                   size: componentSize,
                 }}
@@ -339,14 +339,14 @@ export default function DanhMuc() {
                 onFinish={updateDanhMuc}
                 form={form1}>
                 <Form.Item label={<b>Tên</b>} hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
-                     <Input className='border' value={dmUpdate.ten} onChange={(e) => setDmUpdate({ ...dmUpdate, ten: e.target.value })}></Input>
+                  <Input className='border' value={dmUpdate.ten} onChange={(e) => setDmUpdate({ ...dmUpdate, ten: e.target.value })}></Input>
                 </Form.Item>
                 <Form.Item label={<b>Trạng thái </b>}>
-                      <Select defaultValue={dmUpdate.trangThai == 0 ? 'Còn bán' : 'Dừng bán'} onChange={(e) => setDmUpdate({ ...dmUpdate, trangThai: e })}>
-                        <Select.Option value='0'>Còn Bán</Select.Option>
-                        <Select.Option value='1'>Dừng Bán</Select.Option>
-                      </Select>
-                    </Form.Item>
+                  <Select defaultValue={dmUpdate.trangThai == 0 ? 'Còn bán' : 'Dừng bán'} onChange={(e) => setDmUpdate({ ...dmUpdate, trangThai: e })}>
+                    <Select.Option value='0'>Còn Bán</Select.Option>
+                    <Select.Option value='1'>Dừng Bán</Select.Option>
+                  </Select>
+                </Form.Item>
               </Form>
             </Modal>
           </div>
