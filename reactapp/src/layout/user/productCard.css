@@ -23,15 +23,15 @@
   }
 
   .product-name {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
-    margin-bottom: 8px;
+    margin-bottom: 3px;
   }
 
   .product-price {
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 15px;
     color: #e44d26;
+    margin-top: 3px;
     margin-bottom: 16px;
   }
 
@@ -50,7 +50,7 @@
 
   .product-card:hover .buttons-container {
     opacity: 1;
-    transform: translateY(-10px);
+    transform: translateY(4px);
     
   }
 
@@ -64,7 +64,6 @@
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
-    
   }
 
   .buy-button {
@@ -76,4 +75,8 @@
     background-color: #333;
     color: #fff;
     margin-left: 8px;
+  }
+
+  .icon{
+    margin-bottom: 3px;
   }

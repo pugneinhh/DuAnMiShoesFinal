@@ -1,5 +1,7 @@
 package com.example.backend.service;
 
+import com.example.backend.dto.request.KhachHangVoucherSearch;
+import com.example.backend.dto.request.NguoiDungSeacrh;
 import com.example.backend.dto.response.NguoiDungRespone;
 import com.example.backend.dto.response.VoucherRespone;
 import com.example.backend.entity.NguoiDung;
@@ -75,5 +77,9 @@ public class NguoiDungVoucherService {
         n.setTrangThai(Status.NGUNG_HOAT_DONG);
         nguoiDungVoucherRepository.save(n);
         return n;
+    }
+
+    public List<AdminKhachHangRepon> getSearchKhachHang(KhachHangVoucherSearch nguoiDungSeacrh){
+        return nguoiDungVoucherRepository.getKhachHangSearch(nguoiDungSeacrh);
     }
 }
