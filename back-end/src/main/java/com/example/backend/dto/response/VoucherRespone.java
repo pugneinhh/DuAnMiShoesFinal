@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.sql.Date;
 
 public interface VoucherRespone {
+    public String getId();
     public String getMa();
     public String getTen();
     public String getLoaiVoucher();

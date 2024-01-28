@@ -1,15 +1,23 @@
-
 import React from "react";
-import { Breadcrumb, Layout, theme, Image, Badge, Avatar } from "antd";
+import {
+  Breadcrumb,
+  Layout,
+  theme,
+  Image,
+  Badge,
+  Avatar,
+  Dropdown,
+  Space,
+  Row,
+  Col,
+} from "antd";
 import { Link } from "react-router-dom";
 import { DownOutlined, SmileOutlined, UserOutlined } from "@ant-design/icons";
-import { Dropdown, Space, Input } from "antd";
 import { TbShoppingCartHeart } from "react-icons/tb";
 import logoShop from "../../assets/images/logoNgang.png";
 import "./client.css";
 const { Header, Content, Footer } = Layout;
 export const DashboardClient = ({ children }) => {
-
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -61,13 +69,12 @@ export const DashboardClient = ({ children }) => {
     },
   ];
   return (
-    <Layout className="container">
+    <Layout  >
       {/* tiêu đề */}
 
       <Header
         style={{
           display: "flex",
-          alignItems: "center",
           position: "sticky",
           top: 0,
           zIndex: 1,
@@ -76,57 +83,63 @@ export const DashboardClient = ({ children }) => {
           color: "black",
         }}
       >
-        <div className="demo-logo" />
+        {/* logo SHOP */}
 
-        <div className="menu row d-flex  ">
-          {/* logo SHOP */}
-          <Image className="col" width={170} src={logoShop} />
-          <Dropdown menu={{ items }} className="col">
-            <a onClick={(e) => e.preventDefault()}>
+        <Col span={4}>
+         
+          <Image style={{ height: 60 }} width={170} src={logoShop} />
+        </Col>
+        <Col span={1.5} className="button-menu-trai text-center algin-center">
+          <Dropdown menu={{ items }} className="pb-4">
+            <a href='/home' className="button-menu-trai">
               <Space>
-                {" "}
                 <h6>HOME</h6>
-                <DownOutlined />
               </Space>
             </a>
           </Dropdown>
-          <Dropdown menu={{ items }} className="col">
-            <a onClick={(e) => e.preventDefault()}>
+        </Col>
+        <Col span={1.5} className=" button-menu-trai ms-4">
+          <Dropdown menu={{ items }} className="pb-4">
+            <a onClick={(e) => e.preventDefault()} className="button-menu-trai">
               <Space>
-                {" "}
                 <h6>SHOP</h6>
                 <DownOutlined />
               </Space>
             </a>
           </Dropdown>
-          <Dropdown menu={{ items }} className="col">
-            <a onClick={(e) => e.preventDefault()}>
+        </Col>
+        <Col span={1.5} className="button-menu-trai ms-4">
+          <Dropdown menu={{ items }} className=" button-menu-trai">
+            <a onClick={(e) => e.preventDefault()} className="pb-4">
               <Space>
-                {" "}
                 <h6>PRODUCT</h6>
                 <DownOutlined />
               </Space>
             </a>
           </Dropdown>
-          <Dropdown menu={{ items }} className="col">
-            <a onClick={(e) => e.preventDefault()}>
+        </Col>
+        <Col span={1.5} className="button-menu-trai ms-4">
+          <Dropdown menu={{ items }} className="button-menu-trai">
+            <a onClick={(e) => e.preventDefault()} className="pb-4">
               <Space>
-                {" "}
                 <h6>BLOG</h6>
                 <DownOutlined />
               </Space>
             </a>
           </Dropdown>
-
-          <Link className="col ms-10  justify-content-end">
-            <Badge count={10}>
-              <TbShoppingCartHeart size={25} />
+        </Col>
+        <Col span={12} className="float-end ">
+          <Link to={"/gio-hang"} className="float-end justify-content-end ">
+            <Badge count={10} offset={[8, 1]} className="menuButton">
+              <TbShoppingCartHeart size={30} className="menuButton" />
             </Badge>
           </Link>
-          <Link className="col ">
-            <Avatar size={40} icon={<UserOutlined />} />
+        </Col>
+        <Col span={1} className="ms-5">
+          <Link to={"/login"}>
+            <Avatar size={40} className="menuButton" icon={<UserOutlined />} />
           </Link>
-        </div>
+        </Col>
       </Header>
       <Content
         style={{
@@ -162,8 +175,4 @@ export const DashboardClient = ({ children }) => {
       </Footer>
     </Layout>
   );
-
-
 };
-
-

@@ -1,10 +1,13 @@
-.menu>a{
+.button-menu-trai{
     color: black;
-    text-align: center;
+
 }
-.menu>a:hover{
-    background-color: #d0aa73;
+.button-menu-trai:hover{
+background-color: #d0aa73;
+    height: 63px;
 }
-.ms-10{
-    margin-left: 500px;
+.menuButton:hover {
+    cursor: pointer;
+    color: #d0aa73;
+
 }

@@ -1,5 +1,5 @@
 {
-  "homepage": "http://localhost:3000/admin-thong-ke",
+  "homepage": "http://localhost:3000/login",
   "name": "reactapp",
   "version": "0.1.0",
   "private": true,
@@ -33,6 +33,7 @@
     "icomoon-free-npm": "^0.0.0",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.7.1",
+    "mdb-react-ui-kit": "^7.1.0",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.43",
     "papaparse": "^5.4.1",
@@ -67,7 +68,7 @@
     "xlsx": "^0.18.5"
   },
   "scripts": {
-    "start": "react-scripts start http://localhost:3000/admin/ban-hang",
+    "start": "react-scripts start http://localhost:3000/login",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

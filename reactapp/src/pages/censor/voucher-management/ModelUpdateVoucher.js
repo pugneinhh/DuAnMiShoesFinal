@@ -8,7 +8,7 @@ import {
   Select,
   Divider,
 } from "antd";
-import axios from "axios";
+import axios, { getAdapter } from "axios";
 import { useEffect, useState } from "react";
 import moment from "moment";
 import { useParams } from "react-router-dom";
@@ -18,6 +18,7 @@ import TableKhachHang from "./tableKhachHang";
 import {  useNavigate } from "react-router-dom";
 import { VoucherAPI } from "../api/voucher/voucher.api";
 import { NguoiDungVoucherAPI } from "../api/voucher/nguoiDungVoucher.api";
+import {KhachHangAPI} from "../../censor/api/user/khachHang.api"
 
 
 const ModelUpdateVoucher = (props) => {
@@ -26,6 +27,7 @@ const ModelUpdateVoucher = (props) => {
   const [selectedValue, setSelectedValue] = useState("Tiền mặt");
   const [dataUpdate, setDataUpdate] = useState({});
   const [khachHang, setKhachHang] = useState([]);
+  const [allKhachHang,setAllKhachHang] = useState([]);
 
   const [form2] = Form.useForm();
 
@@ -69,16 +71,26 @@ const ModelUpdateVoucher = (props) => {
     console.log("đóng");
   };
   
+  const loadAllKH = () => {
+    KhachHangAPI.getAll().then((result) => {
+      setAllKhachHang(result.data);
+      console.log("All KH",result.data);
+    });
+  }
 
   const loadKH = () => {
     NguoiDungVoucherAPI.getAllByVoucher(id).then((x)=>{
     setKhachHang(x.data);
+    console.log("KH",x.data);
   });
   };
 
   useEffect(() => {
     detailVoucher();
     loadKH();
+    loadAllKH();
+
+
   }, []);
 
   const [selectedIDKH, setSelectedIDKH] = useState([]);
@@ -87,6 +99,8 @@ const ModelUpdateVoucher = (props) => {
     setSelectedIDKH(selectedRowKeys);
   };
   const handleUpdateVoucher = (value) => {
+    allKhachHang.map((kh) => selectedIDKH.includes(kh.idND) ? 
+    (khachHang.includes(kh.idND) ? "" : NguoiDungVoucherAPI.create(kh.idND,value)) : (khachHang.includes(kh.idND) ? NguoiDungVoucherAPI.updateTTNgung(id,kh.idND) : ""));   
     VoucherAPI.update(id,value)
       .then((response) => {
         navigate("/admin-voucher");

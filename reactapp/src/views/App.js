@@ -51,6 +51,9 @@ import ThongKe from "../pages/censor/thongKe-management/ThongKe";
 import BanHang from "../pages/censor/banHang-management/BanHang";
 import GuestGuard from "../guard/GuestGuard";
 import { Home } from "../layout/user/home";
+import { Login } from "../layout/login/login";
+import { GioHang } from "../layout/user/cart/gioHang";
+import { Shop } from "../layout/user/shop/shop";
 function App() {
   const isLoading = useAppSelector(GetLoading);
 
@@ -283,7 +286,7 @@ function App() {
                 </AuthGuard>
               }
             />
-               <Route
+            <Route
               path="/admin-showct/:id"
               element={
                 <AuthGuard>
@@ -344,7 +347,7 @@ function App() {
               }
             />
 
-               <Route
+            <Route
               path="/admin-sua-khuyen-mai/:id"
               element={
                 <AuthGuard>
@@ -371,8 +374,37 @@ function App() {
               element={
                 <GuestGuard>
                   <DashboardClient>
-                    <Home/>
+                    <Home />
                   </DashboardClient>
+                </GuestGuard>
+              }
+            />
+            <Route
+              path="/gio-hang"
+              element={
+                <GuestGuard>
+                  <DashboardClient>
+                    <GioHang />
+                  </DashboardClient>
+                </GuestGuard>
+              }
+            />
+            <Route
+              path="/san-pham"
+              element={
+                <GuestGuard>
+                  <DashboardClient>
+                    <Shop />
+                  </DashboardClient>
+                </GuestGuard>
+              }
+            />
+            {/* Màn login */}
+            <Route
+              path="/login"
+              element={
+                <GuestGuard>
+                  <Login />
                 </GuestGuard>
               }
             />
