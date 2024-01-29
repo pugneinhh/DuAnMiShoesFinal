@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
+import { Button } from 'antd';
 import "./productCard.css";
+import { IoIosInformationCircle } from 'react-icons/io';
+import { FaShoppingCart } from 'react-icons/fa';
 export const ProductCard = ({ product }) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -23,15 +26,16 @@ export const ProductCard = ({ product }) => {
         className="product-image"
       />
       <div className="product-details">
-        <div className="product-name">{product.name}</div>
-        <div className="product-price">{product.price}</div>
+        <div className="product-name"><h7>{product.name} [{product.size}-{product.color}]</h7></div>
+        <div><Button shape="circle" className='btn btn-sm border border-dark' style={{backgroundColor: product.colorCode}}/></div>
+        <div className="product-price">{Intl.NumberFormat('en-US').format(product.price)} VNĐ</div>
       </div>
       <div className="buttons-container">
         <a href="#" className="buy-button">
-          Buy Now
+           <FaShoppingCart size={20} className='icon'/> Buy Now
         </a>
         <a href="#" className="details-button">
-          Details
+          <IoIosInformationCircle size={20} className='icon'/> Details
         </a>
       </div>
     </div>

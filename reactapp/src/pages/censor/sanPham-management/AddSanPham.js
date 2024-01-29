@@ -284,7 +284,7 @@ export default function AddSanPham() {
         loadCTSP();
     }, []);
     const loadCTSP = async () => {
-        const result = await axios.get("http://localhost:8080/ctsp/show", {
+        const result = await axios.get("http://localhost:8080/admin/ctsp/show", {
             validateStatus: () => {
                 return true;
             }
@@ -363,7 +363,7 @@ export default function AddSanPham() {
         }
 
         for (let i = 0; i < tableData.length; i++) {
-            axios.post('http://localhost:8080/ctsp/add', tableData[i])
+            axios.post('http://localhost:8080/admin/ctsp/add', tableData[i])
                 .then(response => {
                     console.log(response.data);
                     loadCTSP();
@@ -394,7 +394,7 @@ export default function AddSanPham() {
         loadSP();
     }, []);
     const loadSP = async () => {
-        const result = await axios.get("http://localhost:8080/san-pham/getAll", {
+        const result = await axios.get("http://localhost:8080/admin/san-pham/getAll", {
             validateStatus: () => {
                 return true;
             }
@@ -402,8 +402,7 @@ export default function AddSanPham() {
         setOptionsSP(result.data);
     };
     const addSanPham = (value) => {
-        console.log(value);
-        axios.post('http://localhost:8080/san-pham/add', value)
+        axios.post('http://localhost:8080/admin/san-pham/add', value)
             .then(response => {
                 console.log(response.data);
                 loadSP();
@@ -421,12 +420,11 @@ export default function AddSanPham() {
         loadKT();
     }, []);
     const loadKT = async () => {
-        const result = await axios.get("http://localhost:8080/kich-thuoc", {
+        const result = await axios.get("http://localhost:8080/admin/kich-thuoc", {
             validateStatus: () => {
                 return true;
             }
         });
-        if (result.status === 302) {
             setKTData(result.data);
             const loadOKT = result.data.map(item => ({
                 key: item.id,
@@ -434,11 +432,10 @@ export default function AddSanPham() {
                 label: item.ten,
             }));
             setOptionsKT(loadOKT);
-        }
     };
     const addKichThuoc = (value) => {
         console.log(value);
-        axios.post('http://localhost:8080/kich-thuoc/add', value)
+        axios.post('http://localhost:8080/admin/kich-thuoc/add', value)
             .then(response => {
                 console.log(response.data);
                 toast('✔️ Thêm thành công!', {
@@ -480,12 +477,12 @@ export default function AddSanPham() {
         loadMS();
     }, []);
     const loadMS = async () => {
-        const result = await axios.get("http://localhost:8080/mau-sac", {
+        const result = await axios.get("http://localhost:8080/admin/mau-sac", {
             validateStatus: () => {
                 return true;
             }
         });
-        if (result.status === 302) {
+  
             setMSData(result.data);
             const loadOMS = result.data.map(item => ({
                 key: item.id,
@@ -493,7 +490,7 @@ export default function AddSanPham() {
                 label: item.ten,
             }));
             setOptionsMS(loadOMS);
-        }
+        
     };
     const addMauSac = (value) => {
         const chekTrung = (code) => {
@@ -501,7 +498,7 @@ export default function AddSanPham() {
         };
         if (!chekTrung(value.ma)) {
             console.log(value.ma);
-            axios.post('http://localhost:8080/mau-sac/add', value)
+            axios.post('http://localhost:8080/admin/mau-sac/add', value)
                 .then(response => {
                     console.log(response.data);
                     toast('✔️ Thêm thành công!', {
@@ -541,18 +538,18 @@ export default function AddSanPham() {
         loadCL();
     }, []);
     const loadCL = async () => {
-        const result = await axios.get("http://localhost:8080/chat-lieu", {
+        const result = await axios.get("http://localhost:8080/admin/chat-lieu", {
             validateStatus: () => {
                 return true;
             }
         });
-        if (result.status === 302) {
+   
             setCL(result.data);
-        }
+        
     };
     const addChatLieu = (value) => {
         console.log(value);
-        axios.post('http://localhost:8080/chat-lieu/add', value)
+        axios.post('http://localhost:8080/admin/chat-lieu/add', value)
             .then(response => {
                 console.log(response.data);
                 toast('✔️ Thêm thành công!', {
@@ -579,18 +576,18 @@ export default function AddSanPham() {
         loadDC();
     }, []);
     const loadDC = async () => {
-        const result = await axios.get("http://localhost:8080/de-giay", {
+        const result = await axios.get("http://localhost:8080/admin/de-giay", {
             validateStatus: () => {
                 return true;
             }
         });
-        if (result.status === 302) {
+      
             setDC(result.data);
-        }
+        
     };
     const addDoCao = (value) => {
         console.log(value);
-        axios.post('http://localhost:8080/de-giay/add', value)
+        axios.post('http://localhost:8080/admin/de-giay/add', value)
             .then(response => {
                 console.log(response.data);
                 toast('✔️ Thêm thành công!', {
@@ -617,7 +614,7 @@ export default function AddSanPham() {
         loadDM();
     }, []);
     const loadDM = async () => {
-        const result = await axios.get("http://localhost:8080/danh-muc", {
+        const result = await axios.get("http://localhost:8080/admin/danh-muc", {
             validateStatus: () => {
                 return true;
             }
@@ -626,7 +623,7 @@ export default function AddSanPham() {
     };
     const addDanhMuc = (value) => {
         console.log(value);
-        axios.post('http://localhost:8080/danh-muc/add', value)
+        axios.post('http://localhost:8080/admin/danh-muc/add', value)
             .then(response => {
                 console.log(response.data);
                 toast('✔️ Thêm thành công!', {
@@ -653,18 +650,18 @@ export default function AddSanPham() {
         loadH();
     }, []);
     const loadH = async () => {
-        const result = await axios.get("http://localhost:8080/hang", {
+        const result = await axios.get("http://localhost:8080/admin/hang", {
             validateStatus: () => {
                 return true;
             }
         });
-        if (result.status === 302) {
+       
             setH(result.data);
-        }
+        
     };
     const addHang = (value) => {
         console.log(value);
-        axios.post('http://localhost:8080/hang/add', value)
+        axios.post('http://localhost:8080/admin/hang/add', value)
             .then(response => {
                 console.log(response.data);
                 toast('✔️ Thêm thành công!', {
