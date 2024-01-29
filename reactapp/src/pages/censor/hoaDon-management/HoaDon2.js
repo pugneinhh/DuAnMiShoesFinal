@@ -305,7 +305,7 @@ export default function HoaDon() {
       {
         key: "1",
 
-        label: <Badge count={hoaDonLength} offset={[8, 1]}>Tất cả</Badge>,
+        label: 'Tất cả',
         children: (
           <Table
             dataSource={hoaDon}
@@ -407,7 +407,7 @@ export default function HoaDon() {
       },
       {
         key: "7",
-        label: <Badge count={tongHDThanhCong} offset={[8, 1]}>Hoàn thành</Badge>,
+        label: "Hoàn thành",
         children: (
           <Table
             dataSource={hoaDonHT}

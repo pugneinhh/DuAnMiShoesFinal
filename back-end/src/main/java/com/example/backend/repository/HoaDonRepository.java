@@ -25,7 +25,7 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
                  	CASE WHEN hd.khach_hang_id IS  NULL   THEN N''
                         ELSE kh.so_dien_thoai END  as sdt,
                              ngay_mua as ngayMua,thanh_tien as thanhTien,hd.trang_thai as trangThai,hd.loai_hoa_don AS loaiHD FROM duanmishoes.hoa_don hd
-                 		 	LEFT JOIN duanmishoes.nguoi_dung kh ON kh.id = hd.khach_hang_id ORDER BY hd.ma DESC
+                 		 	LEFT JOIN duanmishoes.nguoi_dung kh ON kh.id = hd.khach_hang_id ORDER BY ngayMua desc 
                      """, nativeQuery = true)
     List<AdminHoaDonResponn> getALLHD();
 
@@ -35,7 +35,7 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
                                	CASE WHEN hd.khach_hang_id IS  NULL   THEN N''
                                       ELSE kh.so_dien_thoai END  as sdt,
                                            ngay_mua as ngayMua,thanh_tien as thanhTien,hd.trang_thai as trangThai,hd.loai_hoa_don AS loaiHD FROM duanmishoes.hoa_don hd
-                               		 	LEFT JOIN duanmishoes.nguoi_dung kh ON kh.id = hd.khach_hang_id where hd.trang_thai=:tt ORDER BY hd.ma DESC
+                               		 	LEFT JOIN duanmishoes.nguoi_dung kh ON kh.id = hd.khach_hang_id where hd.trang_thai=:tt ORDER BY ngayMua desc 
             """,
             nativeQuery = true)
     List<AdminHoaDonResponn> getALLHDTT(int tt);
