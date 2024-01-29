@@ -6,6 +6,7 @@ import { BiSolidDiscount } from "react-icons/bi";
 import ModalDiaChi from "./modalDiaChi";
 import ModalVoucher from "./modalVoucher";
 import { Link } from "react-router-dom";
+import ProductRow from "./gioHangrow";
 export const GioHang = ({ children }) => {
     const [openModalDiaChi, setOpenModalDiaChi] = useState(false);
     const [openModalVoucher, setOpenModalVoucher] = useState(false);
@@ -14,16 +15,16 @@ export const GioHang = ({ children }) => {
         // setIdKH(row);
         setOpenModalDiaChi(true);
       };
-  const [quantity, setQuantity] = useState(0);
-  const tangSL = () => {
-    setQuantity(quantity + 1);
-  };
+  // const [quantity, setQuantity] = useState(0);
+  // const tangSL = () => {
+  //   setQuantity(quantity + 1);
+  // };
 
-  const giamSL = () => {
-    if (quantity > 0) {
-      setQuantity(quantity - 1);
-    }
-  };
+  // const giamSL = () => {
+  //   if (quantity > 0) {
+  //     setQuantity(quantity - 1);
+  //   }
+  // };
   return (
     <div>
       <div className="banner-gio-hang-san-pham">
@@ -75,138 +76,8 @@ export const GioHang = ({ children }) => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td className="row">
-                  <div className="col-md-3">
-                    <img
-                      style={{ width: 100, height: 100 }}
-                      src="https://res-console.cloudinary.com/dm0w2qws8/thumbnails/v1/image/upload/v1705931217/eTN5eGM4bHdkdHZvYWZkZ21ucmE=/preview"
-                    ></img>
-                  </div>
-                  <div className="col-md-5 fw-bold" style={{ paddingLeft: 20 }}>
-                    <h6> Nike Adidas Grand Court</h6>
-                    <h6 className="mt-2"> 40</h6>
-                    <div
-                      className="mt-2"
-                      style={{
-                        backgroundColor: "red", //`${listSanPham.tenMauSac}`
-                        borderRadius: 6,
-                        width: 60,
-                        height: 25,
-                      }}
-                    ></div>
-                  </div>
-                </td>
-                <td>
-                  <h6
-                    className=" fw-bold"
-                    style={{ color: "red", marginTop: "35px" }}
-                  >
-                    1.200.000
-                  </h6>
-                </td>
-                <td>
-                  <div style={{ marginTop: "30px" }}>
-                    <button
-                      onClick={giamSL}
-                      style={{ width: 35, borderRadius: 10 }}
-                    >
-                      -
-                    </button>
-                    <input
-                      value={quantity}
-                      className="ms-2 me-2 text-center"
-                      style={{ width: 35 }}
-                      min={0}
-                    ></input>
-                    <button
-                      onClick={tangSL}
-                      style={{ width: 35, borderRadius: 10 }}
-                    >
-                      +
-                    </button>
-                  </div>
-                </td>
-                <td>
-                  <h6
-                    className=" fw-bold"
-                    style={{ color: "red", marginTop: "35px" }}
-                  >
-                    1.200.000
-                  </h6>
-                </td>
-                <td>
-                  <Button style={{ marginTop: "30px" }}>
-                    <FaRegTrashAlt />
-                  </Button>
-                </td>
-              </tr>
-              <tr>
-                <td className="row">
-                  <div className="col-md-3">
-                    <img
-                      style={{ width: 100, height: 100 }}
-                      src="https://res-console.cloudinary.com/dm0w2qws8/thumbnails/v1/image/upload/v1705931217/eTN5eGM4bHdkdHZvYWZkZ21ucmE=/preview"
-                    ></img>
-                  </div>
-                  <div className="col-md-5 fw-bold" style={{ paddingLeft: 20 }}>
-                    <h6> Nike Adidas Grand Court</h6>
-                    <h6 className="mt-2"> 40</h6>
-                    <div
-                      className="mt-2"
-                      style={{
-                        backgroundColor: "red", //`${listSanPham.tenMauSac}`
-                        borderRadius: 6,
-                        width: 60,
-                        height: 25,
-                      }}
-                    ></div>
-                  </div>
-                </td>
-                <td>
-                  <h6
-                    className=" fw-bold"
-                    style={{ color: "red", marginTop: "35px" }}
-                  >
-                    1.200.000
-                  </h6>
-                </td>
-                <td>
-                  <div style={{ marginTop: "30px" }}>
-                    <button
-                      onClick={giamSL}
-                      style={{ width: 35, borderRadius: 10 }}
-                    >
-                      -
-                    </button>
-                    <input
-                      value={quantity}
-                      className="ms-2 me-2 text-center"
-                      style={{ width: 35 }}
-                      min={0}
-                    ></input>
-                    <button
-                      onClick={tangSL}
-                      style={{ width: 35, borderRadius: 10 }}
-                    >
-                      +
-                    </button>
-                  </div>
-                </td>
-                <td>
-                  <h6
-                    className=" fw-bold"
-                    style={{ color: "red", marginTop: "35px" }}
-                  >
-                    1.200.000
-                  </h6>
-                </td>
-                <td>
-                  <Button style={{ marginTop: "30px" }}>
-                    <FaRegTrashAlt />
-                  </Button>
-                </td>
-              </tr>
+              <ProductRow />
+              <ProductRow />
             </tbody>
           </table>
         </div>
@@ -242,10 +113,10 @@ export const GioHang = ({ children }) => {
             className="row ps-2 pb-2 mt-3"
             // style={{ borderBottom: "1px dashed black"}}
           >
-            <div className="col-md-7" style={{ marginLeft: 40 }}>
+            <div className="col-md-6" style={{ marginLeft: 30 }}>
               <span>Đơn hàng </span>
             </div>
-            <div className="col-md-4">
+            <div className="col-md-5">
               <span style={{ color: "blue" }}>0 </span> <span>VND</span>
             </div>
           </div>
@@ -253,10 +124,10 @@ export const GioHang = ({ children }) => {
             className="row ps-2 pb-2 mt-3"
             style={{ borderBottom: "1px dashed black" }}
           >
-            <div className="col-md-7" style={{ marginLeft: 40 }}>
+            <div className="col-md-6" style={{ marginLeft: 30 }}>
               <span>Giảm </span>
             </div>
-            <div className="col-md-4">
+            <div className="col-md-5">
               <span style={{ color: "blue" }}>0 </span> <span>VND</span>
             </div>
           </div>
@@ -264,10 +135,10 @@ export const GioHang = ({ children }) => {
             className="row ps-2 pb-2 mt-3"
             // style={{ borderBottom: "1px dashed black" }}
           >
-            <h5 className="col-md-7" style={{ marginLeft: 40 }}>
+            <h5 className="col-md-6" style={{ marginLeft: 30 }}>
               <span>Tổng tiền </span>
             </h5>
-            <h5 className="col-md-4">
+            <h5 className="col-md-5">
               <span style={{ color: "blue" }}>0 </span> <span>VND</span>
             </h5>
           </div>
