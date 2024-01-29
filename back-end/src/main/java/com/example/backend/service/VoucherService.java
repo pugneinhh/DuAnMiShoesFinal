@@ -86,23 +86,20 @@ public class VoucherService {
         list.addAll(listVoucherNguoiDung);
         return list;
     }
-//    @Scheduled(cron = "0 * * * * *",zone = "Asia/Saigon")
-//    public void checkHan(){
-//        Timestamp now = new Timestamp(System.currentTimeMillis());
-//        for (Voucher x : vr.findAll()){
-//            if (x.getNgayKetThuc().compareTo(now)<=0) {
-//                x.setTrangThai(1);
-//                vr.save(x);
-//            }
-//            if(x.getNgayKetThuc().compareTo(now)>0){
-//                x.setTrangThai(0);
-//                vr.save(x);
-//            }
-//            if(x.getLoaiVoucher()==null||x.getLoaiVoucher().equalsIgnoreCase("false")){
-//                x.setSoLuong(0);
-//                vr.save(x);
-//            }
-//        }
-//    }
-
+    public Voucher updateTruSL(String id){
+        Voucher v=vr.findById(id).get();
+        v.setSoLuong(v.getSoLuong()-1);
+        if(v.getSoLuong()==0){
+            v.setTrangThai(Status.DA_DUNG_HET);
+        }
+        return vr.save(v);
+    }
+    public Voucher updateCongSL(String id){
+        Voucher v=vr.findById(id).get();
+        v.setSoLuong(v.getSoLuong()+1);
+        if(v.getTrangThai()==Status.DA_DUNG_HET){
+            v.setTrangThai(Status.DANG_HOAT_DONG);
+        }
+        return vr.save(v);
+    }
 }

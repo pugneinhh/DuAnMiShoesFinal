@@ -28,7 +28,15 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
                  		 	LEFT JOIN duanmishoes.nguoi_dung kh ON kh.id = hd.khach_hang_id ORDER BY hd.ma DESC
                      """, nativeQuery = true)
     List<AdminHoaDonResponn> getALLHD();
-
+    @Query(value = """
+                    SELECT hd.id AS idHD,  hd.ma AS ma, hd.nhan_vien_id as maNV, CASE WHEN hd.khach_hang_id IS NULL  THEN N'Khách lẻ'
+                                    ELSE kh.ten END  as tenKH ,
+                             	CASE WHEN hd.khach_hang_id IS  NULL   THEN N''
+                                    ELSE kh.so_dien_thoai END  as sdt,
+                                         ngay_mua as ngayMua,thanh_tien as thanhTien,hd.trang_thai as trangThai,hd.loai_hoa_don AS loaiHD FROM duanmishoes.hoa_don hd
+                             		 	LEFT JOIN duanmishoes.nguoi_dung kh ON kh.id = hd.khach_hang_id  where hd.loai_hoa_don=1 and hd.trang_thai=0
+            """,nativeQuery = true)
+    List<AdminHoaDonResponn> getHoaDonChoTaiQuay();
     @Query(value = """
                          SELECT hd.id AS idHD,  hd.ma AS ma, hd.nhan_vien_id as maNV, CASE WHEN hd.khach_hang_id IS NULL  THEN N'Khách lẻ'
                                       ELSE kh.ten END  as tenKH ,
