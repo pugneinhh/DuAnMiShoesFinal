@@ -67,6 +67,10 @@ public class BanHangController {
     public ResponseEntity<?> updateSLHDCT(@RequestBody HoaDonChiTietRequest request){
         return ResponseEntity.ok(hoaDonChiTietService.updateTruSl(request));
     }
+    @PostMapping("/delete-hdct")
+    public ResponseEntity<?> deleteHDCT(@RequestBody HoaDonChiTietRequest request){
+        return ResponseEntity.ok(hoaDonChiTietService.deleteHDCT(request));
+    }
     @PostMapping("/thanh-toan")
     public ResponseEntity<?> thanhToan(@PathVariable HoaDonRequest hoaDonRequest){
         hoaDonRequest.setTrangThai(1);
