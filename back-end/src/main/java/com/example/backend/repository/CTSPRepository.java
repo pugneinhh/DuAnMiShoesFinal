@@ -2,6 +2,7 @@ package com.example.backend.repository;
 
 
 import com.example.backend.dto.request.sanphamsearch.CTSPSearch;
+import com.example.backend.dto.response.SanPhamClient.DetailCTSPClientRespon;
 import com.example.backend.dto.response.sanpham.CTSPSearchRespone;
 import com.example.backend.dto.response.sanpham.ChiTietSanPhamRespone;
 import com.example.backend.dto.response.sanpham.DetailCTSPRespone;
@@ -130,5 +131,21 @@ public interface CTSPRepository extends JpaRepository<ChiTietSanPham, String> {
                         AND o.san_pham_id = :idSP
                                  """, nativeQuery = true)
     List<CTSPSearchRespone> getTim(@Param("idSP") String idSP, CTSPSearch ctspSearch);
+
+    // sản phẩm client
+    @Query(value = """
+                 SELECT o.id AS id,o.mo_ta AS moTa ,sp.id AS sanPhamID,sp.ten AS tenSP ,kt.id AS kichThuocID,ms.id AS mauSacID,cl.id AS chatLieuID, cl.ten as tenCL,dc.id AS deGiayID,dc.ten as tenDeGiay,dm.id AS danhMucID
+                     ,dm.ten as tenDM,h.id AS hangID,h.ten as tenHang,o.so_luong AS soLuong,o.gia_ban AS giaBan,o.trang_thai AS trangThai,o.ghi_chu as anh,o.khuyen_mai_id as khuyenMaiID
+                     FROM chi_tiet_san_pham o
+                     JOIN san_pham sp  on o.san_pham_id=sp.id
+                     JOIN kich_thuoc kt  on o.kich_thuoc_id=kt.id
+                     JOIN mau_sac ms  on o.mau_sac_id=ms.id
+                     JOIN chat_lieu cl  on o.chat_lieu_id=cl.id
+                     JOIN de_giay dc  on o.de_giay_id=dc.id
+                     JOIN danh_muc dm  on o.danh_muc_id=dm.id
+                     JOIN hang h  on o.hang_id=h.id
+                     WHERE o.id=:idCT
+                     """, nativeQuery = true)
+    DetailCTSPClientRespon detailCTSPClient(@Param("idCT") String idCT);
 
 }
