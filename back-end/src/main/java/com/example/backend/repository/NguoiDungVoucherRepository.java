@@ -41,26 +41,38 @@ public interface NguoiDungVoucherRepository extends JpaRepository<NguoiDungVouch
     NguoiDungVoucher getNguoiDungVoucherByVoucherAndKHhachHang(String idV, String idND);
 
     @Query(value = """
-            select
-            	case
-            		when nd.diem is null then N'0'
-            		else nd.diem
-            	end as diem,
-            	nd.id as idND,
-            	nd.ma as maND,
-            	nd.ten as tenND,
-            	nd.so_dien_thoai as SDT,
-            	case
-            		when nd.email is null then N'Không có'
-            		else nd.email
-            	end as email
+           select
+                 case
+                     when nd.diem is null then N'0'
+                     else nd.diem
+                 end as diem,
+                 nd.id as idND,
+                 nd.ma as maND,
+                 nd.ten as tenND,
+                 nd.so_dien_thoai as SDT,
+                 case
+                     when nd.email is null then N'Không có'
+                     else nd.email
+                 end as email,
+                 case
+                     when nd.ngay_sinh is null then N'Không có'
+                     else nd.ngay_sinh
+                 end as ngaySinh,
+                 nd.gioi_tinh as gioiTinh,
+                 nd.chung_minh_thu as cccd,
+                 case
+                     when nd.anh is null then N'Không có'
+                     else nd.anh
+                 end as anh,
+                 nd.trang_thai as trangThai
             from
             	nguoi_dung nd
             where
             	(:#{#nguoiDungSeacrh.ten} IS NULL OR 
             	nd.ma like (%:#{#nguoiDungSeacrh.ten}%) OR
             	nd.ten like (%:#{#nguoiDungSeacrh.ten}%) OR
-            	nd.so_dien_thoai like (%:#{#nguoiDungSeacrh.ten}%))AND            
+            	nd.so_dien_thoai like (%:#{#nguoiDungSeacrh.ten}%) OR
+            	nd.email like (%:#{#nguoiDungSeacrh.ten}%))AND            
             	nd.chuc_vu = 'khach_hang'
             order by
             	maND desc
