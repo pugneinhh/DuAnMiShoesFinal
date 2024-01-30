@@ -1,4 +1,4 @@
-import { Button, Modal, Image } from "antd";
+import { Button, Modal, Image, InputNumber } from "antd";
 import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { SanPhamClientAPI } from "../../../pages/censor/api/home/sanPham/sanPham.api";
@@ -8,18 +8,32 @@ const ModalDetailSP = (props) => {
   const [bottom, setBottom] = useState("bottomRight");
   const [largeImage, setLargeImage] = useState('');
       useEffect(() => {
-       loadCTSP()
+       loadCTSP();
+       loadListMauSacBySP();
+       loadListSizeBySP();
       }, []);
   const [ChiTietSanPham, setChiTietSanPham] = useState([]);
+   const [IDSanPham, setIDSanPham] = useState('');
   const loadCTSP = () => {
     // console.log(result.data);
     SanPhamClientAPI.getCTSP(idCt).then((res) => {
       setChiTietSanPham(res.data);
+      setIDSanPham(res.data.sanPhamID);
       setLargeImage(res.data.anh);
-      console.log(res.data);
-     
     });
   };
+   const [ListMauSacBySP, setListMauSacBySP] = useState([]);
+    const loadListMauSacBySP = () => {
+      SanPhamClientAPI.getListMauSacBySP(IDSanPham).then((res) => {
+     setListMauSacBySP(res.data);
+      });
+    };
+       const [ListSizeBySP, setListSizeBySP] = useState([]);
+       const loadListSizeBySP = () => {
+         SanPhamClientAPI.getListSizeBySP(IDSanPham).then((res) => {
+           setListSizeBySP(res.data);
+         });
+       };
   const handleImageClick = (url) => {
     setLargeImage(url);
   };
@@ -28,6 +42,8 @@ const ModalDetailSP = (props) => {
     setidCTSP("");
   };
   console.log("idctsp là của tôi là",idCt);
+    console.log("idsp  là", IDSanPham);
+  console.log(" là của tôi là", ListMauSacBySP);
 
   return (
     <Modal
@@ -101,51 +117,32 @@ const ModalDetailSP = (props) => {
         <div className="col-md-6 ">
           {idCt}
           <h3>{ChiTietSanPham.tenSP}</h3>
-          <h5 className="mb-4" style={{ color: "red" }}>
-            {ChiTietSanPham.giaBan}
+          <h5 className="mb-3" style={{ color: "red" }}>
+            {Intl.NumberFormat("en-US").format(ChiTietSanPham.giaBan)}
+
             <span>VND</span>
           </h5>
           <hr></hr>
           <h6>Màu</h6>
+
           <div className="row">
-            <div className="col-md-1">
-              <Button
-                className="mt-2 "
-                style={{
-                  backgroundColor: "red", //`${listSanPham.tenMauSac}`
-                  borderRadius: 20,
-                  width: 30,
-                  height: 30,
-                }}
-              ></Button>
-            </div>
-            <div className="col-md-1">
-              <Button
-                className="mt-2 "
-                style={{
-                  backgroundColor: "black", //`${listSanPham.tenMauSac}`
-                  borderRadius: 20,
-                  width: 30,
-                  height: 30,
-                }}
-              ></Button>
-            </div>
-            <div className="col-md-1">
-              <Button
-                className="mt-2 "
-                ghost
-                style={{
-                  backgroundColor: "pink", //`${listSanPham.tenMauSac}`
-                  borderRadius: 20,
-                  width: 30,
-                  height: 30,
-                }}
-              ></Button>
-            </div>
+            {ListMauSacBySP.map((listMauSacBySP, index) => (
+              <div className="col-md-1" key={index}>
+                <Button
+                  className="mt-1 "
+                  style={{
+                    backgroundColor: "{listMauSacBySP.maMau}", //`${listSanPham.tenMauSac}`
+                    borderRadius: 20,
+                    width: 30,
+                    height: 30,
+                  }}
+                ></Button>
+              </div>
+            ))}
           </div>
           <hr></hr>
           <h6>Size</h6>
-          <div className="row mt-2">
+          <div className="row mt-1">
             <div className="col-md-1 me-2">
               <Button
                 className=" mt-2  "
@@ -183,6 +180,18 @@ const ModalDetailSP = (props) => {
               </Button>
             </div>
           </div>
+          <h6 className="mt-3">Số lượng</h6>
+          <div className="row">
+            <div className="col">
+              <InputNumber
+                min={1}
+                max={ChiTietSanPham.soLuong}
+                defaultValue={0}
+              />
+            </div>
+            <div className="col">{ChiTietSanPham.soLuong} sản phẩm có sẵn</div>
+          </div>
+
           <hr></hr>
           <h5>Mô tả sản phẩm:</h5>
           <p>
