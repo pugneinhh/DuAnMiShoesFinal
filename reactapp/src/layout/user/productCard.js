@@ -3,9 +3,10 @@ import { Button } from 'antd';
 import "./productCard.css";
 import { IoIosInformationCircle } from 'react-icons/io';
 import { FaShoppingCart } from 'react-icons/fa';
+import ModalDetailSP from './shop/modalDetailSP';
 export const ProductCard = ({ product }) => {
   const [isHovered, setIsHovered] = useState(false);
-
+    const [openModalDetailSP, setOpenModalDetailSP] =useState(false);
   const handleMouseEnter = () => {
     setIsHovered(true);
   };
@@ -13,7 +14,12 @@ export const ProductCard = ({ product }) => {
   const handleMouseLeave = () => {
     setIsHovered(false);
   };
-
+  const [idCt, setidCTSP] = useState("");
+  const detailCTSP = (row) => {
+    console.log("click", row);
+    setidCTSP(row);
+    setOpenModalDetailSP(true);
+  };
   return (
     <div
       className="product-card col-sm-3 m-3"
@@ -30,6 +36,8 @@ export const ProductCard = ({ product }) => {
           <h7>
             {product.name} [{product.size}-{product.color}]
           </h7>
+          <br></br>
+          {product.idCt}
         </div>
         <div className="text-center">
           <Button
@@ -46,9 +54,21 @@ export const ProductCard = ({ product }) => {
         <a href="#" className="buy-button">
           <FaShoppingCart size={20} className="icon" /> Buy Now
         </a>
-        <a href="#" className="details-button">
-          <IoIosInformationCircle size={20} className="icon" /> Details
-        </a>
+        <button
+          className="details-button"
+          onClick={() => detailCTSP(product.idCt)}
+        >
+          <IoIosInformationCircle size={20} className="icon" />
+          Details
+        </button>
+        {idCt && (
+          <ModalDetailSP
+            openModalDetailSP={openModalDetailSP}
+            setOpenModalDetailSP={setOpenModalDetailSP}
+            idCt={idCt}
+            setidCTSP={setidCTSP}
+          />
+        )}
       </div>
     </div>
   );

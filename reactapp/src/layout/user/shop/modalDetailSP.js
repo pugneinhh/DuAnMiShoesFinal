@@ -1,20 +1,33 @@
-import { Button, Modal, Table, Tag, Radio, Image } from "antd";
+import { Button, Modal, Image } from "antd";
 import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
+import { SanPhamClientAPI } from "../../../pages/censor/api/home/sanPham/sanPham.api";
 const ModalDetailSP = (props) => {
-  const { openModalDetailSP, setOpenModalDetailSP } = props;
+  const { openModalDetailSP, setOpenModalDetailSP, idCt, setidCTSP } = props;
   const [top, setTop] = useState("none");
   const [bottom, setBottom] = useState("bottomRight");
-  const [largeImage, setLargeImage] = useState(
-    "https://res.cloudinary.com/dm0w2qws8/image/upload/v1706369415/z5112244321028_f6fcdc3c05a4e07141bdf44715b5b065_a0ygmi.jpg"
-  );
-
+  const [largeImage, setLargeImage] = useState('');
+      useEffect(() => {
+       loadCTSP()
+      }, []);
+  const [ChiTietSanPham, setChiTietSanPham] = useState([]);
+  const loadCTSP = () => {
+    // console.log(result.data);
+    SanPhamClientAPI.getCTSP(idCt).then((res) => {
+      setChiTietSanPham(res.data);
+      setLargeImage(res.data.anh);
+      console.log(res.data);
+     
+    });
+  };
   const handleImageClick = (url) => {
     setLargeImage(url);
   };
   const handleClose = () => {
     setOpenModalDetailSP(false);
+    setidCTSP("");
   };
+  console.log("idctsp là của tôi là",idCt);
 
   return (
     <Modal
@@ -86,9 +99,11 @@ const ModalDetailSP = (props) => {
           </div>
         </div>
         <div className="col-md-6 ">
-          <h3>Nike Adidas Grand Court</h3>
+          {idCt}
+          <h3>{ChiTietSanPham.tenSP}</h3>
           <h5 className="mb-4" style={{ color: "red" }}>
-            2.500.000 <span>VND</span>
+            {ChiTietSanPham.giaBan}
+            <span>VND</span>
           </h5>
           <hr></hr>
           <h6>Màu</h6>
@@ -118,6 +133,7 @@ const ModalDetailSP = (props) => {
             <div className="col-md-1">
               <Button
                 className="mt-2 "
+                ghost
                 style={{
                   backgroundColor: "pink", //`${listSanPham.tenMauSac}`
                   borderRadius: 20,
@@ -168,10 +184,25 @@ const ModalDetailSP = (props) => {
             </div>
           </div>
           <hr></hr>
-          <h6>Mô tả</h6>
-          <p >
-            Danh mục sản phẩm: giày vải Nhóm tuổi áp dụng'Người lớn Nguồn
-            category 'spot Chất liệu trên | Canvas
+          <h5>Mô tả sản phẩm:</h5>
+          <p>
+            <p>
+              ●<span className="me-2"></span>Tên hãng:{" "}
+              <span>{ChiTietSanPham.tenHang}</span>
+            </p>
+            <p>
+              ●<span className="me-2"></span>Độ cao :{" "}
+              <span>{ChiTietSanPham.tenDeGiay} cm </span>
+            </p>
+            <p>
+              ●<span className="me-2"></span>Danh mục:{" "}
+              <span>{ChiTietSanPham.tenDM}</span>
+            </p>
+            <p>
+              ●<span className="me-2"></span>Chất liệu:{" "}
+              <span>{ChiTietSanPham.tenCL}</span>
+            </p>
+            {ChiTietSanPham.moTa}
           </p>
         </div>
       </div>
