@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 @Builder
 @ToString
 public class HoaDonChiTietRequest {
+    private String id;
     private String hoaDon;
     private String chiTietSanPham;
     private int soLuong;
@@ -28,10 +29,9 @@ public class HoaDonChiTietRequest {
     private LocalDateTime ngaySua;
     private int trangThai;
     public HoaDonChiTiet map(HoaDonChiTiet hdct){
-        IDHoaDonChiTiet id=new IDHoaDonChiTiet();
-        id.setHoaDon(HoaDon.builder().id(this.hoaDon).build());
-        id.setChiTietSanPham(ChiTietSanPham.builder().id(this.chiTietSanPham).build());
-        hdct.setId(id);
+        hdct.setHoaDon(HoaDon.builder().id(this.hoaDon).build());
+        hdct.setChiTietSanPham(ChiTietSanPham.builder().id(this.chiTietSanPham).build());
+        hdct.setId(this.id);
         hdct.setSoLuong(this.soLuong);
         hdct.setGiaGiam(this.giaGiam);
         hdct.setGiaSauGiam(this.giaSauGiam);

@@ -9,6 +9,7 @@ import com.example.backend.repository.CTSPRepository;
 import com.example.backend.repository.CongThucRepository;
 import com.example.backend.service.BanHangService;
 import com.example.backend.service.HoaDonChiTietService;
+import com.example.backend.service.HoaDonServicee;
 import com.example.backend.service.VoucherService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -35,6 +37,13 @@ public class BanHangController {
     @Autowired
     VoucherService voucherService;
 
+    @Autowired
+    HoaDonServicee hoaDonServicee;
+
+    @GetMapping("/getHoaDonChoTaiQuay")
+    public ResponseEntity<?> getHoaDonChoTaiQuay(){
+        return ResponseEntity.ok(hoaDonServicee.getHoaDonChoTaiQuay());
+    }
     @GetMapping("/getALLCTSP")
     public ResponseEntity<?> getALLctsp(){
         List<ChiTietSanPhamForBanHang> list=banHangService.getALLCTSPBanHang();
@@ -43,26 +52,24 @@ public class BanHangController {
     @PostMapping("/add-hoa-don")
     public  ResponseEntity<?> addHD(@RequestBody HoaDonRequest hoaDonRequest){
         CongThuc ct=congThucRepository.getCongThucByTrangThai(0);
-        System.out.println("Hóa đơn requết"+hoaDonRequest);
         hoaDonRequest.setMa("HDTQ"+ RandomStringUtils.randomNumeric(6));
         hoaDonRequest.setLoaiHoaDon(1);
         hoaDonRequest.setNgayTao(LocalDateTime.now());
-        hoaDonRequest.setTrangThai(4);
-        hoaDonRequest.setNgayMua(LocalDateTime.now());
+        hoaDonRequest.setTrangThai(0);
       //  hoaDonRequest.setGiaTriDiem(Integer.valueOf(hoaDonRequest.getThanhTien().intValue()/ct.getTiSo().intValue()));
         return  ResponseEntity.ok(banHangService.addHoaDon(hoaDonRequest));
     }
     @PostMapping("/addHDCT")
     public ResponseEntity<?> addHDCT(@RequestBody HoaDonChiTietRequest request){
-        System.out.println("Hóa đơn chi tiet requết"+request);
-        System.out.println("re quet"+request.getChiTietSanPham());
-        request.setNgayTao(LocalDateTime.now());
-        String idCTSP= request.getChiTietSanPham();
-        ChiTietSanPham ctsp=ctspRepository.findById(idCTSP).get();
-        ctsp.setSoLuong(ctsp.getSoLuong()- request.getSoLuong());
-        System.out.println("CTSP"+ctsp.toString());
-        ctspRepository.save(ctsp);
         return ResponseEntity.ok(hoaDonChiTietService.addHDCT(request));
+    }
+    @PostMapping("/update-so-luong-hdct")
+    public ResponseEntity<?> updateSLHDCT(@RequestBody HoaDonChiTietRequest request){
+        return ResponseEntity.ok(hoaDonChiTietService.updateTruSl(request));
+    }
+    @PostMapping("/delete-hdct")
+    public ResponseEntity<?> deleteHDCT(@RequestBody HoaDonChiTietRequest request){
+        return ResponseEntity.ok(hoaDonChiTietService.deleteHDCT(request));
     }
     @PostMapping("/thanh-toan")
     public ResponseEntity<?> thanhToan(@PathVariable HoaDonRequest hoaDonRequest){
@@ -83,5 +90,18 @@ public class BanHangController {
     @GetMapping("/voucher/{idND}")
     public ResponseEntity<?> getOneHDCT(@PathVariable("idND")String idND){
         return ResponseEntity.ok(voucherService.getVoucherBanHang(idND));
+    }
+    @GetMapping("/voucher-hop-le/{total}")
+    public ResponseEntity<?> getVoucherHopLe(@PathVariable("total")String total){
+        BigDecimal tien=BigDecimal.valueOf(Double.valueOf(total));
+        return ResponseEntity.ok(voucherService.getVoucherHopLe(tien));
+    }
+    @PostMapping("/voucher/updateTruSLVoucher/{id}")
+    public ResponseEntity<?> updateTruSLVoucher(@PathVariable("id")String id){
+        return ResponseEntity.ok(voucherService.updateTruSL(id));
+    }
+    @PostMapping("/voucher/updateCongSLVoucher/{id}")
+    public ResponseEntity<?> updateCongSLVoucher(@PathVariable("id")String id){
+        return ResponseEntity.ok(voucherService.updateCongSL(id));
     }
 }
