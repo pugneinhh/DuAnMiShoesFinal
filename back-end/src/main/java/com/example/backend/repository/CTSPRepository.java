@@ -3,6 +3,8 @@ package com.example.backend.repository;
 
 import com.example.backend.dto.request.sanphamsearch.CTSPSearch;
 import com.example.backend.dto.response.SanPhamClient.DetailCTSPClientRespon;
+import com.example.backend.dto.response.SanPhamClient.ListMauSacBySPClientRespon;
+import com.example.backend.dto.response.SanPhamClient.ListSizeBySPClientRespon;
 import com.example.backend.dto.response.sanpham.CTSPSearchRespone;
 import com.example.backend.dto.response.sanpham.ChiTietSanPhamRespone;
 import com.example.backend.dto.response.sanpham.DetailCTSPRespone;
@@ -148,4 +150,19 @@ public interface CTSPRepository extends JpaRepository<ChiTietSanPham, String> {
                      """, nativeQuery = true)
     DetailCTSPClientRespon detailCTSPClient(@Param("idCT") String idCT);
 
+    //list mau sac by sp client
+    @Query(value = """
+                SELECT distinct mau_sac.id as mauSacID, mau_sac.ma as maMau FROM chi_tiet_san_pham
+                 join san_pham on chi_tiet_san_pham.san_pham_id = san_pham.id
+                  join mau_sac on chi_tiet_san_pham.mau_sac_id =mau_sac.id where san_pham_id=:idSP
+                     """, nativeQuery = true)
+    List<ListMauSacBySPClientRespon> listMauSacBySPClient(@Param("idSP") String idSP);
+
+    //list size by sp client
+    @Query(value = """
+                SELECT distinct mau_sac.id as mauSacID, mau_sac.ma as maMau FROM chi_tiet_san_pham
+                 join san_pham on chi_tiet_san_pham.san_pham_id = san_pham.id
+                  join mau_sac on chi_tiet_san_pham.mau_sac_id =mau_sac.id where san_pham_id=:idSP
+                     """, nativeQuery = true)
+    List<ListSizeBySPClientRespon> listSizeBySPClient(@Param("idSP") String idSP);
 }

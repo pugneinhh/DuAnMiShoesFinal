@@ -37,7 +37,7 @@ export const ProductCard = ({ product }) => {
             {product.name} [{product.size}-{product.color}]
           </h7>
           <br></br>
-          {product.idCt}
+          
         </div>
         <div className="text-center">
           <Button

@@ -1,7 +1,5 @@
 package com.example.backend.dto.response.SanPhamClient;
 
-import org.springframework.beans.factory.annotation.Value;
-
 import java.math.BigDecimal;
 
 public interface DetailCTSPClientRespon {
