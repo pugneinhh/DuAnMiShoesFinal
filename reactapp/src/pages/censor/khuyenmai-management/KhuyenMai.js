@@ -28,7 +28,6 @@ import moment from "moment";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { PromotionAPI } from "../../censor/api/promotion/promotion.api";
-import BanHang from "../../censor/banHang-management/BanHang";
 
 const KhuyenMai = () => {
   const currentTime = moment(); // thời gian hiện tại
@@ -75,7 +74,7 @@ const KhuyenMai = () => {
     const result = await PromotionAPI.getAll()
       .then((response) => {
         setKhuyenMais(response.data);
-        console.log(response.data);
+        console.log("getAll",response.data);
       })
       .catch((error) => console.error("Error adding item:", error));
   };
@@ -89,6 +88,8 @@ const KhuyenMai = () => {
     const handleUpdateStatus = (status) => {
       const currentTime = new Date();
       khuyenMai.forEach((x) => {
+        console.log("x Khuyến mại",x);
+        console.log("ngayBatDau",x.ngay_bat_dau)
         currentTime > new Date(x.ngay_bat_dau) &&
         currentTime < new Date(x.ngay_ket_thuc)
           ? PromotionAPI.updateAutoStart(x.id, x)
@@ -126,7 +127,7 @@ const KhuyenMai = () => {
   const timKiemKhuyenMai = (dataSearch) => {
     PromotionAPI.search(dataSearch)
       .then((response) => {
-        console.log(response.data);
+        console.log("searchPromotion",response.data);
         setKhuyenMais(response.data);
       })
       .catch((error) => console.error("Error adding item:", error));
@@ -458,7 +459,8 @@ const KhuyenMai = () => {
                     value={selectedValue}
                     onChange={handleChange}
                     className="rounded-pill border-warning"
-                    id="abc"
+                      id="abc"
+                    status="warning"
                   >
                     <option value="">Tất cả</option>
                     <option value="Tiền mặt">Tiền mặt</option>

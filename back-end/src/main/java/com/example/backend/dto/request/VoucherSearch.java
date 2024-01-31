@@ -15,11 +15,11 @@ import java.sql.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class VoucherSearch {
-    String tenVoucher;
+    String ten;
 //    @Enumerated(EnumType.STRING)
-    String trangThaiVoucher;
+    String trangThai;
     String loaiVoucher;
-    Date ngayBDVoucher;
-    Date ngayKTVoucher;
+    Date ngayBatDau;
+    Date ngayKetThuc;
 
 }

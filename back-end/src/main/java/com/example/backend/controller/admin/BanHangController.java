@@ -88,9 +88,18 @@ public class BanHangController {
     }
 
     @GetMapping("/voucher/{idND}")
-    public ResponseEntity<?> getOneHDCT(@PathVariable("idND")String idND){
+    public ResponseEntity<?> getAllVoucherWithIDKH(@PathVariable("idND")String idND){
         return ResponseEntity.ok(voucherService.getVoucherBanHang(idND));
     }
+
+
+    @GetMapping("/voucher/no-limited")
+    public ResponseEntity<?> getAllVoucherNoLimited(){
+        return ResponseEntity.ok(voucherService.noLimited());
+    }
+
+
+
     @GetMapping("/voucher-hop-le/{total}")
     public ResponseEntity<?> getVoucherHopLe(@PathVariable("total")String total){
         BigDecimal tien=BigDecimal.valueOf(Double.valueOf(total));
@@ -104,4 +113,5 @@ public class BanHangController {
     public ResponseEntity<?> updateCongSLVoucher(@PathVariable("id")String id){
         return ResponseEntity.ok(voucherService.updateCongSL(id));
     }
+
 }

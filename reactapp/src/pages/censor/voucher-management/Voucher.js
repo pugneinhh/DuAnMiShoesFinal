@@ -36,9 +36,8 @@ const Voucher = () => {
   const [voucher, setVouchers] = useState([]);
 
   const onChangeFilter = (changedValues, allValues) => {
-    setDataSearch(allValues);
-
     timKiemVoucher(allValues);
+    setDataSearch(allValues);
   };
   //call api tìm kiếm
   const timKiemVoucher = (dataSearch) => {
@@ -46,14 +45,16 @@ const Voucher = () => {
     VoucherAPI.search(dataSearch)
       .then((response) => {
         setVouchers(response.data);
+        console.log("searchVoucher", response.data);
       })
       .catch((error) => console.error("Error adding item:", error));
   };
   const loadVoucher = async () => {
-    VoucherAPI.getAll()
+    await VoucherAPI.getAll()
       .then((response) => {
         // Update the list of items
         setVouchers(response.data);
+        console.log("getAll",response.data);
       })
       .catch((error) => console.error("Error adding item:", error));
   };
@@ -61,27 +62,30 @@ const Voucher = () => {
   useEffect(() => {
     loadVoucher();
   }, []);
+
   useEffect(() => {
     const handleUpdateStatus = (status) => {
+      console.log("Tìm kiếm voucher",dataSearch);
       const currentTime = new Date();
-      if (
-        !dataSearch.tenVoucher &&
-        !dataSearch.trangThaiVoucher &&
-        !dataSearch.ngayKTVoucher &&
-        !dataSearch.ngayBDVoucher &&
-        !dataSearch.loaiVoucher
-      ) {
+
         voucher.forEach((x) => {
+          console.log("x",x);
+          console.log("ngayBatDau",x.ngayBatDau);
           currentTime > new Date(x.ngayBatDau) &&
           currentTime < new Date(x.ngayKetThuc)
-            ? VoucherAPI.updateTTHD(x.id, x)
+            ? console.log(VoucherAPI.updateTTHD(x.id, x))
             : currentTime > new Date(x.ngayKetThuc)
             ? VoucherAPI.updateTTNgung(x.id, x)
-            : // : (currentTime < new Date(x.ngayBatDau)) ?
-              // axios.put(`http://localhost:8080/voucher/updateTTSap/${x.id}`, x)
-              console.log("Không có dữ liệu update");
+            : console.log("Không có dữ liệu update");
         });
-
+        if (
+          !dataSearch.ten &&
+          !dataSearch.trangThai &&
+          !dataSearch.ngayKetThuc &&
+          !dataSearch.ngayBatDau &&
+          !dataSearch.loaiVoucher
+        ) {
+        
         loadVoucher();
       }
     };
@@ -137,12 +141,12 @@ const Voucher = () => {
     {
       title: "Ngày bắt đầu",
       dataIndex: "ngayBatDau",
-      render: (ngayBatDau) => <>{moment(ngayBatDau).format("DD/MM/YYYY")}</>,
+      render: (ngayBatDau) => <>{moment(ngayBatDau).format("DD/MM/YYYY , HH:mm:ss")}</>,
     },
     {
       title: "Ngày kết thúc",
       dataIndex: "ngayKetThuc",
-      render: (ngayKetThuc) => <>{moment(ngayKetThuc).format("DD/MM/YYYY")}</>,
+      render: (ngayKetThuc) => <>{moment(ngayKetThuc).format("DD/MM/YYYY , HH:mm:ss")}</>,
       sorter: (a, b) => a.ngayKetThuc - b.ngayKetThuc,
     },
     {
@@ -332,7 +336,7 @@ const Voucher = () => {
             form={form}
           >
             <div className="col-md-4">
-              <Form.Item label="Tìm kiếm" name="tenVoucher">
+              <Form.Item label="Tìm kiếm" name="ten">
                 <Input
                   className="rounded-pill border-warning"
                   placeholder="Nhập mã hoặc tên hoặc mức độ giảm giá"
@@ -350,7 +354,7 @@ const Voucher = () => {
             </div>
 
             <div className="col-md-4">
-              <Form.Item label="Trạng thái" name="trangThaiVoucher">
+              <Form.Item label="Trạng thái" name="trangThai">
                 <Select
                   defaultValue={"Tất cả"}
                   style={{ borderColor: "yellow" }}
@@ -366,18 +370,20 @@ const Voucher = () => {
               </Form.Item>
             </div>
             <div className="col-md-4">
-              <Form.Item label="Ngày bắt đầu" name="ngayBDVoucher">
+              <Form.Item label="Ngày bắt đầu" name="ngayBatDau">
                 <DatePicker
                   className="rounded-pill border-warning"
                   placeholder="Ngày bắt đầu"
                   style={{ width: "100%" }}
+                  format="YYYY-MM-DD HH:mm:ss"
                 />
               </Form.Item>
-              <Form.Item label="Ngày kết thúc" name="ngayKTVoucher">
+              <Form.Item label="Ngày kết thúc" name="ngayKetThuc">
                 <DatePicker
                   className="rounded-pill border-warning"
                   placeholder="Ngày kết thúc"
                   style={{ width: "100%" }}
+                  format="YYYY-MM-DD HH:mm:ss"
                 />
               </Form.Item>
             </div>
@@ -416,7 +422,7 @@ const Voucher = () => {
           </div>
           <>
             <Table
-              {...tableProps}
+              // {...tableProps}
               pagination={{
                 showQuickJumper: true,
                 position: [top, bottom],
@@ -425,7 +431,7 @@ const Voucher = () => {
                 total: 100,
               }}
               columns={tableColumns}
-              dataSource={hasData ? voucher : []}
+              dataSource={voucher}
               scroll={scroll}
             />
           </>

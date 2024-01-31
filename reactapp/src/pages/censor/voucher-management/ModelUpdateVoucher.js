@@ -15,11 +15,11 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FaTag } from "react-icons/fa";
 import TableKhachHang from "./tableKhachHang";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { VoucherAPI } from "../api/voucher/voucher.api";
 import { NguoiDungVoucherAPI } from "../api/voucher/nguoiDungVoucher.api";
-import {KhachHangAPI} from "../../censor/api/user/khachHang.api"
-
+import { KhachHangAPI } from "../../censor/api/user/khachHang.api";
+import { FormGroup } from "react-bootstrap";
 
 const ModelUpdateVoucher = (props) => {
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ const ModelUpdateVoucher = (props) => {
   const [selectedValue, setSelectedValue] = useState("Tiền mặt");
   const [dataUpdate, setDataUpdate] = useState({});
   const [khachHang, setKhachHang] = useState([]);
-  const [allKhachHang,setAllKhachHang] = useState([]);
+  const [allKhachHang, setAllKhachHang] = useState([]);
 
   const [form2] = Form.useForm();
 
@@ -42,9 +42,8 @@ const ModelUpdateVoucher = (props) => {
 
   //lấy ra detail voucher
   const detailVoucher = async () => {
-   VoucherAPI.detail(id)
+    VoucherAPI.detail(id)
       .then((response) => {
-
         form2.setFieldsValue({
           id: response.data.id,
           ma: response.data.ma,
@@ -64,33 +63,30 @@ const ModelUpdateVoucher = (props) => {
       .catch((error) => console.error("Error upfate item:", error));
   };
 
-
   const handleClose = () => {
     form2.resetFields();
     setDataUpdate({});
     console.log("đóng");
   };
-  
+
   const loadAllKH = () => {
     KhachHangAPI.getAll().then((result) => {
       setAllKhachHang(result.data);
-      console.log("All KH",result.data);
+      console.log("All KH", result.data);
     });
-  }
+  };
 
   const loadKH = () => {
-    NguoiDungVoucherAPI.getAllByVoucher(id).then((x)=>{
-    setKhachHang(x.data);
-    console.log("KH",x.data);
-  });
+    NguoiDungVoucherAPI.getAllByVoucher(id).then((x) => {
+      setKhachHang(x.data);
+      console.log("KH", x.data);
+    });
   };
 
   useEffect(() => {
     detailVoucher();
     loadKH();
     loadAllKH();
-
-
   }, []);
 
   const [selectedIDKH, setSelectedIDKH] = useState([]);
@@ -99,10 +95,20 @@ const ModelUpdateVoucher = (props) => {
     setSelectedIDKH(selectedRowKeys);
   };
   const handleUpdateVoucher = (value) => {
-    allKhachHang.map((kh) => selectedIDKH.includes(kh.idND) ? 
-    (khachHang.includes(kh.idND) ? "" : NguoiDungVoucherAPI.create(kh.idND,value)) : (khachHang.includes(kh.idND) ? NguoiDungVoucherAPI.updateTTNgung(id,kh.idND) : ""));   
-    VoucherAPI.update(id,value)
+    console.log("Value", value);
+
+    allKhachHang.map((kh) =>
+      selectedIDKH.includes(kh.idND)
+        ? khachHang.includes(kh.idND)
+          ? ""
+          : NguoiDungVoucherAPI.create(kh.idND, value)
+        : khachHang.includes(kh.idND)
+        ? NguoiDungVoucherAPI.updateTTNgung(id, kh.idND)
+        : ""
+    );
+    VoucherAPI.update(id, value)
       .then((response) => {
+
         navigate("/admin-voucher");
         toast("✔️ Cập nhật thành công!", {
           position: "top-right",
@@ -116,7 +122,7 @@ const ModelUpdateVoucher = (props) => {
         });
         props.loadVoucher();
         form2.resetFields();
-        handleClose();
+       // handleClose();
       })
       .catch((error) => console.error("Error upfate item:", error));
   };
@@ -189,6 +195,9 @@ const ModelUpdateVoucher = (props) => {
             onFinish={handleUpdateVoucher}
             form={form2}
           >
+            <Form.Item name="id" disable={true}>
+              <Input value={id} hidden></Input>
+            </Form.Item>
             <div className="col-md-4">
               <Form.Item
                 label="Mã phiếu giảm giá"
@@ -204,11 +213,7 @@ const ModelUpdateVoucher = (props) => {
                 labelCol={{ span: 6 }}
                 wrapperCol={{ span: 10 }}
               >
-                <Input
-                  placeholder="Mã giảm giá"
-                  className="border-warning"
-  
-                />
+                <Input placeholder="Mã giảm giá" className="border-warning" />
               </Form.Item>
               <Form.Item
                 label="Tên phiếu giảm giá"
@@ -227,7 +232,6 @@ const ModelUpdateVoucher = (props) => {
                 <Input
                   placeholder="Tên phiếu giảm giá"
                   className="border-warning"
-      
                 />
               </Form.Item>
               <Form.Item
@@ -262,17 +266,13 @@ const ModelUpdateVoucher = (props) => {
               >
                 <InputNumber
                   className="border-warning"
-                  style={{ marginLeft: 30, width:230}}
+                  style={{ marginLeft: 30, width: 230 }}
                   defaultValue={"1"}
                   min={1}
                 />
               </Form.Item>
 
-              <Form.Item
-                label="Mức độ"
-                labelCol={{ span: 20 }}
-                name="mucDo"
-              >
+              <Form.Item label="Mức độ" labelCol={{ span: 20 }} name="mucDo">
                 {selectedValue === "Tiền mặt" ? (
                   <InputNumber
                     className="border-warning"
@@ -281,7 +281,7 @@ const ModelUpdateVoucher = (props) => {
                       `VND ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                     }
                     parser={(value) => value.replace(/\VND\s?|(,*)/g, "")}
-                    style={{ marginLeft: 30, width:230}}
+                    style={{ marginLeft: 30, width: 230 }}
                   />
                 ) : (
                   <InputNumber
@@ -291,7 +291,7 @@ const ModelUpdateVoucher = (props) => {
                     max={100}
                     formatter={(value) => `${value}%`}
                     parser={(value) => value.replace("%", "")}
-                    style={{ marginLeft: 30, width:230}}
+                    style={{ marginLeft: 30, width: 230 }}
                   />
                 )}
               </Form.Item>
@@ -315,7 +315,7 @@ const ModelUpdateVoucher = (props) => {
                     `VND ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                   }
                   parser={(value) => value.replace(/\VND\s?|(,*)/g, "")}
-                  style={{ marginLeft: 30, width:230}}
+                  style={{ marginLeft: 30, width: 230 }}
                 />
               </Form.Item>
             </div>
@@ -340,7 +340,7 @@ const ModelUpdateVoucher = (props) => {
                     `VND ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                   }
                   parser={(value) => value.replace(/\VND\s?|(,*)/g, "")}
-                  style={{ marginLeft: 30, width:230}}
+                  style={{ marginLeft: 30, width: 230 }}
                 />
               </Form.Item>
               <Form.Item
@@ -359,7 +359,7 @@ const ModelUpdateVoucher = (props) => {
               >
                 <DatePicker
                   showTime
-                  style={{ marginLeft: 30, width:230}}
+                  style={{ marginLeft: 30, width: 230 }}
                   className="border-warning"
                   placeholder="Ngày bắt đầu"
                 />
@@ -380,7 +380,7 @@ const ModelUpdateVoucher = (props) => {
               >
                 <DatePicker
                   showTime
-                  style={{ marginLeft: 30, width:230}}
+                  style={{ marginLeft: 30, width: 230 }}
                   className="border-warning"
                   placeholder="Ngày kết thúc"
                 />

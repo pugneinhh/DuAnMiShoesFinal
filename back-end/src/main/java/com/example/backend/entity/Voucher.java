@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.util.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -15,6 +15,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
+@ToString
 public class Voucher {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -30,8 +31,8 @@ public class Voucher {
     private int soLuong;
     private String nguoiTao;
     private String nguoiSua;
-    private LocalDateTime ngayTao;
-    private LocalDateTime ngaySua;
+    private Date ngayTao;
+    private Date ngaySua;
     @Enumerated(EnumType.STRING)
     private Status trangThai;
 }

@@ -11,7 +11,7 @@ import {
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { FaTag } from "react-icons/fa";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { VoucherAPI } from "../api/voucher/voucher.api";
 import { NguoiDungVoucherAPI } from "../api/voucher/nguoiDungVoucher.api";
 import TableKhachHang from "./tableKhachHang";
@@ -24,7 +24,6 @@ const AddVoucher = () => {
   };
   const navigate = useNavigate();
 
-
   const [componentSize, setComponentSize] = useState("default");
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
@@ -32,30 +31,28 @@ const AddVoucher = () => {
 
   const [form] = Form.useForm();
   const handleSubmit = (value) => {
-    
-      VoucherAPI.create(value)
-      .then((response) => {
-        if(selectedIDKH){
+    VoucherAPI.create(value).then((response) => {
+      if (selectedIDKH) {
         Promise.all(
           selectedIDKH.map((id) =>
-          NguoiDungVoucherAPI.create(id,response.data)
-          ) 
+            NguoiDungVoucherAPI.create(id, response.data)
+          )
         );
       }
-        console.log(response.data);
-        navigate('/admin-voucher');
-        toast("✔️ Thêm thành công!", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        form.resetFields();
-      })
+      console.log(response.data);
+      navigate("/admin-voucher");
+      toast("✔️ Thêm thành công!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      form.resetFields();
+    });
   };
 
   const [selectedIDKH, setSelectedIDKH] = useState([]);
@@ -89,7 +86,6 @@ const AddVoucher = () => {
     }
     return Promise.resolve();
   };
-  
 
   return (
     <div
@@ -103,13 +99,19 @@ const AddVoucher = () => {
       <div className="row">
         <Divider orientation="center" color="none">
           <h4 className="text-first pt-5 fw-bold">
-            <FaTag size={20} /> 
+            <FaTag size={20} />
             Thêm phiếu giảm giá
           </h4>
         </Divider>
         <div
           className="bg-light col-md-4"
-          style={{border: "1px solid #ddd", boxShadow: "0 3px 8px rgba(0, 0, 0, 0.1)", borderRadius: "8px", marginBottom: 10, height: 600 }}
+          style={{
+            border: "1px solid #ddd",
+            boxShadow: "0 3px 8px rgba(0, 0, 0, 0.1)",
+            borderRadius: "8px",
+            marginBottom: 10,
+            height: 600,
+          }}
         >
           <h4 className="text-center">Thông tin phiếu giảm giá</h4>
           {/* form add voucher */}
@@ -144,8 +146,8 @@ const AddVoucher = () => {
                     message: "Vui lòng không để trống mã!",
                   },
                 ]}
-                       labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 10 }}
+                labelCol={{ span: 6 }}
+                wrapperCol={{ span: 10 }}
               >
                 <Input
                   placeholder="Mã giảm giá"
@@ -170,7 +172,6 @@ const AddVoucher = () => {
                 <Input
                   placeholder="Tên phiếu giảm giá"
                   className="border-warning"
-            
                 />
               </Form.Item>
               <Form.Item
@@ -188,11 +189,10 @@ const AddVoucher = () => {
               >
                 <Select
                   defaultValue={"Tiền mặt"}
-                  style={{ borderColor: "yellow"}}
+                  style={{ borderColor: "yellow" }}
                   onChange={handleChange}
                   className="border-warning"
                 >
-                  
                   <Select.Option value="Tiền mặt">Tiền mặt</Select.Option>
                   <Select.Option value="Phần trăm">Phần trăm</Select.Option>
                 </Select>
@@ -200,27 +200,20 @@ const AddVoucher = () => {
             </div>
 
             <div className="col-md-4">
-              
-                <Form.Item
-                  label="Số lượng"
-                  name="soLuong"
-                  labelCol={{ span: 20 }}
-                  
-                >
-                  <InputNumber
-                    className="border-warning"
-                    style={{ marginLeft: 30, width:230}}
-                    defaultValue={"1"}
-                    min={1}
-                  />
-                </Form.Item>
-              
               <Form.Item
-                label="Mức độ"
+                label="Số lượng"
+                name="soLuong"
                 labelCol={{ span: 20 }}
-   
-                name="mucDo"
               >
+                <InputNumber
+                  className="border-warning"
+                  style={{ marginLeft: 30, width: 230 }}
+                  defaultValue={"1"}
+                  min={1}
+                />
+              </Form.Item>
+
+              <Form.Item label="Mức độ" labelCol={{ span: 20 }} name="mucDo">
                 {selectedValue === "Tiền mặt" ? (
                   <InputNumber
                     className="border-warning"
@@ -229,7 +222,7 @@ const AddVoucher = () => {
                       `VND ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                     }
                     parser={(value) => value.replace(/\VND\s?|(,*)/g, "")}
-                    style={{ marginLeft: 30, width:230}}
+                    style={{ marginLeft: 30, width: 230 }}
                   />
                 ) : (
                   <InputNumber
@@ -239,7 +232,7 @@ const AddVoucher = () => {
                     max={100}
                     formatter={(value) => `${value}%`}
                     parser={(value) => value.replace("%", "")}
-                    style={{ marginLeft: 30, width:230}}
+                    style={{ marginLeft: 30, width: 230 }}
                   />
                 )}
               </Form.Item>
@@ -263,7 +256,7 @@ const AddVoucher = () => {
                     `VND ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                   }
                   parser={(value) => value.replace(/\VND\s?|(,*)/g, "")}
-                  style={{ marginLeft: 30, width:230}}
+                  style={{ marginLeft: 30, width: 230 }}
                 />
               </Form.Item>
             </div>
@@ -288,13 +281,12 @@ const AddVoucher = () => {
                     `VND ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                   }
                   parser={(value) => value.replace(/\VND\s?|(,*)/g, "")}
-                  style={{ marginLeft: 30, width:230}}
+                  style={{ marginLeft: 30, width: 230 }}
                 />
               </Form.Item>
               <Form.Item
                 label="Ngày bắt đầu"
                 name="ngayBatDau"
-               
                 hasFeedback
                 rules={[
                   {
@@ -308,7 +300,7 @@ const AddVoucher = () => {
               >
                 <DatePicker
                   showTime
-                  style={{ marginLeft: 30, width:230}}
+                  style={{ marginLeft: 30, width: 230 }}
                   className="border-warning"
                   placeholder="Ngày bắt đầu"
                 />
@@ -329,7 +321,7 @@ const AddVoucher = () => {
               >
                 <DatePicker
                   showTime
-                  style={{ marginLeft: 30, width:230}}
+                  style={{ marginLeft: 30, width: 230 }}
                   className="border-warning"
                   placeholder="Ngày kết thúc"
                 />
@@ -340,7 +332,7 @@ const AddVoucher = () => {
             <div className="text-end">
               <Form.Item>
                 <Button
-                  type="primary"  
+                  type="primary"
                   onClick={() => {
                     Modal.confirm({
                       title: "Thông báo",
@@ -365,18 +357,22 @@ const AddVoucher = () => {
         </div>
         <div
           className="bg-light col"
-          style={{border: "1px solid #ddd", boxShadow: "0 3px 8px rgba(0, 0, 0, 0.1)", borderRadius: "8px", marginBottom: 10, marginLeft: 20 , marginRight : 15}}
+          style={{
+            border: "1px solid #ddd",
+            boxShadow: "0 3px 8px rgba(0, 0, 0, 0.1)",
+            borderRadius: "8px",
+            marginBottom: 10,
+            marginLeft: 20,
+            marginRight: 15,
+          }}
         >
           <p className="fw-bold" style={{ marginTop: 10 }}>
             Khách hàng
           </p>
-          <TableKhachHang 
-            onSelectedKH = {handleSelectedIDKH}
-          />
+          <TableKhachHang onSelectedKH={handleSelectedIDKH} />
         </div>
       </div>
-
     </div>
   );
-}
+};
 export default AddVoucher;

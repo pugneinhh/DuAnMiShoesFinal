@@ -80,4 +80,18 @@ export class SellAPI{
             url: `/vnpayment/chuyen-khoan/${data}/${money}`,
         });
     };
+
+    static  getVoucherNoLimited = () => {
+        return requestAdmin({
+            method : 'GET',
+            url: `/ban-hang/voucher/no-limited`,
+        });
+    };
+
+    static getVoucherWithIDKH = (id) => {
+        return requestAdmin({
+            method : 'GET',
+            url: `/ban-hang/voucher/${id}`,
+        });
+    };
 }

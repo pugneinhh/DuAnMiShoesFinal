@@ -13,31 +13,33 @@ import {
   Breadcrumb,
 } from "antd";
 import "./KhuyenMai.scss";
-import {
-  HomeOutlined,
-} from "@ant-design/icons";
+import { HomeOutlined } from "@ant-design/icons";
 import { BiSolidDiscount } from "react-icons/bi";
 
 import { LuBadgePercent } from "react-icons/lu";
-import {toast } from "react-toastify";
+import { toast } from "react-toastify";
 import TableSanPham from "./tableSanPham";
 import TableChiTietSanPham from "./tableChiTietSanPham";
 import { useNavigate } from "react-router-dom";
-import dayjs from 'dayjs';
-import {PromotionAPI} from "../../censor/api/promotion/promotion.api";
-
+import dayjs from "dayjs";
+import { PromotionAPI } from "../../censor/api/promotion/promotion.api";
+import { SellAPI } from "../../censor/api/sell/sell.api";
 const SuaKhuyenMai = () => {
-
   const navigate = useNavigate();
 
-  const {id} = useParams("");
+  const { id } = useParams("");
 
   const [CTSP, setCTSP] = useState([]);
   const [idSP, setIDSP] = useState([]);
   const [dataUpdate, setDataUpdate] = useState({});
-
   const [formSuaKhuyenMai] = Form.useForm();
+  const [dataCTSP, setDataCTSP] = useState([]);
 
+  const loadDataCTSP = async () => {
+    const result = await SellAPI.getAllProducts();
+    setDataCTSP(result.data);
+    console.log("DATA CTSP",result.data)
+  };
   const loadDetailKhuyenMai = async () => {
     // Lấy ra chi tiết khuyến mại
     await PromotionAPI.detail(id)
@@ -65,25 +67,26 @@ const SuaKhuyenMai = () => {
   };
 
   const loadCTSP = async () => {
-    const x = await PromotionAPI.showProductByPromotion(id)
-    console.log("id ctsp",x.data); 
-     setCTSP(x.data);
-    const SP = await Promise.all(x.data.map(idCTSP =>
-      PromotionAPI.showSPByProduct(idCTSP)));
-      SP.map((res)=>( setIDSP(prevData  => 
-        (res.data.includes(prevData) ? console.log("trùng:" ,prevData) : 
-        [...prevData,...res.data]))));
-
+    const x = await PromotionAPI.showProductByPromotion(id);
+    console.log("id ctsp", x.data);
+    setCTSP(x.data);
+    const SP = await Promise.all(
+      x.data.map((idCTSP) => PromotionAPI.showSPByProduct(idCTSP))
+    );
+    SP.map((res) =>
+      setIDSP((prevData) =>
+        res.data.includes(prevData)
+          ? console.log("trùng:", prevData)
+          : [...prevData, ...res.data]
+      )
+    );
   };
-
 
   useEffect(() => {
     loadDetailKhuyenMai();
     loadCTSP();
-    
-
+    loadDataCTSP();
   }, []);
-
 
   const onChangeLoai = (value) => {
     console.log("changed", value);
@@ -102,28 +105,39 @@ const SuaKhuyenMai = () => {
   const [idKM, setIDKM] = useState("");
 
   const [khuyenMai, setKhuyenMais] = useState([]);
- 
 
   useEffect(() => {
     loadKhuyenMai();
   }, []);
 
   const loadKhuyenMai = async () => {
-    const result = await PromotionAPI.getAll().then(response => {setKhuyenMais(response.data);}).catch(error => console.error('Error adding item:',error));
+    const result = await PromotionAPI.getAll()
+      .then((response) => {
+        setKhuyenMais(response.data);
+      })
+      .catch((error) => console.error("Error adding item:", error));
   };
 
   const handleSubmit = (value) => {
-    PromotionAPI.update(id,value)
+    PromotionAPI.update(id, value)
       .then((response) => {
         setIDKM(response.data);
-        if (selectedIDCTSP.length > 0){
-        Promise.all(
-          selectedIDCTSP.map((id) =>
-          PromotionAPI.updateProductByPromotion(id,response.data)
-          )
-        ); 
-            }
-            loadKhuyenMai();
+        if (selectedIDCTSP.length > 0) {
+          console.log("selected idctsp", selectedIDCTSP);
+          Promise.all(
+            dataCTSP.map((data) => selectedIDCTSP.filter(item => item===data.idCTSP).length > 0 ? 
+            PromotionAPI.updateProductByPromotion(data.idCTSP, response.data) :  dataCTSP.map((data) => PromotionAPI.deletePromotion(data.idCTSP, response.data))
+            )
+            // selectedIDCTSP.map((id) =>
+            //   PromotionAPI.updateProductByPromotion(id, response.data)
+            // )
+          );
+        } else {
+          Promise.all(
+            dataCTSP.map((data) => PromotionAPI.deletePromotion(data.idCTSP, response.data))
+          );
+        }
+        loadKhuyenMai();
         navigate("/admin-khuyen-mai");
 
         toast("✔️ Sửa thành công!", {
@@ -141,7 +155,6 @@ const SuaKhuyenMai = () => {
         formSuaKhuyenMai.resetFields();
       })
       .catch((error) => console.error("Error adding item:", error));
-
   };
 
   const [selectedIDSP, setSelectedIDSP] = useState([]);
@@ -177,34 +190,36 @@ const SuaKhuyenMai = () => {
   return (
     <div className="container">
       <div>
-      <Breadcrumb
-      style={{marginTop: "10px"}}
-    items={[
-      {
-        href: '/admin-ban-hang',
-        title: <HomeOutlined />,
-      },
-      {
-        href: 'http://localhost:3000/admin-ban-hang',
-        title: (
-          <>
-            <BiSolidDiscount size={15} style={{paddingBottom:2}}/> 
-            <span>Giảm giá</span>
-          </>
-        ),
-      },
-      {
-        href: 'http://localhost:3000/admin-khuyen-mai',
-        title: (
-          <>
-          <LuBadgePercent size={15} style={{paddingBottom:2}}/> 
-          <span>Đợt giảm giá</span>       </> )
-      },
-      {
-        title: `Sửa đợt giảm giá ${dataUpdate.ma} - ${dataUpdate.ten}`
-      }
-    ]}
-  />
+        <Breadcrumb
+          style={{ marginTop: "10px" }}
+          items={[
+            {
+              href: "/admin-ban-hang",
+              title: <HomeOutlined />,
+            },
+            {
+              href: "http://localhost:3000/admin-ban-hang",
+              title: (
+                <>
+                  <BiSolidDiscount size={15} style={{ paddingBottom: 2 }} />
+                  <span>Giảm giá</span>
+                </>
+              ),
+            },
+            {
+              href: "http://localhost:3000/admin-khuyen-mai",
+              title: (
+                <>
+                  <LuBadgePercent size={15} style={{ paddingBottom: 2 }} />
+                  <span>Đợt giảm giá</span>{" "}
+                </>
+              ),
+            },
+            {
+              title: `Sửa đợt giảm giá ${dataUpdate.ma} - ${dataUpdate.ten}`,
+            },
+          ]}
+        />
         <div className="container-fluid">
           <Divider orientation="center" color="none">
             <h2 className="text-first pt-1 fw-bold">
@@ -437,14 +452,12 @@ const SuaKhuyenMai = () => {
                 <TableChiTietSanPham
                   selectedIDSPs={selectedIDSP}
                   onSelectedCTSanPham={handleSelectedCTSanPham}
-                  suaIDCTSP = {CTSP}
+                  suaIDCTSP={CTSP}
                 />
               </div>
             </div>
           </div>
         </div>
-
-      
       </div>
     </div>
   );

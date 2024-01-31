@@ -68,6 +68,12 @@ public class CTSPController {
         return ResponseEntity.ok(ctspService.updateKM(idCTSP, khuyenMai));
     }
 
+    @PutMapping("/deleteKM/{idCTSP}")
+    public ResponseEntity<?> delete(@PathVariable("idCTSP")String idCTSP,  @RequestBody KhuyenMai khuyenMai){
+        return ResponseEntity.ok(ctspService.deleteKM(idCTSP,khuyenMai));
+    }
+
+
     @GetMapping("/showKM/{idKM}")
     public ResponseEntity<?> getALLCTSPByKM(@PathVariable("idKM") String id){
         System.out.println("id"+id);

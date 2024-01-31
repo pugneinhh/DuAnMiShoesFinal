@@ -93,7 +93,7 @@ public class KhuyenMaiController {
         if (ngayKT.isBefore(today)){
             List<String> list = ctspService.getCTSPByKM(id);
             for (String x: list) {
-                ctspService.deleteKM(x);
+                ctspService.deleteKM(x,km);
             }
         }
         km.setTrangThai(2);
@@ -136,9 +136,6 @@ public class KhuyenMaiController {
     }
     @PostMapping("/search-khuyen-mai")
     public ResponseEntity<?> search(@RequestBody KhuyenMaiSearch khuyenMaiSearch){
-        System.out.println(khuyenMaiSearch.getNgay_bat_dau());
-        System.out.println(khuyenMaiSearch.getNgay_ket_thuc());
-        System.out.println(khuyenMaiSearch.getMa());
         return ResponseEntity.ok(khuyenMaiService.getSearch(khuyenMaiSearch));
     }
 }

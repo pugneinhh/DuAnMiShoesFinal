@@ -28,7 +28,7 @@ const ModalSanPham = (props) => {
   const activeKey = props.activeKey;
   const ctsp = useSelector(GetProduct);
   const invoice = useSelector(GetInvoice)
-
+  const [chiTietSanPham,setChiTietSanPham] = useState([""]);
 
   const handleClose = () => {
     setOpenSanPham(false);
@@ -107,19 +107,19 @@ const ModalSanPham = (props) => {
   //     setH(result.data);
     
   // };
- 
+  const dispatch = useDispatch()
 
   useEffect(() => {
     loadCTSP();
-  }, []);
+  }, [chiTietSanPham.tenKM]);
 
   const loadCTSP = async () => {
     const result = await SellAPI.getAllProducts();
     result.data.map((i)=> dispatch(AddProduct({id:i.idCTSP,soLuong:i.soLuong,linkAnh:i.linkAnh,tenSP:i.tenSP,tenKT:i.tenKT,tenMS:i.tenMS,maMS:i.maMS,loaiKM:i.loaiKM,giaTriKhuyenMai: parseInt(i.giaKhuyenMai, 10),giaBan:i.giaBan,tenKM:i.tenKM})))
-
+    setChiTietSanPham(result.data);
 
   };
-  const dispatch = useDispatch()
+
 
   const handleClickAddProduct = (record) => {
 
