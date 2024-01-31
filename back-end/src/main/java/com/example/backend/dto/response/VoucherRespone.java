@@ -11,13 +11,13 @@ public interface VoucherRespone {
     public String getLoaiVoucher();
     public LocalDateTime getNgayBatDau();
     public LocalDateTime getNgayKetThuc();
-    public int getMucDo();
+    public String getMucDo();
     public BigDecimal getGiamToiDa();
     public BigDecimal getDieuKien();
-    public int getSoLuong();
+    public String getSoLuong();
     public String getNguoiTao();
     public String getNguoiSua();
     public Date getNgayTao();
     public Date getNgaySua();
-    public int getTrangThai();
+    public String getTrangThai();
 }

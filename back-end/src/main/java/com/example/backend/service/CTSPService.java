@@ -74,10 +74,12 @@ public class CTSPService {
         return  ctspRepository.getCTSPByKM(idKM);
     }
 
-    public ChiTietSanPham deleteKM(String idCTSP){
+    public ChiTietSanPham deleteKM(String idCTSP , KhuyenMai km){
         ChiTietSanPham ctsp = ctspRepository.getReferenceById(idCTSP);
-        ctsp.setKhuyenMai(null);
-        ctsp.setNgaySua(LocalDateTime.now());
+        if  (ctsp.getKhuyenMai()!= null && km.getId().equalsIgnoreCase(ctsp.getKhuyenMai().getId())) {
+            ctsp.setKhuyenMai(null);
+            ctsp.setNgaySua(LocalDateTime.now());
+        }
         return ctspRepository.save(ctsp);
     }
 }

@@ -17,9 +17,9 @@ import {
 } from "../../../store/reducer/Bill.reducer";
 import {SellAPI} from "../../censor/api/sell/sell.api";
 
-const ModalKhachHang = (props) => {
-  const { openKhachHang, setOpenKhachHang } = props;
-  const activeKey = props.activeKey;
+const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) => {
+  // const { openKhachHang, setOpenKhachHang } = props;
+  // const activeKey = props.activeKey;
 
   useEffect(() => {
     loadKhachHang();
@@ -30,7 +30,9 @@ const ModalKhachHang = (props) => {
   const bill = useSelector(GetBill);
   const idKH = bill.filter((item)=> item.id === activeKey)[0].nguoiDung;
 
-  const handleClickAddClient = (record) => {
+
+
+  const handleClickAddClient = async (record) => {
     dispatch(
       UpdateKHToBill({
         key: activeKey,
@@ -40,11 +42,16 @@ const ModalKhachHang = (props) => {
         diemNguoiDung: record.diem,
       })
     );
+    await SellAPI.getVoucherWithIDKH(record.id).then(res => onVoucher(res));
     setOpenKhachHang(false);
   };
 
+
+
+
   const handleClickRemoveClient = (record) => {
     dispatch(UpdateNullClient({ key: activeKey }));
+    onVoucher("");
     setOpenKhachHang(false);
   };
 

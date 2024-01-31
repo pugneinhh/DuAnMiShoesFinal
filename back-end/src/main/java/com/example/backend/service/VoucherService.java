@@ -31,6 +31,11 @@ public class VoucherService {
 //        return vr.findAll(sort);
         return vr.findAllByOrderByNgayTaoDesc();
     }
+
+    public List<VoucherRespone> noLimited(){
+        Sort sort=Sort.by(Sort.Order.desc("ngayTao"));
+        return   vr.getVoucherTatCa();
+    }
     public List<Voucher> getTim(String key, Date ngayBD,Date ngayKT){
         return vr.search(key,ngayBD,ngayKT);
     }

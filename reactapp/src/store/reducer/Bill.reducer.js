@@ -4,14 +4,32 @@ import {
 import {
     v4 as uuid
 } from 'uuid';
-import moment from "moment";
-import { NULL } from "sass";
+import {BillAPI} from "../../pages/censor/api/hoaDon/hoaDon.api";
 
 const initialState = () => {
+    // const result = BillAPI.getAll();
+    // const i = 0;
+    // if (result.data.length > 0) {
+    //     return [      
+    //     result.data.map((item) => {
+    //         stt: i+1;
+    //         id : item.id;
+    //         ma : item.ma;
+
+    //     }
+    //     )
+    //     ]
+            
+        
+         
+        
+    // } else {
     const id = uuid();
     return [
+        
         {
-       
+            
+
         stt:1,id:id,ma:`HDTQ1`,nhanVien:'Phanh',nguoiDung:null,voucher:null,ngayMua:null,giaGoc:0,giaGiamGia:0,thanhTien:0,diemSuDung:0,giaTriDiem:null,tenNguoiNhan:null,soDienThoai:null,diaChi:null,qrCode:null,ghiChu:null,ngayDuKienNhan:null,ngayNhan:'null',ngayTraHang:null,nguoiTao:'Phanh',nguoiSua:null,ngaySua:null,trangThai:0,key:id
     }        
     ]

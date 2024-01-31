@@ -93,7 +93,7 @@ public class KhuyenMaiController {
         if (ngayKT.isBefore(today)){
             List<String> list = ctspService.getCTSPByKM(id);
             for (String x: list) {
-                ctspService.deleteKM(x);
+                ctspService.deleteKM(x,km);
             }
         }
         km.setTrangThai(2);

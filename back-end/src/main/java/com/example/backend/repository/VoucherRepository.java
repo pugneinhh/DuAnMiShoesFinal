@@ -56,7 +56,10 @@ public interface VoucherRepository extends JpaRepository<Voucher, String> {
     Voucher getVoucherHopLe(BigDecimal tien);
 
     @Query(value = """
-                    select * from voucher where id not in (select voucher.id from voucher  join nguoidung_voucher on nguoidung_voucher.voucher_id =voucher.id  ) and voucher.trang_thai='DANG_HOAT_DONG'
+                    select v.id AS id, v.ma AS ma,v.ten AS ten,v.muc_do AS mucDo,
+                                    v.giam_toi_da AS giamToiDa,v.dieu_kien AS dieuKien,v.so_luong AS soLuong,
+                                     v.loai_voucher AS loaiVoucher,v.ngay_bat_dau AS ngayBatDau,
+                                     v.ngay_ket_thuc AS ngayKetThuc,v.trang_thai AS trangThai FROM voucher v where v.id not in (select voucher.id from voucher  join nguoidung_voucher on nguoidung_voucher.voucher_id =voucher.id  ) and v.trang_thai='DANG_HOAT_DONG'
             """, nativeQuery = true)
     List<VoucherRespone> getVoucherTatCa();
 }

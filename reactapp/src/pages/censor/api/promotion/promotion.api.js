@@ -89,6 +89,14 @@ export class PromotionAPI {
     });
   };
 
+  static deletePromotion = (id,data) => {
+    return requestAdmin({
+      method:"PUT",
+      url: `/admin/ctsp/deleteKM/${id}`,
+      data : data,
+    });
+  }
+
   static showSPByProduct = (id) =>{
     return requestAdmin({
         method :"GET",

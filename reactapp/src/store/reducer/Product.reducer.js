@@ -49,7 +49,38 @@ const productSlice=createSlice({
                 state.forEach((item, index) => {
                     item.stt = index + 1;
                 });
+            } else {
+                state[index].id = data.id;
+                state[index].soLuong = data.soLuong;
+                state[index].linkAnh = data.linkAnh;
+                state[index].tenSP = data.tenSP;
+                state[index].tenKT = data.tenKT;
+                state[index].tenMS = data.tenMS;
+                state[index].maMS = data.maMS;
+                state[index].giaBan = data.giaBan;
+                state[index].giaNhap = data.giaNhap; 
+                state[index].gioiTinh = data.gioiTinh;
+                state[index].trangThai = data.trangThai;
+                state[index].chatLieu = data.chatLieu;
+                state[index].danhMuc = data.danhMuc;
+                state[index].deGiay = data.deGiay;
+                state[index].ghiChu = data.ghiChu;
+                state[index].hoaDon = data.hoaDon;
+                state[index].tenKM = data.tenKM;
+                state[index].chiTietSanPham = data.chiTietSanPham;
+                state[index].nguoiTao = data.nguoiTao;
+                state[index].nguoiSua = data.nguoiSua;
+                state[index].ngayTao = data.ngayTao;
+                state[index].ngaySua = data.ngaySua;
+                state[index].moTa = data.moTa;
+                state[index].qrCode = data.qrCode;
+                state[index].sanPham = data.sanPham;
+                state[index].loaiKM = data.loaiKM;
+                state[index].giaTriKhuyenMai = data.giaTriKhuyenMai;
+                state[index].giaGiam = (data.tenKM !== null) ?(data.loaiKM === 'Tiền mặt' ? data.giaTriKhuyenMai :  (data.giaBan * data.giaTriKhuyenMai / 100)) : 0;
+                state[index].giaSauGiam = data.giaBan - ((data.tenKM !== null) ?(data.loaiKM === 'Tiền mặt' ? data.giaTriKhuyenMai :  (data.giaBan * data.giaTriKhuyenMai / 100)) : 0 )
             }
+            
             },
 
      

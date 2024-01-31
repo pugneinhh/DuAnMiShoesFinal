@@ -81,7 +81,14 @@ public class BanHangController {
     }
 
     @GetMapping("/voucher/{idND}")
-    public ResponseEntity<?> getOneHDCT(@PathVariable("idND")String idND){
+    public ResponseEntity<?> getAllVoucherWithIDKH(@PathVariable("idND")String idND){
         return ResponseEntity.ok(voucherService.getVoucherBanHang(idND));
     }
+
+    @GetMapping("/voucher/no-limited")
+    public ResponseEntity<?> getAllVoucherNoLimited(){
+        return ResponseEntity.ok(voucherService.noLimited());
+    }
+
+
 }
