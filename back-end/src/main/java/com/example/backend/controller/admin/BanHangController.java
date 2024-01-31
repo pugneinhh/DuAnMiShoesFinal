@@ -87,6 +87,10 @@ public class BanHangController {
         return ResponseEntity.ok(hoaDonChiTietService.getOneHDCT(idHD,idCTSP));
     }
 
+    @GetMapping("/hoa-don/hoa-don-cho")
+    public ResponseEntity<?> getAllHDChoTaiQuay(){
+        return ResponseEntity.ok(hoaDonServicee.getHoaDonChoTaiQuay());
+    }
     @GetMapping("/voucher/{idND}")
     public ResponseEntity<?> getAllVoucherWithIDKH(@PathVariable("idND")String idND){
         return ResponseEntity.ok(voucherService.getVoucherBanHang(idND));

@@ -66,6 +66,13 @@ export class SellAPI{
         });
     };
 
+    static getAllHoaDonCho = () => {
+        return requestAdmin({
+            method : 'GET',
+            url : '/ban-hang/hoa-don/hoa-don-cho',
+        });
+    }
+
     static addInvoice = (data) => {
         return requestAdmin({
             method : 'POST',

@@ -583,7 +583,7 @@ const BanHang = () => {
                   }
                   key={tab.key}
                 >
-                  (
+                  
                   <>
                     <div>
                       <div className="d-flex justify-content-between align-items-center">
@@ -829,7 +829,7 @@ const BanHang = () => {
                                       </div>
                                     </Option>
                                   ))
-                                : voucherNoLimited.map((option) => (
+                                : voucherNoLimited ? voucherNoLimited.map((option) => (
                                     <Option
                                       key={option.id}
                                       value={option.id}
@@ -875,7 +875,7 @@ const BanHang = () => {
                                         </div>
                                       </div>
                                     </Option>
-                                  ))}
+                                  )) : <Option>Không có voucher hợp lệ</Option>}
                             </Select>
                             {/* <Button className="ms-5">Áp mã</Button> */}
                           </Space.Compact>
@@ -932,7 +932,7 @@ const BanHang = () => {
                       </div>
                     </div>
                   </>
-                  )
+                  
                 </TabPane>
               )
             )
@@ -979,6 +979,7 @@ const BanHang = () => {
                       />
                     }
                     style={{ marginLeft: 15 }}
+                    disabled
                   ></Button>
                   <ModalThanhToan
                     openThanhToan={openThanhToan}
@@ -999,8 +1000,9 @@ const BanHang = () => {
                       optionFilterProp="children"
                       onChange={onChangeVoucher}
                       // onSearch={onSearchVoucher}
+                      disabled
                     >
-                      {voucherNoLimited.map((option) => (
+                      {voucherNoLimited ? voucherNoLimited.map((option) => (
                         <Option
                           key={option.id}
                           value={option.id}
@@ -1043,7 +1045,7 @@ const BanHang = () => {
                             </div>
                           </div>
                         </Option>
-                      ))}
+                      )) : <Option>Không có voucher hợp lệ</Option>}
                     </Select>
                     {/* 
                     <Button className="ms-5">Áp mã</Button> */}
@@ -1051,11 +1053,11 @@ const BanHang = () => {
                 </div>
                 <h6 className="mt-4">
                   Trả sau: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  <Switch defaultChecked />
+                  <Switch disabled checked="false"/>
                 </h6>
                 <h6 className="mt-4">
                   Giao hàng: &nbsp;&nbsp;&nbsp;
-                  <Switch />
+                  <Switch disabled/>
                 </h6>
                 <div className="row">
                   <div className="col-md-8">
@@ -1075,6 +1077,7 @@ const BanHang = () => {
                 <Button
                   className=" mt-2 me-5 bg-success float-end bg-black"
                   type="primary"
+                  disabled
                 >
                   Xác nhận đặt hàng
                 </Button>
