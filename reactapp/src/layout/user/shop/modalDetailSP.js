@@ -9,28 +9,30 @@ const ModalDetailSP = (props) => {
   const [largeImage, setLargeImage] = useState('');
       useEffect(() => {
        loadCTSP();
-       loadListMauSacBySP();
-       loadListSizeBySP();
+    
       }, []);
   const [ChiTietSanPham, setChiTietSanPham] = useState([]);
-   const [IDSanPham, setIDSanPham] = useState('');
+  //  const [IDSanPham, setIDSanPham] = useState('');
   const loadCTSP = () => {
     // console.log(result.data);
     SanPhamClientAPI.getCTSP(idCt).then((res) => {
       setChiTietSanPham(res.data);
-      setIDSanPham(res.data.sanPhamID);
+      console.log(res.data);
+      loadListMauSacBySP(res.data.sanPhamID);
+      loadListSizeBySP(res.data.sanPhamID);
       setLargeImage(res.data.anh);
     });
   };
+
    const [ListMauSacBySP, setListMauSacBySP] = useState([]);
-    const loadListMauSacBySP = () => {
-      SanPhamClientAPI.getListMauSacBySP(IDSanPham).then((res) => {
+    const loadListMauSacBySP = (IDSP) => {
+      SanPhamClientAPI.getListMauSacBySP(IDSP).then((res) => {
      setListMauSacBySP(res.data);
       });
     };
        const [ListSizeBySP, setListSizeBySP] = useState([]);
-       const loadListSizeBySP = () => {
-         SanPhamClientAPI.getListSizeBySP(IDSanPham).then((res) => {
+       const loadListSizeBySP = (IDSP) => {
+         SanPhamClientAPI.getListSizeBySP(IDSP).then((res) => {
            setListSizeBySP(res.data);
          });
        };
@@ -41,10 +43,8 @@ const ModalDetailSP = (props) => {
     setOpenModalDetailSP(false);
     setidCTSP("");
   };
-  console.log("idctsp là của tôi là",idCt);
-    console.log("idsp  là", IDSanPham);
-  console.log(" là của tôi là", ListMauSacBySP);
 
+  console.log('listtttttttttt',ListSizeBySP);
   return (
     <Modal
       //   title="Voucher"
@@ -131,7 +131,7 @@ const ModalDetailSP = (props) => {
                 <Button
                   className="mt-1 "
                   style={{
-                    backgroundColor: "{listMauSacBySP.maMau}", //`${listSanPham.tenMauSac}`
+                    backgroundColor: listMauSacBySP.maMau, //`${listSanPham.tenMauSac}`
                     borderRadius: 20,
                     width: 30,
                     height: 30,
@@ -143,6 +143,7 @@ const ModalDetailSP = (props) => {
           <hr></hr>
           <h6>Size</h6>
           <div className="row mt-1">
+          {ListSizeBySP.map((listsize, index) => (
             <div className="col-md-1 me-2">
               <Button
                 className=" mt-2  "
@@ -152,33 +153,10 @@ const ModalDetailSP = (props) => {
                   height: 40,
                 }}
               >
-                38
+                {listsize.tenKichThuoc}
               </Button>
             </div>
-            <div className="col-md-1 me-2">
-              <Button
-                className=" mt-2  "
-                style={{
-                  borderRadius: 10,
-                  width: 40,
-                  height: 40,
-                }}
-              >
-                39
-              </Button>
-            </div>
-            <div className="col-md-1 me-2">
-              <Button
-                className=" mt-2  "
-                style={{
-                  borderRadius: 10,
-                  width: 40,
-                  height: 40,
-                }}
-              >
-                40
-              </Button>
-            </div>
+  ))}
           </div>
           <h6 className="mt-3">Số lượng</h6>
           <div className="row">

@@ -160,9 +160,9 @@ public interface CTSPRepository extends JpaRepository<ChiTietSanPham, String> {
 
     //list size by sp client
     @Query(value = """
-                SELECT distinct mau_sac.id as mauSacID, mau_sac.ma as maMau FROM chi_tiet_san_pham
+                SELECT distinct kich_thuoc.id as kichThuocID, kich_thuoc.ten as tenKichThuoc FROM chi_tiet_san_pham
                  join san_pham on chi_tiet_san_pham.san_pham_id = san_pham.id
-                  join mau_sac on chi_tiet_san_pham.mau_sac_id =mau_sac.id where san_pham_id=:idSP
+                  join kich_thuoc on chi_tiet_san_pham.kich_thuoc_id =kich_thuoc.id where san_pham_id=:idSP
                      """, nativeQuery = true)
     List<ListSizeBySPClientRespon> listSizeBySPClient(@Param("idSP") String idSP);
 }
