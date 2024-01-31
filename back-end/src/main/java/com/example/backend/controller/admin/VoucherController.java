@@ -33,11 +33,7 @@ public class VoucherController {
 //        vs.checkHan();
         return ResponseEntity.ok(vs.getAll());
     }
-    @GetMapping("/voucher-hop-le/{total}")
-    public ResponseEntity<?> getVoucherHopLe(@PathVariable("total")String total){
-        BigDecimal tien=BigDecimal.valueOf(Double.valueOf(total));
-        return ResponseEntity.ok(vs.getVoucherHopLe(tien));
-    }
+
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody VoucherRequest request){
         LocalDateTime ngayBD =  vs.convertTime(request.getNgayBatDau());

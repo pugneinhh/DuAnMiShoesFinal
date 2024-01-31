@@ -26,6 +26,9 @@ public class HoaDonServicee {
     public List<AdminHoaDonResponn> getALL() {
         return hoaDonRepository.getALLHD();
     }
+    public List<AdminHoaDonResponn> getHoaDonChoTaiQuay() {
+        return hoaDonRepository.getHoaDonChoTaiQuay();
+    }
 
     public List<AdminHoaDonResponn> getALLTT(int tt) {
         return hoaDonRepository.getALLHDTT(tt);

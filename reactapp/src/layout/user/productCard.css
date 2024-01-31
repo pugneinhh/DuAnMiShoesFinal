@@ -23,15 +23,15 @@
   }
 
   .product-name {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
-    margin-bottom: 8px;
+    margin-bottom: 3px;
   }
 
   .product-price {
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 15px;
     color: #e44d26;
+    margin-top: 3px;
     margin-bottom: 16px;
   }
 
@@ -50,11 +50,11 @@
 
   .product-card:hover .buttons-container {
     opacity: 1;
-    transform: translateY(-10px);
+    transform: translateY(4px);
     
   }
 
-  .buy-button,
+  /* .buy-button,
   .details-button {
     flex: 1;
     padding: 8px;
@@ -64,9 +64,8 @@
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
-    
   }
-
+*/
   .buy-button {
     background-color: #e44d26;
     color: #fff;
@@ -76,4 +75,60 @@
     background-color: #333;
     color: #fff;
     margin-left: 8px;
+  } 
+.buttons-container {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.buy-button,
+.details-button {
+  position: relative;
+  display: inline-block;
+  padding: 10px 20px;
+  text-decoration: none;
+  overflow: hidden;
+  flex: 1;
+    padding: 8px;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    
+}
+
+.icon {
+  margin-right: 5px;
+}
+
+.buy-button::before,
+.details-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.2);
+  transition: left 0.5s ease;
+}
+
+.buy-button:hover::before,
+.details-button:hover::before {
+  left: 0;
+}
+
+.buy-button:hover {
+  background-color: orange;
+  color: black;
+}
+
+.details-button:hover {
+  background-color: green;
+  color: wheat;
+}
+  .icon{
+    margin-bottom: 3px;
   }

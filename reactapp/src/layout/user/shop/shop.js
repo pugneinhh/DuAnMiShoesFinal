@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./shop.css";
 import { Button, Card, Col, Collapse, Input, Popover, Row, Space } from "antd";
-
+import { ProductCard } from "../productCard";
 import ModalDetailSP from "./modalDetailSP";
 export const Shop = ({ children }) => {
     const [openModalDetailSP, setOpenModalDetailSP] = useState(false);
@@ -17,11 +17,40 @@ export const Shop = ({ children }) => {
  };
 
 
-const text = `
-  A dog is a type of domesticated animal.
-  Known for its loyalty and faithfulness,
-  it can be found as a welcome guest in many households across the world.
-`;
+ const products = [
+   {
+     name: "Product 1",
+     price: "$29.99",
+     image:
+       "https://res.cloudinary.com/dm0w2qws8/image/upload/v1706369414/z5112244316883_4f6532ed804a61321b068673ee56a1e6_oitnz6.jpg",
+     hoverImage:
+       "https://res.cloudinary.com/dm0w2qws8/image/upload/v1706369416/z5112244337734_c47ff61cb4fea73d3f86511d1cd98cd5_jmaz2r.jpg",
+   },
+   {
+     name: "Product 2",
+     price: "$39.99",
+     image:
+       "https://res.cloudinary.com/dm0w2qws8/image/upload/v1706369415/z5112244321028_f6fcdc3c05a4e07141bdf44715b5b065_a0ygmi.jpg",
+     hoverImage:
+       "https://res.cloudinary.com/dm0w2qws8/image/upload/v1706369415/z5112244328612_12aeebf03e6a619c5ece84623d562ee8_zh6isc.jpg",
+   },
+   {
+     name: "Product 3",
+     price: "$49.99",
+     image:
+       "https://res.cloudinary.com/dm0w2qws8/image/upload/v1706369417/z5112244347228_606242593e3dc68cd054f7b04dfe6011_umomep.jpg",
+     hoverImage:
+       "https://res.cloudinary.com/dm0w2qws8/image/upload/v1706369418/z5112244349534_fae017512dfd31dc78d51f18b1721554_aokiwg.jpg",
+   },
+   {
+     name: "Product 4",
+     price: "$59.99",
+     image:
+       "https://res.cloudinary.com/dm0w2qws8/image/upload/v1706369418/z5112244357653_374000deb4a875eb0c274e45065f9875_popcgk.jpg",
+     hoverImage:
+       "https://res.cloudinary.com/dm0w2qws8/image/upload/v1706369416/z5112244329159_f5bc31899ed8c375a9132e4b43d18e8e_ewatzh.jpg",
+   },
+ ];
   return (
     <div>
       <div className="banner-san-pham-shop">
@@ -33,7 +62,7 @@ const text = `
       <br></br> <br></br>
       <div className="row mt-5">
         {/* lọc filter */}
-        <Space direction="vertical" className="col-md-3">
+        <Space direction="vertical" className="col-md-2">
           <Collapse
             collapsible="header"
             defaultActiveKey={["1"]}
@@ -164,137 +193,15 @@ const text = `
             ]}
           />
         </Space>
-        <div className="col-md-9  ">
+        <div className="col-md-10  ">
           <Row gutter={16} className="mb-3">
-            <Col span={8} className="sanpham-item">
-              <Card
-                bordered={false}
-                onMouseEnter={() => handleMouseEnter(1)}
-                onMouseLeave={handleMouseLeave}
-              >
-                <div className="image-container">
-                  <div>
-                    <img
-                      className={`image ${hoveredCard === 1 ? "" : "hidden"}`}
-                      src="https://res.cloudinary.com/dm0w2qws8/image/upload/v1706369415/z5112244321028_f6fcdc3c05a4e07141bdf44715b5b065_a0ygmi.jpg"
-                      alt="Product 1"
-                    />
-                    <img
-                      className={`image ${hoveredCard === 1 ? "hidden" : ""}`}
-                      src="https://res.cloudinary.com/dm0w2qws8/image/upload/v1706369414/z5112244316883_4f6532ed804a61321b068673ee56a1e6_oitnz6.jpg"
-                      alt="Product 2"
-                    />
-                  </div>
-                </div>
-                <h6 className="mt-2 text-center">Nike Adidas Grand Court</h6>
-                <h6 className="d-flex justify-content-center align-items-center mt-2">
-                  1.000.000 <span>VND</span>
-                </h6>
-                {/* Your Card content */}
-                {hoveredCard === 1 && (
-                  <div className="d-flex justify-content-center mt-2">
-                    <Button
-                      className="buy-now-button mr-2"
-                      onClick={() => console.log("Clicked Buy Now")}
-                    >
-                      Mua Ngay
-                    </Button>
-                    <Button
-                      className="buy-now-button"
-                      onClick={() => setOpenModalDetailSP(true)}
-                    >
-                      Quick View
-                    </Button>
-                  </div>
-                )}
-              </Card>
-            </Col>
-            <Col span={8} className="sanpham-item">
-              <Card
-                bordered={false}
-                onMouseEnter={() => handleMouseEnter(1)}
-                onMouseLeave={handleMouseLeave}
-              >
-                <div className="image-container">
-                  <div>
-                    <img
-                      className={`image ${hoveredCard === 1 ? "" : "hidden"}`}
-                      src="https://res.cloudinary.com/dm0w2qws8/image/upload/v1706369415/z5112244321028_f6fcdc3c05a4e07141bdf44715b5b065_a0ygmi.jpg"
-                      alt="Product 1"
-                    />
-                    <img
-                      className={`image ${hoveredCard === 1 ? "hidden" : ""}`}
-                      src="https://res.cloudinary.com/dm0w2qws8/image/upload/v1706369414/z5112244316883_4f6532ed804a61321b068673ee56a1e6_oitnz6.jpg"
-                      alt="Product 2"
-                    />
-                  </div>
-                </div>
-                <h6 className="mt-2 text-center">Nike Adidas Grand Court</h6>
-                <h6 className="d-flex justify-content-center align-items-center mt-2">
-                  1.000.000 <span>VND</span>
-                </h6>
-                {/* Your Card content */}
-                {hoveredCard === 1 && (
-                  <div className="d-flex justify-content-center mt-2">
-                    <Button
-                      className="buy-now-button mr-2"
-                      onClick={() => console.log("Clicked Buy Now")}
-                    >
-                      Mua Ngay
-                    </Button>
-                    <Button
-                      className="buy-now-button"
-                      onClick={() => setOpenModalDetailSP(true)}
-                    >
-                      Quick View
-                    </Button>
-                  </div>
-                )}
-              </Card>
-            </Col>
-            <Col span={8} className="sanpham-item">
-              <Card
-                bordered={false}
-                onMouseEnter={() => handleMouseEnter(1)}
-                onMouseLeave={handleMouseLeave}
-              >
-                <div className="image-container">
-                  <div>
-                    <img
-                      className={`image ${hoveredCard === 1 ? "" : "hidden"}`}
-                      src="https://res.cloudinary.com/dm0w2qws8/image/upload/v1706369415/z5112244321028_f6fcdc3c05a4e07141bdf44715b5b065_a0ygmi.jpg"
-                      alt="Product 1"
-                    />
-                    <img
-                      className={`image ${hoveredCard === 1 ? "hidden" : ""}`}
-                      src="https://res.cloudinary.com/dm0w2qws8/image/upload/v1706369414/z5112244316883_4f6532ed804a61321b068673ee56a1e6_oitnz6.jpg"
-                      alt="Product 2"
-                    />
-                  </div>
-                </div>
-                <h6 className="mt-2 text-center">Nike Adidas Grand Court</h6>
-                <h6 className="d-flex justify-content-center align-items-center mt-2">
-                  1.000.000 <span>VND</span>
-                </h6>
-                {/* Your Card content */}
-                {hoveredCard === 1 && (
-                  <div className="d-flex justify-content-center mt-2">
-                    <Button
-                      className="buy-now-button mr-2"
-                      onClick={() => console.log("Clicked Buy Now")}
-                    >
-                      Mua Ngay
-                    </Button>
-                    <Button
-                      className="buy-now-button"
-                      onClick={() => setOpenModalDetailSP(true)}
-                    >
-                      Quick View
-                    </Button>
-                  </div>
-                )}
-              </Card>
-            </Col>
+            <div class="container">
+              <div className="row">
+                {products.map((product, index) => (
+                  <ProductCard key={index} product={product} />
+                ))}
+              </div>
+            </div>
             {/* Similar code for other Col spans */}
           </Row>
         </div>

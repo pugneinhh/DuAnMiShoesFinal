@@ -59,5 +59,13 @@ export class NguoiDungVoucherAPI {
             url: `/admin/nguoi-dung-voucher/nguoi-dung/${id}`,
         });
     };
+
+    static getSearchKhachHang = (data) => {
+        return requestAdmin({
+            method: "POST",
+            url: `/admin/nguoi-dung-voucher/searchKhachHang`,
+            data: data
+        });
+    };
   
 }

@@ -16,7 +16,8 @@ import SuaAnhCTSP from './SuaAnhCTSP';
 
 export default function CTSP() {
   //Mở detail ctsp
-  const { uuid } = useParams();
+  const { id } = useParams();
+  console.log(id)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [ktCheck, setKtCheck] = useState('');
   const [msCheck, setMsCheck] = useState('');
@@ -68,7 +69,7 @@ export default function CTSP() {
     if (selectedRowKeys) {
       console.log(selectedRowKeys);
       for (let i = 0; i < selectedRowKeys.length; i++) {
-        const result = await axios.get(`http://localhost:8080/ctsp/detail/${selectedRowKeys[i]}`, {
+        const result = await axios.get(`http://localhost:8080/admin/ctsp/detail/${selectedRowKeys[i]}`, {
           validateStatus: () => {
             return true;
           }
@@ -127,7 +128,7 @@ export default function CTSP() {
   }
   //Update
   const showModal = async (idCT) => {
-    const result = await axios.get(`http://localhost:8080/ctsp/detail/${idCT}`, {
+    const result = await axios.get(`http://localhost:8080/admin/ctsp/detail/${idCT}`, {
       validateStatus: () => {
         return true;
       }
@@ -143,7 +144,7 @@ export default function CTSP() {
     loadCTSP_Update();
   }, []);
   const loadCTSP_Update = async () => {
-    const result = await axios.get("http://localhost:8080/ctsp/detailsp", {
+    const result = await axios.get("http://localhost:8080/admin/ctsp/detailsp", {
       validateStatus: () => {
         return true;
       }
@@ -176,7 +177,7 @@ export default function CTSP() {
       }
     }
 
-    axios.put(`http://localhost:8080/ctsp/update/${ctData.id}`, ctData)
+    axios.put(`http://localhost:8080/admin/ctsp/update/${ctData.id}`, ctData)
       .then(response => {
         console.log(response.data);
         toast('✔️ Sửa thành công!', {
@@ -199,12 +200,11 @@ export default function CTSP() {
     timKiemCT(allValues);
   }
   const timKiemCT = (dataSearch) => {
-    axios.post(`http://localhost:8080/ctsp/search-ctsp/${uuid}`, dataSearch)
+    axios.post(`http://localhost:8080/admin/ctsp/search-ctsp/${id}`, dataSearch)
       .then(response => {
         // Update the list of items
         setCTSPs(response.data);
         console.log("tìm kím:", response.data);
-        console.log("UUID : ", uuid)
       })
       .catch(error => console.error('Error adding item:', error));
   }
@@ -214,18 +214,16 @@ export default function CTSP() {
     loadKT();
   }, []);
   const loadKT = async () => {
-    const result = await axios.get("http://localhost:8080/kich-thuoc", {
+    const result = await axios.get("http://localhost:8080/admin/kich-thuoc", {
       validateStatus: () => {
         return true;
       }
     });
-    if (result.status === 302) {
       setKT(result.data);
-    }
   };
   const addKichThuoc = (value) => {
     console.log(value);
-    axios.post('http://localhost:8080/kich-thuoc/add', value)
+    axios.post('http://localhost:8080/admin/kich-thuoc/add', value)
       .then(response => {
         console.log(response.data);
         toast('✔️ Thêm thành công!', {
@@ -251,18 +249,16 @@ export default function CTSP() {
     loadMS();
   }, []);
   const loadMS = async () => {
-    const result = await axios.get("http://localhost:8080/mau-sac", {
+    const result = await axios.get("http://localhost:8080/admin/mau-sac", {
       validateStatus: () => {
         return true;
       }
     });
-    if (result.status === 302) {
       setMS(result.data);
-    }
   };
   const addMauSac = (value) => {
     console.log(value);
-    axios.post('http://localhost:8080/mau-sac/add', value)
+    axios.post('http://localhost:8080/admin/mau-sac/add', value)
       .then(response => {
         console.log(response.data);
         toast('✔️ Thêm thành công!', {
@@ -288,18 +284,16 @@ export default function CTSP() {
     loadCL();
   }, []);
   const loadCL = async () => {
-    const result = await axios.get("http://localhost:8080/chat-lieu", {
+    const result = await axios.get("http://localhost:8080/admin/chat-lieu", {
       validateStatus: () => {
         return true;
       }
     });
-    if (result.status === 302) {
       setCL(result.data);
-    }
   };
   const addChatLieu = (value) => {
     console.log(value);
-    axios.post('http://localhost:8080/chat-lieu/add', value)
+    axios.post('http://localhost:8080/admin/chat-lieu/add', value)
       .then(response => {
         console.log(response.data);
         toast('✔️ Thêm thành công!', {
@@ -325,18 +319,16 @@ export default function CTSP() {
     loadDC();
   }, []);
   const loadDC = async () => {
-    const result = await axios.get("http://localhost:8080/de-giay", {
+    const result = await axios.get("http://localhost:8080/admin/de-giay", {
       validateStatus: () => {
         return true;
       }
     });
-    if (result.status === 302) {
       setDC(result.data);
-    }
   };
   const addDoCao = (value) => {
     console.log(value);
-    axios.post('http://localhost:8080/de-giay/add', value)
+    axios.post('http://localhost:8080/admin/de-giay/add', value)
       .then(response => {
         console.log(response.data);
         toast('✔️ Thêm thành công!', {
@@ -362,7 +354,7 @@ export default function CTSP() {
     loadDM();
   }, []);
   const loadDM = async () => {
-    const result = await axios.get("http://localhost:8080/danh-muc", {
+    const result = await axios.get("http://localhost:8080/admin/danh-muc", {
       validateStatus: () => {
         return true;
       }
@@ -371,7 +363,7 @@ export default function CTSP() {
   };
   const addDanhMuc = (value) => {
     console.log(value);
-    axios.post('http://localhost:8080/danh-muc/add', value)
+    axios.post('http://localhost:8080/admin/danh-muc/add', value)
       .then(response => {
         console.log(response.data);
         toast('✔️ Thêm thành công!', {
@@ -397,18 +389,16 @@ export default function CTSP() {
     loadH();
   }, []);
   const loadH = async () => {
-    const result = await axios.get("http://localhost:8080/hang", {
+    const result = await axios.get("http://localhost:8080/admin/hang", {
       validateStatus: () => {
         return true;
       }
     });
-    if (result.status === 302) {
       setH(result.data);
-    }
   };
   const addHang = (value) => {
     console.log(value);
-    axios.post('http://localhost:8080/hang/add', value)
+    axios.post('http://localhost:8080/hang/admin/add', value)
       .then(response => {
         console.log(response.data);
         toast('✔️ Thêm thành công!', {
@@ -436,7 +426,7 @@ export default function CTSP() {
     loadCTSP();
   }, []);
   const loadCTSP = async () => {
-    const result = await axios.get(`http://localhost:8080/ctsp/showct/${uuid}`, {
+    const result = await axios.get(`http://localhost:8080/admin/ctsp/showct/${id}`, {
       validateStatus: () => {
         return true;
       }
@@ -462,7 +452,7 @@ export default function CTSP() {
 
   // console.log(dataSource)
   const loadCTKT = async () => {
-    const result = await axios.get(`http://localhost:8080/ctsp/search/${uuid}`, {
+    const result = await axios.get(`http://localhost:8080/admin/ctsp/search/${id}`, {
       validateStatus: () => {
         return true;
       }

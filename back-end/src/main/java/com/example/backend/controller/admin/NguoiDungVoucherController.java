@@ -1,5 +1,7 @@
 package com.example.backend.controller.admin;
 
+import com.example.backend.dto.request.KhachHangVoucherSearch;
+import com.example.backend.dto.request.NguoiDungSeacrh;
 import com.example.backend.dto.request.NguoiDungVoucherRequest;
 import com.example.backend.entity.NguoiDungVoucher;
 import com.example.backend.entity.Voucher;
@@ -57,5 +59,10 @@ public class NguoiDungVoucherController {
     @PutMapping("/update/da-ket-thuc/{idV}/{idKH}")
     public ResponseEntity<?> updateDaKetThuc(@PathVariable("idV") String idV,@PathVariable("idKH")String idKH) {
         return ResponseEntity.ok(nguoiDungVoucherService.updateTrangThai_DaKetThuc(idKH, idV));
+    }
+
+    @PostMapping("/searchKhachHang")
+    public ResponseEntity<?> getSearchKhachHang(@RequestBody KhachHangVoucherSearch nguoiDungSeacrh) {
+        return ResponseEntity.ok(nguoiDungVoucherService.getSearchKhachHang(nguoiDungSeacrh));
     }
 }
