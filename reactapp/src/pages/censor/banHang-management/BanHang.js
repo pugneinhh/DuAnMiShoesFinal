@@ -49,6 +49,7 @@ import {
 import { VoucherNguoiDungAPI } from "../../censor/api/voucher/nguoiDungVoucher.api";
 import { SellAPI } from "../api/sell/sell.api";
 import imgTicket from "../../../assets/images/discountTicket.png";
+import DiaChiGiaoHang from "./GiaoHang";
 const { Option } = Select;
 const { TabPane } = Tabs;
 const BanHang = () => {
@@ -62,6 +63,11 @@ const BanHang = () => {
   let lengthSP = 0;
   let data = [""];
   let KH = [""];
+  const [isSwitchOn, setIsSwitchOn] = useState(false);
+
+  const handleSwitchToggle = () => {
+    setIsSwitchOn(!isSwitchOn);
+  };
 
   const onChangeVoucher = (value, option) => {
     console.log(`selected ${value}`);
@@ -92,8 +98,7 @@ const BanHang = () => {
 
   const [open, setOpen] = useState(false);
   const [openSanPham, setOpenSanPham] = useState(false);
-
-  useEffect(() => {
+useEffect(() => {
     voucherNoIDKH();
   }, []);
 
@@ -204,7 +209,7 @@ const BanHang = () => {
     setOpenThanhToan(true);
   };
   const handleCloseSanPham = () => {
-    setOpenSanPham(false);
+setOpenSanPham(false);
   };
   const [openKhachHang, setOpenKhachHang] = useState(false);
 
@@ -319,7 +324,7 @@ const BanHang = () => {
       });
     } else {
       dispatch(
-        RemoveBill(hoaDons.filter((hoaDon) => hoaDon.key == targetKey)[0])
+RemoveBill(hoaDons.filter((hoaDon) => hoaDon.key == targetKey)[0])
       );
 
       initState.current--;
@@ -432,7 +437,7 @@ const BanHang = () => {
         <InputNumber
           min={0}
           value={record.soLuong}
-          onChange={(value) => onChangeSoLuong(value, record)}
+onChange={(value) => onChangeSoLuong(value, record)}
         />
       ),
     },
@@ -541,7 +546,7 @@ const BanHang = () => {
   return (
     <div className="container border-1">
       <div className="text-end mt-3 me-4 mb-3">
-        {/* <Button type="primary" onClick={add} >Tạo hóa đơn</Button> */}
+{/* <Button type="primary" onClick={add} >Tạo hóa đơn</Button> */}
         <Button type="primary" onClick={handleClickAddHD}>
           Tạo hóa đơn
         </Button>
@@ -583,7 +588,6 @@ const BanHang = () => {
                   }
                   key={tab.key}
                 >
-                  
                   <>
                     <div>
                       <div className="d-flex justify-content-between align-items-center">
@@ -619,7 +623,7 @@ const BanHang = () => {
                       </div>
                       <>
                         {data.length > 0 ? (
-                          <Table
+<Table
                             className="text-center"
                             dataSource={data}
                             columns={columns}
@@ -634,7 +638,7 @@ const BanHang = () => {
                         ) : (
                           <div>
                             <Empty
-                              image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSy4Pi1fKO57hmDRxcyP1cVftjpGRe2xg-ymZd6Q25PAgeq7dUX4MqU5GGLK3UYYYc_s8s&amp;usqp=CAU"
+                              image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSy4Pi1fKO57hmDRx...usqp=CAU"
                               imageStyle={{
                                 height: 250,
                               }}
@@ -686,7 +690,7 @@ const BanHang = () => {
                             <p>
                               Số điện thoại:{" "}
                               <Tag color="#cccccc" className="rounded-pill">
-                                000-0000-000
+000-0000-000
                               </Tag>
                             </p>
                           </span>
@@ -732,7 +736,9 @@ const BanHang = () => {
                     <h4>Khách hàng</h4>
                     <hr></hr>
                     <div className="container-fluid row">
-                      <div className="col-md-7"></div>
+                      <div className="col-md-7">
+                        {isSwitchOn && <DiaChiGiaoHang></DiaChiGiaoHang>}
+                      </div>
                       <div className="col-md-5">
                         <h4 className="fw-bold">
                           <MdOutlineShoppingCartCheckout />
@@ -752,7 +758,7 @@ const BanHang = () => {
                               />
                             }
                             style={{ marginLeft: 12 }}
-                          ></Button>
+></Button>
                           <ModalThanhToan
                             openThanhToan={openThanhToan}
                             setOpenThanhToan={setOpenThanhToan}
@@ -778,104 +784,108 @@ const BanHang = () => {
                               placeholder="Lựa chọn voucher"
                               //optionLabelProp="label"
                               onChange={onChangeVoucher}
-                             // filterOption={filterOptionVoucher}
+                              // filterOption={filterOptionVoucher}
                               //  options={voucherByIDKH.data ? voucherByIDKH.data : voucherNoLimited}
                             >
-                              {voucherByIDKH.data
-                                ? voucherByIDKH.data.map((option) => (
-                                    <Option
-                                      key={option.id}
-                                      value={option.id}
-                                      label={option.ma}
-                                      style={{ width: "100%", height: 80 }}
-                                      // filterOption={filterOptionVoucher}
-                                    >
-                                      <div className="row">
-                                        <div className="col-md-2">
-                                          <img
-                                            src={imgTicket}
-                                            style={{
-                                              width: 100,
-                                              marginRight: "8px",
-                                              heitgh: 50,
-                                              marginTop: "15px",
-                                            }}
-                                          />
-                                        </div>
-                                        <div
-                                          className="col"
-                                          style={{ marginLeft: 50 }}
-                                        >
-                                          Mã giảm giá: {option.ma}
-                                          <br></br>
-                                          Điều kiện:
-                                          {Intl.NumberFormat("en-US").format(
-                                            option.dieuKien
-                                          )}{" "}
-                                          VNĐ
-                                          <br></br>
-                                          Giảm:
-                                          {option.loaiVoucher === "Phần trăm"
-                                            ? option.mucDo + "% "
-                                            : `${Intl.NumberFormat(
-                                                "en-US"
-                                              ).format(option.mucDo)} VNĐ `}
-                                          - Tối đa:
-                                          {Intl.NumberFormat("en-US").format(
-                                            option.giamToiDa
-                                          )}
-                                          VNĐ
-                                        </div>
+                              {voucherByIDKH.data ? (
+                                voucherByIDKH.data.map((option) => (
+                                  <Option
+                                    key={option.id}
+                                    value={option.id}
+                                    label={option.ma}
+                                    style={{ width: "100%", height: 80 }}
+                                    // filterOption={filterOptionVoucher}
+                                  >
+                                    <div className="row">
+                                      <div className="col-md-2">
+                                        <img
+                                          src={imgTicket}
+                                          style={{
+                                            width: 100,
+                                            marginRight: "8px",
+                                            heitgh: 50,
+                                            marginTop: "15px",
+                                          }}
+                                        />
                                       </div>
-                                    </Option>
-                                  ))
-                                : voucherNoLimited ? voucherNoLimited.map((option) => (
-                                    <Option
-                                      key={option.id}
-                                      value={option.id}
-                                      label={option.ma}
-                                      style={{ width: "100%", height: 80 }}
-                                      // filterOption={filterOptionVoucher}
-                                    >
-                                      <div className="row">
-                                        <div className="col-md-2">
-                                          <img
-                                            src={imgTicket}
-                                            style={{
-                                              width: 100,
-                                              marginRight: "8px",
-                                              heitgh: 50,
-                                              marginTop: "15px",
-                                            }}
-                                          />
-                                        </div>
-                                        <div
-                                          className="col"
-                                          style={{ marginLeft: 50 }}
-                                        >
-                                          Mã giảm giá: {option.ma}
-                                          <br></br>
-                                          Điều kiện:
-                                          {Intl.NumberFormat("en-US").format(
-                                            option.dieuKien
-                                          )}{" "}
-                                          VNĐ
-                                          <br></br>
-                                          Giảm:
-                                          {option.loaiVoucher === "Phần trăm"
-                                            ? option.mucDo + "% "
-                                            : `${Intl.NumberFormat(
-                                                "en-US"
-                                              ).format(option.mucDo)} VNĐ `}
-                                          - Tối đa:
-                                          {Intl.NumberFormat("en-US").format(
-                                            option.giamToiDa
-                                          )}
-                                          VNĐ
-                                        </div>
+                                      <div
+                                        className="col"
+                                        style={{ marginLeft: 50 }}
+                                      >
+                                        Mã giảm giá: {option.ma}
+                                        <br></br>
+                                        Điều kiện:
+{Intl.NumberFormat("en-US").format(
+                                          option.dieuKien
+                                        )}{" "}
+                                        VNĐ
+                                        <br></br>
+                                        Giảm:
+                                        {option.loaiVoucher === "Phần trăm"
+                                          ? option.mucDo + "% "
+                                          : `${Intl.NumberFormat(
+                                              "en-US"
+                                            ).format(option.mucDo)} VNĐ `}
+                                        - Tối đa:
+                                        {Intl.NumberFormat("en-US").format(
+                                          option.giamToiDa
+                                        )}
+                                        VNĐ
                                       </div>
-                                    </Option>
-                                  )) : <Option>Không có voucher hợp lệ</Option>}
+                                    </div>
+                                  </Option>
+                                ))
+                              ) : voucherNoLimited ? (
+                                voucherNoLimited.map((option) => (
+                                  <Option
+                                    key={option.id}
+                                    value={option.id}
+                                    label={option.ma}
+                                    style={{ width: "100%", height: 80 }}
+                                    // filterOption={filterOptionVoucher}
+                                  >
+                                    <div className="row">
+                                      <div className="col-md-2">
+                                        <img
+                                          src={imgTicket}
+                                          style={{
+                                            width: 100,
+                                            marginRight: "8px",
+                                            heitgh: 50,
+                                            marginTop: "15px",
+                                          }}
+                                        />
+                                      </div>
+                                      <div
+                                        className="col"
+                                        style={{ marginLeft: 50 }}
+                                      >
+                                        Mã giảm giá: {option.ma}
+                                        <br></br>
+                                        Điều kiện:
+                                        {Intl.NumberFormat("en-US").format(
+                                          option.dieuKien
+                                        )}{" "}
+                                        VNĐ
+                                        <br></br>
+                                        Giảm:
+{option.loaiVoucher === "Phần trăm"
+                                          ? option.mucDo + "% "
+                                          : `${Intl.NumberFormat(
+                                              "en-US"
+                                            ).format(option.mucDo)} VNĐ `}
+                                        - Tối đa:
+                                        {Intl.NumberFormat("en-US").format(
+                                          option.giamToiDa
+                                        )}
+                                        VNĐ
+                                      </div>
+                                    </div>
+                                  </Option>
+                                ))
+                              ) : (
+                                <Option>Không có voucher hợp lệ</Option>
+                              )}
                             </Select>
                             {/* <Button className="ms-5">Áp mã</Button> */}
                           </Space.Compact>
@@ -887,7 +897,11 @@ const BanHang = () => {
                         </h6>
                         <h6 className="mt-4">
                           Giao hàng: &nbsp;&nbsp;&nbsp;
-                          <Switch />
+                          <Switch
+                            disabled={false}
+                            onChange={handleSwitchToggle}
+                            checked={isSwitchOn}
+                          />
                         </h6>
                         <div className="row">
                           <div className="col-md-8">
@@ -913,7 +927,7 @@ const BanHang = () => {
                                 data.reduce((accumulator, currentProduct) => {
                                   return accumulator + currentProduct.total;
                                 }, 0)
-                              )} VND`}
+)} VND`}
                             </h6>
                           </div>
                           <div className="col-md-4">
@@ -932,7 +946,6 @@ const BanHang = () => {
                       </div>
                     </div>
                   </>
-                  
                 </TabPane>
               )
             )
@@ -999,53 +1012,57 @@ const BanHang = () => {
                       placeholder="Lựa chọn voucher"
                       optionFilterProp="children"
                       onChange={onChangeVoucher}
-                      // onSearch={onSearchVoucher}
+// onSearch={onSearchVoucher}
                       disabled
                     >
-                      {voucherNoLimited ? voucherNoLimited.map((option) => (
-                        <Option
-                          key={option.id}
-                          value={option.id}
-                          label={option.ma}
-                          style={{ width: "100%", height: 80 }}
-                          // filterOption={filterOptionVoucher}
-                        >
-                          <div className="row">
-                            <div className="col-md-2">
-                              <img
-                                src={imgTicket}
-                                style={{
-                                  width: 100,
-                                  marginRight: "8px",
-                                  heitgh: 50,
-                                  marginTop: "15px",
-                                }}
-                              />
+                      {voucherNoLimited ? (
+                        voucherNoLimited.map((option) => (
+                          <Option
+                            key={option.id}
+                            value={option.id}
+                            label={option.ma}
+                            style={{ width: "100%", height: 80 }}
+                            // filterOption={filterOptionVoucher}
+                          >
+                            <div className="row">
+                              <div className="col-md-2">
+                                <img
+                                  src={imgTicket}
+                                  style={{
+                                    width: 100,
+                                    marginRight: "8px",
+                                    heitgh: 50,
+                                    marginTop: "15px",
+                                  }}
+                                />
+                              </div>
+                              <div className="col" style={{ marginLeft: 50 }}>
+                                Mã giảm giá: {option.ma}
+                                <br></br>
+                                Điều kiện:
+                                {Intl.NumberFormat("en-US").format(
+                                  option.dieuKien
+                                )}{" "}
+                                VNĐ
+                                <br></br>
+                                Giảm:
+                                {option.loaiVoucher === "Phần trăm"
+                                  ? option.mucDo + "% "
+                                  : `${Intl.NumberFormat("en-US").format(
+                                      option.mucDo
+                                    )} VNĐ `}
+                                - Tối đa:
+                                {Intl.NumberFormat("en-US").format(
+                                  option.giamToiDa
+                                )}
+                                VNĐ
+                              </div>
                             </div>
-                            <div className="col" style={{ marginLeft: 50 }}>
-                              Mã giảm giá: {option.ma}
-                              <br></br>
-                              Điều kiện:
-                              {Intl.NumberFormat("en-US").format(
-                                option.dieuKien
-                              )}{" "}
-                              VNĐ
-                              <br></br>
-                              Giảm:
-                              {option.loaiVoucher === "Phần trăm"
-                                ? option.mucDo + "% "
-                                : `${Intl.NumberFormat("en-US").format(
-                                    option.mucDo
-                                  )} VNĐ `}
-                              - Tối đa:
-                              {Intl.NumberFormat("en-US").format(
-                                option.giamToiDa
-                              )}
-                              VNĐ
-                            </div>
-                          </div>
-                        </Option>
-                      )) : <Option>Không có voucher hợp lệ</Option>}
+                          </Option>
+                        ))
+                      ) : (
+                        <Option>Không có voucher hợp lệ</Option>
+                      )}
                     </Select>
                     {/* 
                     <Button className="ms-5">Áp mã</Button> */}
@@ -1053,15 +1070,15 @@ const BanHang = () => {
                 </div>
                 <h6 className="mt-4">
                   Trả sau: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  <Switch disabled checked="false"/>
+                  <Switch disabled checked="false" />
                 </h6>
                 <h6 className="mt-4">
                   Giao hàng: &nbsp;&nbsp;&nbsp;
-                  <Switch disabled/>
+                  <Switch disabled />
                 </h6>
                 <div className="row">
                   <div className="col-md-8">
-                    <h6 className="mt-4">Tiền hàng:</h6>
+<h6 className="mt-4">Tiền hàng:</h6>
                     <h6 className="mt-4">Phí vận chuyển:</h6>
                     <h6 className="mt-4">Giảm giá:</h6>
                     <h6 className="mt-4">Điểm hiện tại:</h6>

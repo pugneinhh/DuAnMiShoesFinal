@@ -2,43 +2,43 @@ import { createSlice } from "@reduxjs/toolkit";
 import { v4 as uuid } from "uuid";
 import { SellAPI } from "../../pages/censor/api/sell/sell.api";
 
-const initialState = () => {
+const initialState = [];
 
-    const id = uuid();
-    return [
-      {
-        stt: 1,
-        id: id,
-        ma: `HDTQ1`,
-        nhanVien: "Phanh",
-        nguoiDung: null,
-        voucher: null,
-        ngayMua: null,
-        giaGoc: 0,
-        giaGiamGia: 0,
-        thanhTien: 0,
-        diemSuDung: 0,
-        giaTriDiem: null,
-        tenNguoiNhan: null,
-        soDienThoai: null,
-        diaChi: null,
-        qrCode: null,
-        ghiChu: null,
-        ngayDuKienNhan: null,
-        ngayNhan: "null",
-        ngayTraHang: null,
-        nguoiTao: "Phanh",
-        nguoiSua: null,
-        ngaySua: null,
-        trangThai: 0,
-        key: id,
-      },
- ];
+//     const id = uuid();
+//     return [
+//       {
+//         stt: 1,
+//         id: id,
+//         ma: `HDTQ1`,
+//         nhanVien: "Phanh",
+//         nguoiDung: null,
+//         voucher: null,
+//         ngayMua: null,
+//         giaGoc: 0,
+//         giaGiamGia: 0,
+//         thanhTien: 0,
+//         diemSuDung: 0,
+//         giaTriDiem: null,
+//         tenNguoiNhan: null,
+//         soDienThoai: null,
+//         diaChi: null,
+//         qrCode: null,
+//         ghiChu: null,
+//         ngayDuKienNhan: null,
+//         ngayNhan: "null",
+//         ngayTraHang: null,
+//         nguoiTao: "Phanh",
+//         nguoiSua: null,
+//         ngaySua: null,
+//         trangThai: 0,
+//         key: id,
+//       },
+//  ];
 
-};
+
 const billSlice = createSlice({
   name: "bill",
-  initialState: initialState(),
+  initialState,
   reducers: {
     SetBill: (state, action) => {
       return action.payload;
