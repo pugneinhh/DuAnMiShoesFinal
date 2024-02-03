@@ -1,6 +1,6 @@
 import "react-pro-sidebar/dist/css/styles.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import "./DashboardCensor.model.css";
 import { Link } from "react-router-dom";
@@ -32,10 +32,18 @@ import {
 import { Avatar, Badge, Button, Layout, theme, Image, FloatButton } from "antd";
 import { IoNotifications } from "react-icons/io5";
 import { FaUserAlt } from "react-icons/fa";
-
+import { get, set } from "local-storage"
 import logoShop from "../../assets/images/logo.png";
 const { Header, Sider, Content } = Layout;
 const DashboardCensor = ({ children }) => {
+  const [userName, setUserName] = useState("");
+  const [linkAnh, setLinkAnh] = useState("");
+  useEffect(() => {
+    const storedData = get('userData');
+    setUserName(storedData.ten);
+    setLinkAnh(storedData.anh)
+  }, []);
+
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
@@ -259,14 +267,19 @@ const DashboardCensor = ({ children }) => {
                   style={{ backgroundColor: "#f7faf9" }}
                 />
               </Badge>
-            </a>
+            </a> 
             <Avatar
               shape="circle"
               className="align-content-center"
               size="large"
-              icon={<FaUserAlt size={20} />}
+              src={linkAnh}
               style={{ marginLeft: 40 }}
             />
+            <div className="bold ms-2">
+              <strong>{userName}</strong>
+            </div>
+           
+
           </div>
         </Header>
         <Content

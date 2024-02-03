@@ -1,4 +1,4 @@
-import React from "react";
+import React,{ useState, useEffect } from "react";
 import {
   Breadcrumb,
   Layout,
@@ -16,8 +16,16 @@ import { DownOutlined, SmileOutlined, UserOutlined } from "@ant-design/icons";
 import { TbShoppingCartHeart } from "react-icons/tb";
 import logoShop from "../../assets/images/logoNgang.png";
 import "./client.css";
+import { get, set } from "local-storage"
 const { Header, Content, Footer } = Layout;
 export const DashboardClient = ({ children }) => {
+  const [userName, setUserName] = useState("");
+  const [linkAnh, setLinkAnh] = useState("");
+  useEffect(() => {
+    const storedData = get('userData');
+    setUserName(storedData.ten);
+    setLinkAnh(storedData.anh)
+  }, []);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -128,17 +136,28 @@ export const DashboardClient = ({ children }) => {
             </a>
           </Dropdown>
         </Col>
-        <Col span={12} className="float-end ">
+        <Col span={11} className="float-end ">
           <Link to={"/gio-hang"} className="float-end justify-content-end ">
             <Badge count={10} offset={[8, 1]} className="menuButton">
               <TbShoppingCartHeart size={30} className="menuButton" />
             </Badge>
           </Link>
         </Col>
-        <Col span={1} className="ms-5">
+        <Col span={1} className="ms-1">
           <Link to={"/login"}>
-            <Avatar size={40} className="menuButton" icon={<UserOutlined />} />
-          </Link>
+          <Avatar
+              shape="circle"
+              className="align-content-center"
+              size="large"
+              src={linkAnh}
+              style={{ marginLeft: 35 }}
+            />
+          </Link> 
+        </Col>
+        <Col span={5} className="ms-4">
+           <div className="bold">
+              <strong>{userName}</strong>
+            </div>
         </Col>
       </Header>
       <Content

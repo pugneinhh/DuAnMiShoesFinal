@@ -37,7 +37,7 @@ public class LoginController {
     public ResponseEntity<?> login(@Valid @RequestBody LoginPayLoad loginPayload) {
         try {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginPayload.getEmail(), loginPayload.getPassword())
+                    new UsernamePasswordAuthenticationToken(loginPayload.getEmail(),loginPayload.getPassword())
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String token = loginService.login(loginPayload);
@@ -46,6 +46,9 @@ public class LoginController {
             LoginRespon jwtAuthResponse = new LoginRespon();
             jwtAuthResponse.setAccessToken(token);
             jwtAuthResponse.setEmail(email);
+            jwtAuthResponse.setChucVu(nguoiDungService.findByToken(token).getChucVu());
+            jwtAuthResponse.setTen(nguoiDungService.findByToken(token).getTen());
+            jwtAuthResponse.setAnh(nguoiDungService.findByToken(token).getAnh());
 //            jwtAuthResponse.setUserID(khUserService.findByToken(token) != null ? khUserService.findByToken(token).getId() : null);
             jwtAuthResponse.setUserID(nguoiDungService.findByToken(token).getId());
 
