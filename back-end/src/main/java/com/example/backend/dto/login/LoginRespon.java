@@ -13,6 +13,9 @@ public class LoginRespon {
     private String tokenType = "Bearer";
     private String email;
     private String userID;
+    private String chucVu;
+    private String ten;
+    private String anh;
 
     public LoginRespon (String accessToken,String email) {
         this.accessToken = accessToken;
