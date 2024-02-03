@@ -2,6 +2,7 @@ package com.example.backend.service;
 
 import com.example.backend.dto.impldto.NhanVienResponseImplDTO;
 
+import com.example.backend.dto.login.TokenService;
 import com.example.backend.dto.response.KhachHangRespon;
 import com.example.backend.entity.NguoiDung;
 import com.example.backend.model.AdminKhachHangRepon;
@@ -15,8 +16,18 @@ import java.util.List;
 public class NguoiDungService {
     @Autowired
     NguoiDungRepository nguoiDungRepository;
-
+    @Autowired
+    TokenService tokenService;
     public List<AdminKhachHangRepon> getKhach() {return nguoiDungRepository.getAllKhachHang();}
+    public NguoiDung findByToken(String token) {
+        if (tokenService.getUserNameByToken(token) == null) {
+            return null;
+        }
+        String userName = tokenService.getUserNameByToken(token);
+        NguoiDung nguoiDung = nguoiDungRepository.findByEmail(userName).orElse(null);
+        return nguoiDung;
+    }
+
 //    public List<NguoiDung> getAll(){
 //        return nguoiDungRepository.findAll();
 //    }
