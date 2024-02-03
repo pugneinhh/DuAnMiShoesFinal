@@ -1,10 +1,13 @@
 package com.example.backend.service;
 
 import com.example.backend.dto.request.ThanhToanRequest;
+import com.example.backend.dto.response.LichSuThanhToanRespon;
 import com.example.backend.entity.ThanhToan;
 import com.example.backend.repository.ThanhToanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ThanhToanService {
@@ -14,4 +17,8 @@ public class ThanhToanService {
         ThanhToan tt=request.map(new ThanhToan());
         return thanhToanRepository.save(tt);
     }
+    public List<LichSuThanhToanRespon> getALLLLichSuThanhToanByIDHD(String id){
+        return thanhToanRepository.getALLLLichSuThanhToanByIDHD(id);
+    }
+
 }

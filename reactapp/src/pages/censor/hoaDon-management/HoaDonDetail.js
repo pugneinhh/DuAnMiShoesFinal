@@ -18,15 +18,16 @@ import { FormattedNumber, IntlProvider } from "react-intl";
 import { HoaDonAPI } from "../api/hoaDon/hoaDon.api";
 import ModalTimeLine from "./ModalTimeLine";
 import ModalSanPham from "./ModalSanPham";
+import { ThanhToanAPI } from "../api/thanhToan/thanhToan.api";
 export default function HoaDonDetail() {
   const { id } = useParams();
   const [openModalTimeLine, setOpenModalTimeLine] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [openSanPham, setOpenSanPham] = useState(false);
-const [activeKey, setActiveKey] = useState(0);
-const onChange = (key) => {
-  setActiveKey(key);
-};
+  const [activeKey, setActiveKey] = useState(0);
+  const onChange = (key) => {
+    setActiveKey(key);
+  };
   const handleOk = () => {
     setIsModalOpen(false);
     setOpenModalTimeLine(false);
@@ -59,6 +60,7 @@ const onChange = (key) => {
     loadHoaDon();
     loadNgayTimeLine();
     loadListSanPhams();
+    loadLichSuThanhToan();
   }, []);
   // load hóa đơn
   const loadHoaDon = async () => {
@@ -110,7 +112,16 @@ const onChange = (key) => {
       console.log("ngayTimeLine", res.data);
     });
   };
-  const columLichSuHoaDon = [
+    const [LichSuThanhToan, setLichSuThanhToan] = useState([]);
+  const loadLichSuThanhToan = () => {
+    ThanhToanAPI.LichSuThanhToanByIdHD(id).then((res) => {
+      setLichSuThanhToan(res.data);
+      console.log("2223333",res.data);
+    });
+  };
+  console.log("loadLichSuThanhToan", LichSuThanhToan);
+  //lịch sử thanh toán
+  const columLichSuThanhToan = [
     {
       title: "STT",
       dataIndex: "id",
@@ -122,14 +133,22 @@ const onChange = (key) => {
       showSortTooltip: false,
     },
     {
-      title: "Mã hóa đơn",
-      dataIndex: "trangThai",
-      key: "trangThai",
+      title: "Mã Giao dịch",
+      dataIndex: "maVNP",
+      key: "maVNP",
     },
     {
       title: "Số tiền",
-      dataIndex: "trangThai",
-      key: "trangThai",
+      dataIndex: "tongTien",
+      key: "tongTien",
+      render: (tongTien) => (
+        <>
+          {new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+          }).format(tongTien)}
+        </>
+      ),
     },
     {
       title: "Thời gian",
@@ -137,15 +156,24 @@ const onChange = (key) => {
       center: "true",
       render: (ngayTao) => <>{moment(ngayTao).format("hh:mm:ss DD/MM/YYYY")}</>,
     },
-    {
-      title: "Loại giao dịch",
-      dataIndex: "trangThai",
-      key: "trangThai",
-    },
+    // {
+    //   title: "Loại giao dịch",
+    //   dataIndex: "trangThai",
+    //   key: "trangThai",
+    // },
     {
       title: "Phương thức thanh toán",
-      dataIndex: "trangThai",
-      key: "trangThai",
+      dataIndex: "phuongThuc",
+      key: "phuongThuc",
+      render: (trangThai) => (
+        <>
+          {trangThai == 0 ? (
+            <Tag color="#00cc00">Tiền mặt</Tag>
+          ) : (
+            <Tag color="#FFD700">Chuyển khoản</Tag>
+          )}
+        </>
+      ),
     },
     {
       title: "Người xác nhận",
@@ -154,7 +182,7 @@ const onChange = (key) => {
     },
     {
       title: "Ghi chú",
-      dataIndex: "motaHoatDong",
+      dataIndex: "moTa",
       center: "true",
     },
   ];
@@ -173,21 +201,8 @@ const onChange = (key) => {
       setlistSanPhams(res.data);
     });
   };
-  const VALUES = [
-    "Chờ xác nhận",
-    "Xác nhận",
-    "Chờ vận chuyển",
-    "Đang vận chuyển",
-    "Đã thanh toán",
-    "Thành công",
-  ];
-  const textButton = [
-    "Xác nhận",
-    "Chờ vận chuyển",
-    "Đang vận chuyển",
-    "Đã thanh toán",
-    "Thành công",
-  ];
+  const VALUES = ["Chờ xác nhận","Xác nhận","Chờ vận chuyển","Đang vận chuyển","Đã thanh toán","Thành công",];
+  const textButton = ["Xác nhận","Chờ vận chuyển","Đang vận chuyển","Đã thanh toán","Thành công",];
   const icon = [
     GiNotebook,
     SlNotebook,
@@ -911,7 +926,7 @@ const onChange = (key) => {
           Lịch sử thanh toán
         </h5>
         <hr />
-        <Table columns={columLichSuHoaDon} style={{ marginTop: "25px" }} />
+        <Table  columns={columLichSuThanhToan} dataSource={LichSuThanhToan} style={{ marginTop: "25px" }} />
       </div>
       {/* Thông tin đơn hàng */}
       <div className="container-fuild mt-3 row bg-light radius">

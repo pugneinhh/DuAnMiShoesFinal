@@ -40,4 +40,8 @@ public class ThanhToanController {
         }
         return ResponseEntity.ok(thanhToanService.thanhToan(request));
     }
+    @GetMapping("/{idHD}")
+    public  ResponseEntity<?> getALlLichSuThanhToan(@PathVariable String idHD){
+        return ResponseEntity.ok(thanhToanService.getALLLLichSuThanhToanByIDHD(idHD));
+    }
 }

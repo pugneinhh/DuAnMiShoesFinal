@@ -15,13 +15,7 @@ import java.util.List;
 public class NguoiDungService {
     @Autowired
     NguoiDungRepository nguoiDungRepository;
-
-    public List<AdminKhachHangRepon> getKhach() {return nguoiDungRepository.getAllKhachHang();}
-//    public List<NguoiDung> getAll(){
-//        return nguoiDungRepository.findAll();
-//    }
-////    public NguoiDung add(NhanVienResponseImplDTO request){
-////        NguoiDung nd=request.map(new NguoiDung());
-////        return nguoiDungRepository.save(nd);
-////    }
+    public List<NguoiDung> getAll(){
+        return nguoiDungRepository.findAll();
+    }
 }
