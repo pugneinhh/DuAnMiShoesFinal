@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { BsFillEyeFill } from 'react-icons/bs';
 import { IoColorPalette } from 'react-icons/io5';
 import convert from 'color-convert';
-import './SanPham.scss'
+import './SanPham.css'
 import { MauSacAPI } from '../api/SanPham/mauSac.api';
 export default function MauSac() {
   //Form
