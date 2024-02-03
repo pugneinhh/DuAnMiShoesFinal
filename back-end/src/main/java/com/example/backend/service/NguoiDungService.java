@@ -16,6 +16,7 @@ import java.util.List;
 public class NguoiDungService {
     @Autowired
     NguoiDungRepository nguoiDungRepository;
+
     @Autowired
     TokenService tokenService;
     public List<AdminKhachHangRepon> getKhach() {return nguoiDungRepository.getAllKhachHang();}
@@ -35,4 +36,9 @@ public class NguoiDungService {
 ////        NguoiDung nd=request.map(new NguoiDung());
 ////        return nguoiDungRepository.save(nd);
 ////    }
+
+    public List<NguoiDung> getAll(){
+        return nguoiDungRepository.findAll();
+    }
+
 }

@@ -9,7 +9,7 @@ import { BsFillEyeFill } from 'react-icons/bs';
 import { FaTshirt } from 'react-icons/fa';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './SanPham.scss'
+import './SanPham.css'
 import { SanPhamAPI } from '../api/SanPham/sanPham.api';
 
 export default function SanPham() {

@@ -1,15 +1,25 @@
-import React, { useEffect, useState } from 'react'
-import { Button, Card, Col, Divider, Form, Input, message, Row, Select } from 'antd';
-import { FaMoneyBills } from 'react-icons/fa6';
-import UpLoadImage from './UploadAnh';
-import { AddressApi } from '../api/address/AddressApi';
-import { Link, useNavigate } from 'react-router-dom';
-import { NhanVienAPI } from '../api/user/nhanVien.api';
-import QRScannerModal from '../api/QR_Code/QrCode';
-import { ToastContainer, toast } from 'react-toastify';
-import moment from 'moment';
+import React, { useEffect, useState } from "react";
+import {
+  Button,
+  Card,
+  Col,
+  Divider,
+  Form,
+  Input,
+  message,
+  Row,
+  Select,
+} from "antd";
+import { FaMoneyBills } from "react-icons/fa6";
+import UpLoadImage from "./UploadAnh";
+import { AddressApi } from "../api/address/AddressApi";
+import { Link, useNavigate } from "react-router-dom";
+import { NhanVienAPI } from "../api/user/nhanVien.api";
+import QRScannerModal from "../api/QR_Code/QrCode";
+import { ToastContainer, toast } from "react-toastify";
+import moment from "moment";
+import { NguoiDungAPI } from "../api/nguoiDung/nguoiDungAPI";
 export default function AddNhanVien() {
-
   const [form] = Form.useForm();
   const [fileImage, setFileIamge] = useState(null);
   const [listProvince, setListProvince] = useState([]);
@@ -66,6 +76,8 @@ export default function AddNhanVien() {
 
   useEffect(() => {
     loadDataProvince();
+    loadNguoiDung();
+    loadNhanVien();
   }, []);
 
   // QR code
@@ -77,65 +89,169 @@ export default function AddNhanVien() {
     }
     setQrResult(result);
 
-
     // Tìm vị trí của phần tử thứ ba trong chuỗi
-    const firstIndex = result.indexOf('|');
-    const secondIndex = result.indexOf('|', firstIndex + 1);
-    const thirdIndex = result.indexOf('|', secondIndex + 1);
-    const fourIndex = result.indexOf('|', thirdIndex + 1);
-    const fifIndex = result.indexOf('|', fourIndex + 1);
-    const sixIndex = result.indexOf('|', fifIndex + 1);
+    const firstIndex = result.indexOf("|");
+    const secondIndex = result.indexOf("|", firstIndex + 1);
+    const thirdIndex = result.indexOf("|", secondIndex + 1);
+    const fourIndex = result.indexOf("|", thirdIndex + 1);
+    const fifIndex = result.indexOf("|", fourIndex + 1);
+    const sixIndex = result.indexOf("|", fifIndex + 1);
 
-    const indexDC = result.indexOf(',');
-    const indexXa = result.indexOf(',', indexDC + 1);
-    const indexHuyen = result.indexOf(',', indexXa + 1);
+    const indexDC = result.indexOf(",");
+    const indexXa = result.indexOf(",", indexDC + 1);
+    const indexHuyen = result.indexOf(",", indexXa + 1);
 
-
-
-    setProvince(listProvince.filter((item) =>
-      item.ProvinceName.toLowerCase().replace(/\s/g, '') === result.substring(indexHuyen + 1, sixIndex).toLowerCase().replace(/\s/g, '')
-    )[0])
-
-    AddressApi.fetchAllProvinceDistricts(listProvince.filter((item) =>
-      item.ProvinceName.toLowerCase().replace(/\s/g, '') === result.substring(indexHuyen + 1, sixIndex).toLowerCase().replace(/\s/g, '')
-    )[0].ProvinceID).then(
-      (res) => {
-        setListDistricts(res.data.data);
-        setDistrict(res.data.data.filter((item) =>
-          item.NameExtension[3].toLowerCase().replace(/\s/g, '') === result.substring(indexXa + 1, indexHuyen).toLowerCase().replace(/\s/g, '')
-        )[0])
-        AddressApi.fetchAllProvinceWard(res.data.data.filter((item) =>
-          item.NameExtension[3].toLowerCase().replace(/\s/g, '') === result.substring(indexXa + 1, indexHuyen).toLowerCase().replace(/\s/g, '')
-        )[0].DistrictID).then((res) => {
-          setListWard(res.data.data);
-          console.log("xã", res.data.data)
-          setWard(res.data.data.filter((item) =>
-            item.NameExtension[3].toLowerCase().replace(/\s/g, '') === result.substring(indexDC + 1, indexXa).toLowerCase().replace(/\s/g, '')
-          )[0])
-        });
-      }
+    setProvince(
+      listProvince.filter(
+        (item) =>
+          item.ProvinceName.toLowerCase().replace(/\s/g, "") ===
+          result
+            .substring(indexHuyen + 1, sixIndex)
+            .toLowerCase()
+            .replace(/\s/g, "")
+      )[0]
     );
 
+    AddressApi.fetchAllProvinceDistricts(
+      listProvince.filter(
+        (item) =>
+          item.ProvinceName.toLowerCase().replace(/\s/g, "") ===
+          result
+            .substring(indexHuyen + 1, sixIndex)
+            .toLowerCase()
+            .replace(/\s/g, "")
+      )[0].ProvinceID
+    ).then((res) => {
+      setListDistricts(res.data.data);
+      setDistrict(
+        res.data.data.filter(
+          (item) =>
+            item.NameExtension[3].toLowerCase().replace(/\s/g, "") ===
+            result
+              .substring(indexXa + 1, indexHuyen)
+              .toLowerCase()
+              .replace(/\s/g, "")
+        )[0]
+      );
+      AddressApi.fetchAllProvinceWard(
+        res.data.data.filter(
+          (item) =>
+            item.NameExtension[3].toLowerCase().replace(/\s/g, "") ===
+            result
+              .substring(indexXa + 1, indexHuyen)
+              .toLowerCase()
+              .replace(/\s/g, "")
+        )[0].DistrictID
+      ).then((res) => {
+        setListWard(res.data.data);
+        console.log("xã", res.data.data);
+        setWard(
+          res.data.data.filter(
+            (item) =>
+              item.NameExtension[3].toLowerCase().replace(/\s/g, "") ===
+              result
+                .substring(indexDC + 1, indexXa)
+                .toLowerCase()
+                .replace(/\s/g, "")
+          )[0]
+        );
+      });
+    });
 
     form.setFieldsValue({
       canCuocCongDan: result.substring(0, 12),
-      ten: result.split('|')[2],
-      ngaySinh: moment(result.split('|')[3], "DDMMYYYY").format("YYYY-MM-DD"),
-      gioiTinh: result.split('|')[4] == 'Nam' ? "true" : "false",
+      ten: result.split("|")[2],
+      ngaySinh: moment(result.split("|")[3], "DDMMYYYY").format("YYYY-MM-DD"),
+      gioiTinh: result.split("|")[4] == "Nam" ? "true" : "false",
       diaChi: result.substring(fifIndex + 1, indexDC),
       tenXa: result.substring(indexDC + 1, indexXa),
       tenHuyen: result.substring(indexXa + 1, indexHuyen),
       tenThanhPho: result.substring(indexHuyen + 1, sixIndex),
-    })
+    });
+  };
+  // const defaultImage =
+  //   "https://res.cloudinary.com/dm0w2qws8/image/upload/v1706933984/user-128_vsllkw.png";
+  // const fetchImage = async () => {
+  //   try {
+  //     const response = await fetch(defaultImage);
+  //     const blob = await response.blob();
+  //     const file = new File([blob], "cloudinary_image.jpg", {
+  //       type: "image/jpeg",
+  //     });
+  //     setFileIamge(file);
+  //   } catch (error) {
+  //     console.error("Error fetching image:", error);
+  //   }
+  // };
+
+  const [ListNguoiDung, setListNguoiDung] = useState([]);
+  const loadNguoiDung = () => {
+    NguoiDungAPI.getALLNguoiDung().then((res) => {
+      setListNguoiDung(res.data);
+    });
+  };
+  const [ListNhanVien, setListNhanVien] = useState([]);
+  const loadNhanVien = () => {
+    NhanVienAPI.getAll().then((res) => {
+      setListNhanVien(res.data);
+    });
   };
 
   const handleSuccess = () => {
-    form
-      .validateFields()
+    const checkTrungEmail = (code) => {
+      return ListNguoiDung.some(
+        (nguoidung) =>
+          nguoidung.email.trim().toLowerCase() === code.trim().toLowerCase()
+      );
+    };
+        const checkTrungSDT = (code) => {
+          return ListNhanVien.some(
+            (nhanvien) =>
+              nhanvien.sdt.trim().toLowerCase() === code.trim().toLowerCase()
+          );
+        };
+    form.validateFields()
       .then((values) => {
         if (fileImage === null) {
-          message.error("Vui lòng chọn ảnh đại diện.");
+                   toast.error("🦄 Không để trống ảnh!", {
+                     position: "top-right",
+                     autoClose: 3000,
+                     hideProgressBar: false,
+                     closeOnClick: true,
+                     pauseOnHover: true,
+                     draggable: true,
+                     progress: undefined,
+                     theme: "light",
+                   });
+                   return;
+              }
+        if (checkTrungEmail(values.email)) {
+          toast.error("🦄 Email đã tồn tại!", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          return;
         }
+        if (checkTrungSDT(values.soDienThoai)) {
+          toast.error("🦄 Số điện thoại đã tồn tại!", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          return;
+        }
+
         const data = {
           ...values,
           ngaySinh: values.ngaySinh
@@ -146,14 +262,13 @@ export default function AddNhanVien() {
           idXa: ward.key == null ? ward.WardCode : ward.key,
         };
         const formData = new FormData();
-        formData.append(`file`, fileImage);
+          formData.append("file", fileImage);
         formData.append("request", JSON.stringify(data));
         NhanVienAPI.create(formData)
 
           .then((result) => {
-
-            nav("/nhan-vien");
-            toast('🦄 Thêm Thành công!', {
+            nav("/admin-nhan-vien");
+            toast("🦄 Thêm Thành công!", {
               position: "top-right",
               autoClose: 3000,
               hideProgressBar: false,
@@ -162,7 +277,6 @@ export default function AddNhanVien() {
               draggable: true,
               progress: undefined,
               theme: "light",
-
             });
           })
           .catch((error) => {
@@ -170,7 +284,7 @@ export default function AddNhanVien() {
           });
       })
       .catch(() => {
-        toast('🦄 Thêm Thất bại!', {
+        toast("🦄 Thêm Thất bại!", {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -186,34 +300,29 @@ export default function AddNhanVien() {
   return (
     <>
       <h1>
-
         <Divider orientation="center" color="none">
           <h3 className="text-first  fw-bold">
             <FaMoneyBills /> Thêm nhân viên
           </h3>
         </Divider>
-
       </h1>
-      <Form form={form}
-        layout="vertical"
-      >
+      <Form form={form} layout="vertical">
         <Row gutter={16} style={{ marginTop: "0px" }}>
           <Col span={7}>
             <Card style={{ height: "100%" }}>
-              <h5 className='text-center fw-bold'>Ảnh đại diện</h5>
-              <Row className='text-center mt-5'>
+              <h5 className="text-center fw-bold">Ảnh đại diện</h5>
+              <Row className="text-center mt-5">
                 <UpLoadImage onFileUpload={handleFileUpload} />
               </Row>
             </Card>
           </Col>
           <Col span={17}>
             <Card style={{ height: "100%" }}>
-              <h5 className='text-center fw-bold'>Thông tin nhân viên</h5>
+              <h5 className="text-center fw-bold">Thông tin nhân viên</h5>
               <Row
                 justify="end"
                 align="middle"
                 style={{ marginBottom: "15px", marginTop: "10px" }}
-
               >
                 <Col span={11}>
                   <Button
@@ -236,18 +345,14 @@ export default function AddNhanVien() {
                       onQRResult={handleQRResult}
                     />
                   )}
-
-
-
                 </Col>
               </Row>
               <Row>
-                <Col span={11} style={{ marginRight: "20px" }}  >
+                <Col span={11} style={{ marginRight: "20px" }}>
                   <Form.Item
                     name="ten"
                     label="Họ và tên"
                     tooltip="Họ tên đầy đủ của bạn là gì?"
-
                     rules={[
                       {
                         required: true,
@@ -259,8 +364,8 @@ export default function AddNhanVien() {
                         message: "Họ và tên chỉ được phép chứa chữ cái.",
                       },
                     ]}
-                  // labelCol={{ span: 9 }}
-                  // wrapperCol={{ span: 15 }}
+                    // labelCol={{ span: 9 }}
+                    // wrapperCol={{ span: 15 }}
                   >
                     <Input
                       onKeyPress={(e) => {
@@ -268,7 +373,7 @@ export default function AddNhanVien() {
                           e.preventDefault();
                         }
                       }}
-                    // style={{ textAlign: "center" }}
+                      // style={{ textAlign: "center" }}
                     />
                   </Form.Item>
                   <Form.Item
@@ -286,8 +391,8 @@ export default function AddNhanVien() {
                         message: "Căn cước công dân cần phải 12 chữ số.",
                       },
                     ]}
-                  // labelCol={{ span: 9 }}
-                  // wrapperCol={{ span: 15 }}
+                    // labelCol={{ span: 9 }}
+                    // wrapperCol={{ span: 15 }}
                   >
                     <Input />
                   </Form.Item>
@@ -302,8 +407,8 @@ export default function AddNhanVien() {
                         whitespace: true,
                       },
                     ]}
-                  // labelCol={{ span: 9 }}
-                  // wrapperCol={{ span: 15 }}
+                    // labelCol={{ span: 9 }}
+                    // wrapperCol={{ span: 15 }}
                   >
                     <Select defaultValue={""}>
                       <Select.Option value="">Chọn giới tính</Select.Option>
@@ -322,8 +427,8 @@ export default function AddNhanVien() {
                         whitespace: true,
                       },
                     ]}
-                  // labelCol={{ span: 9 }}
-                  // wrapperCol={{ span: 15 }}
+                    // labelCol={{ span: 9 }}
+                    // wrapperCol={{ span: 15 }}
                   >
                     <Select defaultValue={""} onChange={handleProvinceChange}>
                       <Select.Option value="">
@@ -353,8 +458,8 @@ export default function AddNhanVien() {
                         whitespace: true,
                       },
                     ]}
-                  // labelCol={{ span: 9 }}
-                  // wrapperCol={{ span: 15 }}
+                    // labelCol={{ span: 9 }}
+                    // wrapperCol={{ span: 15 }}
                   >
                     <Select defaultValue={""} onChange={handleWardChange}>
                       <Select.Option value="">--Chọn Xã/Phường--</Select.Option>
@@ -384,8 +489,8 @@ export default function AddNhanVien() {
                         whitespace: true,
                       },
                     ]}
-                  // labelCol={{ span: 9 }}
-                  // wrapperCol={{ span: 15 }}
+                    // labelCol={{ span: 9 }}
+                    // wrapperCol={{ span: 15 }}
                   >
                     <Input type="date" style={{ textAlign: "center" }} />
                   </Form.Item>
@@ -405,8 +510,8 @@ export default function AddNhanVien() {
                         message: "Vui lòng nhập đúng định dạng email.",
                       },
                     ]}
-                  // labelCol={{ span: 9 }}
-                  // wrapperCol={{ span: 15 }}
+                    // labelCol={{ span: 9 }}
+                    // wrapperCol={{ span: 15 }}
                   >
                     <Input />
                   </Form.Item>
@@ -425,8 +530,8 @@ export default function AddNhanVien() {
                         message: "Vui lòng nhập số điện thoại hợp lệ.",
                       },
                     ]}
-                  // labelCol={{ span: 9 }}
-                  // wrapperCol={{ span: 15 }}
+                    // labelCol={{ span: 9 }}
+                    // wrapperCol={{ span: 15 }}
                   >
                     <Input />
                   </Form.Item>
@@ -441,8 +546,8 @@ export default function AddNhanVien() {
                         whitespace: true,
                       },
                     ]}
-                  // labelCol={{ span: 9 }}
-                  // wrapperCol={{ span: 15 }}
+                    // labelCol={{ span: 9 }}
+                    // wrapperCol={{ span: 15 }}
                   >
                     <Select defaultValue={""} onChange={handleDistrictChange}>
                       <Select.Option value="">
@@ -472,17 +577,14 @@ export default function AddNhanVien() {
                         whitespace: true,
                       },
                     ]}
-                  // labelCol={{ span: 9 }}
-                  // wrapperCol={{ span: 15 }}
+                    // labelCol={{ span: 9 }}
+                    // wrapperCol={{ span: 15 }}
                   >
                     <Input />
                   </Form.Item>
                 </Col>
                 <Button
-                  onClick={
-
-                    handleSuccess
-                  }
+                  onClick={handleSuccess}
                   style={{
                     width: "110px",
                     height: "40px",
@@ -490,41 +592,42 @@ export default function AddNhanVien() {
                     backgroundColor: "#3366CC",
                     color: "white",
                   }}
-                // htmlType="reset"
+                  // htmlType="reset"
                 >
                   Hoàn tất
                 </Button>
 
-                <Link to={'/nhan-vien'} className='btn btn-danger' style={{
-                  width: "110px",
-                  height: "40px",
-                  margin: "0 10px 10px 10px ",
-                  backgroundColor: "#3366CC",
-                  color: "white",
-                }}>Hủy</Link>
-
+                <Link
+                  to={"/admin-nhan-vien"}
+                  className="btn btn-danger"
+                  style={{
+                    width: "110px",
+                    height: "40px",
+                    margin: "0 10px 10px 10px ",
+                    backgroundColor: "#3366CC",
+                    color: "white",
+                  }}
+                >
+                  Hủy
+                </Link>
               </Row>
-
             </Card>
           </Col>
         </Row>
         <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
-      <ToastContainer />
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
+        <ToastContainer />
       </Form>
-
     </>
-
-  )
-
+  );
 }
