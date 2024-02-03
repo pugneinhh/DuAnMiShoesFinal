@@ -2,9 +2,12 @@ package com.example.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.Collection;
 
 @Entity
 @Table(name = "nguoi_dung")
@@ -14,7 +17,7 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 @ToString
-public class NguoiDung {
+public class NguoiDung implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
@@ -36,6 +39,42 @@ public class NguoiDung {
     private String hangKhachHang;
     private int diem;
     private int trangThai;
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return null;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
+    }
 
 
 }

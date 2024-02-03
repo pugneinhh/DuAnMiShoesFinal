@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface NguoiDungRepository extends JpaRepository<NguoiDung, String> {
@@ -183,4 +184,12 @@ public interface NguoiDungRepository extends JpaRepository<NguoiDung, String> {
             	maND desc
                          """, nativeQuery = true)
     List<AdminNhanVienRespon> getTimNhanVien(NguoiDungSeacrh nguoiDungSeacrh);
+
+
+    // login
+
+    @Query(value = """
+           select  * from nguoi_dung where  email=:email
+                    """,nativeQuery = true)
+    Optional<NguoiDung> findByEmail(@Param("email") String email);
 }
