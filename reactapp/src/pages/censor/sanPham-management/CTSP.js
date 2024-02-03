@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {Button,Divider,Modal,QRCode,Form,Input,InputNumber,Select,Slider, Space,Table,Tag,} from 'antd';
+import { Button, Divider, Modal, QRCode, Form, Input, InputNumber, Select, Slider, Space, Table, Tag, } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { HighlightOutlined, InfoCircleFilled, InfoCircleOutlined, PlusCircleOutlined, RetweetOutlined } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
@@ -11,7 +11,7 @@ import { Image } from 'cloudinary-react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './SanPham.scss'
+import './SanPham.css'
 import SuaAnhCTSP from './SuaAnhCTSP';
 
 export default function CTSP() {
@@ -58,14 +58,15 @@ export default function CTSP() {
   const [updateNhanh, setUpdateNhanh] = useState([]);
 
   //CheckBox Dong
+  // Custom table  
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const onSelectChange = (newSelectedRowKeys) => {
     console.log('selectedRowKeys changed: ', newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
-
   };
 
   const loadUpdateNhanh = async () => {
+    setUpdateNhanh([]);
     if (selectedRowKeys) {
       console.log(selectedRowKeys);
       for (let i = 0; i < selectedRowKeys.length; i++) {
@@ -98,7 +99,39 @@ export default function CTSP() {
       setUpdateNhanh(newData);
     }
   };
+  const onChangeGB = (record, value) => {
+    const newData = [...updateNhanh];
+    const index = newData.findIndex(item => item.id === record.key);
+    if (index > -1) {
+      newData[index].giaBan = value;
+      setUpdateNhanh(newData);
+    }
+  };
   //Update nhanh
+  const UpdateGiaVaSL = () => {
+    for (let i = 0; i < updateNhanh.length; i++) {
+      let idSP = updateNhanh[i].id
+      console.log(updateNhanh[i].id)
+      axios.put(`http://localhost:8080/admin/ctsp/update/${idSP}`, updateNhanh[i])
+        .then(response => {
+          console.log(response.data);
+
+          loadCTSP();
+        })
+        .catch(error => console.error('Error adding item:', error));
+
+    }
+    toast('✔️ Sửa thành công!', {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  }
   const UpdateNhanh = () => {
     if (selectedRowKeys.length <= 0) {
       toast.warning('Chưa chọn sản phẩm để sửa !', {
@@ -116,7 +149,7 @@ export default function CTSP() {
         centered: 'true',
         title: 'Thông báo',
         content: 'Bạn có chắc chắn muốn cập nhật không?',
-        onOk: () => { form2.submit(); },
+        onOk: () => { UpdateGiaVaSL(); },
         footer: (_, { OkBtn, CancelBtn }) => (
           <>
             <CancelBtn />
@@ -219,7 +252,7 @@ export default function CTSP() {
         return true;
       }
     });
-      setKT(result.data);
+    setKT(result.data);
   };
   const addKichThuoc = (value) => {
     console.log(value);
@@ -254,7 +287,7 @@ export default function CTSP() {
         return true;
       }
     });
-      setMS(result.data);
+    setMS(result.data);
   };
   const addMauSac = (value) => {
     console.log(value);
@@ -289,7 +322,7 @@ export default function CTSP() {
         return true;
       }
     });
-      setCL(result.data);
+    setCL(result.data);
   };
   const addChatLieu = (value) => {
     console.log(value);
@@ -324,7 +357,7 @@ export default function CTSP() {
         return true;
       }
     });
-      setDC(result.data);
+    setDC(result.data);
   };
   const addDoCao = (value) => {
     console.log(value);
@@ -394,7 +427,7 @@ export default function CTSP() {
         return true;
       }
     });
-      setH(result.data);
+    setH(result.data);
   };
   const addHang = (value) => {
     console.log(value);
@@ -498,16 +531,18 @@ export default function CTSP() {
     {
       title: "Giá Bán",
       dataIndex: "giaBan",
-      render: (text, record) => {
+      render: (_, record) => {
         const isCTSelected = selectedRowKeys.some((selectedItem) => selectedItem === record.idCTSP);
         return isCTSelected ? (
-          <InputNumber
-            value={record.giaBan}
+          <Input
+            type='number'
+            defaultValue={record.giaBan}
             formatter={(value) =>
               `VND ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
             }
             parser={(value) => value.replace(/\VND\s?|(,*)/g, "")}
             style={{ marginLeft: 20, width: 160 }}
+            onChange={(e) => onChangeGB(record, e.target.value)}
           />
         ) : (
           <span>{`${Intl.NumberFormat('en-US').format(record.giaBan)} VNĐ`}</span>
@@ -803,13 +838,13 @@ export default function CTSP() {
                     ))}
                   </Select>
                 </Form.Item>
-              </div> 
-             </div>
-            
-          
+              </div>
+            </div>
+
+
             {/* Các Thuộc Tính Dòng 2 */}
-            <div className='row'>  
-            {/* Chất Liệu */}
+            <div className='row'>
+              {/* Chất Liệu */}
               <div className='col-md-4' >
                 <Form.Item label="Chất Liệu" name="idCL">
                   <Select placeholder="Chọn một giá trị">
@@ -845,11 +880,11 @@ export default function CTSP() {
                   </Select>
                 </Form.Item>
               </div>
-            </div> 
-          
+            </div>
+
             {/* Các Thuộc Tính Dòng 3 */}
-            <div className='row'>  
-             {/* Hãng */}
+            <div className='row'>
+              {/* Hãng */}
               <div className='col-md-4'>
                 <Form.Item label="Hãng" name="idH">
                   <Select placeholder="Chọn một giá trị">
@@ -864,9 +899,9 @@ export default function CTSP() {
               {/* Trạng Thái */}
               <div className='col-md-4'>
                 <Form.Item label="Trạng thái" name="trangThaiCT">
-                  <Select placeholder="Chọn một giá trị" defaultValue="1">
-                    <Select.Option value='1'>Còn Bán</Select.Option>
-                    <Select.Option value='0'>Dừng Bán</Select.Option>
+                  <Select placeholder="Chọn một giá trị" defaultValue="0">
+                    <Select.Option value='0'>Còn Bán</Select.Option>
+                    <Select.Option value='1'>Dừng Bán</Select.Option>
                   </Select>
                 </Form.Item>
               </div>
@@ -875,17 +910,17 @@ export default function CTSP() {
                   <Slider style={{ width: '200px' }} min={1} />
                 </Form.Item>
               </div>
-            </div> 
+            </div>
             <div className='col'>
-                <Form.Item style={{ marginLeft:100 }} label="Giá bán" name="giaBanCT">
-                  <Slider style={{ width: '430px' }} min={1000000} max={10000000} step={1000000} />
-                </Form.Item>
-              </div>
+              <Form.Item style={{ marginLeft: 100 }} label="Giá bán" name="giaBanCT">
+                <Slider style={{ width: '430px' }} min={1000000} max={10000000} step={1000000} />
+              </Form.Item>
+            </div>
 
 
             <div className='container-fluid'>
               <Form.Item className='text-center' style={{ paddingLeft: 360 }}>
-                <Button type="primary" htmlType='reset' onClick={loadCTSP}  icon={<RetweetOutlined/>}>Làm mới</Button>
+                <Button type="primary" htmlType='reset' onClick={loadCTSP} icon={<RetweetOutlined />}>Làm mới</Button>
               </Form.Item>
             </div>
 

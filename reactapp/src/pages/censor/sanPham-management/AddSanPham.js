@@ -9,20 +9,20 @@ import {
     Modal,
     Table,
     AutoComplete,
-    notification
+    notification,
+    Cascader
 } from 'antd';
 import { Link } from "react-router-dom";
 import { MdAddTask, MdDelete } from "react-icons/md";
 import { IoIosAddCircleOutline } from "react-icons/io";
-import { Cascader } from 'antd';
 import axios from 'axios';
 import TextArea from 'antd/es/input/TextArea';
-import "./SanPham.scss";
+import "./SanPham.css";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Swal from "sweetalert2";
 import FormItem from 'antd/es/form/FormItem';
-import { DeleteOutlined, InfoCircleOutlined, PlusCircleFilled, PlusCircleOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusCircleFilled, PlusCircleOutlined } from '@ant-design/icons';
 import { keys } from '@antv/util';
 import { App } from 'antd';
 import tr from 'date-fns/esm/locale/tr/index.js';
@@ -38,8 +38,15 @@ export default function AddSanPham() {
     const [form1] = Form.useForm();
     const [selectedValue, setSelectedValue] = useState('1');
     const handleChange = (value) => {
-        console.log(`Selected value: ${value}`);
         setSelectedValue(value);
+    };
+    const formItemLayout = {
+        labelCol: {
+            span: 4
+        },
+        wrapperCol: {
+            span: 20
+        },
     };
     const { Option } = Select;
     const [componentSize, setComponentSize] = useState('default');
@@ -47,6 +54,7 @@ export default function AddSanPham() {
         setComponentSize(size);
 
     };
+    const [openUpdateNhanh, setUpdateNhanhs] = useState(false);
 
     const [tableData, setTableData] = useState([]);
     const [dataKichThuoc, setDataKichThuocs] = useState([]);
@@ -57,6 +65,8 @@ export default function AddSanPham() {
     const [dataDeGiay, setDataDeGiays] = useState([]);
     const [dataDanhMuc, setDataDanhMucs] = useState([]);
     const [dataMoTa, setDataMoTas] = useState([]);
+    const [dataSoLuong, setDataSoLuong] = useState('');
+    const [dataGiaBan, setDataGiaBan] = useState('');
 
     const handleDelete = (key) => {
         const updatedData = tableData.filter(item => item.key !== key);
@@ -66,7 +76,7 @@ export default function AddSanPham() {
     const handleLinkAnhChange = (linkAnh, index) => {
         // Tìm dòng tương ứng trong dataSource
         const updatedDataSource = tableData.map((item) => {
-            if (item.key === index) {
+            if (item.mauSac === index || item.ghiChu == "") {
                 // Cập nhật giá trị ghiChu cho dòng đó
                 return { ...item, ghiChu: linkAnh };
             }
@@ -117,6 +127,12 @@ export default function AddSanPham() {
             setTableData(newData);
         }
     };
+    const onChangeNhapGia = (event) => {
+        setDataGiaBan(event.target.value)
+    }
+    const onChangeNhapSoLuong = (event) => {
+        setDataSoLuong(event.target.value)
+    }
 
 
     const loadDuLieuThem = () => {
@@ -142,14 +158,13 @@ export default function AddSanPham() {
             dataSanPham.includes(data.ten)
         );
 
-        console.log(newDataSP)
-
         if (dataKichThuoc.length > 0 && dataMauSac.length > 0) {
 
-            if (newDataCL.length <= 0 || newDataH.length <= 0 || newDataDG.length <= 0 || newDataDM.length <= 0 || newDataSP.length <= 0) {
-                toast.error('Không để trống thông tin sản phẩm', {
+            if (newDataCL.length <= 0 || newDataH.length <= 0 || newDataDG.length <= 0 ||
+                newDataDM.length <= 0 || newDataSP.length <= 0 || dataSoLuong === '' || dataKichThuoc === '') {
+                toast.error('Không để trống thông tin sản phẩm !', {
                     position: "top-right",
-                    autoClose: 5000,
+                    autoClose: 2500,
                     hideProgressBar: false,
                     closeOnClick: true,
                     pauseOnHover: true,
@@ -158,18 +173,21 @@ export default function AddSanPham() {
                     theme: "light",
                 });
                 form.resetFields();
+                setDataMauSacs([]);
+                setDataKichThuocs([]);
                 return;
             }
 
             let index = 1;
             const nameProduct = selectedValue
             setTableData([])
-            for (let i = 0; i < newDataKT.length; i++) {
-                for (let j = 0; j < newDataMS.length; j++) {
+            for (let j = 0; j < newDataMS.length; j++) {
+                for (let i = 0; i < newDataKT.length; i++) {
                     const newSanPham = {
                         key: `${newDataSP[0].ten} - ${newDataKT[i].ten} ${newDataMS[j].ten}`,
                         tenCt: `${newDataSP[0].ten} - [${newDataKT[i].ten} ${newDataMS[j].ten}]`,
                         maMau: newDataMS[j].ma,
+                        tenMau: newDataMS[j].ten,
                         sanPham: newDataSP[0].id,
                         moTa: dataMoTa,
                         chatLieu: newDataCL[0].id,
@@ -179,13 +197,11 @@ export default function AddSanPham() {
                         mauSac: newDataMS[j].id,
                         kichThuoc: newDataKT[i].id,
                         ghiChu: null,
-                        soLuong: 1,
-                        giaBan: 1000000,
+                        soLuong: dataSoLuong,
+                        giaBan: dataGiaBan,
                         stt: index++,
-
                     };
                     setTableData((prevData) => [...prevData, newSanPham]);
-
                 }
             }
         } else {
@@ -193,10 +209,105 @@ export default function AddSanPham() {
         }
 
     }
+    console.log(tableData)
+    const processColorGroups = () => {
+        const colorGroups = {};
+        tableData.forEach((item) => {
+            if (!colorGroups[item.mauSac]) {
+                colorGroups[item.mauSac] = [];
+            }
+            colorGroups[item.mauSac].push(item);
+        });
+
+        const processedData = [];
+        Object.keys(colorGroups).forEach((color) => {
+            const colorGroup = colorGroups[color];
+            colorGroup.forEach((item, index) => {
+                if (index === 0) {
+                    item.rowSpan = colorGroup.length;
+                } else {
+                    item.rowSpan = 0;
+                }
+                processedData.push(item);
+            });
+        });
+
+        return processedData;
+    };
+    const processedData = processColorGroups();
+
+    const [colorGroups, setColorGroups] = useState([]);
+    // Filter products based on color dynamically
+    const filterProducts = () => {
+        const groupedCTSP = tableData.reduce((groups, table) => {
+            const mausac = table.tenMau;
+            groups[mausac] = groups[mausac] || [];
+            groups[mausac].push(table);
+            return groups;
+        }, {});
+        setColorGroups(Object.entries(groupedCTSP));
+    };
+
+    useEffect(() => {
+        filterProducts();
+    }, [tableData]);
 
     useEffect(() => {
         loadDuLieuThem()
-    }, [dataKichThuoc, dataMauSac]);
+    }, [dataKichThuoc,dataMauSac,dataSoLuong,dataGiaBan]);
+
+    //Update nhanh
+    const updateNhanh = (newValues) => {
+        if (selectedRowKeys.length <= 0) {
+            toast.error('Chưa chọn dòng để sửa !', {
+                position: "top-right",
+                autoClose: 2500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+            return;
+        } else {
+            const updatedData = tableData.map((record) => {
+                if (selectedRowKeys.includes(record.key)) {
+                    return {
+                        ...record,
+                        soLuong: newValues.soLuong,
+                        giaBan: newValues.giaBan,
+                    };
+                }
+                return record;
+            });
+            setTableData(updatedData);
+            form1.resetFields();
+            setUpdateNhanhs(false);
+            toast('✔️ Sửa thành công!', {
+                position: "top-right",
+                autoClose: 2500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        }
+    };
+
+
+    // Custom table  
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const onSelectChange = (newSelectedRowKeys) => {
+        setSelectedRowKeys(newSelectedRowKeys);
+        console.log(newSelectedRowKeys)
+    };
+    const rowSelection = {
+        selectedRowKeys,
+        onChange: onSelectChange,
+    };
     //Load table
     const columns = [
         {
@@ -218,7 +329,7 @@ export default function AddSanPham() {
                     rules={[{ required: true, alert: 'Không để trống số lượng', },]}
                     min={1}
                     style={{ width: 100 }}
-                    defaultValue={1}
+                    value={record.soLuong}
                     onChange={(e) => onChangeSL(record, e.target.value)}
                 />
             ),
@@ -237,7 +348,7 @@ export default function AddSanPham() {
                         type='number'
                         rules={[{ required: true, alert: 'Không để trống giá', },]}
                         style={{ width: 100 }}
-                        defaultValue={1000000}
+                        value={record.giaBan}
                         onChange={(e) => onChangeGB(record, e.target.value)}></Input> VNĐ
                 </>;
             }
@@ -256,16 +367,7 @@ export default function AddSanPham() {
                             height: 25,
                         }}></div >
                 </>;
-            }
-        },
-        {
-            title: "Upload ảnh",
-            dataIndex: "ghiChu",
-            render: (_, record) => {
-                return <>
-                    <CloudinaryUpload onLinkAnhChange={(imageUrl) => handleLinkAnhChange(imageUrl, record.key)}></CloudinaryUpload>
-                </>;
-            }
+            },
         },
         {
             title: "Hành động",
@@ -276,6 +378,25 @@ export default function AddSanPham() {
                 </>;
             }
         },
+        {
+            title: "Upload ảnh",
+            dataIndex: "ghiChu",
+            render: (_, record, index) => {
+                return {
+                    children: (<>
+                        <CloudinaryUpload onLinkAnhChange={(imageUrl) => handleLinkAnhChange(imageUrl, record.mauSac)}></CloudinaryUpload>
+                    </>),
+                    props: {
+                        rowSpan: record.rowSpan,
+                        style: {
+                            justifyContent: "center",
+                            alignItems: "center"
+                        }
+                    }
+
+                }
+            }
+        }
     ]
 
     //CTSP
@@ -314,7 +435,7 @@ export default function AddSanPham() {
         }
 
         for (let i = 0; i < tableData.length; i++) {
-            if (tableData[i].soLuong === "" || tableData[i].soLuong <1 ) {
+            if (tableData[i].soLuong === "" || tableData[i].soLuong < 1) {
                 toast.error('Không để trống số lượng ! ( Số lượng >= 1 )', {
                     position: "top-right",
                     autoClose: 5000,
@@ -330,7 +451,7 @@ export default function AddSanPham() {
         }
 
         for (let i = 0; i < tableData.length; i++) {
-            if (tableData[i].giaBan === "" || tableData[i].giaBan <1000000 ) {
+            if (tableData[i].giaBan === "" || tableData[i].giaBan < 1000000) {
                 toast.error('Không để trống giá bán ! ( Giá bán >= 1,000,000 )', {
                     position: "top-right",
                     autoClose: 5000,
@@ -365,7 +486,6 @@ export default function AddSanPham() {
         for (let i = 0; i < tableData.length; i++) {
             axios.post('http://localhost:8080/admin/ctsp/add', tableData[i])
                 .then(response => {
-                    console.log(response.data);
                     loadCTSP();
                     loadSP();
                     form1.resetFields();
@@ -402,14 +522,39 @@ export default function AddSanPham() {
         setOptionsSP(result.data);
     };
     const addSanPham = (value) => {
-        axios.post('http://localhost:8080/admin/san-pham/add', value)
-            .then(response => {
-                console.log(response.data);
-                loadSP();
-                form1.resetFields();
-
-            })
-            .catch(error => console.error('Error adding item:', error));
+        const checkTrung = (code) => {
+            return optionsSP.some(sp => sp.ten.trim().toLowerCase() === code.trim().toLowerCase());
+        };
+        if (!(checkTrung(value.ten))) {
+            axios.post('http://localhost:8080/admin/san-pham/add', value)
+                .then(response => {
+                    loadSP();
+                    form1.resetFields();
+                    setOpenSP(false);
+                })
+                .catch(error => console.error('Error adding item:', error));
+            toast('✔️ Thêm thành công!', {
+                position: "top-right",
+                autoClose: 2500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        } else {
+            toast.error('Sản phẩm đã tồn tại !', {
+                position: "top-right",
+                autoClose: 2500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        }
     }
     //Load Kích Thước
     const [openKT, setOpenKT] = useState(false);
@@ -425,19 +570,17 @@ export default function AddSanPham() {
                 return true;
             }
         });
-            setKTData(result.data);
-            const loadOKT = result.data.map(item => ({
-                key: item.id,
-                value: item.id,
-                label: item.ten,
-            }));
-            setOptionsKT(loadOKT);
+        setKTData(result.data);
+        const loadOKT = result.data.map(item => ({
+            key: item.id,
+            value: item.id,
+            label: item.ten,
+        }));
+        setOptionsKT(loadOKT);
     };
     const addKichThuoc = (value) => {
-        console.log(value);
         axios.post('http://localhost:8080/admin/kich-thuoc/add', value)
             .then(response => {
-                console.log(response.data);
                 toast('✔️ Thêm thành công!', {
                     position: "top-right",
                     autoClose: 5000,
@@ -465,7 +608,6 @@ export default function AddSanPham() {
         if (colorName === null) {
             console.log("hehe")
         } else {
-            console.log(colorName);
             setTenMaus(colorName);
         }
     };
@@ -482,25 +624,23 @@ export default function AddSanPham() {
                 return true;
             }
         });
-  
-            setMSData(result.data);
-            const loadOMS = result.data.map(item => ({
-                key: item.id,
-                value: item.id,
-                label: item.ten,
-            }));
-            setOptionsMS(loadOMS);
-        
+
+        setMSData(result.data);
+        const loadOMS = result.data.map(item => ({
+            key: item.id,
+            value: item.id,
+            label: item.ten,
+        }));
+        setOptionsMS(loadOMS);
+
     };
     const addMauSac = (value) => {
         const chekTrung = (code) => {
             return msData.some(color => color.ma === code);
         };
         if (!chekTrung(value.ma)) {
-            console.log(value.ma);
             axios.post('http://localhost:8080/admin/mau-sac/add', value)
                 .then(response => {
-                    console.log(response.data);
                     toast('✔️ Thêm thành công!', {
                         position: "top-right",
                         autoClose: 5000,
@@ -518,7 +658,6 @@ export default function AddSanPham() {
                 .catch(error => console.error('Error adding item:', error));
 
         } else {
-            console.log('hehe');
             toast.error('Mã màu đã tồn tại!', {
                 position: "top-right",
                 autoClose: 5000,
@@ -543,15 +682,13 @@ export default function AddSanPham() {
                 return true;
             }
         });
-   
-            setCL(result.data);
-        
+
+        setCL(result.data);
+
     };
     const addChatLieu = (value) => {
-        console.log(value);
         axios.post('http://localhost:8080/admin/chat-lieu/add', value)
             .then(response => {
-                console.log(response.data);
                 toast('✔️ Thêm thành công!', {
                     position: "top-right",
                     autoClose: 5000,
@@ -581,15 +718,13 @@ export default function AddSanPham() {
                 return true;
             }
         });
-      
-            setDC(result.data);
-        
+
+        setDC(result.data);
+
     };
     const addDoCao = (value) => {
-        console.log(value);
         axios.post('http://localhost:8080/admin/de-giay/add', value)
             .then(response => {
-                console.log(response.data);
                 toast('✔️ Thêm thành công!', {
                     position: "top-right",
                     autoClose: 5000,
@@ -622,10 +757,8 @@ export default function AddSanPham() {
         setDM(result.data);
     };
     const addDanhMuc = (value) => {
-        console.log(value);
         axios.post('http://localhost:8080/admin/danh-muc/add', value)
             .then(response => {
-                console.log(response.data);
                 toast('✔️ Thêm thành công!', {
                     position: "top-right",
                     autoClose: 5000,
@@ -655,15 +788,13 @@ export default function AddSanPham() {
                 return true;
             }
         });
-       
-            setH(result.data);
-        
+
+        setH(result.data);
+
     };
     const addHang = (value) => {
-        console.log(value);
         axios.post('http://localhost:8080/admin/hang/add', value)
             .then(response => {
-                console.log(response.data);
                 toast('✔️ Thêm thành công!', {
                     position: "top-right",
                     autoClose: 5000,
@@ -676,7 +807,7 @@ export default function AddSanPham() {
                 });
                 loadH();
                 form1.resetFields();
-
+                // setOpenH(false);
             })
             .catch(error => console.error('Error adding item:', error));
 
@@ -736,7 +867,7 @@ export default function AddSanPham() {
                                     </Select>
                                 </Form.Item>
                                 <Form.Item className='col mt-1' style={{ paddingLeft: 140 }} >
-                                    <Button className='bg-success text-white' onClick={() => setOpenSP(true)} icon={<PlusCircleOutlined/>}></Button>
+                                    <Button className='bg-success text-white' onClick={() => setOpenSP(true)} icon={<PlusCircleOutlined />}></Button>
                                     <Modal
                                         title="Thêm Sản Phẩm"
                                         centered
@@ -776,7 +907,7 @@ export default function AddSanPham() {
 
                                             <div className='row'>
                                                 <div className="container">
-                                                    <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
+                                                    <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên sản phẩm !', },]} >
                                                         <Input className="border" />
                                                     </Form.Item>
                                                 </div>
@@ -788,16 +919,16 @@ export default function AddSanPham() {
                             {/* Mô Tả */}
                             <Form.Item name='moTa' label={<b>Mô tả </b>}
                                 hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống mô tả!', },]}>
-                                <TextArea style={{width: 613,marginLeft: 10}} rows={5} value={dataMoTa} onChange={onChangeMT} placeholder='Nhập mô tả sản phẩm'/>
+                                <TextArea style={{ width: 613, marginLeft: 10 }} rows={5} value={dataMoTa} onChange={onChangeMT} placeholder='Nhập mô tả sản phẩm' />
                             </Form.Item>
                             {/* Chất liệu & Hãng */}
                             <div className='row'>
                                 <div className='col-md-6'>
                                     {/* Chất Liệu */}
                                     <div className='row'>
-                                        <Form.Item className='col-md-10' style={{paddingLeft: 87}} name='chatLieu' label={<b>Chất liệu </b>}
+                                        <Form.Item className='col-md-10' style={{ paddingLeft: 87 }} name='chatLieu' label={<b>Chất liệu </b>}
                                             hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống chất liệu !', },]}>
-                                            <Select placeholder="Chọn một giá trị" style={{width: 307}} onChange={onChangeCL}>
+                                            <Select placeholder="Chọn một giá trị" style={{ width: 307 }} onChange={onChangeCL}>
                                                 {cl.map(item => (
                                                     <Select.Option key={item.id} value={item.ten}>
                                                         {item.ten}
@@ -806,10 +937,10 @@ export default function AddSanPham() {
                                             </Select>
                                         </Form.Item>
                                         <Form.Item className="col-md-2">
-                                            <Button 
-                                            className='bg-success text-white' 
-                                            onClick={() => setOpenCL(true)} 
-                                            icon={<PlusCircleOutlined/>}
+                                            <Button
+                                                className='bg-success text-white'
+                                                onClick={() => setOpenCL(true)}
+                                                icon={<PlusCircleOutlined />}
                                             >
                                             </Button>
                                             <Modal
@@ -864,9 +995,9 @@ export default function AddSanPham() {
                                 {/* Hãng */}
                                 <div className='col-md-6'>
                                     <div className='row'>
-                                        <Form.Item className='col-md-8' style={{paddingLeft: 54}} name='hang' label={<b>Hãng </b>}
+                                        <Form.Item className='col-md-8' style={{ paddingLeft: 54 }} name='hang' label={<b>Hãng </b>}
                                             hasFeedback rules={[{ required: true, message: '', },]}>
-                                            <Select placeholder="Chọn một giá trị" style={{width: 307}} onChange={onChangeH}>
+                                            <Select placeholder="Chọn một giá trị" style={{ width: 307 }} onChange={onChangeH}>
                                                 {h.map(item => (
                                                     <Select.Option key={item.id} value={item.ten}>
                                                         {item.ten}
@@ -874,8 +1005,8 @@ export default function AddSanPham() {
                                                 ))}
                                             </Select>
                                         </Form.Item>
-                                        <Form.Item className='col-md-4' style={{paddingLeft: 62}}>
-                                            <Button className='bg-success text-white' onClick={() => setOpenH(true)} icon={<PlusCircleOutlined/>}></Button>
+                                        <Form.Item className='col-md-4' style={{ paddingLeft: 62 }}>
+                                            <Button className='bg-success text-white' onClick={() => setOpenH(true)} icon={<PlusCircleOutlined />}></Button>
                                             <Modal
                                                 title="Thêm Hãng"
                                                 centered
@@ -931,7 +1062,7 @@ export default function AddSanPham() {
                             <div className='row'>
                                 <div className='col-md-6'>
                                     <div className='row'>
-                                        <Form.Item className='col-md-10' style={{paddingLeft: 87}} name='deGiay' label={<b>Đế giày </b>}
+                                        <Form.Item className='col-md-10' style={{ paddingLeft: 87 }} name='deGiay' label={<b>Đế giày </b>}
                                             hasFeedback rules={[{ required: true, message: '', },]}>
                                             <Select placeholder="Chọn một giá trị" style={{ width: 307 }} className='me-2' onChange={onChangeDG}>
                                                 {dc.map(item => (
@@ -942,7 +1073,7 @@ export default function AddSanPham() {
                                             </Select>
                                         </Form.Item>
                                         <Form.Item className='col-md-2'>
-                                            <Button className='bg-success text-white' onClick={() => setOpenDC(true)} icon={<PlusCircleOutlined/>}></Button>
+                                            <Button className='bg-success text-white' onClick={() => setOpenDC(true)} icon={<PlusCircleOutlined />}></Button>
                                             <Modal
                                                 title="Thêm Độ Cao"
                                                 centered
@@ -995,9 +1126,9 @@ export default function AddSanPham() {
                                 {/* Danh mục */}
                                 <div className='col-md-6'>
                                     <div className='row'>
-                                        <Form.Item className='col-md-9' style={{paddingLeft: 39}} name='danhMuc' label={<b>Danh mục</b>}
+                                        <Form.Item className='col-md-9' style={{ paddingLeft: 39 }} name='danhMuc' label={<b>Danh mục</b>}
                                             hasFeedback rules={[{ required: true, message: '', },]}>
-                                            <Select placeholder="Chọn một giá trị" style={{ width: 307}} className='me-2' onChange={onChangeDM}>
+                                            <Select placeholder="Chọn một giá trị" style={{ width: 307 }} className='me-2' onChange={onChangeDM}>
                                                 {dm.map(item => (
                                                     <Select.Option key={item.id} value={item.ten}>
                                                         {item.ten}
@@ -1007,7 +1138,7 @@ export default function AddSanPham() {
 
                                         </Form.Item>
                                         <Form.Item className='col-md-3'>
-                                            <Button className='bg-success text-white w-1' onClick={() => setOpenDM(true)} icon={<PlusCircleOutlined/>}></Button>
+                                            <Button className='bg-success text-white w-1' onClick={() => setOpenDM(true)} icon={<PlusCircleOutlined />}></Button>
                                             <Modal
                                                 title="Thêm Danh Mục"
                                                 centered
@@ -1058,8 +1189,20 @@ export default function AddSanPham() {
                                     </div>
                                 </div>
                             </div>
-
-
+                            <div className='row'>
+                                <div className='col-md-6'>
+                                    <Form.Item label={<b>Số lượng </b>} name='soLuong' style={{ paddingLeft: 45 }}
+                                        hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống số lượng !', },]} >
+                                        <Input onChange={onChangeNhapSoLuong} style={{ width: 307 }} placeholder='Nhập số lượng sản phẩm' type='number' min={1} className="border" />
+                                    </Form.Item>
+                                </div>
+                                <div className='col-md-6'>
+                                    <Form.Item label={<b>Giá bán </b>} name='giaBan' style={{ paddingRight: 60 }}
+                                        hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống giá bán !', },]} >
+                                        <Input onChange={onChangeNhapGia} style={{ width: 307 }} placeholder='Nhập giá sản phẩm' type='number' min={100000} className="border" />
+                                    </Form.Item>
+                                </div>
+                            </div>
                         </div>
                         {/* Kích thước và màu sắc */}
                         <div className=' bg-light m-2 p-3 pt-2' style={{
@@ -1093,7 +1236,7 @@ export default function AddSanPham() {
                                 </div>
                                 <div className='col' style={{ paddingLeft: 137, paddingTop: 10 }}>
                                     <Form.Item>
-                                        <Button className='bg-success text-white w-1' onClick={() => setOpenKT(true)} icon={<PlusCircleOutlined/>}></Button>
+                                        <Button className='bg-success text-white w-1' onClick={() => setOpenKT(true)} icon={<PlusCircleOutlined />}></Button>
                                         <Modal
                                             title="Thêm Kích Thước"
                                             centered
@@ -1133,7 +1276,7 @@ export default function AddSanPham() {
                                                 <div className='row'>
                                                     <div className="container">
                                                         <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
-                                                            <Input className="border" />
+                                                            <Input type='number' className="border" />
                                                         </Form.Item>
                                                     </div>
                                                 </div>
@@ -1166,7 +1309,7 @@ export default function AddSanPham() {
                                 </div>
                                 <div className='col' style={{ paddingLeft: 137, paddingTop: 10 }}>
                                     <Form.Item>
-                                        <Button className='bg-success text-white w-1' onClick={() => setOpenMS(true)}icon={<PlusCircleOutlined/>}></Button>
+                                        <Button className='bg-success text-white w-1' onClick={() => setOpenMS(true)} icon={<PlusCircleOutlined />}></Button>
                                         <Modal
                                             title="Thêm Màu Sắc"
                                             centered
@@ -1227,10 +1370,62 @@ export default function AddSanPham() {
                         }}>
                             <h5><InfoCircleOutlined size={30} /> Chi tiết sản phẩm</h5>
                             <hr />
-                            <div className='text-start mt-3'>
+                            <div className='text-end mb-3'>
+                                <Button icon={<EditOutlined />}
+                                    onClick={() => { setUpdateNhanhs(true) }}
+                                    style={{ backgroundColor: '#0A1172', color: 'white' }}>
+                                    Sửa nhanh số lượng & giá bán</Button>
+                                <Modal
+                                    title=" Sửa nhanh số lượng & giá bán"
+                                    centered
+                                    open={openUpdateNhanh}
+                                    onOk={() => setUpdateNhanhs(false)}
+                                    onCancel={() => setUpdateNhanhs(false)}
+                                    footer={[
+                                        <Button onClick={() => setUpdateNhanhs(false)}>Hủy</Button>,
+                                        <Button type="primary" onClick={() => {
+                                            Modal.confirm({
+                                                centered: true,
+                                                title: 'Thông báo',
+                                                content: 'Bạn có chắc chắn muốn sửa số lượng & giá không?',
+                                                onOk: () => { form1.submit(); },
+                                                footer: (_, { OkBtn, CancelBtn }) => (
+                                                    <>
+                                                        <CancelBtn />
+                                                        <OkBtn />
+                                                    </>
+                                                ),
+                                            });
+                                        }}>Sửa</Button>
+                                    ]}
+                                    width={500}
+                                >
+                                    <Form
+                                        {...formItemLayout}
+                                        initialValues={{
+                                            size: componentSize,
+                                        }}
+                                        onValuesChange={onFormLayoutChange}
+                                        size={componentSize}
+                                        style={{
+                                            maxWidth: 1000,
+                                        }}
+                                        onFinish={updateNhanh}
+                                        form={form1}>
+                                        <Form.Item name="soLuong" label={<b>Số lượng</b>} hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống số lượng !', },]} >
+                                            <Input className='border'></Input>
+                                        </Form.Item>
+                                        <Form.Item name="giaBan" label={<b>Giá bán</b>} hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống giá bán !', },]} >
+                                            <Input className='border'></Input>
+                                        </Form.Item>
+                                    </Form>
+                                </Modal>
+                            </div>
+                            <Table dataSource={processedData} rowKey={"key"} columns={columns} rowSelection={rowSelection} ></Table>
+                            <div className='text-end mt-3'>
                                 <Form.Item >
-                                    <Link className='btn btn-outline-success ms-3 me-2' style={{height: 31,fontSize: 14,paddingBottom: 30}} to='/san-pham'>Hủy</Link>
-                                    <Button style={{height: 41}} className='bg-success text-white' onClick={() => {
+                                    <Link className='btn btn-outline-success ms-3 me-2' style={{ height: 31, fontSize: 14, paddingBottom: 30 }} to='/admin-san-pham'>Hủy</Link>
+                                    <Button style={{ height: 41 }} className='bg-success text-white' onClick={() => {
                                         Modal.confirm({
                                             centered: 'true',
                                             title: 'Thông báo',
@@ -1246,23 +1441,11 @@ export default function AddSanPham() {
                                     }}> Thêm Sản Phẩm</Button>
                                 </Form.Item>
                             </div>
-                            <Table dataSource={tableData} rowKey={"key"} columns={columns}></Table>
                         </div>
                     </div>
                 </Form>
             </div>
-            <ToastContainer
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-            />
+            <ToastContainer />
             {/* Same as */}
             <ToastContainer />
         </div>
