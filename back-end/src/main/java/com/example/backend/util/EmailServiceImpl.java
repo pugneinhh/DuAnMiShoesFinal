@@ -1,4 +1,4 @@
-/*
+
 package com.example.backend.util;
 
 import jakarta.mail.MessagingException;
@@ -67,4 +67,4 @@ public class EmailServiceImpl {
         }
     }
 }
-*/
+

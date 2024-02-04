@@ -14,10 +14,12 @@ import com.example.backend.model.AdminKhachHangRepon;
 import com.example.backend.repository.DiaChiRepository;
 import com.example.backend.repository.NguoiDungRepository;
 //import com.example.backend.util.EmailServiceImpl;
+import com.example.backend.util.EmailServiceImpl;
 import com.example.backend.util.cloudinary.UploadImageToCloudinary;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,8 +34,10 @@ public class KhachHangService {
     NguoiDungRepository nguoiDungRepository;
     @Autowired
     DiaChiRepository diaChiRepository;
-  //  @Autowired
-  //  private EmailServiceImpl emailService;
+    @Autowired
+    private EmailServiceImpl emailService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Autowired
     private UploadImageToCloudinary uploadImageToCloudinary;
 
@@ -46,7 +50,7 @@ public class KhachHangService {
        String password = RandomStringUtils.random(8, true, true);
        String url = uploadImageToCloudinary.uploadImage(file);
        int size=nguoiDungRepository.getAllKhachHang().size()+1;
-     //  emailService.sendEmailPasword(request.getEmail(),"Mật khẩu bạn là ",password);
+       emailService.sendEmailPasword(request.getEmail(),"Mật khẩu bạn là ",password);
        NguoiDung add= new NguoiDung();
        add.setTen(request.getTen());
        add.setMa("KH"+size);
@@ -58,7 +62,7 @@ public class KhachHangService {
        add.setTrangThai(0);
        add.setNgaySinh(request.getNgaySinh());
        add.setAnh(url);
-       add.setMatKhau(password);
+       add.setMatKhau(passwordEncoder.encode(password));
        add.setNgayTao(LocalDateTime.now());
        add.setNgayThamGia(LocalDateTime.now());
        add.setSoDienThoai(request.getSoDienThoai());
