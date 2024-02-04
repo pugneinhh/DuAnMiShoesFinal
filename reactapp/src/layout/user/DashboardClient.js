@@ -77,7 +77,7 @@ export const DashboardClient = ({ children }) => {
     },
   ];
   return (
-    <Layout  >
+    <Layout>
       {/* tiêu đề */}
 
       <Header
@@ -94,12 +94,11 @@ export const DashboardClient = ({ children }) => {
         {/* logo SHOP */}
 
         <Col span={4}>
-         
           <Image style={{ height: 60 }} width={170} src={logoShop} />
         </Col>
         <Col span={1.5} className="button-menu-trai text-center algin-center">
           <Dropdown menu={{ items }} className="pb-4">
-            <a href='/home' className="button-menu-trai">
+            <a href="/home" className="button-menu-trai">
               <Space>
                 <h6>HOME</h6>
               </Space>
@@ -136,28 +135,28 @@ export const DashboardClient = ({ children }) => {
             </a>
           </Dropdown>
         </Col>
-        <Col span={11} className="float-end ">
+        <Col span={11} className="float-end ms-4 ">
           <Link to={"/gio-hang"} className="float-end justify-content-end ">
             <Badge count={10} offset={[8, 1]} className="menuButton">
               <TbShoppingCartHeart size={30} className="menuButton" />
             </Badge>
           </Link>
         </Col>
-        <Col span={1} className="ms-1">
+        <Col span={1} className="ms-2">
           <Link to={"/login"}>
-          <Avatar
+            <Avatar
               shape="circle"
               className="align-content-center"
               size="large"
               src={linkAnh}
               style={{ marginLeft: 35 }}
             />
-          </Link> 
+          </Link>
         </Col>
-        <Col span={5} className="ms-4">
-           <div className="bold">
-              <strong>{userName}</strong>
-            </div>
+        <Col span={2} className="ms-4">
+          <div className="bold">
+            <span>{userName.split(' ').slice(2).join(' ')}</span>
+          </div>
         </Col>
       </Header>
       <Content
