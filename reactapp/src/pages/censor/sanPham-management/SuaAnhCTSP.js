@@ -8,7 +8,7 @@ const getBase64 = (file) =>
     reader.onload = () => resolve(reader.result);
     reader.onerror = (error) => reject(error);
   });
-const SuaAnhCTSP = () => {
+const SuaAnhCTSP = ({hinhAnh}) => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
@@ -17,7 +17,7 @@ const SuaAnhCTSP = () => {
       uid: '-1',
       name: 'Nike Shoes.png',
       status: 'done',
-      url: 'https://res.cloudinary.com/dtetgawxc/image/upload/v1704817232/MiShoes/giay_hqovrg.jpg',
+      url: `${hinhAnh}`,
     }
   ]);
   const handleCancel = () => setPreviewOpen(false);

@@ -166,6 +166,7 @@ export default function CTSP() {
         return true;
       }
     });
+    console.log(result.data)
     setMsCheck(result.data.mauSac)
     setKtCheck(result.data.kichThuoc)
     setCTDatas(result.data);
@@ -742,7 +743,7 @@ export default function CTSP() {
                   <label className='mb-2'><b>QR Code :</b></label>
                   <QRCode size={100} type="canvas" value={ctData.id} />
                   <label className='mb-2'><b>Hình ảnh :</b></label>
-                  <SuaAnhCTSP></SuaAnhCTSP>
+                  <SuaAnhCTSP hinhAnh={ctData.ghiChu}></SuaAnhCTSP>
                 </div>
                 <div className='row'>
                   <div className='container text-center'>

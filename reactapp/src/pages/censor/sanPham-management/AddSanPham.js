@@ -29,6 +29,7 @@ import tr from 'date-fns/esm/locale/tr/index.js';
 import CloudinaryUpload from './UpAnh';
 import { useNavigate } from 'react-router-dom';
 import convert from 'color-convert';
+import { MauSacAPI } from '../api/SanPham/mauSac.api';
 
 
 export default function AddSanPham() {
@@ -254,7 +255,7 @@ export default function AddSanPham() {
 
     useEffect(() => {
         loadDuLieuThem()
-    }, [dataKichThuoc,dataMauSac,dataSoLuong,dataGiaBan]);
+    }, [dataKichThuoc, dataMauSac, dataSoLuong, dataGiaBan]);
 
     //Update nhanh
     const updateNhanh = (newValues) => {
@@ -608,7 +609,8 @@ export default function AddSanPham() {
         if (colorName === null) {
             console.log("hehe")
         } else {
-            setTenMaus(colorName);
+            console.log(colorName);
+            setTenMaus(colorName)
         }
     };
 
@@ -636,29 +638,17 @@ export default function AddSanPham() {
     };
     const addMauSac = (value) => {
         const chekTrung = (code) => {
-            return msData.some(color => color.ma === code);
+          return msData.some(color => color.ma === code);
         };
         if (!chekTrung(value.ma)) {
-            axios.post('http://localhost:8080/admin/mau-sac/add', value)
-                .then(response => {
-                    toast('✔️ Thêm thành công!', {
-                        position: "top-right",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "light",
-                    });
-                    loadMS();
-                    form.resetFields();
-
-                })
-                .catch(error => console.error('Error adding item:', error));
-
-        } else {
-            toast.error('Mã màu đã tồn tại!', {
+          console.log(value.ma);
+          const hexCode = value.ma.replace("#", "").toUpperCase();
+          const rgb = convert.hex.rgb(hexCode);
+          const colorName = convert.rgb.keyword(rgb);
+          value.ten = colorName;
+            MauSacAPI.create(value)
+            .then((res)=>{
+              toast('✔️ Thêm thành công!', {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -667,9 +657,24 @@ export default function AddSanPham() {
                 draggable: true,
                 progress: undefined,
                 theme: "light",
-            });
+              });
+              loadMS();
+              setOpenMS(false);
+              form1.resetFields();
+            })
+        } else {
+          toast.error('Mã màu đã tồn tại!', {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
         }
-    }
+      }
     // Load Chất Liệu
     const [openCL, setOpenCL] = useState(false);
     const [cl, setCL] = useState([]);
@@ -1350,10 +1355,11 @@ export default function AddSanPham() {
                                                     <Input readOnly="true" className="border" type="text" />
                                                 </Form.Item>
                                                 <Form.Item label="Tên" hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
+
                                                     <Input
                                                         type='text'
                                                         value={ten}
-                                                        readOnly />
+                                                    />
                                                 </Form.Item>
                                             </Form>
                                         </Modal>
