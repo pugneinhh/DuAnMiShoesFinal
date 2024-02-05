@@ -57,4 +57,10 @@ export class HoaDonAPI {
             data: data,
         });
     }; 
+    static huyHoaDon = (id) => {
+        return requestAdmin({
+            method: "PUT",
+            url: `/admin/hoa-don/huy-hoa-don/${id}`,
+        })
+    }
 }

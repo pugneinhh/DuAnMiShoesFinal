@@ -52,7 +52,7 @@ public class BanHangController {
     @PostMapping("/add-hoa-don")
     public  ResponseEntity<?> addHD(@RequestBody HoaDonRequest hoaDonRequest){
         CongThuc ct=congThucRepository.getCongThucByTrangThai(0);
-        hoaDonRequest.setMa("HDTQ"+ RandomStringUtils.randomNumeric(6));
+       // hoaDonRequest.setMa("HDTQ"+ RandomStringUtils.randomNumeric(6));
         hoaDonRequest.setLoaiHoaDon(1);
         hoaDonRequest.setNgayTao(LocalDateTime.now());
         hoaDonRequest.setTrangThai(0);
@@ -71,6 +71,10 @@ public class BanHangController {
     public ResponseEntity<?> deleteHDCT(@RequestBody HoaDonChiTietRequest request){
         return ResponseEntity.ok(hoaDonChiTietService.deleteHDCT(request));
     }
+    @DeleteMapping("/delete-hoa-don-chi-tiet/{idCTSP}/{idHD}")
+    public void  deleteHoaDonChiTiet (@PathVariable("idCTSP") String idCTSP,@PathVariable("idHD")String idHD) {
+        hoaDonChiTietService.deleteHDCTAndRollBackInSell(idCTSP,idHD); //  roll backed
+    }
     @PostMapping("/thanh-toan")
     public ResponseEntity<?> thanhToan(@PathVariable HoaDonRequest hoaDonRequest){
         hoaDonRequest.setTrangThai(1);
@@ -88,8 +92,13 @@ public class BanHangController {
     }
 
     @GetMapping("/hoa-don/hoa-don-cho")
-    public ResponseEntity<?> getAllHDChoTaiQuay(){
-        return ResponseEntity.ok(hoaDonServicee.getHoaDonChoTaiQuay());
+    public ResponseEntity<?> getAllBill(){
+        return ResponseEntity.ok(hoaDonServicee.getAllBill());
+    }
+
+    @GetMapping("/hoa-don/hoa-don-cho-hom-nay")
+    public ResponseEntity<?> getAllBillToday(){
+        return ResponseEntity.ok(hoaDonServicee.getAllBillToday());
     }
     @GetMapping("/voucher/{idND}")
     public ResponseEntity<?> getAllVoucherWithIDKH(@PathVariable("idND")String idND){
@@ -102,6 +111,10 @@ public class BanHangController {
         return ResponseEntity.ok(voucherService.noLimited());
     }
 
+    @PutMapping("/hoa-don/updateSL/{idCTSP}/{idHD}/{value}")
+    public ResponseEntity<?> updateSL (@PathVariable("idCTSP")String idCTSP,@PathVariable("idHD") String idHD,@PathVariable("value") int value) {
+        return ResponseEntity.ok(hoaDonChiTietService.updateSL(idCTSP,idHD,value));
+    }
 
 
     @GetMapping("/voucher-hop-le/{total}")
@@ -118,4 +131,14 @@ public class BanHangController {
         return ResponseEntity.ok(voucherService.updateCongSL(id));
     }
 
+
+    @PutMapping("/nguoi-dung/update-nguoi-dung/{idHD}/{idND}")
+    public  ResponseEntity<?> updateNguoiDung(@PathVariable("idHD")String idHD,@PathVariable("idND")String idND) {
+        return ResponseEntity.ok(hoaDonServicee.updateKH(idHD,idND));
+    }
+
+    @PutMapping("/nguoi-dung/update-khach-le/{idHD}")
+    public  ResponseEntity<?> updateNguoiDung(@PathVariable("idHD")String idHD) {
+        return ResponseEntity.ok(hoaDonServicee.updateReturnKhachLe(idHD));
+    }
 }

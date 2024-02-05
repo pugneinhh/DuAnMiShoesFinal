@@ -46,17 +46,19 @@ const billSlice = createSlice({
     CreateBill: (state, action) => {
       console.log("Dài", state.length);
       const data = action.payload;
+      const index = state.findIndex((period) => period.id === data.id);
+      if (index !== -1) return;
       const newBill = {
         stt: state.length + 1,
-        id: data.key,
-        ma: "HDTQ" + (state.length + 1),
+        id: data.id,
+        ma: data.ma,
         trangThai: 0,
         key: data.key,
-        tenNguoiDung: null,
-        //ngayTao: moment(new Date().getTime()).format("YYYY-MM-DD HH:mm:ss"),
+        tenNguoiDung: data.tenNguoiDung,
+       // ngayTao : data.ngayTao,
         loaiHoaDon: 1,
         nhanVien: data.nhanVien,
-        nguoiDung: null,
+        nguoiDung: data.nguoiDung,
         voucher: data.voucher,
         ngayMua: data.ngayMua,
         giaGoc: data.giaGoc,
@@ -73,8 +75,8 @@ const billSlice = createSlice({
         ngayNhan: data.ngayNhan,
         ngayTraHang: data.ngayTraHang,
         nguoiTao: data.nguoiTao,
-        nguoiSua: data.nguoiSua,
-        ngaySua: data.ngaySua,
+      //  nguoiSua: data.nguoiSua,
+      //  ngaySua: data.ngaySua,
         gtNguoiDung: null,
         diemNguoiDung: null,
       };

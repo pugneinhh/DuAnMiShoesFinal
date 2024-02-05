@@ -1,6 +1,7 @@
 package com.example.backend.service;
 
 import com.example.backend.dto.request.HoaDonChiTietRequest;
+import com.example.backend.dto.response.HoaDonChiTietBanHangRespone;
 import com.example.backend.dto.response.HoaDonChiTietRespone;
 import com.example.backend.entity.ChiTietSanPham;
 import com.example.backend.entity.HoaDonChiTiet;
@@ -9,6 +10,7 @@ import com.example.backend.repository.HoaDonChiTietRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +22,7 @@ public class HoaDonChiTietService {
     HoaDonChiTietRepository hoaDonChiTietRepository;
     @Autowired
     CTSPRepository ctspRepository;
-    public List<HoaDonChiTietRespone> getAllHDCTByHD(String id){
+    public List<HoaDonChiTietBanHangRespone> getAllHDCTByHD(String id){
         return hoaDonChiTietRepository.getAllHDCTByHD(id);
     }
     public HoaDonChiTietRespone getOneHDCT(String idHD,String idCTSP){
@@ -65,4 +67,40 @@ public class HoaDonChiTietService {
         hdctTonTai.setTrangThai(2);
         return  hoaDonChiTietRepository.save(hdctTonTai);
     }
+
+    public void deleteHDCTAndRollBackInSell(String idCTSP,String idHD){
+        HoaDonChiTiet hdct = hoaDonChiTietRepository.getHDCTByCTSPAndHD(idCTSP,idHD);
+        ChiTietSanPham ctsp = ctspRepository.getReferenceById(idCTSP);
+        int slt = ctsp.getSoLuong();
+        int slh = hdct.getSoLuong();
+        ctsp.setSoLuong(slt+slh);
+        ctspRepository.save(ctsp);
+        hoaDonChiTietRepository.delete(hdct);
+    }
+
+    public void updateGia(String idCTSP, BigDecimal giaGiam , BigDecimal giaSauGiam){
+        List<HoaDonChiTiet> list = hoaDonChiTietRepository.getAllHDCTByCTSP(idCTSP);
+        for (HoaDonChiTiet h : list){
+            System.out.println("H"+h);
+            h.setGiaGiam(giaGiam);
+            h.setGiaSauGiam(giaSauGiam);
+            hoaDonChiTietRepository.save(h);
+            System.out.println( hoaDonChiTietRepository.save(h));
+        }
+    }
+
+    public HoaDonChiTiet updateSL(String idCTSP,String idHD,int soLuongCapNhat){
+        HoaDonChiTiet hdct = hoaDonChiTietRepository.getHDCTByCTSPAndHD(idCTSP,idHD);
+        ChiTietSanPham ctsp = ctspRepository.getReferenceById(idCTSP);
+        int slt = ctsp.getSoLuong();
+        int slh = hdct.getSoLuong();
+        int sltd = soLuongCapNhat-slh;
+        hdct.setSoLuong(soLuongCapNhat);
+        ctsp.setSoLuong(slt-sltd);
+        System.out.println("HDCT sau update"+hdct);
+        System.out.println("CTSP sau update"+ctsp);
+        ctspRepository.save(ctsp);
+       return hoaDonChiTietRepository.save(hdct);
+    }
+
 }

@@ -119,14 +119,20 @@ const SuaKhuyenMai = () => {
   };
 
   const handleSubmit = (value) => {
+    console.log("idctsp",selectedIDCTSP);
     PromotionAPI.update(id, value)
       .then((response) => {
         setIDKM(response.data);
+        if (new Date() > new Date(value.ngay_ket_thuc)){
+          Promise.all(
+            dataCTSP.map((data) => PromotionAPI.deletePromotion(data.idCTSP))
+          )
+        } else {
         if (selectedIDCTSP.length > 0) {
-          console.log("selected idctsp", selectedIDCTSP);
+          console.log("selected idctsp", CTSP);
           Promise.all(
             dataCTSP.map((data) => selectedIDCTSP.filter(item => item===data.idCTSP).length > 0 ? 
-            PromotionAPI.updateProductByPromotion(data.idCTSP, response.data) :  dataCTSP.map((data) => PromotionAPI.deletePromotion(data.idCTSP, response.data))
+            PromotionAPI.updateProductByPromotion(data.idCTSP, response.data) :  dataCTSP.map((data) => PromotionAPI.deletePromotion(data.idCTSP))
             )
             // selectedIDCTSP.map((id) =>
             //   PromotionAPI.updateProductByPromotion(id, response.data)
@@ -134,9 +140,10 @@ const SuaKhuyenMai = () => {
           );
         } else {
           Promise.all(
-            dataCTSP.map((data) => PromotionAPI.deletePromotion(data.idCTSP, response.data))
+            dataCTSP.map((data) => PromotionAPI.deletePromotion(data.idCTSP))
           );
         }
+      }
         loadKhuyenMai();
         navigate("/admin-khuyen-mai");
 

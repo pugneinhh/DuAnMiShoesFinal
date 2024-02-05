@@ -1,3 +1,4 @@
+import { Value } from "sass";
 import { requestAdmin } from "../request";
 
 export class SellAPI{
@@ -73,6 +74,20 @@ export class SellAPI{
         });
     }
 
+    static getAllHoaDonChoHomNay = () => {
+        return requestAdmin({
+            method : 'GET',
+            url : '/ban-hang/hoa-don/hoa-don-cho-hom-nay',
+        });
+    }
+
+    static getAllHDCTByHD = (id) => {
+        return requestAdmin({
+            method : 'GET',
+            url : `/ban-hang/hien-thi-hdct/${id}`,
+        });
+    }
+
     static addInvoice = (data) => {
         return requestAdmin({
             method : 'POST',
@@ -101,4 +116,30 @@ export class SellAPI{
             url: `/ban-hang/voucher/${id}`,
         });
     };
+    static deleteInvoiceAndRollBackProduct = (idCTSP,idHD) => {
+        return requestAdmin({
+            method : 'DELETE',
+            url: `/ban-hang/delete-hoa-don-chi-tiet/${idCTSP}/${idHD}`,
+        })
+    }
+    static updateSL = (idCTSP,idHD,Value) => {
+        return requestAdmin({
+            method : 'PUT',
+            url: `/ban-hang/hoa-don/updateSL/${idCTSP}/${idHD}/${Value}`,
+        })
+    }
+
+    static updateKH = (idHD,idKH) => {
+        return requestAdmin({
+            method : 'PUT',
+            url: `/ban-hang/nguoi-dung/update-nguoi-dung/${idHD}/${idKH}`,
+        })
+    }
+
+    static updateReturnKhachLe = (idHD) => {
+        return requestAdmin({
+            method : 'PUT',
+            url: `/ban-hang/nguoi-dung/update-khach-le/${idHD}`,
+        })
+    }
 }

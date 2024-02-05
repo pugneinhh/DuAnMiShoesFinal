@@ -89,11 +89,10 @@ export class PromotionAPI {
     });
   };
 
-  static deletePromotion = (id,data) => {
+  static deletePromotion = (id) => {
     return requestAdmin({
       method:"PUT",
       url: `/admin/ctsp/deleteKM/${id}`,
-      data : data,
     });
   }
 

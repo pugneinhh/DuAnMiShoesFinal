@@ -6,8 +6,11 @@ import com.example.backend.dto.response.AdminHoaDonDetailRespon;
 import com.example.backend.dto.response.AdminHoaDonResponn;
 import com.example.backend.dto.response.sanpham.DanhMucRespone;
 import com.example.backend.entity.HoaDon;
+import com.example.backend.entity.NguoiDung;
+import com.example.backend.model.AdminBillForSellRespon;
 import com.example.backend.model.AdminHoaDonSanPham;
 import com.example.backend.repository.HoaDonRepository;
+import com.example.backend.repository.NguoiDungRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,12 +25,26 @@ public class HoaDonServicee {
     @Autowired
     HoaDonRepository hoaDonRepository;
 
+    @Autowired
+    NguoiDungRepository nguoiDungRepository;
 
     public List<AdminHoaDonResponn> getALL() {
         return hoaDonRepository.getALLHD();
     }
     public List<AdminHoaDonResponn> getHoaDonChoTaiQuay() {
         return hoaDonRepository.getHoaDonChoTaiQuay();
+    }
+    public List<AdminBillForSellRespon> getAllBill() {
+        return hoaDonRepository.getAllBill();
+    }
+
+    public HoaDon deleteHoaDon(String idHD) {
+        HoaDon hoaDon = hoaDonRepository.findById(idHD).get();
+        hoaDon.setTrangThai(-1);
+        return  hoaDonRepository.save(hoaDon);
+    }
+    public List<AdminBillForSellRespon> getAllBillToday() {
+        return hoaDonRepository.getAllBillToday();
     }
 
     public List<AdminHoaDonResponn> getALLTT(int tt) {
@@ -36,6 +53,21 @@ public class HoaDonServicee {
 
     public AdminHoaDonDetailRespon getByID(String id){
         return hoaDonRepository.detailHD(id);
+    }
+
+    public HoaDon updateKH(String idHD,String idKH){
+        HoaDon hoaDon = hoaDonRepository.getHoaDonByIDHD(idHD);
+        NguoiDung nguoiDung = nguoiDungRepository.findById(idKH).get();
+        System.out.println("hoa don"+hoaDon);
+        hoaDon.setNguoiDung(nguoiDung);
+        return hoaDonRepository.save(hoaDon);
+    }
+
+    public HoaDon updateReturnKhachLe(String idHD){
+        HoaDon hoaDon = hoaDonRepository.getHoaDonByIDHD(idHD);
+        hoaDon.setNguoiDung(null);
+        System.out.println("hoa don"+hoaDon);
+        return hoaDonRepository.save(hoaDon);
     }
     public HoaDon updateHD(HoaDon hoaDon,String id){
         HoaDon hoaDon1= findHoaDonbyID(id);
