@@ -21,7 +21,7 @@ import { AddProduct, GetProduct, UpdateApartProduct } from "../../../store/reduc
 import { AddInvoice, GetInvoice } from "../../../store/reducer/DetailInvoice.reducer";
 import {SellAPI} from "../../censor/api/sell/sell.api"
 import axios from "axios";
-
+import { v4 as uuid } from "uuid";
 
 const ModalSanPham = (props) => {
   const { openSanPham, setOpenSanPham } = props;
@@ -122,10 +122,11 @@ const ModalSanPham = (props) => {
 
 
   const handleClickAddProduct = (record) => {
-
-    dispatch(AddInvoice({chiTietSanPham:record.id,tenSP:record.tenSP,maMS:record.maMS,linkAnh : record.linkAnh,tenKT:record.tenKT,giaBan: record.giaBan,hoaDon:activeKey,tenMS:record.tenMS,giaGiam:record.giaGiam,giaSauGiam:record.giaSauGiam,nguoiTao:record.nguoiTao,giaBan:record.giaBan,tenKM:record.tenKM,loaiKM:record.loaiKM,giaTriKhuyenMai:record.giaTriKhuyenMai}));
- 
+    const id =  uuid();
+    const hdct = [{id:id,hoaDon:activeKey,chiTietSanPham:record.id,soLuong:1,giaSauGiam:record.giaSauGiam,giaGiam:record.giaGiam}]
+    dispatch(AddInvoice({id:id,chiTietSanPham:record.id,tenSP:record.tenSP,maMS:record.maMS,linkAnh : record.linkAnh,tenKT:record.tenKT,giaBan: record.giaBan,hoaDon:activeKey,tenMS:record.tenMS,giaGiam:record.giaGiam,giaSauGiam:record.giaSauGiam,nguoiTao:record.nguoiTao,giaBan:record.giaBan,tenKM:record.tenKM,loaiKM:record.loaiKM,giaTriKhuyenMai:record.giaTriKhuyenMai}));
     dispatch(UpdateApartProduct({id:record.id,soLuong:1})); 
+    SellAPI.addInvoice(hdct[0]);
     setOpenSanPham(false);
   };
 

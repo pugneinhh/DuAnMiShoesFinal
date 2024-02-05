@@ -81,6 +81,11 @@ public class HoaDonControllerr {
         hoaDonRequest.setNgayTao(LocalDateTime.now());
         return  ResponseEntity.ok(hoaDonService.add(hoaDonRequest));
     }
+
+    @PutMapping("/huy-hoa-don/{idHD}")
+    public ResponseEntity<?> HuyHoaDon(@PathVariable("idHD") String idHD) {
+        return  ResponseEntity.ok(hoaDonService.deleteHoaDon(idHD));
+    }
 //    @PutMapping("/update/{ma}")
 //    public ResponseEntity<?> update(@PathVariable String ma,@RequestBody LichSuHoaDon khachHang){
 //        return   ResponseEntity.ok(khachHangService.update(khachHang,ma));

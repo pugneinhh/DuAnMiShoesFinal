@@ -3,8 +3,10 @@ package com.example.backend.controller.admin;
 
 import com.example.backend.dto.request.KhuyenMaiRequest;
 import com.example.backend.dto.request.KhuyenMaiSearch;
+import com.example.backend.entity.ChiTietSanPham;
 import com.example.backend.entity.KhuyenMai;
 import com.example.backend.service.CTSPService;
+import com.example.backend.service.HoaDonChiTietService;
 import com.example.backend.service.KhuyenMaiService;
 //import com.example.duanmishoes.util.ScheduledCheck;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,6 +32,8 @@ public class KhuyenMaiController {
     KhuyenMaiService khuyenMaiService;
     @Autowired
     CTSPService ctspService;
+    @Autowired
+    HoaDonChiTietService hoaDonChiTietService;
 //    private ScheduledCheck scheduledCheck;
     @GetMapping("hien-thi")
     public ResponseEntity<?> getALL(){
@@ -93,7 +98,10 @@ public class KhuyenMaiController {
         if (ngayKT.isBefore(today)){
             List<String> list = ctspService.getCTSPByKM(id);
             for (String x: list) {
-                ctspService.deleteKM(x,km);
+                ChiTietSanPham ctsp = ctspService.findChiTietSanPhamByID(x);
+                ctspService.deleteKM(x);
+                hoaDonChiTietService.updateGia(x,new BigDecimal(0),ctsp.getGiaBan());
+
             }
         }
         km.setTrangThai(2);

@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Data
 public class HoaDonChiTiet {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+   // @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     @ManyToOne
     private HoaDon hoaDon;

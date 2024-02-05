@@ -9,11 +9,13 @@ import com.example.backend.entity.ChiTietSanPham;
 import com.example.backend.entity.KhuyenMai;
 import com.example.backend.service.CTSPService;
 import com.example.backend.service.HinhAnhService;
+import com.example.backend.service.HoaDonChiTietService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @CrossOrigin("http://localhost:3000/")
@@ -24,7 +26,8 @@ public class CTSPController {
     private CTSPService ctspService;
     @Autowired
     private HinhAnhService hinhAnhService;
-
+    @Autowired
+    private HoaDonChiTietService hoaDonChiTietService;
     @GetMapping("/show")
     public ResponseEntity<?> getALLCTSP() {
         return new ResponseEntity<>(ctspService.getALL(), HttpStatus.OK);
@@ -65,12 +68,20 @@ public class CTSPController {
     @PutMapping("/updateKM/{idCTSP}")
     public ResponseEntity<?> update(@PathVariable("idCTSP") String idCTSP, @RequestBody KhuyenMai khuyenMai) {
         System.out.println("Vào update");
+        ChiTietSanPham ctsp = ctspService.findChiTietSanPhamByID(idCTSP);
+        BigDecimal giaGiam = khuyenMai.getLoai().equals("Tiền mặt") ? khuyenMai.getGia_tri_khuyen_mai()
+                    : (ctsp.getGiaBan().subtract(ctsp.getGiaBan().multiply(khuyenMai.getGia_tri_khuyen_mai().divide(new BigDecimal("100")))));
+        BigDecimal giaSauGiam = ctsp.getGiaBan().subtract(giaGiam);
+        hoaDonChiTietService.updateGia(idCTSP,giaGiam,giaSauGiam);
         return ResponseEntity.ok(ctspService.updateKM(idCTSP, khuyenMai));
     }
 
+
     @PutMapping("/deleteKM/{idCTSP}")
-    public ResponseEntity<?> delete(@PathVariable("idCTSP")String idCTSP,  @RequestBody KhuyenMai khuyenMai){
-        return ResponseEntity.ok(ctspService.deleteKM(idCTSP,khuyenMai));
+    public ResponseEntity<?> delete(@PathVariable("idCTSP")String idCTSP){
+        ChiTietSanPham ctsp = ctspService.findChiTietSanPhamByID(idCTSP);
+        hoaDonChiTietService.updateGia(idCTSP,new BigDecimal(0),ctsp.getGiaBan());
+        return ResponseEntity.ok(ctspService.deleteKM(idCTSP));
     }
 
 

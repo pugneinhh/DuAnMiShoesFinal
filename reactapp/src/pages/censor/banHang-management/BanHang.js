@@ -14,7 +14,7 @@ import {
 } from "antd";
 import React, { Children, useEffect, useRef, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
-import { BsQrCodeScan } from "react-icons/bs";
+import { BsQrCodeScan, BsRecordCircle } from "react-icons/bs";
 import { FaList } from "react-icons/fa";
 import { QrReader } from "react-qr-reader";
 import {
@@ -34,20 +34,24 @@ import {
   UpdateBill,
 } from "../../../store/reducer/Bill.reducer";
 import {
+  AddProduct,
   GetProduct,
   UpdateApartProduct,
   UpdatePushProduct,
 } from "../../../store/reducer/Product.reducer";
 import { Image } from "cloudinary-react";
-import { GetClient } from "../../../store/reducer/Client.reducer";
+import { AddClient, GetClient } from "../../../store/reducer/Client.reducer";
 import {
   GetInvoice,
   UpdateInvoice,
   RemoveInvoice,
   GetLengthListByBill,
+  AddInvoice,
+  LoadInvoice,
 } from "../../../store/reducer/DetailInvoice.reducer";
 import { VoucherNguoiDungAPI } from "../../censor/api/voucher/nguoiDungVoucher.api";
 import { SellAPI } from "../api/sell/sell.api";
+import {HoaDonAPI} from "../api/hoaDon/hoaDon.api";
 import imgTicket from "../../../assets/images/discountTicket.png";
 import DiaChiGiaoHang from "./GiaoHang";
 const { Option } = Select;
@@ -64,7 +68,8 @@ const BanHang = () => {
   let data = [""];
   let KH = [""];
   const [isSwitchOn, setIsSwitchOn] = useState(false);
-
+  console.log("client[", client);
+  console.log("ctsp",ctsp);
   const handleSwitchToggle = () => {
     setIsSwitchOn(!isSwitchOn);
   };
@@ -78,7 +83,7 @@ const BanHang = () => {
     // option.label.toLowerCase().includes(input.toLowerCase());
   };
   const [voucherByIDKH, setVoucherByIDKH] = useState([""]);
-
+  const [ctspSS,setCTSPSS] = useState([""]);
   const [voucherNoLimited, setVoucherNoLimited] = useState([""]);
   console.log("Voucher by idkh", voucherByIDKH);
 
@@ -89,26 +94,161 @@ const BanHang = () => {
     console.log(result.data);
     setVoucherNoLimited(result.data);
   };
-  //voucherNoIDKH();
-  const voucherKH = async (id) => {
-    const result = await SellAPI.getVoucherWithIDKH(id);
+
+  const loadCTSP = async () => {
+    const result = await SellAPI.getAllProducts();
+    result.data.map((i)=> dispatch(AddProduct({id:i.idCTSP,soLuong:i.soLuong,linkAnh:i.linkAnh,tenSP:i.tenSP,tenKT:i.tenKT,tenMS:i.tenMS,maMS:i.maMS,loaiKM:i.loaiKM,giaTriKhuyenMai: parseInt(i.giaKhuyenMai, 10),giaBan:i.giaBan,tenKM:i.tenKM})))
+    setCTSPSS(result.data);
+  };
+
+  const loadKhachHang = async () => {
+    const result = await SellAPI.getAllCustomers();
+    result.data.map((i) =>
+      dispatch(
+        AddClient({
+          id: i.idND,
+          ma: i.maND,
+          ten: i.tenND,
+          cccd: i.cccd,
+          email: i.email,
+          gioiTinh: i.gioiTinh,
+          ngaySinh: new Date(i.ngaySinh * 1).toDateString("DD-MM-YYYY"),
+          anh: i.anh,
+          soDienThoai: i.sdt,
+          diem: i.diem,
+          trangThai: i.trangThai,
+        })
+      )
+    );
+  };
+
+  const load = async (id) => {
+    const result_hdct = await SellAPI.getAllHDCTByHD(id);
+    console.log("HDCT", result_hdct.data);
+    if (result_hdct.data.length > 0) {
+      result_hdct.data.map((i) => {  
+        dispatch(
+          LoadInvoice({
+            id : i.id,
+            soLuong: i.soLuong,
+            giaGiam: i.giaGiam,
+            total: i.giaSauGiam,
+            trangThai: i.trangThai,
+            giaBan: parseFloat(i.giaGiam)+parseFloat(i.giaSauGiam),
+            giaSauGiam: i.giaSauGiam,
+            tenSP: i.tenSP,
+            maMS: i.maMS,
+            tenMS: i.tenMS,
+            tenKT: i.tenKT,
+            hoaDon: i.idHD,
+            chiTietSanPham: i.idCTSP,
+            nguoiTao: i.nguoiTao,
+            linkAnh: i.linkAnh,
+            loaiKM: i.loaiKM,
+            tenKM: i.tenKM,
+            giaTriKhuyenMai: i.giaTriKhuyenMai,
+          })
+        );
+      });
+    }
+  };
+
+  const loadAllBill = async() => {
+    const result = await SellAPI.getAllHoaDonCho();
     console.log(result.data);
-    setVoucherByIDKH(result.data);
+    if (result.data.length > 0) {
+      setActiveKey(result.data[0].id);
+      result.data.map((item) => {
+        dispatch(
+          CreateBill({
+            id: item.id,
+            ma: item.ma,
+            nhanVien: item.nhanVien,
+            nguoiDung: item.nguoiDung,
+            gtNguoiDung: item.gtNguoiDung,
+            voucher: null,
+            ngayMua: null,
+            giaGoc: item.giaGoc,
+            giaGiamGia: item.giaGiamGia,
+            thanhTien: item.thanhTien,
+            diemSuDung: null,
+            giaTriDiem: null,
+            tenNguoiNhan: item.tenNguoiNhan,
+            soDienThoai: item.soDienThoai,
+            diaChi: item.diaChi,
+            qrCode: null,
+            ghiChu: item.ghiChu,
+            ngayDuKienNhan: null,
+            ngayNhan: "null",
+            ngayTraHang: null,
+            nguoiTao: item.nguoiTao,
+           // nguoiSua: item.nguoiSua,
+           // ngaySua: item.ngaySua,
+           // ngayTao: item.ngayTao,
+            trangThai: 0,
+            key: item.id,
+          })
+        );
+        load(item.id);
+      });
+    } else {
+      const result = SellAPI.getAllHoaDonChoHomNay();
+      const idHD = uuid();
+      const value = [{id:idHD,ma:"HDTQ" + new Date().getTime() + "-" + ((!result.data ? 0 : result.data.length)  + 1),trangThai : 0}]
+      dispatch(
+        CreateBill({ 
+          id: idHD,
+          ma: "HDTQ" + new Date().getTime() + "-" + ((!result.data ? 0 : result.data.length)  + 1),
+          nhanVien: null,
+          nguoiDung: null,
+          voucher: null,
+          ngayMua: null,
+          giaGoc: null,
+          giaGiamGia: null,
+          thanhTien: null,
+          diemSuDung: null,
+          giaTriDiem: null,
+          tenNguoiNhan: null,
+          soDienThoai: null,
+          diaChi: null,
+          qrCode: null,
+          ghiChu: null,
+          ngayDuKienNhan: null,
+          ngayNhan: "null",
+          ngayTraHang: null,
+          nguoiTao: null,
+         // nguoiSua: null,
+         // ngaySua: null,
+         // ngayTao: new Date(),
+          trangThai: 0,
+          key: idHD,
+        })
+      );
+      SellAPI.addBill(value[0]);
+      
+      setActiveKey(idHD);
+      console.log(value[0])
+
+    }
   };
 
   const [open, setOpen] = useState(false);
   const [openSanPham, setOpenSanPham] = useState(false);
-useEffect(() => {
-    voucherNoIDKH();
-  }, []);
 
-  // useEffect(() => {
-  //   voucherKH(voucherFromTable);
-  // }, [voucherFromTable]);
+
+
+  useEffect(() => {
+    loadCTSP();
+    voucherNoIDKH();
+    loadKhachHang();
+    loadAllBill();
+
+  }, []);
 
   const onChangeSoLuong = (value, record) => {
     console.log("value", value);
     console.log("prevvlue", prevValue);
+    console.log("record",record);
     if (prevValue === 0) {
       setPrevValue(undefined);
       return;
@@ -121,7 +261,7 @@ useEffect(() => {
           "Bạn có chắc chắn muốn xóa sản phẩm này ra khỏi giỏ hàng không không?",
         onOk: () => {
           dispatch(
-            RemoveInvoice({ chiTietSanPham: record.id, hoaDon: activeKey })
+            RemoveInvoice({ chiTietSanPham: record.chiTietSanPham, hoaDon: record.hoaDon })
           );
           dispatch(
             UpdatePushProduct({
@@ -129,6 +269,7 @@ useEffect(() => {
               soLuong: record.soLuong,
             })
           );
+          SellAPI.deleteInvoiceAndRollBackProduct(record.chiTietSanPham,record.hoaDon);
           data = ctspHD.filter((f) => f.hoaDon === activeKey);
           toast("✔️ Cập nhật giỏ hàng thành công!", {
             position: "top-right",
@@ -179,6 +320,7 @@ useEffect(() => {
             soLuong: value - record.soLuong,
           })
         );
+        SellAPI.updateSL(record.chiTietSanPham,activeKey,value);
       } else {
         dispatch(
           UpdateInvoice({
@@ -193,6 +335,8 @@ useEffect(() => {
             soLuong: value - record.soLuong,
           })
         );
+        SellAPI.updateSL(record.chiTietSanPham,activeKey,value);
+
       }
     }
   };
@@ -209,7 +353,7 @@ useEffect(() => {
     setOpenThanhToan(true);
   };
   const handleCloseSanPham = () => {
-setOpenSanPham(false);
+    setOpenSanPham(false);
   };
   const [openKhachHang, setOpenKhachHang] = useState(false);
 
@@ -229,7 +373,7 @@ setOpenSanPham(false);
 
   const dispatch = useDispatch();
   const handleClickAddHD = () => {
-    const maxKey = Math.max(...hoaDons.map((hd) => hd.key));
+   // const maxKey = Math.max(...hoaDons.map((hd) => hd.key));
     if (hoaDons.length >= 5) {
       return toast.error("Không được vượt quá 5 hóa đơn!", {
         position: "top-right",
@@ -242,12 +386,14 @@ setOpenSanPham(false);
         theme: "light",
       });
     }
-    if (maxKey > 0) {
+   // if (maxKey > 0) {
+      const result = SellAPI.getAllHoaDonChoHomNay();
       const idHD = uuid();
+      const value = [{id:idHD,ma:"HDTQ" + new Date().getTime() + "-" + ((!result.data ? 0 : result.data.length)  + 1),trangThai : 0}]
       dispatch(
         CreateBill({
           id: idHD,
-          ma: `HDTQ${maxKey + 1}`,
+          ma: "HDTQ" + new Date().getTime() + "-" + ((!result.data ? 0 : result.data.length)  + 1),
           nhanVien: "Phanh",
           nguoiDung: null,
           voucher: null,
@@ -271,43 +417,45 @@ setOpenSanPham(false);
           trangThai: 0,
           key: idHD,
         })
+
       );
-      initState.current++;
+      SellAPI.addBill(value[0]);
+     // initState.current++;
       setActiveKey(idHD);
-    } else {
-      const idHD = uuid();
-      dispatch(
-        CreateBill({
-          id: idHD,
-          ma: `HDTQ${initState.current}`,
-          nhanVien: "Phanh",
-          nguoiDung: null,
-          voucher: null,
-          ngayMua: null,
-          giaGoc: 0,
-          giaGiamGia: 0,
-          thanhTien: 0,
-          diemSuDung: 0,
-          giaTriDiem: null,
-          tenNguoiNhan: null,
-          soDienThoai: null,
-          diaChi: null,
-          qrCode: null,
-          ghiChu: null,
-          ngayDuKienNhan: null,
-          ngayNhan: "null",
-          ngayTraHang: null,
-          nguoiTao: "Phanh",
-          nguoiSua: null,
-          ngaySua: null,
-          trangThai: 0,
-          key: idHD,
-          //key:`${initState.current}`
-        })
-      );
-      initState.current++;
-      setActiveKey(idHD);
-    }
+    // } else {
+    //   const idHD = uuid();
+    //   dispatch(
+    //     CreateBill({
+    //       id: idHD,
+    //       ma: `HDTQ${initState.current}`,
+    //       nhanVien: "Phanh",
+    //       nguoiDung: null,
+    //       voucher: null,
+    //       ngayMua: null,
+    //       giaGoc: 0,
+    //       giaGiamGia: 0,
+    //       thanhTien: 0,
+    //       diemSuDung: 0,
+    //       giaTriDiem: null,
+    //       tenNguoiNhan: null,
+    //       soDienThoai: null,
+    //       diaChi: null,
+    //       qrCode: null,
+    //       ghiChu: null,
+    //       ngayDuKienNhan: null,
+    //       ngayNhan: "null",
+    //       ngayTraHang: null,
+    //       nguoiTao: "Phanh",
+    //       nguoiSua: null,
+    //       ngaySua: null,
+    //       trangThai: 0,
+    //       key: idHD,
+    //       //key:`${initState.current}`
+    //     })
+    //   );
+    //   initState.current++;
+    //   setActiveKey(idHD);
+    // }
   };
   // ///remove hóa đơn bằng redux
   const handleClickRemoveHD = (targetKey) => {
@@ -323,11 +471,38 @@ setOpenSanPham(false);
         theme: "light",
       });
     } else {
-      dispatch(
-RemoveBill(hoaDons.filter((hoaDon) => hoaDon.key == targetKey)[0])
-      );
-
-      initState.current--;
+      Modal.confirm({
+        title: "Thông báo",
+        content:
+          "Bạn có chắc chắn muốn xóa hóa đơn này không?",
+        onOk: () => {
+          dispatch(
+            RemoveBill(hoaDons.filter((hoaDon) => hoaDon.key == targetKey)[0])
+          );
+          HoaDonAPI.huyHoaDon(targetKey);
+          const list = ctspHD.filter((item)=> item.hoaDon === targetKey);
+          list.map((i) => SellAPI.deleteInvoiceAndRollBackProduct(i.chiTietSanPham,targetKey));
+          initState.current--;
+          toast("✔️ Cập nhật giỏ hàng thành công!", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          // form.finish();
+        },
+        footer: (_, { OkBtn, CancelBtn }) => (
+          <>
+            <CancelBtn />
+            <OkBtn />
+          </>
+        ),
+      });
+      
       // setActiveKey(initState.current);
     }
   };
@@ -337,6 +512,7 @@ RemoveBill(hoaDons.filter((hoaDon) => hoaDon.key == targetKey)[0])
       handleClickAddHD();
     } else {
       handleClickRemoveHD(targetKey);
+      
     }
   };
 
@@ -421,7 +597,7 @@ RemoveBill(hoaDons.filter((hoaDon) => hoaDon.key == targetKey)[0])
                 ).format(record.giaBan)} VNĐ`}</del>
                 <br></br>
                 {`${Intl.NumberFormat("en-US").format(
-                  record.giaBan - record.giaGiam
+                  record.giaSauGiam
                 )} VNĐ`}
               </span>
             )}
@@ -437,7 +613,7 @@ RemoveBill(hoaDons.filter((hoaDon) => hoaDon.key == targetKey)[0])
         <InputNumber
           min={0}
           value={record.soLuong}
-onChange={(value) => onChangeSoLuong(value, record)}
+          onChange={(value) => onChangeSoLuong(value, record)}
         />
       ),
     },
@@ -455,9 +631,12 @@ onChange={(value) => onChangeSoLuong(value, record)}
             <div
               style={{
                 backgroundColor: `${record.maMS}`,
+                borderColor: `${record.maMS === '#ffffff' || '#fafafa' ? '#000000' : '#ffffff'}`,
                 borderRadius: 30,
+                border: "1px solid",
                 width: 25,
                 height: 25,
+                
               }}
             ></div>
           </>
@@ -486,7 +665,7 @@ onChange={(value) => onChangeSoLuong(value, record)}
                 onOk: () => {
                   dispatch(
                     RemoveInvoice({
-                      chiTietSanPham: record.id,
+                      chiTietSanPham: record.chiTietSanPham,
                       hoaDon: activeKey,
                     })
                   );
@@ -496,6 +675,7 @@ onChange={(value) => onChangeSoLuong(value, record)}
                       soLuong: record.soLuong,
                     })
                   );
+                  SellAPI.deleteInvoiceAndRollBackProduct(record.chiTietSanPham,record.hoaDon);
                   data = ctspHD.filter((f) => f.hoaDon === activeKey);
                   toast("✔️ Cập nhật giỏ hàng thành công!", {
                     position: "top-right",
@@ -546,7 +726,7 @@ onChange={(value) => onChangeSoLuong(value, record)}
   return (
     <div className="container border-1">
       <div className="text-end mt-3 me-4 mb-3">
-{/* <Button type="primary" onClick={add} >Tạo hóa đơn</Button> */}
+        {/* <Button type="primary" onClick={add} >Tạo hóa đơn</Button> */}
         <Button type="primary" onClick={handleClickAddHD}>
           Tạo hóa đơn
         </Button>
@@ -564,7 +744,7 @@ onChange={(value) => onChangeSoLuong(value, record)}
           {hoaDons.map(
             (tab) => (
               (data = ctspHD.filter((f) => f.hoaDon === activeKey)),
-              (KH = client.filter((k) => k.activeKey === activeKey)),
+              // (KH = client.filter((k) => k.activeKey === activeKey)),
               (lengthSP = ctspHD
                 .filter((f) => f.hoaDon === tab.key)
                 .reduce(
@@ -623,7 +803,7 @@ onChange={(value) => onChangeSoLuong(value, record)}
                       </div>
                       <>
                         {data.length > 0 ? (
-<Table
+                          <Table
                             className="text-center"
                             dataSource={data}
                             columns={columns}
@@ -690,7 +870,7 @@ onChange={(value) => onChangeSoLuong(value, record)}
                             <p>
                               Số điện thoại:{" "}
                               <Tag color="#cccccc" className="rounded-pill">
-000-0000-000
+                                000-0000-000
                               </Tag>
                             </p>
                           </span>
@@ -701,13 +881,19 @@ onChange={(value) => onChangeSoLuong(value, record)}
                               <Tag
                                 bordered={false}
                                 color={
-                                  tab.gtNguoiDung === "true"
+                                  client.filter(
+                                    (i) => i.id === tab.nguoiDung
+                                  )[0].gioiTinh === "true"
                                     ? "processing"
                                     : "#FFB6C1"
                                 }
                                 className="rounded-pill"
                               >
-                                {tab.tenNguoiDung}
+                                {
+                                  client.filter(
+                                    (i) => i.id === tab.nguoiDung
+                                  )[0].ten
+                                }
                               </Tag>
                             </p>
                             <p>
@@ -715,7 +901,9 @@ onChange={(value) => onChangeSoLuong(value, record)}
                               <Tag
                                 bordered={false}
                                 color={
-                                  tab.gtNguoiDung === "true"
+                                  client.filter(
+                                    (i) => i.id === tab.nguoiDung
+                                  )[0].gioiTinh === "true"
                                     ? "processing"
                                     : "#FFB6C1"
                                 }
@@ -725,6 +913,7 @@ onChange={(value) => onChangeSoLuong(value, record)}
                                   client.filter(
                                     (i) => i.id === tab.nguoiDung
                                   )[0].soDienThoai
+                                  //.soDienThoai
                                 }
                               </Tag>
                             </p>
@@ -737,7 +926,7 @@ onChange={(value) => onChangeSoLuong(value, record)}
                     <hr></hr>
                     <div className="container-fluid row">
                       <div className="col-md-7">
-                        {isSwitchOn && <DiaChiGiaoHang></DiaChiGiaoHang>}
+                        {isSwitchOn && <DiaChiGiaoHang />}
                       </div>
                       <div className="col-md-5">
                         <h4 className="fw-bold">
@@ -758,7 +947,7 @@ onChange={(value) => onChangeSoLuong(value, record)}
                               />
                             }
                             style={{ marginLeft: 12 }}
-></Button>
+                          ></Button>
                           <ModalThanhToan
                             openThanhToan={openThanhToan}
                             setOpenThanhToan={setOpenThanhToan}
@@ -815,7 +1004,7 @@ onChange={(value) => onChangeSoLuong(value, record)}
                                         Mã giảm giá: {option.ma}
                                         <br></br>
                                         Điều kiện:
-{Intl.NumberFormat("en-US").format(
+                                        {Intl.NumberFormat("en-US").format(
                                           option.dieuKien
                                         )}{" "}
                                         VNĐ
@@ -869,7 +1058,7 @@ onChange={(value) => onChangeSoLuong(value, record)}
                                         VNĐ
                                         <br></br>
                                         Giảm:
-{option.loaiVoucher === "Phần trăm"
+                                        {option.loaiVoucher === "Phần trăm"
                                           ? option.mucDo + "% "
                                           : `${Intl.NumberFormat(
                                               "en-US"
@@ -927,7 +1116,7 @@ onChange={(value) => onChangeSoLuong(value, record)}
                                 data.reduce((accumulator, currentProduct) => {
                                   return accumulator + currentProduct.total;
                                 }, 0)
-)} VND`}
+                              )} VND`}
                             </h6>
                           </div>
                           <div className="col-md-4">
@@ -968,7 +1157,6 @@ onChange={(value) => onChangeSoLuong(value, record)}
                     000-0000-000
                   </Tag>
                 </p>
-                ,
               </span>
             </div>
 
@@ -1012,7 +1200,7 @@ onChange={(value) => onChangeSoLuong(value, record)}
                       placeholder="Lựa chọn voucher"
                       optionFilterProp="children"
                       onChange={onChangeVoucher}
-// onSearch={onSearchVoucher}
+                      // onSearch={onSearchVoucher}
                       disabled
                     >
                       {voucherNoLimited ? (
@@ -1078,7 +1266,7 @@ onChange={(value) => onChangeSoLuong(value, record)}
                 </h6>
                 <div className="row">
                   <div className="col-md-8">
-<h6 className="mt-4">Tiền hàng:</h6>
+                    <h6 className="mt-4">Tiền hàng:</h6>
                     <h6 className="mt-4">Phí vận chuyển:</h6>
                     <h6 className="mt-4">Giảm giá:</h6>
                     <h6 className="mt-4">Điểm hiện tại:</h6>

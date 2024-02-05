@@ -43,6 +43,7 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
       })
     );
     await SellAPI.getVoucherWithIDKH(record.id).then(res => onVoucher(res));
+    SellAPI.updateKH(activeKey,record.id);
     setOpenKhachHang(false);
   };
 
@@ -51,6 +52,7 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
 
   const handleClickRemoveClient = (record) => {
     dispatch(UpdateNullClient({ key: activeKey }));
+    SellAPI.updateReturnKhachLe(activeKey);
     onVoucher("");
     setOpenKhachHang(false);
   };
