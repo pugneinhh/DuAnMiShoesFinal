@@ -271,25 +271,7 @@ export default function HoaDonDetail() {
                       <TimelineEvent color="#e6e3e3" />
                     </Flex>
                   )}
-                  <Flex horizontal>
-                    <TimelineEvent
-                      color="#3d874d"
-                      icon={icon[trangThai]}
-                      index={trangThai}
-                      values={trangThai}
-                      // indexClick={({ trangThai }) => setValue({ trangThai })}
-                      isOpenEnding={true}
-                      title={"Chờ xác nhận"}
-                      subtitle={moment(ngay[trangThai]).format(
-                        "hh:mm:ss DD/MM/YYYY"
-                      )}
-                    />
-                    <TimelineEvent color="#e6e3e3" />
-                    <TimelineEvent color="#e6e3e3" />
-                    <TimelineEvent color="#e6e3e3" />
-                    <TimelineEvent color="#e6e3e3" />
-                    <TimelineEvent color="#e6e3e3" />
-                  </Flex>
+           
                 </Timeline>
               ) : (
                 <Timeline minEvents={6} index={trangThai} placeholder>
@@ -589,9 +571,11 @@ export default function HoaDonDetail() {
         </div>
 
         {/* xác nhận đơn hàng */}
+        
         <div className="col-md-2 ">
           <>
-            <>
+          {loaiHD==0?      
+                <>
               {trangThai == 0 ? (
                 <Button className="ms-5 " type="primary" onClick={showModal}>
                   {textButton[trangThai]}
@@ -613,9 +597,12 @@ export default function HoaDonDetail() {
                   {textButton[trangThai]}
                 </Button>
               ) : (
-                <></>
+                <>
+                </>
               )}
-            </>
+            </>  : <> </>
+            }
+
             <Modal
               title="Xác nhận đơn hàng"
               footer={[]}
