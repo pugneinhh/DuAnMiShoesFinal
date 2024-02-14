@@ -4,26 +4,31 @@ import { ToastContainer, toast } from "react-toastify";
 import { SanPhamClientAPI } from "../../../pages/censor/api/home/sanPham/sanPham.api";
 const ModalDetailSP = (props) => {
   const { openModalDetailSP, setOpenModalDetailSP, idCt, setidCTSP } = props;
-  const [top, setTop] = useState("none");
-  const [bottom, setBottom] = useState("bottomRight");
   const [largeImage, setLargeImage] = useState('');
       useEffect(() => {
        loadCTSP();
     
       }, []);
   const [ChiTietSanPham, setChiTietSanPham] = useState([]);
+  const [selectedMauSac, setSelectedMauSac] = useState(null);
+  const [selectedSize, setSelectedSize] = useState(null);
   //  const [IDSanPham, setIDSanPham] = useState('');
+
+  useEffect(() => {
+   loadCTSP();
+  }, [])
   const loadCTSP = () => {
-    // console.log(result.data);
     SanPhamClientAPI.getCTSP(idCt).then((res) => {
       setChiTietSanPham(res.data);
-      console.log(res.data);
+      console.log("list sp",res.data);
+      setSelectedMauSac(res.data.mauSacID);
+      setSelectedSize(res.data.kichThuocID);
       loadListMauSacBySP(res.data.sanPhamID);
       loadListSizeBySP(res.data.sanPhamID);
       setLargeImage(res.data.anh);
     });
   };
-
+  
    const [ListMauSacBySP, setListMauSacBySP] = useState([]);
     const loadListMauSacBySP = (IDSP) => {
       SanPhamClientAPI.getListMauSacBySP(IDSP).then((res) => {
@@ -36,6 +41,7 @@ const ModalDetailSP = (props) => {
            setListSizeBySP(res.data);
          });
        };
+       console.log("selected mauSac",ListSizeBySP);
   const handleImageClick = (url) => {
     setLargeImage(url);
   };
@@ -44,7 +50,21 @@ const ModalDetailSP = (props) => {
     setidCTSP("");
   };
 
-  console.log('listtttttttttt',ListSizeBySP);
+
+  const handleMauSacClick = (mauSacId) => {
+    // Update the selected color when a button is clicked
+    setSelectedMauSac(mauSacId);
+  };
+
+  const handleSizeClick = (sizeId) => {
+    // Update the selected size when a button is clicked
+    console.log("click size",sizeId);
+    setSelectedSize(sizeId);
+  };
+
+
+
+
   return (
     <Modal
       //   title="Voucher"
@@ -129,13 +149,15 @@ const ModalDetailSP = (props) => {
             {ListMauSacBySP.map((listMauSacBySP, index) => (
               <div className="col-md-1" key={index}>
                 <Button
-                  className="mt-1 "
+                  className={`mt-1 `}
                   style={{
                     backgroundColor: listMauSacBySP.maMau, //`${listSanPham.tenMauSac}`
                     borderRadius: 20,
                     width: 30,
                     height: 30,
+                    border: selectedMauSac === listMauSacBySP.mauSacID ? '1px solid #4096ff' : 'none',
                   }}
+                   onClick={() => handleMauSacClick(listMauSacBySP.mauSacID)}
                 ></Button>
               </div>
             ))}
@@ -144,14 +166,17 @@ const ModalDetailSP = (props) => {
           <h6>Size</h6>
           <div className="row mt-1">
           {ListSizeBySP.map((listsize, index) => (
-            <div className="col-md-1 me-2">
+            <div className="col-md-1 me-2" key={index}>
               <Button
-                className=" mt-2  "
+                className={`mt-2`}
                 style={{
                   borderRadius: 10,
                   width: 40,
                   height: 40,
+                  textAlign: 'center',
+                  border: selectedSize === listsize.kichThuocID ? '1px solid #4096ff' : '1px solid #d9d9d9',
                 }}
+                onClick={() => handleSizeClick(listsize.kichThuocID)}
               >
                 {listsize.tenKichThuoc}
               </Button>
