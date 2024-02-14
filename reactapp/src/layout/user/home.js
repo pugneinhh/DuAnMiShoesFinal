@@ -14,7 +14,6 @@ const contentStyle = {
 };
 const { TabPane } = Tabs;
 export const Home = ({ children }) => {
-
   const [products, setProducts] = useState([]);
   const [newProducts, setNewProducts] = useState([]);
   const [hotProducts, setHotProducts] = useState([]);
@@ -53,7 +52,6 @@ export const Home = ({ children }) => {
         <div>
           <img
             src="https://d-themes.com/react/molla/demo-10/images/home/sliders/slide-1.jpg"
-
             height={"450px"}
             width={"1296px"}
 

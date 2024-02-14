@@ -15,6 +15,10 @@ public class SanPhamClientController {
     public ResponseEntity<?> getDetail(@PathVariable("idCT") String id) {
         return  ResponseEntity.ok(SanPhamClientService.detailCTSPClient(id));
     }
+    @GetMapping("detailCTSPChiTiet/{idSP}/{idMS}/{idKT}")
+    public ResponseEntity<?> getDetailCTSP(@PathVariable("idSP") String idSP,@PathVariable("idMS") String idMS,@PathVariable("idKT") String idKT) {
+        return  ResponseEntity.ok(SanPhamClientService.detailCTSPClientByIdSPbyIdSizebyIdMs(idSP, idMS, idKT));
+    }
 
     @GetMapping("mau-sac-sp/{idSP}")
     public ResponseEntity<?> listMauSacBySPClient(@PathVariable("idSP") String id) {
