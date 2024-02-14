@@ -20,4 +20,10 @@
         url: `/client/sanpham/kich-thuoc-sp/${idctsp}`,
       });
     };
+    static getCTSPChange = (idsp,idmausac,idsize) => {
+      return requestAdmin({
+        method: "GET",
+        url: `client/sanpham/detailCTSPChiTiet/${idsp}/${idmausac}/${idsize}`,
+      });
+    };
   }

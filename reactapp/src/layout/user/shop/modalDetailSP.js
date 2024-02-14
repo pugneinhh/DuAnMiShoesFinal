@@ -12,8 +12,9 @@ const ModalDetailSP = (props) => {
   const [ChiTietSanPham, setChiTietSanPham] = useState([]);
   const [selectedMauSac, setSelectedMauSac] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
-  //  const [IDSanPham, setIDSanPham] = useState('');
-
+  const [IDSanPham, setIDSanPham] = useState('');
+  const [IDMauSac, setIDMauSac] = useState('');
+  const [IDSize, setIDSize] = useState('');
   useEffect(() => {
    loadCTSP();
   }, [])
@@ -21,14 +22,27 @@ const ModalDetailSP = (props) => {
     SanPhamClientAPI.getCTSP(idCt).then((res) => {
       setChiTietSanPham(res.data);
       console.log("list sp",res.data);
+      setIDSanPham(res.data.sanPhamID);
       setSelectedMauSac(res.data.mauSacID);
+      setIDMauSac(res.data.mauSacID);
       setSelectedSize(res.data.kichThuocID);
+      setIDSize(res.data.kichThuocID);
       loadListMauSacBySP(res.data.sanPhamID);
       loadListSizeBySP(res.data.sanPhamID);
       setLargeImage(res.data.anh);
     });
   };
-  
+  const loadCTSPChange = () => {
+    console.log("ídap",IDSanPham,'idms',IDMauSac,'idSize',IDSize);
+    SanPhamClientAPI.getCTSPChange(IDSanPham,IDMauSac,IDSize).then((res) => {
+      // setChiTietSanPham(res.data);
+      console.log("list sp change",res.data);
+      setIDSanPham(res.data.sanPhamID);
+      setIDMauSac(res.data.mauSacID);
+      setIDSize(res.data.kichThuocID);
+      // setLargeImage(res.data.anh);
+    });
+  };
    const [ListMauSacBySP, setListMauSacBySP] = useState([]);
     const loadListMauSacBySP = (IDSP) => {
       SanPhamClientAPI.getListMauSacBySP(IDSP).then((res) => {
@@ -41,7 +55,7 @@ const ModalDetailSP = (props) => {
            setListSizeBySP(res.data);
          });
        };
-       console.log("selected mauSac",ListSizeBySP);
+      
   const handleImageClick = (url) => {
     setLargeImage(url);
   };
@@ -53,13 +67,16 @@ const ModalDetailSP = (props) => {
 
   const handleMauSacClick = (mauSacId) => {
     // Update the selected color when a button is clicked
+    setIDMauSac(mauSacId);
     setSelectedMauSac(mauSacId);
+    loadCTSPChange();
   };
 
   const handleSizeClick = (sizeId) => {
     // Update the selected size when a button is clicked
-    console.log("click size",sizeId);
+    setIDSize(sizeId);
     setSelectedSize(sizeId);
+    loadCTSPChange();
   };
 
 
