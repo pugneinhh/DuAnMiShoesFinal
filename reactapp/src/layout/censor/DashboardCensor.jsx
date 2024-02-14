@@ -29,25 +29,51 @@ import {
   SidebarHeader,
   SidebarFooter,
 } from "react-pro-sidebar";
-import { Avatar, Badge, Button, Layout, theme, Image, FloatButton } from "antd";
+import {
+  Avatar,
+  Badge,
+  Button,
+  Layout,
+  theme,
+  Image,
+  FloatButton,
+  Dropdown,
+  Typography,
+  Space,
+} from "antd";
 import { IoNotifications } from "react-icons/io5";
 import { FaUserAlt } from "react-icons/fa";
-import { get, set } from "local-storage"
+import { get, set } from "local-storage";
 import logoShop from "../../assets/images/logo.png";
 const { Header, Sider, Content } = Layout;
 const DashboardCensor = ({ children }) => {
   const [userName, setUserName] = useState("");
   const [linkAnh, setLinkAnh] = useState("");
   useEffect(() => {
-    const storedData = get('userData');
+    const storedData = get("userData");
     setUserName(storedData.ten);
-    setLinkAnh(storedData.anh)
+    setLinkAnh(storedData.anh);
   }, []);
 
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+  const items = [
+    {
+      key: "1",
+      label: "Đổi mật khẩu",
+    },
+    {
+      key: "2",
+      label: "Thông tin ",
+    },
+    {
+      key: "3",
+      label: "Đăng xuất",
+    },
+  ];
+
   return (
     <Layout className="layout-censor">
       <Sider trigger={null} collapsible collapsed={collapsed} width={235}>
@@ -267,19 +293,35 @@ const DashboardCensor = ({ children }) => {
                   style={{ backgroundColor: "#f7faf9" }}
                 />
               </Badge>
-            </a> 
-            <Avatar
-              shape="circle"
-              className="align-content-center"
-              size="large"
-              src={linkAnh}
-              style={{ marginLeft: 40 }}
-            />
-            <div className="bold ms-2">
+            </a>
+
+            <Dropdown
+              menu={{
+                items,
+                selectable: true,
+                defaultSelectedKeys: ["3"],
+              }}
+              className="ms-4"
+            >
+              <Typography.Link>
+                <Space>
+                  <Avatar
+                    shape="circle"
+                    className="align-content-center"
+                    size="large"
+                    src={linkAnh}
+                    style={{ marginLeft: 40 }}
+                  />
+      
+                </Space>
+   
+              </Typography.Link>
+    
+            </Dropdown>
+
+                                 <div className="bold ms-2">
               <strong>{userName}</strong>
             </div>
-           
-
           </div>
         </Header>
         <Content
