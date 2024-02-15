@@ -69,7 +69,13 @@ const ModalDetailSP = (props) => {
     // Update the selected color when a button is clicked
     setIDMauSac(mauSacId);
     setSelectedMauSac(mauSacId);
+    // window.location.href = `/client/sanpham/kich-thuoc-sp/${IDSanPham}/${mauSacId}`;
+     SanPhamClientAPI.changeListSizeBySPandMS(IDSanPham,mauSacId).then((res) => {
+       setListSizeBySP(res.data);
+     });
     loadCTSPChange();
+    console.log("id ms ne", IDMauSac );
+    console.log("id ms ne", IDSanPham);
   };
 
   const handleSizeClick = (sizeId) => {

@@ -22,5 +22,10 @@ public class SanPhamClientService {
     }
 
     public List<ListMauSacBySPClientRespon> listMauSacBySPClient(String id){return ctspRepository.listMauSacBySPClient(id);}
+
+
     public List<ListSizeBySPClientRespon> listSizeBySPClient(String id){return ctspRepository.listSizeBySPClient(id);}
+    public  List<ListSizeBySPClientRespon> listSizeBySPandIDmsClient(String idSP,String idMS){
+        return ctspRepository.listSizeBySPandIDmsClient(idSP, idMS);
+    }
 }

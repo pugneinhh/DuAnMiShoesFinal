@@ -166,6 +166,16 @@ public interface CTSPRepository extends JpaRepository<ChiTietSanPham, String> {
                      """, nativeQuery = true)
     List<ListSizeBySPClientRespon> listSizeBySPClient(@Param("idSP") String idSP);
 
+    //list size by id màu sắc client
+    @Query(value = """
+                 SELECT distinct kich_thuoc.id as kichThuocID, kich_thuoc.ten as tenKichThuoc FROM chi_tiet_san_pham
+                   join san_pham on chi_tiet_san_pham.san_pham_id = san_pham.id
+                    join kich_thuoc on chi_tiet_san_pham.kich_thuoc_id =kich_thuoc.id  where san_pham_id=:idSP 
+                     and mau_sac_id=:idMS and so_luong >0
+                    order by kich_thuoc.ten
+                     """, nativeQuery = true)
+    List<ListSizeBySPClientRespon> listSizeBySPandIDmsClient(@Param("idSP") String idSP,@Param("idMS") String idMS);
+
     //detail ctsp by id san pham , id mau sac, id size
     @Query(value = """
         SELECT o.id AS id,o.mo_ta AS moTa ,sp.id AS sanPhamID,sp.ten AS tenSP ,kt.id AS kichThuocID,ms.id AS mauSacID,cl.id AS chatLieuID, cl.ten as tenCL,dc.id AS deGiayID,dc.ten as tenDeGiay,dm.id AS danhMucID

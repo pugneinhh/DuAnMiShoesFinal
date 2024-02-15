@@ -28,4 +28,8 @@ public class SanPhamClientController {
     public ResponseEntity<?> listSizeBySPClient(@PathVariable("idSP") String id) {
         return  ResponseEntity.ok(SanPhamClientService.listSizeBySPClient(id));
     }
+    @GetMapping("kich-thuoc-sp/{idSP}/{idMS}")
+    public ResponseEntity<?> listSizeBySPandIDmsClient(@PathVariable("idSP") String idSP,@PathVariable("idMS") String idMS) {
+        return  ResponseEntity.ok(SanPhamClientService.listSizeBySPandIDmsClient(idSP,idMS));
+    }
 }
