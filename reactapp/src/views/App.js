@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import AuthGuard from "../guard/AuthGuard";
 import DashboardCensor from "../layout/censor/DashboardCensor";
 import NotFoud from "../pages/404/NotFoud";
+import NotAccess from "../pages/403/NotAccess";
 import { DashboardClient } from "../layout/user/DashboardClient";
 import { GetLoading } from "../store/reducer/Loading.reducer";
 import { useAppSelector } from "../store/redux/hook";
@@ -71,6 +72,7 @@ function App() {
         <Suspense>
           <Routes>
             <Route path="*" element={<NotFoud />} />
+            <Route path="/403" element={<NotAccess />} />
             <Route
               path="/"
               element={<Navigate replace to="/admin-thong-ke" />}
