@@ -28,21 +28,14 @@ const ModalDetailSP = (props) => {
       setLargeImage(res.data.anh);
     });
   };
-  // const loadCTSPChange = () => {
+  const loadCTSPChange = () => {
 
-  //   SanPhamClientAPI.getCTSPChange(IDSanPham,IDMauSac,IDSize).then((res) => {
-  //     // setChiTietSanPham(res.data);
-  //     console.log("list sp change",res.data);
-  //     setIDSanPham(res.data.sanPhamID);
-  //     setSelectedMauSac(res.data.mauSacID);
-  //     setIDMauSac(res.data.mauSacID);
-  //     setSelectedSize(res.data.kichThuocID);
-  //     setIDSize(res.data.kichThuocID);
-  //     loadListMauSacBySP(IDSanPham);
-  //     loadListSizeBySP(IDSanPham);
-  //   });
+    SanPhamClientAPI.getCTSPChange(IDSanPham,selectedMauSac,selectedSize).then((res) => {
+      setChiTietSanPham(res.data);
+      console.log("list sp change",res.data);
+    });
 
-  // };
+  };
   const [ListMauSacBySP, setListMauSacBySP] = useState([]);
   const loadListMauSacBySP = (IDSP) => {
     SanPhamClientAPI.getListMauSacBySP(IDSP).then((res) => {
@@ -80,7 +73,7 @@ const ModalDetailSP = (props) => {
       }
 
     });
-    // loadCTSPChange();
+    loadCTSPChange();
     console.log("id ms ne", IDMauSac);
     console.log("id ms ne", IDSanPham);
   };
@@ -89,7 +82,7 @@ const ModalDetailSP = (props) => {
     // Update the selected size when a button is clicked
     setIDSize(sizeId);
     setSelectedSize(sizeId);
-    // loadCTSPChange();
+    loadCTSPChange();
   };
 
 
@@ -165,7 +158,6 @@ const ModalDetailSP = (props) => {
           </div>
         </div>
         <div className="col-md-6 ">
-          {idCt}
           <h3>{ChiTietSanPham.tenSP}</h3>
           <h5 className="mb-3" style={{ color: "red" }}>
             {Intl.NumberFormat("en-US").format(ChiTietSanPham.giaBan)}
