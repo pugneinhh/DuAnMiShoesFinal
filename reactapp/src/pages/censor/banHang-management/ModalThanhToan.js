@@ -24,6 +24,26 @@ const ModalThanhToan = (props) => {
     const data = payDetail.filter((item)=> item.hoaDon === hoaDon);
     const navigate = useNavigate();
 
+  const [storedData, setStoredData] = useState(null);
+
+  useEffect(() => {
+    // Lấy dữ liệu từ localStorage khi component được tạo ra
+    const dataFromLocalStorage = localStorage.getItem('userData');
+
+    // Kiểm tra xem có dữ liệu trong localStorage không
+    if (dataFromLocalStorage) {
+      const parsedData = JSON.parse(dataFromLocalStorage);
+      const nameFromData = parsedData.userID;
+
+      if (nameFromData) {
+        // Cập nhật state nếu có giá trị
+        setStoredData(nameFromData);
+      }
+      // Nếu có, cập nhật state
+      //setStoredData(dataFromLocalStorage);
+    }
+    },[]);
+    console.log("Nhân viên",storedData);
     const handleClose = () => {
         setOpenThanhToan(false);
         console.log("đóng")
@@ -40,15 +60,20 @@ const ModalThanhToan = (props) => {
     const handleTienMat = () => {
         dispatch(AddPayDetail({hoaDon: hoaDon,phuongThuc:0,soTien:money}));
         dispatch(AddPay({hoaDon: hoaDon,phuongThuc:0,tienMat:money}));
+        const value = [{hoaDon:hoaDon,nguoiTao:storedData,tongTien:money}]
+        SellAPI.thanhToanTienMat(value[0]);
         setTongThanhToan (parseFloat(tongThanhToan) + parseFloat(money));
         setMoney(0);
     }
 
     const handleChuyenKhoan = () => {
+        
+  
+        console.log("Hóa đơn ck",hoaDon);
+        console.log("Tiền ck",money);
         linkVNP();
-        dispatch(AddPayDetail({hoaDon: hoaDon,phuongThuc : 1,soTien: money}));
+        dispatch(AddPayDetail({hoaDon: hoaDon,phuongThuc:1,soTien: money}));
         setTongThanhToan(parseFloat(tongThanhToan) + parseFloat(money));
-
         setTienCK(money);
         setMoney(0);
         
@@ -63,15 +88,16 @@ const ModalThanhToan = (props) => {
         const dataHoaDon = hoaDons.filter((item) => item.id === hoaDon);
         console.log(dataHoaDon[0]);
         // Hóa đơn 
-        const addHD = async() => {
-          const dataAdd =  await SellAPI.addBill(dataHoaDon[0]);
-        // Chi tiết hóa đơn
-          const ctsp = ctspHD.filter((f)=> f.hoaDon === hoaDon);
-          Promise.all(ctsp.map(value => 
-           SellAPI.addInvoice(value)));
-        }
-        addHD();
+        // const addHD = async() => {
+        //   const dataAdd =  await SellAPI.addBill(dataHoaDon[0]);
+        // // Chi tiết hóa đơn
+        //   const ctsp = ctspHD.filter((f)=> f.hoaDon === hoaDon);
+        //   Promise.all(ctsp.map(value => 
+        //    SellAPI.addInvoice(value)));
+        // }
+        // addHD();
         // axios.post(`http://localhost:8080/ban-hang/thanh-toan`,dataHoaDon[0]);
+        SellAPI.thanhToanHoaDon(hoaDon);
         toast("Thanh toán thành công!", {
             position: "top-right",
             autoClose: 1000,
@@ -105,10 +131,15 @@ const ModalThanhToan = (props) => {
 
     const linkVNP =  () => {
            SellAPI.getLinkVnpay(hoaDon,money).then((res) => {
+            const value = [{hoaDon:hoaDon,nguoiTao:storedData,tongTien:money,phuongThucVnp:res.data.url.substring(res.data.url.indexOf('vnp_TxnRef')+11).substring(0,8)}];
               dispatch(AddPay({hoaDon: hoaDon,phuongThuc:1,chuyenKhoan:money,phuongThucVNP:res.data.url}));
+               SellAPI.thanhToanChuyenKhoan(value[0]);
               window.open(res.data.url, '_blank');
+              console.log("url",res.data.url.substring(res.data.url.indexOf('vnp_TxnRef')+11).substring(0,8)); // mã giao dịch
+
+           
           });
-          
+   
          
     };
     

@@ -3,6 +3,7 @@ package com.example.backend.model;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -45,4 +46,6 @@ public interface AdminBillForSellRespon {
     LocalDateTime getNgayTao();
     @Value("#{target.ngaySua}")
     LocalDateTime getNgaySua();
+    @Value("#{target.ngayDuKienNhan}")
+    Date getNgayDuKienNhan();
 }

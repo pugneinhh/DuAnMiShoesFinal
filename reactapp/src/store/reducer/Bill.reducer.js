@@ -78,6 +78,7 @@ const billSlice = createSlice({
       //  nguoiSua: data.nguoiSua,
       //  ngaySua: data.ngaySua,
         gtNguoiDung: null,
+        email:data.email,
         diemNguoiDung: null,
       };
       state.unshift(newBill);
@@ -125,6 +126,16 @@ const billSlice = createSlice({
         state[index].diemNguoiDung = updatedBill.diemNguoiDung;
       }
     },
+
+    UpdateVoucherToBill: (state, action) => {
+      const updatedBill = action.payload; // backend
+      const index = state.findIndex((period) => period.key === updatedBill.key);
+      console.log(index);
+      console.log(updatedBill);
+      if (index !== -1) {
+        state[index].voucher = updatedBill.voucher;
+      }
+    },
     UpdateNullClient: (state, action) => {
       const updatedBill = action.payload; // backend
       const index = state.findIndex((period) => period.key === updatedBill.key);
@@ -133,6 +144,14 @@ const billSlice = createSlice({
         state[index].tenNguoiDung = null;
         state[index].gtNguoiDung = null;
         state[index].diemNguoiDung = null;
+      }
+    },
+    UpdateNullVoucher: (state, action) => {
+      const updatedBill = action.payload; // backend
+      const index = state.findIndex((period) => period.key === updatedBill.key);
+      if (index !== -1) {
+        state[index].voucher = null;
+
       }
     },
   },
@@ -146,6 +165,8 @@ export const {
   GetBillByKey,
   UpdateKHToBill,
   UpdateNullClient,
+  UpdateNullVoucher,
+  UpdateVoucherToBill
 } = billSlice.actions;
 export default billSlice.reducer;
 export const GetBill = (state) => state.bill;
