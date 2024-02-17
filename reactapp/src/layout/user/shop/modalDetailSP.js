@@ -28,9 +28,9 @@ const ModalDetailSP = (props) => {
       setLargeImage(res.data.anh);
     });
   };
-  const loadCTSPChange = () => {
+  const loadCTSPChange = (idSP,mauSelect,sizeSelect) => {
 
-    SanPhamClientAPI.getCTSPChange(IDSanPham,selectedMauSac,selectedSize).then((res) => {
+    SanPhamClientAPI.getCTSPChange(idSP,mauSelect,sizeSelect).then((res) => {
       setChiTietSanPham(res.data);
       console.log("list sp change",res.data);
     });
@@ -49,6 +49,16 @@ const ModalDetailSP = (props) => {
     });
   };
 
+  const [initialRender, setInitialRender] = useState(true);
+
+  useEffect(() => {
+    if (initialRender) {
+      setInitialRender(false); // Đánh dấu đã render lần đầu
+    } else {
+      loadCTSPChange(IDSanPham, selectedMauSac, selectedSize);
+    }
+  }, [selectedMauSac, selectedSize]);
+
   const handleImageClick = (url) => {
     setLargeImage(url);
   };
@@ -56,8 +66,6 @@ const ModalDetailSP = (props) => {
     setOpenModalDetailSP(false);
     setidCTSP("");
   };
-
-
   const handleMauSacClick = (mauSacId) => {
     // Update the selected color when a button is clicked
     setIDMauSac(mauSacId);
@@ -68,21 +76,21 @@ const ModalDetailSP = (props) => {
       const kichThuocExists = res.data.some(item => item.kichThuocID === selectedSize);
       if (kichThuocExists) {
         setSelectedSize(selectedSize)
+       
       } else {
         setSelectedSize(res.data[0].kichThuocID)
       }
-
     });
-    loadCTSPChange();
-    console.log("id ms ne", IDMauSac);
-    console.log("id ms ne", IDSanPham);
+   
   };
+
+
+
 
   const handleSizeClick = (sizeId) => {
     // Update the selected size when a button is clicked
     setIDSize(sizeId);
     setSelectedSize(sizeId);
-    loadCTSPChange();
   };
 
 
