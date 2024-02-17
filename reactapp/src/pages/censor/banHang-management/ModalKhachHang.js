@@ -28,7 +28,7 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
   const dispatch = useDispatch();
   const client = useSelector(GetClient);
   const bill = useSelector(GetBill);
-  const idKH = bill.filter((item)=> item.id === activeKey)[0].nguoiDung;
+  const idKH = activeKey ? bill.filter((item)=> item.id === activeKey)[0].nguoiDung : "";
 
 
 

@@ -62,4 +62,7 @@ public interface VoucherRepository extends JpaRepository<Voucher, String> {
                                      v.ngay_ket_thuc AS ngayKetThuc,v.trang_thai AS trangThai FROM voucher v where v.id not in (select voucher.id from voucher  join nguoidung_voucher on nguoidung_voucher.voucher_id =voucher.id  ) and v.trang_thai='DANG_HOAT_DONG'
             """, nativeQuery = true)
     List<VoucherRespone> getVoucherTatCa();
+
+
+
 }
