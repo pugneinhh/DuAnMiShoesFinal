@@ -127,6 +127,7 @@ const ModalSanPham = (props) => {
     dispatch(AddInvoice({id:id,chiTietSanPham:record.id,tenSP:record.tenSP,maMS:record.maMS,linkAnh : record.linkAnh,tenKT:record.tenKT,giaBan: record.giaBan,hoaDon:activeKey,tenMS:record.tenMS,giaGiam:record.giaGiam,giaSauGiam:record.giaSauGiam,nguoiTao:record.nguoiTao,giaBan:record.giaBan,tenKM:record.tenKM,loaiKM:record.loaiKM,giaTriKhuyenMai:record.giaTriKhuyenMai}));
     dispatch(UpdateApartProduct({id:record.id,soLuong:1})); 
     SellAPI.addInvoice(hdct[0]);
+   // SellAPI.updateThanhTien(activeKey);
     setOpenSanPham(false);
   };
 

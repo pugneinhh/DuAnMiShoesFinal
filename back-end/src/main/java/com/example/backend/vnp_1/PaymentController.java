@@ -119,7 +119,9 @@ public class PaymentController {
 
         //Trả về một url
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", "/admin/ban-hang");
+        System.out.println("Mã TMN"+vnp_TmnCode);
+        headers.add("Location", "/admin-ban-hang");
+       // System.out.println("REturrn"+ ResponseEntity.status(HttpStatus.OK).body(paymentResDTO));
         return ResponseEntity.status(HttpStatus.OK).body(paymentResDTO);
     }
 

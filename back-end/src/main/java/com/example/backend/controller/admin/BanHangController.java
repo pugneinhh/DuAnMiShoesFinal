@@ -2,19 +2,19 @@ package com.example.backend.controller.admin;
 
 import com.example.backend.dto.request.HoaDonChiTietRequest;
 import com.example.backend.dto.request.HoaDonRequest;
+import com.example.backend.dto.request.LichSuHoaDonRequest;
 import com.example.backend.dto.response.ChiTietSanPhamForBanHang;
 import com.example.backend.entity.ChiTietSanPham;
 import com.example.backend.entity.CongThuc;
+import com.example.backend.entity.HoaDon;
 import com.example.backend.repository.CTSPRepository;
 import com.example.backend.repository.CongThucRepository;
-import com.example.backend.service.BanHangService;
-import com.example.backend.service.HoaDonChiTietService;
-import com.example.backend.service.HoaDonServicee;
-import com.example.backend.service.VoucherService;
+import com.example.backend.service.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -39,6 +39,9 @@ public class BanHangController {
 
     @Autowired
     HoaDonServicee hoaDonServicee;
+
+    @Autowired
+    LichSuHoaDonService lichSuHoaDonService;
 
     @GetMapping("/getHoaDonChoTaiQuay")
     public ResponseEntity<?> getHoaDonChoTaiQuay(){
@@ -90,7 +93,10 @@ public class BanHangController {
                                         @PathVariable("idCTSP")String idCTSP){
         return ResponseEntity.ok(hoaDonChiTietService.getOneHDCT(idHD,idCTSP));
     }
-
+    @PutMapping("/hoa-don/update-thanh-tien/{idHD}")
+    public ResponseEntity<?> updateThanhTien(String idHD) {
+        return ResponseEntity.ok(hoaDonServicee.updateThanhTien(idHD));
+    }
     @GetMapping("/hoa-don/hoa-don-cho")
     public ResponseEntity<?> getAllBill(){
         return ResponseEntity.ok(hoaDonServicee.getAllBill());
@@ -113,9 +119,19 @@ public class BanHangController {
 
     @PutMapping("/hoa-don/updateSL/{idCTSP}/{idHD}/{value}")
     public ResponseEntity<?> updateSL (@PathVariable("idCTSP")String idCTSP,@PathVariable("idHD") String idHD,@PathVariable("value") int value) {
+
         return ResponseEntity.ok(hoaDonChiTietService.updateSL(idCTSP,idHD,value));
     }
 
+    @PutMapping("/hoa-don/update-van-chuyen/{idHD}")
+    public ResponseEntity<?> updateVanChuyen (@PathVariable("idHD")String idHD, @RequestBody HoaDon hd){
+        return ResponseEntity.ok(hoaDonServicee.update(hd,idHD));
+    }
+
+    @PutMapping("/hoa-don/them-voucher/{idHD}/{idVoucher}")
+    public ResponseEntity<?> updateVoucherToHD(@PathVariable("idHD") String idHD, @PathVariable("idVoucher") String idVoucher) {
+        return ResponseEntity.ok(hoaDonServicee.addVoucherToHD(idHD,idVoucher));
+    }
 
     @GetMapping("/voucher-hop-le/{total}")
     public ResponseEntity<?> getVoucherHopLe(@PathVariable("total")String total){
@@ -141,9 +157,20 @@ public class BanHangController {
     public  ResponseEntity<?> updateNguoiDung(@PathVariable("idHD")String idHD) {
         return ResponseEntity.ok(hoaDonServicee.updateReturnKhachLe(idHD));
     }
+
     @PostMapping("/addHDClient")
     public  ResponseEntity<?> addHDClient(@RequestBody HoaDonRequest request) {
         request.setLoaiHoaDon(0);
         return ResponseEntity.ok(hoaDonServicee.add(request));
+
+
+    @PostMapping("/lich-su-hoa-don/them")
+    public ResponseEntity<?> themLichSuHoaDon (@RequestBody LichSuHoaDonRequest lichSuHoaDonRequest){
+        return ResponseEntity.ok(lichSuHoaDonService.addLichSuHoaDon(lichSuHoaDonRequest));
+    }
+
+    @PutMapping("/thanh-toan/hoa-don/{idHD}")
+    public ResponseEntity<?> thanhToanHoaDon (@PathVariable("idHD") String idHD ) {
+        return ResponseEntity.ok(hoaDonServicee.thanhToanHoaDon(idHD));
     }
 }

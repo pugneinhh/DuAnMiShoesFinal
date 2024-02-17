@@ -96,10 +96,10 @@ export class SellAPI{
         });
     };
 
-    static getLinkVnpay = (data,money) => {
+    static getLinkVnpay = (hoaDon,money) => {
         return requestAdmin({
             method : 'GET',
-            url: `/vnpayment/chuyen-khoan/${data}/${money}`,
+            url: `/vnppayment/chuyen-khoan/${hoaDon}/${money}`,
         });
     };
 
@@ -134,12 +134,56 @@ export class SellAPI{
             method : 'PUT',
             url: `/ban-hang/nguoi-dung/update-nguoi-dung/${idHD}/${idKH}`,
         })
-    }
+    };
 
     static updateReturnKhachLe = (idHD) => {
         return requestAdmin({
             method : 'PUT',
             url: `/ban-hang/nguoi-dung/update-khach-le/${idHD}`,
         })
+    };
+
+    static updateThanhTien = (idHD) => {
+        return requestAdmin({
+            method : 'PUT',
+            url: `/ban-hang/hoa-don/update-thanh-tien/${idHD}`,
+        });
+    };
+
+    static updateVoucherToHD = (idHD,idVoucher) => {
+        return requestAdmin({
+            method : 'PUT',
+            url: `/ban-hang/hoa-don/them-voucher/${idHD}/${idVoucher}`
+        });
+    };
+    static thanhToanTienMat = (data) => {
+        return requestAdmin({
+            method: 'POST',
+            url: `/admin/thanh-toan/thanh-toan-tien-mat`,
+            data : data,
+        });
+    };
+
+    static thanhToanChuyenKhoan = (data) => {
+        return requestAdmin({
+            method: 'POST',
+            url: `/admin/thanh-toan/thanh-toan-chuyen-khoan`,
+            data : data,
+        });
+    };  
+
+    static thanhToanHoaDon = (id) => {
+        return requestAdmin({
+            method: 'PUT',
+            url : `/ban-hang/thanh-toan/hoa-don/${id}`,
+        });
+    }
+
+    static updateVanChuyen = (idHD,data) => {
+        return requestAdmin({
+            method: 'PUT',
+            url: `/ban-hang/hoa-don/update-van-chuyen/${idHD}`,
+            data : data,
+        });
     }
 }
