@@ -11,7 +11,7 @@ import { FaSquareFacebook } from "react-icons/fa6";
 import { IoLogoGoogle } from "react-icons/io5";
 import { LoginAPI } from '../../pages/censor/api/login/loginApi';
 import { get, set } from "local-storage"
-
+import {GoogleLogin} from 'react-google-login';
 export const Login = () => {
   const nav = useNavigate();
   const [password, setPassword] = useState('');
@@ -137,12 +137,16 @@ export const Login = () => {
               <FaSquareFacebook size={30} className='me-2' />
               Continue with facebook
             </Button>
-
-            <Button className="fw-bold w-75 text-light  button-hihi" style={{ backgroundColor: '#55acee', marginLeft: 70, height: 40 }}>
+              <GoogleLogin
+              clientId='866945057159-3d3tjvimr8ncfj624en2tmsr3abk91ki.apps.googleusercontent.com'
+              cookiePolicy={'single_host_origin'}
+              isSignedIn={true}
+              buttonText="Login to Google"
+               className="fw-bold w-75 text-light  button-hihi" style={{ backgroundColor: '#55acee', marginLeft: 70, height: 40 }}/>
               <IoLogoGoogle size={30} className='me-1' />
               Continue with Email
-            </Button>
-
+          
+          
           </MDBCol>
 
         </MDBRow>

@@ -72,17 +72,18 @@ const ModalDetailSP = (props) => {
     // window.location.href = `/client/sanpham/kich-thuoc-sp/${IDSanPham}/${mauSacId}`;
      SanPhamClientAPI.changeListSizeBySPandMS(IDSanPham,mauSacId).then((res) => {
        setListSizeBySP(res.data);
+       console.log(res.data);
      });
-    loadCTSPChange();
+    // loadCTSPChange();
     console.log("id ms ne", IDMauSac );
-    console.log("id ms ne", IDSanPham);
+    console.log("id sp ne", IDSanPham);
   };
 
   const handleSizeClick = (sizeId) => {
     // Update the selected size when a button is clicked
     setIDSize(sizeId);
     setSelectedSize(sizeId);
-    loadCTSPChange();
+    // loadCTSPChange();
   };
 
 
