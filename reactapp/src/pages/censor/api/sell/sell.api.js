@@ -186,4 +186,11 @@ export class SellAPI{
             data : data,
         });
     }
+    static addBillClient = (data) => {
+        return requestAdmin({
+            method : 'POST',
+            url: '/ban-hang/addHDClient',
+            data: data,
+        });
+    };
 }
