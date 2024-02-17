@@ -162,7 +162,7 @@ public class BanHangController {
     public  ResponseEntity<?> addHDClient(@RequestBody HoaDonRequest request) {
         request.setLoaiHoaDon(0);
         return ResponseEntity.ok(hoaDonServicee.add(request));
-
+    }
 
     @PostMapping("/lich-su-hoa-don/them")
     public ResponseEntity<?> themLichSuHoaDon (@RequestBody LichSuHoaDonRequest lichSuHoaDonRequest){
