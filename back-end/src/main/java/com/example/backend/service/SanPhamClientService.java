@@ -17,7 +17,7 @@ public class SanPhamClientService {
     CTSPRepository ctspRepository;
     public DetailCTSPClientRespon detailCTSPClient(String id){return ctspRepository.detailCTSPClient(id);}
 
-    public  DetailCTSPClientRespon detailCTSPClientByIdSPbyIdSizebyIdMs(String idSP,String idKT,String idMS){
+    public  DetailCTSPClientRespon detailCTSPClientByIdSPbyIdSizebyIdMs(String idSP,String idMS,String idKT){
         return ctspRepository.detailCTSPClientByIdSPbyIdSizebyIdMs(idSP,idMS,idKT);
     }
 
@@ -28,4 +28,6 @@ public class SanPhamClientService {
     public  List<ListSizeBySPClientRespon> listSizeBySPandIDmsClient(String idSP,String idMS){
         return ctspRepository.listSizeBySPandIDmsClient(idSP, idMS);
     }
+
+
 }
