@@ -1,4 +1,5 @@
 package com.example.backend.service;
+import com.example.backend.dto.request.GioHangRequest;
 import com.example.backend.dto.request.HoaDonRequest;
 import com.example.backend.dto.request.hoadonsearch.HoaDonSearch;
 import com.example.backend.dto.request.sanphamsearch.BangConSearch;
@@ -96,6 +97,12 @@ public class HoaDonServicee {
     {
         return hoaDonRepository.timKiemHoaDon(hoaDonSearch);
     }
+//    public HoaDon addHoaDonClient(GioHangRequest request){
+//        HoaDon hd=new HoaDon();
+//        hd.setLoaiHoaDon(0);
+//        hd.setNguoiDung(NguoiDung.builder().id(request.getKhachHang()).build());
+//        return hoaDonRepository.save(hd);
+//    }
 //    public LichSuHoaDon update(LichSuHoaDon kh, String ma){
 //        Optional<LichSuHoaDon> optional =khachHangRespon.findById(ma);
 //        return optional.map(o->{

@@ -141,4 +141,9 @@ public class BanHangController {
     public  ResponseEntity<?> updateNguoiDung(@PathVariable("idHD")String idHD) {
         return ResponseEntity.ok(hoaDonServicee.updateReturnKhachLe(idHD));
     }
+    @PostMapping("/addHDClient")
+    public  ResponseEntity<?> addHDClient(@RequestBody HoaDonRequest request) {
+        request.setLoaiHoaDon(0);
+        return ResponseEntity.ok(hoaDonServicee.add(request));
+    }
 }
