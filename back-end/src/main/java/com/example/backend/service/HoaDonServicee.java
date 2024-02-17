@@ -1,4 +1,5 @@
 package com.example.backend.service;
+import com.example.backend.dto.request.GioHangRequest;
 import com.example.backend.dto.request.HoaDonRequest;
 import com.example.backend.dto.request.hoadonsearch.HoaDonSearch;
 import com.example.backend.dto.request.sanphamsearch.BangConSearch;
@@ -6,16 +7,22 @@ import com.example.backend.dto.response.AdminHoaDonDetailRespon;
 import com.example.backend.dto.response.AdminHoaDonResponn;
 import com.example.backend.dto.response.sanpham.DanhMucRespone;
 import com.example.backend.entity.HoaDon;
+import com.example.backend.entity.HoaDonChiTiet;
 import com.example.backend.entity.NguoiDung;
+import com.example.backend.entity.Voucher;
 import com.example.backend.model.AdminBillForSellRespon;
 import com.example.backend.model.AdminHoaDonSanPham;
+import com.example.backend.repository.HoaDonChiTietRepository;
 import com.example.backend.repository.HoaDonRepository;
 import com.example.backend.repository.NguoiDungRepository;
+import com.example.backend.repository.VoucherRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +35,11 @@ public class HoaDonServicee {
     @Autowired
     NguoiDungRepository nguoiDungRepository;
 
+    @Autowired
+    VoucherRepository voucherRepository;
+
+    @Autowired
+    HoaDonChiTietRepository hoaDonChiTietRepository;
     public List<AdminHoaDonResponn> getALL() {
         return hoaDonRepository.getALLHD();
     }
@@ -43,7 +55,7 @@ public class HoaDonServicee {
         hoaDon.setTrangThai(-1);
         return  hoaDonRepository.save(hoaDon);
     }
-    public List<AdminBillForSellRespon> getAllBillToday() {
+    public List<HoaDon> getAllBillToday() {
         return hoaDonRepository.getAllBillToday();
     }
 
@@ -79,6 +91,47 @@ public class HoaDonServicee {
 //         return hoaDonResponn.save(hoaDon);
 
     }
+
+    public HoaDon update(HoaDon hd,String idHD){
+        HoaDon hoaDon = findHoaDonbyID(idHD);
+        hoaDon.setDiaChi(hd.getDiaChi());
+        hoaDon.setNgayDuKienNhan(hd.getNgayDuKienNhan());
+        hoaDon.setTenNguoiNhan(hd.getTenNguoiNhan());
+        hoaDon.setSoDienThoai(hd.getSoDienThoai());
+        hoaDon.setEmail(hd.getEmail());
+        return hoaDonRepository.save(hoaDon);
+    }
+
+    public HoaDon addVoucherToHD(String idHD, String idVoucher) {
+        HoaDon hoaDon = hoaDonRepository.getHoaDonByIDHD(idHD);
+        Voucher voucher = voucherRepository.findById(idVoucher).get() ;
+        System.out.println("Hóa đơn"+hoaDon);
+        System.out.println("Voucherr"+voucher);
+        hoaDon.setVoucher(voucher);
+        BigDecimal giamToiDa = voucher.getGiamToiDa();
+        BigDecimal giam = voucher.getLoaiVoucher().equals("Tiền mặt") ?
+                ( BigDecimal.valueOf(voucher.getMucDo()).compareTo(giamToiDa) < 0 ?  BigDecimal.valueOf(voucher.getMucDo()) : giamToiDa ) :
+                ((hoaDon.getThanhTien().multiply(BigDecimal.valueOf(voucher.getMucDo())).divide(new BigDecimal(100))).compareTo(giamToiDa) < 0 ? (hoaDon.getThanhTien().multiply(BigDecimal.valueOf(voucher.getMucDo())).divide(new BigDecimal(100))) : giamToiDa);
+       // hoaDon.get
+        hoaDon.setGiaGiamGia(giam);
+        hoaDon.setThanhTien(hoaDon.getGiaGoc().subtract(giam));
+        return hoaDonRepository.save(hoaDon);
+    }
+
+    public HoaDon updateThanhTien(String idHD) { // khi chưa sử dụng voucher
+        List<HoaDonChiTiet> list = hoaDonChiTietRepository.getAllHDCTByIDHD(idHD);
+        HoaDon hoaDon = hoaDonRepository.findById(idHD).get();
+        System.out.println("List"+list.size());
+        System.out.println("Hóa đơn tiền"+hoaDon);
+        BigDecimal tong = new BigDecimal("0");
+        for (HoaDonChiTiet x : list) {
+           tong =  tong.add(x.getGiaSauGiam());
+        }
+        hoaDon.setGiaGoc(tong);
+        hoaDon.setThanhTien(tong);
+        hoaDon.setGiaGiamGia(new BigDecimal("0"));
+        return hoaDonRepository.save(hoaDon);
+    }
     public HoaDon findHoaDonbyID(String id){
         return  hoaDonRepository.findById(id).get();
     }
@@ -92,10 +145,27 @@ public class HoaDonServicee {
 
     }
 
+    public HoaDon thanhToanHoaDon(String idHD) {
+            HoaDon hoaDonCT=hoaDonRepository.findById(idHD).get();
+        hoaDonCT.setTrangThai(4);
+        hoaDonCT.setNgayMua(LocalDateTime.now());
+      return   hoaDonRepository.save(hoaDonCT);
+    }
+
+    public HoaDon addHoaDon (HoaDon hd){
+        return  hoaDonRepository.save(hd);
+    }
+
     public List<AdminHoaDonResponn> getTim(HoaDonSearch hoaDonSearch)
     {
         return hoaDonRepository.timKiemHoaDon(hoaDonSearch);
     }
+//    public HoaDon addHoaDonClient(GioHangRequest request){
+//        HoaDon hd=new HoaDon();
+//        hd.setLoaiHoaDon(0);
+//        hd.setNguoiDung(NguoiDung.builder().id(request.getKhachHang()).build());
+//        return hoaDonRepository.save(hd);
+//    }
 //    public LichSuHoaDon update(LichSuHoaDon kh, String ma){
 //        Optional<LichSuHoaDon> optional =khachHangRespon.findById(ma);
 //        return optional.map(o->{

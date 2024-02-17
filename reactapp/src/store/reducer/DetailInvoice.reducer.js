@@ -94,7 +94,7 @@ const detailInvoiceSlice=createSlice({
                 const newInvoice ={
                 stt: state.length +1,
                 id: data.id,
-                soLuong: 1,
+                soLuong: data.soLuong,
                 giaGiam : data.giaGiam,
                 total: data.giaSauGiam, 
                 trangThai : data.trangThai,
@@ -111,6 +111,7 @@ const detailInvoiceSlice=createSlice({
                 loaiKM: data.loaiKM,
                 tenKM: data.tenKM,
                 giaTriKhuyenMai: data.giaTriKhuyenMai,
+                total : parseFloat(data.soLuong) * parseFloat(data.giaSauGiam),
                 }
                 state.unshift(newInvoice);
                 state.forEach((item, index) => {

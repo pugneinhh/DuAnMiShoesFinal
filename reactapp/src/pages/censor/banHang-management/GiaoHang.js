@@ -1,23 +1,114 @@
-import { Col, Form, Input, Select } from "antd";
+import { Col, Form, Input, Select, Button, Modal } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AddressApi } from "../api/address/AddressApi";
+import { ShipAPI } from "../api/ship/ship.api";
 import LogoGHN from "../../../assets/images/LogoGHN.png";
-const DiaChiGiaoHang = (props) => {
+import { SellAPI } from "../api/sell/sell.api";
+import { toast, ToastContainer } from "react-toastify";
+
+const DiaChiGiaoHang = ({ money, quantity, hoaDon ,thongTinVanChuyen}) => {
   const [listProvince, setListProvince] = useState([]);
   const [listDistricts, setListDistricts] = useState([]);
   const [listWard, setListWard] = useState([]);
-   const [form] = Form.useForm();
+  const [districtID, setDistrictID] = useState("");
+  const [wardCode, setWardCode] = useState("");
+  const [timeShip, setTimeShip] = useState("");
+  const [nameClient, setNameClient] = useState("");
+  const [email, setEmail] = useState("");
+  const [sdt, setSDT] = useState("");
+  const [thanhPho, setThanhPho] = useState("");
+  const [quan, setQuan] = useState("");
+  const [phuong, setPhuong] = useState("");
+  const [soNha, setSoNha] = useState("");
+  const [form] = Form.useForm();
   const nav = useNavigate();
   const loadDataProvince = () => {
     AddressApi.fetchAllProvince().then((res) => {
       setListProvince(res.data.data);
     });
   };
+  const loadTimeAndMoney = async(districtID,valueWard,quantity) => {
+    setTimeShip(
+      await ShipAPI.fetchAllDayShip(districtID, valueWard).then(
+        (res) => res.data.data.leadtime * 1000
+      )
+    );
+    money(
+      await ShipAPI.fetchAllMoneyShip(
+        districtID,
+        valueWard,
+        quantity
+      ).then((res) => res.data.data.total)
+    );
+  }
+  console.log("Thông tin vận chuyển",thongTinVanChuyen)
+  let indexThanhPhoDaCo =  "";
+  let thanhPhoDaCo = "";
+  let diaChi1 = "";
+  let indexQuanDaCo = "";
+  let quanDaCo = "";
+  let diaChi2 = "";
+  let indexPhuongDaCo = ""; 
+  let phuongDaCo = "";
+  let diaChi3 = "";
+  let indexSoNhaDaCo = "";
+  let soNhaDaCo = "";
+  if (thongTinVanChuyen) {
+   indexThanhPhoDaCo =  thongTinVanChuyen.diaChi.lastIndexOf("/") ;
+   thanhPhoDaCo =  thongTinVanChuyen.diaChi.substring(indexThanhPhoDaCo + 1,thongTinVanChuyen.diaChi.length) ;
+   diaChi1 =  thongTinVanChuyen.diaChi.substring(0,indexThanhPhoDaCo) ;
+   indexQuanDaCo = diaChi1.lastIndexOf("/");
+   quanDaCo = diaChi1.substring(indexQuanDaCo + 1,diaChi1.length );
+   diaChi2 = diaChi1.substring(0,indexQuanDaCo);
+   indexPhuongDaCo = diaChi2.lastIndexOf("/");
+   phuongDaCo = diaChi2.substring(indexPhuongDaCo + 1, diaChi2.length );
+   diaChi3 = diaChi2.substring(0,indexPhuongDaCo);
+   indexSoNhaDaCo = diaChi3.lastIndexOf("/");
+   soNhaDaCo = diaChi3.substring(indexSoNhaDaCo + 1, diaChi3.length );
+   let districtID = "";
+   let valueWard = "";
+   let codeProvince = "";
+  //  AddressApi.fetchAllProvince().then((res) => {
+  //   codeProvince = res.data.data.filter((i) => i.ProvinceName === thanhPhoDaCo)[0].ProvinceID;
+
+  // });
+
+  // AddressApi.fetchAllProvinceDistricts(codeProvince).then(
+  //   (res) => {
+  //      districtID = res.data.data?.fillter((i) => i.DistrictName === quanDaCo)[0].DistrictID;
+  //   })
+  //   console.log("ID district",districtID);
+
+
+  //   AddressApi.fetchAllProvinceWard(districtID).then((res) => {
+  //     valueWard = res.data.data.fillter((i) => i.WardName === phuongDaCo)[0].WardCode;
+  //   });
+  //  loadTimeAndMoney(districtID,valueWard,quantity);
+  }
+  console.log("Thành phố đã có",thanhPhoDaCo);
+  console.log("Quận đã có",quanDaCo);
+  console.log("Phường đã có",phuongDaCo);
+  console.log("Số nhà đã có",soNhaDaCo)
 
   const [province, setProvince] = useState(null);
   const [district, setDistrict] = useState(null);
   const [ward, setWard] = useState(null);
+
+  const handleSubmit = async(value) => {
+    console.log(value);
+    const data = [
+      {
+        tenNguoiNhan: value.tenNguoiNhan,
+        soDienThoai: value.soDienThoai,
+        email: value.email,
+        diaChi: value.soNha + "/" + value.tenXa + "/" + value.tenHuyen + "/" + value.tenThanhPho,
+        ngayDuKienNhan: timeShip,
+      },
+    ];
+    console.log("dâta", data[0]);
+    await SellAPI.updateVanChuyen(hoaDon, data[0]);
+  };
 
   const handleProvinceChange = (value, valueProvince) => {
     form.setFieldsValue({ provinceId: valueProvince.valueProvince });
@@ -27,31 +118,85 @@ const DiaChiGiaoHang = (props) => {
       }
     );
     setProvince(valueProvince);
+    setThanhPho(value);
   };
+
+  const handleNameChange = (value) => {
+    setNameClient(value);
+    console.log("Tên", value);
+  };
+
+  const handleEmailChange = (value) => {
+    setEmail(value);
+  };
+
+  const handleSDTChange = (value) => {
+    setSDT(value);
+  };
+
+  const handleSoNhaChange = (value) => {
+    setSoNha(value);
+  };
+
 
   const handleDistrictChange = (value, valueDistrict) => {
     form.setFieldsValue({ toDistrictId: valueDistrict.valueDistrict });
+    setDistrictID(valueDistrict.valueDistrict);
     AddressApi.fetchAllProvinceWard(valueDistrict.valueDistrict).then((res) => {
       setListWard(res.data.data);
     });
     setDistrict(valueDistrict);
+    setQuan(value);
   };
 
-  const handleWardChange = (value, valueWard) => {
+  const handleWardChange = async (value, valueWard) => {
     form.setFieldsValue({ wardCode: valueWard.valueWard });
+    setWardCode(valueWard.valueWard);
+    setTimeShip(
+      await ShipAPI.fetchAllDayShip(districtID, valueWard.valueWard).then(
+        (res) => res.data.data.leadtime * 1000
+      )
+    );
+    money(
+      await ShipAPI.fetchAllMoneyShip(
+        districtID,
+        valueWard.valueWard,
+        quantity
+      ).then((res) => res.data.data.total)
+    );
+    console.log(
+      await ShipAPI.fetchAllDayShip(districtID, valueWard.valueWard).then(
+        (res) => res.data.data.leadtime * 1000
+      )
+    );
+    setPhuong(value);
     setWard(valueWard);
   };
+
+  const changeQuantity = async () => {
+    if (districtID && wardCode) {
+      money(
+        await ShipAPI.fetchAllMoneyShip(districtID, wardCode, quantity).then(
+          (res) => res.data.data.total
+        )
+      );
+    }
+  };
+  useEffect(() => {
+    changeQuantity();
+  }, [quantity]);
 
   useEffect(() => {
     loadDataProvince();
   }, []);
   return (
     <>
-      <Form className="mt-4">
+      <Form className="mt-4" onFinish={handleSubmit} form={form}>
         <Col span={25} style={{ marginRight: "20px" }}>
           <Form.Item
-            name="ten"
+            name="tenNguoiNhan"
             tooltip="Họ tên đầy đủ của bạn là gì?"
+            onChange={handleNameChange}
             rules={[
               {
                 required: true,
@@ -71,6 +216,9 @@ const DiaChiGiaoHang = (props) => {
                 }
               }}
               placeholder="Nhập họ và tên"
+              defaultValue={thongTinVanChuyen ? thongTinVanChuyen.tenNguoiNhan : ""}
+              // value={""}
+              // onChange={handleNameChange}
             />
           </Form.Item>
           <Form.Item
@@ -88,7 +236,11 @@ const DiaChiGiaoHang = (props) => {
               },
             ]}
           >
-            <Input placeholder="Nhập số điện thoại" />
+            <Input
+              placeholder="Nhập số điện thoại"
+              onChange={handleSDTChange}
+              defaultValue={thongTinVanChuyen ? thongTinVanChuyen.soDienThoai : ""}
+            />
           </Form.Item>
           <Form.Item
             name="email"
@@ -105,7 +257,8 @@ const DiaChiGiaoHang = (props) => {
               },
             ]}
           >
-            <Input placeholder="Nhập email" />
+            <Input placeholder="Nhập email" onChange={handleEmailChange}  defaultValue={thongTinVanChuyen ? thongTinVanChuyen.email : ""}
+/>
           </Form.Item>
 
           <Form.Item
@@ -119,14 +272,14 @@ const DiaChiGiaoHang = (props) => {
               },
             ]}
           >
-            <Select defaultValue={""} onChange={handleProvinceChange}>
-              <Select.Option value="">--Chọn Tỉnh/Thành phố--</Select.Option>
+            <Select defaultValue={thanhPhoDaCo ? thanhPhoDaCo  : null} onChange={handleProvinceChange}>
+              <Select.Option >--Chọn Tỉnh/Thành phố--</Select.Option>
               {listProvince?.map((item) => {
                 return (
                   <Select.Option
                     key={item.ProvinceID}
                     value={item.ProvinceName}
-                    valueProvince={item.ProvinceID}
+                    valueProvince={item.ProvinceID}                 
                   >
                     {item.ProvinceName}
                   </Select.Option>
@@ -147,8 +300,8 @@ const DiaChiGiaoHang = (props) => {
             // labelCol={{ span: 9 }}
             // wrapperCol={{ span: 15 }}
           >
-            <Select defaultValue={""} onChange={handleDistrictChange}>
-              <Select.Option value="">--Chọn Quận/Huyện--</Select.Option>
+            <Select defaultValue={quanDaCo ? quanDaCo : null} onChange={handleDistrictChange}>
+              <Select.Option >--Chọn Quận/Huyện--</Select.Option>
               {listDistricts?.map((item) => {
                 return (
                   <Select.Option
@@ -173,8 +326,8 @@ const DiaChiGiaoHang = (props) => {
               },
             ]}
           >
-            <Select defaultValue={""} onChange={handleWardChange}>
-              <Select.Option value="">--Chọn Xã/Phường--</Select.Option>
+            <Select defaultValue={phuongDaCo ? phuongDaCo : null} onChange={handleWardChange}>
+              <Select.Option>--Chọn Xã/Phường--</Select.Option>
               {listWard?.map((item) => {
                 return (
                   <Select.Option
@@ -190,7 +343,7 @@ const DiaChiGiaoHang = (props) => {
           </Form.Item>
 
           <Form.Item
-            name="diaChi"
+            name="soNha"
             tooltip="Số nhà của bạn là gì?"
             rules={[
               {
@@ -202,21 +355,60 @@ const DiaChiGiaoHang = (props) => {
             // labelCol={{ span: 9 }}
             // wrapperCol={{ span: 15 }}
           >
-            <Input placeholder="Nhập số nhà " />
+            <Input placeholder="Nhập số nhà " onChange={handleSoNhaChange} defaultValue={soNhaDaCo ? soNhaDaCo : null}/>
           </Form.Item>
         </Col>
-      </Form>
 
-      <div className="row mt-2">
-        <div className="col-md-4">
-          <img src={LogoGHN} style={{ width: 200, height: 70 }}></img>
+        <div className="row mt-2">
+          <div className="col-md-4">
+            <img src={LogoGHN} style={{ width: 200, height: 70 }}></img>
+          </div>
+          <div className="col-md-6 align-self-center fw-bold">
+            <p>
+               Thời gian giao hàng dự kiến :{" "}
+              <span className="text-danger">
+                {/* {new Date(timeShip * 1).getDate()} / {new Date(timeShip * 1).getUTCMonth()} / {new Date(timeShip * 1).getFullYear()} */}
+                {thongTinVanChuyen ? thongTinVanChuyen.ngayDuKienNhan : timeShip
+                  ? new Date(timeShip).toLocaleDateString()
+                  : "dd/MM/yyyy"}
+              </span>
+            </p>
+          </div>
         </div>
-        <div className="col-md-6 align-self-center fw-bold">
-          <p >
-            Thời gian giao hàng dự kiến : <span className="text-danger"> 31/01/2024</span>
-          </p>
-        </div>
-      </div>
+        <Button
+          className=" mt-2 me-5 bg-success float-end bg-black"
+          type="primary"
+          onClick={() => {
+            Modal.confirm({
+              title: "Thông báo",
+              content: "Bạn có chắc chắn muốn đặt hàng không?",
+              onOk: () => {
+                form.submit();
+
+                toast("✔️ Cập nhật hóa đơn thành công!", {
+                  position: "top-right",
+                  autoClose: 1000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "light",
+                });
+                // form.finish();
+              },
+              footer: (_, { OkBtn, CancelBtn }) => (
+                <>
+                  <CancelBtn />
+                  <OkBtn />
+                </>
+              ),
+            });
+          }}
+        >
+          Xác nhận đặt hàng
+        </Button>
+      </Form>
     </>
   );
 };

@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
+@Builder
 public class GioHang {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

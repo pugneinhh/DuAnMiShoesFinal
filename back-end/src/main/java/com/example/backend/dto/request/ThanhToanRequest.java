@@ -39,6 +39,7 @@ public class ThanhToanRequest {
         thanhToan.setNgayTao(this.ngayTao);
         thanhToan.setNgaySua(this.ngaySua);
         thanhToan.setTrangThai(this.trangThai);
+        thanhToan.setNguoiTao(this.nguoiTao);
         return thanhToan;
     }
 }

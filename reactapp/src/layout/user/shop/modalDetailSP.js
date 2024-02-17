@@ -5,7 +5,6 @@ import { SanPhamClientAPI } from "../../../pages/censor/api/home/sanPham/sanPham
 const ModalDetailSP = (props) => {
   const { openModalDetailSP, setOpenModalDetailSP, idCt, setidCTSP } = props;
   const [largeImage, setLargeImage] = useState('');
-
   const [ChiTietSanPham, setChiTietSanPham] = useState([]);
   const [selectedMauSac, setSelectedMauSac] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
@@ -13,12 +12,12 @@ const ModalDetailSP = (props) => {
   const [IDMauSac, setIDMauSac] = useState('');
   const [IDSize, setIDSize] = useState('');
   useEffect(() => {
-   loadCTSP();
+    loadCTSP();
   }, [])
   const loadCTSP = () => {
     SanPhamClientAPI.getCTSP(idCt).then((res) => {
       setChiTietSanPham(res.data);
-      console.log("list sp",res.data);
+      console.log("list sp", res.data);
       setIDSanPham(res.data.sanPhamID);
       setSelectedMauSac(res.data.mauSacID);
       setIDMauSac(res.data.mauSacID);
@@ -29,30 +28,34 @@ const ModalDetailSP = (props) => {
       setLargeImage(res.data.anh);
     });
   };
-  const loadCTSPChange = () => {
-    console.log("ídap",IDSanPham,'idms',IDMauSac,'idSize',IDSize);
-    SanPhamClientAPI.getCTSPChange(IDSanPham,IDMauSac,IDSize).then((res) => {
-      // setChiTietSanPham(res.data);
-      console.log("list sp change",res.data);
-      setIDSanPham(res.data.sanPhamID);
-      setIDMauSac(res.data.mauSacID);
-      setIDSize(res.data.kichThuocID);
-      // setLargeImage(res.data.anh);
+  // const loadCTSPChange = () => {
+
+  //   SanPhamClientAPI.getCTSPChange(IDSanPham,IDMauSac,IDSize).then((res) => {
+  //     // setChiTietSanPham(res.data);
+  //     console.log("list sp change",res.data);
+  //     setIDSanPham(res.data.sanPhamID);
+  //     setSelectedMauSac(res.data.mauSacID);
+  //     setIDMauSac(res.data.mauSacID);
+  //     setSelectedSize(res.data.kichThuocID);
+  //     setIDSize(res.data.kichThuocID);
+  //     loadListMauSacBySP(IDSanPham);
+  //     loadListSizeBySP(IDSanPham);
+  //   });
+
+  // };
+  const [ListMauSacBySP, setListMauSacBySP] = useState([]);
+  const loadListMauSacBySP = (IDSP) => {
+    SanPhamClientAPI.getListMauSacBySP(IDSP).then((res) => {
+      setListMauSacBySP(res.data);
     });
   };
-   const [ListMauSacBySP, setListMauSacBySP] = useState([]);
-    const loadListMauSacBySP = (IDSP) => {
-      SanPhamClientAPI.getListMauSacBySP(IDSP).then((res) => {
-     setListMauSacBySP(res.data);
-      });
-    };
-       const [ListSizeBySP, setListSizeBySP] = useState([]);
-       const loadListSizeBySP = (IDSP) => {
-         SanPhamClientAPI.getListSizeBySP(IDSP).then((res) => {
-           setListSizeBySP(res.data);
-         });
-       };
-      
+  const [ListSizeBySP, setListSizeBySP] = useState([]);
+  const loadListSizeBySP = (IDSP) => {
+    SanPhamClientAPI.getListSizeBySP(IDSP).then((res) => {
+      setListSizeBySP(res.data);
+    });
+  };
+
   const handleImageClick = (url) => {
     setLargeImage(url);
   };
@@ -67,13 +70,19 @@ const ModalDetailSP = (props) => {
     setIDMauSac(mauSacId);
     setSelectedMauSac(mauSacId);
     // window.location.href = `/client/sanpham/kich-thuoc-sp/${IDSanPham}/${mauSacId}`;
-     SanPhamClientAPI.changeListSizeBySPandMS(IDSanPham,mauSacId).then((res) => {
-       setListSizeBySP(res.data);
-       console.log(res.data);
-     });
+    SanPhamClientAPI.changeListSizeBySPandMS(IDSanPham, mauSacId).then((res) => {
+      setListSizeBySP(res.data);
+      const kichThuocExists = res.data.some(item => item.kichThuocID === selectedSize);
+      if (kichThuocExists) {
+        setSelectedSize(selectedSize)
+      } else {
+        setSelectedSize(res.data[0].kichThuocID)
+      }
+
+    });
     // loadCTSPChange();
-    console.log("id ms ne", IDMauSac );
-    console.log("id sp ne", IDSanPham);
+    console.log("id ms ne", IDMauSac);
+    console.log("id ms ne", IDSanPham);
   };
 
   const handleSizeClick = (sizeId) => {
@@ -178,7 +187,7 @@ const ModalDetailSP = (props) => {
                     height: 30,
                     border: selectedMauSac === listMauSacBySP.mauSacID ? '1px solid #4096ff' : 'none',
                   }}
-                   onClick={() => handleMauSacClick(listMauSacBySP.mauSacID)}
+                  onClick={() => handleMauSacClick(listMauSacBySP.mauSacID)}
                 ></Button>
               </div>
             ))}
@@ -186,23 +195,23 @@ const ModalDetailSP = (props) => {
           <hr></hr>
           <h6>Size</h6>
           <div className="row mt-1">
-          {ListSizeBySP.map((listsize, index) => (
-            <div className="col-md-1 me-2" key={index}>
-              <Button
-                className={`mt-2`}
-                style={{
-                  borderRadius: 10,
-                  width: 40,
-                  height: 40,
-                  textAlign: 'center',
-                  border: selectedSize === listsize.kichThuocID ? '1px solid #4096ff' : '1px solid #d9d9d9',
-                }}
-                onClick={() => handleSizeClick(listsize.kichThuocID)}
-              >
-                {listsize.tenKichThuoc}
-              </Button>
-            </div>
-  ))}
+            {ListSizeBySP.map((listsize, index) => (
+              <div className="col-md-1 me-2" key={index}>
+                <Button
+                  className={`mt-2`}
+                  style={{
+                    borderRadius: 10,
+                    width: 40,
+                    height: 40,
+                    textAlign: 'center',
+                    border: selectedSize === listsize.kichThuocID ? '1px solid #4096ff' : '1px solid #d9d9d9',
+                  }}
+                  onClick={() => handleSizeClick(listsize.kichThuocID)}
+                >
+                  {listsize.tenKichThuoc}
+                </Button>
+              </div>
+            ))}
           </div>
           <h6 className="mt-3">Số lượng</h6>
           <div className="row">

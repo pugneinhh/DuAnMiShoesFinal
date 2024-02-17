@@ -1,12 +1,15 @@
 package com.example.backend.service;
 
+import com.example.backend.dto.request.GioHangChiTietRequest;
 import com.example.backend.dto.request.HoaDonChiTietRequest;
 import com.example.backend.dto.response.HoaDonChiTietBanHangRespone;
 import com.example.backend.dto.response.HoaDonChiTietRespone;
 import com.example.backend.entity.ChiTietSanPham;
+import com.example.backend.entity.HoaDon;
 import com.example.backend.entity.HoaDonChiTiet;
 import com.example.backend.repository.CTSPRepository;
 import com.example.backend.repository.HoaDonChiTietRepository;
+import com.example.backend.repository.HoaDonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +25,8 @@ public class HoaDonChiTietService {
     HoaDonChiTietRepository hoaDonChiTietRepository;
     @Autowired
     CTSPRepository ctspRepository;
+    @Autowired
+    HoaDonRepository hoaDonRepository;
     public List<HoaDonChiTietBanHangRespone> getAllHDCTByHD(String id){
         return hoaDonChiTietRepository.getAllHDCTByHD(id);
     }
@@ -31,6 +36,11 @@ public class HoaDonChiTietService {
     public HoaDonChiTiet addHDCT(HoaDonChiTietRequest request){
         HoaDonChiTiet hdct=request.map(new HoaDonChiTiet());
         String idCTSP= request.getChiTietSanPham();
+        HoaDon hoaDon = hoaDonRepository.getHoaDonByIDHD(request.getHoaDon());
+        BigDecimal giaHienTai = hoaDon.getGiaGoc() == null ? new BigDecimal("0") : hoaDon.getGiaGoc();
+        BigDecimal giaThem = request.getGiaSauGiam();
+        hoaDon.setGiaGoc(giaHienTai.add(giaThem));
+        hoaDon.setThanhTien(giaHienTai.add(giaThem));
         ChiTietSanPham ctsp=ctspRepository.findById(idCTSP).get();
         Optional<HoaDonChiTiet> timhdct=hoaDonChiTietRepository.findHoaDonChiTietByHoaDon_Id(request.getHoaDon()).stream().filter(hd -> hd.getChiTietSanPham().getId().equals(idCTSP)).findFirst();
         if(timhdct.isPresent()){
@@ -45,6 +55,7 @@ public class HoaDonChiTietService {
         hdct.setTrangThai(0);
         ctsp.setSoLuong(ctsp.getSoLuong()- request.getSoLuong());
         ctspRepository.save(ctsp);
+        hoaDonRepository.save(hoaDon);
         return  hoaDonChiTietRepository.save(hdct);
     }
     public HoaDonChiTiet updateTruSl(HoaDonChiTietRequest request){
@@ -75,6 +86,20 @@ public class HoaDonChiTietService {
         int slh = hdct.getSoLuong();
         ctsp.setSoLuong(slt+slh);
         ctspRepository.save(ctsp);
+        BigDecimal tong = new BigDecimal("0");
+        HoaDon hoaDon = hoaDonRepository.getHoaDonByIDHD(idHD);
+        List<HoaDonChiTiet> list = hoaDonChiTietRepository.getAllHDCTByIDHD(idHD);
+        for (HoaDonChiTiet x : list) {
+            if (x.getChiTietSanPham().getId().equals(idCTSP)){
+               // tong = tong.add(x.getGiaSauGiam().multiply(BigDecimal.valueOf(soLuongCapNhat)));
+                continue;
+            }
+            tong = tong.add(x.getGiaSauGiam().multiply(BigDecimal.valueOf(x.getSoLuong())));
+        }
+        BigDecimal giaGiam = hoaDon.getGiaGiamGia() == null ? new BigDecimal("0") : hoaDon.getGiaGiamGia();
+        hoaDon.setGiaGoc(tong);
+        hoaDon.setThanhTien(tong.subtract(giaGiam));
+        hoaDonRepository.save(hoaDon);
         hoaDonChiTietRepository.delete(hdct);
     }
 
@@ -99,6 +124,21 @@ public class HoaDonChiTietService {
         ctsp.setSoLuong(slt-sltd);
         System.out.println("HDCT sau update"+hdct);
         System.out.println("CTSP sau update"+ctsp);
+        HoaDon hoaDon = hoaDonRepository.getHoaDonByIDHD(idHD);
+        BigDecimal tong = new BigDecimal("0");
+        List<HoaDonChiTiet> list = hoaDonChiTietRepository.getAllHDCTByIDHD(idHD);
+        for (HoaDonChiTiet x : list) {
+            if (x.getChiTietSanPham().getId().equals(idCTSP)){
+                tong = tong.add(x.getGiaSauGiam().multiply(BigDecimal.valueOf(soLuongCapNhat)));
+
+            } else {
+                tong = tong.add(x.getGiaSauGiam().multiply(BigDecimal.valueOf(x.getSoLuong())));
+            }
+        }
+        BigDecimal giaGiam = hoaDon.getGiaGiamGia() == null ? new BigDecimal("0") : hoaDon.getGiaGiamGia();
+        hoaDon.setGiaGoc(tong);
+        hoaDon.setThanhTien(tong.subtract(giaGiam));
+        hoaDonRepository.save(hoaDon);
         ctspRepository.save(ctsp);
        return hoaDonChiTietRepository.save(hdct);
     }
