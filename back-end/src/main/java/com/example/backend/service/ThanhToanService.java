@@ -21,4 +21,7 @@ public class ThanhToanService {
         return thanhToanRepository.getALLLLichSuThanhToanByIDHD(id);
     }
 
+//    public ThanhToan thanhToanTienMat(ThanhToanRequest request){
+//        ThanhToan tt = request.map(new ThanhToan())
+//    }
 }

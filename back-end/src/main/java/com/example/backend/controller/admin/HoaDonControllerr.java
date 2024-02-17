@@ -6,8 +6,10 @@ import com.example.backend.dto.request.LichSuHoaDonRequest;
 import com.example.backend.dto.request.hoadonsearch.HoaDonSearch;
 import com.example.backend.entity.HoaDon;
 import com.example.backend.entity.LichSuHoaDon;
+import com.example.backend.entity.Voucher;
 import com.example.backend.service.HoaDonServicee;
 import com.example.backend.service.LichSuHoaDonService;
+import com.example.backend.service.VoucherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,7 +33,8 @@ public class HoaDonControllerr {
     private HoaDonServicee hoaDonService;
     @Autowired
     private LichSuHoaDonService lichSuHoaDonService;
-
+    @Autowired
+    private VoucherService voucherService;
 
     @GetMapping()
     public ResponseEntity<?> getALL(){
@@ -94,4 +97,21 @@ public class HoaDonControllerr {
 //    public ResponseEntity<?> delete(@PathVariable String ma){
 //        return  ResponseEntity.ok(khachHangService.delete(ma));
 //    }
+    @PutMapping("/thanh-toan-hoa-don/{iHD}")
+    public ResponseEntity<?> ThanhToanHoaDon(@PathVariable("idHD") String idHD){
+        HoaDon hoaDon = hoaDonService.findHoaDonbyID(idHD);
+        hoaDon.setTrangThai(4);
+        LichSuHoaDonRequest lichSuHoaDonRequest = new LichSuHoaDonRequest();
+        lichSuHoaDonRequest.setIdHD(idHD);
+        lichSuHoaDonRequest.setTrangThai(4);
+        lichSuHoaDonRequest.setNgayTao(LocalDateTime.now());
+        lichSuHoaDonRequest.setNguoiTao(hoaDon.getNguoiTao());
+        lichSuHoaDonService.addLichSuHoaDon(lichSuHoaDonRequest);
+        if (hoaDon.getVoucher() != null) {
+            Voucher voucher = voucherService.detailVoucher(hoaDon.getVoucher().getId());
+            voucher.setSoLuong(voucher.getSoLuong() -1 );
+            voucherService.add(voucher);
+        }
+        return ResponseEntity.ok(hoaDonService.addHoaDon(hoaDon));
+    }
 }
