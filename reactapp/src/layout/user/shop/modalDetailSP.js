@@ -5,10 +5,7 @@ import { SanPhamClientAPI } from "../../../pages/censor/api/home/sanPham/sanPham
 const ModalDetailSP = (props) => {
   const { openModalDetailSP, setOpenModalDetailSP, idCt, setidCTSP } = props;
   const [largeImage, setLargeImage] = useState('');
-      useEffect(() => {
-       loadCTSP();
-    
-      }, []);
+
   const [ChiTietSanPham, setChiTietSanPham] = useState([]);
   const [selectedMauSac, setSelectedMauSac] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
