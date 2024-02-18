@@ -48,4 +48,6 @@ public interface AdminBillForSellRespon {
     LocalDateTime getNgaySua();
     @Value("#{target.ngayDuKienNhan}")
     Date getNgayDuKienNhan();
+    @Value("#{target.tienVanChuyen}")
+    Float getTienVanChuyen();
 }

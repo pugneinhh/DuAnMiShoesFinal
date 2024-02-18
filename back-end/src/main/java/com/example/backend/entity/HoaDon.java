@@ -48,6 +48,7 @@ public class HoaDon {
     private LocalDateTime ngayTao;
     private LocalDateTime ngaySua;
     private int trangThai;
+    private Float tienVanChuyen;
 
 
 //    @PrePersist

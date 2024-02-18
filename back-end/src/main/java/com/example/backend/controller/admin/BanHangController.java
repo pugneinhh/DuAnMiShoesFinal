@@ -183,7 +183,6 @@ public class BanHangController {
     @PutMapping("/thanh-toan/hoa-don/{idHD}/{idNV}")
     public ResponseEntity<?> thanhToanHoaDon (@PathVariable("idHD") String idHD,@PathVariable("idNV") String idNV ) {
         HoaDon hoaDon=hoaDonServicee.findHoaDonbyID(idHD);
-
         LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
         lichSuHoaDon.setHoaDon(hoaDon);
         lichSuHoaDon.setNguoiTao(idNV);
@@ -191,5 +190,6 @@ public class BanHangController {
         lichSuHoaDon.setNgayTao(LocalDateTime.now());
         lichSuHoaDonService.save(lichSuHoaDon);
         return ResponseEntity.ok(  hoaDonServicee.thanhToanHoaDon(idHD));
+       
     }
 }
