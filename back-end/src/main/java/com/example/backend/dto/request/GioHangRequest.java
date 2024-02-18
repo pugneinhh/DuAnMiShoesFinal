@@ -26,7 +26,9 @@ public class GioHangRequest {
     public GioHang map(GioHang gioHang){
         gioHang.setId(this.id);
         gioHang.setMa(this.ma);
-        gioHang.setKhachHang(NguoiDung.builder().id(this.khachHang).build());
+        if(this.khachHang!=null ) {
+            gioHang.setKhachHang(NguoiDung.builder().id(this.khachHang).build());
+        }
         gioHang.setNhanVien(this.nhanVien);
         gioHang.setNguoiTao(this.nguoiTao);
         gioHang.setNguoiSua(this.nguoiSua);

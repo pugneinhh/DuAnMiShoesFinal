@@ -31,6 +31,14 @@ const AddVoucher = () => {
 
   const [form] = Form.useForm();
   const handleSubmit = (value) => {
+    if(value.ma==null || value.ma==''){
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    for (let i = 0; i < 6; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      value.ma += characters.charAt(randomIndex);
+    }
+    }
+    console.log("voucher",value);
     VoucherAPI.create(value).then((response) => {
       if (selectedIDKH) {
         Promise.all(
@@ -139,13 +147,13 @@ const AddVoucher = () => {
                 label="Mã phiếu giảm giá"
                 style={{ paddingLeft: 0, width: 550 }}
                 name="ma"
-                hasFeedback
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng không để trống mã!",
-                  },
-                ]}
+                // hasFeedback
+                // rules={[
+                //   {
+                //     required: true,
+                //     message: "Vui lòng không để trống mã!",
+                //   },
+                // ]}
                 labelCol={{ span: 6 }}
                 wrapperCol={{ span: 10 }}
               >
