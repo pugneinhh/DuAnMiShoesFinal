@@ -20,6 +20,9 @@ public class LichSuHoaDonService {
         return lichSuHoaDonRepository.save(lichSuHoaDon);
 
     }
+    public LichSuHoaDon save(LichSuHoaDon lichSuHoaDon){
+        return lichSuHoaDonRepository.save(lichSuHoaDon);
+    }
     public List<AdminHoaDonTimeLineRespon> getLichHoaDon(String idHD) {
         return lichSuHoaDonRepository.detailLichSuHoaDon(idHD);
     }
