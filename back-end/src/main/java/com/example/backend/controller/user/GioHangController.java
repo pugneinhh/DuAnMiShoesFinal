@@ -25,7 +25,6 @@ public class GioHangController {
     }
     @PostMapping("/addGH")
     public ResponseEntity<?> addGH(@RequestBody GioHangRequest request){
-        request.setMa(RandomStringUtils.random(6));
         return ResponseEntity.ok(gioHangService.addGioHang(request));
     }
 }
