@@ -2,6 +2,8 @@ import { Button, Modal, Image, InputNumber } from "antd";
 import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { SanPhamClientAPI } from "../../../pages/censor/api/home/sanPham/sanPham.api";
+import { GioHangAPI } from "../../../pages/censor/api/gioHang/gioHang.api";
+import { get, set } from "local-storage";
 const ModalDetailSP = (props) => {
   const { openModalDetailSP, setOpenModalDetailSP, idCt, setidCTSP } = props;
   const [largeImage, setLargeImage] = useState('');
@@ -11,13 +13,13 @@ const ModalDetailSP = (props) => {
   const [IDSanPham, setIDSanPham] = useState('');
   const [IDMauSac, setIDMauSac] = useState('');
   const [IDSize, setIDSize] = useState('');
+  const [soLuong, setSoLuong] = useState(1); 
   useEffect(() => {
     loadCTSP();
   }, [])
   const loadCTSP = () => {
     SanPhamClientAPI.getCTSP(idCt).then((res) => {
       setChiTietSanPham(res.data);
-      console.log("list sp", res.data);
       setIDSanPham(res.data.sanPhamID);
       setSelectedMauSac(res.data.mauSacID);
       setIDMauSac(res.data.mauSacID);
@@ -88,11 +90,28 @@ const ModalDetailSP = (props) => {
 
 
   const handleSizeClick = (sizeId) => {
-    // Update the selected size when a button is clicked
+    
     setIDSize(sizeId);
     setSelectedSize(sizeId);
   };
+  const handleAddGioHang = (ChiTietSanPham,soLuong) => {
+    console.log("ctsp",ChiTietSanPham)
+    let randomString = '';
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    for (let i = 0; i < 6; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      randomString += characters.charAt(randomIndex);
+    }
+    
+    GioHangAPI.addGH({ma:randomString,khachHang:null}).then((res)=>{
+      set("GioHang",res.data);
+      const data={gioHang:res.data.id,chiTietSanPham:ChiTietSanPham.id,soLuong:soLuong,thanhTien:(ChiTietSanPham.giaBan*soLuong)}
+      GioHangAPI.addGHCT(data).then((res)=>{
 
+        console.log("giỏ hàng chi tiết",res.data);
+      })
+    })
+  };
 
 
 
@@ -219,12 +238,15 @@ const ModalDetailSP = (props) => {
               <InputNumber
                 min={1}
                 max={ChiTietSanPham.soLuong}
-                defaultValue={0}
+                value={soLuong}
+                onChange={(value) => setSoLuong(value)}
               />
             </div>
             <div className="col">{ChiTietSanPham.soLuong} sản phẩm có sẵn</div>
           </div>
-
+          <Button className={`mt-3`} type="primary" onClick={()=>handleAddGioHang(ChiTietSanPham,soLuong)}>
+                  Thêm vào giỏ hàng
+                </Button>
           <hr></hr>
           <h5>Mô tả sản phẩm:</h5>
           <p>

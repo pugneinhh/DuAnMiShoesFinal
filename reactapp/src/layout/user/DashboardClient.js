@@ -20,16 +20,20 @@ import { TbShoppingCartHeart } from "react-icons/tb";
 import logoShop from "../../assets/images/logoNgang.png";
 import "./client.css";
 import { get, set } from "local-storage";
+import { GioHangAPI } from "../../pages/censor/api/gioHang/gioHang.api";
 const { Header, Content, Footer } = Layout;
 export const DashboardClient = ({ children }) => {
     const nav = useNavigate();
   const [userName, setUserName] = useState("");
   const [linkAnh, setLinkAnh] = useState("");
-  useEffect(() => {
-      
-    const storedData = get("userData");
+  const [countgioHang, setCountGioHang] = useState("");
+  const storedData = get("userData");
     const storedDataGoogle = get("userGoogle");
     const storedDataFaceBook = get("userFacebook");
+    const storedGioHang=get("gioHang");
+  useEffect(() => {
+      
+    
     if (storedData != null) {
       setUserName(storedData.ten);
       setLinkAnh(storedData.anh);
@@ -44,7 +48,14 @@ export const DashboardClient = ({ children }) => {
     else {
       setUserName(null);
       setLinkAnh(null);
+      if(storedGioHang!=null){
+        GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res)=>{
+          setCountGioHang(res.data.length);
+          console.log("count",res.data);
+        })
+      }
     }
+    
   dangXuat();
   }, []);
         const dangXuat = () => {
