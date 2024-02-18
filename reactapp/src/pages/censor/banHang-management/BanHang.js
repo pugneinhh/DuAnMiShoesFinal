@@ -728,7 +728,7 @@ const BanHang = () => {
                   dispatch(
                     RemoveInvoice({
                       chiTietSanPham: record.chiTietSanPham,
-                      hoaDon: activeKey,
+                      hoaDon: record.hoaDon,
                     })
                   );
                   dispatch(
@@ -739,7 +739,7 @@ const BanHang = () => {
                   );
                   SellAPI.deleteInvoiceAndRollBackProduct(record.chiTietSanPham,record.hoaDon);
                   //SellAPI.updateThanhTien(record.hoaDon);
-                  data = ctspHD.filter((f) => f.hoaDon === activeKey);
+                //  data = ctspHD.filter((f) => f.hoaDon === activeKey);
                   toast("✔️ Cập nhật giỏ hàng thành công!", {
                     position: "top-right",
                     autoClose: 5000,
