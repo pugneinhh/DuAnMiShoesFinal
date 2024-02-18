@@ -6,6 +6,7 @@ import com.example.backend.entity.NguoiDung;
 import com.example.backend.repository.HoaDonRepository;
 import com.example.backend.service.HoaDonServicee;
 import com.example.backend.service.KhachHangService;
+import com.example.backend.service.NguoiDungService;
 import com.example.backend.service.ThanhToanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,8 @@ public class ThanhToanController {
     HoaDonRepository hoaDonService;
     @Autowired
     KhachHangService khachHangService;
+    @Autowired
+    NguoiDungService nguoiDungService;
     @PostMapping("/thanh-toan-tien-mat")
     public ResponseEntity<?> thanhToan(@RequestBody ThanhToanRequest request){
 //        HoaDon hd=hoaDonService.findById(request.getHoaDon()).get();
@@ -38,6 +41,8 @@ public class ThanhToanController {
 //            }
 //            nguoiDung.setDiem(nguoiDung.getDiem()+hd.getGiaTriDiem());
 //        }
+        NguoiDung nguoiDung = nguoiDungService.findByID(request.getNguoiTao());
+        request.setNguoiTao(nguoiDung.getMa());
         request.setNgayTao(LocalDateTime.now());
         request.setPhuongThuc(0);
         request.setTrangThai(0);
@@ -58,6 +63,8 @@ public class ThanhToanController {
 //            nguoiDung.setDiem(nguoiDung.getDiem()+hd.getGiaTriDiem());
 //        }
         System.out.println("Người tạo: "+request.getNguoiTao());
+        NguoiDung nguoiDung = nguoiDungService.findByID(request.getNguoiTao());
+        request.setNguoiTao(nguoiDung.getMa());
         request.setNgayTao(LocalDateTime.now());
         request.setPhuongThuc(1);
         request.setTrangThai(0);
