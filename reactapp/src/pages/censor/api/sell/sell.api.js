@@ -171,10 +171,10 @@ export class SellAPI {
     });
   };
 
-  static thanhToanHoaDon = (id) => {
+  static thanhToanHoaDon = (id,idNV) => {
     return requestAdmin({
       method: "PUT",
-      url: `/ban-hang/thanh-toan/hoa-don/${id}`,
+      url: `/ban-hang/thanh-toan/hoa-don/${id},${idNV}`,
     });
   };
 
