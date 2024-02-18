@@ -7,6 +7,7 @@ import com.example.backend.dto.response.ChiTietSanPhamForBanHang;
 import com.example.backend.entity.ChiTietSanPham;
 import com.example.backend.entity.CongThuc;
 import com.example.backend.entity.HoaDon;
+import com.example.backend.entity.LichSuHoaDon;
 import com.example.backend.repository.CTSPRepository;
 import com.example.backend.repository.CongThucRepository;
 import com.example.backend.service.*;
@@ -54,13 +55,23 @@ public class BanHangController {
     }
     @PostMapping("/add-hoa-don")
     public  ResponseEntity<?> addHD(@RequestBody HoaDonRequest hoaDonRequest){
+
         CongThuc ct=congThucRepository.getCongThucByTrangThai(0);
        // hoaDonRequest.setMa("HDTQ"+ RandomStringUtils.randomNumeric(6));
         hoaDonRequest.setLoaiHoaDon(1);
         hoaDonRequest.setNgayTao(LocalDateTime.now());
         hoaDonRequest.setTrangThai(0);
       //  hoaDonRequest.setGiaTriDiem(Integer.valueOf(hoaDonRequest.getThanhTien().intValue()/ct.getTiSo().intValue()));
-        return  ResponseEntity.ok(banHangService.addHoaDon(hoaDonRequest));
+        banHangService.addHoaDon(hoaDonRequest);
+        HoaDon hoaDon=hoaDonServicee.findHoaDonbyID(hoaDonRequest.getId());
+        LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
+        lichSuHoaDon.setId(hoaDonRequest.getId());
+        lichSuHoaDon.setHoaDon(hoaDon);
+        lichSuHoaDon.setNguoiTao(hoaDonRequest.getNhanVien());
+        lichSuHoaDon.setTrangThai(0);
+        lichSuHoaDon.setNgayTao(LocalDateTime.now());
+        return  ResponseEntity.ok(lichSuHoaDonService.save(lichSuHoaDon));
+
     }
     @PostMapping("/addHDCT")
     public ResponseEntity<?> addHDCT(@RequestBody HoaDonChiTietRequest request){
@@ -171,6 +182,14 @@ public class BanHangController {
 
     @PutMapping("/thanh-toan/hoa-don/{idHD}")
     public ResponseEntity<?> thanhToanHoaDon (@PathVariable("idHD") String idHD ) {
-        return ResponseEntity.ok(hoaDonServicee.thanhToanHoaDon(idHD));
+        HoaDon hoaDon=hoaDonServicee.findHoaDonbyID(idHD);
+
+        LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
+        lichSuHoaDon.setHoaDon(hoaDon);
+//        lichSuHoaDon.setNguoiTao(idNV);
+        lichSuHoaDon.setTrangThai(4);
+        lichSuHoaDon.setNgayTao(LocalDateTime.now());
+        hoaDonServicee.thanhToanHoaDon(idHD);
+        return ResponseEntity.ok( lichSuHoaDonService.save(lichSuHoaDon));
     }
 }
