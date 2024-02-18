@@ -26,11 +26,11 @@ export const DashboardClient = ({ children }) => {
     const nav = useNavigate();
   const [userName, setUserName] = useState("");
   const [linkAnh, setLinkAnh] = useState("");
-  const [countgioHang, setCountGioHang] = useState("");
+  const [countgioHang, setCountGioHang] = useState(0);
   const storedData = get("userData");
     const storedDataGoogle = get("userGoogle");
     const storedDataFaceBook = get("userFacebook");
-    const storedGioHang=get("gioHang");
+    const storedGioHang=get("GioHang");
   useEffect(() => {
       
     
@@ -49,14 +49,14 @@ export const DashboardClient = ({ children }) => {
       setUserName(null);
       setLinkAnh(null);
       if(storedGioHang!=null){
+        console.log("giỏ hàng",storedGioHang)
         GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res)=>{
           setCountGioHang(res.data.length);
           console.log("count",res.data);
         })
       }
     }
-    
-  dangXuat();
+  
   }, []);
         const dangXuat = () => {
              nav("/home");
@@ -206,7 +206,7 @@ export const DashboardClient = ({ children }) => {
         </Col>
         <Col span={11} className="float-end ms-4 ">
           <Link to={"/gio-hang"} className="float-end justify-content-end ">
-            <Badge count={10} offset={[8, 1]} className="menuButton">
+            <Badge count={countgioHang} offset={[8, 1]} className="menuButton">
               <TbShoppingCartHeart size={30} className="menuButton" />
             </Badge>
           </Link>
