@@ -115,7 +115,7 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
                     CASE WHEN hd.khach_hang_id IS NULL THEN N'' ELSE kh.gioi_tinh END  as gtNguoiDung,
                     hd.ngay_tao as ngayTao, hd.ngay_sua as ngaySua , hd.nguoi_tao as nguoiTao , hd.nguoi_sua as nguoiSua,
                     hd.thanh_tien as thanhTien,hd.gia_goc as giaGoc,hd.gia_giam_gia AS giaGiamGia,
-                    hd.ten_nguoi_nhan as tenNguoiNhan , hd.so_dien_thoai as soDienThoai , hd.email as email, hd.dia_chi as diaChi , hd.ghi_chu as ghiChu , hd.ngay_du_kien_nhan as ngayDuKienNhan
+                    hd.ten_nguoi_nhan as tenNguoiNhan , hd.so_dien_thoai as soDienThoai , hd.email as email, hd.dia_chi as diaChi , hd.ghi_chu as ghiChu , hd.ngay_du_kien_nhan as ngayDuKienNhan , hd.tien_van_chuyen as tienVanChuyen
                     FROM duanmishoes.hoa_don hd
                     LEFT JOIN duanmishoes.nguoi_dung kh ON kh.id = hd.khach_hang_id  where hd.loai_hoa_don=1 and hd.trang_thai=0
             """,nativeQuery = true)

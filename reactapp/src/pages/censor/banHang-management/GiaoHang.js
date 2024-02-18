@@ -104,6 +104,7 @@ const DiaChiGiaoHang = ({ money, quantity, hoaDon ,thongTinVanChuyen}) => {
         email: value.email,
         diaChi: value.soNha + "/" + value.tenXa + "/" + value.tenHuyen + "/" + value.tenThanhPho,
         ngayDuKienNhan: timeShip,
+        tienVanChuyen : money,
       },
     ];
     console.log("dâta", data[0]);
