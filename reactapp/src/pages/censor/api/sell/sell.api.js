@@ -174,7 +174,7 @@ export class SellAPI {
   static thanhToanHoaDon = (id,idNV) => {
     return requestAdmin({
       method: "PUT",
-      url: `/ban-hang/thanh-toan/hoa-don/${id},${idNV}`,
+      url: `/ban-hang/thanh-toan/hoa-don/${id}/${idNV}`,
     });
   };
 
