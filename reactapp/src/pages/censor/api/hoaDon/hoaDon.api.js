@@ -43,11 +43,11 @@ export class HoaDonAPI {
             url: `/admin/hoa-don/ngay-hoa-don-time-line/${id}`,
         });
     };
-    static updateTTHoaDon = (id,data) => {
+    static updateTTHoaDon = (id,maNV,data) => {
         return requestAdmin({
-            method: "PUT",
-            url: `/admin/hoa-don/update-hoa-don/${id}`,
-            data: data,
+          method: "PUT",
+          url: `/admin/hoa-don/update-hoa-don/${id}/${maNV}`,
+          data: data,
         });
     };
    static search = (data) => {

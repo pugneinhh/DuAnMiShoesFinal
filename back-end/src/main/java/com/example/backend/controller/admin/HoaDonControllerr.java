@@ -53,13 +53,13 @@ public class HoaDonControllerr {
         System.out.println(hoaDonSearch.toString());
         return  ResponseEntity.ok(hoaDonService.getTim(hoaDonSearch));
     }
-    @PutMapping("/update-hoa-don/{idHD}")
-    public ResponseEntity<?> updateTTHDvaADDLSHD(@RequestBody LichSuHoaDonRequest ls, @PathVariable("idHD") String id, HoaDon hd){
+    @PutMapping("/update-hoa-don/{idHD}/{maNV}")
+    public ResponseEntity<?> updateTTHDvaADDLSHD(@RequestBody LichSuHoaDonRequest ls, @PathVariable("idHD") String id, @PathVariable("maNV") String maNV ,HoaDon hd){
         HoaDon hoaDon=hoaDonService.findHoaDonbyID(id);
         ls.setTrangThai(hoaDon.getTrangThai()+1);
         ls.setNgayTao(LocalDateTime.now());
         ls.setIdHD(id);
-        ls.setNguoiTao("Dương");
+        ls.setNguoiTao(maNV);
         ls.setMoTaHoatDong(ls.getMoTaHoatDong());
         lichSuHoaDonService.addLichSuHoaDon(ls);
         return ResponseEntity.ok(
