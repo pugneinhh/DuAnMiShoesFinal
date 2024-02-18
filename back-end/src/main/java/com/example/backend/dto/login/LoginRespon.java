@@ -16,6 +16,7 @@ public class LoginRespon {
     private String chucVu;
     private String ten;
     private String anh;
+    private String ma;
 
     public LoginRespon (String accessToken,String email) {
         this.accessToken = accessToken;

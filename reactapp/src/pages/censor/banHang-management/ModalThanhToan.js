@@ -223,9 +223,9 @@ const ModalThanhToan = (props) => {
             <div className="row mt-5 fw-bold ">
                 <Button className="col-md-6 rounded-pill" type="primary" onClick={handleTienMat}> Tiền mặt</Button>
 
-                <Link 
-                className="col-md-6 rounded-pill btn btn-primary" type="primary" onClick={handleChuyenKhoan}
-                > Chuyển khoản</Link>
+                <Button 
+                className="col-md-6 rounded-pill" type="primary" onClick={handleChuyenKhoan}
+                > Chuyển khoản</Button>
             </div>
             <div className="row mt-3">
                 <h6 className="col-md-3 fw-bold ">Tiền cần thanh toán</h6>

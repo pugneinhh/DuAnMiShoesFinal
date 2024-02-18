@@ -29,6 +29,9 @@ public class NguoiDungService {
         return nguoiDung;
     }
 
+    public NguoiDung findByID(String id) {
+        return nguoiDungRepository.getById(id);
+    }
 //    public List<NguoiDung> getAll(){
 //        return nguoiDungRepository.findAll();
 //    }

@@ -4,10 +4,7 @@ import com.example.backend.dto.request.HoaDonChiTietRequest;
 import com.example.backend.dto.request.HoaDonRequest;
 import com.example.backend.dto.request.LichSuHoaDonRequest;
 import com.example.backend.dto.response.ChiTietSanPhamForBanHang;
-import com.example.backend.entity.ChiTietSanPham;
-import com.example.backend.entity.CongThuc;
-import com.example.backend.entity.HoaDon;
-import com.example.backend.entity.LichSuHoaDon;
+import com.example.backend.entity.*;
 import com.example.backend.repository.CTSPRepository;
 import com.example.backend.repository.CongThucRepository;
 import com.example.backend.service.*;
@@ -40,7 +37,8 @@ public class BanHangController {
 
     @Autowired
     HoaDonServicee hoaDonServicee;
-
+    @Autowired
+    NguoiDungService nguoiDungService;
     @Autowired
     LichSuHoaDonService lichSuHoaDonService;
 
@@ -64,6 +62,7 @@ public class BanHangController {
       //  hoaDonRequest.setGiaTriDiem(Integer.valueOf(hoaDonRequest.getThanhTien().intValue()/ct.getTiSo().intValue()));
         banHangService.addHoaDon(hoaDonRequest);
         HoaDon hoaDon=hoaDonServicee.findHoaDonbyID(hoaDonRequest.getId());
+
         LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
         lichSuHoaDon.setId(hoaDonRequest.getId());
         lichSuHoaDon.setHoaDon(hoaDon);
@@ -183,9 +182,13 @@ public class BanHangController {
     @PutMapping("/thanh-toan/hoa-don/{idHD}/{idNV}")
     public ResponseEntity<?> thanhToanHoaDon (@PathVariable("idHD") String idHD,@PathVariable("idNV") String idNV ) {
         HoaDon hoaDon=hoaDonServicee.findHoaDonbyID(idHD);
+<<<<<<< HEAD
+        NguoiDung nguoiDung = nguoiDungService.findByID(idNV);
+=======
+>>>>>>> developer
         LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
         lichSuHoaDon.setHoaDon(hoaDon);
-        lichSuHoaDon.setNguoiTao(idNV);
+        lichSuHoaDon.setNguoiTao(nguoiDung.getMa());
         lichSuHoaDon.setTrangThai(4);
         lichSuHoaDon.setNgayTao(LocalDateTime.now());
         lichSuHoaDonService.save(lichSuHoaDon);

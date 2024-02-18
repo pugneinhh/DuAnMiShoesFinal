@@ -46,6 +46,7 @@ public class LoginController {
             LoginRespon jwtAuthResponse = new LoginRespon();
             jwtAuthResponse.setAccessToken(token);
             jwtAuthResponse.setEmail(email);
+            jwtAuthResponse.setMa(nguoiDungService.findByToken(token).getMa());
             jwtAuthResponse.setChucVu(nguoiDungService.findByToken(token).getChucVu());
             jwtAuthResponse.setTen(nguoiDungService.findByToken(token).getTen());
             jwtAuthResponse.setAnh(nguoiDungService.findByToken(token).getAnh());

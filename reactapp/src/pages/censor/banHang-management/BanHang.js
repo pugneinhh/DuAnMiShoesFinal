@@ -112,7 +112,7 @@ const BanHang = () => {
     // Kiểm tra xem có dữ liệu trong localStorage không
     if (dataFromLocalStorage) {
       const parsedData = JSON.parse(dataFromLocalStorage);
-      const nameFromData = parsedData.userID;
+      const nameFromData = parsedData.ma;
 
       if (nameFromData) {
         // Cập nhật state nếu có giá trị
@@ -209,11 +209,12 @@ const BanHang = () => {
       setActiveKey(result.data[0].id);
       result.data.map((item) => {
         console.log("Hóa đon",item)
+        console.log("Hóa đon2222222222222222222222222222222222222222222222222222222222", item.nhanVien);
         dispatch(
           CreateBill({
             id: item.id,
             ma: item.ma,
-            nhanVien: item.nhanVien,
+            nhanVien: storedData,
             nguoiDung: item.nguoiDung,
             gtNguoiDung: item.gtNguoiDung,
             voucher: item.voucher,
@@ -237,7 +238,6 @@ const BanHang = () => {
            // ngaySua: item.ngaySua,
            // ngayTao: item.ngayTao,
             trangThai: 0,
-            tienVanChuyen : item.tienVanChuyen,
             key: item.id,
           })
         );
@@ -281,7 +281,6 @@ const BanHang = () => {
          // nguoiSua: null,
          // ngaySua: null,
          // ngayTao: new Date(),
-         tienVanChuyen : 0,
           trangThai: 0,
           key: idHD,
         })
@@ -445,11 +444,7 @@ const BanHang = () => {
     } else {
       VoucherAPI.detail(hoaDons.filter((item) => item.key === key)[0].voucher).then((res) => setVoucherHienTai(res.data));
     }
-    if (!hoaDons.filter((item) => item.key === key)[0].tenNguoiDung) {
-      setVoucherHienTai("");
-    } else {
-      VoucherAPI.detail(hoaDons.filter((item) => item.key === key)[0].voucher).then((res) => setVoucherHienTai(res.data));
-    }
+
     //voucherKH(nguoiDung);
   };
 
@@ -507,7 +502,6 @@ const BanHang = () => {
           nguoiSua: null,
           ngaySua: null,
           trangThai: 0,
-          tienVanChuyen:0,
           key: idHD,
         })
 
@@ -1179,7 +1173,7 @@ const BanHang = () => {
                    
                               )}`}
                             </h6>
-                            <h6 className="mt-4">Phí vận chuyển: {`${Intl.NumberFormat("en-US").format(hd[0]?.tienVanChuyen ? hd[0].tienVanChuyen : (shipMoney ?  parseFloat(shipMoney) : 0))}`}</h6>
+                            <h6 className="mt-4">Phí vận chuyển: {`${Intl.NumberFormat("en-US").format(shipMoney ? shipMoney : 0)}`}</h6>
                             <h6 className="mt-4">Giảm giá: {`${Intl.NumberFormat("en-US").format((voucherHienTai ? 
                                   voucherHienTai.loaiVoucher === "Tiền mặt" ? 
                                   (voucherHienTai.mucDo < voucherHienTai.giamToiDa ? voucherHienTai.mucDo : voucherHienTai.giamToiDa) : 

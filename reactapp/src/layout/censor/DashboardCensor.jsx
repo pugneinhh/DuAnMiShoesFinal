@@ -41,20 +41,30 @@ import {
   Typography,
   Space,
 } from "antd";
+import { useNavigate } from "react-router-dom";
 import { IoNotifications } from "react-icons/io5";
-import { FaUserAlt } from "react-icons/fa";
 import { get, set } from "local-storage";
 import logoShop from "../../assets/images/logo.png";
 const { Header, Sider, Content } = Layout;
 const DashboardCensor = ({ children }) => {
   const [userName, setUserName] = useState("");
   const [linkAnh, setLinkAnh] = useState("");
+    const nav = useNavigate();
   useEffect(() => {
     const storedData = get("userData");
+      if (storedData.accessToken == null) {
+        nav("/login");
+      }
     setUserName(storedData.ten);
     setLinkAnh(storedData.anh);
+    if(storedData.accessToken==null){
+       nav("/login");
+    }
   }, []);
-
+      const dangXuat = () => {
+             nav("/login");
+             localStorage.clear();
+      };
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
@@ -70,7 +80,11 @@ const DashboardCensor = ({ children }) => {
     },
     {
       key: "3",
-      label: "Đăng xuất",
+      label: (
+        <a target="_blank" rel="noopener noreferrer" onClick={dangXuat}>
+          Đăng xuất
+        </a>
+      ),
     },
   ];
 
@@ -319,7 +333,7 @@ const DashboardCensor = ({ children }) => {
     
             </Dropdown>
 
-                                 <div className="bold ms-2">
+              <div className="bold ms-2">
               <strong>{userName}</strong>
             </div>
           </div>
