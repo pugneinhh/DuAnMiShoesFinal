@@ -204,27 +204,28 @@ export default function AddNhanVien() {
           nguoidung.email.trim().toLowerCase() === code.trim().toLowerCase()
       );
     };
-        const checkTrungSDT = (code) => {
-          return ListNhanVien.some(
-            (nhanvien) =>
-              nhanvien.sdt.trim().toLowerCase() === code.trim().toLowerCase()
-          );
-        };
-    form.validateFields()
+    const checkTrungSDT = (code) => {
+      return ListNhanVien.some(
+        (nhanvien) =>
+          nhanvien.sdt.trim().toLowerCase() === code.trim().toLowerCase()
+      );
+    };
+    form
+      .validateFields()
       .then((values) => {
         if (fileImage === null) {
-                   toast.error("🦄 Không để trống ảnh!", {
-                     position: "top-right",
-                     autoClose: 3000,
-                     hideProgressBar: false,
-                     closeOnClick: true,
-                     pauseOnHover: true,
-                     draggable: true,
-                     progress: undefined,
-                     theme: "light",
-                   });
-                   return;
-              }
+          toast.error("🦄 Không để trống ảnh!", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          return;
+        }
         if (checkTrungEmail(values.email)) {
           toast.error("🦄 Email đã tồn tại!", {
             position: "top-right",
@@ -262,7 +263,7 @@ export default function AddNhanVien() {
           idXa: ward.key == null ? ward.WardCode : ward.key,
         };
         const formData = new FormData();
-          formData.append("file", fileImage);
+        formData.append("file", fileImage);
         formData.append("request", JSON.stringify(data));
         NhanVienAPI.create(formData)
 
@@ -279,22 +280,8 @@ export default function AddNhanVien() {
               theme: "light",
             });
           })
-          .catch((error) => {
-            console.log(error);
-          });
       })
-      .catch(() => {
-        toast("🦄 Thêm Thất bại!", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-      });
+      
   };
 
   return (

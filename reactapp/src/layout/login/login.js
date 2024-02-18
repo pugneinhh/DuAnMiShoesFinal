@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  MDBBtn,
   MDBContainer,
   MDBCard,
   MDBCardImage,
@@ -36,6 +35,7 @@ export const Login = () => {
   };
 
   const login = (data) => {
+      localStorage.clear();
     LoginAPI.login(data)
       .then((respone) => {
         set("userData", respone.data);
@@ -58,17 +58,17 @@ export const Login = () => {
         });
       });
   };
-  useEffect(() => {
-    const start =()=>{
-      gapi.clientId({
-        clientId:
-          "689459482014-49jc7cvt8hqflu87jegh2osfo2fd17se.apps.googleusercontent.com",
-          scope:""
+  // useEffect(() => {
+  //   const start =()=>{
+  //     gapi.clientId({
+  //       clientId:
+  //         "689459482014-49jc7cvt8hqflu87jegh2osfo2fd17se.apps.googleusercontent.com",
+  //         scope:""
 
-      });
-    }
+  //     });
+  //   }
      
-  });
+  // });
   const onSuccess = (res) => {
     nav("/home");
         console.log("login thanh cong:", res.profileObj);
