@@ -22,4 +22,8 @@ public class GioHangChiTietController {
     public ResponseEntity<?> addGHCT(@RequestBody GioHangChiTietRequest request){
         return ResponseEntity.ok(gioHangChiTietService.addGHCT(request));
     }
+    @PostMapping("/updateSLGHCT")
+    public ResponseEntity<?> updateSLGHCT(@RequestBody GioHangChiTietRequest request){
+        return ResponseEntity.ok(gioHangChiTietService.updateSLGHCT(request));
+    }
 }

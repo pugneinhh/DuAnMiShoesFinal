@@ -37,6 +37,12 @@ export const DashboardClient = ({ children }) => {
     if (storedData != null) {
       setUserName(storedData.ten);
       setLinkAnh(storedData.anh);
+      GioHangAPI.getByIDKH(storedData.id).then((res)=>{
+        GioHangAPI.getAllGHCTByIDGH(res.data.id).then((res)=>{
+          console.log("giỏ hàng của khách",res.data);
+          setCountGioHang(res.data.length);
+        })
+      })
     } else if (storedDataGoogle != null) {
       setUserName(storedDataGoogle.name);
       setLinkAnh(storedDataGoogle.imageUrl);
