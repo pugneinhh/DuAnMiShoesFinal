@@ -80,6 +80,7 @@ const billSlice = createSlice({
         gtNguoiDung: null,
         email:data.email,
         diemNguoiDung: null,
+        tienVanChuyen : data.tienVanChuyen,
       };
       state.unshift(newBill);
       state.forEach((item, index) => {
