@@ -180,16 +180,16 @@ public class BanHangController {
         return ResponseEntity.ok(lichSuHoaDonService.addLichSuHoaDon(lichSuHoaDonRequest));
     }
 
-    @PutMapping("/thanh-toan/hoa-don/{idHD}")
-    public ResponseEntity<?> thanhToanHoaDon (@PathVariable("idHD") String idHD ) {
+    @PutMapping("/thanh-toan/hoa-don/{idHD}/{idNV}")
+    public ResponseEntity<?> thanhToanHoaDon (@PathVariable("idHD") String idHD,@PathVariable("idNV") String idNV ) {
         HoaDon hoaDon=hoaDonServicee.findHoaDonbyID(idHD);
-
         LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
         lichSuHoaDon.setHoaDon(hoaDon);
-//        lichSuHoaDon.setNguoiTao(idNV);
+        lichSuHoaDon.setNguoiTao(idNV);
         lichSuHoaDon.setTrangThai(4);
         lichSuHoaDon.setNgayTao(LocalDateTime.now());
-        hoaDonServicee.thanhToanHoaDon(idHD);
-        return ResponseEntity.ok( lichSuHoaDonService.save(lichSuHoaDon));
+        lichSuHoaDonService.save(lichSuHoaDon);
+        return ResponseEntity.ok(  hoaDonServicee.thanhToanHoaDon(idHD));
+       
     }
 }

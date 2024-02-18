@@ -33,9 +33,9 @@ export const ProductCard = ({ product }) => {
       />
       <div className="product-details">
         <div className="product-name text-center">
-          <h7>
+          <h6>
             {product.name} [{product.size}-{product.color}]
-          </h7>
+          </h6>
           <br></br>
           
         </div>

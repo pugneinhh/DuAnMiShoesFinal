@@ -97,7 +97,7 @@ const ModalThanhToan = (props) => {
         // }
         // addHD();
         // axios.post(`http://localhost:8080/ban-hang/thanh-toan`,dataHoaDon[0]);
-        SellAPI.thanhToanHoaDon(hoaDon);
+        SellAPI.thanhToanHoaDon(hoaDon, storedData);
         toast("Thanh toán thành công!", {
             position: "top-right",
             autoClose: 1000,
