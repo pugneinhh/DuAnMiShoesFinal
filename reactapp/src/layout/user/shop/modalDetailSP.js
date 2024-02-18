@@ -6,17 +6,24 @@ import { GioHangAPI } from "../../../pages/censor/api/gioHang/gioHang.api";
 import { get, set } from "local-storage";
 const ModalDetailSP = (props) => {
   const { openModalDetailSP, setOpenModalDetailSP, idCt, setidCTSP } = props;
-  const [largeImage, setLargeImage] = useState('');
+  const [largeImage, setLargeImage] = useState("");
   const [ChiTietSanPham, setChiTietSanPham] = useState([]);
   const [selectedMauSac, setSelectedMauSac] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
-  const [IDSanPham, setIDSanPham] = useState('');
-  const [IDMauSac, setIDMauSac] = useState('');
-  const [IDSize, setIDSize] = useState('');
-  const [soLuong, setSoLuong] = useState(1); 
+  const [IDSanPham, setIDSanPham] = useState("");
+  const [IDMauSac, setIDMauSac] = useState("");
+  const [IDSize, setIDSize] = useState("");
+  const [soLuong, setSoLuong] = useState(1);
+  const [khachHang, setKhachHang] = useState(null);
+  const [gioHang, setGioHang] = useState(null);
+  const storedData = get("userData");
+  const storedGioHang = get("GioHang");
   useEffect(() => {
     loadCTSP();
-  }, [])
+    if (storedData != null) {
+      setKhachHang(storedData.userID);
+    } 
+  }, []);
   const loadCTSP = () => {
     SanPhamClientAPI.getCTSP(idCt).then((res) => {
       setChiTietSanPham(res.data);
@@ -30,13 +37,11 @@ const ModalDetailSP = (props) => {
       setLargeImage(res.data.anh);
     });
   };
-  const loadCTSPChange = (idSP,mauSelect,sizeSelect) => {
-
-    SanPhamClientAPI.getCTSPChange(idSP,mauSelect,sizeSelect).then((res) => {
+  const loadCTSPChange = (idSP, mauSelect, sizeSelect) => {
+    SanPhamClientAPI.getCTSPChange(idSP, mauSelect, sizeSelect).then((res) => {
       setChiTietSanPham(res.data);
-      console.log("list sp change",res.data);
+      console.log("list sp change", res.data);
     });
-
   };
   const [ListMauSacBySP, setListMauSacBySP] = useState([]);
   const loadListMauSacBySP = (IDSP) => {
@@ -73,47 +78,211 @@ const ModalDetailSP = (props) => {
     setIDMauSac(mauSacId);
     setSelectedMauSac(mauSacId);
     // window.location.href = `/client/sanpham/kich-thuoc-sp/${IDSanPham}/${mauSacId}`;
-    SanPhamClientAPI.changeListSizeBySPandMS(IDSanPham, mauSacId).then((res) => {
-      setListSizeBySP(res.data);
-      const kichThuocExists = res.data.some(item => item.kichThuocID === selectedSize);
-      if (kichThuocExists) {
-        setSelectedSize(selectedSize)
-       
-      } else {
-        setSelectedSize(res.data[0].kichThuocID)
+    SanPhamClientAPI.changeListSizeBySPandMS(IDSanPham, mauSacId).then(
+      (res) => {
+        setListSizeBySP(res.data);
+        const kichThuocExists = res.data.some(
+          (item) => item.kichThuocID === selectedSize
+        );
+        if (kichThuocExists) {
+          setSelectedSize(selectedSize);
+        } else {
+          setSelectedSize(res.data[0].kichThuocID);
+        }
       }
-    });
-   
+    );
   };
 
-
-
-
   const handleSizeClick = (sizeId) => {
-    
     setIDSize(sizeId);
     setSelectedSize(sizeId);
   };
-  const handleAddGioHang = (ChiTietSanPham,soLuong) => {
-    console.log("ctsp",ChiTietSanPham)
-    let randomString = '';
-      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const handleAddGioHang = (ChiTietSanPham, soLuong, khachHang) => {
+    let randomString = "";
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     for (let i = 0; i < 6; i++) {
       const randomIndex = Math.floor(Math.random() * characters.length);
       randomString += characters.charAt(randomIndex);
     }
-    
-    GioHangAPI.addGH({ma:randomString,khachHang:null}).then((res)=>{
-      set("GioHang",res.data);
-      const data={gioHang:res.data.id,chiTietSanPham:ChiTietSanPham.id,soLuong:soLuong,thanhTien:(ChiTietSanPham.giaBan*soLuong)}
-      GioHangAPI.addGHCT(data).then((res)=>{
 
-        console.log("giỏ hàng chi tiết",res.data);
-      })
-    })
+    if (storedGioHang == null) {
+      if(khachHang!=null){
+        GioHangAPI.getByIDKH(khachHang).then((res)=>{
+          if(res.data!=null){//nếu như tồn tại giỏ hàng của khách đăng nhập thì kiểm tra xem sp có trùng vs sp trong ghct đó k
+            setGioHang(res.data.id);
+            GioHangAPI.getAllGHCTByIDGH(res.data.id).then((res) => {
+              const idCTSP = res.data.filter((item) => item.chiTietSanPham === ChiTietSanPham.id);
+              console.log("list",idCTSP);
+              if (idCTSP.length > 0) {
+                const GHCT = {
+                  id:idCTSP[0].id,
+                  gioHang: idCTSP[0].gioHang,
+                  chiTietSanPham: ChiTietSanPham.id,
+                  soLuong: soLuong,
+                  thanhTien: ChiTietSanPham.giaBan * soLuong,
+                };
+                 console.log(GHCT);
+                GioHangAPI.updateSLGHCT(GHCT).then((res)=>{
+                  toast("✔️ Thêm thành công!", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                  });
+                })
+              }else{
+                const data = {
+                  gioHang:gioHang,
+                  chiTietSanPham: ChiTietSanPham.id,
+                  soLuong: soLuong,
+                  thanhTien: ChiTietSanPham.giaBan * soLuong,
+                };
+                console.log("gh",data);
+                GioHangAPI.addGHCT(data).then((res) => {
+                  toast("✔️ Thêm thành công!", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                  });
+                });
+              }
+            });
+          }else{
+            GioHangAPI.addGH({ ma: randomString, khachHang: khachHang }).then(
+              (res) => {
+                // set("GioHang", res.data);
+                const data = {
+                  gioHang: res.data.id,
+                  chiTietSanPham: ChiTietSanPham.id,
+                  soLuong: soLuong,
+                  thanhTien: ChiTietSanPham.giaBan * soLuong,
+                };
+                if (soLuong > ChiTietSanPham.soLuong) {
+                  toast.error("Số lượng sản phẩm không đủ!", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                  });
+                } else {
+                  GioHangAPI.addGHCT(data).then((res) => {
+                    toast("✔️ Thêm thành công!", {
+                      position: "top-right",
+                      autoClose: 5000,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: true,
+                      progress: undefined,
+                      theme: "light",
+                    });
+                  
+                  });
+                }
+              }
+            );
+          }
+        })
+      }else{
+      
+      GioHangAPI.addGH({ ma: randomString, khachHang: khachHang }).then(
+        (res) => {
+          set("GioHang", res.data);
+          const data = {
+            gioHang: res.data.id,
+            chiTietSanPham: ChiTietSanPham.id,
+            soLuong: soLuong,
+            thanhTien: ChiTietSanPham.giaBan * soLuong,
+          };
+          if (soLuong > ChiTietSanPham.soLuong) {
+            toast.error("Số lượng sản phẩm không đủ!", {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+          } else {
+            GioHangAPI.addGHCT(data).then((res) => {
+              toast("✔️ Thêm thành công!", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              });
+            
+            });
+          }
+        }
+      );}
+    } else {
+      GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res) => {
+        const idCTSP = res.data.filter((item) => item.chiTietSanPham === ChiTietSanPham.id);
+       
+        if (idCTSP.length > 0) {
+          const GHCT = {
+            id:idCTSP[0].id,
+            gioHang: storedGioHang.id,
+            chiTietSanPham: ChiTietSanPham.id,
+            soLuong: soLuong,
+            thanhTien: ChiTietSanPham.giaBan * soLuong,
+          };
+           
+          GioHangAPI.updateSLGHCT(GHCT).then((res)=>{
+            toast("✔️ Thêm thành công!", {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+          })
+        }else{
+          const data = {
+            gioHang: storedGioHang.id,
+            chiTietSanPham: ChiTietSanPham.id,
+            soLuong: soLuong,
+            thanhTien: ChiTietSanPham.giaBan * soLuong,
+          };
+          GioHangAPI.addGHCT(data).then((res) => {
+            toast("✔️ Thêm thành công!", {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+          });
+        }
+      });
+    }
   };
-
-
 
   return (
     <Modal
@@ -204,7 +373,10 @@ const ModalDetailSP = (props) => {
                     borderRadius: 20,
                     width: 30,
                     height: 30,
-                    border: selectedMauSac === listMauSacBySP.mauSacID ? '1px solid #4096ff' : 'none',
+                    border:
+                      selectedMauSac === listMauSacBySP.mauSacID
+                        ? "1px solid #4096ff"
+                        : "none",
                   }}
                   onClick={() => handleMauSacClick(listMauSacBySP.mauSacID)}
                 ></Button>
@@ -222,8 +394,11 @@ const ModalDetailSP = (props) => {
                     borderRadius: 10,
                     width: 40,
                     height: 40,
-                    textAlign: 'center',
-                    border: selectedSize === listsize.kichThuocID ? '1px solid #4096ff' : '1px solid #d9d9d9',
+                    textAlign: "center",
+                    border:
+                      selectedSize === listsize.kichThuocID
+                        ? "1px solid #4096ff"
+                        : "1px solid #d9d9d9",
                   }}
                   onClick={() => handleSizeClick(listsize.kichThuocID)}
                 >
@@ -244,9 +419,13 @@ const ModalDetailSP = (props) => {
             </div>
             <div className="col">{ChiTietSanPham.soLuong} sản phẩm có sẵn</div>
           </div>
-          <Button className={`mt-3`} type="primary" onClick={()=>handleAddGioHang(ChiTietSanPham,soLuong)}>
-                  Thêm vào giỏ hàng
-                </Button>
+          <Button
+            className={`mt-3`}
+            type="primary"
+            onClick={() => handleAddGioHang(ChiTietSanPham, soLuong, khachHang)}
+          >
+            Thêm vào giỏ hàng
+          </Button>
           <hr></hr>
           <h5>Mô tả sản phẩm:</h5>
           <p>
@@ -270,6 +449,20 @@ const ModalDetailSP = (props) => {
           </p>
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      {/* Same as */}
+      <ToastContainer />
     </Modal>
   );
 };

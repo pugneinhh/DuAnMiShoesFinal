@@ -36,4 +36,11 @@ export class GioHangAPI{
             data: data,
         });
     };
+    static updateSLGHCT = (data) => {
+        return requestAdmin({
+            method : 'POST',
+            url: 'gio-hang-chi-tiet/updateSLGHCT',
+            data: data,
+        });
+    };
 }

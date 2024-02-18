@@ -7,6 +7,7 @@ import com.example.backend.repository.GioHangChiTietRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -20,6 +21,12 @@ public class GioHangChiTietService {
     }
     public GioHangChiTiet addGHCT(GioHangChiTietRequest request){
         GioHangChiTiet ghct=request.map(new GioHangChiTiet());
+        return gioHangChiTietRepository.save(ghct);
+    }
+    public GioHangChiTiet updateSLGHCT(GioHangChiTietRequest request){
+        GioHangChiTiet ghct=gioHangChiTietRepository.findById(request.getId()).get();
+        ghct.setSoLuong(ghct.getSoLuong()+ request.getSoLuong());
+        ghct.setThanhTien(BigDecimal.valueOf(ghct.getThanhTien().doubleValue()+request.getThanhTien().doubleValue()));
         return gioHangChiTietRepository.save(ghct);
     }
 }
