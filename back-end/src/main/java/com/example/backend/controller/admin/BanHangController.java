@@ -182,10 +182,7 @@ public class BanHangController {
     @PutMapping("/thanh-toan/hoa-don/{idHD}/{idNV}")
     public ResponseEntity<?> thanhToanHoaDon (@PathVariable("idHD") String idHD,@PathVariable("idNV") String idNV ) {
         HoaDon hoaDon=hoaDonServicee.findHoaDonbyID(idHD);
-<<<<<<< HEAD
         NguoiDung nguoiDung = nguoiDungService.findByID(idNV);
-=======
->>>>>>> developer
         LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
         lichSuHoaDon.setHoaDon(hoaDon);
         lichSuHoaDon.setNguoiTao(nguoiDung.getMa());

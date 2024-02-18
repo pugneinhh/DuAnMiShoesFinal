@@ -18,6 +18,7 @@ import { FormattedNumber, IntlProvider } from "react-intl";
 import { HoaDonAPI } from "../api/hoaDon/hoaDon.api";
 import ModalTimeLine from "./ModalTimeLine";
 import ModalSanPham from "./ModalSanPham";
+import { get, set } from "local-storage";
 import { ThanhToanAPI } from "../api/thanhToan/thanhToan.api";
 export default function HoaDonDetail() {
   const { id } = useParams();
@@ -56,13 +57,18 @@ export default function HoaDonDetail() {
   });
   const { TextArea } = Input;
   const [hoaDondetail, setHoaDondetail] = useState([]);
+    const [maNV, setmaNV] = useState("");
   useEffect(() => {
+    const storedData = get("userData");
+      setmaNV(storedData.ma);
     loadHoaDon();
     loadNgayTimeLine();
     loadListSanPhams();
+    // ModalTimeLine();
     loadLichSuThanhToan();
   }, []);
   // load hóa đơn
+
   const loadHoaDon = async () => {
     HoaDonAPI.detailHD(id).then((res) => {
       setHoaDondetail(res.data);
@@ -83,7 +89,7 @@ export default function HoaDonDetail() {
   const [form] = Form.useForm();
   // update trạng thái hóa đơn
   const handleSubmit = (values) => {
-    HoaDonAPI.updateTTHoaDon(id, values).then((res) => {
+    HoaDonAPI.updateTTHoaDon(id,maNV ,values).then((res) => {
       loadHoaDon();
       loadNgayTimeLine();
       setTrangThai(res.data.trangThai);
@@ -271,7 +277,6 @@ export default function HoaDonDetail() {
                       <TimelineEvent color="#e6e3e3" />
                     </Flex>
                   )}
-           
                 </Timeline>
               ) : (
                 <Timeline minEvents={6} index={trangThai} placeholder>
@@ -571,37 +576,38 @@ export default function HoaDonDetail() {
         </div>
 
         {/* xác nhận đơn hàng */}
-        
+
         <div className="col-md-2 ">
           <>
-          {loaiHD==0?      
-                <>
-              {trangThai == 0 ? (
-                <Button className="ms-5 " type="primary" onClick={showModal}>
-                  {textButton[trangThai]}
-                </Button>
-              ) : trangThai == 1 ? (
-                <Button className="ms-5 " type="primary" onClick={showModal}>
-                  {textButton[trangThai]}
-                </Button>
-              ) : trangThai == 2 ? (
-                <Button className="ms-5 " type="primary" onClick={showModal}>
-                  {textButton[trangThai]}
-                </Button>
-              ) : trangThai == 3 ? (
-                <Button className="ms-5 " type="primary" onClick={showModal}>
-                  {textButton[trangThai]}
-                </Button>
-              ) : trangThai == 4 ? (
-                <Button className="ms-5 " type="primary" onClick={showModal}>
-                  {textButton[trangThai]}
-                </Button>
-              ) : (
-                <>
-                </>
-              )}
-            </>  : <> </>
-            }
+            {loaiHD == 0 ? (
+              <>
+                {trangThai == 0 ? (
+                  <Button className="ms-5 " type="primary" onClick={showModal}>
+                    {textButton[trangThai]}
+                  </Button>
+                ) : trangThai == 1 ? (
+                  <Button className="ms-5 " type="primary" onClick={showModal}>
+                    {textButton[trangThai]}
+                  </Button>
+                ) : trangThai == 2 ? (
+                  <Button className="ms-5 " type="primary" onClick={showModal}>
+                    {textButton[trangThai]}
+                  </Button>
+                ) : trangThai == 3 ? (
+                  <Button className="ms-5 " type="primary" onClick={showModal}>
+                    {textButton[trangThai]}
+                  </Button>
+                ) : trangThai == 4 ? (
+                  <Button className="ms-5 " type="primary" onClick={showModal}>
+                    {textButton[trangThai]}
+                  </Button>
+                ) : (
+                  <></>
+                )}
+              </>
+            ) : (
+              <> </>
+            )}
 
             <Modal
               title="Xác nhận đơn hàng"
@@ -623,7 +629,6 @@ export default function HoaDonDetail() {
                 >
                   <TextArea rows={4} />
                 </Form.Item>
-
                 <Button
                   style={{ marginLeft: 200 }}
                   className="bg-success text-light"
@@ -913,7 +918,11 @@ export default function HoaDonDetail() {
           Lịch sử thanh toán
         </h5>
         <hr />
-        <Table  columns={columLichSuThanhToan} dataSource={LichSuThanhToan} style={{ marginTop: "25px" }} />
+        <Table
+          columns={columLichSuThanhToan}
+          dataSource={LichSuThanhToan}
+          style={{ marginTop: "25px" }}
+        />
       </div>
       {/* Thông tin đơn hàng */}
       <div className="container-fuild mt-3 row bg-light radius">
