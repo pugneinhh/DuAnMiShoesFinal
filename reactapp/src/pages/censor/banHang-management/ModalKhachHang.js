@@ -30,7 +30,6 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
   };
   useEffect(() => {
     loadKhachHang();
-
   }, []);
 
   const dispatch = useDispatch();
@@ -41,17 +40,18 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
     : "";
 console.log("cliennnnnnnnnnnn",client);
   const handleClickAddClient = async (record) => {
+    console.log("recorrd id",record);
     dispatch(
       UpdateKHToBill({
         key: activeKey,
-        nguoiDung: record.id,
-        tenNguoiDung: record.ten,
+        nguoiDung: record.idND,
+        tenNguoiDung: record.tenND,
         gtNguoiDung: record.gioiTinh,
         diemNguoiDung: record.diem,
       })
     );
-    await SellAPI.getVoucherWithIDKH(record.id).then((res) => onVoucher(res));
-    SellAPI.updateKH(activeKey, record.id);
+    await SellAPI.getVoucherWithIDKH(record.idND).then((res) => onVoucher(res));
+   SellAPI.updateKH(activeKey, record.idND);
     setOpenKhachHang(false);
   };
 
@@ -79,11 +79,10 @@ console.log("cliennnnnnnnnnnn",client);
 
   const loadKhachHang = async () => {
     const result = await SellAPI.getAllCustomers();
-    setListKH(result.data);
     result.data.map((i) =>
       dispatch(
         AddClient({
-          id: i.idND,
+          idND: i.idND,
           maND: i.maND,
           tenND: i.tenND,
           cccd: i.cccd,
@@ -97,6 +96,7 @@ console.log("cliennnnnnnnnnnn",client);
         })
       )
     );
+    setListKH(result.data);
   };
   const handleClose = () => {
     setOpenKhachHang(false);
@@ -104,9 +104,9 @@ console.log("cliennnnnnnnnnnn",client);
   const columns = [
     {
       title: "STT",
-      dataIndex: "id",
-      key: "id",
-      render: (id, record, index) => {
+      dataIndex: "idND",
+      key: "idND",
+      render: (idND, record, index) => {
         ++index;
         return index;
       },

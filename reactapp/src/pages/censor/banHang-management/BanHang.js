@@ -144,6 +144,27 @@ const BanHang = () => {
     setVoucherNoLimited(result.data);
   };
 
+  const loadKhachHang = async () => {
+    const result = await SellAPI.getAllCustomers();
+    result.data.map((i) =>
+      dispatch(
+        AddClient({
+          idND: i.idND,
+          maND: i.maND,
+          tenND: i.tenND,
+          cccd: i.cccd,
+          email: i.email,
+          gioiTinh: i.gioiTinh,
+          ngaySinh: new Date(i.ngaySinh * 1).toDateString("DD-MM-YYYY"),
+          anh: i.anh,
+          sdt: i.sdt,
+          diem: i.diem,
+          trangThai: i.trangThai,
+        })
+      )
+    );
+  };
+
   const loadCTSP = async () => {
     const result = await SellAPI.getAllProducts();
     result.data.map((i) =>
@@ -166,26 +187,7 @@ const BanHang = () => {
     setCTSPSS(result.data);
   };
 
-  const loadKhachHang = async () => {
-    const result = await SellAPI.getAllCustomers();
-    result.data.map((i) =>
-      dispatch(
-        AddClient({
-          id: i.idND,
-          ma: i.maND,
-          ten: i.tenND,
-          cccd: i.cccd,
-          email: i.email,
-          gioiTinh: i.gioiTinh,
-          ngaySinh: new Date(i.ngaySinh * 1).toDateString("DD-MM-YYYY"),
-          anh: i.anh,
-          soDienThoai: i.sdt,
-          diem: i.diem,
-          trangThai: i.trangThai,
-        })
-      )
-    );
-  };
+
 
   const load = async (id) => {
     const result_hdct = await SellAPI.getAllHDCTByHD(id);
@@ -1008,8 +1010,8 @@ const BanHang = () => {
                                 bordered={false}
                                 color={
                                   client.filter(
-                                    (i) => i.id === tab.nguoiDung
-                                  )[0].gioiTinh === "true"
+                                    (i) => i.idND === tab.nguoiDung
+                                  )[0]?.gioiTinh === "true"
                                     ? "processing"
                                     : "#FFB6C1"
                                 }
@@ -1017,8 +1019,8 @@ const BanHang = () => {
                               >
                                 {
                                   client.filter(
-                                    (i) => i.id === tab.nguoiDung
-                                  )[0].ten
+                                    (i) => i.idND === tab.nguoiDung
+                                  )[0].tenND
                                 }
                               </Tag>
                             </p>
@@ -1028,8 +1030,8 @@ const BanHang = () => {
                                 bordered={false}
                                 color={
                                   client.filter(
-                                    (i) => i.id === tab.nguoiDung
-                                  )[0].gioiTinh === "true"
+                                    (i) => i.idND === tab.nguoiDung
+                                  )[0]?.gioiTinh === "true"
                                     ? "processing"
                                     : "#FFB6C1"
                                 }
@@ -1037,8 +1039,8 @@ const BanHang = () => {
                               >
                                 {
                                   client.filter(
-                                    (i) => i.id === tab.nguoiDung
-                                  )[0].soDienThoai
+                                    (i) => i.idND === tab.nguoiDung
+                                  )[0].sdt
                                   //.soDienThoai
                                 }
                               </Tag>
