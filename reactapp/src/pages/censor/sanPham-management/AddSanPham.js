@@ -29,6 +29,7 @@ import tr from 'date-fns/esm/locale/tr/index.js';
 import CloudinaryUpload from './UpAnh';
 import { useNavigate } from 'react-router-dom';
 import convert from 'color-convert';
+import './SanPham.css'
 import { MauSacAPI } from '../api/SanPham/mauSac.api';
 
 
@@ -1310,7 +1311,12 @@ export default function AddSanPham() {
                                         >
                                             {msData.map(item => (
                                                 <Select.Option key={item.id} value={item.ma}>
-                                                    {item.ten}
+                                                    <div style={{
+                                                        backgroundColor: `${item.ma}`,
+                                                        borderRadius: 6,
+                                                        width: 60,
+                                                        height: 20,
+                                                    }} className='custom-div'>{item.ten}</div >
                                                 </Select.Option>
                                             ))}
                                         </Select>

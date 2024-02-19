@@ -32,6 +32,7 @@ const ModalSanPham = (props) => {
   const ctsp = useSelector(GetProduct);
   const invoice = useSelector(GetInvoice)
   const [chiTietSanPham,setChiTietSanPham] = useState([""]);
+  const [CTSP,setCTSPs] = useState([]);
   const handleClose = () => {
     setOpenSanPham(false);
 
@@ -49,6 +50,7 @@ const ModalSanPham = (props) => {
     setComponentSize(size);
   };
  
+  //Tìm kiếm
   const onChangeFilter = (changedValues, allValues) => {
     console.log("All values : ", allValues)
     timKiemCT(allValues);
@@ -58,7 +60,7 @@ const ModalSanPham = (props) => {
       .then(response => {
         // Update the list of items
         response.data.map((i)=> dispatch(AddProduct({id:i.idCTSP,soLuong:i.soLuong,linkAnh:i.linkAnh,tenSP:i.tenSP,tenKT:i.tenKT,tenMS:i.tenMS,maMS:i.maMS,loaiKM:i.loaiKM,giaTriKhuyenMai: parseInt(i.giaKhuyenMai, 10),giaBan:i.giaBan,tenKM:i.tenKM})))
-        setChiTietSanPham(response.data)
+        setCTSPs(response.data)
       })
       .catch(error => console.error('Error adding item:', error));
   }
@@ -284,6 +286,7 @@ const addHang = (value) => {
     result.data.map((i)=> dispatch(AddProduct({id:i.idCTSP,soLuong:i.soLuong,linkAnh:i.linkAnh,tenSP:i.tenSP,tenKT:i.tenKT,tenMS:i.tenMS,maMS:i.maMS,loaiKM:i.loaiKM,giaTriKhuyenMai: parseInt(i.giaKhuyenMai, 10),giaBan:i.giaBan,tenKM:i.tenKM})))
     setChiTietSanPham(result.data);
     console.log(result.data)
+    setCTSPs(result.data)
   };
 
 
@@ -295,6 +298,7 @@ const addHang = (value) => {
     SellAPI.addInvoice(hdct[0]);
    // SellAPI.updateThanhTien(activeKey);
     setOpenSanPham(false);
+    
   };
 
   const columns = [
@@ -631,7 +635,7 @@ const addHang = (value) => {
               <div>
                 <Table
                   className="text-center"
-                  dataSource={ctsp}
+                  dataSource={CTSP}
                   columns={columns}
                   pagination={{
                     showQuickJumper: true,

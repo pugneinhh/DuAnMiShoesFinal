@@ -3,6 +3,9 @@
   }
   .custom-div {
     border: 1px solid black;
+    text-align: center;
+    color: white;
+    justify-content: center;
   }
 
   .icon-button{
