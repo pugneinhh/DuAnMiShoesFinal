@@ -11,7 +11,8 @@ import java.util.List;
 @Repository
 public interface GioHangChiTietRepository extends JpaRepository<GioHangChiTiet,String> {
     @Query(value = """
-SELECT gh.id,gh.gio_hang_id as gioHang,gh.chi_tiet_sp_id as chiTietSanPham,gh.so_luong as soLuong,gh.thanh_tien as thanhTien,gh.trang_thai as trangThai  from gio_hang_chi_tiet gh join gio_hang on gh.gio_hang_id=gio_hang.id where gh.gio_hang_id=:idGH
+SELECT gh.id,gh.gio_hang_id as gioHang,gh.chi_tiet_sp_id as chiTietSanPham,gh.so_luong as soLuong,gh.thanh_tien as thanhTien,gh.trang_thai as trangThai  from gio_hang_chi_tiet gh join gio_hang on gh.gio_hang_id=gio_hang.id where gh.gio_hang_id=:idGH and gh.trang_thai=0
 """,nativeQuery = true)
     List<GioHangChiTietRespone> getAllGioHangChiTiet(String idGH);
+
 }

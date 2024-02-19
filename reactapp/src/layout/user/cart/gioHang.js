@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./gioHang.css";
 import { Button, Tag } from "antd";
 import { FaRegTrashAlt, FaMapMarkerAlt } from "react-icons/fa";
@@ -7,14 +7,46 @@ import ModalDiaChi from "./modalDiaChi";
 import ModalVoucher from "./modalVoucher";
 import { Link } from "react-router-dom";
 import ProductRow from "./gioHangrow";
+import { GioHangAPI } from "../../../pages/censor/api/gioHang/gioHang.api";
+import { get, set } from "local-storage";
 export const GioHang = ({ children }) => {
     const [openModalDiaChi, setOpenModalDiaChi] = useState(false);
     const [openModalVoucher, setOpenModalVoucher] = useState(false);
+    const [khachHang,setKhachHang] = useState(null);
+    const [gioHangCT,setGioHangCT] = useState([]);
+    const storedData = get("userData");
+    const storedGioHang = get("GioHang");
+
+    useEffect(() => {
+      if (storedData != null) {
+        setKhachHang(storedData.userID);
+      } 
+      loadGHCT();
+    }, []);
+    const loadGHCT = () => {
+     if(storedData !== null) {
+      GioHangAPI.getByIDKH(storedData.userID).then((response) => {
+        GioHangAPI.getAllGHCTByIDGH(response.data.id).then((res)=>{
+          setGioHangCT(res.data);
+          console.log("GioHangct",res.data);
+        });
+      });
+     }
+     if(storedGioHang !==null){
+      GioHangAPI.getByID(storedGioHang.id).then((res)=>{
+        GioHangAPI.getAllGHCTByIDGH(res.data.id).then((res)=>{
+          setGioHangCT(res.data);
+          console.log("GioHan",res.data);
+        });
+      });
+     }
+    };
       const detailDiaChi = (row) => {
         console.log("click", row);
         // setIdKH(row);
         setOpenModalDiaChi(true);
       };
+     
   // const [quantity, setQuantity] = useState(0);
   // const tangSL = () => {
   //   setQuantity(quantity + 1);
@@ -76,8 +108,9 @@ export const GioHang = ({ children }) => {
               </tr>
             </thead>
             <tbody>
-              <ProductRow />
-              <ProductRow />
+              {gioHangCT.map((ghct,index)=>{
+                return(<ProductRow key={index} product={ghct} loadghct={loadGHCT}/>)
+              })}
             </tbody>
           </table>
         </div>

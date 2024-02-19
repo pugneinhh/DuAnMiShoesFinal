@@ -1,37 +1,76 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
+import { GioHangAPI } from "../../../pages/censor/api/gioHang/gioHang.api";
 
-function ProductRow() {
-  const [quantity, setQuantity] = useState(1);
+function ProductRow({product,loadghct}) {
+  const [quantity, setQuantity] = useState();
   const [price, setPrice] = useState();
+  const [ctsp,setCtsp]=useState({});
+  const [priceOne, setPriceOne] = useState();
+  useEffect(() => {
+    setQuantity(product.soLuong);
+    setPrice(product.thanhTien);
+    setPriceOne(product.thanhTien/product.soLuong);
+    GioHangAPI.detailCTSP(product.chiTietSanPham).then((res)=>{
+      setCtsp(res.data);
+      console.log("ctspgh",res.data);
+    })
+  }, []);
 
   const decreaseQuantity = () => {
-    setQuantity(quantity - 1 >= 0 ? quantity - 1 : 0);
-    setPrice(quantity*120000)
+    setQuantity(quantity - 1 > 0 ? quantity - 1 : 0);
+    setPrice(quantity>0?price-priceOne:0)
+    if(quantity>0){
+    handleUpdateGHCT(quantity-1, price-priceOne,product);
+    }
+    if(quantity===1){
+     handleDeleteGHCT();
+    }
   };
 
   const increaseQuantity = () => {
-    setQuantity(quantity + 1);
-     setPrice(quantity * 120000);
+    setQuantity(quantity + 1 <ctsp.soLuong ? quantity +1 : ctsp.soLuong);
+    setPrice(quantity<ctsp.soLuong?price+priceOne:price);
+    if(quantity<ctsp.soLuong){
+    handleUpdateGHCT(quantity+1, price+priceOne,product);
+    }
   };
-
+  const handleDeleteGHCT = () => {
+    GioHangAPI.deleteGHCT(product.id).then((res)=>{
+      console.log("remove ghct",res.data)
+      loadghct();
+    })
+  };
+  const handleUpdateGHCT = (quantity,price,product) => {
+    console.log("qqqqqq",quantity,price,product)
+    const data = {
+      id:product.id,
+      gioHang: product.gioHang,
+      chiTietSanPham: product.chiTietSanPham,
+      soLuong: quantity,
+      thanhTien: price,
+    };
+    GioHangAPI.updateGHCT(data).then((res)=>{
+      console.log("ghctupdate",res.data);
+    })
+  };
   return (
     <tr>
       <td className="row">
         <div className="col-md-3">
           <img
             style={{ width: 100, height: 100 }}
-            src="https://res-console.cloudinary.com/dm0w2qws8/thumbnails/v1/image/upload/v1705931217/eTN5eGM4bHdkdHZvYWZkZ21ucmE=/preview"
+            src={ctsp.ghiChu}
             alt="Product"
           ></img>
         </div>
         <div className="col-md-5 fw-bold" style={{ paddingLeft: 20 }}>
-          <h6> Nike Adidas Grand Court</h6>
-          <h6 className="mt-2">39</h6>
+          <h6> {ctsp.tenSP}</h6>
+          <h6 className="mt-2">{ctsp.kichThuoc}</h6>
           <div
             className="mt-2"
             style={{
-              backgroundColor: "red",
+              backgroundColor: `${ctsp.mauSac}`,
               borderRadius: 6,
               width: 60,
               height: 25,
@@ -41,7 +80,7 @@ function ProductRow() {
       </td>
       <td>
         <h6 className=" fw-bold" style={{ color: "red", marginTop: "35px" }}>
-          120000
+          {ctsp.giaBan}
         </h6>
       </td>
       <td>
@@ -58,6 +97,7 @@ function ProductRow() {
             style={{ width: 35 }}
             min={0}
             readOnly
+            
           ></input>
           <button
             onClick={increaseQuantity}
@@ -69,11 +109,11 @@ function ProductRow() {
       </td>
       <td>
         <h6 className=" fw-bold" style={{ color: "red", marginTop: "35px" }}>
-          ${price}
+          {price}VNĐ
         </h6>
       </td>
       <td>
-        <button style={{ marginTop: "30px" }}>
+        <button style={{ marginTop: "30px" }} onClick={handleDeleteGHCT}>
           <FaRegTrashAlt />
         </button>
       </td>

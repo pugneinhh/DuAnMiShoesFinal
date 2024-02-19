@@ -15,7 +15,6 @@ const ModalDetailSP = (props) => {
   const [IDSize, setIDSize] = useState("");
   const [soLuong, setSoLuong] = useState(1);
   const [khachHang, setKhachHang] = useState(null);
-  const [gioHang, setGioHang] = useState(null);
   const storedData = get("userData");
   const storedGioHang = get("GioHang");
   useEffect(() => {
@@ -33,7 +32,19 @@ const ModalDetailSP = (props) => {
       setSelectedSize(res.data.kichThuocID);
       setIDSize(res.data.kichThuocID);
       loadListMauSacBySP(res.data.sanPhamID);
-      loadListSizeBySP(res.data.sanPhamID);
+      SanPhamClientAPI.changeListSizeBySPandMS(res.data.sanPhamID, res.data.mauSacID).then(
+        (res) => {
+          setListSizeBySP(res.data);
+          const kichThuocExists = res.data.some(
+            (item) => item.kichThuocID === selectedSize
+          );
+          if (kichThuocExists) {
+            setSelectedSize(selectedSize);
+          } else {
+            setSelectedSize(res.data[0].kichThuocID);
+          }
+        }
+      );
       setLargeImage(res.data.anh);
     });
   };
@@ -111,11 +122,11 @@ const ModalDetailSP = (props) => {
           
           if(res.data!==null&&res.data!==''){//nếu như tồn tại giỏ hàng của khách đăng nhập thì kiểm tra xem sp có trùng vs sp trong ghct đó k
             console.log("res.data",res.data);
-            setGioHang(res.data.id);
-            console.log("hior hàng",gioHang);
+            
+            const idgh=res.data.id;
+            
             GioHangAPI.getAllGHCTByIDGH(res.data.id).then((res) => {
               const idCTSP = res.data.filter((item) => item.chiTietSanPham === ChiTietSanPham.id);
-              console.log("list",idCTSP);
               if (idCTSP.length > 0) {
                 const GHCT = {
                   id:idCTSP[0].id,
@@ -139,7 +150,7 @@ const ModalDetailSP = (props) => {
                 })
               }else{
                 const data = {
-                  gioHang:res.data[0].gioHang,
+                  gioHang:idgh,
                   chiTietSanPham: ChiTietSanPham.id,
                   soLuong: soLuong,
                   thanhTien: ChiTietSanPham.giaBan * soLuong,
