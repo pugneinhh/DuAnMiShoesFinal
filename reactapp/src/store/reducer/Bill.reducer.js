@@ -35,7 +35,6 @@ const initialState = [];
 //       },
 //  ];
 
-
 const billSlice = createSlice({
   name: "bill",
   initialState,
@@ -55,7 +54,7 @@ const billSlice = createSlice({
         trangThai: 0,
         key: data.key,
         tenNguoiDung: data.tenNguoiDung,
-       // ngayTao : data.ngayTao,
+        // ngayTao : data.ngayTao,
         loaiHoaDon: 1,
         nhanVien: data.nhanVien,
         nguoiDung: data.nguoiDung,
@@ -75,12 +74,12 @@ const billSlice = createSlice({
         ngayNhan: data.ngayNhan,
         ngayTraHang: data.ngayTraHang,
         nguoiTao: data.nguoiTao,
-      //  nguoiSua: data.nguoiSua,
-      //  ngaySua: data.ngaySua,
+        //  nguoiSua: data.nguoiSua,
+        //  ngaySua: data.ngaySua,
         gtNguoiDung: null,
-        email:data.email,
+        email: data.email,
         diemNguoiDung: null,
-        tienVanChuyen : data.tienVanChuyen,
+        tienVanChuyen: data.tienVanChuyen,
       };
       state.unshift(newBill);
       state.forEach((item, index) => {
@@ -152,7 +151,20 @@ const billSlice = createSlice({
       const index = state.findIndex((period) => period.key === updatedBill.key);
       if (index !== -1) {
         state[index].voucher = null;
-
+      }
+    },
+    UpdateVanChuyenToBill: (state, action) => {
+      const updatedBill = action.payload; // backend
+      const index = state.findIndex((period) => period.key === updatedBill.key);
+      console.log(index);
+      console.log(updatedBill);
+      if (index !== -1) {
+        state[index].tenNguoiNhan = updatedBill.tenNguoiNhan;
+        state[index].email = updatedBill.email;
+        state[index].soDienThoai = updatedBill.soDienThoai;
+        state[index].tienVanChuyen = updatedBill.tienVanChuyen;
+        state[index].ngayDuKienNhan = updatedBill.ngayDuKienNhan;
+        state[index].diaChi = updatedBill.diaChi;
       }
     },
   },
@@ -167,7 +179,8 @@ export const {
   UpdateKHToBill,
   UpdateNullClient,
   UpdateNullVoucher,
-  UpdateVoucherToBill
+  UpdateVoucherToBill,
+  UpdateVanChuyenToBill,
 } = billSlice.actions;
 export default billSlice.reducer;
 export const GetBill = (state) => state.bill;

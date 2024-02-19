@@ -6,14 +6,17 @@ import { ShipAPI } from "../api/ship/ship.api";
 import LogoGHN from "../../../assets/images/LogoGHN.png";
 import { SellAPI } from "../api/sell/sell.api";
 import { toast, ToastContainer } from "react-toastify";
+import { UpdateVanChuyenToBill } from "../../../store/reducer/Bill.reducer";
+import { dispatch } from "../../../store/redux/store";
 
-const DiaChiGiaoHang = ({ money, quantity, hoaDon ,thongTinVanChuyen}) => {
+const DiaChiGiaoHang = ({ money, quantity, hoaDon, thongTinVanChuyen }) => {
   const [listProvince, setListProvince] = useState([]);
   const [listDistricts, setListDistricts] = useState([]);
   const [listWard, setListWard] = useState([]);
   const [districtID, setDistrictID] = useState("");
   const [wardCode, setWardCode] = useState("");
   const [timeShip, setTimeShip] = useState("");
+  const [moneyShip, setMoneyShip] = useState();
   const [nameClient, setNameClient] = useState("");
   const [email, setEmail] = useState("");
   const [sdt, setSDT] = useState("");
@@ -28,83 +31,113 @@ const DiaChiGiaoHang = ({ money, quantity, hoaDon ,thongTinVanChuyen}) => {
       setListProvince(res.data.data);
     });
   };
-  const loadTimeAndMoney = async(districtID,valueWard,quantity) => {
+  const loadTimeAndMoney = async (districtID, valueWard, quantity) => {
     setTimeShip(
       await ShipAPI.fetchAllDayShip(districtID, valueWard).then(
         (res) => res.data.data.leadtime * 1000
       )
     );
     money(
-      await ShipAPI.fetchAllMoneyShip(
-        districtID,
-        valueWard,
-        quantity
-      ).then((res) => res.data.data.total)
+      await ShipAPI.fetchAllMoneyShip(districtID, valueWard, quantity).then(
+        (res) => res.data.data.total
+      )
     );
-  }
-  console.log("Thông tin vận chuyển",thongTinVanChuyen)
-  let indexThanhPhoDaCo =  "";
+    setMoneyShip(
+      await ShipAPI.fetchAllMoneyShip(districtID, valueWard, quantity).then(
+        (res) => res.data.data.total
+      )
+    );
+  };
+  console.log("Thông tin vận chuyển", thongTinVanChuyen);
+  let indexThanhPhoDaCo = "";
   let thanhPhoDaCo = "";
   let diaChi1 = "";
   let indexQuanDaCo = "";
   let quanDaCo = "";
   let diaChi2 = "";
-  let indexPhuongDaCo = ""; 
+  let indexPhuongDaCo = "";
   let phuongDaCo = "";
   let diaChi3 = "";
   let indexSoNhaDaCo = "";
   let soNhaDaCo = "";
   if (thongTinVanChuyen) {
-   indexThanhPhoDaCo =  thongTinVanChuyen.diaChi.lastIndexOf("/") ;
-   thanhPhoDaCo =  thongTinVanChuyen.diaChi.substring(indexThanhPhoDaCo + 1,thongTinVanChuyen.diaChi.length) ;
-   diaChi1 =  thongTinVanChuyen.diaChi.substring(0,indexThanhPhoDaCo) ;
-   indexQuanDaCo = diaChi1.lastIndexOf("/");
-   quanDaCo = diaChi1.substring(indexQuanDaCo + 1,diaChi1.length );
-   diaChi2 = diaChi1.substring(0,indexQuanDaCo);
-   indexPhuongDaCo = diaChi2.lastIndexOf("/");
-   phuongDaCo = diaChi2.substring(indexPhuongDaCo + 1, diaChi2.length );
-   diaChi3 = diaChi2.substring(0,indexPhuongDaCo);
-   indexSoNhaDaCo = diaChi3.lastIndexOf("/");
-   soNhaDaCo = diaChi3.substring(indexSoNhaDaCo + 1, diaChi3.length );
-   let districtID = "";
-   let valueWard = "";
-   let codeProvince = "";
-  //  AddressApi.fetchAllProvince().then((res) => {
-  //   codeProvince = res.data.data.filter((i) => i.ProvinceName === thanhPhoDaCo)[0].ProvinceID;
+    indexThanhPhoDaCo = thongTinVanChuyen.diaChi.lastIndexOf("/");
+    thanhPhoDaCo = thongTinVanChuyen.diaChi.substring(
+      indexThanhPhoDaCo + 1,
+      thongTinVanChuyen.diaChi.length
+    );
+    diaChi1 = thongTinVanChuyen.diaChi.substring(0, indexThanhPhoDaCo);
+    indexQuanDaCo = diaChi1.lastIndexOf("/");
+    quanDaCo = diaChi1.substring(indexQuanDaCo + 1, diaChi1.length);
+    diaChi2 = diaChi1.substring(0, indexQuanDaCo);
+    indexPhuongDaCo = diaChi2.lastIndexOf("/");
+    phuongDaCo = diaChi2.substring(indexPhuongDaCo + 1, diaChi2.length);
+    diaChi3 = diaChi2.substring(0, indexPhuongDaCo);
+    indexSoNhaDaCo = diaChi3.lastIndexOf("/");
+    soNhaDaCo = diaChi3.substring(indexSoNhaDaCo + 1, diaChi3.length);
+    let districtID = "";
+    let valueWard = "";
+    let codeProvince = "";
+    //  AddressApi.fetchAllProvince().then((res) => {
+    //   codeProvince = res.data.data.filter((i) => i.ProvinceName === thanhPhoDaCo)[0].ProvinceID;
 
-  // });
+    // });
 
-  // AddressApi.fetchAllProvinceDistricts(codeProvince).then(
-  //   (res) => {
-  //      districtID = res.data.data?.fillter((i) => i.DistrictName === quanDaCo)[0].DistrictID;
-  //   })
-  //   console.log("ID district",districtID);
+    // AddressApi.fetchAllProvinceDistricts(codeProvince).then(
+    //   (res) => {
+    //      districtID = res.data.data?.fillter((i) => i.DistrictName === quanDaCo)[0].DistrictID;
+    //   })
+    //   console.log("ID district",districtID);
 
-
-  //   AddressApi.fetchAllProvinceWard(districtID).then((res) => {
-  //     valueWard = res.data.data.fillter((i) => i.WardName === phuongDaCo)[0].WardCode;
-  //   });
-  //  loadTimeAndMoney(districtID,valueWard,quantity);
+    //   AddressApi.fetchAllProvinceWard(districtID).then((res) => {
+    //     valueWard = res.data.data.fillter((i) => i.WardName === phuongDaCo)[0].WardCode;
+    //   });
+    //  loadTimeAndMoney(districtID,valueWard,quantity);
   }
-  console.log("Thành phố đã có",thanhPhoDaCo);
-  console.log("Quận đã có",quanDaCo);
-  console.log("Phường đã có",phuongDaCo);
-  console.log("Số nhà đã có",soNhaDaCo)
+  console.log("Thành phố đã có", thanhPhoDaCo);
+  console.log("Quận đã có", quanDaCo);
+  console.log("Phường đã có", phuongDaCo);
+  console.log("Số nhà đã có", soNhaDaCo);
 
   const [province, setProvince] = useState(null);
   const [district, setDistrict] = useState(null);
   const [ward, setWard] = useState(null);
 
-  const handleSubmit = async(value) => {
+  const handleSubmit = async (value) => {
     console.log(value);
+    console.log(money);
+    dispatch(
+      UpdateVanChuyenToBill({
+        tenNguoiNhan: value.tenNguoiNhan,
+        soDienThoai: value.soDienThoai,
+        email: value.email,
+        diaChi:
+          value.soNha +
+          "/" +
+          value.tenXa +
+          "/" +
+          value.tenHuyen +
+          "/" +
+          value.tenThanhPho,
+        ngayDuKienNhan: timeShip,
+        tienVanChuyen: moneyShip,
+      })
+    );
     const data = [
       {
         tenNguoiNhan: value.tenNguoiNhan,
         soDienThoai: value.soDienThoai,
         email: value.email,
-        diaChi: value.soNha + "/" + value.tenXa + "/" + value.tenHuyen + "/" + value.tenThanhPho,
+        diaChi:
+          value.soNha +
+          "/" +
+          value.tenXa +
+          "/" +
+          value.tenHuyen +
+          "/" +
+          value.tenThanhPho,
         ngayDuKienNhan: timeShip,
-        tienVanChuyen : money,
+        tienVanChuyen: moneyShip,
       },
     ];
     console.log("dâta", data[0]);
@@ -139,7 +172,6 @@ const DiaChiGiaoHang = ({ money, quantity, hoaDon ,thongTinVanChuyen}) => {
     setSoNha(value);
   };
 
-
   const handleDistrictChange = (value, valueDistrict) => {
     form.setFieldsValue({ toDistrictId: valueDistrict.valueDistrict });
     setDistrictID(valueDistrict.valueDistrict);
@@ -170,6 +202,13 @@ const DiaChiGiaoHang = ({ money, quantity, hoaDon ,thongTinVanChuyen}) => {
         (res) => res.data.data.leadtime * 1000
       )
     );
+    setMoneyShip(
+      await ShipAPI.fetchAllMoneyShip(
+        districtID,
+        valueWard.valueWard,
+        quantity
+      ).then((res) => res.data.data.total)
+    );
     setPhuong(value);
     setWard(valueWard);
   };
@@ -185,6 +224,7 @@ const DiaChiGiaoHang = ({ money, quantity, hoaDon ,thongTinVanChuyen}) => {
   };
   useEffect(() => {
     changeQuantity();
+    console.log("Số lượng thay đổi", quantity);
   }, [quantity]);
 
   useEffect(() => {
@@ -217,7 +257,9 @@ const DiaChiGiaoHang = ({ money, quantity, hoaDon ,thongTinVanChuyen}) => {
                 }
               }}
               placeholder="Nhập họ và tên"
-              defaultValue={thongTinVanChuyen ? thongTinVanChuyen.tenNguoiNhan : ""}
+              defaultValue={
+                thongTinVanChuyen ? thongTinVanChuyen.tenNguoiNhan : ""
+              }
               // value={""}
               // onChange={handleNameChange}
             />
@@ -240,7 +282,9 @@ const DiaChiGiaoHang = ({ money, quantity, hoaDon ,thongTinVanChuyen}) => {
             <Input
               placeholder="Nhập số điện thoại"
               onChange={handleSDTChange}
-              defaultValue={thongTinVanChuyen ? thongTinVanChuyen.soDienThoai : ""}
+              defaultValue={
+                thongTinVanChuyen ? thongTinVanChuyen.soDienThoai : ""
+              }
             />
           </Form.Item>
           <Form.Item
@@ -258,8 +302,11 @@ const DiaChiGiaoHang = ({ money, quantity, hoaDon ,thongTinVanChuyen}) => {
               },
             ]}
           >
-            <Input placeholder="Nhập email" onChange={handleEmailChange}  defaultValue={thongTinVanChuyen ? thongTinVanChuyen.email : ""}
-/>
+            <Input
+              placeholder="Nhập email"
+              onChange={handleEmailChange}
+              defaultValue={thongTinVanChuyen ? thongTinVanChuyen.email : ""}
+            />
           </Form.Item>
 
           <Form.Item
@@ -273,14 +320,17 @@ const DiaChiGiaoHang = ({ money, quantity, hoaDon ,thongTinVanChuyen}) => {
               },
             ]}
           >
-            <Select defaultValue={thanhPhoDaCo ? thanhPhoDaCo  : null} onChange={handleProvinceChange}>
-              <Select.Option >--Chọn Tỉnh/Thành phố--</Select.Option>
+            <Select
+              defaultValue={thanhPhoDaCo ? thanhPhoDaCo : null}
+              onChange={handleProvinceChange}
+            >
+              <Select.Option>--Chọn Tỉnh/Thành phố--</Select.Option>
               {listProvince?.map((item) => {
                 return (
                   <Select.Option
                     key={item.ProvinceID}
                     value={item.ProvinceName}
-                    valueProvince={item.ProvinceID}                 
+                    valueProvince={item.ProvinceID}
                   >
                     {item.ProvinceName}
                   </Select.Option>
@@ -301,8 +351,11 @@ const DiaChiGiaoHang = ({ money, quantity, hoaDon ,thongTinVanChuyen}) => {
             // labelCol={{ span: 9 }}
             // wrapperCol={{ span: 15 }}
           >
-            <Select defaultValue={quanDaCo ? quanDaCo : null} onChange={handleDistrictChange}>
-              <Select.Option >--Chọn Quận/Huyện--</Select.Option>
+            <Select
+              defaultValue={quanDaCo ? quanDaCo : null}
+              onChange={handleDistrictChange}
+            >
+              <Select.Option>--Chọn Quận/Huyện--</Select.Option>
               {listDistricts?.map((item) => {
                 return (
                   <Select.Option
@@ -327,7 +380,10 @@ const DiaChiGiaoHang = ({ money, quantity, hoaDon ,thongTinVanChuyen}) => {
               },
             ]}
           >
-            <Select defaultValue={phuongDaCo ? phuongDaCo : null} onChange={handleWardChange}>
+            <Select
+              defaultValue={phuongDaCo ? phuongDaCo : null}
+              onChange={handleWardChange}
+            >
               <Select.Option>--Chọn Xã/Phường--</Select.Option>
               {listWard?.map((item) => {
                 return (
@@ -356,7 +412,11 @@ const DiaChiGiaoHang = ({ money, quantity, hoaDon ,thongTinVanChuyen}) => {
             // labelCol={{ span: 9 }}
             // wrapperCol={{ span: 15 }}
           >
-            <Input placeholder="Nhập số nhà " onChange={handleSoNhaChange} defaultValue={soNhaDaCo ? soNhaDaCo : null}/>
+            <Input
+              placeholder="Nhập số nhà "
+              onChange={handleSoNhaChange}
+              defaultValue={soNhaDaCo ? soNhaDaCo : null}
+            />
           </Form.Item>
         </Col>
 
@@ -366,10 +426,12 @@ const DiaChiGiaoHang = ({ money, quantity, hoaDon ,thongTinVanChuyen}) => {
           </div>
           <div className="col-md-6 align-self-center fw-bold">
             <p>
-               Thời gian giao hàng dự kiến :{" "}
+              Thời gian giao hàng dự kiến :{" "}
               <span className="text-danger">
                 {/* {new Date(timeShip * 1).getDate()} / {new Date(timeShip * 1).getUTCMonth()} / {new Date(timeShip * 1).getFullYear()} */}
-                {thongTinVanChuyen ? thongTinVanChuyen.ngayDuKienNhan : timeShip
+                {thongTinVanChuyen
+                  ? thongTinVanChuyen.ngayDuKienNhan
+                  : timeShip
                   ? new Date(timeShip).toLocaleDateString()
                   : "dd/MM/yyyy"}
               </span>

@@ -21,8 +21,8 @@ public interface NguoiDungVoucherRepository extends JpaRepository<NguoiDungVouch
     List<String> getIDKHByIDKM(String id);
 
     @Query(value = """
-            select voucher.* from voucher join nguoidung_voucher on nguoidung_voucher.voucher_id =voucher.id\s
-            where nguoi_dung_id=:idND and voucher.trang_thai='DANG_HOAT_DONG' and nguoidung_voucher.trang_thai='DANG_SU_DUNG'\s
+            select voucher.id as id , voucher.ma as ma , voucher.ten as ten ,voucher.loai_voucher as loaiVoucher, voucher.muc_do as mucDo , voucher.dieu_kien as dieuKien , voucher.so_luong as soLuong, voucher.trang_thai as trangThai , voucher.giam_toi_da as giamToiDa from voucher join nguoidung_voucher on nguoidung_voucher.voucher_id =voucher.id
+            where nguoi_dung_id=:idND and voucher.trang_thai='DANG_HOAT_DONG' and nguoidung_voucher.trang_thai='DANG_SU_DUNG'
             """, nativeQuery = true)
     List<VoucherRespone> getVoucherByNguoiDung(String idND);
 

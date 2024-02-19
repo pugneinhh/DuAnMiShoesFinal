@@ -113,7 +113,7 @@ public class HoaDonServicee {
         BigDecimal giam = voucher.getLoaiVoucher().equals("Tiền mặt") ?
                 ( BigDecimal.valueOf(voucher.getMucDo()).compareTo(giamToiDa) < 0 ?  BigDecimal.valueOf(voucher.getMucDo()) : giamToiDa ) :
                 ((hoaDon.getThanhTien().multiply(BigDecimal.valueOf(voucher.getMucDo())).divide(new BigDecimal(100))).compareTo(giamToiDa) < 0 ? (hoaDon.getThanhTien().multiply(BigDecimal.valueOf(voucher.getMucDo())).divide(new BigDecimal(100))) : giamToiDa);
-       // hoaDon.get
+        System.out.println("Giảm"+giam);
         hoaDon.setGiaGiamGia(giam);
         hoaDon.setThanhTien(hoaDon.getGiaGoc().subtract(giam));
         return hoaDonRepository.save(hoaDon);
