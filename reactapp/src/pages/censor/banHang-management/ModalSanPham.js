@@ -11,7 +11,7 @@ import {
   Tag,
   Badge
 } from "antd";
-import { BookFilled } from "@ant-design/icons";
+import { BookFilled, RetweetOutlined } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
 import { InfoCircleFilled } from "@ant-design/icons";
 import { useEffect, useState } from "react";
@@ -20,16 +20,18 @@ import { Image } from "cloudinary-react";
 import { AddProduct, GetProduct, UpdateApartProduct } from "../../../store/reducer/Product.reducer";
 import { AddInvoice, GetInvoice } from "../../../store/reducer/DetailInvoice.reducer";
 import {SellAPI} from "../../censor/api/sell/sell.api"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import axios from "axios";
 import { v4 as uuid } from "uuid";
 
 const ModalSanPham = (props) => {
+  const [form1] = Form.useForm();
   const { openSanPham, setOpenSanPham } = props;
   const activeKey = props.activeKey;
   const ctsp = useSelector(GetProduct);
   const invoice = useSelector(GetInvoice)
   const [chiTietSanPham,setChiTietSanPham] = useState([""]);
-
   const handleClose = () => {
     setOpenSanPham(false);
 
@@ -46,67 +48,231 @@ const ModalSanPham = (props) => {
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
   };
-  //Load kich thước
-   const [kt, setKT] = useState([]);
+ 
+  const onChangeFilter = (changedValues, allValues) => {
+    console.log("All values : ", allValues)
+    timKiemCT(allValues);
+  }
+  const timKiemCT = (dataSearch) => {
+    axios.post(`http://localhost:8080/admin/ctsp/search-ctsp-banhang`, dataSearch)
+      .then(response => {
+        // Update the list of items
+        response.data.map((i)=> dispatch(AddProduct({id:i.idCTSP,soLuong:i.soLuong,linkAnh:i.linkAnh,tenSP:i.tenSP,tenKT:i.tenKT,tenMS:i.tenMS,maMS:i.maMS,loaiKM:i.loaiKM,giaTriKhuyenMai: parseInt(i.giaKhuyenMai, 10),giaBan:i.giaBan,tenKM:i.tenKM})))
+        setChiTietSanPham(response.data)
+      })
+      .catch(error => console.error('Error adding item:', error));
+  }
 
-  const loadKT =  async() => {
-    const result = await axios.get("http://localhost:8080/admin/kich-thuoc").then((response) => setKT(response.data));
-    
-    
- };
+//Load kich thước
+const [kt, setKT] = useState([]);
+useEffect(() => {
+  loadKT();
+}, []);
+const loadKT = async () => {
+  const result = await axios.get("http://localhost:8080/admin/kich-thuoc", {
+    validateStatus: () => {
+      return true;
+    }
+  });
+  setKT(result.data);
+};
+const addKichThuoc = (value) => {
+  console.log(value);
+  axios.post('http://localhost:8080/admin/kich-thuoc/add', value)
+    .then(response => {
+      console.log(response.data);
+      toast('✔️ Thêm thành công!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      loadKT();
+      form1.resetFields();
 
-   useEffect(() => {
-    loadKT();
-  }, []);
-  // //Load Màu Sắc
-   const [ms, setMS] = useState([]);
-  // useEffect(() => {
-  //   loadMS();
-  // }, []);
-  // const loadMS = async () => {
-  //   const result = await SellAPI.getAllColors();
-  //     setMS(result.data);
-    
-  // };
-  // //Load Chất Liệu
-   const [cl, setCL] = useState([]);
-  // useEffect(() => {
-  //   loadCL();
-  // }, []);
-  // const loadCL = async () => {
-  //   const result = await SellAPI.getAllMeterials();
-  //     setCL(result.data);
-    
-  // };
-  // //Load Độ Cao -- Đế Giầy
-   const [dc, setDC] = useState([]);
-  // useEffect(() => {
-  //   loadDC();
-  // }, []);
-  // const loadDC = async () => {
-  //   const result = await SellAPI.getAllSoles();
-  //     setDC(result.data);
-    
-  // };
-  // //Load Danh Mục
-  const [dm, setDM] = useState([]);
-  // useEffect(() => {
-  //   loadDM();
-  // }, []);
-  // const loadDM = async () => {
-  //   const result = await SellAPI.getAllCategories();
-  //   setDM(result.data);
-  // };
-  // //Load Chất Liệu
-   const [h, setH] = useState([]);
-  // useEffect(() => {
-  //   loadH();
-  // }, []);
-  // const loadH = async () => {
-  //   const result = await SellAPI.getAllBrands();
-  //     setH(result.data);
-    
-  // };
+    })
+    .catch(error => console.error('Error adding item:', error));
+
+}
+//Load Màu Sắc 
+const [ms, setMS] = useState([]);
+useEffect(() => {
+  loadMS();
+}, []);
+const loadMS = async () => {
+  const result = await axios.get("http://localhost:8080/admin/mau-sac", {
+    validateStatus: () => {
+      return true;
+    }
+  });
+  setMS(result.data);
+};
+const addMauSac = (value) => {
+  console.log(value);
+  axios.post('http://localhost:8080/admin/mau-sac/add', value)
+    .then(response => {
+      console.log(response.data);
+      toast('✔️ Thêm thành công!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      loadMS();
+      form1.resetFields();
+
+    })
+    .catch(error => console.error('Error adding item:', error));
+
+}
+//Load Chất Liệu
+const [cl, setCL] = useState([]);
+useEffect(() => {
+  loadCL();
+}, []);
+const loadCL = async () => {
+  const result = await axios.get("http://localhost:8080/admin/chat-lieu", {
+    validateStatus: () => {
+      return true;
+    }
+  });
+  setCL(result.data);
+};
+const addChatLieu = (value) => {
+  console.log(value);
+  axios.post('http://localhost:8080/admin/chat-lieu/add', value)
+    .then(response => {
+      console.log(response.data);
+      toast('✔️ Thêm thành công!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      loadCL();
+      form1.resetFields();
+
+    })
+    .catch(error => console.error('Error adding item:', error));
+
+}
+//Load Độ Cao
+const [dc, setDC] = useState([]);
+useEffect(() => {
+  loadDC();
+}, []);
+const loadDC = async () => {
+  const result = await axios.get("http://localhost:8080/admin/de-giay", {
+    validateStatus: () => {
+      return true;
+    }
+  });
+  setDC(result.data);
+};
+const addDoCao = (value) => {
+  console.log(value);
+  axios.post('http://localhost:8080/admin/de-giay/add', value)
+    .then(response => {
+      console.log(response.data);
+      toast('✔️ Thêm thành công!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      loadDC();
+      form1.resetFields();
+
+    })
+    .catch(error => console.error('Error adding item:', error));
+
+}
+//Load Danh Mục
+const [dm, setDM] = useState([]);
+useEffect(() => {
+  loadDM();
+}, []);
+const loadDM = async () => {
+  const result = await axios.get("http://localhost:8080/admin/danh-muc", {
+    validateStatus: () => {
+      return true;
+    }
+  });
+  setDM(result.data);
+};
+const addDanhMuc = (value) => {
+  console.log(value);
+  axios.post('http://localhost:8080/admin/danh-muc/add', value)
+    .then(response => {
+      console.log(response.data);
+      toast('✔️ Thêm thành công!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      loadDM();
+      form1.resetFields();
+
+    })
+    .catch(error => console.error('Error adding item:', error));
+
+}
+//Load Hãng
+const [h, setH] = useState([]);
+useEffect(() => {
+  loadH();
+}, []);
+const loadH = async () => {
+  const result = await axios.get("http://localhost:8080/admin/hang", {
+    validateStatus: () => {
+      return true;
+    }
+  });
+  setH(result.data);
+};
+const addHang = (value) => {
+  console.log(value);
+  axios.post('http://localhost:8080/hang/admin/add', value)
+    .then(response => {
+      console.log(response.data);
+      toast('✔️ Thêm thành công!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      loadH();
+      form1.resetFields();
+
+    })
+    .catch(error => console.error('Error adding item:', error));
+  }
+  
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -117,7 +283,7 @@ const ModalSanPham = (props) => {
     const result = await SellAPI.getAllProducts();
     result.data.map((i)=> dispatch(AddProduct({id:i.idCTSP,soLuong:i.soLuong,linkAnh:i.linkAnh,tenSP:i.tenSP,tenKT:i.tenKT,tenMS:i.tenMS,maMS:i.maMS,loaiKM:i.loaiKM,giaTriKhuyenMai: parseInt(i.giaKhuyenMai, 10),giaBan:i.giaBan,tenKM:i.tenKM})))
     setChiTietSanPham(result.data);
-
+    console.log(result.data)
   };
 
 
@@ -304,152 +470,150 @@ const ModalSanPham = (props) => {
               borderRadius: "8px",
             }}
           >
-            <h5>
-              <FilterFilled size={30} /> Bộ lọc
-            </h5>
-            <hr />
-            <Form
-              labelCol={{
-                span: 6,
-              }}
-              wrapperCol={{
-                span: 14,
-              }}
-              layout="horizontal"
-              initialValues={{
-                size: componentSize,
-              }}
-              onValuesChange={onFormLayoutChange}
-              size={componentSize}
-              style={{
-                maxWidth: 1600,
-              }}
-            >
-              {/* Form tìm kiếm */}
-              {/* Các Thuộc Tính Dòng 1 */}
-              <div className="row mt-3">
-                {/* Tên & Mã */}
-                <div className="col-3">
-                  <Form.Item label="Tên & Mã" name="tenCT">
-                    <Input className="border" />
-                  </Form.Item>
-                </div>
-                {/* Kích Thước */}
-                <div className="col-3">
-                  <Form.Item label="Kích Thước" name="idKT">
-                    <Select placeholder="Chọn một giá trị">
-                      {kt.map((item) => (
-                        <Option key={item.id} value={item.id}>
-                          {item.ten}
-                        </Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                </div>
-                {/* Màu Sắc */}
-                <div className="col-3">
-                  <Form.Item label="Màu Sắc" name="idMS">
-                    <Select placeholder="Chọn một giá trị">
-                      {ms.map((item) => (
-                        <Option key={item.id} value={item.id}>
-                          <div
-                            style={{
-                              backgroundColor: `${item.ma}`,
-                              borderRadius: 6,
-                              width: 170,
-                              height: 25,
-                            }}
-                          ></div>
-                        </Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                </div>
-                {/* Chất Liệu */}
-                <div className="col-3">
-                  <Form.Item label="Chất Liệu" name="idCL">
-                    <Select placeholder="Chọn một giá trị">
-                      {cl.map((item) => (
-                        <Option key={item.id} value={item.id}>
-                          {item.ten}
-                        </Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                </div>
-              </div>
-              {/* Các Thuộc Tính Dòng 2 */}
-              <div className="row">
-                {/* Độ Cao */}
-                <div className="col-md-3">
-                  <Form.Item label="Độ Cao" name="idDC">
-                    <Select placeholder="Chọn một giá trị">
-                      {dc.map((item) => (
-                        <Option key={item.ma} value={item.ma}>
-                          {item.ten}
-                        </Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                </div>
-                {/* Danh Mục */}
-                <div className="col-md-3">
-                  <Form.Item label="Danh Mục" name="idDM">
-                    <Select placeholder="Chọn một giá trị">
-                      {dm.map((item) => (
-                        <Option key={item.id} value={item.id}>
-                          {item.ten}
-                        </Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                </div>
-                {/* Hãng */}
-                <div className="col-md-3">
-                  <Form.Item label="Hãng" name="idH">
-                    <Select defaultValue={null}>
-                      <Select.Option value={null}>Tất cả</Select.Option>
-                      {h.map((item) => (
-                        <Select.Option key={item.id} value={item.id}>
-                          {item.ten}
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                </div>
-                {/* Trạng Thái */}
-                <div className="col-md-3">
-                  <Form.Item label="Số Lượng" name="trangThaiCT">
-                    <Select defaultValue={null}>
-                      <Select.Option value={null}>Tất cả</Select.Option>
-                      <Select.Option value="1">Còn Bán</Select.Option>
-                      <Select.Option value="0">Dừng Bán</Select.Option>
-                    </Select>
-                  </Form.Item>
-                </div>
-              </div>
-              {/* Các Thuộc Tính Dòng 3 */}
-              <div className="row">
-                <div className="col-md-6">
-                  <Form.Item label="Số lượng" name="soLuongCT">
-                    <Slider style={{ width: "400px" }} min={1} />
-                  </Form.Item>
-                </div>
-                <div className="col-md-6">
-                  <Form.Item label="Giá bán" name="giaBanCT">
-                    <Slider style={{ width: "400px" }} min={1} />
-                  </Form.Item>
-                </div>
-              </div>
+             <h5><FilterFilled size={30} /> Bộ lọc</h5>
+          <hr />
+          <Form
+            labelCol={{
+              span: 6,
+            }}
+            wrapperCol={{
+              span: 14,
+            }}
+            layout="horizontal"
+            initialValues={{
+              size: componentSize,
+            }}
+            onValuesChange={onChangeFilter}
+            size={componentSize}
+            style={{
+              maxWidth: 1600,
+            }}
+          >
 
-              <div className="container-fluid">
-                <Form.Item className="text-center">
-                  <Button type="primary" htmlType="reset">
-                    Làm mới
-                  </Button>
+            {/* Form tìm kiếm */}
+            {/* Các Thuộc Tính Dòng 1 */}
+            <div className='row mt-3'>
+              {/* Tên & Mã */}
+              <div className="col-md-4">
+                <Form.Item label="Tên & Mã" name="tenCT">
+                  <Input className="border" />
                 </Form.Item>
               </div>
-            </Form>
+              {/* Kích Thước */}
+              <div className='col-md-4' >
+                <Form.Item label="Kích Thước" name="idKT">
+                  <Select placeholder="Chọn một giá trị" >
+                    {kt.map(item => (
+                      <Option key={item.id} value={item.id}>
+                        {item.ten}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </div>
+              {/* Màu Sắc */}
+              <div className='col-md-4'>
+                <Form.Item label="Màu Sắc" name="idMS">
+                  <Select placeholder="Chọn một giá trị">
+                    {ms.map(item => (
+                      <Option key={item.id} value={item.id}>
+                        <div style={{
+                          backgroundColor: `${item.ma}`,
+                          borderRadius: 6,
+                          width: 170,
+                          height: 25,
+                        }}></div >
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </div>
+            </div>
+
+
+            {/* Các Thuộc Tính Dòng 2 */}
+            <div className='row'>
+              {/* Chất Liệu */}
+              <div className='col-md-4' >
+                <Form.Item label="Chất Liệu" name="idCL">
+                  <Select placeholder="Chọn một giá trị">
+                    {cl.map(item => (
+                      <Option key={item.id} value={item.id}>
+                        {item.ten}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </div>
+              {/* Độ Cao */}
+              <div className='col-md-4'>
+                <Form.Item label="Đế giày" name="idDC">
+                  <Select placeholder="Chọn một giá trị">
+                    {dc.map(item => (
+                      <Option key={item.ma} value={item.id}>
+                        {item.ten}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </div>
+              {/* Danh Mục */}
+              <div className='col-md-4'>
+                <Form.Item label="Danh Mục" name="idDM">
+                  <Select placeholder="Chọn một giá trị">
+                    {dm.map(item => (
+                      <Option key={item.id} value={item.id}>
+                        {item.ten}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </div>
+            </div>
+
+            {/* Các Thuộc Tính Dòng 3 */}
+            <div className='row'>
+              {/* Hãng */}
+              <div className='col-md-4'>
+                <Form.Item label="Hãng" name="idH">
+                  <Select placeholder="Chọn một giá trị">
+                    {h.map(item => (
+                      <Option key={item.id} value={item.id}>
+                        {item.ten}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </div>
+              {/* Trạng Thái */}
+              <div className='col-md-4'>
+                <Form.Item label="Trạng thái" name="trangThaiCT">
+                  <Select placeholder="Chọn một giá trị" defaultValue="0">
+                    <Select.Option value='0'>Còn Bán</Select.Option>
+                    <Select.Option value='1'>Dừng Bán</Select.Option>
+                  </Select>
+                </Form.Item>
+              </div>
+              <div className='col-md-4'>
+                <Form.Item label="Số lượng" name="soLuongCT">
+                  <Slider style={{ width: '200px' }} min={1} />
+                </Form.Item>
+              </div>
+            </div>
+            <div className='col'>
+              <Form.Item style={{ marginLeft: 100 }} label="Giá bán" name="giaBanCT">
+                <Slider style={{ width: '430px' }} min={1000000} max={10000000} step={1000000} />
+              </Form.Item>
+            </div>
+
+
+            <div className='container-fluid'>
+              <Form.Item className='text-center' style={{ paddingLeft: 360 }}>
+                <Button type="primary" htmlType='reset' onClick={loadCTSP} icon={<RetweetOutlined />}>Làm mới</Button>
+              </Form.Item>
+            </div>
+
+          </Form>
           </div>
           <div
             className=" bg-light m-2 p-3 pt-2"
