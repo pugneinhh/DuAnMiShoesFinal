@@ -49,6 +49,7 @@ const ModalSanPham = (props) => {
     setComponentSize(size);
   };
  
+  //Tìm kiếm
   const onChangeFilter = (changedValues, allValues) => {
     console.log("All values : ", allValues)
     timKiemCT(allValues);
