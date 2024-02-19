@@ -191,7 +191,7 @@ public interface CTSPRepository extends JpaRepository<ChiTietSanPham, String> {
                 JOIN hang h  on o.hang_id=h.id
                                   WHERE o.san_pham_id =:idSP and
                                o.mau_sac_id=:idMS and
-                          o.kich_thuoc_id=:idKT       
+                          o.kich_thuoc_id=:idKT    
                        """, nativeQuery = true)
     DetailCTSPClientRespon detailCTSPClientByIdSPbyIdSizebyIdMs(@Param("idSP") String idSP, @Param("idMS") String idMS, @Param("idKT") String idKT);
 

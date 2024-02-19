@@ -3,7 +3,8 @@ import {
   Modal,
   Space,
   Table,
-  Input
+  Input,
+  Form
 } from "antd";
 import { useEffect, useState } from "react";
 import { Image } from "cloudinary-react";
@@ -17,6 +18,7 @@ import {
 } from "../../../store/reducer/Bill.reducer";
 import {SellAPI} from "../../censor/api/sell/sell.api";
 import ModalAddKhachHang from "./ModalAddKhachHang";
+import { KhachHangAPI } from "../api/user/khachHang.api";
 // import { KhachHangAPI } from "../api/user/khachHang.api";
 
 const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) => {
@@ -28,6 +30,7 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
   };
   useEffect(() => {
     loadKhachHang();
+
   }, []);
 
   const dispatch = useDispatch();
@@ -36,7 +39,7 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
   const idKH = activeKey
     ? bill.filter((item) => item.id === activeKey)[0]?.nguoiDung
     : "";
-
+console.log("cliennnnnnnnnnnn",client);
   const handleClickAddClient = async (record) => {
     dispatch(
       UpdateKHToBill({
@@ -53,16 +56,19 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
   };
 
   //Tìm khách hàng
-  // const onChangeFilter = (changedValues, allValues) => {
-  //   console.log("All values : ", allValues);
-  //   timKiemKH(allValues);
-  // };
-  // const timKiemKH = (dataSearch) => {
-  //   KhachHangAPI.timKiem(dataSearch).then((res) => {
-  //     setKhachHang(res.data);
-  //     console.log("22", res.data);
-  //   });
-  // };
+  const [listKH, setListKH] = useState([]);
+  const [form] = Form.useForm();
+    const [componentSize, setComponentSize] = useState("default");
+  const onChangeFilter = (changedValues, allValues) => {
+    console.log("All values : ", allValues);
+    timKiemKH(allValues);
+  };
+  const timKiemKH = (dataSearch) => {
+    KhachHangAPI.timKiem(dataSearch).then((res) => {
+       setListKH(res.data);
+      console.log(res.data,"2222222222222");
+    });
+  };
 
   const handleClickRemoveClient = (record) => {
     dispatch(UpdateNullClient({ key: activeKey }));
@@ -73,18 +79,19 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
 
   const loadKhachHang = async () => {
     const result = await SellAPI.getAllCustomers();
+    setListKH(result.data);
     result.data.map((i) =>
       dispatch(
         AddClient({
           id: i.idND,
-          ma: i.maND,
-          ten: i.tenND,
+          maND: i.maND,
+          tenND: i.tenND,
           cccd: i.cccd,
           email: i.email,
           gioiTinh: i.gioiTinh,
           ngaySinh: new Date(i.ngaySinh * 1).toDateString("DD-MM-YYYY"),
           anh: i.anh,
-          soDienThoai: i.sdt,
+          sdt: i.sdt,
           diem: i.diem,
           trangThai: i.trangThai,
         })
@@ -127,7 +134,7 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
     },
     {
       title: "Tên khách hàng",
-      dataIndex: "ten",
+      dataIndex: "tenND",
       center: "true",
       sorter: (a, b) => a.ma - b.ma,
     },
@@ -138,7 +145,7 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
     },
     {
       title: "Số điện thoại",
-      dataIndex: "soDienThoai",
+      dataIndex: "sdt",
     },
     {
       title: "Điểm",
@@ -190,6 +197,49 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
     >
       <div className="container">
         <div className="row mt-4">
+          <Form
+            className="row col-md-12"
+            labelCol={{
+              span: 8,
+            }}
+            wrapperCol={{
+              span: 14,
+            }}
+            layout="horizontal"
+            initialValues={{
+              size: componentSize,
+            }}
+            onValuesChange={onChangeFilter}
+            size={componentSize}
+            style={{
+              maxWidth: 1400,
+            }}
+            form={form}
+          >
+            <div className="col-md-6">
+              <Form.Item label="Tìm kiếm" name="ten">
+                <Input
+                  className="rounded-pill border-warning"
+                  placeholder="Nhập mã hoặc tên hoặc sđt ..."
+                />
+              </Form.Item>
+            </div>
+            <div className="col-md-6">
+              <Form.Item label="Trạng thái" name="trangThai">
+                <Input
+                  className="rounded-pill border-warning"
+                  placeholder="Nhập mã hoặc tên hoặc sđt ..."
+                  value={0}
+                  
+                />
+              </Form.Item>
+            </div>
+            <Form.Item className="text-end ">
+              <Button type="primary" htmlType="reset" onClick={loadKhachHang}>
+                Làm mới
+              </Button>
+            </Form.Item>
+          </Form>
           <Input className="col-md-8 ms-5"></Input>
           <Button
             className=" col-md-1 ms-5  bg-success float-end bg-primary"
@@ -215,7 +265,7 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
         <Table
           style={{ justifyContent: "right" }}
           className="text-center mt-4"
-          dataSource={client}
+          dataSource={listKH}
           columns={columns}
           pagination={{
             showQuickJumper: true,

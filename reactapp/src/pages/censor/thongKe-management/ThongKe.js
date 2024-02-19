@@ -154,7 +154,9 @@ export default function ThongKe() {
         return [
           {
             type:
-              item.trangThai == 0
+              item.trangThai == -1
+                ? "Hủy"
+                : item.trangThai == 0
                 ? "Chờ xác nhận"
                 : item.trangThai == 1
                 ? "Xác nhận"
@@ -183,7 +185,9 @@ export default function ThongKe() {
         return [
           {
             type:
-              item.trangThai == 0
+              item.trangThai == -1
+                ? "Hủy"
+                : item.trangThai == 0
                 ? "Chờ xác nhận"
                 : item.trangThai == 1
                 ? "Xác nhận"
@@ -212,7 +216,9 @@ export default function ThongKe() {
         return [
           {
             type:
-              item.trangThai == 0
+              item.trangThai == -1
+                ? "Hủy"
+                : item.trangThai == 0
                 ? "Chờ xác nhận"
                 : item.trangThai == 1
                 ? "Xác nhận"
@@ -241,7 +247,9 @@ export default function ThongKe() {
         return [
           {
             type:
-              item.trangThai == 0
+              item.trangThai == -1
+                ? "Hủy"
+                : item.trangThai == 0
                 ? "Chờ xác nhận"
                 : item.trangThai == 1
                 ? "Xác nhận"
@@ -611,7 +619,8 @@ export default function ThongKe() {
                     </h5>
                   </div>
                   <div class="h6 mb-0 font-weight-bold text-gray-800">
-                    {hoaDonTheoNgay} đơn hàng / {tienTheoNgay} VND
+                    {hoaDonTheoNgay} đơn hàng /{" "}
+                    {Intl.NumberFormat("en-US").format(tienTheoNgay)} VND
                   </div>
                 </div>
               </div>
@@ -636,7 +645,8 @@ export default function ThongKe() {
                   <div class="row no-gutters align-items-center">
                     <div class="col-auto">
                       <div class="h6 mb-0 mr-3 font-weight-bold text-gray-800">
-                        {hoaDonTheoThang} đơn hàng / {tienTheoThang} VND
+                        {hoaDonTheoThang} đơn hàng /{" "}
+                        {Intl.NumberFormat("en-US").format(tienTheoThang)} VND
                       </div>
                     </div>
                   </div>
@@ -660,7 +670,8 @@ export default function ThongKe() {
                     </h5>
                   </div>
                   <div class="h6 mb-0 font-weight-bold text-gray-800">
-                    {hoaDonTheoNam} đơn hàng / {tienTheoNam} VND
+                    {hoaDonTheoNam} đơn hàng /{" "}
+                    {Intl.NumberFormat("en-US").format(tienTheoNam)} VND
                   </div>
                 </div>
               </div>
