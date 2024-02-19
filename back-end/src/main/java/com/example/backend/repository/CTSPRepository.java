@@ -218,5 +218,18 @@ public interface CTSPRepository extends JpaRepository<ChiTietSanPham, String> {
             group by o.id
                      """, nativeQuery = true)
     List<ChiTietSanPhamForBanHang> getTimBanHang(CTSPSearch ctspSearch);
-
+    @Query(value = """
+            SELECT o.ghi_chu as ghiChu,o.id AS id,o.mo_ta AS moTa ,sp.id AS sanPham,sp.ten AS tenSP ,kt.ten AS kichThuoc,ms.ma AS mauSac,cl.ten AS chatLieu,dc.ten AS deGiay,dm.ten AS danhMuc
+            ,h.ten AS hang,o.so_luong AS soLuong,o.gia_ban AS giaBan,o.trang_thai AS trangThai
+            FROM chi_tiet_san_pham o
+            JOIN san_pham sp  on o.san_pham_id=sp.id
+            JOIN kich_thuoc kt  on o.kich_thuoc_id=kt.id
+            JOIN mau_sac ms  on o.mau_sac_id=ms.id
+            JOIN chat_lieu cl  on o.chat_lieu_id=cl.id
+            JOIN de_giay dc  on o.de_giay_id=dc.id
+            JOIN danh_muc dm  on o.danh_muc_id=dm.id
+            JOIN hang h  on o.hang_id=h.id
+            WHERE o.id=:idCT
+                     """, nativeQuery = true)
+    DetailCTSPRespone detailCTSPGioHang(@Param("idCT") String idCT);
 }

@@ -29,4 +29,15 @@ public class GioHangChiTietService {
         ghct.setThanhTien(BigDecimal.valueOf(ghct.getThanhTien().doubleValue()+request.getThanhTien().doubleValue()));
         return gioHangChiTietRepository.save(ghct);
     }
+    public GioHangChiTiet updateGHCT(GioHangChiTietRequest request){
+        GioHangChiTiet ghct=gioHangChiTietRepository.findById(request.getId()).get();
+        ghct.setSoLuong(request.getSoLuong());
+        ghct.setThanhTien(request.getThanhTien());
+        return gioHangChiTietRepository.save(ghct);
+    }
+    public GioHangChiTiet deleteGHCT(String id){
+        GioHangChiTiet ghct=gioHangChiTietRepository.findById(id).get();
+        ghct.setTrangThai(1);
+        return gioHangChiTietRepository.save(ghct);
+    }
 }

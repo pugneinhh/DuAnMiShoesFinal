@@ -43,4 +43,23 @@ export class GioHangAPI{
             data: data,
         });
     };
+    static updateGHCT = (data) => {
+        return requestAdmin({
+            method : 'POST',
+            url: 'gio-hang-chi-tiet/updateGHCT',
+            data: data,
+        });
+    };
+    static detailCTSP = (idCT) => {
+        return requestAdmin({
+            method : 'GET',
+            url: `gio-hang-chi-tiet/detailCTSP/${idCT}`,
+        });
+    };
+    static deleteGHCT = (id) => {
+        return requestAdmin({
+            method : 'DELETE',
+            url: `gio-hang-chi-tiet/deleteGHCT/${id}`,
+        });
+    };
 }

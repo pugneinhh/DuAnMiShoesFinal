@@ -29,6 +29,7 @@ public class CTSPService {
         return ctspRepository.getALLCTSP(id);
     }
     public DetailCTSPRespone detailCTSP(String id){return ctspRepository.detailCTSP(id);}
+    public DetailCTSPRespone detailCTSPGioHang(String id){return ctspRepository.detailCTSPGioHang(id);}
 
     public List<DetailCTSPRespone> detail(){return ctspRepository.detail();}
 
