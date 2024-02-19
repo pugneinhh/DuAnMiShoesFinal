@@ -52,6 +52,7 @@ function ProductRow({product,loadghct}) {
     };
     GioHangAPI.updateGHCT(data).then((res)=>{
       console.log("ghctupdate",res.data);
+      loadghct();
     })
   };
   return (
