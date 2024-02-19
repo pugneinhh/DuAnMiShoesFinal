@@ -15,9 +15,9 @@ const clientSlice=createSlice({
                 const newClient = {
                     stt: state.length +1,
                     id : data.id,
-                    ten : data.ten,
+                    tenND : data.tenND,
                     diem : data.diem,
-                    soDienThoai: data.soDienThoai,
+                    sdt: data.sdt,
                     email : data.email,
                     ngaySinh : data.ngaySinh,
                     cccd: data.cccd,
