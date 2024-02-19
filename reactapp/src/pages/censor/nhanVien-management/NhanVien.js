@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import {Button,Form,Input,Divider,Select,Space,Table,Tag,Image} from "antd";
 import { FilterFilled } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { BsFillEyeFill, BsPencilSquare } from "react-icons/bs";
 import { PlusCircleOutlined } from "@ant-design/icons";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { BiSolidUserBadge } from "react-icons/bi";
 import { NhanVienAPI } from "../api/user/nhanVien.api";
 
@@ -25,21 +24,20 @@ export default function NhanVien() {
      NhanVienAPI.getAll()
     .then((res)=>{
       setNhanVien(res.data);
-          // console.log("22",res.data);
+       
     })
   };
   
 
   //Tìm nhân viên
   const onChangeFilter = (changedValues, allValues) => {
-    console.log("All values : ", allValues)
     timKiemNV(allValues);
   }
   const timKiemNV = (dataSearch) => {
     NhanVienAPI.timKiem(dataSearch)
     .then((res)=>{
       setNhanVien(res.data);
-          console.log("22",res.data);
+       
     })
   }
 

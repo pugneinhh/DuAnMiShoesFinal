@@ -6,7 +6,6 @@ import {
   Divider,
   Form,
   Input,
-  message,
   Row,
   Select,
 } from "antd";
@@ -144,7 +143,7 @@ export default function AddNhanVien() {
         )[0].DistrictID
       ).then((res) => {
         setListWard(res.data.data);
-        console.log("xã", res.data.data);
+       
         setWard(
           res.data.data.filter(
             (item) =>
@@ -294,7 +293,7 @@ export default function AddNhanVien() {
         </Divider>
       </h1>
       <Form form={form} layout="vertical">
-        <Row gutter={16} style={{ marginTop: "0px" }}>
+        <Row gutter={14} style={{ marginTop: "0px" }}>
           <Col span={7}>
             <Card style={{ height: "100%" }}>
               <h5 className="text-center fw-bold">Ảnh đại diện</h5>
@@ -324,6 +323,19 @@ export default function AddNhanVien() {
                   >
                     {/* <FontAwesomeIcon icon={FaQrcode} /> */}
                     <span style={{ marginLeft: "10px" }}>QR-Căn cước</span>
+                  </Button>
+                  <Button
+                    onClick={handleSuccess}
+                    style={{
+                      width: "110px",
+                      height: "40px",
+                      margin: "0 10px 10px 10px ",
+                      backgroundColor: "#3366CC",
+                      color: "white",
+                    }}
+                    // htmlType="reset"
+                  >
+                    Hoàn tất
                   </Button>
                   {showModal && (
                     <QRScannerModal
@@ -570,33 +582,34 @@ export default function AddNhanVien() {
                     <Input />
                   </Form.Item>
                 </Col>
-                <Button
-                  onClick={handleSuccess}
-                  style={{
-                    width: "110px",
-                    height: "40px",
-                    margin: "0 10px 10px 10px ",
-                    backgroundColor: "#3366CC",
-                    color: "white",
-                  }}
-                  // htmlType="reset"
-                >
-                  Hoàn tất
-                </Button>
+                <Col style={{ marginLeft: "300px" }}>
+                  <Button
+                    onClick={handleSuccess}
+                    style={{
+                      width: "110px",
+                      height: "40px",
+                      margin: "0 10px 10px 10px ",
+                      backgroundColor: "#3366CC",
+                      color: "white",
+                    }}
+                    // htmlType="reset"
+                  >
+                    Hoàn tất
+                  </Button>
 
-                <Link
-                  to={"/admin-nhan-vien"}
-                  className="btn btn-danger"
-                  style={{
-                    width: "110px",
-                    height: "40px",
-                    margin: "0 10px 10px 10px ",
-                    backgroundColor: "#3366CC",
-                    color: "white",
-                  }}
-                >
-                  Hủy
-                </Link>
+                  <Button
+                    to={"/admin-nhan-vien"}
+                    style={{
+                      width: "110px",
+                      height: "40px",
+                      margin: "0 10px 10px 10px ",
+                      backgroundColor: "#3366CC",
+                      color: "white",
+                    }}
+                  >
+                    Hủy
+                  </Button>
+                </Col>
               </Row>
             </Card>
           </Col>

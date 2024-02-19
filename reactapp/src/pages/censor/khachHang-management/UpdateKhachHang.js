@@ -22,9 +22,6 @@ export default function UpdateKhachHang() {
     const nav = useNavigate();
     
     const [getOneEmployee, setOneEmployee] = useState(null);
- 
-    // console.log(KhachHangAPI.getOneByIdUser(id)
-    console.log("dfdf",getOneEmployee)
     const getOneEmployeeById = () => {
         KhachHangAPI.getOneByIdUser(id)
             .then((resp) => {
@@ -147,7 +144,7 @@ export default function UpdateKhachHang() {
             </h1>
             {getOneEmployee !== null && (
                 <Form form={form} initialValues={getOneEmployee} layout="vertical">
-                    <Row gutter={16} style={{ marginTop: "30px" }}>
+                    <Row gutter={14} style={{ marginTop: "30px" }}>
                         <Col span={7}>
                             <Card style={{ height: "100%" }}>
                                 <h5 className='text-center fw-bold'>Ảnh đại diện</h5>
@@ -168,25 +165,7 @@ export default function UpdateKhachHang() {
                                     style={{ marginBottom: "15px", marginTop: "10px" }}
                                 >
                                     <Col span={11}>
-                                        <Button
-                                            onClick={handleScanButtonClick}
-                                            style={{
-                                                width: "150px",
-                                                height: "40px",
-                                                margin: "0 10px 10px 10px ",
-                                                backgroundColor: "#3366CC",
-                                                color: "white",
-                                            }}
-                                        >
-                                            {/* <FontAwesomeIcon icon={faQrcode} /> */}
-                                            <span style={{ marginLeft: "10px" }}>QR-Căn cước</span>
-                                        </Button>
-                                        {/* {showModal && (
-                                            <QRScannerModal
-                                                visible={showModal}
-                                                onCancel={handleModalClose}
-                                            />
-                                        )} */}
+                                  
                                         <Button
                                             onClick={
                                                 // showConfirmationModal(
@@ -200,6 +179,7 @@ export default function UpdateKhachHang() {
                                                 margin: "0 10px 10px 10px ",
                                                 backgroundColor: "#3366CC",
                                                 color: "white",
+                                                marginLeft: "180px",
                                             }}
                                         >
                                             Hoàn tất

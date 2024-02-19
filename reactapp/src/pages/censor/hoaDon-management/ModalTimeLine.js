@@ -4,7 +4,7 @@ import moment from 'moment';
 import { HoaDonAPI } from '../api/hoaDon/hoaDon.api';
 const ModalTimeLine = (props) => {
     const { openModalTimeLine, setOpenModalTimeLine, idHD } = props;
-    console.log("333",idHD)
+
     const handleClose = () => {
         setOpenModalTimeLine(false);
 
@@ -28,7 +28,7 @@ const ModalTimeLine = (props) => {
         HoaDonAPI.getAllLichSuHoaDon(idHD)
           .then((res) => {
               setHDTimeLine(res.data);
-            console.log("22", res.data);
+         
           })
     };
     const columns = [

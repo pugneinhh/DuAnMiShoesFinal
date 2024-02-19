@@ -12,14 +12,14 @@ const TableKhachHang = ({ onSelectedKH, suaKH }) => {
   const [khachHang, setKhachHangs] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const onChangeFilter = (changedValues, allValues) => {
-    console.log("All values : ", allValues)
+   
     timKiemKH(allValues);
   }
   const timKiemKH = (dataSearch) => {
-    console.log(dataSearch)
+  
    NguoiDungVoucherAPI.getSearchKhachHang(dataSearch)
       .then((res) => {
-        console.log(res.data)
+  
         setKhachHangs(res.data);
       })
   }

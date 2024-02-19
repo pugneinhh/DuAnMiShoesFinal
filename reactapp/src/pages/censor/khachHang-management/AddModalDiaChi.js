@@ -15,7 +15,7 @@ const AddModalDiaChi = (props) => {
     };
     //add dia chi khach hang
     const handleSubmit = (value) => {
-        console.log(value);
+       
         const data={
             ...value,
             idThanhPho: province.key == null ? province.ProvinceID : province.key,

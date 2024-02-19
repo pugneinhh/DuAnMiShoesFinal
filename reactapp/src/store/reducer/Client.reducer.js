@@ -10,11 +10,11 @@ const clientSlice=createSlice({
         },
         AddClient: (state,action) =>{
             const data = action.payload;
-            const exitsItem = state.findIndex((item) => item.id === data.id);
+            const exitsItem = state.findIndex((item) => item.idND === data.idND);
             if (exitsItem === -1) {
                 const newClient = {
                     stt: state.length +1,
-                    id : data.id,
+                    idND : data.idND,
                     tenND : data.tenND,
                     diem : data.diem,
                     sdt: data.sdt,
@@ -23,7 +23,7 @@ const clientSlice=createSlice({
                     cccd: data.cccd,
                     anh: data.anh,
                     gioiTinh: data.gioiTinh,
-                    ma: data.ma,
+                    maND: data.maND,
                     trangThai: data.trangThai,
                 }
                 state.unshift(newClient);
@@ -33,7 +33,7 @@ const clientSlice=createSlice({
             }
         },
         RemoveClient : (state,action)=> {
-            return state.filter((item) => item.id !== action.payload.id )
+            return state.filter((item) => item.idND !== action.payload.idND )
 
         }
     }

@@ -540,7 +540,7 @@ export default function ThongKe() {
       });
     }
 
-    console.log(result);
+
     const wb = XLSX.utils.book_new("Danh sách thống hóa đơn");
     // const wb1 = XLSX.utils.book_new("Danh sách thống sản phẩm bán chạy");
     const ws = XLSX.utils.json_to_sheet(result);

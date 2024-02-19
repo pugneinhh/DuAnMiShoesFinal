@@ -13,25 +13,16 @@ import {
 import { EyeOutlined } from "@ant-design/icons";
 import { FilterFilled, UnorderedListOutlined } from "@ant-design/icons";
 import { BsPencilSquare } from "react-icons/bs";
-import axios from "axios";
 import moment from "moment";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { render } from "@testing-library/react";
 import { FaTag } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { VoucherAPI } from "../api/voucher/voucher.api";
 
 const Voucher = () => {
-  // const [dataSearch,setDataSearch]=useState({
-  //   tenVoucher:"",
-  //   trangThaiVoucher:"",
-  //   loaiVoucher:"",
-  //   phuongThucVoucher:"",
-  //   ngayBDVoucher:"",
-  //   ngayKTVoucher:"",
-  // });
+
   const [dataSearch, setDataSearch] = useState({});
   const [voucher, setVouchers] = useState([]);
 
@@ -41,11 +32,10 @@ const Voucher = () => {
   };
   //call api tìm kiếm
   const timKiemVoucher = (dataSearch) => {
-    console.log("voucher tim", dataSearch);
     VoucherAPI.search(dataSearch)
       .then((response) => {
         setVouchers(response.data);
-        console.log("searchVoucher", response.data);
+   
       })
       .catch((error) => console.error("Error adding item:", error));
   };
@@ -54,7 +44,7 @@ const Voucher = () => {
       .then((response) => {
         // Update the list of items
         setVouchers(response.data);
-        console.log("getAll",response.data);
+      
       })
       .catch((error) => console.error("Error adding item:", error));
   };
@@ -65,7 +55,7 @@ const Voucher = () => {
 
   useEffect(() => {
     const handleUpdateStatus = (status) => {
-      console.log("Tìm kiếm voucher",dataSearch);
+  
       const currentTime = new Date();
 
         voucher.forEach((x) => {

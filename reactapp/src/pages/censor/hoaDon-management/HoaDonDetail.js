@@ -64,7 +64,6 @@ export default function HoaDonDetail() {
     loadHoaDon();
     loadNgayTimeLine();
     loadListSanPhams();
-    // ModalTimeLine();
     loadLichSuThanhToan();
   }, []);
   // load hóa đơn
@@ -115,17 +114,17 @@ export default function HoaDonDetail() {
   const loadNgayTimeLine = (idHD) => {
     HoaDonAPI.getAllTimeLine(idHD).then((res) => {
       setngayTimeLine(res.data);
-      console.log("ngayTimeLine", res.data);
+   
     });
   };
     const [LichSuThanhToan, setLichSuThanhToan] = useState([]);
   const loadLichSuThanhToan = () => {
     ThanhToanAPI.LichSuThanhToanByIdHD(id).then((res) => {
       setLichSuThanhToan(res.data);
-      console.log("2223333",res.data);
+   
     });
   };
-  console.log("loadLichSuThanhToan", LichSuThanhToan);
+
   //lịch sử thanh toán
   const columLichSuThanhToan = [
     {

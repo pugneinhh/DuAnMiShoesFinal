@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import {
   Form,
   Input,
@@ -38,7 +37,6 @@ const SuaKhuyenMai = () => {
   const loadDataCTSP = async () => {
     const result = await SellAPI.getAllProducts();
     setDataCTSP(result.data);
-    console.log("DATA CTSP",result.data)
   };
   const loadDetailKhuyenMai = async () => {
     // Lấy ra chi tiết khuyến mại
@@ -60,7 +58,7 @@ const SuaKhuyenMai = () => {
             "YYYY-MM-DD HH:mm:ss"
           ).locale("vi"),
         });
-        console.log("Res KM ", response.data);
+      
         setDataUpdate(response.data); // set cho DataUpdate
       })
       .catch((error) => console.error("Error adding item:", error));
@@ -68,7 +66,7 @@ const SuaKhuyenMai = () => {
 
   const loadCTSP = async () => {
     const x = await PromotionAPI.showProductByPromotion(id);
-    console.log("id ctsp", x.data);
+
     setCTSP(x.data);
     const SP = await Promise.all(
       x.data.map((idCTSP) => PromotionAPI.showSPByProduct(idCTSP))
@@ -89,7 +87,7 @@ const SuaKhuyenMai = () => {
   }, []);
 
   const onChangeLoai = (value) => {
-    console.log("changed", value);
+
   };
 
   const [selectedValue, setSelectedValue] = useState("Tiền mặt");
@@ -119,7 +117,7 @@ const SuaKhuyenMai = () => {
   };
 
   const handleSubmit = (value) => {
-    console.log("idctsp",selectedIDCTSP);
+  
     PromotionAPI.update(id, value)
       .then((response) => {
         setIDKM(response.data);
@@ -129,7 +127,7 @@ const SuaKhuyenMai = () => {
           )
         } else {
         if (selectedIDCTSP.length > 0) {
-          console.log("selected idctsp", CTSP);
+        
           Promise.all(
             dataCTSP.map((data) => selectedIDCTSP.filter(item => item===data.idCTSP).length > 0 ? 
             PromotionAPI.updateProductByPromotion(data.idCTSP, response.data) :  dataCTSP.map((data) => PromotionAPI.deletePromotion(data.idCTSP))

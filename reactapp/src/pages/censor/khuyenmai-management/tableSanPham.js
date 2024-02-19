@@ -18,7 +18,7 @@ const TableSanPham = ({onSelectedSanPham , suaIDSP}) => {
             await PromotionAPI.loadSP()
             .then(response =>{
               setSanPhams(response.data)
-              console.log("idSP  =", suaIDSP);
+           
               setSelectedRowKeys(suaIDSP);
               onSelectedSanPham(suaIDSP);
             })
@@ -31,7 +31,7 @@ const TableSanPham = ({onSelectedSanPham , suaIDSP}) => {
 
       
       const handleCheckboxChange = (selectedKeys , selectedRowKeys) => {
-        console.log("selected row key",selectedRowKeys);
+       
       if (selectedRowKeys !== null){
         setSelectedRowKeys(selectedKeys);
         onSelectedSanPham(selectedKeys);
