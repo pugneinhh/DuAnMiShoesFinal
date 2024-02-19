@@ -31,20 +31,20 @@ export default function KhachHang() {
       KhachHangAPI.getAll()
       .then((res)=>{
         setKhachHang(res.data);
-            console.log("22",res.data);
+          
       })
   };
 
   //Tìm khách hàng
   const onChangeFilter = (changedValues, allValues) => {
-    console.log("All values : ", allValues)
+  
     timKiemKH(allValues);
   }
   const timKiemKH = (dataSearch) => {
     KhachHangAPI.timKiem(dataSearch)
     .then((res)=>{
       setKhachHang(res.data);
-          console.log("22",res.data);
+       
     })
   }
   const columns = [
@@ -161,7 +161,7 @@ export default function KhachHang() {
   ];
   const [idKH,setIdKH]=useState("");
   const detailDiaChi = (row) => {
-    console.log("click",row)
+ 
     setIdKH(row);
     setOpenModalDiaChi(true);
   }
@@ -224,7 +224,7 @@ export default function KhachHang() {
         result.push(arr);
       })
     }
-    console.log(result);
+   
     const wb = XLSX.utils.book_new("Danh sách khách hàng");
     const ws = XLSX.utils.json_to_sheet(result);
     ws['!cols'] = [{ wpx: 40 }, { wpx: 100 }, { wpx: 120 }, { wpx: 150 }, { wpx: 150 }, { wpx: 120 }, { wpx: 120 }, { wpx: 150 }];

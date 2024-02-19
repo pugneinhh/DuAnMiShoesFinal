@@ -34,12 +34,12 @@ const ThemKhuyenMai = () => {
 
 
   const onChangeLoai = (value) => {
-    console.log("changed", value);
+    
   };
 
   const [selectedValue, setSelectedValue] = useState("Tiền mặt");
   const handleChange = (value) => {
-    console.log(`Selected value: ${value}`);
+  
     setSelectedValue(value);
   };
 
@@ -54,7 +54,7 @@ const ThemKhuyenMai = () => {
   const [formThemKhuyenMai] = Form.useForm();
 
   const handleSubmit = (value) => {
-    console.log(value);
+  
    PromotionAPI.create(value)
       .then((response) => {
         setIDKM(response.data);
@@ -66,7 +66,7 @@ const ThemKhuyenMai = () => {
           )
         );
             }
-        // console.log("Thêm res", response.data.id);
+      
         navigate('/admin-khuyen-mai');
         
         toast("✔️ Thêm thành công!", {
@@ -79,7 +79,7 @@ const ThemKhuyenMai = () => {
           progress: undefined,
           theme: "light",
         });
-        console.log("Thêm thành công");
+   
         loadKhuyenMai();
         setSelectedIDSP("");
         formThemKhuyenMai.resetFields();
@@ -89,7 +89,7 @@ const ThemKhuyenMai = () => {
   };
 
   const [selectedIDSP, setSelectedIDSP] = useState([]);
-  console.log("IDSP", selectedIDSP);
+
   const handleSelectedSanPham = (selectedRowKeys) => {
     setSelectedIDSP(selectedRowKeys);
   };
@@ -99,7 +99,7 @@ const ThemKhuyenMai = () => {
     setSelectedIDCTSP(selectedRowKeys);
   };
   const [khuyenMai, setKhuyenMais] = useState([]);
-  console.log("IDCTSP", selectedIDCTSP);
+
 
   useEffect(() => {
     loadKhuyenMai();

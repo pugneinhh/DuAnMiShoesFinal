@@ -39,13 +39,6 @@ const ModalSanPham = (props) => {
     setOpenSanPham(false);
   };
   const { Option } = Select;
-
-  //Form
-  // const [selectedValue, setSelectedValue] = useState("");
-  // const handleChange = (value) => {
-  //   console.log(`Selected value: ${value}`);
-  //   setSelectedValue(value);
-  // };
   const [componentSize, setComponentSize] = useState("default");
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);

@@ -16,20 +16,12 @@ import { HoaDonAPI } from '../api/hoaDon/hoaDon.api';
 export default function HoaDon() {
   //Tìm hóa đơn
   const onChangeFilter = (changedValues, allValues) => {
-    console.log("All values : ", allValues);
     timKiemHD(allValues);
   };
-  // const timKiemHD = (dataSearch) => {
-  //     axios.post(`http://localhost:8080/admin/hoa-don/search`, dataSearch)
-  //         .then(response => {
-  //             setHoaDons(response.data);
-  //         })
-  //         .catch(error => console.error('Error adding item:', error));
-  // }
+
   const timKiemHD = (dataSearch) => {
     HoaDonAPI.search(dataSearch).then((res) => {
       setHoaDons(res.data);
-      console.log("22", res.data);
     });
   };
   useEffect(() => {
@@ -58,7 +50,6 @@ export default function HoaDon() {
   const loadHoaDonCho = () => {
     HoaDonAPI.getAllbyTT(0).then((res) => {
       setHoaDonsCho(res.data);
-      console.log("22", res.data);
       const demHD = res.data.length;
       settongHDchoXN(demHD);
     });
@@ -67,7 +58,6 @@ export default function HoaDon() {
   const [hoaDonXN, setHoaDonsXN] = useState([]);
   const [tongHDXacNhan, settongHDXacNhan] = useState([]);
   const loadHoaDonXN = () => {
-    // console.log(result.data);
     HoaDonAPI.getAllbyTT(1).then((res) => {
       setHoaDonsXN(res.data);
       const demHD = res.data.length;
@@ -260,7 +250,7 @@ export default function HoaDon() {
   ];
 
   const onChange = (key) => {
-    console.log(key);
+
   };
   const items = [
     {
@@ -306,7 +296,7 @@ export default function HoaDon() {
       key: "3",
       label: (
         <Badge count={tongHDXacNhan} offset={[8, 1]}>
-          xác nhận
+          Xác nhận
         </Badge>
       ),
       children: (

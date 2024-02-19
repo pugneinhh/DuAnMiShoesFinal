@@ -8,7 +8,7 @@ import {
   Select,
   Divider,
 } from "antd";
-import axios, { getAdapter } from "axios";
+
 import { useEffect, useState } from "react";
 import moment from "moment";
 import { useParams } from "react-router-dom";
@@ -19,7 +19,7 @@ import { useNavigate } from "react-router-dom";
 import { VoucherAPI } from "../api/voucher/voucher.api";
 import { NguoiDungVoucherAPI } from "../api/voucher/nguoiDungVoucher.api";
 import { KhachHangAPI } from "../../censor/api/user/khachHang.api";
-import { FormGroup } from "react-bootstrap";
+
 
 const ModelUpdateVoucher = (props) => {
   const navigate = useNavigate();
@@ -32,7 +32,6 @@ const ModelUpdateVoucher = (props) => {
   const [form2] = Form.useForm();
 
   const handleChange = (value) => {
-    console.log(`Selected value: ${value}`);
     setSelectedValue(value);
   };
   const [componentSize, setComponentSize] = useState("default");
@@ -57,8 +56,7 @@ const ModelUpdateVoucher = (props) => {
           soLuong: response.data.soLuong,
         });
         setDataUpdate(response.data);
-        console.log(response.data);
-        console.log(dataUpdate);
+  
       })
       .catch((error) => console.error("Error upfate item:", error));
   };
@@ -66,20 +64,20 @@ const ModelUpdateVoucher = (props) => {
   const handleClose = () => {
     form2.resetFields();
     setDataUpdate({});
-    console.log("đóng");
+ 
   };
 
   const loadAllKH = () => {
     KhachHangAPI.getAll().then((result) => {
       setAllKhachHang(result.data);
-      console.log("All KH", result.data);
+    
     });
   };
 
   const loadKH = () => {
     NguoiDungVoucherAPI.getAllByVoucher(id).then((x) => {
       setKhachHang(x.data);
-      console.log("KH", x.data);
+     
     });
   };
 
@@ -95,7 +93,7 @@ const ModelUpdateVoucher = (props) => {
     setSelectedIDKH(selectedRowKeys);
   };
   const handleUpdateVoucher = (value) => {
-    console.log("Value", value);
+  
 
     allKhachHang.map((kh) =>
       selectedIDKH.includes(kh.idND)
