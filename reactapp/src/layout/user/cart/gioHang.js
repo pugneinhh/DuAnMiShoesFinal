@@ -13,13 +13,21 @@ import DiaChiGiaoHang from "./GiaoHang";
 import LogoVNP from "../../../assets/images/vnp.png";
 import { BanHangClientAPI } from "../../../pages/censor/api/banHangClient/banHangClient.api";
 import { v4 as uuid } from "uuid";
-
-
 export const GioHang = ({ children }) => {
   const [openModalDiaChi, setOpenModalDiaChi] = useState(false);
   const [openModalVoucher, setOpenModalVoucher] = useState(false);
   const [khachHang, setKhachHang] = useState(null);
   const [gioHangCT, setGioHangCT] = useState([]);
+  const [userID, setUserID] = useState("");
+  const checkUser = () => {
+    const storedData = get("userData");
+    setUserID(storedData.userID)
+  };
+  useEffect(() => {
+    if (userID != null || userID != undefined || userID != "") {
+      checkUser();
+    }
+  }, [userID]);
   let total = 0;
   let sale=0;
   const storedData = get("userData");
@@ -57,7 +65,6 @@ export const GioHang = ({ children }) => {
   const [isSwitchOn, setIsSwitchOn] = useState(false);
   const [isSwitchTraSau, setIsSwitchTraSau] = useState(false);
   const [isDiaChiGiaoHangVisible, setIsDiaChiGiaoHangVisible] = useState(false);
- 
 
   const handleMuaHang=(total,sale,gioHangCT,khachHang)=>{
     const currentDate = new Date();
@@ -189,7 +196,7 @@ export const GioHang = ({ children }) => {
           </div>
           <div
             className="row ps-2 pb-2 mt-3"
-            // style={{ borderBottom: "1px dashed black"}}
+          // style={{ borderBottom: "1px dashed black"}}
           >
             <div className="col-md-6" style={{ marginLeft: 30 }}>
               <span>Đơn hàng </span>
@@ -218,7 +225,7 @@ export const GioHang = ({ children }) => {
           </div>
           <div
             className="row ps-2 pb-2 mt-3"
-            // style={{ borderBottom: "1px dashed black" }}
+          // style={{ borderBottom: "1px dashed black" }}
           >
             <h5 className="col-md-6" style={{ marginLeft: 30 }}>
               <span>Tổng tiền </span>
@@ -312,10 +319,12 @@ export const GioHang = ({ children }) => {
       <ModalDiaChi
         openModalDiaChi={openModalDiaChi}
         setOpenModalDiaChi={setOpenModalDiaChi}
+        userID={userID}
       />
       <ModalVoucher
         openModalVoucher={openModalVoucher}
         setOpenModalVoucher={setOpenModalVoucher}
+        userID={userID}
       />
     </div>
   );

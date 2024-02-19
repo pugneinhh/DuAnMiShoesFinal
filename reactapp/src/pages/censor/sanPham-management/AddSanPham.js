@@ -6,6 +6,7 @@ import {
     Select,
     Radio,
     Divider,
+    InputNumber,
     Modal,
     Table,
     AutoComplete,
@@ -131,7 +132,7 @@ export default function AddSanPham() {
         }
     };
     const onChangeNhapGia = (event) => {
-        setDataGiaBan(event.target.value)
+        setDataGiaBan(event)
     }
     const onChangeNhapSoLuong = (event) => {
         setDataSoLuong(event.target.value)
@@ -345,17 +346,15 @@ export default function AddSanPham() {
             dataIndex: "giaBan",
             render: (_, record) => {
                 return <>
-                    <Input
+                    <InputNumber
                         min={1000000}
                         formatter={(value) =>
                             `VND ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                         }
                         parser={(value) => value.replace(/\VND\s?|(,*)/g, "")}
-                        type='number'
-                        rules={[{ required: true, alert: 'Không để trống giá', },]}
-                        style={{ width: 100 }}
+                        style={{ width: 150 }}
                         value={record.giaBan}
-                        onChange={(e) => onChangeGB(record, e.target.value)}></Input> VNĐ
+                        onChange={(e) => onChangeGB(record, e)}></InputNumber>
                 </>;
             }
         },
@@ -1204,12 +1203,23 @@ export default function AddSanPham() {
                                     <Form.Item label={<b>Số lượng </b>} name='soLuong' style={{ paddingLeft: 45 }}
                                         hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống số lượng !', },]} >
                                         <Input onChange={onChangeNhapSoLuong} style={{ width: 307 }} placeholder='Nhập số lượng sản phẩm' type='number' min={1} className="border" />
+                                      
                                     </Form.Item>
                                 </div>
                                 <div className='col-md-6'>
                                     <Form.Item label={<b>Giá bán </b>} name='giaBan' style={{ paddingRight: 60 }}
                                         hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống giá bán !', },]} >
-                                        <Input onChange={onChangeNhapGia} style={{ width: 307 }} placeholder='Nhập giá sản phẩm' type='number' min={100000} className="border" />
+                                        {/* <Input onChange={onChangeNhapGia} style={{ width: 307 }} placeholder='Nhập giá sản phẩm' type='number' min={100000} className="border" /> */}  
+                                        <InputNumber
+                                                className="border-warning"
+                                                defaultValue={0}
+                                                formatter={(value) =>
+                                                    `VND ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                                                }
+                                                parser={(value) => value.replace(/\VND\s?|(,*)/g, "")}
+                                                style={{width: 307 }}
+                                                onChange={onChangeNhapGia}
+                                            />
                                     </Form.Item>
                                 </div>
                             </div>
@@ -1429,10 +1439,19 @@ export default function AddSanPham() {
                                         onFinish={updateNhanh}
                                         form={form2}>
                                         <Form.Item name="soLuong" label={<b>Số lượng</b>} hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống số lượng !', },]} >
-                                            <Input className='border'></Input>
+                                            <Input className='border'></Input>                                    
                                         </Form.Item>
                                         <Form.Item name="giaBan" label={<b>Giá bán</b>} hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống giá bán !', },]} >
-                                            <Input className='border'></Input>
+                                        <InputNumber
+                                                className="border"
+                                                style={{width: 376}}
+                                                
+                                                defaultValue={0}
+                                                formatter={(value) =>
+                                                    `VND ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                                                }
+                                                parser={(value) => value.replace(/\VND\s?|(,*)/g, "")}                                                      
+                                            />
                                         </Form.Item>
                                     </Form>
                                 </Modal>
