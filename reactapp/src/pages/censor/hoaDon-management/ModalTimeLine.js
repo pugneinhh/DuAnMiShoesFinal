@@ -11,11 +11,11 @@ const ModalTimeLine = (props) => {
     };
     const [HDTimeLine, setHDTimeLine] = useState([])
     useEffect(() => {
-          if (idHD != null && idHD != undefined) {
+          if (idHD != null && idHD != undefined&&openModalTimeLine ===true) {
              loadTimeLineHoaDon();
         }
        
-    }, [idHD]);
+    }, [idHD,openModalTimeLine]);
  const dataSource = HDTimeLine.map((item, index) => ({
         id:index++,
         trangThai: item.trangThai,

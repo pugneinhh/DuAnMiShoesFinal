@@ -264,7 +264,8 @@ const ModalAddKhachHang = (props) => {
            
               .then((result) => {
                  setopenModalAddKhachHang(false);
-                 
+                 form.resetFields();
+                 fileImage.resetFields();
                  loadKhachHang();
                 toast("🦄 Thêm Thành công!", {
                   position: "top-right",
@@ -593,6 +594,7 @@ const ModalAddKhachHang = (props) => {
                       margin: "0 10px 10px 10px ",
                       backgroundColor: "#3366CC",
                       color: "white",
+                      marginLeft: "250px",
                     }}
                     // htmlType="reset"
                   >

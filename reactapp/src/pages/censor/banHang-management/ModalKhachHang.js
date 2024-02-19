@@ -17,7 +17,7 @@ import {
 } from "../../../store/reducer/Bill.reducer";
 import {SellAPI} from "../../censor/api/sell/sell.api";
 import ModalAddKhachHang from "./ModalAddKhachHang";
-import { KhachHangAPI } from "../api/user/khachHang.api";
+// import { KhachHangAPI } from "../api/user/khachHang.api";
 
 const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) => {
   // const { openKhachHang, setOpenKhachHang } = props;
