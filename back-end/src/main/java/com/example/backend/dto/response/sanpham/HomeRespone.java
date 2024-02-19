@@ -12,4 +12,6 @@ public interface HomeRespone {
     public BigDecimal getPrice();
     public String getImage();
     public String getHoverImage();
+    public String getLoaiKM();
+    public BigDecimal getGiaTriKhuyenMai();
 }
