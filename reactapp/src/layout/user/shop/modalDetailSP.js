@@ -105,8 +105,8 @@ const ModalDetailSP = (props) => {
       randomString += characters.charAt(randomIndex);
     }
 
-    if (storedGioHang == null) {
-      if(khachHang!=null){
+    if (storedGioHang === null) {
+      if(khachHang!==null){
         GioHangAPI.getByIDKH(khachHang).then((res)=>{
           
           if(res.data!==null&&res.data!==''){//nếu như tồn tại giỏ hàng của khách đăng nhập thì kiểm tra xem sp có trùng vs sp trong ghct đó k

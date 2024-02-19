@@ -34,7 +34,7 @@ export const DashboardClient = ({ children }) => {
   useEffect(() => {
       
     
-    if (storedData != null) {
+    if (storedData !== null) {
       setUserName(storedData.ten);
       setLinkAnh(storedData.anh);
       GioHangAPI.getByIDKH(storedData.id).then((res)=>{
@@ -54,7 +54,7 @@ export const DashboardClient = ({ children }) => {
     else {
       setUserName(null);
       setLinkAnh(null);
-      if(storedGioHang!=null){
+      if(storedGioHang!==null){
         console.log("giỏ hàng",storedGioHang)
         GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res)=>{
           setCountGioHang(res.data.length);
