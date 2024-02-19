@@ -108,8 +108,11 @@ const ModalDetailSP = (props) => {
     if (storedGioHang == null) {
       if(khachHang!=null){
         GioHangAPI.getByIDKH(khachHang).then((res)=>{
-          if(res.data!=null){//nếu như tồn tại giỏ hàng của khách đăng nhập thì kiểm tra xem sp có trùng vs sp trong ghct đó k
+          
+          if(res.data!==null&&res.data!==''){//nếu như tồn tại giỏ hàng của khách đăng nhập thì kiểm tra xem sp có trùng vs sp trong ghct đó k
+            console.log("res.data",res.data);
             setGioHang(res.data.id);
+            console.log("hior hàng",gioHang);
             GioHangAPI.getAllGHCTByIDGH(res.data.id).then((res) => {
               const idCTSP = res.data.filter((item) => item.chiTietSanPham === ChiTietSanPham.id);
               console.log("list",idCTSP);
@@ -121,7 +124,7 @@ const ModalDetailSP = (props) => {
                   soLuong: soLuong,
                   thanhTien: ChiTietSanPham.giaBan * soLuong,
                 };
-                 console.log(GHCT);
+                 
                 GioHangAPI.updateSLGHCT(GHCT).then((res)=>{
                   toast("✔️ Thêm thành công!", {
                     position: "top-right",
@@ -136,12 +139,12 @@ const ModalDetailSP = (props) => {
                 })
               }else{
                 const data = {
-                  gioHang:gioHang,
+                  gioHang:res.data[0].gioHang,
                   chiTietSanPham: ChiTietSanPham.id,
                   soLuong: soLuong,
                   thanhTien: ChiTietSanPham.giaBan * soLuong,
                 };
-                console.log("gh",data);
+               
                 GioHangAPI.addGHCT(data).then((res) => {
                   toast("✔️ Thêm thành công!", {
                     position: "top-right",
@@ -234,7 +237,8 @@ const ModalDetailSP = (props) => {
             });
           }
         }
-      );}
+      );
+    }
     } else {
       GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res) => {
         const idCTSP = res.data.filter((item) => item.chiTietSanPham === ChiTietSanPham.id);
@@ -242,7 +246,7 @@ const ModalDetailSP = (props) => {
         if (idCTSP.length > 0) {
           const GHCT = {
             id:idCTSP[0].id,
-            gioHang: storedGioHang.id,
+            gioHang: res.data[0].gioHang,
             chiTietSanPham: ChiTietSanPham.id,
             soLuong: soLuong,
             thanhTien: ChiTietSanPham.giaBan * soLuong,
@@ -262,7 +266,7 @@ const ModalDetailSP = (props) => {
           })
         }else{
           const data = {
-            gioHang: storedGioHang.id,
+            gioHang: res.data[0].gioHang,
             chiTietSanPham: ChiTietSanPham.id,
             soLuong: soLuong,
             thanhTien: ChiTietSanPham.giaBan * soLuong,
