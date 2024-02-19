@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./gioHang.css";
-import { Button, Tag } from "antd";
+import { Button, Switch, Tag } from "antd";
 import { FaRegTrashAlt, FaMapMarkerAlt } from "react-icons/fa";
 import { BiSolidDiscount } from "react-icons/bi";
 import ModalDiaChi from "./modalDiaChi";
@@ -9,6 +9,8 @@ import { Link } from "react-router-dom";
 import ProductRow from "./gioHangrow";
 import { GioHangAPI } from "../../../pages/censor/api/gioHang/gioHang.api";
 import { get, set } from "local-storage";
+import DiaChiGiaoHang from "./GiaoHang";
+import LogoVNP from "../../../assets/images/vnp.png"
 export const GioHang = ({ children }) => {
     const [openModalDiaChi, setOpenModalDiaChi] = useState(false);
     const [openModalVoucher, setOpenModalVoucher] = useState(false);
@@ -46,7 +48,9 @@ export const GioHang = ({ children }) => {
         // setIdKH(row);
         setOpenModalDiaChi(true);
       };
-     
+       const [isSwitchOn, setIsSwitchOn] = useState(false);
+       const [isSwitchTraSau, setIsSwitchTraSau] = useState(false);
+   const [isDiaChiGiaoHangVisible, setIsDiaChiGiaoHangVisible] = useState(false);
   // const [quantity, setQuantity] = useState(0);
   // const tangSL = () => {
   //   setQuantity(quantity + 1);
@@ -69,31 +73,35 @@ export const GioHang = ({ children }) => {
       <div className="row mt-5">
         {/* kẻ ngang */}
         <div className="xBNaac"></div>
-        <div className="mt-4 row">
-          {/* địa chỉ  */}
-          <h5 style={{ color: "red" }}>
-            <FaMapMarkerAlt size={25} className="text-danger" />
-            <span className="ms-2"> Địa Chỉ Nhận Hàng</span>
-          </h5>
-          <div className="row mt-1">
-            <h6 className="col-md-12">
-              <b> Nguyễn Tùng Dương |09883537xx</b>
-              <span style={{ marginLeft: 40 }}>
-                Số 16 ngõ 406 tổ dân phố 7, Phường Xuân Phương, Quận Nam Từ
-                Liêm, Hà Nội
-              </span>
-              <span style={{ marginLeft: 40 }}>
-                <Tag color="red">Mặc định</Tag>
-              </span>
-              <Button
-                style={{ marginLeft: 30 }}
-                onClick={() => setOpenModalDiaChi(true)}
-              >
-                Thay đổi
-              </Button>
-            </h6>
+        {khachHang != null ? (
+          <div className="mt-4 row">
+            {/* địa chỉ  */}
+            <h5 style={{ color: "red" }}>
+              <FaMapMarkerAlt size={25} className="text-danger" />
+              <span className="ms-2"> Địa Chỉ Nhận Hàng</span>
+            </h5>
+            <div className="row mt-1">
+              <h6 className="col-md-12">
+                <b> Nguyễn Tùng Dương |09883537xx</b>
+                <span style={{ marginLeft: 40 }}>
+                  Số 16 ngõ 406 tổ dân phố 7, Phường Xuân Phương, Quận Nam Từ
+                  Liêm, Hà Nội
+                </span>
+                <span style={{ marginLeft: 40 }}>
+                  <Tag color="red">Mặc định</Tag>
+                </span>
+                <Button
+                  style={{ marginLeft: 30 }}
+                  onClick={() => setOpenModalDiaChi(true)}
+                >
+                  Thay đổi
+                </Button>
+              </h6>
+            </div>
           </div>
-        </div>
+        ) : (
+          <></>
+        )}
       </div>
       <div className="row mt-5">
         <div className="col-md-8">
@@ -108,8 +116,10 @@ export const GioHang = ({ children }) => {
               </tr>
             </thead>
             <tbody>
-              {gioHangCT.map((ghct,index)=>{
-                return(<ProductRow key={index} product={ghct} loadghct={loadGHCT}/>)
+              {gioHangCT.map((ghct, index) => {
+                return (
+                  <ProductRow key={index} product={ghct} loadghct={loadGHCT} />
+                );
               })}
             </tbody>
           </table>
@@ -174,6 +184,86 @@ export const GioHang = ({ children }) => {
             <h5 className="col-md-5">
               <span style={{ color: "blue" }}>0 </span> <span>VND</span>
             </h5>
+          </div>
+        </div>
+      </div>
+      <hr className="mt-5 mb-5"></hr>
+      {/* giao hàng khi khách ko có tài khoản */}
+      <div>
+        {khachHang == null ? (
+          <div className="row">
+            <h5 className="text-danger col-md-2 ">Giao hàng</h5>
+            <div className="col-md-2">
+              <Switch
+                onChange={() =>
+                  setIsDiaChiGiaoHangVisible(!isDiaChiGiaoHangVisible)
+                }
+              />
+            </div>
+          
+          </div>
+        ) : (
+          <></>
+        )}
+        <div className=" col-md-10 ms-5">
+          {isDiaChiGiaoHangVisible && <DiaChiGiaoHang />}
+        </div>
+        {khachHang==null?(  <hr className="mt-5 mb-5"></hr>):(<></>)}
+      </div>
+      {/* 
+      Phương thức thanh toán */}
+      <div className="row">
+        <h5 className="col-md-3 d-flex align-items-center">
+          Phương thức thanh toán
+        </h5>
+        <div className="col-md-8">
+          <Button style={{ width: 300, height: 50 }}>
+            Thanh toán khi nhận hàng
+          </Button>
+          <Button className="ms-4" style={{ width: 300, height: 50 }}>
+            Thanh toán VNP
+            <img
+              className="ms-2"
+              src={LogoVNP}
+              style={{ width: 20, height: 20 }}
+            ></img>
+          </Button>
+        </div>
+      </div>
+      <hr className="mt-5 mb-5"></hr>
+      {/* Thông tin thanh toán */}
+      <div className="row">
+        <div className="col-md-7"></div>
+        <div className="col-md-5 fw-bold">
+          <div className="row">
+            <h5 className="col">Tổng tiền</h5>
+            <h5 className="col">: 5.000.000 VND</h5>
+          </div>
+          <div className="row mt-3">
+            <h5 className="col">Phí vận chuyển</h5>
+            <h5 className="col">: 50.000 VND</h5>
+          </div>
+          <div className="row  mt-3">
+            <h5 className="col">Mã Giảm giá</h5>
+            <h5 className="col">: 50.000 VND</h5>
+          </div>
+          <div className="row mt-3" style={{ color: "red" }}>
+            <h5 className="col">Tổng thanh toán</h5>
+            <h5 className="col">: 5.000.000 VND</h5>
+          </div>
+          <hr className="mt-5 mb-5"></hr>
+          <div className="d-flex flex-row-reverse bd-highlight">
+            <Button
+              className="p-2 bd-highlight"
+              style={{
+                width: 250,
+                height: 60,
+                backgroundColor: "orangered",
+                color: "white",
+              }}
+            >
+              Đặt hàng
+            </Button>
           </div>
         </div>
       </div>
