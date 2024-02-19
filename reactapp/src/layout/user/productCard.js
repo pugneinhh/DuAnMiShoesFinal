@@ -47,7 +47,14 @@ export const ProductCard = ({ product }) => {
           />
         </div>
         <div className="product-price text-center text-danger">
-          {Intl.NumberFormat("en-US").format(product.price)} VNĐ
+           {
+           product.loaiKM ? 
+          (<span><del style={{color:"black"}}>{Intl.NumberFormat("en-US").format(product.price)} VNĐ</del>
+          <br/>
+          {Intl.NumberFormat("en-US").format(product.loaiKM === "Tiền mặt" ? product.price - product.giaTriKhuyenMai : product.price - (product.price*product.giaTriKhuyenMai/100))} VNĐ</span>)
+          :   (<span>{Intl.NumberFormat("en-US").format(product.price)} VNĐ</span>)
+          
+           }
         </div>
       </div>
       <div className="buttons-container">

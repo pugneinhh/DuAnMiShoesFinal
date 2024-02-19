@@ -48,6 +48,8 @@ public interface HomeRepository extends JpaRepository<ChiTietSanPham, String> {
             	sp.ten as name,
             	kt.ten as size,
             	ms.ten as color,
+            	km.gia_tri_khuyen_mai as giaTriKhuyenMai,
+            	km.loai as loaiKM,
             	ms.ma as colorCode,
             	ctsp.gia_ban as price,
             	ctsp.ghi_chu as image,
@@ -60,10 +62,13 @@ public interface HomeRepository extends JpaRepository<ChiTietSanPham, String> {
             	ctsp.mau_sac_id = ms.id
             join kich_thuoc kt on
             	ctsp.kich_thuoc_id = kt.id
+            join khuyen_mai km on
+               ctsp.khuyen_mai_id = km.id
             group by
             	ctsp.gia_ban,
             	ms.ten,
             	sp.ten,
+            	km.ten,
             	kt.ten,
             	ctsp.ghi_chu,
             	ctsp.id,
@@ -81,6 +86,8 @@ public interface HomeRepository extends JpaRepository<ChiTietSanPham, String> {
             	kt.ten as size,
             	ms.ten as color,
             	ms.ma as colorCode,
+            	km.loai as loaiKM,
+            	km.gia_tri_khuyen_mai as giaTriKhuyenMai,
             	ctsp.gia_ban as price,
             	ctsp.ghi_chu as image,
             	ctsp.ghi_chu as hoverImage
@@ -95,6 +102,8 @@ public interface HomeRepository extends JpaRepository<ChiTietSanPham, String> {
             	ctsp.mau_sac_id = ms.id
             join kich_thuoc kt on
             	ctsp.kich_thuoc_id = kt.id
+            join khuyen_mai km on
+                ctsp.khuyen_mai_id = km.id
             where
             	year(hdct.ngay_tao) = year(CURDATE())
             	and (hd.trang_thai = 4
@@ -102,6 +111,7 @@ public interface HomeRepository extends JpaRepository<ChiTietSanPham, String> {
             group by
             	ctsp.gia_ban,
             	ms.ten,
+            	km.ten,
             	sp.ten,
             	kt.ten,
             	ctsp.ghi_chu,
