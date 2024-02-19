@@ -195,5 +195,28 @@ public interface CTSPRepository extends JpaRepository<ChiTietSanPham, String> {
                        """, nativeQuery = true)
     DetailCTSPClientRespon detailCTSPClientByIdSPbyIdSizebyIdMs(@Param("idSP") String idSP, @Param("idMS") String idMS, @Param("idKT") String idKT);
 
+    @Query(value = """
+             SELECT distinct o.id AS idCTSP,MIN(ha.url) AS linkAnh ,sp.ten AS tenSP ,kt.ten AS tenKT,ms.ten AS tenMS,ms.ma AS maMS,
+             o.so_luong AS soLuong,o.gia_ban AS giaBan,o.trang_thai AS trangThai, km.ten as tenKM , km.gia_tri_khuyen_mai as giaKhuyenMai , km.loai as loaiKM
+             FROM duanmishoes.chi_tiet_san_pham o
+             JOIN duanmishoes.san_pham sp  on o.san_pham_id=sp.id
+             JOIN duanmishoes.kich_thuoc kt  on o.kich_thuoc_id=kt.id
+             JOIN duanmishoes.mau_sac ms  on o.mau_sac_id=ms.id
+             JOIN duanmishoes.hinh_anh ha on o.id=ha.chi_tiet_san_pham_id 
+             LEFT JOIN duanmishoes.khuyen_mai km on o.khuyen_mai_id = km.id
+             where o.trang_thai =0 AND                                                    
+            ((:#{#ctspSearch.tenCT} IS NULL OR sp.ten LIKE (%:#{#ctspSearch.tenCT}%) ) AND
+            (:#{#ctspSearch.idKT} IS NULL OR o.kich_thuoc_id =:#{#ctspSearch.idKT} ) AND
+            (:#{#ctspSearch.idMS} IS NULL OR o.mau_sac_id =:#{#ctspSearch.idMS} ) AND
+            (:#{#ctspSearch.idCL} IS NULL OR o.chat_lieu_id =:#{#ctspSearch.idCL} ) AND
+            (:#{#ctspSearch.idDC} IS NULL OR o.de_giay_id =:#{#ctspSearch.idDC} ) AND
+            (:#{#ctspSearch.idDM} IS NULL OR o.danh_muc_id =:#{#ctspSearch.idDM} ) AND
+            (:#{#ctspSearch.idH} IS NULL OR o.hang_id =:#{#ctspSearch.idH} ) AND
+            (:#{#ctspSearch.trangThaiCT} IS NULL OR o.trang_thai =:#{#ctspSearch.trangThaiCT}) AND
+            (:#{#ctspSearch.soLuongCT} IS NULL OR o.so_luong <=:#{#ctspSearch.soLuongCT} OR o.so_luong > 0) AND
+            (:#{#ctspSearch.giaBanCT} IS NULL OR o.gia_ban <=:#{#ctspSearch.giaBanCT} OR o.gia_ban > 0)) 
+            group by o.id
+                     """, nativeQuery = true)
+    List<ChiTietSanPhamForBanHang> getTimBanHang(CTSPSearch ctspSearch);
 
 }

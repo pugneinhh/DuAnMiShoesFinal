@@ -2,6 +2,7 @@ package com.example.backend.service;
 import com.example.backend.dto.request.sanphamsearch.CTSPSearch;
 import com.example.backend.dto.request.sanpham.ChiTietSanPhamRequest;
 import com.example.backend.dto.request.sanphamupdate.UpdateCTSPRequest;
+import com.example.backend.dto.response.ChiTietSanPhamForBanHang;
 import com.example.backend.dto.response.sanpham.CTSPSearchRespone;
 import com.example.backend.dto.response.sanpham.ChiTietSanPhamRespone;
 import com.example.backend.dto.response.sanpham.DetailCTSPRespone;
@@ -45,6 +46,10 @@ public class CTSPService {
 
     public List<CTSPSearchRespone> getSearch(String idSP, CTSPSearch ctspSearch){
         return ctspRepository.getTim(idSP,ctspSearch);
+    }
+
+    public List<ChiTietSanPhamForBanHang> getSearchBanHang(CTSPSearch ctspSearch){
+        return ctspRepository.getTimBanHang(ctspSearch);
     }
 
 
