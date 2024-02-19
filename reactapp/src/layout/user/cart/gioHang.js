@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./gioHang.css";
 import { Button, Tag } from "antd";
 import { FaRegTrashAlt, FaMapMarkerAlt } from "react-icons/fa";
@@ -7,14 +7,28 @@ import ModalDiaChi from "./modalDiaChi";
 import ModalVoucher from "./modalVoucher";
 import { Link } from "react-router-dom";
 import ProductRow from "./gioHangrow";
+import { get, set } from "local-storage";
 export const GioHang = ({ children }) => {
-    const [openModalDiaChi, setOpenModalDiaChi] = useState(false);
-    const [openModalVoucher, setOpenModalVoucher] = useState(false);
-      const detailDiaChi = (row) => {
-        console.log("click", row);
-        // setIdKH(row);
-        setOpenModalDiaChi(true);
-      };
+  const [userID, setUserID] = useState("");
+  const checkUser = () => {
+    const storedData = get("userData");
+    setUserID(storedData.userID)
+  };
+
+  console.log(userID)
+  useEffect(() => {
+    if (userID != null || userID != undefined || userID != "") {
+      checkUser();
+    }
+  }, [userID]);
+
+  const [openModalDiaChi, setOpenModalDiaChi] = useState(false);
+  const [openModalVoucher, setOpenModalVoucher] = useState(false);
+  const detailDiaChi = (row) => {
+    console.log("click", row);
+    // setIdKH(row);
+    setOpenModalDiaChi(true);
+  };
   // const [quantity, setQuantity] = useState(0);
   // const tangSL = () => {
   //   setQuantity(quantity + 1);
@@ -111,7 +125,7 @@ export const GioHang = ({ children }) => {
           </div>
           <div
             className="row ps-2 pb-2 mt-3"
-            // style={{ borderBottom: "1px dashed black"}}
+          // style={{ borderBottom: "1px dashed black"}}
           >
             <div className="col-md-6" style={{ marginLeft: 30 }}>
               <span>Đơn hàng </span>
@@ -133,7 +147,7 @@ export const GioHang = ({ children }) => {
           </div>
           <div
             className="row ps-2 pb-2 mt-3"
-            // style={{ borderBottom: "1px dashed black" }}
+          // style={{ borderBottom: "1px dashed black" }}
           >
             <h5 className="col-md-6" style={{ marginLeft: 30 }}>
               <span>Tổng tiền </span>
@@ -147,10 +161,12 @@ export const GioHang = ({ children }) => {
       <ModalDiaChi
         openModalDiaChi={openModalDiaChi}
         setOpenModalDiaChi={setOpenModalDiaChi}
+        userID={userID}
       />
       <ModalVoucher
         openModalVoucher={openModalVoucher}
         setOpenModalVoucher={setOpenModalVoucher}
+        userID={userID}
       />
     </div>
   );
