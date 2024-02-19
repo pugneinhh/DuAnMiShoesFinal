@@ -1,5 +1,4 @@
 import {  Card, Col, Form, Input, Row, Select } from "antd";
-// import "./CustumerManagement.model.css";
 import { useEffect, useState } from "react";
 import { AddressApi } from "../api/address/AddressApi";
 import { useNavigate, useParams } from "react-router-dom";
@@ -19,9 +18,6 @@ export default function DetailKhachHang() {
     const nav = useNavigate();
 
     const [getOneEmployee, setOneEmployee] = useState(null);
-    console.log(id)
-    // console.log(KhachHangAPI.getOneByIdUser(id)
-    console.log("dfdf", getOneEmployee)
     const getOneEmployeeById = () => {
         KhachHangAPI.getOneByIdUser(id)
             .then((resp) => {
@@ -46,15 +42,7 @@ export default function DetailKhachHang() {
         setFileIamge(fileData);
     };
 
-    const [showModal, setShowModal] = useState(false);
 
-    const handleScanButtonClick = () => {
-        setShowModal(true);
-    };
-
-    const handleModalClose = () => {
-        setShowModal(false);
-    };
 
     const loadDataProvince = () => {
         AddressApi.fetchAllProvince().then((res) => {
@@ -108,7 +96,7 @@ export default function DetailKhachHang() {
             </h1>
             {getOneEmployee !== null && (
                 <Form form={form} initialValues={getOneEmployee} layout="vertical">
-                    <Row gutter={16} style={{ marginTop: "30px" }}>
+                    <Row gutter={14} style={{ marginTop: "30px" }}>
                         <Col span={7}>
                             <Card style={{ height: "100%" }}>
                                 <h5 className='text-center fw-bold'>Ảnh đại diện</h5>

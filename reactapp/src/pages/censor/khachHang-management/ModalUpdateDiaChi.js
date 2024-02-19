@@ -1,6 +1,5 @@
 
 import {  Form, Input,  Modal, Select } from "antd";
-import axios from "axios";
 import { useEffect, useState } from "react";
 
 import { AddressApi } from "../api/address/AddressApi";
@@ -79,9 +78,9 @@ const ModalUpdateDiaChi = (props) => {
         form.setFieldsValue({ wardCode: valueWard.valueWard });
         setWard(valueWard);
     };
-    console.log("diacji",diaChiUpdate)
+   
     useEffect(() => {
-    console.log("updatesss")
+   
        form.setFieldsValue(
         {id:diaChiUpdate.id,
         idNguoiDung:diaChiUpdate.nguoiDung,

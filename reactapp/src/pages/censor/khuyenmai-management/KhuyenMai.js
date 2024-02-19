@@ -33,7 +33,7 @@ const KhuyenMai = () => {
   const currentTime = moment(); // thời gian hiện tại
 
   const onChange = (value) => {
-    console.log("changed", value);
+ 
   };
 
   const handleChange = (event) => {
@@ -74,7 +74,7 @@ const KhuyenMai = () => {
     const result = await PromotionAPI.getAll()
       .then((response) => {
         setKhuyenMais(response.data);
-        console.log("getAll",response.data);
+      
       })
       .catch((error) => console.error("Error adding item:", error));
   };
@@ -88,8 +88,7 @@ const KhuyenMai = () => {
     const handleUpdateStatus = (status) => {
       const currentTime = new Date();
       khuyenMai.forEach((x) => {
-        console.log("x Khuyến mại",x);
-        console.log("ngayBatDau",x.ngay_bat_dau)
+      
         currentTime > new Date(x.ngay_bat_dau) &&
         currentTime < new Date(x.ngay_ket_thuc)
           ? PromotionAPI.updateAutoStart(x.id, x)
@@ -118,8 +117,6 @@ const KhuyenMai = () => {
 
   const [dataSearch, setDataSearch] = useState({});
   const onChangeFilter = (changedValues, allValues) => {
-    console.log("hi", changedValues);
-    console.log("ob", allValues);
     timKiemKhuyenMai(allValues);
     setDataSearch(allValues);
   };
@@ -127,7 +124,6 @@ const KhuyenMai = () => {
   const timKiemKhuyenMai = (dataSearch) => {
     PromotionAPI.search(dataSearch)
       .then((response) => {
-        console.log("searchPromotion",response.data);
         setKhuyenMais(response.data);
       })
       .catch((error) => console.error("Error adding item:", error));

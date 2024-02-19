@@ -15,7 +15,7 @@ const ModalDetailVoucher=(props)=>{
 
   
   const handleChange = (value) => {
-    console.log(`Selected value: ${value}`);
+ 
     setSelectedValue(value);
   };
   const [componentSize, setComponentSize] = useState("default");
@@ -45,8 +45,7 @@ const ModalDetailVoucher=(props)=>{
           soLuong: response.data.soLuong,
         });
         setDataUpdate(response.data);
-        console.log(response.data);
-        console.log(dataUpdate);
+
       })
       .catch((error) => console.error("Error upfate item:", error));
   };
@@ -58,11 +57,6 @@ const ModalDetailVoucher=(props)=>{
         <IntlProvider locale='vi-VN'>
       <div
       className="container-fluid  m-2 p-3 pt-2"
-      // style={{
-      //   border: "1px solid #ddd", // Border color
-      //   boxShadow: "0 3px 8px rgba(0, 0, 0, 0.1)", // Box shadow
-      //   borderRadius: "8px",
-      // }}
     >
       <div className="row">
         <Divider orientation="center" color="none">
@@ -278,19 +272,7 @@ const ModalDetailVoucher=(props)=>{
           <TableNguoiDungVoucher idV={id} />
         </div>
       </div>
-      {/* <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
-      <ToastContainer /> */}
+
     </div>
     </IntlProvider>
     )

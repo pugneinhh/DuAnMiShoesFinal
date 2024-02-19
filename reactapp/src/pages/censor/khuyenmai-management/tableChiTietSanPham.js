@@ -1,5 +1,4 @@
 import React, { useState, useEffect} from "react";
-import axios from "axios";
 import {
   Table,
   Tag,
@@ -24,7 +23,7 @@ const TableChiTietSanPham = ({selectedIDSPs,onSelectedCTSanPham,suaIDCTSP}) => {
           const filterArrray = selectedIDSPs.filter((value, index, self) => {
             return self.indexOf(value) === index;
           });
-          console.log("fillterArray",filterArrray);
+        
           if (filterArrray.length !== 0 ) {
            const responses = await Promise.all(filterArrray.map(id => 
             PromotionAPI.loadCTSPBySP(id)));
@@ -34,7 +33,7 @@ const TableChiTietSanPham = ({selectedIDSPs,onSelectedCTSanPham,suaIDCTSP}) => {
               setIDSanPham(prevData => [...prevData , ...filterArrray]);
         
           } else {
-            console.log("Xóa");
+           
             const responses = await Promise.all(selectedIDSPs.map(id => 
               PromotionAPI.loadCTSPBySP(id)));
             for (let i = 0 ; i < responses.length ; i++){
@@ -59,7 +58,7 @@ const TableChiTietSanPham = ({selectedIDSPs,onSelectedCTSanPham,suaIDCTSP}) => {
 
   useEffect(() => {
     setSelectedRowKeys(suaIDCTSP);
-   console.log("CTSP from tblSP: " , suaIDCTSP);
+ 
    onSelectedCTSanPham(suaIDCTSP);
   },[suaIDCTSP]);
   const columnsChiTietSanPham = [

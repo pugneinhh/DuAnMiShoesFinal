@@ -52,7 +52,7 @@ export default function AddKhachHang() {
   const [ward, setWard] = useState(null);
 
   const handleProvinceChange = (value, valueProvince) => {
-    console.log("fdfdf", valueProvince);
+  
     form.setFieldsValue({ provinceId: valueProvince.valueProvince });
     AddressApi.fetchAllProvinceDistricts(valueProvince.valueProvince).then(
       (res) => {
@@ -145,7 +145,7 @@ export default function AddKhachHang() {
         )[0].DistrictID
       ).then((res) => {
         setListWard(res.data.data);
-        console.log("xã", res.data.data);
+     
         setWard(
           res.data.data.filter(
             (item) =>
@@ -293,7 +293,7 @@ export default function AddKhachHang() {
         </Divider>
       </h1>
       <Form form={form} layout="vertical">
-        <Row gutter={16} style={{ marginTop: "30px" }}>
+        <Row gutter={14} style={{ marginTop: "30px" }}>
           <Col span={7}>
             <Card style={{ height: "100%" }}>
               <h5 className="text-center fw-bold">Ảnh đại diện</h5>
@@ -323,6 +323,19 @@ export default function AddKhachHang() {
                   >
                     {/* <FontAwesomeIcon icon={FaQrcode} /> */}
                     <span style={{ marginLeft: "10px" }}>QR-Căn cước</span>
+                  </Button>
+                  <Button
+                    onClick={handleSuccess}
+                    style={{
+                      width: "110px",
+                      height: "40px",
+                      margin: "0 10px 10px 10px ",
+                      backgroundColor: "#3366CC",
+                      color: "white",
+                    }}
+                    // htmlType="reset"
+                  >
+                    Hoàn tất
                   </Button>
                   {showModal && (
                     <QRScannerModal
@@ -569,23 +582,24 @@ export default function AddKhachHang() {
                     <Input />
                   </Form.Item>
                 </Col>
+                <Col style={{ marginLeft: "300px" }}>
+                  <Button
+                    onClick={handleSuccess}
+                    style={{
+                      width: "110px",
+                      height: "40px",
+                      margin: "0 10px 10px 10px ",
+                      backgroundColor: "#3366CC",
+                      color: "white",
+                    }}
+                    // htmlType="reset"
+                  >
+                    Hoàn tất
+                  </Button>
+                </Col>
                 <Button
-                  onClick={handleSuccess}
-                  style={{
-                    width: "110px",
-                    height: "40px",
-                    margin: "0 10px 10px 10px ",
-                    backgroundColor: "#3366CC",
-                    color: "white",
-                  }}
-                  // htmlType="reset"
-                >
-                  Hoàn tất
-                </Button>
-
-                <Link
                   to={"/nhan-vien"}
-                  className="btn btn-danger"
+               
                   style={{
                     width: "110px",
                     height: "40px",
@@ -595,12 +609,13 @@ export default function AddKhachHang() {
                   }}
                 >
                   Hủy
-                </Link>
+                </Button>
               </Row>
             </Card>
           </Col>
         </Row>
       </Form>
+
       <ToastContainer
         position="top-right"
         autoClose={5000}

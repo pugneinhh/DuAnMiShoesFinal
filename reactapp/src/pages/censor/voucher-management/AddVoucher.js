@@ -19,7 +19,7 @@ import TableKhachHang from "./tableKhachHang";
 const AddVoucher = () => {
   const [selectedValue, setSelectedValue] = useState("Tiền mặt");
   const handleChange = (value) => {
-    console.log(`Selected value: ${value}`);
+   
     setSelectedValue(value);
   };
   const navigate = useNavigate();
@@ -38,7 +38,7 @@ const AddVoucher = () => {
       value.ma += characters.charAt(randomIndex);
     }
     }
-    console.log("voucher",value);
+   
     VoucherAPI.create(value).then((response) => {
       if (selectedIDKH) {
         Promise.all(
@@ -47,7 +47,7 @@ const AddVoucher = () => {
           )
         );
       }
-      console.log(response.data);
+   
       navigate("/admin-voucher");
       toast("✔️ Thêm thành công!", {
         position: "top-right",

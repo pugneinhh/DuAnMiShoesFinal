@@ -1,12 +1,11 @@
 import {  Card, Col, Form, Input, Row, Select } from "antd";
-// import "./CustumerManagement.model.css";
 import { useEffect, useState } from "react";
 import { AddressApi } from "../api/address/AddressApi";
-import { useNavigate, useParams } from "react-router-dom";
+import {  useParams } from "react-router-dom";
 import UpLoadImageUpdate from "../api/UpdateImage/UploadImageUpdate";
 import { NhanVienAPI } from "../api/user/nhanVien.api";
 import moment from "moment";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { FaMoneyBills } from "react-icons/fa6";
 
 export default function DetailNhanVien() {
@@ -17,9 +16,7 @@ export default function DetailNhanVien() {
     const [listDistricts, setListDistricts] = useState([]);
     const [listWard, setListWard] = useState([]);
     const [getOneEmployee, setOneEmployee] = useState(null);
-    console.log(id)
-    // console.log(KhachHangAPI.getOneByIdUser(id)
-    console.log("dfdf", getOneEmployee)
+  
     const getOneEmployeeById = () => {
         NhanVienAPI.getOneByIdUser(id)
             .then((resp) => {
@@ -37,14 +34,14 @@ export default function DetailNhanVien() {
 
     useEffect(() => {
         getOneEmployeeById();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+       
     }, []);
 
     const handleFileUpload = (fileData) => {
         setFileIamge(fileData);
     };
 
-    const [showModal, setShowModal] = useState(false);
+   
 
     const loadDataProvince = () => {
         AddressApi.fetchAllProvince().then((res) => {
@@ -94,7 +91,7 @@ export default function DetailNhanVien() {
             </h1>
             {getOneEmployee !== null && (
                 <Form form={form} initialValues={getOneEmployee} layout="vertical">
-                    <Row gutter={16} style={{ marginTop: "30px" }}>
+                    <Row gutter={14} style={{ marginTop: "30px" }}>
                         <Col span={7}>
                             <Card style={{ height: "100%" }}>
                                 <h5 className='text-center fw-bold'>Ảnh đại diện</h5>
