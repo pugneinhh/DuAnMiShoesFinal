@@ -53,7 +53,7 @@ import {
 import { VoucherNguoiDungAPI } from "../../censor/api/voucher/nguoiDungVoucher.api";
 import { SellAPI } from "../api/sell/sell.api";
 import { VoucherAPI } from "../api/voucher/voucher.api";
-import {HoaDonAPI} from "../api/hoaDon/hoaDon.api";
+import { HoaDonAPI } from "../api/hoaDon/hoaDon.api";
 import imgTicket from "../../../assets/images/discountTicket.png";
 import DiaChiGiaoHang from "./GiaoHang";
 const { Option } = Select;
@@ -65,7 +65,7 @@ const BanHang = () => {
   const ctspHD = useSelector(GetInvoice);
   const ctsp = useSelector(GetProduct);
   const client = useSelector(GetClient);
-  const [shipMoney,setShipMoney] = useState("");
+  const [shipMoney, setShipMoney] = useState("");
   const [prevValue, setPrevValue] = useState(undefined);
   let lengthSP = 0;
   let data = [""];
@@ -75,7 +75,7 @@ const BanHang = () => {
   const [isSwitchTraSau, setIsSwitchTraSau] = useState(false);
 
   console.log("client", client);
-  console.log("ctsp",ctsp);
+  console.log("ctsp", ctsp);
   const handleSwitchToggle = () => {
     setIsSwitchOn(!isSwitchOn);
     if (isSwitchOn === true) {
@@ -85,54 +85,54 @@ const BanHang = () => {
   const handleSwitchTraSau = () => {
     setIsSwitchTraSau(!isSwitchTraSau);
   };
-  
-  const [voucherHienTai,setVoucherHienTai] = useState("");
-  const [hoaDonHienTai,setHoaDonHienTai] = useState("");
-  console.log("voucherHienTai",voucherHienTai);
-  const [tienVoucher,setTienVoucher] = useState("");
+
+  const [voucherHienTai, setVoucherHienTai] = useState("");
+  const [hoaDonHienTai, setHoaDonHienTai] = useState("");
+  console.log("voucherHienTai", voucherHienTai);
+  const [tienVoucher, setTienVoucher] = useState("");
+
   const onChangeVoucher = (value, option) => {
     console.log(`selected ${value}`);
-    console.log("Option",option);
-    dispatch(UpdateVoucherToBill({voucher:value,key:activeKey}))
-    setVoucherHienTai(value);
- 
-    SellAPI.updateVoucherToHD(activeKey,value);
+    console.log("Option", option);
+    dispatch(UpdateVoucherToBill({ voucher: value, key: activeKey }));
+    //setVoucherHienTai(value);
+    VoucherAPI.detail(value).then((res) => setVoucherHienTai(res.data));
+
+    SellAPI.updateVoucherToHD(activeKey, value);
   };
   const onSearchVoucher = (value, option) => {
     console.log(`selected ${value}`);
-    console.log("Option",option);
-  }
+    console.log("Option", option);
+  };
   // Lấy thông tin nhân viên
   const [storedData, setStoredData] = useState(null);
 
   useEffect(() => {
     // Lấy dữ liệu từ localStorage khi component được tạo ra
-    const dataFromLocalStorage = localStorage.getItem('userData');
-
-    // Kiểm tra xem có dữ liệu trong localStorage không
+    const dataFromLocalStorage = localStorage.getItem("userData");
     if (dataFromLocalStorage) {
       const parsedData = JSON.parse(dataFromLocalStorage);
       const nameFromData = parsedData.ma;
-
       if (nameFromData) {
-        // Cập nhật state nếu có giá trị
         setStoredData(nameFromData);
       }
       // Nếu có, cập nhật state
       //setStoredData(dataFromLocalStorage);
     }
-    },[]);
+  }, []);
 
-    console.log("Thông tin ở local storage",storedData)
+  console.log("Thông tin ở local storage", storedData);
 
-  //Hết 
+  //Hết
 
   const filterOptionVoucher = (input, option) => {
-    voucherNoLimited.map((item) => item.ma.toLowerCase().includes(input.toLowerCase()));
+    voucherNoLimited.map((item) =>
+      item.ma.toLowerCase().includes(input.toLowerCase())
+    );
     // option.label.toLowerCase().includes(input.toLowerCase());
   };
   const [voucherByIDKH, setVoucherByIDKH] = useState([""]);
-  const [ctspSS,setCTSPSS] = useState([""]);
+  const [ctspSS, setCTSPSS] = useState([""]);
   const [voucherNoLimited, setVoucherNoLimited] = useState([""]);
   console.log("Voucher by idkh", voucherByIDKH);
 
@@ -146,7 +146,23 @@ const BanHang = () => {
 
   const loadCTSP = async () => {
     const result = await SellAPI.getAllProducts();
-    result.data.map((i)=> dispatch(AddProduct({id:i.idCTSP,soLuong:i.soLuong,linkAnh:i.linkAnh,tenSP:i.tenSP,tenKT:i.tenKT,tenMS:i.tenMS,maMS:i.maMS,loaiKM:i.loaiKM,giaTriKhuyenMai: parseInt(i.giaKhuyenMai, 10),giaBan:i.giaBan,tenKM:i.tenKM})))
+    result.data.map((i) =>
+      dispatch(
+        AddProduct({
+          id: i.idCTSP,
+          soLuong: i.soLuong,
+          linkAnh: i.linkAnh,
+          tenSP: i.tenSP,
+          tenKT: i.tenKT,
+          tenMS: i.tenMS,
+          maMS: i.maMS,
+          loaiKM: i.loaiKM,
+          giaTriKhuyenMai: parseInt(i.giaKhuyenMai, 10),
+          giaBan: i.giaBan,
+          tenKM: i.tenKM,
+        })
+      )
+    );
     setCTSPSS(result.data);
   };
 
@@ -175,15 +191,15 @@ const BanHang = () => {
     const result_hdct = await SellAPI.getAllHDCTByHD(id);
     console.log("HDCT", result_hdct.data);
     if (result_hdct.data.length > 0) {
-      result_hdct.data.map((i) => {  
+      result_hdct.data.map((i) => {
         dispatch(
           LoadInvoice({
-            id : i.id,
+            id: i.id,
             soLuong: i.soLuong,
             giaGiam: i.giaGiam,
             total: i.giaSauGiam,
             trangThai: i.trangThai,
-            giaBan: parseFloat(i.giaGiam)+parseFloat(i.giaSauGiam),
+            giaBan: parseFloat(i.giaGiam) + parseFloat(i.giaSauGiam),
             giaSauGiam: i.giaSauGiam,
             tenSP: i.tenSP,
             maMS: i.maMS,
@@ -202,14 +218,20 @@ const BanHang = () => {
     }
   };
 
-  const loadAllBill = async() => {
+  const loadAllBill = async () => {
     const result = await SellAPI.getAllHoaDonCho();
     console.log(result.data);
     if (result.data.length > 0) {
       setActiveKey(result.data[0].id);
+      if (result.data[0].nguoiDung) {
+      SellAPI.getVoucherWithIDKH(result.data[0].nguoiDung).then(res => setVoucherByIDKH(res));
+      }
       result.data.map((item) => {
-        console.log("Hóa đon",item)
-        console.log("Hóa đon2222222222222222222222222222222222222222222222222222222222", item.nhanVien);
+        console.log("Hóa đon", item);
+        console.log(
+          "Hóa đon2222222222222222222222222222222222222222222222222222222222",
+          item.nhanVien
+        );
         dispatch(
           CreateBill({
             id: item.id,
@@ -224,7 +246,7 @@ const BanHang = () => {
             thanhTien: item.thanhTien,
             diemSuDung: null,
             giaTriDiem: null,
-            email:item.email,
+            email: item.email,
             tenNguoiNhan: item.tenNguoiNhan,
             soDienThoai: item.soDienThoai,
             diaChi: item.diaChi,
@@ -234,32 +256,48 @@ const BanHang = () => {
             ngayNhan: "null",
             ngayTraHang: null,
             nguoiTao: item.nguoiTao,
-           // nguoiSua: item.nguoiSua,
-           // ngaySua: item.ngaySua,
-           // ngayTao: item.ngayTao,
+            // nguoiSua: item.nguoiSua,
+            // ngaySua: item.ngaySua,
+            // ngayTao: item.ngayTao,
             trangThai: 0,
             key: item.id,
+            tienVanChuyen: item.tienVanChuyen,
           })
         );
         load(item.id);
       });
     } else {
       const result = await SellAPI.getAllHoaDonChoHomNay();
-      console.log("result",result)
+      console.log("result", result);
       const idHD = uuid();
       const currentDate = new Date();
-      const currentDateInMilliseconds =  Date.UTC(
+      const currentDateInMilliseconds = Date.UTC(
         currentDate.getFullYear(),
         currentDate.getMonth(),
-        currentDate.getDate(),
-        
-      )
-      const value = [{id:idHD,ma:"HDTQ" + currentDateInMilliseconds + "-" + ((!result.data ? 0 : parseFloat(result.data.length))  + 1),trangThai : 0,nhanVien:storedData,nguoiTao:storedData}]
+        currentDate.getDate()
+      );
+      const value = [
+        {
+          id: idHD,
+          ma:
+            "HDTQ" +
+            currentDateInMilliseconds +
+            "-" +
+            ((!result.data ? 0 : parseFloat(result.data.length)) + 1),
+          trangThai: 0,
+          nhanVien: storedData,
+          nguoiTao: storedData,
+        },
+      ];
 
       dispatch(
-        CreateBill({ 
+        CreateBill({
           id: idHD,
-          ma: "HDTQ" + currentDateInMilliseconds + "-" + ((!result.data ? 0 : parseFloat(result.data.length))  + 1),
+          ma:
+            "HDTQ" +
+            currentDateInMilliseconds +
+            "-" +
+            ((!result.data ? 0 : parseFloat(result.data.length)) + 1),
           nhanVien: storedData,
           nguoiDung: null,
           voucher: null,
@@ -278,38 +316,34 @@ const BanHang = () => {
           ngayNhan: "null",
           ngayTraHang: null,
           nguoiTao: storedData,
-         // nguoiSua: null,
-         // ngaySua: null,
-         // ngayTao: new Date(),
+          // nguoiSua: null,
+          // ngaySua: null,
+          // ngayTao: new Date(),
           trangThai: 0,
           key: idHD,
         })
       );
       SellAPI.addBill(value[0]);
-      
-      setActiveKey(idHD);
-      console.log(value[0])
 
+      setActiveKey(idHD);
+      console.log(value[0]);
     }
   };
 
   const [open, setOpen] = useState(false);
   const [openSanPham, setOpenSanPham] = useState(false);
 
-
-
   useEffect(() => {
     loadCTSP();
     voucherNoIDKH();
     loadKhachHang();
     loadAllBill();
-
   }, []);
 
   const onChangeSoLuong = (value, record) => {
     console.log("value", value);
     console.log("prevvlue", prevValue);
-    console.log("record",record);
+    console.log("record", record);
     if (prevValue === 0) {
       setPrevValue(undefined);
       return;
@@ -322,7 +356,10 @@ const BanHang = () => {
           "Bạn có chắc chắn muốn xóa sản phẩm này ra khỏi giỏ hàng không không?",
         onOk: () => {
           dispatch(
-            RemoveInvoice({ chiTietSanPham: record.chiTietSanPham, hoaDon: record.hoaDon })
+            RemoveInvoice({
+              chiTietSanPham: record.chiTietSanPham,
+              hoaDon: record.hoaDon,
+            })
           );
           dispatch(
             UpdatePushProduct({
@@ -330,8 +367,11 @@ const BanHang = () => {
               soLuong: record.soLuong,
             })
           );
-          SellAPI.deleteInvoiceAndRollBackProduct(record.chiTietSanPham,record.hoaDon);
-         // SellAPI.updateThanhTien(record.hoaDon);
+          SellAPI.deleteInvoiceAndRollBackProduct(
+            record.chiTietSanPham,
+            record.hoaDon
+          );
+          // SellAPI.updateThanhTien(record.hoaDon);
           data = ctspHD.filter((f) => f.hoaDon === activeKey);
           toast("✔️ Cập nhật giỏ hàng thành công!", {
             position: "top-right",
@@ -382,7 +422,7 @@ const BanHang = () => {
             soLuong: value - record.soLuong,
           })
         );
-        SellAPI.updateSL(record.chiTietSanPham,activeKey,value);
+        SellAPI.updateSL(record.chiTietSanPham, activeKey, value);
         //SellAPI.updateThanhTien(activeKey);
       } else {
         dispatch(
@@ -398,8 +438,8 @@ const BanHang = () => {
             soLuong: value - record.soLuong,
           })
         );
-        SellAPI.updateSL(record.chiTietSanPham,activeKey,value);
-       // SellAPI.updateThanhTien(activeKey);
+        SellAPI.updateSL(record.chiTietSanPham, activeKey, value);
+        // SellAPI.updateThanhTien(activeKey);
       }
     }
   };
@@ -408,19 +448,33 @@ const BanHang = () => {
     dispatch(
       UpdateBill({
         key: activeKey,
-        giaGoc:data.reduce((accumulator, currentProduct) => {
-          return accumulator + currentProduct.total
+        giaGoc: data.reduce((accumulator, currentProduct) => {
+          return accumulator + currentProduct.total;
         }, 0),
-        giaGiamGia: ((voucherHienTai ? 
-          voucherHienTai.loaiVoucher === "Tiền mặt" ? 
-          (voucherHienTai.mucDo < voucherHienTai.giamToiDa ? voucherHienTai.mucDo : voucherHienTai.giamToiDa) : 
-          (((data.total)*voucherHienTai.mucDo/100) < voucherHienTai.giamToiDa ? ((data.total)*voucherHienTai.mucDo/100) : voucherHienTai.giamToiDa) : 0)),
-        thanhTien: data.reduce((accumulator, currentProduct) => {
-          return accumulator + currentProduct.total
-        }, 0) - ((voucherHienTai ? 
-          voucherHienTai.loaiVoucher === "Tiền mặt" ? 
-          (voucherHienTai.mucDo < voucherHienTai.giamToiDa ? voucherHienTai.mucDo : voucherHienTai.giamToiDa) : 
-          (((data.total)*voucherHienTai.mucDo/100) < voucherHienTai.giamToiDa ? ((data.total)*voucherHienTai.mucDo/100) : voucherHienTai.giamToiDa) : 0)),
+        giaGiamGia: voucherHienTai
+          ? voucherHienTai.loaiVoucher === "Tiền mặt"
+            ? voucherHienTai.mucDo < voucherHienTai.giamToiDa
+              ? voucherHienTai.mucDo
+              : voucherHienTai.giamToiDa
+            : (data.total * voucherHienTai.mucDo) / 100 <
+              voucherHienTai.giamToiDa
+            ? (data.total * voucherHienTai.mucDo) / 100
+            : voucherHienTai.giamToiDa
+          : 0,
+        thanhTien:
+          data.reduce((accumulator, currentProduct) => {
+            return accumulator + currentProduct.total;
+          }, 0) -
+          (voucherHienTai
+            ? voucherHienTai.loaiVoucher === "Tiền mặt"
+              ? voucherHienTai.mucDo < voucherHienTai.giamToiDa
+                ? voucherHienTai.mucDo
+                : voucherHienTai.giamToiDa
+              : (data.total * voucherHienTai.mucDo) / 100 <
+                voucherHienTai.giamToiDa
+              ? (data.total * voucherHienTai.mucDo) / 100
+              : voucherHienTai.giamToiDa
+            : 0),
       })
     );
     setOpenThanhToan(true);
@@ -437,22 +491,25 @@ const BanHang = () => {
   const handleCloseThanhToan = () => {
     setOpenThanhToan(false);
   };
-  const onChange = (key, nguoiDung) => {
+  const onChange = (key) => {
     setActiveKey(key);
-    if (!hoaDons.filter((item) => item.key === key)[0].voucher) {
-      setVoucherHienTai("");
+    if (!hoaDons.filter((item) => item.id === key)[0].voucher) {
+      setVoucherHienTai("");  
     } else {
-      VoucherAPI.detail(hoaDons.filter((item) => item.key === key)[0].voucher).then((res) => setVoucherHienTai(res.data));
+      VoucherAPI.detail(
+        hoaDons.filter((item) => item.id === key)[0].voucher
+      ).then((res) => setVoucherHienTai(res.data));
     }
-
+    setShipMoney(0);
+     SellAPI.getVoucherWithIDKH(hoaDons.filter((item) => item.id === key && item.nguoiDung)[0]?.nguoiDung).then(res => setVoucherByIDKH(res));
     //voucherKH(nguoiDung);
   };
 
   ////tạo hóa đơn bằng redux
 
   const dispatch = useDispatch();
-  const handleClickAddHD = async() => {
-   // const maxKey = Math.max(...hoaDons.map((hd) => hd.key));
+  const handleClickAddHD = async () => {
+    // const maxKey = Math.max(...hoaDons.map((hd) => hd.key));
     if (hoaDons.length >= 5) {
       return toast.error("Không được vượt quá 5 hóa đơn!", {
         position: "top-right",
@@ -465,50 +522,63 @@ const BanHang = () => {
         theme: "light",
       });
     }
-   // if (maxKey > 0) {
-       const result = await SellAPI.getAllHoaDonChoHomNay();
-      console.log("result",result)
-      const idHD = uuid();
-      const currentDate = new Date();
-      const currentDateInMilliseconds =  Date.UTC(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        currentDate.getDate(),
-        
-      )
-      const value = [{id:idHD,ma:"HDTQ" + currentDateInMilliseconds + "-" + ((!result.data ? 0 : parseFloat(result.data.length)+1)),trangThai : 0,nhanVien:storedData,nguoiTao:storedData}]
-      dispatch(
-        CreateBill({
-          id: idHD,
-          ma: "HDTQ" + currentDateInMilliseconds + "-" + ((!result.data ? 0 : parseFloat(result.data.length)+1)),
-          nhanVien: storedData,
-          nguoiDung: null,
-          voucher: null,
-          ngayMua: null,
-          giaGoc: 0,
-          giaGiamGia: 0,
-          thanhTien: 0,
-          diemSuDung: null,
-          giaTriDiem: null,
-          tenNguoiNhan: null,
-          soDienThoai: null,
-          diaChi: null,
-          qrCode: null,
-          ghiChu: null,
-          ngayDuKienNhan: null,
-          ngayNhan: "null",
-          ngayTraHang: null,
-          nguoiTao: storedData,
-          nguoiSua: null,
-          ngaySua: null,
-          trangThai: 0,
-          key: idHD,
-        })
-
-      );
-      SellAPI.addBill(value[0]);
-      setActiveKey(idHD);
-
+    // if (maxKey > 0) {
+    const result = await SellAPI.getAllHoaDonChoHomNay();
+    console.log("result", result);
+    const idHD = uuid();
+    const currentDate = new Date();
+    const currentDateInMilliseconds = Date.UTC(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      currentDate.getDate()
+    );
+    const value = [
+      {
+        id: idHD,
+        ma:
+          "HDTQ" +
+          currentDateInMilliseconds +
+          "-" +
+          (!result.data ? 0 : parseFloat(result.data.length) + 1),
+        trangThai: 0,
+        nhanVien: storedData,
+        nguoiTao: storedData,
+      },
+    ];
+    dispatch(
+      CreateBill({
+        id: idHD,
+        ma:
+          "HDTQ" +
+          currentDateInMilliseconds +
+          "-" +
+          (!result.data ? 0 : parseFloat(result.data.length) + 1),
+        nhanVien: storedData,
+        nguoiDung: null,
+        voucher: null,
+        ngayMua: null,
+        giaGoc: 0,
+        giaGiamGia: 0,
+        thanhTien: 0,
+        diemSuDung: null,
+        giaTriDiem: null,
+        tenNguoiNhan: null,
+        soDienThoai: null,
+        diaChi: null,
+        qrCode: null,
+        ghiChu: null,
+        ngayDuKienNhan: null,
+        ngayNhan: "null",
+        ngayTraHang: null,
+        nguoiTao: storedData,
+        nguoiSua: null,
+        ngaySua: null,
+        trangThai: 0,
+        key: idHD,
+      })
+    );
+    SellAPI.addBill(value[0]);
+    setActiveKey(idHD);
   };
   // ///remove hóa đơn bằng redux
   const handleClickRemoveHD = (targetKey) => {
@@ -526,15 +596,16 @@ const BanHang = () => {
     } else {
       Modal.confirm({
         title: "Thông báo",
-        content:
-          "Bạn có chắc chắn muốn xóa hóa đơn này không?",
+        content: "Bạn có chắc chắn muốn xóa hóa đơn này không?",
         onOk: () => {
           dispatch(
             RemoveBill(hoaDons.filter((hoaDon) => hoaDon.key == targetKey)[0])
           );
           HoaDonAPI.huyHoaDon(targetKey);
-          const list = ctspHD.filter((item)=> item.hoaDon === targetKey);
-          list.map((i) => SellAPI.deleteInvoiceAndRollBackProduct(i.chiTietSanPham,targetKey));
+          const list = ctspHD.filter((item) => item.hoaDon === targetKey);
+          list.map((i) =>
+            SellAPI.deleteInvoiceAndRollBackProduct(i.chiTietSanPham, targetKey)
+          );
           setActiveKey(null);
           initState.current--;
           toast("✔️ Xóa hóa đơn thành công!", {
@@ -548,8 +619,6 @@ const BanHang = () => {
             theme: "light",
           });
           // form.finish();
-
-          
         },
         footer: (_, { OkBtn, CancelBtn }) => (
           <>
@@ -558,7 +627,7 @@ const BanHang = () => {
           </>
         ),
       });
-      
+
       // setActiveKey(initState.current);
     }
   };
@@ -568,7 +637,6 @@ const BanHang = () => {
       handleClickAddHD();
     } else {
       handleClickRemoveHD(targetKey);
-      
     }
   };
 
@@ -652,9 +720,7 @@ const BanHang = () => {
                   "en-US"
                 ).format(record.giaBan)} VNĐ`}</del>
                 <br></br>
-                {`${Intl.NumberFormat("en-US").format(
-                  record.giaSauGiam
-                )} VNĐ`}
+                {`${Intl.NumberFormat("en-US").format(record.giaSauGiam)} VNĐ`}
               </span>
             )}
           </>
@@ -687,12 +753,13 @@ const BanHang = () => {
             <div
               style={{
                 backgroundColor: `${record.maMS}`,
-                borderColor: `${record.maMS === '#ffffff' || '#fafafa' ? '#000000' : '#ffffff'}`,
+                borderColor: `${
+                  record.maMS === "#ffffff" || "#fafafa" ? "#000000" : "#ffffff"
+                }`,
                 borderRadius: 30,
                 border: "1px solid",
                 width: 25,
                 height: 25,
-                
               }}
             ></div>
           </>
@@ -722,7 +789,7 @@ const BanHang = () => {
                   dispatch(
                     RemoveInvoice({
                       chiTietSanPham: record.chiTietSanPham,
-                      hoaDon: activeKey,
+                      hoaDon: record.hoaDon,
                     })
                   );
                   dispatch(
@@ -731,9 +798,12 @@ const BanHang = () => {
                       soLuong: record.soLuong,
                     })
                   );
-                  SellAPI.deleteInvoiceAndRollBackProduct(record.chiTietSanPham,record.hoaDon);
+                  SellAPI.deleteInvoiceAndRollBackProduct(
+                    record.chiTietSanPham,
+                    record.hoaDon
+                  );
                   //SellAPI.updateThanhTien(record.hoaDon);
-                  data = ctspHD.filter((f) => f.hoaDon === activeKey);
+                  //  data = ctspHD.filter((f) => f.hoaDon === activeKey);
                   toast("✔️ Cập nhật giỏ hàng thành công!", {
                     position: "top-right",
                     autoClose: 5000,
@@ -801,7 +871,7 @@ const BanHang = () => {
           {hoaDons.map(
             (tab) => (
               (data = ctspHD.filter((f) => f.hoaDon === activeKey)),
-              (hd =  hoaDons.filter((f) => f.id === activeKey)),
+              (hd = hoaDons.filter((f) => f.id === activeKey)),
               // (KH = client.filter((k) => k.activeKey === activeKey)),
               (lengthSP = ctspHD
                 .filter((f) => f.hoaDon === tab.key)
@@ -982,7 +1052,22 @@ const BanHang = () => {
                     <hr></hr>
                     <div className="container-fluid row">
                       <div className="col-md-7">
-                      {hd[0]?.tenNguoiNhan ? <DiaChiGiaoHang money ={setShipMoney} quantity={lengthSP} hoaDon={activeKey} thongTinVanChuyen = {hd[0]}/> : isSwitchOn && <DiaChiGiaoHang money ={setShipMoney} quantity={lengthSP} hoaDon={activeKey}/>}
+                        {hd[0]?.tenNguoiNhan ? (
+                          <DiaChiGiaoHang
+                            money={setShipMoney}
+                            quantity={lengthSP}
+                            hoaDon={activeKey}
+                            thongTinVanChuyen={hd[0]}
+                          />
+                        ) : (
+                          isSwitchOn && (
+                            <DiaChiGiaoHang
+                              money={setShipMoney}
+                              quantity={lengthSP}
+                              hoaDon={activeKey}
+                            />
+                          )
+                        )}
                         {/* {isSwitchOn && <DiaChiGiaoHang money ={setShipMoney} quantity={lengthSP} hoaDon={activeKey}/>} */}
                       </div>
                       <div className="col-md-5">
@@ -1010,14 +1095,24 @@ const BanHang = () => {
                             setOpenThanhToan={setOpenThanhToan}
                             onOk={handleCloseThanhToan}
                             onCancel={handleCloseThanhToan}
-                            total={data.reduce((accumulator, currentProduct) => {
-                              return accumulator + currentProduct.total
-                            }, 0) - ((voucherHienTai ? 
-                              voucherHienTai.loaiVoucher === "Tiền mặt" ? 
-                              (voucherHienTai.mucDo < voucherHienTai.giamToiDa ? voucherHienTai.mucDo : voucherHienTai.giamToiDa) : 
-                              (((data.total)*voucherHienTai.mucDo/100) < voucherHienTai.giamToiDa ? ((data.total)*voucherHienTai.mucDo/100) : voucherHienTai.giamToiDa) : 0))
-                          }
+                            total={
+                              data.reduce((accumulator, currentProduct) => {
+                                return accumulator + currentProduct.total;
+                              }, 0) -
+                              (voucherHienTai
+                                ? voucherHienTai.loaiVoucher === "Tiền mặt"
+                                  ? voucherHienTai.mucDo <
+                                    voucherHienTai.giamToiDa
+                                    ? voucherHienTai.mucDo
+                                    : voucherHienTai.giamToiDa
+                                  : (data.total * voucherHienTai.mucDo) / 100 <
+                                    voucherHienTai.giamToiDa
+                                  ? (data.total * voucherHienTai.mucDo) / 100
+                                  : voucherHienTai.giamToiDa
+                                : 0)
+                            }
                             hoaDon={activeKey}
+                            voucher={voucherHienTai.id}
                           />
                         </div>
 
@@ -1042,11 +1137,13 @@ const BanHang = () => {
                                     value={option.id}
                                     label={option.ma}
                                     style={{ width: "100%", height: "100%" }}
+                               
                                     // filterOption={filterOptionVoucher}
                                   >
                                     <div className="row">
-                                      <div className="col-md-2" 
-                                      //style={{ marginRight: 50 }}
+                                      <div
+                                        className="col-md-2"
+                                        //style={{ marginRight: 50 }}
                                       >
                                         <img
                                           src={imgTicket}
@@ -1058,10 +1155,7 @@ const BanHang = () => {
                                           }}
                                         />
                                       </div>
-                                      <div
-                                        className="col"
-                                        
-                                      >
+                                      <div className="col" style={{marginLeft: "50px"}}>
                                         Mã giảm giá: {option.ma}
                                         <br></br>
                                         Điều kiện:
@@ -1076,8 +1170,8 @@ const BanHang = () => {
                                           : `${Intl.NumberFormat(
                                               "en-US"
                                             ).format(option.mucDo)} VNĐ `}
-                                            <br></br>
-                                         Tối đa:
+                                        <br></br>
+                                        Tối đa:
                                         {Intl.NumberFormat("en-US").format(
                                           option.giamToiDa
                                         )}
@@ -1093,6 +1187,7 @@ const BanHang = () => {
                                     value={option.id}
                                     label={option.ma}
                                     style={{ width: "100%", height: 100 }}
+                                
                                     // filterOption={filterOptionVoucher}
                                   >
                                     <div className="row">
@@ -1145,39 +1240,84 @@ const BanHang = () => {
                         <h6 className="mt-4">
                           Trả sau:
                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                          <Switch disabled ={isSwitchOn ? false : true} onChange={handleSwitchTraSau} checked={isSwitchTraSau}/>
+                          <Switch
+                            disabled={isSwitchOn ? false : true}
+                            onChange={handleSwitchTraSau}
+                            checked={isSwitchTraSau}
+                          />
                         </h6>
                         <h6 className="mt-4">
                           Giao hàng: &nbsp;&nbsp;&nbsp;
                           <Switch
                             disabled={false}
                             onChange={handleSwitchToggle}
-                            checked={hd[0]?.tenNguoiNhan ? true : isSwitchOn ? true : false}
+                            checked={
+                              hd[0]?.tenNguoiNhan
+                                ? true
+                                : isSwitchOn
+                                ? true
+                                : false
+                            }
                           />
                         </h6>
                         <div className="row">
                           <div className="col-md-8">
                             <h6 className="mt-4">
                               Tiền hàng:{" "}
-      
-                              {
-                              
-                              
-                              `${Intl.NumberFormat("en-US").format(
+                              {`${Intl.NumberFormat("en-US").format(
                                 data.reduce((accumulator, currentProduct) => {
-                                  return accumulator + currentProduct.total
-                                }, 0) - ((voucherHienTai ? 
-                                  voucherHienTai.loaiVoucher === "Tiền mặt" ? 
-                                  (voucherHienTai.mucDo < voucherHienTai.giamToiDa ? voucherHienTai.mucDo : voucherHienTai.giamToiDa) : 
-                                  (((data.total)*voucherHienTai.mucDo/100) < voucherHienTai.giamToiDa ? ((data.total)*voucherHienTai.mucDo/100) : voucherHienTai.giamToiDa) : 0))
-                   
+                                  return accumulator + currentProduct.total;
+                                }, 0) -
+                                  (voucherHienTai
+                                    ? voucherHienTai.loaiVoucher === "Tiền mặt"
+                                      ? voucherHienTai.mucDo <
+                                        voucherHienTai.giamToiDa
+                                        ? voucherHienTai.mucDo
+                                        : voucherHienTai.giamToiDa
+                                      : (data.total * voucherHienTai.mucDo) /
+                                          100 <
+                                        voucherHienTai.giamToiDa
+                                      ? (data.total * voucherHienTai.mucDo) /
+                                        100
+                                      : voucherHienTai.giamToiDa
+                                    : 0)
                               )}`}
                             </h6>
-                            <h6 className="mt-4">Phí vận chuyển: {`${Intl.NumberFormat("en-US").format(shipMoney ? shipMoney : 0)}`}</h6>
-                            <h6 className="mt-4">Giảm giá: {`${Intl.NumberFormat("en-US").format((voucherHienTai ? 
-                                  voucherHienTai.loaiVoucher === "Tiền mặt" ? 
-                                  (voucherHienTai.mucDo < voucherHienTai.giamToiDa ? voucherHienTai.mucDo : voucherHienTai.giamToiDa) : 
-                                  (((data.total)*voucherHienTai.mucDo/100) < voucherHienTai.giamToiDa ? ((data.total)*voucherHienTai.mucDo/100) : voucherHienTai.giamToiDa) : 0))}`}</h6>
+                            <h6 className="mt-4">
+                              Phí vận chuyển:{" "}
+                              {`${Intl.NumberFormat("en-US").format(
+                               hd[0]?.tienVanChuyen
+                                  ? hd[0].tienVanChuyen 
+                                  : shipMoney
+                                  ? shipMoney
+                                  : 0
+                                  
+                              )}`}
+                            </h6>
+                            <h6 className="mt-4">
+                              Giảm giá:{" "}                    
+                                     {`${Intl.NumberFormat("en-US").format(
+                                voucherHienTai
+                                  ? voucherHienTai.loaiVoucher === "Tiền mặt"
+                                    ? voucherHienTai.mucDo <
+                                      voucherHienTai.giamToiDa
+                                      ? voucherHienTai.mucDo
+                                      : voucherHienTai.giamToiDa
+                                  //   : (((parseFloat(hd[0].thanhTien) * voucherHienTai.mucDo) /
+                                  //       100 ) <
+                                  //       parseFloat(voucherHienTai.giamToiDa))
+                                  //   ? ((parseFloat(hd[0].thanhTien) * voucherHienTai.mucDo) / 100)
+                                  //   : parseFloat(voucherHienTai.giamToiDa)
+                                  // : 0
+                                  : (data.total * voucherHienTai.mucDo) /
+                                  100 <
+                                voucherHienTai.giamToiDa
+                              ? (data.total * voucherHienTai.mucDo) /
+                                100
+                              : voucherHienTai.giamToiDa
+                            : 0
+                              )}`}
+                            </h6>
                             <h6 className="mt-4">
                               Điểm hiện tại:{" "}
                               <>
@@ -1186,21 +1326,28 @@ const BanHang = () => {
                             </h6>
                             <h6 className="mt-4">
                               Tổng tiền:{" "}
-                              {
-                              
-                              
-                              `${Intl.NumberFormat("en-US").format(
+                              {`${Intl.NumberFormat("en-US").format(
                                 data.reduce((accumulator, currentProduct) => {
-                                  const tongGiam = ((voucherHienTai ? 
-                                    voucherHienTai.loaiVoucher === "Tiền mặt" ? 
-                                    (voucherHienTai.mucDo < voucherHienTai.giamToiDa ? voucherHienTai.mucDo : voucherHienTai.giamToiDa) : 
-                                    (((data.total)*voucherHienTai.mucDo/100) < voucherHienTai.giamToiDa ? ((data.total)*voucherHienTai.mucDo/100) : voucherHienTai.giamToiDa) : 0));
-                                  return accumulator + currentProduct.total
-                                }, 0) - ((voucherHienTai ? 
-                                  voucherHienTai.loaiVoucher === "Tiền mặt" ? 
-                                  (voucherHienTai.mucDo < voucherHienTai.giamToiDa ? voucherHienTai.mucDo : voucherHienTai.giamToiDa) : 
-                                  (((data.total)*voucherHienTai.mucDo/100) < voucherHienTai.giamToiDa ? ((data.total)*voucherHienTai.mucDo/100) : voucherHienTai.giamToiDa) : 0))
-                                  + (shipMoney ?  parseFloat(shipMoney) : 0)
+                                  return accumulator + currentProduct.total;
+                                }, 0) -
+                                  (voucherHienTai
+                                    ? voucherHienTai.loaiVoucher === "Tiền mặt"
+                                      ? voucherHienTai.mucDo <
+                                        voucherHienTai.giamToiDa
+                                        ? voucherHienTai.mucDo
+                                        : voucherHienTai.giamToiDa
+                                      : (data.total * voucherHienTai.mucDo) /
+                                          100 <
+                                        voucherHienTai.giamToiDa
+                                      ? (data.total * voucherHienTai.mucDo) /
+                                        100
+                                      : voucherHienTai.giamToiDa
+                                    : 0) +
+                                  (hd[0]?.tienVanChuyen
+                                    ? hd[0].tienVanChuyen
+                                    : shipMoney
+                                    ? shipMoney
+                                    : 0)
                               )}`}
                             </h6>
                           </div>
@@ -1211,7 +1358,6 @@ const BanHang = () => {
                             <h6 className="mt-4 text-danger">VND</h6>
                           </div>
                         </div>
-
                       </div>
                     </div>
                   </>
@@ -1293,7 +1439,9 @@ const BanHang = () => {
                             // filterOption={filterOptionVoucher}
                           >
                             <div className="row">
-                              <div className="col-md-2"  style={{ marginRight: 50 }}
+                              <div
+                                className="col-md-2"
+                                style={{ marginRight: 50 }}
                               >
                                 <img
                                   src={imgTicket}

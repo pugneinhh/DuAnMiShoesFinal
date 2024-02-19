@@ -135,6 +135,7 @@ public class BanHangController {
 
     @PutMapping("/hoa-don/update-van-chuyen/{idHD}")
     public ResponseEntity<?> updateVanChuyen (@PathVariable("idHD")String idHD, @RequestBody HoaDon hd){
+        System.out.println("req hóa đơn"+hd);
         return ResponseEntity.ok(hoaDonServicee.update(hd,idHD));
     }
 
@@ -180,15 +181,18 @@ public class BanHangController {
     }
 
     @PutMapping("/thanh-toan/hoa-don/{idHD}/{idNV}")
-    public ResponseEntity<?> thanhToanHoaDon (@PathVariable("idHD") String idHD,@PathVariable("idNV") String idNV ) {
+    public ResponseEntity<?> thanhToanHoaDon (@PathVariable("idHD") String idHD,@PathVariable("idNV") String idNV) {
         HoaDon hoaDon=hoaDonServicee.findHoaDonbyID(idHD);
         NguoiDung nguoiDung = nguoiDungService.findByID(idNV);
+        System.out.println("Người dùng thanh toán"+nguoiDung);
+        System.out.println("Hóa đơn thanh toán"+hoaDon);
         LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
         lichSuHoaDon.setHoaDon(hoaDon);
         lichSuHoaDon.setNguoiTao(nguoiDung.getMa());
         lichSuHoaDon.setTrangThai(4);
         lichSuHoaDon.setNgayTao(LocalDateTime.now());
         lichSuHoaDonService.save(lichSuHoaDon);
+
         return ResponseEntity.ok(  hoaDonServicee.thanhToanHoaDon(idHD));
        
     }

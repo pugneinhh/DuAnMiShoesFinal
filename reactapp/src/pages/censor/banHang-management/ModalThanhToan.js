@@ -14,6 +14,7 @@ const ModalThanhToan = (props) => {
     const { openThanhToan, setOpenThanhToan } = props;
     const total = props.total;
     const hoaDon = props.hoaDon;
+    const voucher = props.voucher;
     const hoaDons = useSelector(GetBill);
     const ctspHD =  useSelector(GetInvoice);
     const dispatch=useDispatch();
@@ -21,6 +22,8 @@ const ModalThanhToan = (props) => {
     const pay = useSelector(GetPay);
     console.log("Hóa Đơn", hoaDon);
     console.log(payDetail);
+    console.log("Voucher thanh toán",voucher);
+
     const data = payDetail.filter((item)=> item.hoaDon === hoaDon);
     const navigate = useNavigate();
 
@@ -43,6 +46,7 @@ const ModalThanhToan = (props) => {
       //setStoredData(dataFromLocalStorage);
     }
     },[]);
+    console.log("NV",storedData);
     console.log("Nhân viên",storedData);
     const handleClose = () => {
         setOpenThanhToan(false);
@@ -81,7 +85,7 @@ const ModalThanhToan = (props) => {
        // return UrlCK;
     }
 
-    const handleThanhToan = () => {
+    const handleThanhToan = async () => {
         if (parseFloat(total) <= parseFloat(!tongThanhToan ? 0 : tongThanhToan)){
 
         // Tạo hóa đơn và hóa đơn chi tiết
@@ -97,7 +101,11 @@ const ModalThanhToan = (props) => {
         // }
         // addHD();
         // axios.post(`http://localhost:8080/ban-hang/thanh-toan`,dataHoaDon[0]);
+        if (voucher){
+        SellAPI.updateVoucherToHD(hoaDon,voucher);
+        }
         SellAPI.thanhToanHoaDon(hoaDon, storedData);
+
         toast("Thanh toán thành công!", {
             position: "top-right",
             autoClose: 1000,

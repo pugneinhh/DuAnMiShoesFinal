@@ -81,6 +81,7 @@ public class HoaDonChiTietService {
 
     public void deleteHDCTAndRollBackInSell(String idCTSP,String idHD){
         HoaDonChiTiet hdct = hoaDonChiTietRepository.getHDCTByCTSPAndHD(idCTSP,idHD);
+        System.out.println("Hóa đơn chi tiết"+hdct);
         ChiTietSanPham ctsp = ctspRepository.getReferenceById(idCTSP);
         int slt = ctsp.getSoLuong();
         int slh = hdct.getSoLuong();
