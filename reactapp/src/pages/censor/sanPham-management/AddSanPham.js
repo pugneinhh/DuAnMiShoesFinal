@@ -29,6 +29,7 @@ import tr from 'date-fns/esm/locale/tr/index.js';
 import CloudinaryUpload from './UpAnh';
 import { useNavigate } from 'react-router-dom';
 import convert from 'color-convert';
+import './SanPham.css'
 import { MauSacAPI } from '../api/SanPham/mauSac.api';
 
 
@@ -37,6 +38,7 @@ export default function AddSanPham() {
     const nav = useNavigate();
     const [form] = Form.useForm();
     const [form1] = Form.useForm();
+    const [form2] = Form.useForm();
     const [selectedValue, setSelectedValue] = useState('1');
     const handleChange = (value) => {
         setSelectedValue(value);
@@ -259,6 +261,8 @@ export default function AddSanPham() {
 
     //Update nhanh
     const updateNhanh = (newValues) => {
+        console.log("Vão đà", newValues);
+
         if (selectedRowKeys.length <= 0) {
             toast.error('Chưa chọn dòng để sửa !', {
                 position: "top-right",
@@ -272,6 +276,7 @@ export default function AddSanPham() {
             });
             return;
         } else {
+            console.log("Đã vào")
             const updatedData = tableData.map((record) => {
                 if (selectedRowKeys.includes(record.key)) {
                     return {
@@ -638,17 +643,32 @@ export default function AddSanPham() {
     };
     const addMauSac = (value) => {
         const chekTrung = (code) => {
-          return msData.some(color => color.ma === code);
+            return msData.some(color => color.ma === code);
         };
         if (!chekTrung(value.ma)) {
-          console.log(value.ma);
-          const hexCode = value.ma.replace("#", "").toUpperCase();
-          const rgb = convert.hex.rgb(hexCode);
-          const colorName = convert.rgb.keyword(rgb);
-          value.ten = colorName;
+            console.log(value.ma);
+            const hexCode = value.ma.replace("#", "").toUpperCase();
+            const rgb = convert.hex.rgb(hexCode);
+            const colorName = convert.rgb.keyword(rgb);
+            value.ten = colorName;
             MauSacAPI.create(value)
-            .then((res)=>{
-              toast('✔️ Thêm thành công!', {
+                .then((res) => {
+                    toast('✔️ Thêm thành công!', {
+                        position: "top-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                    });
+                    loadMS();
+                    setOpenMS(false);
+                    form1.resetFields();
+                })
+        } else {
+            toast.error('Mã màu đã tồn tại!', {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -657,24 +677,9 @@ export default function AddSanPham() {
                 draggable: true,
                 progress: undefined,
                 theme: "light",
-              });
-              loadMS();
-              setOpenMS(false);
-              form1.resetFields();
-            })
-        } else {
-          toast.error('Mã màu đã tồn tại!', {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
+            });
         }
-      }
+    }
     // Load Chất Liệu
     const [openCL, setOpenCL] = useState(false);
     const [cl, setCL] = useState([]);
@@ -1306,7 +1311,12 @@ export default function AddSanPham() {
                                         >
                                             {msData.map(item => (
                                                 <Select.Option key={item.id} value={item.ma}>
-                                                    {item.ten}
+                                                    <div style={{
+                                                        backgroundColor: `${item.ma}`,
+                                                        borderRadius: 6,
+                                                        width: 60,
+                                                        height: 20,
+                                                    }} className='custom-div'>{item.ten}</div >
                                                 </Select.Option>
                                             ))}
                                         </Select>
@@ -1394,7 +1404,7 @@ export default function AddSanPham() {
                                                 centered: true,
                                                 title: 'Thông báo',
                                                 content: 'Bạn có chắc chắn muốn sửa số lượng & giá không?',
-                                                onOk: () => { form1.submit(); },
+                                                onOk: () => { form2.submit(); },
                                                 footer: (_, { OkBtn, CancelBtn }) => (
                                                     <>
                                                         <CancelBtn />
@@ -1417,7 +1427,7 @@ export default function AddSanPham() {
                                             maxWidth: 1000,
                                         }}
                                         onFinish={updateNhanh}
-                                        form={form1}>
+                                        form={form2}>
                                         <Form.Item name="soLuong" label={<b>Số lượng</b>} hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống số lượng !', },]} >
                                             <Input className='border'></Input>
                                         </Form.Item>

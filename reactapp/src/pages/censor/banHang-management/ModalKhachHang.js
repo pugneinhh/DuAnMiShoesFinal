@@ -16,11 +16,16 @@ import {
   UpdateNullClient,
 } from "../../../store/reducer/Bill.reducer";
 import {SellAPI} from "../../censor/api/sell/sell.api";
+import ModalAddKhachHang from "./ModalAddKhachHang";
+// import { KhachHangAPI } from "../api/user/khachHang.api";
 
 const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) => {
   // const { openKhachHang, setOpenKhachHang } = props;
   // const activeKey = props.activeKey;
-
+  const [openModalAddKhachHang, setopenModalAddKhachHang] = useState(false);
+  const handleCloseAddKhachHang = () => {
+    setopenModalAddKhachHang(false);
+  };
   useEffect(() => {
     loadKhachHang();
   }, []);
@@ -28,9 +33,9 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
   const dispatch = useDispatch();
   const client = useSelector(GetClient);
   const bill = useSelector(GetBill);
-  const idKH = activeKey ? bill.filter((item)=> item.id === activeKey)[0]?.nguoiDung : "";
-
-
+  const idKH = activeKey
+    ? bill.filter((item) => item.id === activeKey)[0]?.nguoiDung
+    : "";
 
   const handleClickAddClient = async (record) => {
     dispatch(
@@ -42,13 +47,22 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
         diemNguoiDung: record.diem,
       })
     );
-    await SellAPI.getVoucherWithIDKH(record.id).then(res => onVoucher(res));
-    SellAPI.updateKH(activeKey,record.id);
+    await SellAPI.getVoucherWithIDKH(record.id).then((res) => onVoucher(res));
+    SellAPI.updateKH(activeKey, record.id);
     setOpenKhachHang(false);
   };
 
-
-
+  //Tìm khách hàng
+  // const onChangeFilter = (changedValues, allValues) => {
+  //   console.log("All values : ", allValues);
+  //   timKiemKH(allValues);
+  // };
+  // const timKiemKH = (dataSearch) => {
+  //   KhachHangAPI.timKiem(dataSearch).then((res) => {
+  //     setKhachHang(res.data);
+  //     console.log("22", res.data);
+  //   });
+  // };
 
   const handleClickRemoveClient = (record) => {
     dispatch(UpdateNullClient({ key: activeKey }));
@@ -76,7 +90,6 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
         })
       )
     );
-  
   };
   const handleClose = () => {
     setOpenKhachHang(false);
@@ -104,6 +117,7 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
               cloudName="dtetgawxc"
               publicId={link}
               width="100"
+              height="140"
               crop="scale"
               href={link}
             />
@@ -136,9 +150,7 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
       render: (record) => (
         <Space size="middle">
           <>
-          {
-            (idKH !== null && idKH === record.id
-            ) ? (
+            {idKH !== null && idKH === record.id ? (
               <button
                 type="primary"
                 shape="round"
@@ -158,8 +170,7 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
               >
                 Chọn khách hàng
               </button>
-            )
-    }
+            )}
           </>
         </Space>
       ),
@@ -174,34 +185,48 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
       onCancel={handleClose}
       height={300}
       width={1200}
-      zIndex={10000}
-      style={{top:50}}
+      // zIndex={10000}
+      style={{ top: 50 }}
     >
       <div className="container">
         <div className="row mt-4">
-          <Input className="col-md-9 ms-5"></Input>
+          <Input className="col-md-8 ms-5"></Input>
           <Button
             className=" col-md-1 ms-5  bg-success float-end bg-primary"
             type="primary"
           >
             Tìm kiếm
           </Button>
+          <Button
+            className=" col-md-1 ms-5  bg-success float-end bg-primary"
+            type="primary"
+            onClick={() => setopenModalAddKhachHang(true)}
+          >
+            Thêm
+          </Button>
+          <ModalAddKhachHang
+            openModalAddKhachHang={openModalAddKhachHang}
+            setopenModalAddKhachHang={setopenModalAddKhachHang}
+            loadKhachHang={loadKhachHang}
+            onOk={handleCloseAddKhachHang}
+            onCancel={handleCloseAddKhachHang}
+          />
         </div>
         <Table
           style={{ justifyContent: "right" }}
-
           className="text-center mt-4"
           dataSource={client}
           columns={columns}
           pagination={{
             showQuickJumper: true,
-            defaultPageSize: 5,
+            defaultPageSize: 2,
             position: ["bottomCenter"],
             defaultCurrent: 1,
             total: client.length,
           }}
         />
       </div>
+      {/* <div id="modal-root"></div> */}
     </Modal>
   );
 };

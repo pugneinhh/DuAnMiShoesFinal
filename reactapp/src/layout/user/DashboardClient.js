@@ -34,9 +34,15 @@ export const DashboardClient = ({ children }) => {
   useEffect(() => {
       
     
-    if (storedData != null) {
+    if (storedData !== null) {
       setUserName(storedData.ten);
       setLinkAnh(storedData.anh);
+      GioHangAPI.getByIDKH(storedData.id).then((res)=>{
+        GioHangAPI.getAllGHCTByIDGH(res.data.id).then((res)=>{
+          console.log("giỏ hàng của khách",res.data);
+          setCountGioHang(res.data.length);
+        })
+      })
     } else if (storedDataGoogle != null) {
       setUserName(storedDataGoogle.name);
       setLinkAnh(storedDataGoogle.imageUrl);
@@ -48,7 +54,7 @@ export const DashboardClient = ({ children }) => {
     else {
       setUserName(null);
       setLinkAnh(null);
-      if(storedGioHang!=null){
+      if(storedGioHang!==null){
         console.log("giỏ hàng",storedGioHang)
         GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res)=>{
           setCountGioHang(res.data.length);

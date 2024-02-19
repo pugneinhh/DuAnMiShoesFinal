@@ -65,6 +65,11 @@ public class CTSPController {
         return ResponseEntity.ok(ctspService.getSearch(id,ctspSearch));
     }
 
+    @PostMapping ("/search-ctsp-banhang")
+    public ResponseEntity<?> searchBanHang(@RequestBody CTSPSearch ctspSearch){
+        return ResponseEntity.ok(ctspService.getSearchBanHang(ctspSearch));
+    }
+
     @PutMapping("/updateKM/{idCTSP}")
     public ResponseEntity<?> update(@PathVariable("idCTSP") String idCTSP, @RequestBody KhuyenMai khuyenMai) {
         System.out.println("Vào update");
