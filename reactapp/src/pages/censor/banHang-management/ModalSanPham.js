@@ -284,7 +284,7 @@ const addHang = (value) => {
 
   const loadCTSP = async () => {
     const result = await SellAPI.getAllProducts();
-    result.data.map((i)=> dispatch(AddProduct({id:i.idCTSP,soLuong:i.soLuong,linkAnh:i.linkAnh,tenSP:i.tenSP,tenKT:i.tenKT,tenMS:i.tenMS,maMS:i.maMS,loaiKM:i.loaiKM,giaTriKhuyenMai: parseInt(i.giaKhuyenMai, 10),giaBan:i.giaBan,tenKM:i.tenKM})))
+    result.data.map((i)=> dispatch(AddProduct({id:i.idCTSP,soLuong:i.soLuong,linkAnh:i.linkAnh,tenSP:i.tenSP,tenKT:i.tenKT,tenMS:i.tenMS,maMS:i.maMS,loaiKM:i.loaiKM,giaTriKhuyenMai: parseInt(i.giaTriKhuyenMai, 10),giaBan:i.giaBan,tenKM:i.tenKM})))
     setChiTietSanPham(result.data);
     console.log(result.data)
     setCTSPs(result.data)
@@ -293,8 +293,8 @@ const addHang = (value) => {
 
   const handleClickAddProduct = (record) => {
     const id =  uuid();
-    const hdct = [{id:id,hoaDon:activeKey,chiTietSanPham:record.idCTSP,soLuong:1,giaSauGiam: (parseFloat(record.giaBan) -parseFloat(record.loaiKM === "Tiền mặt" ? record.giaKhuyenMai : (record.giaBan*record.giaKhuyenMai/100))),giaGiam:(parseFloat(record.loaiKM === "Tiền mặt" ? record.giaKhuyenMai : (record.giaBan*record.giaKhuyenMai/100)))}]
-    dispatch(AddInvoice({id:id,chiTietSanPham:record.idCTSP,tenSP:record.tenSP,maMS:record.maMS,linkAnh : record.linkAnh,tenKT:record.tenKT,giaBan: record.giaBan,hoaDon:activeKey,tenMS:record.tenMS,giaGiam: (parseFloat(record.loaiKM === "Tiền mặt" ? record.giaKhuyenMai : (record.giaBan*record.giaKhuyenMai/100))),giaSauGiam: (parseFloat(record.giaBan) -parseFloat(record.loaiKM === "Tiền mặt" ? record.giaKhuyenMai : (record.giaBan*record.giaKhuyenMai/100))),nguoiTao:record.nguoiTao,giaBan:record.giaBan,tenKM:record.tenKM,loaiKM:record.loaiKM,giaTriKhuyenMai:record.giaKhuyenMai}));
+    const hdct = [{id:id,hoaDon:activeKey,chiTietSanPham:record.idCTSP,soLuong:1,giaSauGiam: (parseFloat(record.giaBan) -parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan*record.giaTriKhuyenMai/100))),giaGiam:(parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan*record.giaTriKhuyenMai/100)))}]
+    dispatch(AddInvoice({id:id,chiTietSanPham:record.idCTSP,tenSP:record.tenSP,maMS:record.maMS,linkAnh : record.linkAnh,tenKT:record.tenKT,giaBan: record.giaBan,hoaDon:activeKey,tenMS:record.tenMS,giaGiam: (parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan*record.giaTriKhuyenMai/100))),giaSauGiam: (parseFloat(record.giaBan) -parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan*record.giaTriKhuyenMai/100))),nguoiTao:record.nguoiTao,giaBan:record.giaBan,tenKM:record.tenKM,loaiKM:record.loaiKM,giaTriKhuyenMai:record.giaTriKhuyenMai}));
     dispatch(UpdateApartProduct({id:record.idCTSP,soLuong:1})); 
     SellAPI.addInvoice(hdct[0]);
    // SellAPI.updateThanhTien(activeKey);
@@ -305,7 +305,7 @@ const addHang = (value) => {
   const columns = [
     {
       title: "STT",
-      dataIndex: "id",
+      dataIndex: "idCTSP",
       key: "idCTSP",
       render: (id, record, index) => {
         ++index;
@@ -332,7 +332,7 @@ const addHang = (value) => {
               crop="scale"
               href={link}
             /> ) : (
-              <Badge.Ribbon text= {record.loaiKM === "Tiền mặt" ? ("-"+`${Intl.NumberFormat("en-US").format(parseInt(record.giaKhuyenMai, 10))} VNĐ`) : ("-"+parseInt(record.giaKhuyenMai, 10)+"%")} color="red" size="small">
+              <Badge.Ribbon text= {record.loaiKM === "Tiền mặt" ? ("-"+`${Intl.NumberFormat("en-US").format(parseInt(record.giaTriKhuyenMai, 10))} VNĐ`) : ("-"+parseInt(record.giaTriKhuyenMai, 10)+"%")} color="red" size="small">
             <Image
               cloudName="dtetgawxc"
               publicId={link}
@@ -371,7 +371,7 @@ const addHang = (value) => {
           ) : 
           (
             <span style={{color:"red"}}><del style={{color:"black"}}>{`${Intl.NumberFormat("en-US").format(record.giaBan)} VNĐ`}</del>
-            <br></br>{`${Intl.NumberFormat("en-US").format(parseFloat(record.giaBan) -parseFloat(record.loaiKM === "Tiền mặt" ? record.giaKhuyenMai : (record.giaBan*record.giaKhuyenMai/100)))} VNĐ`}</span>
+            <br></br>{`${Intl.NumberFormat("en-US").format(parseFloat(record.giaBan) -parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan*record.giaTriKhuyenMai/100)))} VNĐ`}</span>
           )
     }
     </>
