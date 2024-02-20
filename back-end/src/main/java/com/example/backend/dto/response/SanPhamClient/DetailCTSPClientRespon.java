@@ -38,4 +38,8 @@ public interface DetailCTSPClientRespon {
     String getAnh();
 
     String getKhuyenMaiID();
+
+    String getLoaiKM();
+
+    BigDecimal getGiaTriKhuyenMai();
 }

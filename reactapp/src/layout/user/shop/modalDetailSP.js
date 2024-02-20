@@ -17,6 +17,7 @@ const ModalDetailSP = (props) => {
   const [khachHang, setKhachHang] = useState(null);
   const storedData = get("userData");
   const storedGioHang = get("GioHang");
+  console.log("IDCTSP",idCt);
   useEffect(() => {
     loadCTSP();
     if (storedData != null) {
@@ -371,9 +372,21 @@ const ModalDetailSP = (props) => {
         <div className="col-md-6 ">
           <h3>{ChiTietSanPham.tenSP}</h3>
           <h5 className="mb-3" style={{ color: "red" }}>
-            {Intl.NumberFormat("en-US").format(ChiTietSanPham.giaBan)}
+            { 
+            ChiTietSanPham.loaiKM ?
+            (
+            <span>
+            <del style={{color:"black"}}>{Intl.NumberFormat("en-US").format(ChiTietSanPham.giaBan)} VNĐ     </del>
+            
+            {Intl.NumberFormat("en-US").format(ChiTietSanPham.loaiKM === "Tiền mặt" ? ChiTietSanPham.giaBan - ChiTietSanPham.giaTriKhuyenMai : ChiTietSanPham.giaBan - (ChiTietSanPham.giaBan*ChiTietSanPham.giaTriKhuyenMai/100))} VNĐ
+            </span>
+            )
+            : 
+            (<span style={{color:"black"}}>{Intl.NumberFormat("en-US").format(ChiTietSanPham.giaBan)} VNĐ</span>)
 
-            <span>VND</span>
+            }
+            
+            
           </h5>
           <hr></hr>
           <h6>Màu</h6>
