@@ -19,15 +19,15 @@ export const GioHang = ({ children }) => {
   const [khachHang, setKhachHang] = useState(null);
   const [gioHangCT, setGioHangCT] = useState([]);
   const [userID, setUserID] = useState("");
-  const checkUser = () => {
-    const storedData = get("userData");
-    setUserID(storedData.userID)
-  };
+ 
+    
+   
+  
   useEffect(() => {
-    if (userID != null || userID != undefined || userID != "") {
-      checkUser();
+    if (storedData !== null) {
+      setUserID(storedData.userID)
     }
-  }, [userID]);
+  }, []);
   let total = 0;
   let sale=0;
   const storedData = get("userData");

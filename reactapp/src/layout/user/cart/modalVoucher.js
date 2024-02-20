@@ -12,8 +12,8 @@ const ModalVoucher = (props) => {
 
   const loadVoucher = async () => {
     console.log("UUUUU" + userID)
-    if (userID != null && userID != undefined && userID != "") {
-      const result = await SellAPI.getVoucherWithIDKH(userID).then((result) => {
+    if (userID !== null && userID !== undefined && userID !== "") {
+       SellAPI.getVoucherWithIDKH(userID).then((result) => {
         console.log("limit")
         setData(result.data);
       })
@@ -21,7 +21,7 @@ const ModalVoucher = (props) => {
           console.log(error);
         });
     } else {
-      const result = await SellAPI.getVoucherNoLimited().then((result) => {
+       await SellAPI.getVoucherNoLimited().then((result) => {
         console.log("nolimit")
         setData(result.data);
       })
