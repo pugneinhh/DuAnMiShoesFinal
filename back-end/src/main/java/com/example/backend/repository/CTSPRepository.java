@@ -68,7 +68,7 @@ public interface CTSPRepository extends JpaRepository<ChiTietSanPham, String> {
 
     @Query(value = """
             SELECT distinct o.id AS idCTSP,MIN(ha.url) AS linkAnh ,sp.ten AS tenSP ,kt.ten AS tenKT,ms.ten AS tenMS,ms.ma AS maMS,
-             o.so_luong AS soLuong,o.gia_ban AS giaBan,o.trang_thai AS trangThai, km.ten as tenKM , km.gia_tri_khuyen_mai as giaKhuyenMai , km.loai as loaiKM
+             o.so_luong AS soLuong,o.gia_ban AS giaBan,o.trang_thai AS trangThai, km.ten as tenKM , km.gia_tri_khuyen_mai as giaTriKhuyenMai , km.loai as loaiKM
              FROM duanmishoes.chi_tiet_san_pham o
              JOIN duanmishoes.san_pham sp  on o.san_pham_id=sp.id
              JOIN duanmishoes.kich_thuoc kt  on o.kich_thuoc_id=kt.id
@@ -138,7 +138,7 @@ public interface CTSPRepository extends JpaRepository<ChiTietSanPham, String> {
     // sản phẩm client
     @Query(value = """
             SELECT o.id AS id,o.mo_ta AS moTa ,sp.id AS sanPhamID,sp.ten AS tenSP ,kt.id AS kichThuocID,ms.id AS mauSacID,cl.id AS chatLieuID, cl.ten as tenCL,dc.id AS deGiayID,dc.ten as tenDeGiay,dm.id AS danhMucID
-                ,dm.ten as tenDM,h.id AS hangID,h.ten as tenHang,o.so_luong AS soLuong,o.gia_ban AS giaBan,o.trang_thai AS trangThai,o.ghi_chu as anh,o.khuyen_mai_id as khuyenMaiID
+                ,dm.ten as tenDM,h.id AS hangID,h.ten as tenHang,o.so_luong AS soLuong,o.gia_ban AS giaBan,o.trang_thai AS trangThai,o.ghi_chu as anh,o.khuyen_mai_id as khuyenMaiID , km.loai as loaiKM , km.gia_tri_khuyen_mai as giaTriKhuyenMai
                 FROM chi_tiet_san_pham o
                 JOIN san_pham sp  on o.san_pham_id=sp.id
                 JOIN kich_thuoc kt  on o.kich_thuoc_id=kt.id
@@ -147,6 +147,7 @@ public interface CTSPRepository extends JpaRepository<ChiTietSanPham, String> {
                 JOIN de_giay dc  on o.de_giay_id=dc.id
                 JOIN danh_muc dm  on o.danh_muc_id=dm.id
                 JOIN hang h  on o.hang_id=h.id
+                LEFT JOIN khuyen_mai km on o.khuyen_mai_id = km.id
                 WHERE o.id=:idCT
                 """, nativeQuery = true)
     DetailCTSPClientRespon detailCTSPClient(@Param("idCT") String idCT);
@@ -180,7 +181,7 @@ public interface CTSPRepository extends JpaRepository<ChiTietSanPham, String> {
     //detail ctsp by id san pham , id mau sac, id size
     @Query(value = """
             SELECT o.id AS id,o.mo_ta AS moTa ,sp.id AS sanPhamID,sp.ten AS tenSP ,kt.id AS kichThuocID,ms.id AS mauSacID,cl.id AS chatLieuID, cl.ten as tenCL,dc.id AS deGiayID,dc.ten as tenDeGiay,dm.id AS danhMucID
-                ,dm.ten as tenDM,h.id AS hangID,h.ten as tenHang,o.so_luong AS soLuong,o.gia_ban AS giaBan,o.trang_thai AS trangThai,o.ghi_chu as anh,o.khuyen_mai_id as khuyenMaiID
+                ,dm.ten as tenDM,h.id AS hangID,h.ten as tenHang,o.so_luong AS soLuong,o.gia_ban AS giaBan,o.trang_thai AS trangThai,o.ghi_chu as anh,o.khuyen_mai_id as khuyenMaiID , km.loai as loaiKM , km.gia_tri_khuyen_mai as giaTriKhuyenMai
                 FROM chi_tiet_san_pham o
                 JOIN san_pham sp  on o.san_pham_id=sp.id
                 JOIN kich_thuoc kt  on o.kich_thuoc_id=kt.id
@@ -189,6 +190,7 @@ public interface CTSPRepository extends JpaRepository<ChiTietSanPham, String> {
                 JOIN de_giay dc  on o.de_giay_id=dc.id
                 JOIN danh_muc dm  on o.danh_muc_id=dm.id
                 JOIN hang h  on o.hang_id=h.id
+                LEFT JOIN khuyen_mai km on o.khuyen_mai_id = km.id 
                                   WHERE o.san_pham_id =:idSP and
                                o.mau_sac_id=:idMS and
                           o.kich_thuoc_id=:idKT    
