@@ -21,6 +21,7 @@ import ModalSanPham from "./ModalSanPham";
 import { get, set } from "local-storage";
 import { ThanhToanAPI } from "../api/thanhToan/thanhToan.api";
 export default function HoaDonDetail() {
+
   const { id } = useParams();
   const [openModalTimeLine, setOpenModalTimeLine] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -55,6 +56,7 @@ export default function HoaDonDetail() {
         theme: "light",
       }),
   });
+  
   const { TextArea } = Input;
   const [hoaDondetail, setHoaDondetail] = useState([]);
     const [maNV, setmaNV] = useState("");
@@ -67,7 +69,7 @@ export default function HoaDonDetail() {
     loadLichSuThanhToan();
   }, []);
   // load hóa đơn
-
+ console.log("3333333333333333333", hoaDondetail)
   const loadHoaDon = async () => {
     HoaDonAPI.detailHD(id).then((res) => {
       setHoaDondetail(res.data);
@@ -200,7 +202,7 @@ export default function HoaDonDetail() {
   const [thanhTienHD, setThanhTienHD] = useState([]);
   const [ghiChuHD, setGhiChuHD] = useState([]);
   const [listSanPhams, setlistSanPhams] = useState([]);
-
+  
   const loadListSanPhams = () => {
     HoaDonAPI.detailSanPham(id).then((res) => {
       setlistSanPhams(res.data);
@@ -826,7 +828,9 @@ export default function HoaDonDetail() {
                               <IntlProvider locale="vi-VN">
                                 <div>
                                   <FormattedNumber
-                                    value={listSanPham.thanhTienSP}
+                                    value={
+                                      listSanPham.gia * listSanPham.soLuongSP
+                                    }
                                     style="currency"
                                     currency="VND"
                                     minimumFractionDigits={0}
@@ -1042,9 +1046,25 @@ export default function HoaDonDetail() {
                 />
               </div>
               <div className="col-md-5 ">
-                <div className="mt-3">
+                <div className="mt-1">
                   <h6>
                     {listSanPham.tenHang} {listSanPham.tenSP}{" "}
+                  </h6>
+                </div>
+                <div className="text-danger">
+                  <h6>
+                    <del>
+                      <IntlProvider locale="vi-VN">
+                        <div>
+                          <FormattedNumber
+                            value={listSanPham.giaBanSP}
+                            style="currency"
+                            currency="VND"
+                            minimumFractionDigits={0}
+                          />
+                        </div>
+                      </IntlProvider>
+                    </del>
                   </h6>
                 </div>
                 <div className="text-danger">
@@ -1052,7 +1072,7 @@ export default function HoaDonDetail() {
                     <IntlProvider locale="vi-VN">
                       <div>
                         <FormattedNumber
-                          value={listSanPham.giaBanSP}
+                          value={listSanPham.thanhTienSP}
                           style="currency"
                           currency="VND"
                           minimumFractionDigits={0}
@@ -1078,7 +1098,7 @@ export default function HoaDonDetail() {
                   <IntlProvider locale="vi-VN">
                     <div>
                       <FormattedNumber
-                        value={listSanPham.thanhTienSP}
+                        value={listSanPham.thanhTienSP * listSanPham.soLuongSP}
                         style="currency"
                         currency="VND"
                         minimumFractionDigits={0}
@@ -1138,7 +1158,7 @@ export default function HoaDonDetail() {
                 <IntlProvider locale="vi-VN">
                   <div>
                     <FormattedNumber
-                      value={0}
+                      value={(listSanPhams.giaBanSP*listSanPhams.soLuongSP) - thanhTienHD}
                       style="currency"
                       currency="VND"
                       minimumFractionDigits={0}
