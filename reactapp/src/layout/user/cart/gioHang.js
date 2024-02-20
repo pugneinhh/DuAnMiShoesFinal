@@ -196,7 +196,7 @@ export const GioHang = ({ children }) => {
           </div>
           <div
             className="row ps-2 pb-2 mt-3"
-          // style={{ borderBottom: "1px dashed black"}}
+            // style={{ borderBottom: "1px dashed black"}}
           >
             <div className="col-md-6" style={{ marginLeft: 30 }}>
               <span>Đơn hàng </span>
@@ -204,10 +204,10 @@ export const GioHang = ({ children }) => {
             <div className="col-md-5">
               <span style={{ color: "blue" }}>
                 {gioHangCT.map((gh) => {
-                  total += Number(gh.thanhTien); 
-                  return null; 
+                  total += Number(gh.thanhTien);
+                  return null;
                 })}
-                {total}
+                {Intl.NumberFormat("en-US").format(total)}
               </span>{" "}
               <span>VND</span>
             </div>
@@ -220,18 +220,24 @@ export const GioHang = ({ children }) => {
               <span>Giảm </span>
             </div>
             <div className="col-md-5">
-              <span style={{ color: "blue" }}>{sale} </span> <span>VND</span>
+              <span style={{ color: "blue" }}>
+                {Intl.NumberFormat("en-US").format(sale)}
+              </span>{" "}
+              <span>VND</span>
             </div>
           </div>
           <div
             className="row ps-2 pb-2 mt-3"
-          // style={{ borderBottom: "1px dashed black" }}
+            // style={{ borderBottom: "1px dashed black" }}
           >
             <h5 className="col-md-6" style={{ marginLeft: 30 }}>
               <span>Tổng tiền </span>
             </h5>
             <h5 className="col-md-5">
-              <span style={{ color: "blue" }}>{total-sale} </span> <span>VND</span>
+              <span style={{ color: "blue" }}>
+                {Intl.NumberFormat("en-US").format(total - sale)}{" "}
+              </span>{" "}
+              <span>VND</span>
             </h5>
           </div>
         </div>
@@ -285,7 +291,9 @@ export const GioHang = ({ children }) => {
         <div className="col-md-5 fw-bold">
           <div className="row">
             <h5 className="col">Tổng tiền</h5>
-            <h5 className="col">: {total-sale} VND</h5>
+            <h5 className="col">
+              : {Intl.NumberFormat("en-US").format(total - sale)} VND
+            </h5>
           </div>
           <div className="row mt-3">
             <h5 className="col">Phí vận chuyển</h5>
@@ -293,7 +301,9 @@ export const GioHang = ({ children }) => {
           </div>
           <div className="row  mt-3">
             <h5 className="col">Mã Giảm giá</h5>
-            <h5 className="col">: {sale} VND</h5>
+            <h5 className="col">
+              :  {Intl.NumberFormat("en-US").format(sale)} VND
+            </h5>
           </div>
           <div className="row mt-3" style={{ color: "red" }}>
             <h5 className="col">Tổng thanh toán</h5>
@@ -309,7 +319,9 @@ export const GioHang = ({ children }) => {
                 backgroundColor: "orangered",
                 color: "white",
               }}
-              onClick={()=>{handleMuaHang(total,sale,gioHangCT,khachHang)}}
+              onClick={() => {
+                handleMuaHang(total, sale, gioHangCT, khachHang);
+              }}
             >
               Đặt hàng
             </Button>

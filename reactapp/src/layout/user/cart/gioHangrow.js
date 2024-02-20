@@ -60,14 +60,14 @@ function ProductRow({product,loadghct}) {
       <td className="row">
         <div className="col-md-3">
           <img
-            style={{ width: 100, height: 100 }}
+            style={{ width: 150, height: 150 }}
             src={ctsp.ghiChu}
             alt="Product"
           ></img>
         </div>
-        <div className="col-md-5 fw-bold" style={{ paddingLeft: 20 }}>
+        <div className="col-md-6 fw-bold mt-3" style={{ paddingLeft: 80 }}>
           <h6> {ctsp.tenSP}</h6>
-          <h6 className="mt-2">{ctsp.kichThuoc}</h6>
+          <h6 className="mt-2 text-danger">{ctsp.kichThuoc}</h6>
           <div
             className="mt-2"
             style={{
@@ -80,12 +80,15 @@ function ProductRow({product,loadghct}) {
         </div>
       </td>
       <td>
-        <h6 className=" fw-bold" style={{ color: "red", marginTop: "35px" }}>
-          {ctsp.giaBan}
+        <h6 className=" fw-bold" style={{ color: "red", marginTop: "50px" }}>
+          {Intl.NumberFormat("en-US").format(ctsp.giaBan)} VND
         </h6>
       </td>
       <td>
-        <div style={{ marginTop: "30px" }}>
+        <div
+          className="d-flex align-items-center"
+          style={{ marginTop: "45px" }}
+        >
           <button
             onClick={decreaseQuantity}
             style={{ width: 35, borderRadius: 10 }}
@@ -98,7 +101,6 @@ function ProductRow({product,loadghct}) {
             style={{ width: 35 }}
             min={0}
             readOnly
-            
           ></input>
           <button
             onClick={increaseQuantity}
@@ -109,12 +111,12 @@ function ProductRow({product,loadghct}) {
         </div>
       </td>
       <td>
-        <h6 className=" fw-bold" style={{ color: "red", marginTop: "35px" }}>
-          {price}VNĐ
+        <h6 className=" fw-bold" style={{ color: "red", marginTop: "50px" }}>
+         {Intl.NumberFormat("en-US").format(price)}VNĐ
         </h6>
       </td>
       <td>
-        <button style={{ marginTop: "30px" }} onClick={handleDeleteGHCT}>
+        <button  style={{borderRadius: 5, marginTop: "45px" }} onClick={handleDeleteGHCT}>
           <FaRegTrashAlt />
         </button>
       </td>
