@@ -178,7 +178,7 @@ const BanHang = () => {
           tenMS: i.tenMS,
           maMS: i.maMS,
           loaiKM: i.loaiKM,
-          giaTriKhuyenMai: parseInt(i.giaKhuyenMai, 10),
+          giaTriKhuyenMai: parseInt(i.giaTriKhuyenMai, 10),
           giaBan: i.giaBan,
           tenKM: i.tenKM,
         })
