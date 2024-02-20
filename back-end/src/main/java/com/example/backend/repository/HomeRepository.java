@@ -18,6 +18,8 @@ public interface HomeRepository extends JpaRepository<ChiTietSanPham, String> {
             	sp.ten as name,
             	kt.ten as size,
             	ms.ten as color,
+            	km.loai as loaiKM,
+            	km.gia_tri_khuyen_mai as giaTriKhuyenMai,
             	ms.ma as colorCode,
             	ctsp.gia_ban as price,
             	ctsp.ghi_chu as image,
@@ -30,12 +32,15 @@ public interface HomeRepository extends JpaRepository<ChiTietSanPham, String> {
             	ctsp.mau_sac_id = ms.id
             join kich_thuoc kt on
             	ctsp.kich_thuoc_id = kt.id
+            	left join khuyen_mai km on
+            	ctsp.khuyen_mai_id = km.id
             group by
             	ctsp.gia_ban,
             	ms.ten,
             	sp.ten,
             	kt.ten,
             	ctsp.ghi_chu,
+            	km.ten,
             	ctsp.id,
             	ms.ma
             """, nativeQuery = true)

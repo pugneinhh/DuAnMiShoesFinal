@@ -10,7 +10,7 @@ const ModalVoucher = (props) => {
   const [bottom, setBottom] = useState("bottomRight");
   const [datas, setData] = useState([]);
 
-  const loadVoucher = async () => {
+  const loadVoucher =  () => {
     console.log("UUUUU" + userID)
     if (userID !== null && userID !== undefined && userID !== "") {
        SellAPI.getVoucherWithIDKH(userID).then((result) => {
@@ -21,7 +21,7 @@ const ModalVoucher = (props) => {
           console.log(error);
         });
     } else {
-       await SellAPI.getVoucherNoLimited().then((result) => {
+        SellAPI.getVoucherNoLimited().then((result) => {
         console.log("nolimit")
         setData(result.data);
       })
