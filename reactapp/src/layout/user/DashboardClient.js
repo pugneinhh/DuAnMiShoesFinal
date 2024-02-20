@@ -63,6 +63,9 @@ export const DashboardClient = ({ children }) => {
     }
   
   }, []);
+     const openHistory = () => {
+             nav("/history");
+        };
         const dangXuat = () => {
              
           localStorage.clear();
@@ -87,12 +90,8 @@ export const DashboardClient = ({ children }) => {
     {
       key: "2",
       label: (
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.aliyun.com"
-        >
-          Đổi mật khẩu
+        <a target="_blank" rel="noopener noreferrer" onClick={openHistory}>
+          Đơn mua
         </a>
       ),
     },
@@ -172,13 +171,11 @@ export const DashboardClient = ({ children }) => {
           <Image style={{ height: 60 }} width={170} src={logoShop} />
         </Col>
         <Col span={1.5} className="button-menu-trai text-center algin-center">
-          <Dropdown menu={{ items }} className="pb-4">
-            <a href="/home" className="button-menu-trai">
-              <Space>
-                <h6>HOME</h6>
-              </Space>
-            </a>
-          </Dropdown>
+          <a href="/home" className="button-menu-trai">
+            <Space>
+              <h6>HOME</h6>
+            </Space>
+          </a>
         </Col>
         <Col span={1.5} className=" button-menu-trai ms-4">
           <Dropdown menu={{ items }} className="pb-4">
@@ -269,9 +266,10 @@ export const DashboardClient = ({ children }) => {
                 <span>Đăng nhập</span>
               ) : (
                 <span className="fw-bold">
-                  {userName.split(" ").slice(2).join(" ") == null
+                  {/* {userName.split(" ").slice(2).join(" ") == null
                     ? userName.split(" ").slice(2).join(" ")
-                    : userName.split(" ").slice(1).join(" ")}
+                    : userName.split(" ").slice(1).join(" ")} */}
+                  {userName}
                 </span>
               )}
             </>

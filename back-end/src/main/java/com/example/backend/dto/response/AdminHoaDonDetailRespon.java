@@ -31,4 +31,6 @@ public interface AdminHoaDonDetailRespon {
     String getDiaChi();
     @Value("#{target.ghiChuHD}")
     String getGhiChuHD();
+    @Value("#{target.tienVanChuyen}")
+    String getTienVanChuyen();
 }
