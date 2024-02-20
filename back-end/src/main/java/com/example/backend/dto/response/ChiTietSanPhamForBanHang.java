@@ -17,13 +17,13 @@ public interface ChiTietSanPhamForBanHang {
     @Value("#{target.tenKT}")
     String getTenKT();
 
-    @Value("#{target.loaiKM}")
-    String getLoaiKM();
-
-    @Value("#{target.giaKhuyenMai}")
-    String getGiaKhuyenMai();
-    @Value("#{target.tenKM}")
-    String getTenKM();
+//    @Value("#{target.loaiKM}")
+//    String getLoaiKM();
+//
+//    @Value("#{target.giaKhuyenMai}")
+//    String getGiaKhuyenMai();
+//    @Value("#{target.tenKM}")
+//    String getTenKM();
     @Value("#{target.tenMS}")
     String getTenMS();
 

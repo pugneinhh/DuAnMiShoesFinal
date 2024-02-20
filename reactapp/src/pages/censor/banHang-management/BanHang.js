@@ -184,7 +184,7 @@ const BanHang = () => {
         })
       )
     );
-    setCTSPSS(result.data);
+   // setCTSPSS(result.data);
   };
 
 
