@@ -13,14 +13,15 @@ import DiaChiGiaoHang from "./GiaoHang";
 import LogoVNP from "../../../assets/images/vnp.png";
 import { BanHangClientAPI } from "../../../pages/censor/api/banHangClient/banHangClient.api";
 import { v4 as uuid } from "uuid";
+import { SellAPI } from "../../../pages/censor/api/sell/sell.api";
 export const GioHang = ({ children }) => {
   const [openModalDiaChi, setOpenModalDiaChi] = useState(false);
   const [openModalVoucher, setOpenModalVoucher] = useState(false);
   const [khachHang, setKhachHang] = useState(null);
   const [gioHangCT, setGioHangCT] = useState([]);
   const [userID, setUserID] = useState("");
- 
-    
+  const [hoaDonID,setHoaDonID] = useState("");
+  const [voucherID,setVoucherID] = useState(null);
    
   
   useEffect(() => {
@@ -84,9 +85,11 @@ export const GioHang = ({ children }) => {
     }
     BanHangClientAPI.addHD(hoaDon).then((res)=>{
       console.log("hóa đơn tạo",res.data);
+        setHoaDonID(res.data.hoaDon.id)
       gioHangCT.map((ghct)=>{
         const id = uuid();
         console.log(res.data.hoaDon.id)
+        
         const hdct={
           id:id,
           hoaDon:res.data.hoaDon.id,
@@ -100,7 +103,11 @@ export const GioHang = ({ children }) => {
         GioHangAPI.deleteGHCT(ghct.id);
         
       })
-      loadGHCT();
+      if(voucherID!==null){
+        SellAPI.updateVoucherToHD(hoaDonID,voucherID);
+        console.log("vvv",voucherID,hoaDonID);
+      }
+      // loadGHCT();
     })
   }
   return (
@@ -337,6 +344,9 @@ export const GioHang = ({ children }) => {
         openModalVoucher={openModalVoucher}
         setOpenModalVoucher={setOpenModalVoucher}
         userID={userID}
+        hoaDonID={hoaDonID}
+        voucherID={voucherID}
+        setVoucherID={setVoucherID}
       />
     </div>
   );

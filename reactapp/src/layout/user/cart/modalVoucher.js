@@ -5,7 +5,7 @@ import { SellAPI } from "../../../pages/censor/api/sell/sell.api";
 import imgTicket from "../../../assets/images/discountTicket.png";
 
 const ModalVoucher = (props) => {
-  const { openModalVoucher, setOpenModalVoucher, userID } = props;
+  const { openModalVoucher, setOpenModalVoucher, userID , hoaDonID,voucherID,setVoucherID} = props;
   const [top, setTop] = useState("none");
   const [bottom, setBottom] = useState("bottomRight");
   const [datas, setData] = useState([]);
@@ -34,8 +34,14 @@ const ModalVoucher = (props) => {
   useEffect(() => {
     if (userID != null && userID != undefined) {
       loadVoucher();
+      console.log("hóa đơn",hoaDonID)
     }
   }, [userID]);
+
+  const handleChonVoucher = (hoaDonID,record) => {
+    setVoucherID(record);
+    setOpenModalVoucher(false);
+  }
 
   const dataSource = datas.map((item, index) => ({
     key: item.id,
@@ -113,9 +119,9 @@ const ModalVoucher = (props) => {
       title: "Action",
       key: "action",
 
-      render: () => (
+      render: (record) => (
         <Space size="middle">
-          <a className='btn btn-danger'>Chọn</a>
+          <a className='btn btn-danger' onClick={()=>{handleChonVoucher(record,hoaDonID)}}>Chọn</a>
         </Space>
       ),
     },
