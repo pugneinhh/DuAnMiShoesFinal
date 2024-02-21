@@ -266,10 +266,10 @@ export const DashboardClient = ({ children }) => {
                 <span>Đăng nhập</span>
               ) : (
                 <span className="fw-bold">
-                  {/* {userName.split(" ").slice(2).join(" ") == null
-                    ? userName.split(" ").slice(2).join(" ")
-                    : userName.split(" ").slice(1).join(" ")} */}
-                  {userName}
+                  {userName.split(" ").slice(2).join(" ") == null
+                    ? (userName.split(" ").slice(1).join(" "))
+                    : (userName.split(" ").slice(2).join(" "))}
+      
                 </span>
               )}
             </>

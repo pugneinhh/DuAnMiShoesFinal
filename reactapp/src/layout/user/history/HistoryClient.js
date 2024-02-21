@@ -2,9 +2,10 @@ import { Avatar, Badge, Button, Space, Tabs, Tag } from "antd";
 import { BsShop } from "react-icons/bs";
 import { FaUser } from "react-icons/fa";
 import { TfiPencil } from "react-icons/tfi";
+import { Link ,useNavigate} from "react-router-dom";
 import  "./history.css";
 const HistoryClient = (props) => {
-
+  const nav = useNavigate();
     // item tab
     const onChange = (key) => {};
    const items = [
@@ -102,8 +103,11 @@ const HistoryClient = (props) => {
                      height: 40,
                      marginLeft: 20,
                    }}
+                   onClick={() => {
+                    nav(`/chi-tiet-don-hang`);
+                  }}
                  >
-                   Hủy đơn
+                   Xem đơn hàng
                  </Button>
                </div>
              </div>
