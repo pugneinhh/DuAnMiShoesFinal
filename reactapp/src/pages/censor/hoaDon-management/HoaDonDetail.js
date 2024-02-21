@@ -1142,7 +1142,7 @@ export default function HoaDonDetail() {
                 <IntlProvider locale="vi-VN">
                   <div>
                     <FormattedNumber
-                      value={0}
+                      value={hoaDondetail.tienVanChuyen}
                       style="currency"
                       currency="VND"
                       minimumFractionDigits={0}
@@ -1158,7 +1158,10 @@ export default function HoaDonDetail() {
                 <IntlProvider locale="vi-VN">
                   <div>
                     <FormattedNumber
-                      value={(listSanPhams.giaBanSP*listSanPhams.soLuongSP) - thanhTienHD}
+                      value={
+                        listSanPhams.giaBanSP * listSanPhams.soLuongSP -
+                        thanhTienHD
+                      }
                       style="currency"
                       currency="VND"
                       minimumFractionDigits={0}
