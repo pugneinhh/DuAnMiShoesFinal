@@ -56,6 +56,7 @@ import { Login } from "../layout/login/login";
 import { GioHang } from "../layout/user/cart/gioHang";
 import { Shop } from "../layout/user/shop/shop";
 import HistoryClient from "../layout/user/history/HistoryClient";
+import ChiTietDonHang from "../layout/user/history/ChiTietDonHang";
 function App() {
   const isLoading = useAppSelector(GetLoading);
 
@@ -408,6 +409,16 @@ function App() {
                 <GuestGuard>
                   <DashboardClient>
                     <HistoryClient/>
+                  </DashboardClient>
+                </GuestGuard>
+              }
+            />
+           <Route
+              path="/chi-tiet-don-hang"
+              element={
+                <GuestGuard>
+                  <DashboardClient>
+                    <ChiTietDonHang/>
                   </DashboardClient>
                 </GuestGuard>
               }
