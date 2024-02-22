@@ -14,6 +14,7 @@ import LogoVNP from "../../../assets/images/vnp.png";
 import { BanHangClientAPI } from "../../../pages/censor/api/banHangClient/banHangClient.api";
 import { v4 as uuid } from "uuid";
 import { SellAPI } from "../../../pages/censor/api/sell/sell.api";
+import { KhachHangAPI } from "../../../pages/censor/api/user/khachHang.api";
 export const GioHang = ({ children }) => {
   const [openModalDiaChi, setOpenModalDiaChi] = useState(false);
   const [openModalVoucher, setOpenModalVoucher] = useState(false);
@@ -22,13 +23,9 @@ export const GioHang = ({ children }) => {
   const [userID, setUserID] = useState("");
   const [hoaDonID,setHoaDonID] = useState("");
   const [voucherID,setVoucherID] = useState(null);
-   
+  const [diaChi,setDiaChi] = useState(null);
   
-  useEffect(() => {
-    if (storedData !== null) {
-      setUserID(storedData.userID)
-    }
-  }, []);
+ 
   let total = 0;
   let sale=0;
   const storedData = get("userData");
@@ -37,9 +34,18 @@ export const GioHang = ({ children }) => {
   useEffect(() => {
     if (storedData != null) {
       setKhachHang(storedData.userID);
+      setUserID(storedData.userID)
+      loadDiaChiMacDinh();
     }
     loadGHCT();
   }, []);
+
+  const loadDiaChiMacDinh=()=>{
+    KhachHangAPI.getDiaChiMacDinh(storedData.userID).then((res)=>{
+      setDiaChi(res.data);
+      console.log("diacj chỉ",res.data);
+    })
+  }
   const loadGHCT = () => {
     if (storedData !== null) {
       GioHangAPI.getByIDKH(storedData.userID).then((response) => {
@@ -110,6 +116,7 @@ export const GioHang = ({ children }) => {
       // loadGHCT();
     })
   }
+  
   return (
     <div>
       <div className="banner-gio-hang-san-pham">
@@ -122,7 +129,7 @@ export const GioHang = ({ children }) => {
       <div className="row mt-5">
         {/* kẻ ngang */}
         <div className="xBNaac"></div>
-        {khachHang != null ? (
+        {khachHang != null && diaChi!=null? (
           <div className="mt-4 row">
             {/* địa chỉ  */}
             <h5 style={{ color: "red" }}>
@@ -131,14 +138,16 @@ export const GioHang = ({ children }) => {
             </h5>
             <div className="row mt-1">
               <h6 className="col-md-12">
-                <b> Nguyễn Tùng Dương |09883537xx</b>
+                <b> {diaChi.tenNguoiNhan}{" "} | {diaChi.soDienThoai}</b>
                 <span style={{ marginLeft: 40 }}>
-                  Số 16 ngõ 406 tổ dân phố 7, Phường Xuân Phương, Quận Nam Từ
-                  Liêm, Hà Nội
+                  {diaChi.diaChi}, {diaChi.tenXa}, {diaChi.tenHuyen}, {diaChi.tenThanhPho}
                 </span>
-                <span style={{ marginLeft: 40 }}>
+                {diaChi.trangThai==0?(
+                  <span style={{ marginLeft: 40 }}>
                   <Tag color="red">Mặc định</Tag>
                 </span>
+                ):<></>}
+                
                 <Button
                   style={{ marginLeft: 30 }}
                   onClick={() => setOpenModalDiaChi(true)}
@@ -339,6 +348,7 @@ export const GioHang = ({ children }) => {
         openModalDiaChi={openModalDiaChi}
         setOpenModalDiaChi={setOpenModalDiaChi}
         userID={userID}
+        loadDiaChiMacDinh={loadDiaChiMacDinh}
       />
       <ModalVoucher
         openModalVoucher={openModalVoucher}

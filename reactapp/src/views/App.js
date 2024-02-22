@@ -55,8 +55,8 @@ import { Home } from "../layout/user/home";
 import { Login } from "../layout/login/login";
 import { GioHang } from "../layout/user/cart/gioHang";
 import { Shop } from "../layout/user/shop/shop";
-import HistoryClient from "../layout/user/history/HistoryClient";
 import ChiTietDonHang from "../layout/user/history/ChiTietDonHang";
+import ALLTabHistoryClient from "../layout/user/history/ALLTabHistoryClient";
 function App() {
   const isLoading = useAppSelector(GetLoading);
 
@@ -408,7 +408,7 @@ function App() {
               element={
                 <GuestGuard>
                   <DashboardClient>
-                    <HistoryClient/>
+                    <ALLTabHistoryClient/>
                   </DashboardClient>
                 </GuestGuard>
               }

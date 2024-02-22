@@ -136,6 +136,9 @@ public class KhachHangService {
    public List<DiaChiKhachHangRespon> findDiaChiByKH(String idKH){
         return diaChiRepository.findDiaChiByKH(idKH);
     }
+    public DiaChiKhachHangRespon findDiaChiMacDinh(String idKH){
+        return diaChiRepository.findDiaChiMacDinh(idKH);
+    }
     public DiaChi addDiaChi(DiaChiRequest diaChiRequest){
         DiaChi diaChi=diaChiRequest.map(new DiaChi());
         return diaChiRepository.save(diaChi);
