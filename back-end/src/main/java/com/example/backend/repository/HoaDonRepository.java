@@ -1,9 +1,11 @@
 package com.example.backend.repository;
 
 
+import com.example.backend.dto.request.HoaDonCLient.TrangThaiRequest;
 import com.example.backend.dto.request.hoadonsearch.HoaDonSearch;
 import com.example.backend.dto.response.AdminHoaDonDetailRespon;
 import com.example.backend.dto.response.AdminHoaDonResponn;
+import com.example.backend.dto.response.HoaDonCLient.HoaDonClientHistory;
 import com.example.backend.entity.HoaDon;
 import com.example.backend.model.*;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -29,6 +31,12 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
                      """, nativeQuery = true)
     List<AdminHoaDonResponn> getALLHD();
     @Query(value = """
+           SELECT hd.id, hd.thanh_tien as thanhTien, hd.trang_thai as trangThaiHD, (select group_concat(hdct.id) from hoa_don_chi_tiet hdct where hdct.hoa_don_id=hd.id) as hoaDonDetail 
+           FROM duanmishoes.hoa_don hd where khach_hang_id=:#{#req.id}  and loai_hoa_don=0 AND ( :#{#req.trangThai}  IS NULL
+         OR :#{#req.trangThai} LIKE ''OR hd.trang_thai Like (:#{#req.trangThai}))  order by hd.ngay_mua desc;                                                                                              
+                     """, nativeQuery = true)
+    List<HoaDonClientHistory> getALLHDClientByIDKH(TrangThaiRequest req);
+    @Query(value = """
                     SELECT hd.id AS idHD,  hd.ma AS ma, hd.nhan_vien_id as maNV, CASE WHEN hd.khach_hang_id IS NULL  THEN N'Khách lẻ'
                                     ELSE kh.ten END  as tenKH ,
                              	CASE WHEN hd.khach_hang_id IS  NULL   THEN N''
@@ -37,6 +45,7 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
                              		 	LEFT JOIN duanmishoes.nguoi_dung kh ON kh.id = hd.khach_hang_id  where hd.loai_hoa_don=1 and hd.trang_thai=0
             """,nativeQuery = true)
     List<AdminHoaDonResponn> getHoaDonChoTaiQuay();
+
     @Query(value = """
                          SELECT hd.id AS idHD,  hd.ma AS ma, hd.nhan_vien_id as maNV, CASE WHEN hd.khach_hang_id IS NULL  THEN N'Khách lẻ'
                                       ELSE kh.ten END  as tenKH ,

@@ -6,7 +6,7 @@ import ModalUpdateDiaChi from "../../../pages/censor/khachHang-management/ModalU
 import { KhachHangAPI } from "../../../pages/censor/api/user/khachHang.api";
 import { get, set } from "local-storage";
 const ModalDiaChi = (props) => {
-  const { openModalDiaChi, setOpenModalDiaChi , userID } = props;
+  const { openModalDiaChi, setOpenModalDiaChi, loadDiaChiMacDinh, userID } = props;
   const [top, setTop] = useState("none");
   const [bottom, setBottom] = useState("bottomRight");
   const [nowAddress, setNowAddress] = useState("");
@@ -30,6 +30,7 @@ const ModalDiaChi = (props) => {
           theme: "light",
         });
         loadDiaChi();
+        loadDiaChiMacDinh();
       })
       .catch((error) => {
         console.log(error);
@@ -157,13 +158,12 @@ const ModalDiaChi = (props) => {
         });
       }}
       onCancel={handleClose}
-
       width={600}
     >
       <Button
         style={{ marginLeft: 400 }}
         type="primary"
-      onClick={handleOpenADDModalDiaChi}
+        onClick={handleOpenADDModalDiaChi}
       >
         +Thêm địa chỉ mới
       </Button>
@@ -171,11 +171,16 @@ const ModalDiaChi = (props) => {
       <hr className="mt-4"></hr>
       <div>
         <Table
-          pagination={{
-            position: [top, bottom],
-          }}
-        columns={columns}
-        dataSource={dataSource}
+               pagination={{
+                showQuickJumper: true,
+                position: ["bottomCenter"],
+                defaultPageSize: 5,
+                defaultCurrent: 1,
+                total: 100,
+              }}
+          columns={columns}
+          dataSource={dataSource}
+       
         />
         <ToastContainer
           position="top-right"
