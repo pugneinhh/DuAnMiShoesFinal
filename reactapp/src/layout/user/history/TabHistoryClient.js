@@ -1,8 +1,35 @@
-import { Avatar, Button, Space, Tag } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import { Avatar, Button, Form, Modal, Space, Tag } from "antd";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 const TabHistoryClient = ({ listBill }) => {
   const nav = useNavigate();
-   console.log(listBill.trangThai,"2222222222222222");
+   const [modalReason, setModalReason] = useState(false);
+   const [reason, setReason] = useState("");
+   const [errror, setError] = useState("");
+   const [id, setId] = useState("");
+   const cancelBill = () => {
+     const data = {
+       id: id,
+       description: reason,
+     };
+     console.log(data);
+     if (reason === "") {
+       setError("Vui lòng nhập lý do hủy đơn");
+       return;
+     }
+    //  BillClientApi.cancelBill(data).then((res) => {
+    //    toast.success("Hủy đơn thành công");
+    //    window.location.href = "/purchase";
+    //  });
+   };
+   const openModal = (id) => {
+     setModalReason(true);
+     setId(id);
+   };
+   const closeModal = () => {
+     setModalReason(false);
+     setReason("");
+   };
   return (
     <div className="container ">
       <div className="row pt-3 " style={{ backgroundColor: "#F3F2F2" }}>
@@ -83,7 +110,7 @@ const TabHistoryClient = ({ listBill }) => {
 
                 {/* nút thanh toán */}
                 <div className=" mt-4 d-flex justify-content-end  ">
-                  {parseInt(item.trangThai) <2 ? (
+                  {parseInt(item.trangThai) < 2 ? (
                     <Button
                       style={{
                         backgroundColor: "orangered",
@@ -91,7 +118,9 @@ const TabHistoryClient = ({ listBill }) => {
                         width: 150,
                         height: 40,
                       }}
+                      onClick={() => openModal(item.id)}
                     >
+                      {" "}
                       Hủy đơn
                     </Button>
                   ) : (
@@ -117,6 +146,41 @@ const TabHistoryClient = ({ listBill }) => {
           </div>
         ))}
       </div>
+
+      <Modal
+        open={modalReason}
+        // onCancel={closeModal}
+        okButtonProps={{ style: { display: "none" } }}
+        cancelButtonProps={{ style: { display: "none" } }}
+      >
+        <Form>
+          <Form.Item
+            label={"Lý do hủy đơn"}
+            validateStatus={errror ? "error" : ""}
+            help={errror || ""}
+          >
+            <textarea
+              style={{ height: 130, width: 300, padding: 10, fontSize: 17 }}
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+            />
+          </Form.Item>
+          <Form.Item>
+            <div style={{ float: "right" }}>
+              <Button onClick={closeModal}>Hủy</Button>
+              <Button
+                className="button-add-promotion"
+                key="submit"
+                title="Xác nhận hủy đơn"
+                onClick={cancelBill}
+                style={{ marginLeft: "20px" }}
+              >
+                Xác nhận
+              </Button>
+            </div>
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 };
