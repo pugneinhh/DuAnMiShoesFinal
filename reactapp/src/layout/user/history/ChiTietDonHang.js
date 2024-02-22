@@ -11,6 +11,7 @@ import { GiNotebook, GiPiggyBank } from "react-icons/gi";
 import { SlNotebook } from "react-icons/sl";
 import { RiTruckFill } from "react-icons/ri";
 import { FaTruckFast } from "react-icons/fa6";
+import LogoGHN from "../../../assets/images/LogoGHN.png";
 import { HoaDonClientAPI } from "../../../pages/censor/api/HoaDonClient/HoaDonClientAPI";
 const ChiTietDonHang = (props) => {
     const idHD = useParams();
@@ -169,9 +170,9 @@ const ChiTietDonHang = (props) => {
             {/* địa chỉ giao hàng */}
             <div className="ms-4">
               <h4>Địa chỉ nhận hàng</h4>
-              <p>Nguyễn Tùng Dương</p>
-              <p>0988353709</p>
-              <p>TDP7 Phường Xuân Phương, Nam Từ Liêm, Hà nội</p>
+              <p>{bill.tenNguoiNhan}</p>
+              <p>{bill.sdt}</p>
+              <p>{bill.diaChiShip}</p>
             </div>
 
             <hr className="mt-5 mb-3"></hr>
@@ -183,31 +184,51 @@ const ChiTietDonHang = (props) => {
                 <div className="col-md-6 fs-6">
                   <div className="row">
                     <div className="col ">Tổng tiền hàng:</div>
-                    <div className="col">5.000.000 VND</div>
+                    <div className="col">
+                      {Intl.NumberFormat("en-US").format(bill.giaGoc)} VND
+                    </div>
                   </div>
                   <div className="row">
                     <div className="col">Phí vận chuyển:</div>
-                    <div className="col">0 VND</div>
+                    <div className="col">
+                      {Intl.NumberFormat("en-US").format(bill.tienVanChuyen)}
+                      VND
+                    </div>
                   </div>
                   <div
                     className="row"
                     style={{ borderBottom: "1px solid #000" }}
                   >
                     <div className="col">Voucher cửa hàng:</div>
-                    <div className="col">100.000 VND</div>
+                    <div className="col">
+                      {Intl.NumberFormat("en-US").format(bill.giaGiamGia)} VND
+                    </div>
                   </div>
                   <div className="row">
                     <div className="col">
                       <b>Thành tiền</b>
                     </div>
                     <div className="col text-danger fs-5">
-                      <b>4.900.000 VND</b>
+                      <b>
+                        {Intl.NumberFormat("en-US").format(bill.thanhTien)} VND
+                      </b>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+            <hr className="mt-5 mb-3"></hr>
+            {/* phương thức thanh toán */}
+            <div className="ms-4 d-flex justify-content-start">
+              <h5 className=" mt-4">Ngày dự kiến:</h5>
+              <p className="ms-5 mt-1">
+                <img src={LogoGHN} style={{ width: 200, height: 70 }}></img>
+              </p>
 
+              <p className="mt-4 ms-5 fs-5 text-danger ">
+                <b> {bill.ngayDuKienNhan}</b>
+              </p>
+            </div>
             <hr className="mt-5 mb-3"></hr>
             {/* phương thức thanh toán */}
             <div className="ms-4 d-flex justify-content-start">

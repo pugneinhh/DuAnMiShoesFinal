@@ -5,6 +5,7 @@ import com.example.backend.dto.request.HoaDonCLient.TrangThaiRequest;
 import com.example.backend.dto.request.hoadonsearch.HoaDonSearch;
 import com.example.backend.dto.response.AdminHoaDonDetailRespon;
 import com.example.backend.dto.response.AdminHoaDonResponn;
+import com.example.backend.dto.response.HoaDonCLient.DetailHoaDonClientByIdHDRespon;
 import com.example.backend.dto.response.HoaDonCLient.HoaDonClientHistory;
 import com.example.backend.entity.HoaDon;
 import com.example.backend.model.*;
@@ -38,7 +39,13 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
          OR :#{#req.trangThai} LIKE ''OR hd.trang_thai Like (:#{#req.trangThai}))  order by hd.ngay_mua desc;                                                                                              
                      """, nativeQuery = true)
     List<HoaDonClientHistory> getALLHDClientByIDKH(TrangThaiRequest req);
-    //get
+    //get hóa đơn by id client
+    @Query(value = """
+     select id,dia_chi as diaChiShip,email,gia_giam_gia as giaGiamGia, gia_goc as giaGoc,loai_hoa_don as loaiHoaDon,ma,
+     ngay_du_kien_nhan as ngayDuKienNhan,so_dien_thoai as sdt, trang_thai as trangThai, tien_van_chuyen as tienVanChuyen,ten_nguoi_nhan as tenNguoiNhan
+   ,thanh_tien as thanhTien   from hoa_don where id=:idHD                                                                                             
+                     """, nativeQuery = true)
+    DetailHoaDonClientByIdHDRespon detailHoaDonClienByIdHD(String idHD);
     @Query(value = """
                     SELECT hd.id AS idHD,  hd.ma AS ma, hd.nhan_vien_id as maNV, CASE WHEN hd.khach_hang_id IS NULL  THEN N'Khách lẻ'
                                     ELSE kh.ten END  as tenKH ,
