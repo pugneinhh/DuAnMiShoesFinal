@@ -18,4 +18,11 @@ export class HoaDonClientAPI {
             //   params: filter,
         });
     };  
+   static DetailHoaDonClient = (idHD) => {
+        return requestAdmin({
+          method: "GET",
+          url: `/client-hoa-don/detail-hoa-don/${idHD}`,
+        });
+    }; 
+   
 }

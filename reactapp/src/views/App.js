@@ -414,7 +414,7 @@ function App() {
               }
             />
            <Route
-              path="/chi-tiet-don-hang"
+              path="/chi-tiet-don-hang/:idHD"
               element={
                 <GuestGuard>
                   <DashboardClient>
