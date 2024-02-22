@@ -69,7 +69,9 @@ export const DashboardClient = ({ children }) => {
         const dangXuat = () => {
              
           localStorage.clear();
-           window.location.reload();
+          //  window.location.reload();
+  
+            window.location.href = "/home";
         };
   const {
     token: { colorBgContainer, borderRadiusLG },
