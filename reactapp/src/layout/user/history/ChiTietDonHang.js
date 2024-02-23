@@ -1,4 +1,7 @@
 import { Avatar, Flex, Button, Space, Tabs, Tag } from "antd";
+import React, { useState } from "react";
+import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router";
 import { BsShop } from "react-icons/bs";
 import { FaCheckCircle, FaUser } from "react-icons/fa";
 import { TfiPencil } from "react-icons/tfi";
@@ -8,7 +11,23 @@ import { GiNotebook, GiPiggyBank } from "react-icons/gi";
 import { SlNotebook } from "react-icons/sl";
 import { RiTruckFill } from "react-icons/ri";
 import { FaTruckFast } from "react-icons/fa6";
+import LogoGHN from "../../../assets/images/LogoGHN.png";
+import { HoaDonClientAPI } from "../../../pages/censor/api/HoaDonClient/HoaDonClientAPI";
 const ChiTietDonHang = (props) => {
+    const idHD = useParams();
+    console.log(idHD);
+    const nav = useNavigate();
+    const [listBillHistory, setListBillHistory] = useState([]);
+    const [statusPresent, setStatusPresent] = useState([]);
+    const [bill, setBill] = useState({});
+    const [paymentMethod, setPaymentMethod] = useState({});
+      useEffect(() => {
+        HoaDonClientAPI.DetailHoaDonClient(idHD.idHD).then((res) => {
+             console.log(idHD,33333333333);
+          console.log(res);
+          setBill(res.data);
+        });
+      }, []);
   const VALUES = [
     "Chờ xác nhận",
     "Xác nhận",
@@ -24,6 +43,21 @@ const ChiTietDonHang = (props) => {
     "Đã thanh toán",
     "Thành công",
   ];
+   const showIcon = (statusBill) => {
+     if (statusBill === "0") {
+       return GiNotebook;
+     } else if (statusBill === "1") {
+       return SlNotebook;
+     } else if (statusBill === "2") {
+       return RiTruckFill;
+     } else if (statusBill === "3") {
+       return FaTruckFast;
+     } else if (statusBill === "4") {
+       return GiPiggyBank;
+     } else if (statusBill === "-1") {
+       return FaCheckCircle;
+     }
+   };
   const icon = [
     GiNotebook,
     SlNotebook,
@@ -83,8 +117,26 @@ const ChiTietDonHang = (props) => {
               className="d-flex justify-content-end"
               style={{ borderBottom: "1px solid #000" }}
             >
-              <p className="me-4">Mã đơn hàng : HD8888888</p> |{" "}
-              <span className="text-danger ms-4">Chờ xác nhận</span>
+              <p className="me-4">Mã đơn hàng : {bill.ma}</p> |
+              <span className="text-danger ms-4">
+                {bill.trangThai === "0"
+                  ? "Chờ xác nhận"
+                  : bill.trangThai === "1"
+                  ? "Xác nhận"
+                  : bill.trangThai === "2"
+                  ? "Chờ vận chuyển"
+                  : bill.trangThai === "3"
+                  ? "Đang vận chuyển"
+                  : bill.trangThai === "4"
+                  ? "Đã thanh toán"
+                  : bill.trangThai === "5"
+                  ? "Thành công"
+                  : bill.trangThai === "6"
+                  ? "Trả hàng"
+                  : bill.trangThai === "-1"
+                  ? "Đã hủy"
+                  : "Đã"}
+              </span>
             </div>
 
             {/* hóa đơn time line */}
@@ -118,9 +170,9 @@ const ChiTietDonHang = (props) => {
             {/* địa chỉ giao hàng */}
             <div className="ms-4">
               <h4>Địa chỉ nhận hàng</h4>
-              <p>Nguyễn Tùng Dương</p>
-              <p>0988353709</p>
-              <p>TDP7 Phường Xuân Phương, Nam Từ Liêm, Hà nội</p>
+              <p>{bill.tenNguoiNhan}</p>
+              <p>{bill.sdt}</p>
+              <p>{bill.diaChiShip}</p>
             </div>
 
             <hr className="mt-5 mb-3"></hr>
@@ -130,39 +182,62 @@ const ChiTietDonHang = (props) => {
               <div className="row">
                 <div className="col-md-6"></div>
                 <div className="col-md-6 fs-6">
-                    <div className="row">
-                        <div className="col ">Tổng tiền hàng:</div>
-                        <div className="col">5.000.000 VND</div>
+                  <div className="row">
+                    <div className="col ">Tổng tiền hàng:</div>
+                    <div className="col">
+                      {Intl.NumberFormat("en-US").format(bill.giaGoc)} VND
                     </div>
-                    <div className="row">
-                        <div className="col">Phí vận chuyển:</div>
-                        <div className="col">0 VND</div>
+                  </div>
+                  <div className="row">
+                    <div className="col">Phí vận chuyển:</div>
+                    <div className="col">
+                      {Intl.NumberFormat("en-US").format(bill.tienVanChuyen)}
+                      VND
                     </div>
-                    <div className="row"  style={{ borderBottom: "1px solid #000" }}>
-                        <div className="col">Voucher cửa hàng:</div>
-                        <div className="col">100.000 VND</div>
+                  </div>
+                  <div
+                    className="row"
+                    style={{ borderBottom: "1px solid #000" }}
+                  >
+                    <div className="col">Voucher cửa hàng:</div>
+                    <div className="col">
+                      {Intl.NumberFormat("en-US").format(bill.giaGiamGia)} VND
                     </div>
-                    <div className="row">
-                        <div className="col"><b>Thành tiền</b></div>
-                        <div className="col text-danger fs-5"><b>4.900.000 VND</b></div>
+                  </div>
+                  <div className="row">
+                    <div className="col">
+                      <b>Thành tiền</b>
                     </div>
-
+                    <div className="col text-danger fs-5">
+                      <b>
+                        {Intl.NumberFormat("en-US").format(bill.thanhTien)} VND
+                      </b>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-
             <hr className="mt-5 mb-3"></hr>
             {/* phương thức thanh toán */}
             <div className="ms-4 d-flex justify-content-start">
-              <h5 className=" mt-1">Phương thức thanh toán  :</h5>
-              <p className="ms-5 mt-1"><b>Thanh toán khi nhận hàng</b></p>
- 
+              <h5 className=" mt-4">Ngày dự kiến:</h5>
+              <p className="ms-5 mt-1">
+                <img src={LogoGHN} style={{ width: 200, height: 70 }}></img>
+              </p>
+
+              <p className="mt-4 ms-5 fs-5 text-danger ">
+                <b> {bill.ngayDuKienNhan}</b>
+              </p>
             </div>
-
-    
+            <hr className="mt-5 mb-3"></hr>
+            {/* phương thức thanh toán */}
+            <div className="ms-4 d-flex justify-content-start">
+              <h5 className=" mt-1">Phương thức thanh toán :</h5>
+              <p className="ms-5 mt-1">
+                <b>Thanh toán khi nhận hàng</b>
+              </p>
+            </div>
           </div>
-
-          
         </div>
       </div>
     </>

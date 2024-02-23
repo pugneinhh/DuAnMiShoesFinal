@@ -136,6 +136,16 @@ public class BanHangController {
     @PutMapping("/hoa-don/update-van-chuyen/{idHD}")
     public ResponseEntity<?> updateVanChuyen (@PathVariable("idHD")String idHD, @RequestBody HoaDon hd){
         System.out.println("req hóa đơn"+hd);
+        HoaDon hoaDon=hoaDonServicee.findHoaDonbyID(idHD);
+
+        LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
+        lichSuHoaDon.setId(idHD);
+        lichSuHoaDon.setHoaDon(hoaDon);
+        lichSuHoaDon.setNguoiTao(hd.getNhanVien());
+        lichSuHoaDon.setTrangThai(4);
+        lichSuHoaDon.setNgayTao(LocalDateTime.now());
+        lichSuHoaDonService.save(lichSuHoaDon);
+//        hd.setNgayMua(LocalDateTime.now());
         return ResponseEntity.ok(hoaDonServicee.update(hd,idHD));
     }
 

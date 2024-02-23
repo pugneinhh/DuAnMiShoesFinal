@@ -1,4 +1,4 @@
-package com.example.backend.controller.admin.Client;
+package com.example.backend.controller.user;
 
 
 import com.example.backend.dto.request.HoaDonCLient.TrangThaiRequest;
@@ -16,13 +16,20 @@ public class HoaDonClientController {
 
     @Autowired
     HoaDonClientService hoaDonClientService;
+
     @PostMapping("")
-    public ResponseEntity<?> getALLHoaDonOL(@RequestBody TrangThaiRequest request ){
-        System.out.println("tttttttt"+request.getTrangThai());
+    public ResponseEntity<?> getALLHoaDonOL(@RequestBody TrangThaiRequest request) {
+        System.out.println("tttttttt" + request.getTrangThai());
         return ResponseEntity.ok(hoaDonClientService.getALLHDClientByIDKH(request));
     }
+
     @GetMapping("hoa-don/{id}")
-    public ResponseEntity<?> getALLHoaDonOLByIDHD(@PathVariable("id") String id){
+    public ResponseEntity<?> getALLHoaDonOLByIDHD(@PathVariable("id") String id) {
         return ResponseEntity.ok(hoaDonClientService.detailHDSanPham(id));
+    }
+
+    @GetMapping("detail-hoa-don/{idHD}")
+    public ResponseEntity<?> detailHD(@PathVariable("idHD") String id) {
+        return ResponseEntity.ok(hoaDonClientService.detailHoaDonClienByIdHD(id));
     }
 }
