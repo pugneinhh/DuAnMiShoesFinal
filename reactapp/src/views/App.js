@@ -57,6 +57,7 @@ import { GioHang } from "../layout/user/cart/gioHang";
 import { Shop } from "../layout/user/shop/shop";
 import ChiTietDonHang from "../layout/user/history/ChiTietDonHang";
 import ALLTabHistoryClient from "../layout/user/history/ALLTabHistoryClient";
+import TraCuuDonHangClient from "../layout/user/history/TraCuuDonHangClient";
 function App() {
   const isLoading = useAppSelector(GetLoading);
 
@@ -408,17 +409,27 @@ function App() {
               element={
                 <GuestGuard>
                   <DashboardClient>
-                    <ALLTabHistoryClient/>
+                    <ALLTabHistoryClient />
                   </DashboardClient>
                 </GuestGuard>
               }
             />
-           <Route
+            <Route
               path="/chi-tiet-don-hang/:idHD"
               element={
                 <GuestGuard>
                   <DashboardClient>
-                    <ChiTietDonHang/>
+                    <ChiTietDonHang />
+                  </DashboardClient>
+                </GuestGuard>
+              }
+            />
+            <Route
+              path="/tra-cuu-don-hang"
+              element={
+                <GuestGuard>
+                  <DashboardClient>
+                    <TraCuuDonHangClient />
                   </DashboardClient>
                 </GuestGuard>
               }

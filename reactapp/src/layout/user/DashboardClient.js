@@ -14,7 +14,7 @@ import {
   Button,
 } from "antd";
 
-import { Link ,useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { DownOutlined, SmileOutlined, UserOutlined } from "@ant-design/icons";
 import { TbShoppingCartHeart } from "react-icons/tb";
 import logoShop from "../../assets/images/logoNgang.png";
@@ -22,26 +22,28 @@ import "./client.css";
 import { get, set } from "local-storage";
 import { GioHangAPI } from "../../pages/censor/api/gioHang/gioHang.api";
 const { Header, Content, Footer } = Layout;
+
 export const DashboardClient = ({ children }) => {
-    const nav = useNavigate();
+  const nav = useNavigate();
   const [userName, setUserName] = useState("");
   const [linkAnh, setLinkAnh] = useState("");
   const [countgioHang, setCountGioHang] = useState(0);
   const storedData = get("userData");
-    const storedDataGoogle = get("userGoogle");
-    const storedDataFaceBook = get("userFacebook");
-    const storedGioHang=get("GioHang");
+  const storedDataGoogle = get("userGoogle");
+  const storedDataFaceBook = get("userFacebook");
+  const storedGioHang = get("GioHang");
 
   useEffect(() => {
+  
     if (storedData !== null) {
       setUserName(storedData.ten);
       setLinkAnh(storedData.anh);
-      GioHangAPI.getByIDKH(storedData.userID).then((res)=>{
-        GioHangAPI.getAllGHCTByIDGH(res.data.id).then((res)=>{
-          console.log("giỏ hàng của khách",res.data);
+      GioHangAPI.getByIDKH(storedData.userID).then((res) => {
+        GioHangAPI.getAllGHCTByIDGH(res.data.id).then((res) => {
+          console.log("giỏ hàng của khách", res.data);
           setCountGioHang(res.data.length);
-        })
-      })
+        });
+      });
     } else if (storedDataGoogle != null) {
       setUserName(storedDataGoogle.name);
       setLinkAnh(storedDataGoogle.imageUrl);
@@ -53,26 +55,25 @@ export const DashboardClient = ({ children }) => {
     else {
       setUserName(null);
       setLinkAnh(null);
-      if(storedGioHang!==null){
-        console.log("giỏ hàng",storedGioHang)
-        GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res)=>{
+      if (storedGioHang !== null) {
+        console.log("giỏ hàng", storedGioHang);
+        GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res) => {
           setCountGioHang(res.data.length);
-          console.log("count",res.data);
-        })
+          console.log("count", res.data);
+        });
       }
     }
-  
   }, []);
-     const openHistory = () => {
-             nav("/history");
-        };
-        const dangXuat = () => {
-             
-          localStorage.clear();
-          //  window.location.reload();
-  
-            window.location.href = "/home";
-        };
+  const openHistory = () => {
+    nav("/history");
+  };  
+
+  const dangXuat = () => {
+    localStorage.clear();
+    //  window.location.reload();
+
+    window.location.href = "/home";
+  };
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -130,7 +131,7 @@ export const DashboardClient = ({ children }) => {
           TIến bịp
         </a>
       ),
-     
+
       disabled: true,
     },
     {
@@ -172,12 +173,10 @@ export const DashboardClient = ({ children }) => {
         <Col span={4}>
           <Image style={{ height: 60 }} width={170} src={logoShop} />
         </Col>
-        <Col span={1.5} className="button-menu-trai text-center algin-center">
-          <a href="/home" className="button-menu-trai">
-            <Space>
-              <h6>HOME</h6>
-            </Space>
-          </a>
+     <Col span={1.5} className="d-flex align-items-center justify-content-center" >
+        <Link to={"/home"} className="text-decoration-none"  >
+          <h6 className="button-menu-trai d-flex align-items-center mt-1 " > Home</h6>
+          </Link>
         </Col>
         <Col span={1.5} className=" button-menu-trai ms-4">
           <Dropdown menu={{ items }} className="pb-4">
@@ -209,7 +208,16 @@ export const DashboardClient = ({ children }) => {
             </a>
           </Dropdown>
         </Col>
-        <Col span={10} className="float-end ms-5">
+        <Col span={3} className="d-flex align-items-center justify-content-center" >
+      
+        <Link to={"/tra-cuu-don-hang"} className="text-decoration-none" >
+          <h6 className="button-menu-trai d-flex align-items-center mt-2" > Tra Cứu Đơn hàng</h6>
+          </Link>
+          
+        </Col>
+        <Col span={7} className="float-end"></Col>
+    
+        <Col span={0.5} className="float-end">
           <Link to={"/gio-hang"} className="float-end justify-content-end ">
             <Badge count={countgioHang} offset={[8, 1]} className="menuButton">
               <TbShoppingCartHeart size={30} className="menuButton" />
@@ -262,16 +270,15 @@ export const DashboardClient = ({ children }) => {
           </>
         </Col>
         <Col span={2} className="ms-5">
-          <div className="bold">
+          <div className="fw-bold">
             <>
               {userName == null ? (
                 <span>Đăng nhập</span>
               ) : (
-                <span className="fw-bold">
+                <span >
                   {userName.split(" ").slice(2).join(" ") == null
-                    ? (userName.split(" ").slice(1).join(" "))
-                    : (userName.split(" ").slice(2).join(" "))}
-      
+                    ? userName.split(" ").slice(1).join(" ")
+                    : userName.split(" ").slice(2).join(" ")}
                 </span>
               )}
             </>
