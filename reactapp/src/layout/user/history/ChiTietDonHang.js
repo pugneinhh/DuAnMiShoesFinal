@@ -6,28 +6,36 @@ import { BsShop } from "react-icons/bs";
 import { FaCheckCircle, FaUser } from "react-icons/fa";
 import { TfiPencil } from "react-icons/tfi";
 import "./history.css";
-import { TimelineEvent } from "@mailtop/horizontal-timeline";
+import { Timeline, TimelineEvent } from "@mailtop/horizontal-timeline";
 import { GiNotebook, GiPiggyBank } from "react-icons/gi";
 import { SlNotebook } from "react-icons/sl";
 import { RiTruckFill } from "react-icons/ri";
 import { FaTruckFast } from "react-icons/fa6";
 import LogoGHN from "../../../assets/images/LogoGHN.png";
 import { HoaDonClientAPI } from "../../../pages/censor/api/HoaDonClient/HoaDonClientAPI";
+import { HoaDonAPI } from "../../../pages/censor/api/hoaDon/hoaDon.api";
+import moment from "moment";
 const ChiTietDonHang = (props) => {
-    const idHD = useParams();
-    console.log(idHD);
-    const nav = useNavigate();
-    const [listBillHistory, setListBillHistory] = useState([]);
-    const [statusPresent, setStatusPresent] = useState([]);
-    const [bill, setBill] = useState({});
-    const [paymentMethod, setPaymentMethod] = useState({});
-      useEffect(() => {
-        HoaDonClientAPI.DetailHoaDonClient(idHD.idHD).then((res) => {
-             console.log(idHD,33333333333);
-          console.log(res);
-          setBill(res.data);
-        });
-      }, []);
+  const idHD = useParams();
+  console.log(idHD);
+  const nav = useNavigate();
+  const [listBillHistory, setListBillHistory] = useState([]);
+  const [listTimeLine, setlistTimeLine] = useState([]);
+  const [statusPresent, setStatusPresent] = useState([]);
+  const [bill, setBill] = useState({});
+  const [paymentMethod, setPaymentMethod] = useState({});
+  useEffect(() => {
+    HoaDonClientAPI.DetailHoaDonClient(idHD.idHD).then((res) => {
+      setBill(res.data);
+    });
+
+    HoaDonAPI.getAllLichSuHoaDon(idHD.idHD).then((res) => {
+      setlistTimeLine(res.data);
+      console.log(res);
+    });
+  }, []);
+
+  console.log(listTimeLine, "lisst time line");
   const VALUES = [
     "Chờ xác nhận",
     "Xác nhận",
@@ -43,21 +51,38 @@ const ChiTietDonHang = (props) => {
     "Đã thanh toán",
     "Thành công",
   ];
-   const showIcon = (statusBill) => {
-     if (statusBill === "0") {
-       return GiNotebook;
-     } else if (statusBill === "1") {
-       return SlNotebook;
-     } else if (statusBill === "2") {
-       return RiTruckFill;
-     } else if (statusBill === "3") {
-       return FaTruckFast;
-     } else if (statusBill === "4") {
-       return GiPiggyBank;
-     } else if (statusBill === "-1") {
-       return FaCheckCircle;
-     }
-   };
+  const showIcon = (trangThai) => {
+    if (trangThai === "0") {
+      return GiNotebook;
+    } else if (trangThai === "1") {
+      return SlNotebook;
+    } else if (trangThai === "2") {
+      return RiTruckFill;
+    } else if (trangThai === "3") {
+      return FaTruckFast;
+    } else if (trangThai === "4") {
+      return GiPiggyBank;
+    } else if (trangThai === "5") {
+      return FaCheckCircle;
+    }
+  };
+  const showTitle = (trangThai) => {
+    if (trangThai === "0") {
+      return "Chờ xác nhận";
+    } else if (trangThai === "1") {
+      return "Xác Nhận";
+    } else if (trangThai === "2") {
+      return "Chờ vận chuyển";
+    } else if (trangThai === "3") {
+      return "Đang vận chuyển";
+    } else if (trangThai === "4") {
+      return "Đã thanh toán";
+    } else if (trangThai === "5") {
+      return "Thành công";
+    } else if (trangThai === "-1") {
+      return "Hủy";
+    }
+  };
   const icon = [
     GiNotebook,
     SlNotebook,
@@ -70,7 +95,7 @@ const ChiTietDonHang = (props) => {
   return (
     <>
       <div className="container ">
-        <div className="row pt-3 " style={{ backgroundColor: "#F3F2F2" }}>
+        <div className="row pt-3 ">
           <div className="col-md-2">
             <div className="row">
               <div className="col-md-2">
@@ -142,26 +167,29 @@ const ChiTietDonHang = (props) => {
             {/* hóa đơn time line */}
             <div className="scroll-hoa-don mt-5 mb-4">
               <div className="hoa-don-cuon-ngang">
-                <Flex horizontal>
-                  <TimelineEvent
-                    color="#3d874d"
-                    icon={icon[0]}
-                    // index={trangThai}
-                    values={"Chờ xác nhận"}
-                    // indexClick={({ trangThai }) => setValue({ trangThai })}
-                    isOpenEnding={true}
-                    title={"Chờ xác nhận"}
-                    // subtitle={moment(ngay[trangThai]).format(
-                    //   "hh:mm:ss DD/MM/YYYY"
-                    // )}
-                    subtitle={"25/08/1997"}
-                  />
-                  <TimelineEvent color="#e6e3e3" />
-                  <TimelineEvent color="#e6e3e3" />
-                  <TimelineEvent color="#e6e3e3" />
-                  <TimelineEvent color="#e6e3e3" />
-                  <TimelineEvent color="#e6e3e3" />
-                </Flex>
+            
+                  <Timeline
+                    minEvents={6}
+                    // maxEvents={10}
+                    style={{ borderBottom: "1px solid rgb(224, 224, 224)" }}
+                    placeholder              
+                  >
+                    {listTimeLine.map((item, index) => (
+                      <TimelineEvent
+                      minEvents={6}
+                        key={index}
+                        color={"#3d874d"}
+                        icon={showIcon(item.trangThai)}
+                        values={showTitle(item.trangThai)}
+                        isOpenEnding={true}
+                        title={showTitle(item.trangThai)}
+                        subtitle={moment(item.ngayTao).format(
+                          "hh:mm:ss DD/MM/YYYY"
+                        )}
+                      />
+                    ))}
+                  </Timeline>
+           
               </div>
             </div>
 
@@ -188,15 +216,15 @@ const ChiTietDonHang = (props) => {
                       {Intl.NumberFormat("en-US").format(bill.giaGoc)} VND
                     </div>
                   </div>
-                  <div className="row">
+                  <div className="row mt-3">
                     <div className="col">Phí vận chuyển:</div>
                     <div className="col">
                       {Intl.NumberFormat("en-US").format(bill.tienVanChuyen)}
-                      VND
+                                     VND
                     </div>
                   </div>
                   <div
-                    className="row"
+                    className="row mt-3"
                     style={{ borderBottom: "1px solid #000" }}
                   >
                     <div className="col">Voucher cửa hàng:</div>
@@ -204,7 +232,7 @@ const ChiTietDonHang = (props) => {
                       {Intl.NumberFormat("en-US").format(bill.giaGiamGia)} VND
                     </div>
                   </div>
-                  <div className="row">
+                  <div className="row mt-3">
                     <div className="col">
                       <b>Thành tiền</b>
                     </div>
