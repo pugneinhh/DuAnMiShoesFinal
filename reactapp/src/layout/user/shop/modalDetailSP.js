@@ -33,9 +33,10 @@ const ModalDetailSP = (props) => {
       setSelectedSize(res.data.kichThuocID);
       setIDSize(res.data.kichThuocID);
       loadListMauSacBySP(res.data.sanPhamID);
+      loadListSizeBySP(res.data.sanPhamID);
       SanPhamClientAPI.changeListSizeBySPandMS(res.data.sanPhamID, res.data.mauSacID).then(
         (res) => {
-          setListSizeBySP(res.data);
+          setListSizeByMS(res.data);
           const kichThuocExists = res.data.some(
             (item) => item.kichThuocID === selectedSize
           );
@@ -62,6 +63,7 @@ const ModalDetailSP = (props) => {
     });
   };
   const [ListSizeBySP, setListSizeBySP] = useState([]);
+  const [ListSizeByMS, setListSizeByMS] = useState([]);
   const loadListSizeBySP = (IDSP) => {
     SanPhamClientAPI.getListSizeBySP(IDSP).then((res) => {
       setListSizeBySP(res.data);
@@ -92,7 +94,7 @@ const ModalDetailSP = (props) => {
     // window.location.href = `/client/sanpham/kich-thuoc-sp/${IDSanPham}/${mauSacId}`;
     SanPhamClientAPI.changeListSizeBySPandMS(IDSanPham, mauSacId).then(
       (res) => {
-        setListSizeBySP(res.data);
+        setListSizeByMS(res.data);
         const kichThuocExists = res.data.some(
           (item) => item.kichThuocID === selectedSize
         );
@@ -429,8 +431,10 @@ const ModalDetailSP = (props) => {
                         : "1px solid #d9d9d9",
                   }}
                   onClick={() => handleSizeClick(listsize.kichThuocID)}
+                  disabled={!ListSizeByMS.some(size => size.kichThuocID === listsize.kichThuocID)}
                 >
                   {listsize.tenKichThuoc}
+                
                 </Button>
               </div>
             ))}
