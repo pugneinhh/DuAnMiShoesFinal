@@ -74,7 +74,7 @@ const ModalDiaChi = (props) => {
   };
 
   useEffect(() => {
-    if (userID != null && userID != undefined) {
+    if (userID !== null && userID !== undefined) {
       loadDiaChi();
     }
   }, [userID]);

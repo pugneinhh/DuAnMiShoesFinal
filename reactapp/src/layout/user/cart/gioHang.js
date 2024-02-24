@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./gioHang.css";
 import { Button, Switch, Tag } from "antd";
 import { FaRegTrashAlt, FaMapMarkerAlt } from "react-icons/fa";
@@ -15,37 +15,75 @@ import { BanHangClientAPI } from "../../../pages/censor/api/banHangClient/banHan
 import { v4 as uuid } from "uuid";
 import { SellAPI } from "../../../pages/censor/api/sell/sell.api";
 import { KhachHangAPI } from "../../../pages/censor/api/user/khachHang.api";
+import { ShipAPI } from "../../../pages/censor/api/ship/ship.api";
 export const GioHang = ({ children }) => {
   const [openModalDiaChi, setOpenModalDiaChi] = useState(false);
   const [openModalVoucher, setOpenModalVoucher] = useState(false);
   const [khachHang, setKhachHang] = useState(null);
   const [gioHangCT, setGioHangCT] = useState([]);
   const [userID, setUserID] = useState("");
-  const [hoaDonID,setHoaDonID] = useState("");
-  const [voucherID,setVoucherID] = useState(null);
-  const [diaChi,setDiaChi] = useState(null);
+  const [hoaDonID, setHoaDonID] = useState("");
+  const [voucher, setVoucher] = useState(null);
+  const [diaChi, setDiaChi] = useState(null);
+  const [clickCountTM, setClickCountTM] = useState(1);
+  const [clickCountVNP, setClickCountVNP] = useState(0);
+  const [phuongThuc, setPhuongThuc] = useState(0);
+  const [discount, setDiscount] = useState(0);
   
- 
   let total = 0;
-  let sale=0;
+  let tienShip=0;
+  let thanhTien=0;
   const storedData = get("userData");
   const storedGioHang = get("GioHang");
 
+  const getButtonTMType = () => {
+    // Xác định loại button dựa trên giá trị biến đếm
+    return clickCountTM % 2 === 0 ? "default" : "primary";
+  };
+  const getButtonVNPType = () => {
+    // Xác định loại button dựa trên giá trị biến đếm
+    return clickCountVNP % 2 === 0 ? "default" : "primary";
+  };
+  const handleClickButtonTM = () => {
+    setClickCountTM((prevCount) => prevCount + 1);
+    setClickCountVNP(0);
+    setPhuongThuc(0);
+  };
+  const handleClickButtonVNP = () => {
+    setClickCountVNP((prevCount) => prevCount + 1);
+    setClickCountTM(0);
+    setPhuongThuc(1);
+  };
   useEffect(() => {
     if (storedData != null) {
       setKhachHang(storedData.userID);
-      setUserID(storedData.userID)
+      setUserID(storedData.userID);
       loadDiaChiMacDinh();
     }
     loadGHCT();
   }, []);
-
-  const loadDiaChiMacDinh=()=>{
-    KhachHangAPI.getDiaChiMacDinh(storedData.userID).then((res)=>{
-      setDiaChi(res.data);
-      console.log("diacj chỉ",res.data);
-    })
+  const loadGiamGia=(voucher)=>{
+    console.log("vsd",voucher)
+    if(voucher!==null){
+      if(voucher.loaiVoucher==='Tiền mặt'){
+        setDiscount(voucher.giamToiDa);;
+      }else{
+        setDiscount(Math.min(total * (voucher.mucDo / 100), voucher.giamToiDa) );
+      }
+    }
+    console.log("discount",discount)
   }
+  const loadDiaChiMacDinh = () => {
+    KhachHangAPI.getDiaChiMacDinh(storedData.userID).then((res) => {
+      setDiaChi(res.data);
+      console.log(res.data)
+      console.log(ShipAPI.fetchAllDayShip(res.data.idHuyen, res.data.idXa).then(
+        (res) => res.data.data
+      )
+     );
+    });
+    
+  };
   const loadGHCT = () => {
     if (storedData !== null) {
       GioHangAPI.getByIDKH(storedData.userID).then((response) => {
@@ -64,16 +102,22 @@ export const GioHang = ({ children }) => {
       });
     }
   };
-  const detailDiaChi = (row) => {
-    console.log("click", row);
-    // setIdKH(row);
-    setOpenModalDiaChi(true);
-  };
+  
   const [isSwitchOn, setIsSwitchOn] = useState(false);
   const [isSwitchTraSau, setIsSwitchTraSau] = useState(false);
   const [isDiaChiGiaoHangVisible, setIsDiaChiGiaoHangVisible] = useState(false);
 
-  const handleMuaHang=(total,sale,gioHangCT,khachHang)=>{
+
+  //mua hàng
+  const handleMuaHang = (
+    total,
+    discount,
+    gioHangCT,
+    khachHang,
+    voucher,
+    diaChi,
+    phuongThuc
+  ) => {
     const currentDate = new Date();
     const currentDateInMilliseconds = Date.UTC(
       currentDate.getFullYear(),
@@ -81,21 +125,23 @@ export const GioHang = ({ children }) => {
       currentDate.getDate()
     );
     const idHD = uuid();
-    const hoaDon={ 
-      id:idHD,
-      ma:'HD'+currentDateInMilliseconds,
-      nguoiDung:khachHang,
-      giaGoc:total,
-      giaGiamGia:sale,
-      thanhTien:total-sale,
-    }
+    let hoaDonID;
+    const hoaDon = {
+      id: idHD,
+      ma: "HD" + currentDateInMilliseconds,
+      nguoiDung: khachHang,
+      giaGoc: total,
+      giaGiamGia: discount,
+      thanhTien: total - discount,
+    };
+
     BanHangClientAPI.addHD(hoaDon).then((res)=>{
       console.log("hóa đơn tạo",res.data);
-        setHoaDonID(res.data.hoaDon.id)
+        hoaDonID=res.data.hoaDon.id;
       gioHangCT.map((ghct)=>{
         const id = uuid();
         console.log(res.data.hoaDon.id)
-        
+
         const hdct={
           id:id,
           hoaDon:res.data.hoaDon.id,
@@ -107,16 +153,47 @@ export const GioHang = ({ children }) => {
           console.log("hóa đơn chi tiết",res.data);
         });
         GioHangAPI.deleteGHCT(ghct.id);
-        
+
       })
-      if(voucherID!==null){
-        SellAPI.updateVoucherToHD(hoaDonID,voucherID);
-        console.log("vvv",voucherID,hoaDonID);
-      }
-      // loadGHCT();
+
+    if (voucher !== null) {
+      console.log("add voucher to hóa đơn",res.data.hoaDon.id,voucher.id)
+      BanHangClientAPI.updateVoucherToHD(res.data.hoaDon.id,voucher.id)
+    }
+    BanHangClientAPI.thanhToanHoaDon(res.data.hoaDon.id);
+    const thanhToanTM={
+      hoaDon:res.data.hoaDon.id,
+      phuongThuc:phuongThuc,
+      tienMat:total-discount,
+      tongTien:total-discount,
+    }
+    
+    
+    if(phuongThuc==0){
+      console.log("thanhToanTM",thanhToanTM)
+      BanHangClientAPI.thanhToanTienMat(thanhToanTM);
+    }else{
+      BanHangClientAPI.getLinkVnpay(res.data.hoaDon.id,total).then((res) => {
+        window.open(res.data.url, '_blank');
+        console.log("url",res.data.url.substring(res.data.url.indexOf('vnp_TxnRef')+11).substring(0,8)); // mã giao dịch  
+        const thanhToanVNP={
+          hoaDon:hoaDonID,
+          phuongThuc:phuongThuc,
+          chuyenKhoan:total-discount,
+          tongTien:total-discount,
+          phuongThucVnp:res.data.url.substring(res.data.url.indexOf('vnp_TxnRef')+11).substring(0,8)
+        }
+        console.log("thanh toán vnp",thanhToanVNP)
+        BanHangClientAPI.thanhToanChuyenKhoan(thanhToanVNP);
+    });  
+     
+    
+    }
+    loadGHCT();
+    setVoucher(null);
     })
-  }
-  
+  };
+
   return (
     <div>
       <div className="banner-gio-hang-san-pham">
@@ -129,7 +206,7 @@ export const GioHang = ({ children }) => {
       <div className="row mt-5">
         {/* kẻ ngang */}
         <div className="xBNaac"></div>
-        {khachHang != null && diaChi!=null? (
+        {khachHang != null && diaChi != null ? (
           <div className="mt-4 row">
             {/* địa chỉ  */}
             <h5 style={{ color: "red" }}>
@@ -138,16 +215,22 @@ export const GioHang = ({ children }) => {
             </h5>
             <div className="row mt-1">
               <h6 className="col-md-12">
-                <b> {diaChi.tenNguoiNhan}{" "} | {diaChi.soDienThoai}</b>
+                <b>
+                  {" "}
+                  {diaChi.tenNguoiNhan} | {diaChi.soDienThoai}
+                </b>
                 <span style={{ marginLeft: 40 }}>
-                  {diaChi.diaChi}, {diaChi.tenXa}, {diaChi.tenHuyen}, {diaChi.tenThanhPho}
+                  {diaChi.diaChi}, {diaChi.tenXa}, {diaChi.tenHuyen},{" "}
+                  {diaChi.tenThanhPho}
                 </span>
-                {diaChi.trangThai==0?(
+                {diaChi.trangThai == 0 ? (
                   <span style={{ marginLeft: 40 }}>
-                  <Tag color="red">Mặc định</Tag>
-                </span>
-                ):<></>}
-                
+                    <Tag color="red">Mặc định</Tag>
+                  </span>
+                ) : (
+                  <></>
+                )}
+
                 <Button
                   style={{ marginLeft: 30 }}
                   onClick={() => setOpenModalDiaChi(true)}
@@ -192,9 +275,15 @@ export const GioHang = ({ children }) => {
             style={{ borderBottom: "1px dashed black" }}
           >
             <div className="col ps-4">
-              <h6 style={{ marginTop: 4 }}>
-                <BiSolidDiscount /> <span>Voucher</span> : Khuyến mãi 1
-              </h6>
+              {voucher !== null ? (
+                <h6 style={{ marginTop: 4 }}>
+                  <BiSolidDiscount /> <span>Voucher</span> : {voucher.ma}
+                </h6>
+              ) : (
+                <h6 style={{ marginTop: 4 }}>
+                  <BiSolidDiscount /> <span>Voucher</span> : Chọn voucher
+                </h6>
+              )}
             </div>
             <div className="col">
               <a
@@ -235,11 +324,16 @@ export const GioHang = ({ children }) => {
             <div className="col-md-6" style={{ marginLeft: 30 }}>
               <span>Giảm </span>
             </div>
+
             <div className="col-md-5">
-              <span style={{ color: "blue" }}>
-                {Intl.NumberFormat("en-US").format(sale)}
-              </span>{" "}
-              <span>VND</span>
+             
+                <span>
+                  <span style={{ color: "blue" }} >
+                    {Intl.NumberFormat("en-US").format(discount)}
+                  </span>
+                  <span> VND</span>
+                </span>
+              
             </div>
           </div>
           <div
@@ -251,9 +345,8 @@ export const GioHang = ({ children }) => {
             </h5>
             <h5 className="col-md-5">
               <span style={{ color: "blue" }}>
-                {Intl.NumberFormat("en-US").format(total - sale)}{" "}
-              </span>{" "}
-              <span>VND</span>
+                {Intl.NumberFormat("en-US").format(total-discount)} VND
+                </span>
             </h5>
           </div>
         </div>
@@ -287,10 +380,19 @@ export const GioHang = ({ children }) => {
           Phương thức thanh toán
         </h5>
         <div className="col-md-8">
-          <Button style={{ width: 300, height: 50 }}>
+          <Button
+            style={{ width: 300, height: 50 }}
+            type={getButtonTMType()}
+            onClick={handleClickButtonTM}
+          >
             Thanh toán khi nhận hàng
           </Button>
-          <Button className="ms-4" style={{ width: 300, height: 50 }}>
+          <Button
+            className="ms-4"
+            style={{ width: 300, height: 50 }}
+            type={getButtonVNPType()}
+            onClick={handleClickButtonVNP}
+          >
             Thanh toán VNP
             <img
               className="ms-2"
@@ -308,22 +410,24 @@ export const GioHang = ({ children }) => {
           <div className="row">
             <h5 className="col">Tổng tiền</h5>
             <h5 className="col">
-              : {Intl.NumberFormat("en-US").format(total - sale)} VND
+              : {Intl.NumberFormat("en-US").format(total)} VND
             </h5>
           </div>
           <div className="row mt-3">
             <h5 className="col">Phí vận chuyển</h5>
-            <h5 className="col">: 50.000 VND</h5>
+            <h5 className="col">: {Intl.NumberFormat("en-US").format(tienShip)} VND</h5>
           </div>
           <div className="row  mt-3">
             <h5 className="col">Mã Giảm giá</h5>
-            <h5 className="col">
-              :  {Intl.NumberFormat("en-US").format(sale)} VND
-            </h5>
+            
+              <h5 className="col">
+                : {Intl.NumberFormat("en-US").format(discount)} VND
+              </h5>
+            
           </div>
           <div className="row mt-3" style={{ color: "red" }}>
             <h5 className="col">Tổng thanh toán</h5>
-            <h5 className="col">: 5.000.000 VND</h5>
+            <h5 className="col">: {Intl.NumberFormat("en-US").format(total+tienShip-discount)} VND</h5>
           </div>
           <hr className="mt-5 mb-5"></hr>
           <div className="d-flex flex-row-reverse bd-highlight">
@@ -336,7 +440,15 @@ export const GioHang = ({ children }) => {
                 color: "white",
               }}
               onClick={() => {
-                handleMuaHang(total, sale, gioHangCT, khachHang);
+                handleMuaHang(
+                  total,
+                  discount,
+                  gioHangCT,
+                  khachHang,
+                  voucher,
+                  diaChi,
+                  phuongThuc
+                );
               }}
             >
               Đặt hàng
@@ -354,9 +466,11 @@ export const GioHang = ({ children }) => {
         openModalVoucher={openModalVoucher}
         setOpenModalVoucher={setOpenModalVoucher}
         userID={userID}
-        hoaDonID={hoaDonID}
-        voucherID={voucherID}
-        setVoucherID={setVoucherID}
+        // hoaDonID={hoaDonID}
+        voucherID={voucher}
+        setVoucherID={setVoucher}
+        total={total}
+        loadGiamGia={loadGiamGia}
       />
     </div>
   );

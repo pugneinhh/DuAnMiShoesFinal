@@ -5,7 +5,7 @@ import { SellAPI } from "../../../pages/censor/api/sell/sell.api";
 import imgTicket from "../../../assets/images/discountTicket.png";
 
 const ModalVoucher = (props) => {
-  const { openModalVoucher, setOpenModalVoucher, userID , hoaDonID,voucherID,setVoucherID} = props;
+  const { openModalVoucher, setOpenModalVoucher, userID , voucherID,setVoucherID,total,loadGiamGia} = props;
   const [top, setTop] = useState("none");
   const [bottom, setBottom] = useState("bottomRight");
   const [datas, setData] = useState([]);
@@ -32,15 +32,18 @@ const ModalVoucher = (props) => {
   };
 
   useEffect(() => {
-    if (userID != null && userID != undefined) {
+    // if (userID != null && userID != undefined) {
       loadVoucher();
-      console.log("hóa đơn",hoaDonID)
-    }
-  }, [userID]);
+      // console.log("hóa đơn",hoaDonID)
+    // }
+  }, []);
 
-  const handleChonVoucher = (hoaDonID,record) => {
+  const handleChonVoucher = (record) => {
     setVoucherID(record);
+    loadGiamGia(record);
+    console.log("voucher được chọn",record);
     setOpenModalVoucher(false);
+    
   }
 
   const dataSource = datas.map((item, index) => ({
@@ -48,6 +51,7 @@ const ModalVoucher = (props) => {
     id: item.id,
     ma: item.ma,
     ten: item.ten,
+    mucDo:item.mucDo,
     giamToiDa: item.giamToiDa,
     loaiVoucher: item.loaiVoucher,
     dieuKien: item.dieuKien
@@ -120,9 +124,14 @@ const ModalVoucher = (props) => {
       key: "action",
 
       render: (record) => (
+        total>=record.dieuKien?(
         <Space size="middle">
-          <a className='btn btn-danger' onClick={()=>{handleChonVoucher(record,hoaDonID)}}>Chọn</a>
+          <button className='btn btn-danger' onClick={()=>{handleChonVoucher(record)}}>Chọn</button>
         </Space>
+        ):(<Space size="middle">
+        <button className='btn btn-danger' disabled>Chọn</button>
+      </Space>)
+      
       ),
     },
   ]
