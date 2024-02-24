@@ -60,6 +60,8 @@ import ALLTabHistoryClient from "../layout/user/history/ALLTabHistoryClient";
 import TraCuuDonHangClient from "../layout/user/history/TraCuuDonHangClient";
 import DetailTraCuuDonHang from "../layout/user/history/DetailTraCuuDonHang";
 import { SignUp } from "../layout/login/signUp";
+import { ForgotPass } from "../layout/login/forgotPassword";
+import AccountProfile from "../layout/user/profile/profile";
 function App() {
   const isLoading = useAppSelector(GetLoading);
 
@@ -446,6 +448,16 @@ function App() {
                 </GuestGuard>
               }
             />
+            <Route
+              path="/tai-khoan-cua-toi"
+              element={
+                <GuestGuard>
+                  <DashboardClient>
+                    <AccountProfile />
+                  </DashboardClient>
+                </GuestGuard>
+              }
+            />
             {/* Màn login */}
 
             <Route
@@ -461,6 +473,14 @@ function App() {
               element={
                 <GuestGuard>
                   <SignUp />
+                </GuestGuard>
+              }
+            />
+            <Route
+              path="/forgot-password"
+              element={
+                <GuestGuard>
+                  <ForgotPass />
                 </GuestGuard>
               }
             />

@@ -1,7 +1,8 @@
-import { Avatar, Button, Form, Modal, Space, Tag } from "antd";
-import React, { useEffect, useState } from "react";
+import {  Button, Form, Modal, Space, Tag } from "antd";
+import React, {  useState } from "react";
 import { useNavigate } from "react-router";
 import { ToastContainer } from "react-toastify";
+
 const TabHistoryClient = ({ listBill }) => {
   const nav = useNavigate();
    const [modalReason, setModalReason] = useState(false);

@@ -4,6 +4,7 @@ import com.example.backend.dto.impldto.KhachHangResponImplDTO;
 import com.example.backend.dto.request.DiaChiRequest;
 import com.example.backend.dto.request.KhachHangRequest;
 import com.example.backend.dto.request.NguoiDungSeacrh;
+import com.example.backend.dto.request.loginReqest.ForgotPassRequest;
 import com.example.backend.dto.request.loginReqest.SignUpRequest;
 import com.example.backend.dto.request.sanphamsearch.CTSPSearch;
 import com.example.backend.dto.response.DiaChiKhachHangRespon;
@@ -180,6 +181,14 @@ public class KhachHangService {
         nguoiDung.setNgayTao(LocalDateTime.now());
         nguoiDung.setNgayThamGia(LocalDateTime.now());
         nguoiDung.setTrangThai(0);
+        return nguoiDungRepository.save(nguoiDung);
+    }
+    public NguoiDung forgotPass(ForgotPassRequest forgotPassRequest) {
+        String password = RandomStringUtils.random(8, true, true);
+        emailService.sendEmailPasword(forgotPassRequest.getEmail(),"Bạn thay đổi mật khẩu thành công," +
+                "Mật khẩu mới của bạn là:",password);
+        NguoiDung nguoiDung = nguoiDungRepository.findNguoiDungByEmail(forgotPassRequest.getEmail());
+        nguoiDung.setMatKhau(passwordEncoder.encode(password));
         return nguoiDungRepository.save(nguoiDung);
     }
 }

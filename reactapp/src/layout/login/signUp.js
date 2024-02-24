@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "./login.css";
 import { useState, useEffect } from "react";
-import { IoEyeOffOutline } from "react-icons/io5";
+import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 import logoShop from "../../assets/images/logoNgang.png";
 import { LoginAPI } from "../../pages/censor/api/login/loginApi";
 import ReCAPTCHA from "react-google-recaptcha";
@@ -20,16 +20,12 @@ export const SignUp = () => {
   const nav = useNavigate();
   const [password, setPassword] = useState("");
   const [form] = Form.useForm();
-  const handlePasswordChange = (event) => {
-    const rawPassword = event.target.value;
-    const encryptedPassword = encryptPassword(rawPassword);
-    setPassword(encryptedPassword);
-  };
   const[capVal,setcapVal]=useState(null);
-  const encryptPassword = (rawPassword) => {
-    // Thực hiện mã hóa ở đây (ví dụ: chuyển mỗi kí tự thành "*")
-    return rawPassword.replace(/./g, "*");
-  };
+      const [showPassword, setShowPassword] = useState(false);
+
+      const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+      };
     useEffect(() => {
     loadNguoiDung();
 
@@ -135,7 +131,7 @@ export const SignUp = () => {
             />
             <Form
               form={form}
-                onFinish={signUp}
+              onFinish={signUp}
               layout="vertical"
               className="mt-4"
             >
@@ -149,7 +145,6 @@ export const SignUp = () => {
                     message: "Vui lòng nhập tên",
                     whitespace: true,
                   },
-              
                 ]}
                 labelCol={{ span: 20 }}
                 wrapperCol={{ span: 20 }}
@@ -198,7 +193,7 @@ export const SignUp = () => {
                 >
                   <Input
                     placeholder="Mời nhập Password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     value={password}
                     // onChange={handlePasswordChange}
                     style={{ width: 365, height: 40 }}
@@ -219,14 +214,22 @@ export const SignUp = () => {
                 >
                   <Input
                     placeholder="Mời nhập lại  Password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     value={password}
                     // onChange={handlePasswordChange}
                     style={{ width: 365, height: 40 }}
                   />
                 </Form.Item>
-                <div className="col" style={{ marginTop: 20 }}>
-                  <IoEyeOffOutline size={25} className="showpass" />
+                <div
+                  className="col"
+                  style={{ marginTop: 10 }}
+                  onClick={togglePasswordVisibility}
+                >
+                  {showPassword ? (
+                    <IoEyeOffOutline size={25} className="showpass" />
+                  ) : (
+                    <IoEyeOutline size={25} className="showpass" />
+                  )}
                 </div>
               </div>
               <ReCAPTCHA

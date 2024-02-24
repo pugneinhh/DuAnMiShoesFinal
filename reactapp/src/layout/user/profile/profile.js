@@ -1,72 +1,35 @@
-import { Avatar, Badge, Button, Space, Tabs, Tag } from "antd";
-
-import React, { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { get, set } from "local-storage";
-import "./history.css";
-import { HoaDonClientAPI } from "../../../pages/censor/api/HoaDonClient/HoaDonClientAPI";
-import TabHistoryClient from "./TabHistoryClient";
-import { TfiPencil } from "react-icons/tfi";
-import { FaUser } from "react-icons/fa";
+import { Avatar, Flex, Button, Space, Tabs, Tag } from "antd";
+import React, { useState } from "react";
+import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router";
 import { BsShop } from "react-icons/bs";
+import { FaUser } from "react-icons/fa";
+import { TfiPencil } from "react-icons/tfi";
 
-const ALLTabHistoryClient = () => {
-  const nav = useNavigate();
-  const [listBill, setListBill] = useState([]);
+import { ToastContainer } from "react-toastify";
+import { get, set } from "local-storage";
+const AccountProfile = (props) => {
+  const idHD = useParams();
   const storedData = get("userData");
   const [userName, setUserName] = useState("");
   const [AnhUser, setLinkAnhUser] = useState("");
-  const id = storedData.userID;
-  const [key, setKey] = useState("10");
-  const keyToStatusMapping = {
-    1: "0",
-    2: "1",
-    3: "2",
-    4: "3",
-    5: "4",
-    6: "-1",
-    10: "",
-  };
+  const nav = useNavigate();
+  const [listBillHistory, setListBillHistory] = useState([]);
+  const [listTimeLine, setlistTimeLine] = useState([]);
+  const [statusPresent, setStatusPresent] = useState([]);
+  const [bill, setBill] = useState({});
+  const [paymentMethod, setPaymentMethod] = useState({});
+
   useEffect(() => {
     setUserName(storedData.ten);
     setLinkAnhUser(storedData.anh);
-    const trangThai = keyToStatusMapping[key] ? keyToStatusMapping[key] : "";
-
-    const datatest = { id: id, trangThai };
-    console.log("alo", datatest);
-    HoaDonClientAPI.getALLHoaDonOnlineByIdKH(datatest).then((res) => {
-      const data = res.data;
-      console.log(data, "dddddddddddddddddádasdasdasdasd");
-      const promises = data.map((item) => {
-        return HoaDonClientAPI.getALLChiTietSanPhamClientOlByIdHD(item.id).then(
-          (res) => ({
-            id: item.id,
-            thanhTien: item.thanhTien,
-            trangThai: item.trangThaiHD,
-            hoaDonDetail: res.data,
-          })
-        );
-      });
-
-      Promise.all(promises).then((results) => {
-        setListBill(results);
-      });
-    });
-  }, [key]);
-  useEffect(() => {
-    console.log(listBill);
-  }, [listBill]);
-  //   item tab
-  const onChange = (key) => {
-    setKey(key);
-    console.log(key);
-  };
+  }, []);
   const donMua = () => {
     nav("/history");
   };
-    const taiKhoanCuaToi = () => {
-      nav("/tai-khoan-cua-toi");
-    };
+  const taiKhoanCuaToi = () => {
+    nav("/tai-khoan-cua-toi");
+  };
   return (
     <div className="row">
       <div className="col-md-2">
@@ -96,8 +59,12 @@ const ALLTabHistoryClient = () => {
 
         <hr></hr>
 
-        <div className="button-back" onClick={taiKhoanCuaToi}>
-          <FaUser className="ms-2   " size={20} style={{ color: "red" }} />
+        <div onClick={taiKhoanCuaToi}>
+          <FaUser
+            className="ms-2  button-back "
+            size={20}
+            style={{ color: "red" }}
+          />
           <span className="ms-3 ">
             <b>Tài khoản của tôi</b>
           </span>
@@ -109,34 +76,26 @@ const ALLTabHistoryClient = () => {
           </span>
         </div>
       </div>
+      <div className="col-md-10 ">
+        <div className="ps-5" >
+          <p>
+            <span className="fs-5">
+              <b>Hồ sơ của tôi</b>
+            </span>
+            <br></br>
+            <span>
+              <b>Quản lý thông tin hồ sơ để bảo mật tài khoản</b>
+            </span>
+          </p>
+        </div>
+        <hr></hr>
 
-      {/* tab */}
-      <div className="col-md-10" style={{ padding: 20 }}>
-        <Tabs onChange={onChange} type="card">
-          <Tabs.TabPane tab="Tất cả" key="10">
-            <TabHistoryClient listBill={listBill} />
-          </Tabs.TabPane>
-          <Tabs.TabPane tab="Chờ xác nhận" key="1">
-            <TabHistoryClient listBill={listBill} />
-          </Tabs.TabPane>
-          <Tabs.TabPane tab="Xác nhận" key="2">
-            <TabHistoryClient listBill={listBill} />
-          </Tabs.TabPane>
-          <Tabs.TabPane tab="Chờ vận chuyển" key="3">
-            <TabHistoryClient listBill={listBill} />
-          </Tabs.TabPane>
-          <Tabs.TabPane tab="Vận chuyển" key="4">
-            <TabHistoryClient listBill={listBill} />
-          </Tabs.TabPane>
-          <Tabs.TabPane tab="Hoàn thành" key="5">
-            <TabHistoryClient listBill={listBill} />
-          </Tabs.TabPane>
-          <Tabs.TabPane tab="Đã hủy" key="6">
-            <TabHistoryClient listBill={listBill} />
-          </Tabs.TabPane>
-        </Tabs>
+        <div>
+            <p>Tên đăng nhập</p>
+        </div>
       </div>
+      {/* tab */}
     </div>
   );
 };
-export default ALLTabHistoryClient;
+export default AccountProfile;
