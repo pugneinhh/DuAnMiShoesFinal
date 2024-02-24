@@ -14,7 +14,7 @@ import java.util.List;
 public interface LichSuHoaDonRepository extends JpaRepository<LichSuHoaDon, String> {
  @Query(value = """
 SELECT mo_ta_hoat_dong AS moTaHoatDong,trang_thai AS trangThai,nguoi_tao AS nguoiTao,ngay_tao AS ngayTao
- FROM duanmishoes.lich_su_hoa_don WHERE  hoa_don_id=:idHD ORDER BY trangThai ASC""",nativeQuery = true)
+ FROM duanmishoes.lich_su_hoa_don WHERE  hoa_don_id=:idHD ORDER BY ngayTao ASC""",nativeQuery = true)
  List<AdminHoaDonTimeLineRespon> detailLichSuHoaDon(String  idHD);
  @Query(value = """
   SELECT ngay_tao AS hdTimeLine,trang_thai AS trangThai FROM  duanmishoes.lich_su_hoa_don WHERE 

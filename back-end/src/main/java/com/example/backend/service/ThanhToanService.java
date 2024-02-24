@@ -13,15 +13,20 @@ import java.util.List;
 public class ThanhToanService {
     @Autowired
     ThanhToanRepository thanhToanRepository;
-    public ThanhToan thanhToan(ThanhToanRequest request){
-        ThanhToan tt=request.map(new ThanhToan());
+
+    public ThanhToan thanhToan(ThanhToanRequest request) {
+        ThanhToan tt = request.map(new ThanhToan());
         return thanhToanRepository.save(tt);
     }
-    public List<LichSuThanhToanRespon> getALLLLichSuThanhToanByIDHD(String id){
+
+    public List<LichSuThanhToanRespon> getALLLLichSuThanhToanByIDHD(String id) {
         return thanhToanRepository.getALLLLichSuThanhToanByIDHD(id);
     }
 
-//    public ThanhToan thanhToanTienMat(ThanhToanRequest request){
+    //    public ThanhToan thanhToanTienMat(ThanhToanRequest request){
 //        ThanhToan tt = request.map(new ThanhToan())
 //    }
+    public ThanhToan getThanhToanByIdHD(String idHD) {
+        return thanhToanRepository.getThanhToanByIdHD(idHD);
+    }
 }

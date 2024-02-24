@@ -4,6 +4,7 @@ import com.example.backend.dto.impldto.KhachHangResponImplDTO;
 import com.example.backend.dto.request.DiaChiRequest;
 import com.example.backend.dto.request.KhachHangRequest;
 import com.example.backend.dto.request.NguoiDungSeacrh;
+import com.example.backend.dto.request.loginReqest.SignUpRequest;
 import com.example.backend.dto.request.sanphamsearch.CTSPSearch;
 import com.example.backend.dto.response.DiaChiKhachHangRespon;
 import com.example.backend.dto.response.KhachHangRespon;
@@ -40,6 +41,7 @@ public class KhachHangService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UploadImageToCloudinary uploadImageToCloudinary;
+
 
     public List<AdminKhachHangRepon> getAll(){
         return  nguoiDungRepository.getAllKhachHang();
@@ -162,5 +164,22 @@ public class KhachHangService {
         DiaChi diaChi=diaChiRepository.findById(id).get();
         diaChi.setTrangThai(0);
         return diaChiRepository.save(diaChi);
+    }
+    public NguoiDung signUp(SignUpRequest signUpRequest) {
+
+        emailService.sendEmailPasword(signUpRequest.getEmail(), "Bạn đã đăng ký thành công tài khoản ở cửa hàng MiShoes" +
+                "Mật khẩu bạn là ", signUpRequest.getMatKhau());
+        int size = nguoiDungRepository.getAllKhachHang().size() + 1;
+        NguoiDung nguoiDung = new NguoiDung();
+        nguoiDung.setMa("KH" + size);
+        nguoiDung.setTen(signUpRequest.getTen());
+        nguoiDung.setEmail(signUpRequest.getEmail());
+        nguoiDung.setMatKhau(passwordEncoder.encode(signUpRequest.getMatKhau()));
+        nguoiDung.setChucVu("khach_hang");
+        nguoiDung.setDiem(0);
+        nguoiDung.setNgayTao(LocalDateTime.now());
+        nguoiDung.setNgayThamGia(LocalDateTime.now());
+        nguoiDung.setTrangThai(0);
+        return nguoiDungRepository.save(nguoiDung);
     }
 }

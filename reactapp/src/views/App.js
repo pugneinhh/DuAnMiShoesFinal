@@ -58,6 +58,8 @@ import { Shop } from "../layout/user/shop/shop";
 import ChiTietDonHang from "../layout/user/history/ChiTietDonHang";
 import ALLTabHistoryClient from "../layout/user/history/ALLTabHistoryClient";
 import TraCuuDonHangClient from "../layout/user/history/TraCuuDonHangClient";
+import DetailTraCuuDonHang from "../layout/user/history/DetailTraCuuDonHang";
+import { SignUp } from "../layout/login/signUp";
 function App() {
   const isLoading = useAppSelector(GetLoading);
 
@@ -434,6 +436,16 @@ function App() {
                 </GuestGuard>
               }
             />
+            <Route
+              path="/hd/:idHD"
+              element={
+                <GuestGuard>
+                  <DashboardClient>
+                    <DetailTraCuuDonHang />
+                  </DashboardClient>
+                </GuestGuard>
+              }
+            />
             {/* Màn login */}
 
             <Route
@@ -441,6 +453,14 @@ function App() {
               element={
                 <GuestGuard>
                   <Login />
+                </GuestGuard>
+              }
+            />
+            <Route
+              path="/sign-up"
+              element={
+                <GuestGuard>
+                  <SignUp />
                 </GuestGuard>
               }
             />

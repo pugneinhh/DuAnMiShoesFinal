@@ -7,7 +7,7 @@ import { FaCheckCircle, FaUser } from "react-icons/fa";
 import { TfiPencil } from "react-icons/tfi";
 import "./history.css";
 import { Timeline, TimelineEvent } from "@mailtop/horizontal-timeline";
-import { GiNotebook, GiPiggyBank } from "react-icons/gi";
+import { GiNotebook, GiPiggyBank, GiReturnArrow } from "react-icons/gi";
 import { SlNotebook } from "react-icons/sl";
 import { RiTruckFill } from "react-icons/ri";
 import { FaTruckFast } from "react-icons/fa6";
@@ -15,6 +15,7 @@ import LogoGHN from "../../../assets/images/LogoGHN.png";
 import { HoaDonClientAPI } from "../../../pages/censor/api/HoaDonClient/HoaDonClientAPI";
 import { HoaDonAPI } from "../../../pages/censor/api/hoaDon/hoaDon.api";
 import moment from "moment";
+import { ToastContainer } from "react-toastify";
 const ChiTietDonHang = (props) => {
   const idHD = useParams();
   console.log(idHD);
@@ -64,6 +65,8 @@ const ChiTietDonHang = (props) => {
       return GiPiggyBank;
     } else if (trangThai === "5") {
       return FaCheckCircle;
+    } else if (trangThai === "-1") {
+      return GiReturnArrow;
     }
   };
   const showTitle = (trangThai) => {
@@ -83,15 +86,6 @@ const ChiTietDonHang = (props) => {
       return "Hủy";
     }
   };
-  const icon = [
-    GiNotebook,
-    SlNotebook,
-    RiTruckFill,
-    FaTruckFast,
-    GiPiggyBank,
-    FaCheckCircle,
-  ];
-
   return (
     <>
       <div className="container ">
@@ -167,29 +161,27 @@ const ChiTietDonHang = (props) => {
             {/* hóa đơn time line */}
             <div className="scroll-hoa-don mt-5 mb-4">
               <div className="hoa-don-cuon-ngang">
-            
-                  <Timeline
-                    minEvents={6}
-                    // maxEvents={10}
-                    style={{ borderBottom: "1px solid rgb(224, 224, 224)" }}
-                    placeholder              
-                  >
-                    {listTimeLine.map((item, index) => (
-                      <TimelineEvent
+                <Timeline
+                  minEvents={6}
+                  // maxEvents={10}
+                  style={{ borderBottom: "1px solid rgb(224, 224, 224)" }}
+                  placeholder
+                >
+                  {listTimeLine.map((item, index) => (
+                    <TimelineEvent
                       minEvents={6}
-                        key={index}
-                        color={"#3d874d"}
-                        icon={showIcon(item.trangThai)}
-                        values={showTitle(item.trangThai)}
-                        isOpenEnding={true}
-                        title={showTitle(item.trangThai)}
-                        subtitle={moment(item.ngayTao).format(
-                          "hh:mm:ss DD/MM/YYYY"
-                        )}
-                      />
-                    ))}
-                  </Timeline>
-           
+                      key={index}
+                      color={"#3d874d"}
+                      icon={showIcon(item.trangThai)}
+                      values={showTitle(item.trangThai)}
+                      isOpenEnding={true}
+                      title={showTitle(item.trangThai)}
+                      subtitle={moment(item.ngayTao).format(
+                        "hh:mm:ss DD/MM/YYYY"
+                      )}
+                    />
+                  ))}
+                </Timeline>
               </div>
             </div>
 
@@ -220,7 +212,7 @@ const ChiTietDonHang = (props) => {
                     <div className="col">Phí vận chuyển:</div>
                     <div className="col">
                       {Intl.NumberFormat("en-US").format(bill.tienVanChuyen)}
-                                     VND
+                      VND
                     </div>
                   </div>
                   <div
@@ -267,6 +259,18 @@ const ChiTietDonHang = (props) => {
             </div>
           </div>
         </div>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
       </div>
     </>
   );

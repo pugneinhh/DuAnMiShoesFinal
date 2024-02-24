@@ -1,6 +1,7 @@
 package com.example.backend.controller.user;
 
 
+import com.example.backend.dto.request.HoaDonCLient.SearchHDByMaAndSdtRequest;
 import com.example.backend.dto.request.HoaDonCLient.TrangThaiRequest;
 import com.example.backend.service.Client.HoaDonClientService;
 import lombok.RequiredArgsConstructor;
@@ -31,5 +32,9 @@ public class HoaDonClientController {
     @GetMapping("detail-hoa-don/{idHD}")
     public ResponseEntity<?> detailHD(@PathVariable("idHD") String id) {
         return ResponseEntity.ok(hoaDonClientService.detailHoaDonClienByIdHD(id));
+    }
+    @PostMapping("search")
+    public ResponseEntity<?> detailHD(@RequestBody SearchHDByMaAndSdtRequest request ) {
+        return ResponseEntity.ok(hoaDonClientService.search(request));
     }
 }

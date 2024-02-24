@@ -1,5 +1,6 @@
 package com.example.backend.service.Client;
 
+import com.example.backend.dto.request.HoaDonCLient.SearchHDByMaAndSdtRequest;
 import com.example.backend.dto.request.HoaDonCLient.TrangThaiRequest;
 import com.example.backend.dto.response.HoaDonCLient.DetailHoaDonClientByIdHDRespon;
 import com.example.backend.dto.response.HoaDonCLient.HoaDonClientHistory;
@@ -22,5 +23,8 @@ public class HoaDonClientService {
     }
     public DetailHoaDonClientByIdHDRespon detailHoaDonClienByIdHD(String idHD){
         return hoaDonRepository.detailHoaDonClienByIdHD(idHD);
+    }
+    public DetailHoaDonClientByIdHDRespon search(SearchHDByMaAndSdtRequest req){
+        return hoaDonRepository.searchHDClient(req);
     }
 }
