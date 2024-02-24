@@ -2,14 +2,10 @@ import LogoGHN from "../../../assets/images/logoDiShip.jpg";
 import React, { useEffect, useState } from "react";
 import {
   Button,
-  Card,
   Col,
-  Divider,
   Form,
   Input,
-  message,
   Row,
-  Select,
 } from "antd";
 import { HoaDonClientAPI } from "../../../pages/censor/api/HoaDonClient/HoaDonClientAPI";
 import { ToastContainer, toast } from "react-toastify";
