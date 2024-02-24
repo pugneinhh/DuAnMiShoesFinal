@@ -66,12 +66,15 @@ export const DashboardClient = ({ children }) => {
   const openHistory = () => {
     nav("/history");
   };
+  const thongTinTaiKhoan = () => {
+    nav("/tai-khoan-cua-toi");
+  };
 
   const dangXuat = () => {
     localStorage.clear();
     //  window.location.reload();
-   set("userGoogle", "");
-  
+    set("userGoogle", "");
+
     window.location.href = "/home";
   };
   const {
@@ -81,12 +84,8 @@ export const DashboardClient = ({ children }) => {
     {
       key: "1",
       label: (
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.antgroup.com"
-        >
-          Thông tin
+        <a target="_blank" rel="noopener noreferrer" onClick={thongTinTaiKhoan}>
+        Thông tin tài khoản
         </a>
       ),
     },
@@ -101,9 +100,10 @@ export const DashboardClient = ({ children }) => {
     {
       key: "3",
       label: (
-        <Button target="_blank" rel="noopener noreferrer" onClick={dangXuat}>
-          Đăng xuất
-        </Button>
+
+           <a target="_blank" rel="noopener noreferrer" onClick={dangXuat}>
+         Đăng xuất
+        </a>
       ),
     },
   ];
@@ -184,27 +184,20 @@ export const DashboardClient = ({ children }) => {
             </h6>
           </Link>
         </Col>
-        <Col span={2} className=" button-menu-trai">
-          <Dropdown menu={{ items }}>
-            <a onClick={(e) => e.preventDefault()} className="button-menu-trai">
-              <Space>
-                <h6>SHOP</h6>
-                <DownOutlined />
-              </Space>
-            </a>
-          </Dropdown>
+        <Col
+          span={2}
+          className="d-flex align-items-center justify-content-center"
+        >
+          <Link to={"/san-pham"} className="text-decoration-none">
+            <h6 className="button-menu-trai d-flex align-items-center mt-1 ">
+              Sản phẩm
+            </h6>
+          </Link>
         </Col>
-        <Col span={2} className="button-menu-trai ">
-          <Dropdown menu={{ items }} className=" button-menu-trai">
-            <a onClick={(e) => e.preventDefault()}>
-              <Space>
-                <h6>PRODUCT</h6>
-                <DownOutlined />
-              </Space>
-            </a>
-          </Dropdown>
-        </Col>
-        <Col span={2} className="button-menu-trai">
+        <Col
+          span={2}
+          className="d-flex align-items-center justify-content-center"
+        >
           <Link to={"/home"} className="text-decoration-none">
             <h6 className="button-menu-trai d-flex align-items-center mt-1 ">
               Liên hệ
@@ -216,12 +209,22 @@ export const DashboardClient = ({ children }) => {
           className="d-flex align-items-center justify-content-center"
         >
           <Link to={"/tra-cuu-don-hang"} className="text-decoration-none">
-            <h6 className="button-menu-trai d-flex align-items-center mt-2">
+            <h6 className="button-menu-trai d-flex align-items-center mt-1 ">
               Tra Cứu Đơn hàng
             </h6>
           </Link>
         </Col>
-        <Col span={4} className="float-end"></Col>
+        {/* <Col
+          span={3}
+          className="d-flex align-items-center justify-content-center"
+        >
+          <Link to={"/tra-cuu-don-hang"} className="text-decoration-none">
+            <h6 className="button-menu-trai d-flex align-items-center mt-2">
+              Tra Cứu Đơn hàng
+            </h6>
+          </Link>
+        </Col> */}
+        <Col span={7} className="float-end"></Col>
 
         <Col span={0.5} className="float-end">
           <Link to={"/gio-hang"} className="float-end justify-content-end ">
@@ -257,7 +260,7 @@ export const DashboardClient = ({ children }) => {
                     selectable: true,
                     defaultSelectedKeys: ["3"],
                   }}
-                  className="ms-2"
+                  className="ms-2 mt-5"
                 >
                   <Typography.Link>
                     <Space>

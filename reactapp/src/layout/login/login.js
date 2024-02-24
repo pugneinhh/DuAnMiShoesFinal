@@ -7,33 +7,28 @@ import {
   MDBCol,
 } from "mdb-react-ui-kit";
 import { Button, Form, Image, Input } from "antd";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "./login.css";
 import { useState, useEffect } from "react";
-import { IoEyeOffOutline } from "react-icons/io5";
+import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 import logoShop from "../../assets/images/logoNgang.png";
 import { FaSquareFacebook } from "react-icons/fa6";
 import { LoginAPI } from "../../pages/censor/api/login/loginApi";
 import { get, set } from "local-storage";
 import { GoogleLogin } from "react-google-login";
 import FacebookLogin from "react-facebook-login";
+import { FaFacebookSquare } from "react-icons/fa";
 import { gapi } from "gapi-script";
 export const Login = () => {
   const nav = useNavigate();
   const [password, setPassword] = useState("");
   const [form] = Form.useForm();
-  const handlePasswordChange = (event) => {
-    const rawPassword = event.target.value;
-    const encryptedPassword = encryptPassword(rawPassword);
-    setPassword(encryptedPassword);
-  };
+    const [showPassword, setShowPassword] = useState(false);
 
-  const encryptPassword = (rawPassword) => {
-    // Thực hiện mã hóa ở đây (ví dụ: chuyển mỗi kí tự thành "*")
-    return rawPassword.replace(/./g, "*");
-  };
-
+    const togglePasswordVisibility = () => {
+      setShowPassword(!showPassword);
+    };
   const login = (data) => {
       localStorage.clear();
     LoginAPI.login(data)
@@ -152,24 +147,30 @@ const responseFacebook = (res) => {
                 >
                   <Input
                     placeholder="Mời nhập Password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     value={password}
                     // onChange={handlePasswordChange}
                     style={{ width: 365, height: 40 }}
                   />
                 </Form.Item>{" "}
-                <div className="col" style={{ marginTop: 20 }}>
-                  <IoEyeOffOutline size={25} className="showpass" />
+                <div
+                  className="col"
+                  style={{ marginTop: 20 }}
+                  onClick={togglePasswordVisibility}
+                >
+                  {showPassword ? (
+                    <IoEyeOffOutline size={25} className="showpass" />
+                  ) : (
+                    <IoEyeOutline size={25} className="showpass" />
+                  )}
                 </div>
               </div>
-              <div className="ms-5  ">
-                <a href="!#" style={{ fontSize: 15, marginLeft: 240 }}>
-                  Forgot password?
-                </a>
+              <div className=" text-end" style={{ marginRight: 90 }}>
+                <Link to={`/forgot-password`}><b>Forgot password?</b></Link>
               </div>
 
               <Button
-                className="mb-1 w-50"
+                className="mb-1 mt-1 w-50"
                 style={{ marginLeft: 120 }}
                 htmlType="submit"
               >
@@ -202,9 +203,8 @@ const responseFacebook = (res) => {
                 fields="name,email,picture"
                 callback={responseFacebook}
                 buttonText="Login FaceBook"
-                icon="fa-facebook"
-                className="button-login-face-book  mb-1 mt-2 rounded-lg fw-bold w-75  text-light bg-primary"
-                style="width: 10px; height:20px"
+                icon="fa-brands fa-facebook"
+                cssClass=" mb-1 mt-2  fw-bold w-75 h-50 text-light   button-login-face-book"
               />
 
               <GoogleLogin
@@ -213,11 +213,27 @@ const responseFacebook = (res) => {
                 onError={() => {
                   console.log("loginfaile");
                 }}
+                // cookiePolicy={"single_host_origin"}
+                isSignedIn={true}
+                theme="light"
+                buttonText="Login to Google"
+                // cssClass="mb-1 mt-2  fw-bold w-75 h-50 text-dark button-login-face-book"
+                className="mb-1 mt-2  fw-bold w-75 h-50 text-dark button-login-google"
+              />
+              {/* <GoogleLogin
+                clientId="689459482014-49jc7cvt8hqflu87jegh2osfo2fd17se.apps.googleusercontent.com"
+                onSuccess={onSuccess}
+                onError={() => {
+                  console.log("loginfaile");
+                }}
                 cookiePolicy={"single_host_origin"}
                 isSignedIn={true}
-                buttonText="Login to Google"
-                className="mb-1 mt-2 rounded-lg fw-bold w-75 h-50 text-dark"
-              />
+             
+                // cssClass="mb-1 mt-2  fw-bold w-75 h-50 text-dark button-login-face-book"
+                className="mb-1 mt-2  fw-bold w-75 h-50 text-dark button-login-google"
+              >
+                <span> Đăng nhập bằng Google </span>
+              </GoogleLogin> */}
             </div>
           </MDBCol>
         </MDBRow>

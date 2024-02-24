@@ -16,4 +16,11 @@ export class LoginAPI {
       data: data,
     });
   };
+  static forgotPass = (data) => {
+    return requestAdmin({
+      method: "POST",
+      url: `/api/forgot-password`,
+      data: data,
+    });
+  };
 }
