@@ -34,7 +34,6 @@ export const DashboardClient = ({ children }) => {
   const storedGioHang = get("GioHang");
 
   useEffect(() => {
-  
     if (storedData !== null) {
       setUserName(storedData.ten);
       setLinkAnh(storedData.anh);
@@ -66,12 +65,13 @@ export const DashboardClient = ({ children }) => {
   }, []);
   const openHistory = () => {
     nav("/history");
-  };  
+  };
 
   const dangXuat = () => {
     localStorage.clear();
     //  window.location.reload();
-
+   set("userGoogle", "");
+  
     window.location.href = "/home";
   };
   const {
@@ -173,13 +173,19 @@ export const DashboardClient = ({ children }) => {
         <Col span={4}>
           <Image style={{ height: 60 }} width={170} src={logoShop} />
         </Col>
-     <Col span={1.5} className="d-flex align-items-center justify-content-center" >
-        <Link to={"/home"} className="text-decoration-none"  >
-          <h6 className="button-menu-trai d-flex align-items-center mt-1 " > Home</h6>
+        <Col
+          span={2}
+          className="d-flex align-items-center justify-content-center"
+        >
+          <Link to={"/home"} className="text-decoration-none">
+            <h6 className="button-menu-trai d-flex align-items-center mt-1 ">
+              {" "}
+              Trang chủ
+            </h6>
           </Link>
         </Col>
-        <Col span={1.5} className=" button-menu-trai ms-4">
-          <Dropdown menu={{ items }} className="pb-4">
+        <Col span={2} className=" button-menu-trai">
+          <Dropdown menu={{ items }}>
             <a onClick={(e) => e.preventDefault()} className="button-menu-trai">
               <Space>
                 <h6>SHOP</h6>
@@ -188,9 +194,9 @@ export const DashboardClient = ({ children }) => {
             </a>
           </Dropdown>
         </Col>
-        <Col span={1.5} className="button-menu-trai ms-4">
+        <Col span={2} className="button-menu-trai ">
           <Dropdown menu={{ items }} className=" button-menu-trai">
-            <a onClick={(e) => e.preventDefault()} className="pb-4">
+            <a onClick={(e) => e.preventDefault()}>
               <Space>
                 <h6>PRODUCT</h6>
                 <DownOutlined />
@@ -198,25 +204,25 @@ export const DashboardClient = ({ children }) => {
             </a>
           </Dropdown>
         </Col>
-        <Col span={1.5} className="button-menu-trai ms-4">
-          <Dropdown menu={{ items }} className="button-menu-trai">
-            <a onClick={(e) => e.preventDefault()} className="pb-4">
-              <Space>
-                <h6>BLOG</h6>
-                <DownOutlined />
-              </Space>
-            </a>
-          </Dropdown>
-        </Col>
-        <Col span={3} className="d-flex align-items-center justify-content-center" >
-      
-        <Link to={"/tra-cuu-don-hang"} className="text-decoration-none" >
-          <h6 className="button-menu-trai d-flex align-items-center mt-2" > Tra Cứu Đơn hàng</h6>
+        <Col span={2} className="button-menu-trai">
+          <Link to={"/home"} className="text-decoration-none">
+            <h6 className="button-menu-trai d-flex align-items-center mt-1 ">
+              Liên hệ
+            </h6>
           </Link>
-          
         </Col>
-        <Col span={7} className="float-end"></Col>
-    
+        <Col
+          span={3}
+          className="d-flex align-items-center justify-content-center"
+        >
+          <Link to={"/tra-cuu-don-hang"} className="text-decoration-none">
+            <h6 className="button-menu-trai d-flex align-items-center mt-2">
+              Tra Cứu Đơn hàng
+            </h6>
+          </Link>
+        </Col>
+        <Col span={4} className="float-end"></Col>
+
         <Col span={0.5} className="float-end">
           <Link to={"/gio-hang"} className="float-end justify-content-end ">
             <Badge count={countgioHang} offset={[8, 1]} className="menuButton">
@@ -275,7 +281,7 @@ export const DashboardClient = ({ children }) => {
               {userName == null ? (
                 <span>Đăng nhập</span>
               ) : (
-                <span >
+                <span>
                   {userName.split(" ").slice(2).join(" ") == null
                     ? userName.split(" ").slice(1).join(" ")
                     : userName.split(" ").slice(2).join(" ")}

@@ -75,6 +75,10 @@ export const Login = () => {
            set("userGoogle", res.profileObj);
       
   };
+    const signUp = (res) => {
+      nav("/sign-up");
+;
+    };
 const responseFacebook = (res) => {
   console.log(res);
     set("userFacebook", res);
@@ -163,6 +167,7 @@ const responseFacebook = (res) => {
                   Forgot password?
                 </a>
               </div>
+
               <Button
                 className="mb-1 w-50"
                 style={{ marginLeft: 120 }}
@@ -171,6 +176,14 @@ const responseFacebook = (res) => {
                 Sign in
               </Button>
             </Form>
+            <Button
+              className="mb-1 w-50"
+              style={{ marginLeft: 120 }}
+              htmlType="submit"
+              onClick={signUp}
+            >
+              Sign up
+            </Button>
             <div
               className="divider text-center d-flex align-items-center"
               style={{ marginLeft: 210 }}
@@ -189,8 +202,9 @@ const responseFacebook = (res) => {
                 fields="name,email,picture"
                 callback={responseFacebook}
                 buttonText="Login FaceBook"
-                cssClass=" mb-1 mt-2 rounded-lg fw-bold w-75 h-50 text-light bg-primary button-hihi"
                 icon="fa-facebook"
+                className="button-login-face-book  mb-1 mt-2 rounded-lg fw-bold w-75  text-light bg-primary"
+                style="width: 10px; height:20px"
               />
 
               <GoogleLogin
@@ -202,7 +216,7 @@ const responseFacebook = (res) => {
                 cookiePolicy={"single_host_origin"}
                 isSignedIn={true}
                 buttonText="Login to Google"
-                className="mb-1 mt-2 rounded-lg fw-bold w-75 h-50 text-dark button-hihi"
+                className="mb-1 mt-2 rounded-lg fw-bold w-75 h-50 text-dark"
               />
             </div>
           </MDBCol>

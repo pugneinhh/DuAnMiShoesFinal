@@ -1,6 +1,7 @@
 import { Avatar, Button, Form, Modal, Space, Tag } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { ToastContainer } from "react-toastify";
 const TabHistoryClient = ({ listBill }) => {
   const nav = useNavigate();
    const [modalReason, setModalReason] = useState(false);
@@ -181,6 +182,18 @@ const TabHistoryClient = ({ listBill }) => {
           </Form.Item>
         </Form>
       </Modal>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 };

@@ -82,10 +82,10 @@ public class HoaDonServicee {
         return hoaDonRepository.save(hoaDon);
     }
     public HoaDon updateHD(HoaDon hoaDon,String id){
-        HoaDon hoaDon1= findHoaDonbyID(id);
+//        HoaDon hoaDon1= findHoaDonbyID(id);
         Optional<HoaDon> optional = hoaDonRepository.findById(id);
         return optional.map(o->{
-            o.setTrangThai((hoaDon1.getTrangThai())+1);
+//            o.setTrangThai((hoaDon1.getTrangThai())+1);
             return hoaDonRepository.save(o);
         }).orElse(null);
 //         return hoaDonResponn.save(hoaDon);

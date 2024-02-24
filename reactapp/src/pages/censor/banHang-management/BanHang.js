@@ -870,6 +870,7 @@ const BanHang = () => {
           type="editable-card"
           onEdit={onEdit}
         >
+          {/* chi tiết hóa đơn */}
           {hoaDons.map(
             (tab) => (
               (data = ctspHD.filter((f) => f.hoaDon === activeKey)),

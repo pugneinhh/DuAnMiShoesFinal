@@ -1,6 +1,7 @@
 package com.example.backend.repository;
 
 
+import com.example.backend.dto.request.HoaDonCLient.SearchHDByMaAndSdtRequest;
 import com.example.backend.dto.request.HoaDonCLient.TrangThaiRequest;
 import com.example.backend.dto.request.hoadonsearch.HoaDonSearch;
 import com.example.backend.dto.response.AdminHoaDonDetailRespon;
@@ -13,10 +14,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Date;
 import java.util.List;
 
 @Repository
@@ -46,6 +45,12 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
    ,thanh_tien as thanhTien   from hoa_don where id=:idHD                                                                                             
                      """, nativeQuery = true)
     DetailHoaDonClientByIdHDRespon detailHoaDonClienByIdHD(String idHD);
+    @Query(value = """
+      select id,dia_chi as diaChiShip,email,gia_giam_gia as giaGiamGia, gia_goc as giaGoc,loai_hoa_don as loaiHoaDon,ma,
+      ngay_du_kien_nhan as ngayDuKienNhan,so_dien_thoai as sdt, trang_thai as trangThai, tien_van_chuyen as tienVanChuyen,ten_nguoi_nhan as tenNguoiNhan
+    ,thanh_tien as thanhTien   from hoa_don where ma=:#{#req.ma} and so_dien_thoai =:#{#req.sdt}                                                                                  
+                     """, nativeQuery = true)
+    DetailHoaDonClientByIdHDRespon searchHDClient(SearchHDByMaAndSdtRequest req);
     @Query(value = """
                     SELECT hd.id AS idHD,  hd.ma AS ma, hd.nhan_vien_id as maNV, CASE WHEN hd.khach_hang_id IS NULL  THEN N'Khách lẻ'
                                     ELSE kh.ten END  as tenKH ,

@@ -6,9 +6,11 @@ import com.example.backend.dto.request.LichSuHoaDonRequest;
 import com.example.backend.dto.request.hoadonsearch.HoaDonSearch;
 import com.example.backend.entity.HoaDon;
 import com.example.backend.entity.LichSuHoaDon;
+import com.example.backend.entity.ThanhToan;
 import com.example.backend.entity.Voucher;
 import com.example.backend.service.HoaDonServicee;
 import com.example.backend.service.LichSuHoaDonService;
+import com.example.backend.service.ThanhToanService;
 import com.example.backend.service.VoucherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +37,8 @@ public class HoaDonControllerr {
     private LichSuHoaDonService lichSuHoaDonService;
     @Autowired
     private VoucherService voucherService;
-
+    @Autowired
+    private ThanhToanService thanhToanService;
     @GetMapping()
     public ResponseEntity<?> getALL(){
         return  ResponseEntity.ok(hoaDonService.getALL());
@@ -54,17 +57,43 @@ public class HoaDonControllerr {
         return  ResponseEntity.ok(hoaDonService.getTim(hoaDonSearch));
     }
     @PutMapping("/update-hoa-don/{idHD}/{maNV}")
-    public ResponseEntity<?> updateTTHDvaADDLSHD(@RequestBody LichSuHoaDonRequest ls, @PathVariable("idHD") String id, @PathVariable("maNV") String maNV ,HoaDon hd){
+    public ResponseEntity<?> updateTTHDvaADDLSHD(@RequestBody LichSuHoaDonRequest ls, @PathVariable("idHD") String id, @PathVariable("maNV") String maNV ){
         HoaDon hoaDon=hoaDonService.findHoaDonbyID(id);
-        ls.setTrangThai(hoaDon.getTrangThai()+1);
         ls.setNgayTao(LocalDateTime.now());
         ls.setIdHD(id);
         ls.setNguoiTao(maNV);
         ls.setMoTaHoatDong(ls.getMoTaHoatDong());
+        System.out.println("trang thai ban dau hd"+hoaDon.getTrangThai());
+        System.out.println("trang thai ban dau hoadon"+hoaDon.getTrangThai());
+        ThanhToan thanhToan= thanhToanService.getThanhToanByIdHD(id);
+
+        if(hoaDon.getTrangThai()==4&&thanhToan.getPhuongThucVnp()!=null){
+            hoaDon.setTrangThai(0);
+            ls.setTrangThai(0);
+            System.out.println("if 1");
+            lichSuHoaDonService.addLichSuHoaDon(ls);
+            return ResponseEntity.ok(
+                    hoaDonService.updateHD(hoaDon,id)
+            );
+        }
+        else if(hoaDon.getTrangThai()==3&&thanhToan.getPhuongThucVnp()!=null){
+            ls.setTrangThai(5);
+            hoaDon.setTrangThai(5);
+            System.out.println("if 2");
+            lichSuHoaDonService.addLichSuHoaDon(ls);
+            return ResponseEntity.ok(
+                    hoaDonService.updateHD(hoaDon,id)
+            );
+        }
+        if(thanhToan.getPhuongThucVnp()==null){
+            ls.setTrangThai(hoaDon.getTrangThai()+1);
+            hoaDon.setTrangThai(hoaDon.getTrangThai()+1);
+        }
+
+
+
         lichSuHoaDonService.addLichSuHoaDon(ls);
-        return ResponseEntity.ok(
-                hoaDonService.updateHD(hd,id)
-        );
+        return ResponseEntity.ok(hoaDonService.updateHD(hoaDon,id));
     }
     @GetMapping("/detail-lich-su-hoa-don/{idHD}")
     public ResponseEntity<?> detailLSHD(@PathVariable("idHD") String id){
