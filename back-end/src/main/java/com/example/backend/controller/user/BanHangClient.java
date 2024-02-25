@@ -67,16 +67,17 @@ public class BanHangClient {
         hoaDonRequest.setNgayMua(LocalDateTime.now());
         hoaDonRequest.setTrangThai(0);
         //  hoaDonRequest.setGiaTriDiem(Integer.valueOf(hoaDonRequest.getThanhTien().intValue()/ct.getTiSo().intValue()));
-        banHangService.addHoaDon(hoaDonRequest);
-        HoaDon hoaDon=hoaDonServicee.findHoaDonbyID(hoaDonRequest.getId());
 
-        LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
-        lichSuHoaDon.setId(hoaDonRequest.getId());
-        lichSuHoaDon.setHoaDon(hoaDon);
-//        lichSuHoaDon.setNguoiTao(hoaDonRequest.getNguoiDung());
-        lichSuHoaDon.setTrangThai(0);
-        lichSuHoaDon.setNgayTao(LocalDateTime.now());
-        return  ResponseEntity.ok(lichSuHoaDonService.save(lichSuHoaDon));
+//        HoaDon hoaDon=hoaDonServicee.findHoaDonbyID(hoaDonRequest.getId());
+//
+//        LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
+//        lichSuHoaDon.setId(hoaDonRequest.getId());
+//        lichSuHoaDon.setHoaDon(hoaDon);
+////        lichSuHoaDon.setNguoiTao(hoaDonRequest.getNguoiDung());
+//        lichSuHoaDon.setTrangThai(0);
+//        lichSuHoaDon.setNgayTao(LocalDateTime.now());
+//        lichSuHoaDonService.save(lichSuHoaDon);
+        return  ResponseEntity.ok(banHangService.addHoaDon(hoaDonRequest));
     }
     @PostMapping("/addHDCT")
     public ResponseEntity<?> addHDCT(@RequestBody HoaDonChiTietRequest request){
@@ -110,6 +111,15 @@ public class BanHangClient {
         hd.setTrangThai(0);
         hd.setNgayMua(LocalDateTime.now());
         hoaDonRepository.save(hd);
+        HoaDon hoaDon=hoaDonServicee.findHoaDonbyID(request.getHoaDon());
+
+        LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
+        lichSuHoaDon.setId(request.getHoaDon());
+        lichSuHoaDon.setHoaDon(hoaDon);
+//        lichSuHoaDon.setNguoiTao(hoaDonRequest.getNguoiDung());
+        lichSuHoaDon.setTrangThai(0);
+        lichSuHoaDon.setNgayTao(LocalDateTime.now());
+        lichSuHoaDonService.save(lichSuHoaDon);
         return ResponseEntity.ok(thanhToanService.thanhToan(request));
     }
     @PostMapping("/thanh-toan-chuyen-khoan")

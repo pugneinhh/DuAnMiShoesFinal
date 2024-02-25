@@ -141,7 +141,7 @@ export const GioHang = ({ children }) => {
     console.log("hóa đơn",hoaDon)
     BanHangClientAPI.addHD(hoaDon).then((res)=>{
       console.log("hóa đơn tạo",res.data);
-        hoaDonID=res.data.hoaDon.id;
+        hoaDonID=res.data.id;
         console.log("giot hàng",gioHangCT);
       gioHangCT.map((ghct)=>{
         const id = uuid();
@@ -149,7 +149,7 @@ export const GioHang = ({ children }) => {
 
         const hdct = {
           id: id,
-          hoaDon: res.data.hoaDon.id,
+          hoaDon: res.data.id,
           chiTietSanPham: ghct.chiTietSanPham,
           soLuong: ghct.soLuong,
           giaSauGiam: ghct.thanhTien,
@@ -169,7 +169,7 @@ export const GioHang = ({ children }) => {
     }
     
     const thanhToanTM={
-      hoaDon:res.data.hoaDon.id,
+      hoaDon:res.data.id,
       phuongThuc:phuongThuc,
       tienMat:total-discount,
       tongTien:total-discount,
@@ -186,7 +186,7 @@ export const GioHang = ({ children }) => {
       BanHangClientAPI.thanhToanHoaDon(hoaDonID).then((res)=>{
         console.log("thanh toán",res.data)
       });
-      BanHangClientAPI.getLinkVnpay(res.data.hoaDon.id,total-discount).then((res) => {
+      BanHangClientAPI.getLinkVnpay(res.data.id,total-discount).then((res) => {
         window.open(res.data.url, '_blank');
         console.log("url",res.data.url.substring(res.data.url.indexOf('vnp_TxnRef')+11).substring(0,8)); // mã giao dịch  
         console.log("dataa",res.data)
