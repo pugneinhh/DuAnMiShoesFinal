@@ -122,7 +122,11 @@ export const GioHang = ({ children }) => {
     const currentDateInMilliseconds = Date.UTC(
       currentDate.getFullYear(),
       currentDate.getMonth(),
-      currentDate.getDate()
+      currentDate.getDate(),
+      currentDate.getHours(),
+      currentDate.getMinutes(),
+      currentDate.getSeconds(),
+      currentDate.getMilliseconds(),
     );
     const idHD = uuid();
     let hoaDonID;
@@ -176,7 +180,7 @@ export const GioHang = ({ children }) => {
       BanHangClientAPI.getLinkVnpay(res.data.hoaDon.id,total).then((res) => {
         window.open(res.data.url, '_blank');
         console.log("url",res.data.url.substring(res.data.url.indexOf('vnp_TxnRef')+11).substring(0,8)); // mã giao dịch  
-        
+      });
         const thanhToanVNP={
           hoaDon:hoaDonID,
           phuongThuc:phuongThuc,
@@ -188,7 +192,7 @@ export const GioHang = ({ children }) => {
         BanHangClientAPI.thanhToanHoaDon(hoaDonID);
         BanHangClientAPI.thanhToanChuyenKhoan(thanhToanVNP);
         
-    });  
+     
      
     
     }
