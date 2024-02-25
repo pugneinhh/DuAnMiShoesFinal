@@ -9,6 +9,7 @@ import com.example.backend.entity.LichSuHoaDon;
 import com.example.backend.entity.NguoiDung;
 import com.example.backend.repository.CTSPRepository;
 import com.example.backend.repository.CongThucRepository;
+import com.example.backend.repository.HoaDonRepository;
 import com.example.backend.service.*;
 import com.example.backend.vnp_1.Config;
 import com.example.backend.vnp_1.PayService;
@@ -52,6 +53,8 @@ public class BanHangClient {
     LichSuHoaDonService lichSuHoaDonService;
     @Autowired
     ThanhToanService thanhToanService;
+    @Autowired
+    HoaDonRepository hoaDonRepository;
     @PostMapping("/add-hoa-don")
     public ResponseEntity<?> addHD(@RequestBody HoaDonRequest hoaDonRequest){
 
@@ -100,6 +103,10 @@ public class BanHangClient {
         request.setNgayTao(LocalDateTime.now());
         request.setPhuongThuc(0);
         request.setTrangThai(0);
+        HoaDon hd=hoaDonServicee.findHoaDonbyID(request.getHoaDon());
+        hd.setTrangThai(0);
+        hd.setNgayMua(LocalDateTime.now());
+        hoaDonRepository.save(hd);
         return ResponseEntity.ok(thanhToanService.thanhToan(request));
     }
     @PostMapping("/thanh-toan-chuyen-khoan")
@@ -107,6 +114,10 @@ public class BanHangClient {
         request.setNgayTao(LocalDateTime.now());
         request.setPhuongThuc(1);
         request.setTrangThai(0);
+        HoaDon hd=hoaDonServicee.findHoaDonbyID(request.getHoaDon());
+        hd.setTrangThai(0);
+        hd.setNgayMua(LocalDateTime.now());
+        hoaDonRepository.save(hd);
         LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
         lichSuHoaDon.setHoaDon(HoaDon.builder().id(request.getHoaDon()).build());
 //        lichSuHoaDon.setNguoiTao(hoaDon.getNguoiDung().getTen());
