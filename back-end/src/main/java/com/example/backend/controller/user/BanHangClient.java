@@ -86,6 +86,7 @@ public class BanHangClient {
     @PutMapping("/thanh-toan-hoa-don/{idHD}")
     public ResponseEntity<?> thanhToanHoaDon (@PathVariable("idHD") String idHD) {
         HoaDon hoaDon=hoaDonServicee.findHoaDonbyID(idHD);
+        System.out.println("hóa đơn"+hoaDon.toString());
         LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
         lichSuHoaDon.setHoaDon(hoaDon);
 //        lichSuHoaDon.setNguoiTao(hoaDon.getNguoiDung().getTen());

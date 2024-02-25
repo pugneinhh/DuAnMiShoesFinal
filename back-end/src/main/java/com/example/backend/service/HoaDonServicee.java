@@ -152,7 +152,7 @@ public class HoaDonServicee {
             HoaDon hoaDonCT=hoaDonRepository.findById(idHD).get();
         hoaDonCT.setTrangThai(4);
         hoaDonCT.setNgayMua(LocalDateTime.now());
-      return   hoaDonRepository.save(hoaDonCT);
+      return  hoaDonRepository.save(hoaDonCT);
     }
 
     public HoaDon addHoaDon (HoaDon hd){

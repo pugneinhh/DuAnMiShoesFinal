@@ -138,7 +138,7 @@ export const GioHang = ({ children }) => {
       giaGiamGia: discount,
       thanhTien: total - discount,
     };
-
+    console.log("hóa đơn",hoaDon)
     BanHangClientAPI.addHD(hoaDon).then((res)=>{
       console.log("hóa đơn tạo",res.data);
         hoaDonID=res.data.hoaDon.id;
@@ -177,10 +177,10 @@ export const GioHang = ({ children }) => {
       console.log("thanhToanTM",thanhToanTM)
       BanHangClientAPI.thanhToanTienMat(thanhToanTM);
     }else{
-      BanHangClientAPI.getLinkVnpay(res.data.hoaDon.id,total).then((res) => {
+      BanHangClientAPI.getLinkVnpay(res.data.hoaDon.id,total-discount).then((res) => {
         window.open(res.data.url, '_blank');
         console.log("url",res.data.url.substring(res.data.url.indexOf('vnp_TxnRef')+11).substring(0,8)); // mã giao dịch  
-      });
+        console.log("dataa",res.data)
         const thanhToanVNP={
           hoaDon:hoaDonID,
           phuongThuc:phuongThuc,
@@ -188,10 +188,12 @@ export const GioHang = ({ children }) => {
           tongTien:total-discount,
           phuongThucVnp:res.data.url.substring(res.data.url.indexOf('vnp_TxnRef')+11).substring(0,8)
         }
-        
-        BanHangClientAPI.thanhToanHoaDon(hoaDonID);
+        console.log("thanh toán vnp",thanhToanVNP)
+        BanHangClientAPI.thanhToanHoaDon(hoaDonID).then((res)=>{
+          console.log("thanh toán",res.data)
+        });
         BanHangClientAPI.thanhToanChuyenKhoan(thanhToanVNP);
-        
+      });
      
      
     
