@@ -9,6 +9,7 @@ import com.example.backend.entity.LichSuHoaDon;
 import com.example.backend.entity.NguoiDung;
 import com.example.backend.repository.CTSPRepository;
 import com.example.backend.repository.CongThucRepository;
+import com.example.backend.repository.HoaDonChiTietRepository;
 import com.example.backend.repository.HoaDonRepository;
 import com.example.backend.service.*;
 import com.example.backend.vnp_1.Config;
@@ -55,6 +56,7 @@ public class BanHangClient {
     ThanhToanService thanhToanService;
     @Autowired
     HoaDonRepository hoaDonRepository;
+
     @PostMapping("/add-hoa-don")
     public ResponseEntity<?> addHD(@RequestBody HoaDonRequest hoaDonRequest){
 
@@ -80,7 +82,7 @@ public class BanHangClient {
     public ResponseEntity<?> addHDCT(@RequestBody HoaDonChiTietRequest request){
         request.setNgayTao(LocalDateTime.now());
         request.setTrangThai(0);
-        return ResponseEntity.ok(hoaDonChiTietService.addHDCT(request));
+        return ResponseEntity.ok(hoaDonChiTietService.addHDCTClient(request));
     }
     @PutMapping("/them-voucher/{idHD}/{idVoucher}")
     public ResponseEntity<?> updateVoucherToHD(@PathVariable("idHD") String idHD, @PathVariable("idVoucher") String idVoucher) {
@@ -104,6 +106,7 @@ public class BanHangClient {
         request.setPhuongThuc(0);
         request.setTrangThai(0);
         HoaDon hd=hoaDonServicee.findHoaDonbyID(request.getHoaDon());
+        System.out.println("hóa đơn tm"+hd);
         hd.setTrangThai(0);
         hd.setNgayMua(LocalDateTime.now());
         hoaDonRepository.save(hd);
