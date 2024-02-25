@@ -106,6 +106,12 @@ public class BanHangClient {
         request.setNgayTao(LocalDateTime.now());
         request.setPhuongThuc(1);
         request.setTrangThai(0);
+        LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
+        lichSuHoaDon.setHoaDon(HoaDon.builder().id(request.getHoaDon()).build());
+//        lichSuHoaDon.setNguoiTao(hoaDon.getNguoiDung().getTen());
+        lichSuHoaDon.setTrangThai(0);
+        lichSuHoaDon.setNgayTao(LocalDateTime.now());
+        lichSuHoaDonService.save(lichSuHoaDon);
         return ResponseEntity.ok(thanhToanService.thanhToan(request));
     }
     @GetMapping("/chuyen-khoan/{hoaDon}/{money}")

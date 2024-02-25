@@ -184,9 +184,10 @@ export const GioHang = ({ children }) => {
           tongTien:total-discount,
           phuongThucVnp:res.data.url.substring(res.data.url.indexOf('vnp_TxnRef')+11).substring(0,8)
         }
-        console.log("thanh toán vnp",thanhToanVNP)
-        BanHangClientAPI.thanhToanChuyenKhoan(thanhToanVNP);
+        
         BanHangClientAPI.thanhToanHoaDon(hoaDonID);
+        BanHangClientAPI.thanhToanChuyenKhoan(thanhToanVNP);
+        
     });  
      
     
