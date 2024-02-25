@@ -142,9 +142,10 @@ export const GioHang = ({ children }) => {
     BanHangClientAPI.addHD(hoaDon).then((res)=>{
       console.log("hóa đơn tạo",res.data);
         hoaDonID=res.data.hoaDon.id;
+        console.log("giot hàng",gioHangCT);
       gioHangCT.map((ghct)=>{
         const id = uuid();
-        console.log(res.data.hoaDon.id)
+        console.log(hoaDonID)
 
         const hdct={
           id:id,
@@ -153,12 +154,14 @@ export const GioHang = ({ children }) => {
           soLuong:ghct.soLuong,
           giaSauGiam:ghct.thanhTien
         };
+       
+         debugger
         BanHangClientAPI.addHDCT(hdct).then((res)=>{
           console.log("hóa đơn chi tiết",res.data);
         });
         GioHangAPI.deleteGHCT(ghct.id);
 
-      })
+      });
 
     if (voucher !== null) {
       console.log("add voucher to hóa đơn",res.data.hoaDon.id,voucher.id)
@@ -174,8 +177,11 @@ export const GioHang = ({ children }) => {
     
     
     if(phuongThuc==0){
+      console.log("hóa đơn trước thanh toán",res.data.hoaDon);
       console.log("thanhToanTM",thanhToanTM)
-      BanHangClientAPI.thanhToanTienMat(thanhToanTM);
+      BanHangClientAPI.thanhToanTienMat(thanhToanTM).then((res)=>{
+        console.log("hóa đơn tm",res.data);
+      });
     }else{
       BanHangClientAPI.thanhToanHoaDon(hoaDonID).then((res)=>{
         console.log("thanh toán",res.data)
@@ -198,10 +204,10 @@ export const GioHang = ({ children }) => {
      
      
     
-    }
+    }  
+    });
     loadGHCT();
     setVoucher(null);
-    })
   };
 
   return (

@@ -58,6 +58,10 @@ public class HoaDonChiTietService {
         hoaDonRepository.save(hoaDon);
         return  hoaDonChiTietRepository.save(hdct);
     }
+    public HoaDonChiTiet addHDCTClient(HoaDonChiTietRequest request){
+        HoaDonChiTiet hdct=request.map(new HoaDonChiTiet());
+        return  hoaDonChiTietRepository.save(hdct);
+    }
     public HoaDonChiTiet updateTruSl(HoaDonChiTietRequest request){
         HoaDonChiTiet hdct=request.map(new HoaDonChiTiet());
         HoaDonChiTiet hdctTonTai=hoaDonChiTietRepository.findById(request.getId()).get();
