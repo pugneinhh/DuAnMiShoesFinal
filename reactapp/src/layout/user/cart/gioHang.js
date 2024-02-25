@@ -160,7 +160,7 @@ export const GioHang = ({ children }) => {
       console.log("add voucher to hóa đơn",res.data.hoaDon.id,voucher.id)
       BanHangClientAPI.updateVoucherToHD(res.data.hoaDon.id,voucher.id)
     }
-    BanHangClientAPI.thanhToanHoaDon(res.data.hoaDon.id);
+    
     const thanhToanTM={
       hoaDon:res.data.hoaDon.id,
       phuongThuc:phuongThuc,
@@ -176,6 +176,7 @@ export const GioHang = ({ children }) => {
       BanHangClientAPI.getLinkVnpay(res.data.hoaDon.id,total).then((res) => {
         window.open(res.data.url, '_blank');
         console.log("url",res.data.url.substring(res.data.url.indexOf('vnp_TxnRef')+11).substring(0,8)); // mã giao dịch  
+        
         const thanhToanVNP={
           hoaDon:hoaDonID,
           phuongThuc:phuongThuc,
@@ -185,6 +186,7 @@ export const GioHang = ({ children }) => {
         }
         console.log("thanh toán vnp",thanhToanVNP)
         BanHangClientAPI.thanhToanChuyenKhoan(thanhToanVNP);
+        BanHangClientAPI.thanhToanHoaDon(hoaDonID);
     });  
      
     
