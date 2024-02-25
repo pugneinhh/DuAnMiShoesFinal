@@ -11,3 +11,7 @@ background-color: #d0aa73;
     color: #d0aa73;
 
 }
+.ant-typography .ant-dropdown-trigger .ant-dropdown-open {
+    margin-top: 100px;
+    padding-top: 100px;
+}

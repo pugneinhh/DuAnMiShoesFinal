@@ -29,10 +29,10 @@ export const GioHang = ({ children }) => {
   const [clickCountVNP, setClickCountVNP] = useState(0);
   const [phuongThuc, setPhuongThuc] = useState(0);
   const [discount, setDiscount] = useState(0);
-  
+
   let total = 0;
-  let tienShip=0;
-  let thanhTien=0;
+  let tienShip = 0;
+  let thanhTien = 0;
   const storedData = get("userData");
   const storedGioHang = get("GioHang");
 
@@ -62,27 +62,27 @@ export const GioHang = ({ children }) => {
     }
     loadGHCT();
   }, []);
-  const loadGiamGia=(voucher)=>{
-    console.log("vsd",voucher)
-    if(voucher!==null){
-      if(voucher.loaiVoucher==='Tiền mặt'){
-        setDiscount(voucher.giamToiDa);;
-      }else{
-        setDiscount(Math.min(total * (voucher.mucDo / 100), voucher.giamToiDa) );
+  const loadGiamGia = (voucher) => {
+    console.log("vsd", voucher);
+    if (voucher !== null) {
+      if (voucher.loaiVoucher === "Tiền mặt") {
+        setDiscount(voucher.giamToiDa);
+      } else {
+        setDiscount(Math.min(total * (voucher.mucDo / 100), voucher.giamToiDa));
       }
     }
-    console.log("discount",discount)
-  }
+    console.log("discount", discount);
+  };
   const loadDiaChiMacDinh = () => {
     KhachHangAPI.getDiaChiMacDinh(storedData.userID).then((res) => {
       setDiaChi(res.data);
-      console.log(res.data)
-      console.log(ShipAPI.fetchAllDayShip(res.data.idHuyen, res.data.idXa).then(
-        (res) => res.data.data
-      )
-     );
+      console.log(res.data);
+      console.log(
+        ShipAPI.fetchAllDayShip(res.data.idHuyen, res.data.idXa).then(
+          (res) => res.data.data
+        )
+      );
     });
-    
   };
   const loadGHCT = () => {
     if (storedData !== null) {
@@ -102,11 +102,10 @@ export const GioHang = ({ children }) => {
       });
     }
   };
-  
+
   const [isSwitchOn, setIsSwitchOn] = useState(false);
   const [isSwitchTraSau, setIsSwitchTraSau] = useState(false);
   const [isDiaChiGiaoHangVisible, setIsDiaChiGiaoHangVisible] = useState(false);
-
 
   //mua hàng
   const handleMuaHang = (
@@ -126,7 +125,7 @@ export const GioHang = ({ children }) => {
       currentDate.getHours(),
       currentDate.getMinutes(),
       currentDate.getSeconds(),
-      currentDate.getMilliseconds(),
+      currentDate.getMilliseconds()
     );
     const idHD = uuid();
     let hoaDonID;
@@ -138,70 +137,76 @@ export const GioHang = ({ children }) => {
       giaGiamGia: discount,
       thanhTien: total - discount,
     };
-    console.log("hóa đơn",hoaDon)
-    BanHangClientAPI.addHD(hoaDon).then((res)=>{
-      console.log("hóa đơn tạo",res.data);
-        hoaDonID=res.data.hoaDon.id;
-      gioHangCT.map((ghct)=>{
+    console.log("hóa đơn", hoaDon);
+    BanHangClientAPI.addHD(hoaDon).then((res) => {
+      console.log("hóa đơn tạo", res.data);
+      hoaDonID = res.data.hoaDon.id;
+      gioHangCT.map((ghct) => {
         const id = uuid();
-        console.log(res.data.hoaDon.id)
+        console.log(res.data.hoaDon.id);
 
-        const hdct={
-          id:id,
-          hoaDon:res.data.hoaDon.id,
-          chiTietSanPham:ghct.chiTietSanPham,
-          soLuong:ghct.soLuong,
-          giaSauGiam:ghct.thanhTien
+        const hdct = {
+          id: id,
+          hoaDon: res.data.hoaDon.id,
+          chiTietSanPham: ghct.chiTietSanPham,
+          soLuong: ghct.soLuong,
+          giaSauGiam: ghct.thanhTien,
         };
-        BanHangClientAPI.addHDCT(hdct).then((res)=>{
-          console.log("hóa đơn chi tiết",res.data);
+        BanHangClientAPI.addHDCT(hdct).then((res) => {
+          console.log("hóa đơn chi tiết", res.data);
         });
         GioHangAPI.deleteGHCT(ghct.id);
-
-      })
-
-    if (voucher !== null) {
-      console.log("add voucher to hóa đơn",res.data.hoaDon.id,voucher.id)
-      BanHangClientAPI.updateVoucherToHD(res.data.hoaDon.id,voucher.id)
-    }
-    
-    const thanhToanTM={
-      hoaDon:res.data.hoaDon.id,
-      phuongThuc:phuongThuc,
-      tienMat:total-discount,
-      tongTien:total-discount,
-    }
-    
-    
-    if(phuongThuc==0){
-      console.log("thanhToanTM",thanhToanTM)
-      BanHangClientAPI.thanhToanTienMat(thanhToanTM);
-    }else{
-      BanHangClientAPI.thanhToanHoaDon(hoaDonID).then((res)=>{
-        console.log("thanh toán",res.data)
       });
-      BanHangClientAPI.getLinkVnpay(res.data.hoaDon.id,total-discount).then((res) => {
-        window.open(res.data.url, '_blank');
-        console.log("url",res.data.url.substring(res.data.url.indexOf('vnp_TxnRef')+11).substring(0,8)); // mã giao dịch  
-        console.log("dataa",res.data)
-        const thanhToanVNP={
-          hoaDon:hoaDonID,
-          phuongThuc:phuongThuc,
-          chuyenKhoan:total-discount,
-          tongTien:total-discount,
-          phuongThucVnp:res.data.url.substring(res.data.url.indexOf('vnp_TxnRef')+11).substring(0,8)
-        }
-        console.log("thanh toán vnp",thanhToanVNP)
-       
-        BanHangClientAPI.thanhToanChuyenKhoan(thanhToanVNP);
-      });
-     
-     
-    
-    }
-    loadGHCT();
-    setVoucher(null);
-    })
+
+      if (voucher !== null) {
+        console.log("add voucher to hóa đơn", res.data.hoaDon.id, voucher.id);
+        BanHangClientAPI.updateVoucherToHD(res.data.hoaDon.id, voucher.id);
+      }
+
+      const thanhToanTM = {
+        hoaDon: res.data.hoaDon.id,
+        phuongThuc: phuongThuc,
+        tienMat: total - discount,
+        tongTien: total - discount,
+      };
+
+      if (phuongThuc == 0) {
+        console.log("thanhToanTM", thanhToanTM);
+        console.log("tiennnnnnnnnnn", thanhToanTM.tienMat);
+        BanHangClientAPI.thanhToanTienMat(thanhToanTM);
+      } else {
+        BanHangClientAPI.thanhToanHoaDon(hoaDonID).then((res) => {
+          console.log("thanh toán", res.data);
+        });
+        BanHangClientAPI.getLinkVnpay(
+          res.data.hoaDon.id,
+          total - discount
+        ).then((res) => {
+          window.open(res.data.url, "_blank");
+          console.log(
+            "url",
+            res.data.url
+              .substring(res.data.url.indexOf("vnp_TxnRef") + 11)
+              .substring(0, 8)
+          ); // mã giao dịch
+          console.log("dataa", res.data);
+          const thanhToanVNP = {
+            hoaDon: hoaDonID,
+            phuongThuc: phuongThuc,
+            chuyenKhoan: total - discount,
+            tongTien: total - discount,
+            phuongThucVnp: res.data.url
+              .substring(res.data.url.indexOf("vnp_TxnRef") + 11)
+              .substring(0, 8),
+          };
+          console.log("thanh toán vnp", thanhToanVNP);
+
+          BanHangClientAPI.thanhToanChuyenKhoan(thanhToanVNP);
+        });
+      }
+      loadGHCT();
+      setVoucher(null);
+    });
   };
 
   return (
@@ -336,14 +341,12 @@ export const GioHang = ({ children }) => {
             </div>
 
             <div className="col-md-5">
-             
-                <span>
-                  <span style={{ color: "blue" }} >
-                    {Intl.NumberFormat("en-US").format(discount)}
-                  </span>
-                  <span> VND</span>
+              <span>
+                <span style={{ color: "blue" }}>
+                  {Intl.NumberFormat("en-US").format(discount)}
                 </span>
-              
+                <span> VND</span>
+              </span>
             </div>
           </div>
           <div
@@ -355,8 +358,8 @@ export const GioHang = ({ children }) => {
             </h5>
             <h5 className="col-md-5">
               <span style={{ color: "blue" }}>
-                {Intl.NumberFormat("en-US").format(total-discount)} VND
-                </span>
+                {Intl.NumberFormat("en-US").format(total - discount)} VND
+              </span>
             </h5>
           </div>
         </div>
@@ -425,19 +428,23 @@ export const GioHang = ({ children }) => {
           </div>
           <div className="row mt-3">
             <h5 className="col">Phí vận chuyển</h5>
-            <h5 className="col">: {Intl.NumberFormat("en-US").format(tienShip)} VND</h5>
+            <h5 className="col">
+              : {Intl.NumberFormat("en-US").format(tienShip)} VND
+            </h5>
           </div>
           <div className="row  mt-3">
             <h5 className="col">Mã Giảm giá</h5>
-            
-              <h5 className="col">
-                : {Intl.NumberFormat("en-US").format(discount)} VND
-              </h5>
-            
+
+            <h5 className="col">
+              : {Intl.NumberFormat("en-US").format(discount)} VND
+            </h5>
           </div>
           <div className="row mt-3" style={{ color: "red" }}>
             <h5 className="col">Tổng thanh toán</h5>
-            <h5 className="col">: {Intl.NumberFormat("en-US").format(total+tienShip-discount)} VND</h5>
+            <h5 className="col">
+              : {Intl.NumberFormat("en-US").format(total + tienShip - discount)}{" "}
+              VND
+            </h5>
           </div>
           <hr className="mt-5 mb-5"></hr>
           <div className="d-flex flex-row-reverse bd-highlight">

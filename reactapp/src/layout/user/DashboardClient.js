@@ -73,9 +73,9 @@ export const DashboardClient = ({ children }) => {
   const dangXuat = () => {
     localStorage.clear();
     //  window.location.reload();
-    set("userGoogle", "");
+    // set("userGoogle", "");
 
-    window.location.href = "/home";
+    window.location.href = "/login";
   };
   const {
     token: { colorBgContainer, borderRadiusLG },
