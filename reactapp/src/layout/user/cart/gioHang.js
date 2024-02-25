@@ -137,13 +137,15 @@ export const GioHang = ({ children }) => {
       giaGiamGia: discount,
       thanhTien: total - discount,
     };
-    console.log("hóa đơn", hoaDon);
-    BanHangClientAPI.addHD(hoaDon).then((res) => {
-      console.log("hóa đơn tạo", res.data);
-      hoaDonID = res.data.hoaDon.id;
-      gioHangCT.map((ghct) => {
+
+    console.log("hóa đơn",hoaDon)
+    BanHangClientAPI.addHD(hoaDon).then((res)=>{
+      console.log("hóa đơn tạo",res.data);
+        hoaDonID=res.data.hoaDon.id;
+        console.log("giot hàng",gioHangCT);
+      gioHangCT.map((ghct)=>{
         const id = uuid();
-        console.log(res.data.hoaDon.id);
+        console.log(hoaDonID)
 
         const hdct = {
           id: id,
@@ -152,61 +154,60 @@ export const GioHang = ({ children }) => {
           soLuong: ghct.soLuong,
           giaSauGiam: ghct.thanhTien,
         };
-        BanHangClientAPI.addHDCT(hdct).then((res) => {
-          console.log("hóa đơn chi tiết", res.data);
+
+         
+        BanHangClientAPI.addHDCT(hdct).then((res)=>{
+          console.log("hóa đơn chi tiết",res.data);
         });
         GioHangAPI.deleteGHCT(ghct.id);
       });
 
-      if (voucher !== null) {
-        console.log("add voucher to hóa đơn", res.data.hoaDon.id, voucher.id);
-        BanHangClientAPI.updateVoucherToHD(res.data.hoaDon.id, voucher.id);
-      }
 
-      const thanhToanTM = {
-        hoaDon: res.data.hoaDon.id,
-        phuongThuc: phuongThuc,
-        tienMat: total - discount,
-        tongTien: total - discount,
-      };
-
-      if (phuongThuc == 0) {
-        console.log("thanhToanTM", thanhToanTM);
-        console.log("tiennnnnnnnnnn", thanhToanTM.tienMat);
-        BanHangClientAPI.thanhToanTienMat(thanhToanTM);
-      } else {
-        BanHangClientAPI.thanhToanHoaDon(hoaDonID).then((res) => {
-          console.log("thanh toán", res.data);
-        });
-        BanHangClientAPI.getLinkVnpay(
-          res.data.hoaDon.id,
-          total - discount
-        ).then((res) => {
-          window.open(res.data.url, "_blank");
-          console.log(
-            "url",
-            res.data.url
-              .substring(res.data.url.indexOf("vnp_TxnRef") + 11)
-              .substring(0, 8)
-          ); // mã giao dịch
-          console.log("dataa", res.data);
-          const thanhToanVNP = {
-            hoaDon: hoaDonID,
-            phuongThuc: phuongThuc,
-            chuyenKhoan: total - discount,
-            tongTien: total - discount,
-            phuongThucVnp: res.data.url
-              .substring(res.data.url.indexOf("vnp_TxnRef") + 11)
-              .substring(0, 8),
-          };
-          console.log("thanh toán vnp", thanhToanVNP);
-
-          BanHangClientAPI.thanhToanChuyenKhoan(thanhToanVNP);
-        });
-      }
-      loadGHCT();
-      setVoucher(null);
+    if (voucher !== null) {
+      console.log("add voucher to hóa đơn",res.data.hoaDon.id,voucher.id)
+      BanHangClientAPI.updateVoucherToHD(res.data.hoaDon.id,voucher.id)
+    }
+    
+    const thanhToanTM={
+      hoaDon:res.data.hoaDon.id,
+      phuongThuc:phuongThuc,
+      tienMat:total-discount,
+      tongTien:total-discount,
+    }
+    
+    
+    if(phuongThuc==0){
+      console.log("hóa đơn trước thanh toán",res.data.hoaDon);
+      console.log("thanhToanTM",thanhToanTM)
+      BanHangClientAPI.thanhToanTienMat(thanhToanTM).then((res)=>{
+        console.log("hóa đơn tm",res.data);
+      });
+    }else{
+      BanHangClientAPI.thanhToanHoaDon(hoaDonID).then((res)=>{
+        console.log("thanh toán",res.data)
+      });
+      BanHangClientAPI.getLinkVnpay(res.data.hoaDon.id,total-discount).then((res) => {
+        window.open(res.data.url, '_blank');
+        console.log("url",res.data.url.substring(res.data.url.indexOf('vnp_TxnRef')+11).substring(0,8)); // mã giao dịch  
+        console.log("dataa",res.data)
+        const thanhToanVNP={
+          hoaDon:hoaDonID,
+          phuongThuc:phuongThuc,
+          chuyenKhoan:total-discount,
+          tongTien:total-discount,
+          phuongThucVnp:res.data.url.substring(res.data.url.indexOf('vnp_TxnRef')+11).substring(0,8)
+        }
+        console.log("thanh toán vnp",thanhToanVNP)
+       
+        BanHangClientAPI.thanhToanChuyenKhoan(thanhToanVNP);
+      });
+     
+     
+    
+    }  
     });
+    loadGHCT();
+    setVoucher(null);
   };
 
   return (
