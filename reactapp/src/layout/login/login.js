@@ -24,13 +24,13 @@ export const Login = () => {
   const nav = useNavigate();
   const [password, setPassword] = useState("");
   const [form] = Form.useForm();
-    const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-    const togglePasswordVisibility = () => {
-      setShowPassword(!showPassword);
-    };
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
   const login = (data) => {
-      localStorage.clear();
+    localStorage.clear();
     LoginAPI.login(data)
       .then((respone) => {
         set("userData", respone.data);
@@ -62,24 +62,21 @@ export const Login = () => {
 
   //     });
   //   }
-     
+
   // });
   const onSuccess = (res) => {
     nav("/home");
-        console.log("login thanh cong:", res.profileObj);
-           set("userGoogle", res.profileObj);
-      
+    console.log("login thanh cong:", res.profileObj);
+    // set("userGoogle", res.profileObj);
   };
-    const signUp = (res) => {
-      nav("/sign-up");
-;
-    };
-const responseFacebook = (res) => {
-  console.log(res);
+  const signUp = (res) => {
+    nav("/sign-up");
+  };
+  const responseFacebook = (res) => {
+    console.log(res);
     set("userFacebook", res);
-  nav("/home");
-
-};
+    nav("/home");
+  };
 
   return (
     <MDBContainer className="my-5 mb-5 ">
@@ -166,7 +163,9 @@ const responseFacebook = (res) => {
                 </div>
               </div>
               <div className=" text-end" style={{ marginRight: 90 }}>
-                <Link to={`/forgot-password`}><b>Forgot password?</b></Link>
+                <Link to={`/forgot-password`}>
+                  <b>Forgot password?</b>
+                </Link>
               </div>
 
               <Button
