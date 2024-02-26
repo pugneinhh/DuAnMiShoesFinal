@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import {Button,Divider,Form,Input,Select,Space,Table,Tag,Modal} from 'antd';
-import {  PlusCircleOutlined } from "@ant-design/icons";
+import {Button,Divider,Form,Radio,Input,Select,Space,Table,Tag,Modal} from 'antd';
+import {  PlusCircleOutlined, RetweetOutlined } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
 import axios from 'axios';
@@ -22,13 +22,25 @@ export default function Hang() {
     setComponentSize(size);
   };
   const [form] = Form.useForm();
+  const [form1] = Form.useForm();
+  const formItemLayout = {
+    labelCol: {
+      span: 4
+    },
+    wrapperCol: {
+      span: 20
+    },
+  }; 
   //Ấn Add
   const [open, setOpen] = useState(false);
-  const [openUpdate, setOpenUpdate] = useState(false);
   const [bordered] = useState(false);
   const addHang = (value) => {
-    HangAPI.create(value)
-        .then((res)=>{
+    const checkTrung = (code) => {
+      return hang.some(h => h.ten.trim().toLowerCase() === code.trim().toLowerCase());
+    };
+    if (!(checkTrung(value.ten))) {
+     HangAPI.create(value)
+        .then((res) => {
           toast('✔️ Thêm thành công!', {
             position: "top-right",
             autoClose: 5000,
@@ -43,7 +55,83 @@ export default function Hang() {
           setOpen(false);
           form.resetFields();
         })
+    } else {
+      toast.error('Hãng đã tồn tại!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
   }
+   //Update
+   const [openUpdate, setOpenUpdate] = useState(false);
+   const [hangUpdate, setHangUpdate] = useState("");
+   const [tenCheck, setTenCheck] = useState("");
+ 
+   const showModal = async (idDetail) => {
+     await HangAPI.detail(idDetail)
+       .then((res) => {
+         setTenCheck(res.data.ten)
+         setHangUpdate(res.data)
+       })
+       setOpenUpdate(true)
+   };
+   console.log(hangUpdate)
+   const updateHang = () => {
+ 
+     if (hangUpdate.ten != tenCheck) {
+       const checkTrung = (ten) => {
+         return hang.some(x =>
+           x.ten === ten
+         );
+       };
+ 
+       if (checkTrung(hangUpdate.ten)) {
+         toast.error('Hãng trùng với hãng khác !', {
+           position: "top-right",
+           autoClose: 5000,
+           hideProgressBar: false,
+           closeOnClick: true,
+           pauseOnHover: true,
+           draggable: true,
+           progress: undefined,
+           theme: "light",
+         });
+         return;
+       }
+     }
+     HangAPI.update(hangUpdate.id, hangUpdate)
+       .then((res) => {
+         toast('✔️ Sửa thành công!', {
+           position: "top-right",
+           autoClose: 5000,
+           hideProgressBar: false,
+           closeOnClick: true,
+           pauseOnHover: true,
+           draggable: true,
+           progress: undefined,
+           theme: "light",
+         });
+         setHangUpdate("");
+         loadHang();
+         setOpenUpdate(false);
+       })
+   }
+ //Tìm kiếm
+ const onChangeFilter = (changedValues, allValues) => {
+   timKiemHang(allValues);
+ }
+ const timKiemHang = (dataSearch) => {
+  HangAPI.search(dataSearch)
+     .then((res) => {
+       setHangs(res.data);
+     })
+ }
   //Table
   const [hang, setHangs] = useState([]);
 
@@ -100,10 +188,10 @@ export default function Hang() {
     {
       title: "Action",
       key: "action",
-
-      render: () => (
+      dataIndex: "id",
+      render: (title) => (
         <Space size="middle">
-          <a className='btn btn-danger'><BsFillEyeFill className='mb-1' /></a>
+          <a className='btn btn-danger' onClick={() => showModal(`${title}`) }><BsFillEyeFill className='mb-1' /></a>
         </Space>
       ),
     },
@@ -131,28 +219,27 @@ export default function Hang() {
             initialValues={{
               size: componentSize,
             }}
-            onValuesChange={onFormLayoutChange}
+            onValuesChange={onChangeFilter}
             size={componentSize}
             style={{
               maxWidth: 1400,
             }}
-            form={form}
           >
             <div className="col-md-5">
-              <Form.Item label="Tên & Mã">
+              <Form.Item label="Tên & Mã" name="ten">
                 <Input className='rounded-pill border-warning' placeholder='Nhập tên hoặc mã' />
               </Form.Item>
             </div>
             <div className='col-md-5'>
-              <Form.Item label="Trạng Thái">
+              <Form.Item placeholder="Chọn trạng thái" label="Trạng Thái" name="trangThai">
                 <Select value={selectedValue} onChange={handleChange}>
                   <Select.Option value="0">Còn Bán</Select.Option>
                   <Select.Option value="1">Dừng Bán</Select.Option>
                 </Select>
               </Form.Item>
             </div>
-            <Form.Item className='text-center'>
-              <Button type="primary" htmlType='reset'>Làm mới</Button>
+            <Form.Item className='text-center' style={{ paddingLeft: 200 }}>
+              <Button type="primary" htmlType='reset' icon={<RetweetOutlined />} onClick={loadHang}>Làm mới</Button>
             </Form.Item>
           </Form>
         </div>
@@ -207,6 +294,55 @@ export default function Hang() {
                 form={form}>
                 <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
                   <Input className="border" />
+                </Form.Item>
+              </Form>
+            </Modal>
+               {/* Update hãng */}
+               <Modal
+              title="Sửa hãng"
+              centered
+              open={openUpdate}
+              onOk={() => setOpenUpdate(false)}
+              onCancel={() => { setOpenUpdate(false);}}
+              footer={[
+                <Button onClick={() => { setOpenUpdate(false);}}>Hủy</Button>,
+                <Button type="primary" onClick={() => {
+                  Modal.confirm({
+                    centered: true,
+                    title: 'Thông báo',
+                    content: 'Bạn có chắc chắn muốn sửa không?',
+                    onOk: () => { form1.submit(); },
+                    footer: (_, { OkBtn, CancelBtn }) => (
+                      <>
+                        <CancelBtn />
+                        <OkBtn />
+                      </>
+                    ),
+                  });
+                }}>Sửa</Button>
+              ]}
+              width={500}
+            >
+              <Form
+                {...formItemLayout}
+                initialValues={{
+                  size: componentSize,
+                }}
+                onValuesChange={onFormLayoutChange}
+                size={componentSize}
+                style={{
+                  maxWidth: 1000,
+                }}
+                onFinish={updateHang}
+                form={form1}>
+                <Form.Item label={<b>Tên</b>} hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
+                  <Input className='border' value={hangUpdate.ten} onChange={(e) => setHangUpdate({ ...hangUpdate, ten: e.target.value })}></Input>
+                </Form.Item>
+                <Form.Item label={<b>Trạng thái </b>}>
+                  <Radio.Group onChange={(e) => setHangUpdate({ ...hangUpdate, trangThai: e.target.value})} value={hangUpdate.trangThai}>
+                    <Radio value={0}>Còn bán</Radio>
+                    <Radio value={1}>Dừng bán</Radio>
+                  </Radio.Group>
                 </Form.Item>
               </Form>
             </Modal>

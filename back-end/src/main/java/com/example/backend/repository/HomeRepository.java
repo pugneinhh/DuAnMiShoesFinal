@@ -34,6 +34,8 @@ public interface HomeRepository extends JpaRepository<ChiTietSanPham, String> {
             	ctsp.kich_thuoc_id = kt.id
             	left join khuyen_mai km on
             	ctsp.khuyen_mai_id = km.id
+            	where
+             	ctsp.so_luong > 0
             group by
             	ctsp.gia_ban,
             	ms.ten,
@@ -69,6 +71,8 @@ public interface HomeRepository extends JpaRepository<ChiTietSanPham, String> {
             	ctsp.kich_thuoc_id = kt.id
             join khuyen_mai km on
                ctsp.khuyen_mai_id = km.id
+               where
+               	ctsp.so_luong > 0
             group by
             	ctsp.gia_ban,
             	ms.ten,
@@ -112,7 +116,7 @@ public interface HomeRepository extends JpaRepository<ChiTietSanPham, String> {
             where
             	year(hdct.ngay_tao) = year(CURDATE())
             	and (hd.trang_thai = 4
-            		or hd.trang_thai = 5)
+            		or hd.trang_thai = 5) AND ctsp.so_luong > 0
             group by
             	ctsp.gia_ban,
             	ms.ten,

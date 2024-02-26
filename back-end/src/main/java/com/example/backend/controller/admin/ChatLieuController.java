@@ -2,6 +2,8 @@ package com.example.backend.controller.admin;
 
 
 import com.example.backend.dto.request.sanpham.ChatLieuRequest;
+import com.example.backend.dto.request.sanpham.DanhMucRequest;
+import com.example.backend.dto.request.sanphamsearch.BangConSearch;
 import com.example.backend.service.ChatLieuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +26,19 @@ public class ChatLieuController {
         return  ResponseEntity.ok(chatLieuService.getALLCL());
     }
 
+    @PostMapping("/tim-kiem")
+    public ResponseEntity<?> search(@RequestBody BangConSearch bangConSearch){
+        return ResponseEntity.ok(chatLieuService.getTim(bangConSearch));
+    }
+
     @GetMapping("/detail/{idCL}")
     public ResponseEntity<?> detail(@PathVariable("idCL") String id){
         return ResponseEntity.ok(chatLieuService.detailCL(id));
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> update(@PathVariable("id") String id, @RequestBody ChatLieuRequest request){
+        return ResponseEntity.ok(chatLieuService.update(id,request));
     }
 
     @PostMapping("/add")
