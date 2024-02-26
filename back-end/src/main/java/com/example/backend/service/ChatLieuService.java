@@ -1,6 +1,8 @@
 package com.example.backend.service;
 import com.example.backend.dto.request.sanpham.ChatLieuRequest;
+import com.example.backend.dto.request.sanphamsearch.BangConSearch;
 import com.example.backend.dto.response.sanpham.ChatLieuRespone;
+import com.example.backend.dto.response.sanpham.DanhMucRespone;
 import com.example.backend.entity.ChatLieu;
 import com.example.backend.repository.ChatLieuRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,10 @@ public class ChatLieuService {
     }
 
     public ChatLieu detailCL(String id){return chatLieuRepository.findById(id).get();}
+
+    public List<ChatLieuRespone> getTim(BangConSearch bangConSearch) {
+        return chatLieuRepository.timCL(bangConSearch);
+    }
 
     public String addCL(ChatLieuRequest cl){
         ChatLieu chatLieu = ChatLieu.builder()

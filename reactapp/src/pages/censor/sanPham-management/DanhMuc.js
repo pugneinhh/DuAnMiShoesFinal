@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Divider, Form, Input, Select, Space, Table, Tag, Modal } from 'antd';
+import { Button, Divider, Radio, Form, Input, Select, Space, Table, Tag, Modal } from 'antd';
 import { PlusCircleOutlined, RetweetOutlined } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
@@ -22,10 +22,10 @@ export default function DanhMuc() {
   };
   const formItemLayout = {
     labelCol: {
-     span: 4
+      span: 4
     },
     wrapperCol: {
-    span: 20
+      span: 20
     },
   };
   //Ấn add 
@@ -50,7 +50,7 @@ export default function DanhMuc() {
           });
           loadDanhMuc();
           setOpen(false);
-          form.resetFields();
+          form1.resetFields();
         })
     } else {
       toast.error('Danh mục đã tồn tại!', {
@@ -68,17 +68,16 @@ export default function DanhMuc() {
   }
   //Update
   const [openUpdate, setOpenUpdate] = useState(false);
-  const [dmUpdate, setDmUpdate] = useState(false);
-  const [tenCheck, setTenCheck] = useState(false);
+  const [dmUpdate, setDmUpdate] = useState("");
+  const [tenCheck, setTenCheck] = useState("");
 
-  const showModal = async (id) => {
-    setOpenUpdate(true);
-    DanhMucAPI.detailDM(id)
+  const showModal = async (idDetail) => {
+    await DanhMucAPI.detailDM(idDetail)
       .then((res) => {
         setTenCheck(res.data.ten)
         setDmUpdate(res.data)
       })
-
+      setOpenUpdate(true)
   };
   console.log(dmUpdate)
   const updateDanhMuc = () => {
@@ -91,7 +90,7 @@ export default function DanhMuc() {
       };
 
       if (checkTrung(dmUpdate.ten)) {
-        toast.error('Sản phẩm có tên trùng với sản phẩm khác !', {
+        toast.error('Danh mục trùng với danh mục khác !', {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -116,8 +115,10 @@ export default function DanhMuc() {
           progress: undefined,
           theme: "light",
         });
+        setDmUpdate("");
         loadDanhMuc();
         setOpenUpdate(false);
+
       })
   }
   //Tìm kiếm
@@ -190,13 +191,14 @@ export default function DanhMuc() {
       dataIndex: "id",
       render: (title) => (
         <Space size="middle">
-          <a className='btn btn-danger'><BsFillEyeFill className='mb-1' onClick={() => showModal(`${title}`)} /></a>
+          <a className='btn btn-danger' onClick={() => showModal(`${title}`) }><BsFillEyeFill className='mb-1' /></a>
         </Space>
       ),
     },
   ]
   const [form] = Form.useForm();
   const [form1] = Form.useForm();
+  const [form2] = Form.useForm();
   return (
     <div className='container-fluid' style={{ borderRadius: 20 }}>
       <div className="container-fluid">
@@ -306,15 +308,15 @@ export default function DanhMuc() {
               centered
               open={openUpdate}
               onOk={() => setOpenUpdate(false)}
-              onCancel={() => setOpenUpdate(false)}
+              onCancel={() => { setOpenUpdate(false);}}
               footer={[
-                <Button onClick={() => setOpenUpdate(false)}>Hủy</Button>,
+                <Button onClick={() => { setOpenUpdate(false);}}>Hủy</Button>,
                 <Button type="primary" onClick={() => {
                   Modal.confirm({
                     centered: true,
                     title: 'Thông báo',
                     content: 'Bạn có chắc chắn muốn sửa không?',
-                    onOk: () => { form1.submit(); },
+                    onOk: () => { form2.submit(); },
                     footer: (_, { OkBtn, CancelBtn }) => (
                       <>
                         <CancelBtn />
@@ -337,15 +339,15 @@ export default function DanhMuc() {
                   maxWidth: 1000,
                 }}
                 onFinish={updateDanhMuc}
-                form={form1}>
+                form={form2}>
                 <Form.Item label={<b>Tên</b>} hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
                   <Input className='border' value={dmUpdate.ten} onChange={(e) => setDmUpdate({ ...dmUpdate, ten: e.target.value })}></Input>
                 </Form.Item>
                 <Form.Item label={<b>Trạng thái </b>}>
-                  <Select defaultValue={dmUpdate.trangThai == 0 ? 'Còn bán' : 'Dừng bán'} onChange={(e) => setDmUpdate({ ...dmUpdate, trangThai: e })}>
-                    <Select.Option value='0'>Còn Bán</Select.Option>
-                    <Select.Option value='1'>Dừng Bán</Select.Option>
-                  </Select>
+                  <Radio.Group onChange={(e) => setDmUpdate({ ...dmUpdate, trangThai: e.target.value})} value={dmUpdate.trangThai}>
+                    <Radio value={0}>Còn bán</Radio>
+                    <Radio value={1}>Dừng bán</Radio>
+                  </Radio.Group>
                 </Form.Item>
               </Form>
             </Modal>

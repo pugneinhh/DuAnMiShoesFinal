@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 public class UpdateCTSPRequest {
 
     public String sanPham;
+    public String ghiChu;
     public int trangThai;
     public int soLuong;
     public String moTa;
@@ -25,6 +26,7 @@ public class UpdateCTSPRequest {
     public String chatLieu;
 
     public ChiTietSanPham map(ChiTietSanPham ct){
+        ct.setGhiChu(this.ghiChu);
         ct.setTrangThai(this.trangThai);
         ct.setSoLuong(this.soLuong);
         ct.setMoTa(this.moTa);

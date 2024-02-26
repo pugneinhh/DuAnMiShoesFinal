@@ -7,6 +7,9 @@
     color: white;
     justify-content: center;
   }
+  :where(.css-dev-only-do-not-override-2i2tap).ant-input[type="color"] {
+    height: 200px;
+  }
 
   .icon-button{
     margin-bottom: 10px;
@@ -14,5 +17,9 @@
 
   .type-product{
     margin-left: 1%;
+  }
+
+  .card-mau{
+    height: 220px;
   }
   

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import {Button,Divider,Form,Input,Select,Space,Table,Tag,Modal} from 'antd';
-import {  PlusCircleOutlined } from "@ant-design/icons";
+import { Button, Divider, Form, Input,Radio, Select, Space, Table, Tag, Modal } from 'antd';
+import { PlusCircleOutlined, RetweetOutlined } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
 import { ToastContainer, toast } from 'react-toastify';
@@ -20,26 +20,115 @@ export default function ChatLieu() {
     setComponentSize(size);
   };
   const [form] = Form.useForm();
+  const [form1] = Form.useForm();
+
   //Ấn Add
   const [open, setOpen] = useState(false);
   const [bordered] = useState(false);
+  const formItemLayout = {
+    labelCol: {
+      span: 4
+    },
+    wrapperCol: {
+      span: 20
+    },
+  };
   const addChatLieu = (value) => {
-
+    const checkTrung = (code) => {
+      return chatLieu.some(cl => cl.ten.trim().toLowerCase() === code.trim().toLowerCase());
+    };
+    if (!(checkTrung(value.ten))) {
       ChatLieuAPI.create(value)
-      .then((res)=>{
-        toast('✔️ Thêm thành công!', {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        loadChatLieu();
-        setOpen(false);
-        form.resetFields();
+        .then((res) => {
+          toast('✔️ Thêm thành công!', {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          loadChatLieu();
+          setOpen(false);
+          form.resetFields();
+        })
+    } else {
+      toast.error('Chất liệu đã tồn tại!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  }
+   //Update
+   const [openUpdate, setOpenUpdate] = useState(false);
+   const [clUpdate, setClUpdate] = useState("");
+   const [tenCheck, setTenCheck] = useState("");
+ 
+   const showModal = async (idDetail) => {
+     await ChatLieuAPI.detail(idDetail)
+       .then((res) => {
+         setTenCheck(res.data.ten)
+         setClUpdate(res.data)
+       })
+       setOpenUpdate(true)
+   };
+   console.log(clUpdate)
+   const updateChatLieu = () => {
+ 
+     if (clUpdate.ten != tenCheck) {
+       const checkTrung = (ten) => {
+         return chatLieu.some(x =>
+           x.ten === ten
+         );
+       };
+ 
+       if (checkTrung(clUpdate.ten)) {
+         toast.error('Chất liệu trùng với chất liệu khác !', {
+           position: "top-right",
+           autoClose: 5000,
+           hideProgressBar: false,
+           closeOnClick: true,
+           pauseOnHover: true,
+           draggable: true,
+           progress: undefined,
+           theme: "light",
+         });
+         return;
+       }
+     }
+     ChatLieuAPI.update(clUpdate.id, clUpdate)
+       .then((res) => {
+         toast('✔️ Sửa thành công!', {
+           position: "top-right",
+           autoClose: 5000,
+           hideProgressBar: false,
+           closeOnClick: true,
+           pauseOnHover: true,
+           draggable: true,
+           progress: undefined,
+           theme: "light",
+         });
+         setClUpdate("");
+         loadChatLieu();
+         setOpenUpdate(false);
+       })
+   }
+  //Tìm kiếm
+  const onChangeFilter = (changedValues, allValues) => {
+    timKiemCL(allValues);
+  }
+  const timKiemCL = (dataSearch) => {
+   ChatLieuAPI.search(dataSearch)
+      .then((res) => {
+        setChatLieus(res.data);
       })
   }
   //Table
@@ -49,11 +138,11 @@ export default function ChatLieu() {
     loadChatLieu();
   }, []);
 
-  const loadChatLieu =  () => {
+  const loadChatLieu = () => {
     ChatLieuAPI.getAll()
-    .then((res)=>{
-      setChatLieus(res.data); 
-    })
+      .then((res) => {
+        setChatLieus(res.data);
+      })
   };
 
   const columns = [
@@ -89,7 +178,7 @@ export default function ChatLieu() {
             </Tag>
           ) : (
             <Tag color="red">
-              Còn bán
+              Dừng bán
             </Tag>
           )}
         </>
@@ -98,10 +187,10 @@ export default function ChatLieu() {
     {
       title: "Action",
       key: "action",
-
-      render: () => (
+      dataIndex: "id",
+      render: (title) => (
         <Space size="middle">
-          <a className='btn btn-danger'><BsFillEyeFill className='mb-1' /></a>
+          <a className='btn btn-danger' onClick={() => showModal(`${title}`) }><BsFillEyeFill className='mb-1' /></a>
         </Space>
       ),
     },
@@ -129,27 +218,27 @@ export default function ChatLieu() {
             initialValues={{
               size: componentSize,
             }}
-            onValuesChange={onFormLayoutChange}
+            onValuesChange={onChangeFilter}
             size={componentSize}
             style={{
               maxWidth: 1400,
             }}
           >
             <div className="col-md-5">
-              <Form.Item label="Tên & Mã">
+              <Form.Item label="Tên & Mã" name="ten">
                 <Input className='rounded-pill border-warning' placeholder='Nhập tên hoặc mã' />
               </Form.Item>
             </div>
             <div className='col-md-5'>
-              <Form.Item label="Trạng Thái">
+              <Form.Item placeholder="Chọn trạng thái" label="Trạng Thái" name="trangThai">
                 <Select value={selectedValue} onChange={handleChange}>
                   <Select.Option value="0">Còn Bán</Select.Option>
                   <Select.Option value="1">Dừng Bán</Select.Option>
                 </Select>
               </Form.Item>
             </div>
-            <Form.Item className='text-center'>
-              <Button type="primary" htmlType='reset'>Làm mới</Button>
+            <Form.Item className='text-center' style={{ paddingLeft: 200 }}>
+              <Button type="primary" htmlType='reset' icon={<RetweetOutlined />} onClick={loadChatLieu}>Làm mới</Button>
             </Form.Item>
           </Form>
         </div>
@@ -204,6 +293,55 @@ export default function ChatLieu() {
                 form={form}>
                 <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
                   <Input className="border" />
+                </Form.Item>
+              </Form>
+            </Modal>
+              {/* Update chất liệu */}
+              <Modal
+              title="Sửa Chất Liệu"
+              centered
+              open={openUpdate}
+              onOk={() => setOpenUpdate(false)}
+              onCancel={() => { setOpenUpdate(false);}}
+              footer={[
+                <Button onClick={() => { setOpenUpdate(false);}}>Hủy</Button>,
+                <Button type="primary" onClick={() => {
+                  Modal.confirm({
+                    centered: true,
+                    title: 'Thông báo',
+                    content: 'Bạn có chắc chắn muốn sửa không?',
+                    onOk: () => { form1.submit(); },
+                    footer: (_, { OkBtn, CancelBtn }) => (
+                      <>
+                        <CancelBtn />
+                        <OkBtn />
+                      </>
+                    ),
+                  });
+                }}>Sửa</Button>
+              ]}
+              width={500}
+            >
+              <Form
+                {...formItemLayout}
+                initialValues={{
+                  size: componentSize,
+                }}
+                onValuesChange={onFormLayoutChange}
+                size={componentSize}
+                style={{
+                  maxWidth: 1000,
+                }}
+                onFinish={updateChatLieu}
+                form={form1}>
+                <Form.Item label={<b>Tên</b>} hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
+                  <Input className='border' value={clUpdate.ten} onChange={(e) => setClUpdate({ ...clUpdate, ten: e.target.value })}></Input>
+                </Form.Item>
+                <Form.Item label={<b>Trạng thái </b>}>
+                  <Radio.Group onChange={(e) => setClUpdate({ ...clUpdate, trangThai: e.target.value})} value={clUpdate.trangThai}>
+                    <Radio value={0}>Còn bán</Radio>
+                    <Radio value={1}>Dừng bán</Radio>
+                  </Radio.Group>
                 </Form.Item>
               </Form>
             </Modal>
