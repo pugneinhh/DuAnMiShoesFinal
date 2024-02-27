@@ -1,40 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { v4 as uuid } from "uuid";
-import { SellAPI } from "../../pages/censor/api/sell/sell.api";
+
 
 const initialState = [];
-
-//     const id = uuid();
-//     return [
-//       {
-//         stt: 1,
-//         id: id,
-//         ma: `HDTQ1`,
-//         nhanVien: "Phanh",
-//         nguoiDung: null,
-//         voucher: null,
-//         ngayMua: null,
-//         giaGoc: 0,
-//         giaGiamGia: 0,
-//         thanhTien: 0,
-//         diemSuDung: 0,
-//         giaTriDiem: null,
-//         tenNguoiNhan: null,
-//         soDienThoai: null,
-//         diaChi: null,
-//         qrCode: null,
-//         ghiChu: null,
-//         ngayDuKienNhan: null,
-//         ngayNhan: "null",
-//         ngayTraHang: null,
-//         nguoiTao: "Phanh",
-//         nguoiSua: null,
-//         ngaySua: null,
-//         trangThai: 0,
-//         key: id,
-//       },
-//  ];
-
 const billSlice = createSlice({
   name: "bill",
   initialState,
@@ -167,8 +134,23 @@ const billSlice = createSlice({
         state[index].diaChi = updatedBill.diaChi;
       }
     },
+  DeleteVanChuyenFromBill: (state, action) => {
+    const updatedBill = action.payload; // backend
+    const index = state.findIndex((period) => period.key === updatedBill.key);
+    console.log(index);
+    console.log(updatedBill);
+    if (index !== -1) {
+      state[index].tenNguoiNhan = "";
+      state[index].email = "";
+      state[index].soDienThoai = "";
+      state[index].tienVanChuyen = "";
+      state[index].ngayDuKienNhan = "";
+      state[index].diaChi = "";
+    }
   },
-});
+},
+},
+);
 
 export const {
   SetBill,
@@ -181,6 +163,7 @@ export const {
   UpdateNullVoucher,
   UpdateVoucherToBill,
   UpdateVanChuyenToBill,
+  DeleteVanChuyenFromBill
 } = billSlice.actions;
 export default billSlice.reducer;
 export const GetBill = (state) => state.bill;

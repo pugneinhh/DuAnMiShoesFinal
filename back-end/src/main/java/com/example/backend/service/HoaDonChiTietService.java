@@ -42,14 +42,10 @@ public class HoaDonChiTietService {
         hoaDon.setGiaGoc(giaHienTai.add(giaThem));
         hoaDon.setThanhTien(giaHienTai.add(giaThem));
         ChiTietSanPham ctsp=ctspRepository.findById(idCTSP).get();
-        Optional<HoaDonChiTiet> timhdct=hoaDonChiTietRepository.findHoaDonChiTietByHoaDon_Id(request.getHoaDon()).stream().filter(hd -> hd.getChiTietSanPham().getId().equals(idCTSP)).findFirst();
-        if(timhdct.isPresent()){
-            HoaDonChiTiet hdctTonTai=timhdct.get();
-            hdctTonTai.setSoLuong(hdctTonTai.getSoLuong()+(request.getSoLuong()-hdctTonTai.getSoLuong()));
-            hdctTonTai.setNgaySua(LocalDateTime.now());
-            ctsp.setSoLuong(ctsp.getSoLuong()- (request.getSoLuong()-hdctTonTai.getSoLuong()));
-            ctspRepository.save(ctsp);
-            return hoaDonChiTietRepository.save(hdctTonTai);
+        HoaDonChiTiet checkHDCT = hoaDonChiTietRepository.getHDCTByCTSPAndHD(idCTSP,hoaDon.getId());
+        if(checkHDCT != null){
+            System.out.println("ID Hóa đơn"+hoaDon.getId());
+            return updateSL1(idCTSP,hoaDon.getId());
         }
         hdct.setNgayTao(LocalDateTime.now());
         hdct.setTrangThai(0);
@@ -57,6 +53,35 @@ public class HoaDonChiTietService {
         ctspRepository.save(ctsp);
         hoaDonRepository.save(hoaDon);
         return  hoaDonChiTietRepository.save(hdct);
+    }
+
+    public HoaDonChiTiet updateSL1(String idCTSP,String idHD){
+        HoaDonChiTiet hdct = hoaDonChiTietRepository.getHDCTByCTSPAndHD(idCTSP,idHD);
+        ChiTietSanPham ctsp = ctspRepository.getReferenceById(idCTSP);
+        int slt = ctsp.getSoLuong();
+        int slh = hdct.getSoLuong();
+        int sltd = slh + 1;
+        hdct.setSoLuong(sltd);
+        ctsp.setSoLuong(slt-1);
+        System.out.println("HDCT sau update"+hdct);
+        System.out.println("CTSP sau update"+ctsp);
+        HoaDon hoaDon = hoaDonRepository.getHoaDonByIDHD(idHD);
+        BigDecimal tong = new BigDecimal("0");
+        List<HoaDonChiTiet> list = hoaDonChiTietRepository.getAllHDCTByIDHD(idHD);
+        for (HoaDonChiTiet x : list) {
+            if (x.getChiTietSanPham().getId().equals(idCTSP)){
+                tong = tong.add(x.getGiaSauGiam().multiply(BigDecimal.valueOf(sltd)));
+
+            } else {
+                tong = tong.add(x.getGiaSauGiam().multiply(BigDecimal.valueOf(x.getSoLuong())));
+            }
+        }
+        BigDecimal giaGiam = hoaDon.getGiaGiamGia() == null ? new BigDecimal("0") : hoaDon.getGiaGiamGia();
+        hoaDon.setGiaGoc(tong);
+        hoaDon.setThanhTien(tong.subtract(giaGiam));
+        hoaDonRepository.save(hoaDon);
+        ctspRepository.save(ctsp);
+        return hoaDonChiTietRepository.save(hdct);
     }
     public HoaDonChiTiet updateTruSl(HoaDonChiTietRequest request){
         HoaDonChiTiet hdct=request.map(new HoaDonChiTiet());
@@ -106,10 +131,13 @@ public class HoaDonChiTietService {
 
     public void updateGia(String idCTSP, BigDecimal giaGiam , BigDecimal giaSauGiam){
         List<HoaDonChiTiet> list = hoaDonChiTietRepository.getAllHDCTByCTSP(idCTSP);
+        System.out.println("Gia giam"+giaGiam);
+        System.out.println("gia sau giam"+giaSauGiam);
+        System.out.println("List"+list.size());
         for (HoaDonChiTiet h : list){
             System.out.println("H"+h);
-            h.setGiaGiam(giaGiam);
-            h.setGiaSauGiam(giaSauGiam);
+            h.setGiaGiam(giaSauGiam.subtract(giaGiam));
+            h.setGiaSauGiam(giaGiam);
             hoaDonChiTietRepository.save(h);
             System.out.println( hoaDonChiTietRepository.save(h));
         }
@@ -142,6 +170,20 @@ public class HoaDonChiTietService {
         hoaDonRepository.save(hoaDon);
         ctspRepository.save(ctsp);
        return hoaDonChiTietRepository.save(hdct);
+    }
+
+    public List<HoaDonChiTiet> getAllHDCTByIDHD(String idHD){
+        List<HoaDonChiTiet> list = hoaDonChiTietRepository.findHoaDonChiTietByHoaDon_Id(idHD);
+        return list;
+    }
+
+    public HoaDonChiTiet saveHDCT(HoaDonChiTiet hdct){
+       return hoaDonChiTietRepository.save(hdct);
+    }
+
+    public List<HoaDonChiTiet> getAllHDCTByIDCTSP(String idCTSP){
+        List<HoaDonChiTiet> list = hoaDonChiTietRepository.getAllHDCTByCTSP(idCTSP);
+        return list;
     }
 
 }

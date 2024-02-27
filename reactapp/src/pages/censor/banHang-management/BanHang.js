@@ -33,6 +33,7 @@ import BillReducer, {
   RemoveBill,
   UpdateBill,
   UpdateVoucherToBill,
+
 } from "../../../store/reducer/Bill.reducer";
 import {
   AddProduct,
@@ -46,9 +47,7 @@ import {
   GetInvoice,
   UpdateInvoice,
   RemoveInvoice,
-  GetLengthListByBill,
-  AddInvoice,
-  LoadInvoice,
+  LoadInvoice,  RemoveInvoiceByHoaDon,
 } from "../../../store/reducer/DetailInvoice.reducer";
 import { VoucherNguoiDungAPI } from "../../censor/api/voucher/nguoiDungVoucher.api";
 import { SellAPI } from "../api/sell/sell.api";
@@ -56,6 +55,8 @@ import { VoucherAPI } from "../api/voucher/voucher.api";
 import { HoaDonAPI } from "../api/hoaDon/hoaDon.api";
 import imgTicket from "../../../assets/images/discountTicket.png";
 import DiaChiGiaoHang from "./GiaoHang";
+import { NguoiDungAPI } from "../api/nguoiDung/nguoiDungAPI";
+
 const { Option } = Select;
 const { TabPane } = Tabs;
 const BanHang = () => {
@@ -69,46 +70,106 @@ const BanHang = () => {
   const [prevValue, setPrevValue] = useState(undefined);
   let lengthSP = 0;
   let data = [""];
-  let hd = [""];
-  let KH = [""];
+  let hd = [""]; 
   const [isSwitchOn, setIsSwitchOn] = useState(false);
   const [isSwitchTraSau, setIsSwitchTraSau] = useState(false);
 
-  console.log("client", client);
-  console.log("ctsp", ctsp);
   const handleSwitchToggle = () => {
     setIsSwitchOn(!isSwitchOn);
     if (isSwitchOn === true) {
       setIsSwitchTraSau(false);
     }
+    if (isSwitchOn === false) {
+      if(hoaDons.filter((item) => item.id === activeKey && item.nguoiDung)[0]){
+        NguoiDungAPI.getDiaChiByIDND(hoaDons.filter((item) => item.id === activeKey && item.nguoiDung)[0].nguoiDung).then((resData) => setDiaChiKhachHang(resData.data));
+     } else {
+       setDiaChiKhachHang("");
+      // setShipMoney(0);
+     }
+    }
   };
+
+  useEffect(() => {
+     console.log("Hóa đơns",hoaDons);
+    console.log(hoaDons.filter((item) => item.id === activeKey && item.tenNguoiNhan).length)
+    if (hoaDons.filter((item) => item.id === activeKey && item.tenNguoiNhan).length === 0) {
+      setIsSwitchOn(false);
+    } else {
+      setIsSwitchOn(true);
+    }
+  }, [activeKey,hoaDons.tenNguoiNhan,hoaDons.ngayDuKienNhan]);
+  //đang fixx
   const handleSwitchTraSau = () => {
     setIsSwitchTraSau(!isSwitchTraSau);
+    if (!isSwitchTraSau) {
+      Modal.confirm({
+        title: "Thông báo",
+        content:
+          "Bạn có chắc chắn muốn hóa đơn này trả sau hay không?",
+        onOk: () => {
+          console.log("Tên người nhaanjn vận chuyển:",hoaDons.filter((i) => i.id === activeKey)[0].tenNguoiNhan)
+          if (!hoaDons.filter((i) => i.id === activeKey)[0].tenNguoiNhan){
+              toast("Hóa đơn chưa có thông tin vận chuyển!", {
+              position: "top-right",
+              autoClose: 1000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+              
+            });
+            return setIsSwitchTraSau(false);
+          } else {       
+            SellAPI.updateTraSau(activeKey,storedData)
+          toast("✔️ Cập nhật thành công!", {
+            position: "top-right",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          
+          dispatch(RemoveInvoiceByHoaDon({hoaDon:activeKey}))
+          dispatch(RemoveBill({key:activeKey}));
+          setIsSwitchTraSau(false);
+        }
+        },
+        onCancel: () => {
+          return setIsSwitchTraSau(false);
+        },
+        footer: (_, { OkBtn, CancelBtn }) => (
+          <>
+            <CancelBtn />
+            <OkBtn />
+          </>
+        ),
+      });
+    }
   };
 
   const [voucherHienTai, setVoucherHienTai] = useState("");
-  const [hoaDonHienTai, setHoaDonHienTai] = useState("");
-  console.log("voucherHienTai", voucherHienTai);
-  const [tienVoucher, setTienVoucher] = useState("");
+
+
+
 
   const onChangeVoucher = (value, option) => {
-    console.log(`selected ${value}`);
-    console.log("Option", option);
     dispatch(UpdateVoucherToBill({ voucher: value, key: activeKey }));
-    //setVoucherHienTai(value);
     VoucherAPI.detail(value).then((res) => setVoucherHienTai(res.data));
 
     SellAPI.updateVoucherToHD(activeKey, value);
   };
   const onSearchVoucher = (value, option) => {
-    console.log(`selected ${value}`);
-    console.log("Option", option);
+
   };
   // Lấy thông tin nhân viên
   const [storedData, setStoredData] = useState(null);
 
   useEffect(() => {
-    // Lấy dữ liệu từ localStorage khi component được tạo ra
     const dataFromLocalStorage = localStorage.getItem("userData");
     if (dataFromLocalStorage) {
       const parsedData = JSON.parse(dataFromLocalStorage);
@@ -116,25 +177,20 @@ const BanHang = () => {
       if (nameFromData) {
         setStoredData(nameFromData);
       }
-      // Nếu có, cập nhật state
-      //setStoredData(dataFromLocalStorage);
     }
   }, []);
 
-  console.log("Thông tin ở local storage", storedData);
+
 
   //Hết
 
-  const filterOptionVoucher = (input, option) => {
-    voucherNoLimited.map((item) =>
-      item.ma.toLowerCase().includes(input.toLowerCase())
-    );
+ 
     // option.label.toLowerCase().includes(input.toLowerCase());
-  };
+
   const [voucherByIDKH, setVoucherByIDKH] = useState([""]);
-  const [ctspSS, setCTSPSS] = useState([""]);
   const [voucherNoLimited, setVoucherNoLimited] = useState([""]);
-  console.log("Voucher by idkh", voucherByIDKH);
+  const [diaChiKhachHang, setDiaChiKhachHang] = useState([""]);
+console.log("Địa chỉ KH",diaChiKhachHang)
 
   //load nguoi dung voucher
 
@@ -142,6 +198,13 @@ const BanHang = () => {
     const result = await SellAPI.getVoucherNoLimited();
     console.log(result.data);
     setVoucherNoLimited(result.data);
+  };
+
+
+  const filterOptionVoucher = (input, option) => {
+    voucherByIDKH?.map((item) =>
+      item.ma.toLowerCase().includes(input.toLowerCase())
+    );
   };
 
   const loadKhachHang = async () => {
@@ -229,11 +292,7 @@ const BanHang = () => {
       SellAPI.getVoucherWithIDKH(result.data[0].nguoiDung).then(res => setVoucherByIDKH(res));
       }
       result.data.map((item) => {
-        console.log("Hóa đon", item);
-        console.log(
-          "Hóa đon2222222222222222222222222222222222222222222222222222222222",
-          item.nhanVien
-        );
+
         dispatch(
           CreateBill({
             id: item.id,
@@ -270,7 +329,6 @@ const BanHang = () => {
       });
     } else {
       const result = await SellAPI.getAllHoaDonChoHomNay();
-      console.log("result", result);
       const idHD = uuid();
       const currentDate = new Date();
       const currentDateInMilliseconds = Date.UTC(
@@ -332,7 +390,6 @@ const BanHang = () => {
     }
   };
 
-  const [open, setOpen] = useState(false);
   const [openSanPham, setOpenSanPham] = useState(false);
 
   useEffect(() => {
@@ -496,13 +553,19 @@ const BanHang = () => {
   const onChange = (key) => {
     setActiveKey(key);
     if (!hoaDons.filter((item) => item.id === key)[0].voucher) {
+      console.log("Voucher null")
       setVoucherHienTai("");  
     } else {
       VoucherAPI.detail(
         hoaDons.filter((item) => item.id === key)[0].voucher
       ).then((res) => setVoucherHienTai(res.data));
     }
-    setShipMoney(0);
+    if(hoaDons.filter((item) => item.id === key && item.nguoiDung)[0]){
+       NguoiDungAPI.getDiaChiByIDND(hoaDons.filter((item) => item.id === key && item.nguoiDung)[0].nguoiDung).then((resData) => setDiaChiKhachHang(resData.data));
+    } else {
+      setDiaChiKhachHang("");
+    }
+    //setShipMoney(0);
      SellAPI.getVoucherWithIDKH(hoaDons.filter((item) => item.id === key && item.nguoiDung)[0]?.nguoiDung).then(res => setVoucherByIDKH(res));
     //voucherKH(nguoiDung);
   };
@@ -581,6 +644,8 @@ const BanHang = () => {
     );
     SellAPI.addBill(value[0]);
     setActiveKey(idHD);
+    setVoucherHienTai("");
+    setShipMoney(0);
   };
   // ///remove hóa đơn bằng redux
   const handleClickRemoveHD = (targetKey) => {
@@ -874,6 +939,7 @@ const BanHang = () => {
             (tab) => (
               (data = ctspHD.filter((f) => f.hoaDon === activeKey)),
               (hd = hoaDons.filter((f) => f.id === activeKey)),
+              console.log("hóa đơn 0",hd[0]),
               // (KH = client.filter((k) => k.activeKey === activeKey)),
               (lengthSP = ctspHD
                 .filter((f) => f.hoaDon === tab.key)
@@ -1060,6 +1126,7 @@ const BanHang = () => {
                             quantity={lengthSP}
                             hoaDon={activeKey}
                             thongTinVanChuyen={hd[0]}
+                            //thongTinKhachHang={diaChiKhachHang[0]}
                           />
                         ) : (
                           isSwitchOn && (
@@ -1067,6 +1134,7 @@ const BanHang = () => {
                               money={setShipMoney}
                               quantity={lengthSP}
                               hoaDon={activeKey}
+                              thongTinKhachHang={diaChiKhachHang}
                             />
                           )
                         )}
@@ -1127,6 +1195,7 @@ const BanHang = () => {
                               style={{ width: 800, height: 120 }}
                               placeholder="Lựa chọn voucher"
                               optionLabelProp="label"
+                              optionFilterProp="label"
                               onChange={onChangeVoucher}
                               onSearch={onSearchVoucher}
                               filterOption={filterOptionVoucher}
@@ -1138,6 +1207,11 @@ const BanHang = () => {
                                     key={option.id}
                                     value={option.id}
                                     label={option.ma}
+                                    imgTicket={imgTicket}
+                                    dieuKien = {option.dieuKien}
+                                    giamToiDa = {option.giamToiDa}
+                                    loai = {option.loaiVoucher}
+                                    mucDo = {option.mucDo}
                                     style={{ width: "100%", height: "100%" }}
                                
                                     // filterOption={filterOptionVoucher}
@@ -1254,11 +1328,12 @@ const BanHang = () => {
                             disabled={false}
                             onChange={handleSwitchToggle}
                             checked={
-                              hd[0]?.tenNguoiNhan
-                                ? true
-                                : isSwitchOn
-                                ? true
-                                : false
+                              // hd[0]?.tenNguoiNhan
+                              //   ? true
+                              //   : isSwitchOn
+                              //   ? true
+                              //   : false
+                             isSwitchOn
                             }
                           />
                         </h6>
@@ -1287,14 +1362,15 @@ const BanHang = () => {
                             </h6>
                             <h6 className="mt-4">
                               Phí vận chuyển:{" "}
-                              {`${Intl.NumberFormat("en-US").format(
-                               hd[0]?.tienVanChuyen
-                                  ? hd[0].tienVanChuyen 
-                                  : shipMoney
-                                  ? shipMoney
-                                  : 0
+                              {isSwitchOn ? `${Intl.NumberFormat("en-US").format(
+                              //  (hd[0].tienVanChuyen && hd[0].tienVanChuyen === shipMoney)
+                              //     ? hd[0].tienVanChuyen 
+                              //     : (hd[0].tienVanChuyen && hd[0].tienVanChuyen !== shipMoney)
+                              //     ? shipMoney
+                              //     : shipMoney
+                                (hd[0].tienVanChuyen && !shipMoney  ) ? hd[0].tienVanChuyen : (hd[0].tienVanChuyen && hd[0].tienVanChuyen !== shipMoney) ? shipMoney : shipMoney
                                   
-                              )}`}
+                              )}` : 0}
                             </h6>
                             <h6 className="mt-4">
                               Giảm giá:{" "}                    
@@ -1345,10 +1421,7 @@ const BanHang = () => {
                                         100
                                       : voucherHienTai.giamToiDa
                                     : 0) +
-                                  (hd[0]?.tienVanChuyen
-                                    ? hd[0].tienVanChuyen
-                                    : shipMoney
-                                    ? shipMoney
+                                  (isSwitchOn ? (hd[0].tienVanChuyen && !shipMoney  ) ? hd[0].tienVanChuyen : (hd[0].tienVanChuyen && hd[0].tienVanChuyen !== shipMoney) ? shipMoney : shipMoney
                                     : 0)
                               )}`}
                             </h6>
