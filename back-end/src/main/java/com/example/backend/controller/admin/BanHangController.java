@@ -152,20 +152,21 @@ public class BanHangController {
     }
 
     @PutMapping("/hoa-don/delete-van-chuyen/{idHD}")
-    public ResponseEntity<?> updateVanChuyen (@PathVariable("idHD")String idHD){
+    public ResponseEntity<?> updateVanChuyen (@PathVariable("idHD")String idHD) {
         return ResponseEntity.ok(hoaDonServicee.deleteVanChuyen(idHD));
-        HoaDon hoaDon=hoaDonServicee.findHoaDonbyID(idHD);
-
-        LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
-        lichSuHoaDon.setId(idHD);
-        lichSuHoaDon.setHoaDon(hoaDon);
-        lichSuHoaDon.setNguoiTao(hd.getNhanVien());
-        lichSuHoaDon.setTrangThai(4);
-        lichSuHoaDon.setNgayTao(LocalDateTime.now());
-        lichSuHoaDonService.save(lichSuHoaDon);
-//        hd.setNgayMua(LocalDateTime.now());
-        return ResponseEntity.ok(hoaDonServicee.update(hd,idHD));
     }
+//        HoaDon hoaDon=hoaDonServicee.findHoaDonbyID(idHD);
+//
+//        LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
+//        lichSuHoaDon.setId(idHD);
+//        lichSuHoaDon.setHoaDon(hoaDon);
+//        lichSuHoaDon.setNguoiTao(hd.getNhanVien());
+//        lichSuHoaDon.setTrangThai(4);
+//        lichSuHoaDon.setNgayTao(LocalDateTime.now());
+//        lichSuHoaDonService.save(lichSuHoaDon);
+////        hd.setNgayMua(LocalDateTime.now());
+//        return ResponseEntity.ok(hoaDonServicee.update(hd,idHD));
+//    }
 
     @PutMapping("/hoa-don/them-voucher/{idHD}/{idVoucher}")
     public ResponseEntity<?> updateVoucherToHD(@PathVariable("idHD") String idHD, @PathVariable("idVoucher") String idVoucher) {
