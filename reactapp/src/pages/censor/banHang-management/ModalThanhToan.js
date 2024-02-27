@@ -143,12 +143,8 @@ const ModalThanhToan = (props) => {
               dispatch(AddPay({hoaDon: hoaDon,phuongThuc:1,chuyenKhoan:money,phuongThucVNP:res.data.url}));
                SellAPI.thanhToanChuyenKhoan(value[0]);
               window.open(res.data.url, '_blank');
-              console.log("url",res.data.url.substring(res.data.url.indexOf('vnp_TxnRef')+11).substring(0,8)); // mã giao dịch
-
-           
-          });
-   
-         
+              console.log("url",res.data.url.substring(res.data.url.indexOf('vnp_TxnRef')+11).substring(0,8)); // mã giao dịch  
+          });  
     };
     
     const columns = [

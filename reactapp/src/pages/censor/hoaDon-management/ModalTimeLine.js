@@ -9,7 +9,7 @@ const ModalTimeLine = (props) => {
         setOpenModalTimeLine(false);
 
     };
-    const [HDTimeLine, setHDTimeLine] = useState([])
+      const [HDTimeLine, setHDTimeLine] = useState([]);
     useEffect(() => {
           if (idHD != null && idHD != undefined&&openModalTimeLine ===true) {
              loadTimeLineHoaDon();
@@ -24,6 +24,7 @@ const ModalTimeLine = (props) => {
         motaHoatDong: item.motaHoatDong,
         soDienThoai: item.soDienThoai,
     }));
+  
     const loadTimeLineHoaDon =  () => {
         HoaDonAPI.getAllLichSuHoaDon(idHD)
           .then((res) => {

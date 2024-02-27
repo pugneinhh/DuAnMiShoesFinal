@@ -2,6 +2,8 @@ package com.example.backend.controller.admin;
 
 
 import com.example.backend.dto.request.sanpham.HangRequest;
+import com.example.backend.dto.request.sanpham.KichThuocRequest;
+import com.example.backend.dto.request.sanphamsearch.BangConSearch;
 import com.example.backend.service.HangService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,21 @@ public class HangController {
     @GetMapping
     public ResponseEntity<?> getALLH() {
         return  ResponseEntity.ok(hangService.getALLH());
+    }
+
+    @PostMapping("/tim-kiem")
+    public ResponseEntity<?> search(@RequestBody BangConSearch bangConSearch){
+        return ResponseEntity.ok(hangService.getTim(bangConSearch));
+    }
+
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<?> detail(@PathVariable("id") String id){
+        return ResponseEntity.ok(hangService.detailHang(id));
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> update(@PathVariable("id") String id, @RequestBody HangRequest request){
+        return ResponseEntity.ok(hangService.update(id,request));
     }
 
     @PostMapping("/add")

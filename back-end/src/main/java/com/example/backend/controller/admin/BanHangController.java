@@ -154,6 +154,17 @@ public class BanHangController {
     @PutMapping("/hoa-don/delete-van-chuyen/{idHD}")
     public ResponseEntity<?> updateVanChuyen (@PathVariable("idHD")String idHD){
         return ResponseEntity.ok(hoaDonServicee.deleteVanChuyen(idHD));
+        HoaDon hoaDon=hoaDonServicee.findHoaDonbyID(idHD);
+
+        LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
+        lichSuHoaDon.setId(idHD);
+        lichSuHoaDon.setHoaDon(hoaDon);
+        lichSuHoaDon.setNguoiTao(hd.getNhanVien());
+        lichSuHoaDon.setTrangThai(4);
+        lichSuHoaDon.setNgayTao(LocalDateTime.now());
+        lichSuHoaDonService.save(lichSuHoaDon);
+//        hd.setNgayMua(LocalDateTime.now());
+        return ResponseEntity.ok(hoaDonServicee.update(hd,idHD));
     }
 
     @PutMapping("/hoa-don/them-voucher/{idHD}/{idVoucher}")
@@ -186,11 +197,7 @@ public class BanHangController {
         return ResponseEntity.ok(hoaDonServicee.updateReturnKhachLe(idHD));
     }
 
-    @PostMapping("/addHDClient")
-    public  ResponseEntity<?> addHDClient(@RequestBody HoaDonRequest request) {
-        request.setLoaiHoaDon(0);
-        return ResponseEntity.ok(hoaDonServicee.add(request));
-    }
+
 
     @PostMapping("/lich-su-hoa-don/them")
     public ResponseEntity<?> themLichSuHoaDon (@RequestBody LichSuHoaDonRequest lichSuHoaDonRequest){

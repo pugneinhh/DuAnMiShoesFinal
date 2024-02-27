@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import {Button,Divider,Form,Input,Select,Space,Table,Tag,Modal} from 'antd';
-import { PlusCircleOutlined } from "@ant-design/icons";
+import {Button,Divider,Radio,Form,Input,Select,Space,Table,Tag,Modal} from 'antd';
+import { PlusCircleOutlined, RetweetOutlined } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
 import axios from 'axios';
@@ -22,26 +22,115 @@ export default function KichThuoc() {
     setComponentSize(size);
   };
   const [form] = Form.useForm();
+  const [form1] = Form.useForm();
+  const formItemLayout = {
+    labelCol: {
+      span: 4
+    },
+    wrapperCol: {
+      span: 20
+    },
+  }; 
   //Ấn Add
   const [open, setOpen] = useState(false);
 
   const [bordered] = useState(false);
   const addKichThuoc = (value) => {
-      KichThuocAPI.create(value)
-      .then((res)=>{
-        toast('✔️ Thêm thành công!', {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        loadKichThuoc();
-        setOpen(false);
-        form.resetFields();
+    const checkTrung = (code) => {
+      return kichThuoc.some(kt => kt.ten.trim().toLowerCase() === code.trim().toLowerCase());
+    };
+    if (!(checkTrung(value.ten))) {
+     KichThuocAPI.create(value)
+        .then((res) => {
+          toast('✔️ Thêm thành công!', {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          loadKichThuoc();
+          setOpen(false);
+          form1.resetFields();
+        })
+    } else {
+      toast.error('Kích thước đã tồn tại!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  }
+    //Update
+    const [openUpdate, setOpenUpdate] = useState(false);
+    const [ktUpdate, setKtUpdate] = useState("");
+    const [tenCheck, setTenCheck] = useState("");
+  
+    const showModal = async (idDetail) => {
+      await KichThuocAPI.detail(idDetail)
+        .then((res) => {
+          setTenCheck(res.data.ten)
+          setKtUpdate(res.data)
+        })
+        setOpenUpdate(true)
+    };
+    console.log(ktUpdate)
+    const updateKichThuoc = () => {
+  
+      if (ktUpdate.ten != tenCheck) {
+        const checkTrung = (ten) => {
+          return kichThuoc.some(x =>
+            x.ten === ten
+          );
+        };
+  
+        if (checkTrung(ktUpdate.ten)) {
+          toast.error('Kích thước trùng với kích thước khác !', {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          return;
+        }
+      }
+      KichThuocAPI.update(ktUpdate.id, ktUpdate)
+        .then((res) => {
+          toast('✔️ Sửa thành công!', {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          setKtUpdate("");
+          loadKichThuoc();
+          setOpenUpdate(false);
+        })
+    }
+  //Tìm kiếm
+  const onChangeFilter = (changedValues, allValues) => {
+    timKiemKT(allValues);
+  }
+  const timKiemKT = (dataSearch) => {
+   KichThuocAPI.search(dataSearch)
+      .then((res) => {
+        setKichThuocs(res.data);
       })
   }
   //Table
@@ -100,10 +189,10 @@ export default function KichThuoc() {
     {
       title: "Action",
       key: "action",
-
-      render: () => (
+      dataIndex: "id",
+      render: (title) => (
         <Space size="middle">
-          <a className='btn btn-danger'><BsFillEyeFill className='mb-1'/></a>
+          <a className='btn btn-danger' onClick={() => showModal(`${title}`) }><BsFillEyeFill className='mb-1' /></a>
         </Space>
       ),
     },
@@ -131,27 +220,27 @@ export default function KichThuoc() {
             initialValues={{
               size: componentSize,
             }}
-            onValuesChange={onFormLayoutChange}
+            onValuesChange={onChangeFilter}
             size={componentSize}
             style={{
               maxWidth: 1400,
             }}
           >
             <div className="col-md-5">
-              <Form.Item label="Tên & Mã">
+              <Form.Item label="Tên & Mã" name="ten">
                 <Input className='rounded-pill border-warning' placeholder='Nhập tên hoặc mã' />
               </Form.Item>
             </div>
             <div className='col-md-5'>
-              <Form.Item label="Trạng Thái">
+              <Form.Item placeholder="Chọn trạng thái" label="Trạng Thái" name="trangThai">
                 <Select value={selectedValue} onChange={handleChange}>
-                  <Select.Option value="1">Còn Bán</Select.Option>
-                  <Select.Option value="0">Dừng Bán</Select.Option>
+                  <Select.Option value="0">Còn Bán</Select.Option>
+                  <Select.Option value="1">Dừng Bán</Select.Option>
                 </Select>
               </Form.Item>
             </div>
-            <Form.Item className='text-center'>
-              <Button type="primary" htmlType='reset'>Làm mới</Button>
+            <Form.Item className='text-center' style={{ paddingLeft: 200 }}>
+              <Button type="primary" htmlType='reset' icon={<RetweetOutlined />} onClick={loadKichThuoc}>Làm mới</Button>
             </Form.Item>
           </Form>
         </div>
@@ -207,6 +296,55 @@ export default function KichThuoc() {
                     <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
                       <Input className="border" />
                     </Form.Item>
+              </Form>
+            </Modal>
+              {/* Update kích thước */}
+              <Modal
+              title="Sửa kích thước"
+              centered
+              open={openUpdate}
+              onOk={() => setOpenUpdate(false)}
+              onCancel={() => { setOpenUpdate(false);}}
+              footer={[
+                <Button onClick={() => { setOpenUpdate(false);}}>Hủy</Button>,
+                <Button type="primary" onClick={() => {
+                  Modal.confirm({
+                    centered: true,
+                    title: 'Thông báo',
+                    content: 'Bạn có chắc chắn muốn sửa không?',
+                    onOk: () => { form1.submit(); },
+                    footer: (_, { OkBtn, CancelBtn }) => (
+                      <>
+                        <CancelBtn />
+                        <OkBtn />
+                      </>
+                    ),
+                  });
+                }}>Sửa</Button>
+              ]}
+              width={500}
+            >
+              <Form
+                {...formItemLayout}
+                initialValues={{
+                  size: componentSize,
+                }}
+                onValuesChange={onFormLayoutChange}
+                size={componentSize}
+                style={{
+                  maxWidth: 1000,
+                }}
+                onFinish={updateKichThuoc}
+                form={form1}>
+                <Form.Item label={<b>Tên</b>} hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
+                  <Input className='border' value={ktUpdate.ten} onChange={(e) => setKtUpdate({ ...ktUpdate, ten: e.target.value })}></Input>
+                </Form.Item>
+                <Form.Item label={<b>Trạng thái </b>}>
+                  <Radio.Group onChange={(e) => setKtUpdate({ ...ktUpdate, trangThai: e.target.value})} value={ktUpdate.trangThai}>
+                    <Radio value={0}>Còn bán</Radio>
+                    <Radio value={1}>Dừng bán</Radio>
+                  </Radio.Group>
+                </Form.Item>
               </Form>
             </Modal>
           </div>

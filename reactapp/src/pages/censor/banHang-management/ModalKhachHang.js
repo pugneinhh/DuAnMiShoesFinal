@@ -232,7 +232,6 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
                   className="rounded-pill border-warning"
                   placeholder="Nhập mã hoặc tên hoặc sđt ..."
                   value={0}
-                  
                 />
               </Form.Item>
             </div>
@@ -242,20 +241,17 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
               </Button>
             </Form.Item>
           </Form>
-          <Input className="col-md-8 ms-5"></Input>
-          <Button
-            className=" col-md-1 ms-5  bg-success float-end bg-primary"
-            type="primary"
-          >
-            Tìm kiếm
-          </Button>
-          <Button
-            className=" col-md-1 ms-5  bg-success float-end bg-primary"
-            type="primary"
-            onClick={() => setopenModalAddKhachHang(true)}
-          >
-            Thêm
-          </Button>
+
+          <div className="d-flex justify-content-end">
+            <Button
+              className=" col-md-1 ms-5  bg-success float-end bg-primary"
+              type="primary"
+              onClick={() => setopenModalAddKhachHang(true)}
+            >
+              Thêm
+            </Button>
+          </div>
+
           <ModalAddKhachHang
             openModalAddKhachHang={openModalAddKhachHang}
             setopenModalAddKhachHang={setopenModalAddKhachHang}

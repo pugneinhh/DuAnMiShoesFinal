@@ -12,5 +12,29 @@
 }
 .showpass:hover{
     cursor: pointer;
-    color: red;
+    color: #3B5998;
 }
+.button-login-face-book {
+  border-radius: 10px;
+  background-color: #3B5998;
+  transition: background-position 0.3s ease-in-out;
+  /* Thêm hiệu ứng chuyển đổi */
+  background-image: linear-gradient(to right, #3B5998, orangered);
+  /* Gradient từ trái sang phải */
+  background-size: 200% auto;
+  /* Kích thước của gradient */
+}
+
+.button-login-face-book:hover {
+  background-position: right center;
+  /* Di chuyển gradient sang phải */
+}
+
+.button-login-google {
+  border-radius: 10px;
+  background-color: pink;
+}
+/* .button-login-face-book:hover {
+  border-radius: 10px;
+  background-color: orangered;
+} */

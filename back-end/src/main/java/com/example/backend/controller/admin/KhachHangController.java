@@ -35,6 +35,10 @@ public class KhachHangController {
     public  ResponseEntity<?> getALLDCbyKH(@PathVariable("idKH") String idKH){
         return ResponseEntity.ok(khachHangService.findDiaChiByKH(idKH));
     }
+    @GetMapping("/dia-chi-mac-dinh/{idKH}")
+    public  ResponseEntity<?> getDiaChiMacDinh(@PathVariable("idKH") String idKH){
+        return ResponseEntity.ok(khachHangService.findDiaChiMacDinh(idKH));
+    }
     @PostMapping("/add-dia-chi")
     public ResponseEntity<?> addDiaChi(@RequestBody DiaChiRequest request){
         request.setTrangThai(1);

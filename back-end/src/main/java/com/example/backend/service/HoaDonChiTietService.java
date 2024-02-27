@@ -55,6 +55,7 @@ public class HoaDonChiTietService {
         return  hoaDonChiTietRepository.save(hdct);
     }
 
+
     public HoaDonChiTiet updateSL1(String idCTSP,String idHD){
         HoaDonChiTiet hdct = hoaDonChiTietRepository.getHDCTByCTSPAndHD(idCTSP,idHD);
         ChiTietSanPham ctsp = ctspRepository.getReferenceById(idCTSP);
@@ -82,6 +83,11 @@ public class HoaDonChiTietService {
         hoaDonRepository.save(hoaDon);
         ctspRepository.save(ctsp);
         return hoaDonChiTietRepository.save(hdct);
+
+    public HoaDonChiTiet addHDCTClient(HoaDonChiTietRequest request){
+        HoaDonChiTiet hdct=request.map(new HoaDonChiTiet());
+        return  hoaDonChiTietRepository.save(hdct);
+
     }
     public HoaDonChiTiet updateTruSl(HoaDonChiTietRequest request){
         HoaDonChiTiet hdct=request.map(new HoaDonChiTiet());

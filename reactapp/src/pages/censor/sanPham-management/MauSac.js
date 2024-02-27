@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import {Button,Divider,Form,Input,Select,Space,Table,Tag,Modal} from 'antd';
-import {PlusCircleOutlined } from "@ant-design/icons";
+import { Button, Divider, Form, Input, Select, Space, Table, Tag, Modal } from 'antd';
+import { PlusCircleOutlined, RetweetOutlined } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
 import axios from 'axios';
@@ -18,6 +18,14 @@ export default function MauSac() {
     console.log(`Selected value: ${value}`);
     setSelectedValue(value);
   };
+  const formItemLayout = {
+    labelCol: {
+      span: 4
+    },
+    wrapperCol: {
+      span: 20
+    },
+  };
 
   const [ten, setTenMaus] = useState('');
   const doiMau = (e) => {
@@ -32,7 +40,7 @@ export default function MauSac() {
       setTenMaus(colorName)
     }
   };
-  console.log('Tên màu : '+ten);
+  console.log('Tên màu : ' + ten);
   const [componentSize, setComponentSize] = useState('default');
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
@@ -44,9 +52,9 @@ export default function MauSac() {
     timKiemCT(allValues);
   }
   const timKiemCT = (dataSearch) => {
-      MauSacAPI.search(dataSearch)
-      .then((res)=>{
-        setMauSacs(res.data); 
+    MauSacAPI.search(dataSearch)
+      .then((res) => {
+        setMauSacs(res.data);
       })
   }
   //Ấn Add
@@ -63,8 +71,8 @@ export default function MauSac() {
       const rgb = convert.hex.rgb(hexCode);
       const colorName = convert.rgb.keyword(rgb);
       value.ten = colorName;
-        MauSacAPI.create(value)
-        .then((res)=>{
+      MauSacAPI.create(value)
+        .then((res) => {
           toast('✔️ Thêm thành công!', {
             position: "top-right",
             autoClose: 5000,
@@ -111,7 +119,7 @@ export default function MauSac() {
   //       // setTenCheck(res.data.ten)
   //       setmsUpdates(res.data)
   //   })
-  
+
   // };
   //Table
   const [mauSac, setMauSacs] = useState([]);
@@ -120,11 +128,11 @@ export default function MauSac() {
     loadMauSac();
   }, []);
 
-  const loadMauSac =  () => {
+  const loadMauSac = () => {
     MauSacAPI.getAll()
-    .then((res)=>{
-      setMauSacs(res.data); 
-    })
+      .then((res) => {
+        setMauSacs(res.data);
+      })
   };
 
   const columns = [
@@ -157,7 +165,7 @@ export default function MauSac() {
           <div style={{
             backgroundColor: `${record.ma}`,
             borderRadius: 6,
-            width: 60, 
+            width: 60,
             height: 25,
           }} className='custom-div'></div >
         </>;
@@ -187,7 +195,7 @@ export default function MauSac() {
       dataIndex: "id",
       render: (title) => (
         <Space size="middle">
-          <a className='btn btn-danger'><BsFillEyeFill className='mb-1' onClick={() => showModal(`${title}`)}/></a>
+          <a className='btn btn-danger' onClick={() => showModal(`${title}`)}><BsFillEyeFill className='mb-1'  /></a>
         </Space>
       ),
     },
@@ -234,8 +242,8 @@ export default function MauSac() {
                 </Select>
               </Form.Item>
             </div>
-            <Form.Item className='text-center' name="trangThai">
-              <Button type="primary" htmlType='reset' onClick={loadMauSac}>Làm mới</Button>
+            <Form.Item className='text-center' style={{ paddingLeft: 200 }}>
+              <Button type="primary" htmlType='reset' icon={<RetweetOutlined />} onClick={loadMauSac}>Làm mới</Button>
             </Form.Item>
           </Form>
         </div>
@@ -262,7 +270,7 @@ export default function MauSac() {
                 <Button onClick={() => setOpen(false)}>Hủy</Button>,
                 <Button type="primary" onClick={() => {
                   Modal.confirm({
-                    centered : true,
+                    centered: true,
                     title: 'Thông báo',
                     content: 'Bạn có chắc chắn muốn thêm không?',
                     onOk: () => { form.submit(); },
@@ -278,30 +286,37 @@ export default function MauSac() {
               width={500}
             >
               <Form
+                {...formItemLayout}
                 initialValues={{
                   size: componentSize,
                 }}
                 onValuesChange={onFormLayoutChange}
                 size={componentSize}
                 onFinish={addMauSac}
+                layout='vertical'
                 form={form}>
-                <Form.Item label="Màu" name='ma' hasFeedback rules={[{ required: true, message: 'Vui lòng chọn màu', },]} >
-                  <Input className="border" type="color" onChange={doiMau} />
-                </Form.Item>
-                <Form.Item label=" Mã" name='ma' hasFeedback rules={[{ required: true, message: '', },]} >
-                  <Input readOnly="true" className="border" type="text" />
-                </Form.Item>
-                <Form.Item label="Tên"  hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
-
-                  <Input 
-                  type='text'
-                  value={ten}
-                 />
-                </Form.Item>
+                <div className='row'>
+                  <div className='col-md-6'>
+                    <label><b>Màu sắc :</b></label>
+                    <Form.Item name='ma' hasFeedback rules={[{ required: true, message: 'Vui lòng chọn màu', },]} >
+                      <Input className="card-mau" type="color" onChange={doiMau} />
+                    </Form.Item>
+                  </div>
+                  <div className='col-md-6 mt-5'>
+                  <label><b>Mã màu :</b></label>
+                    <Form.Item name='ma' hasFeedback rules={[{ required: true, message: '', },]} >
+                      <Input readOnly="true" className="border" type="text" />
+                    </Form.Item>
+                    <label><b>Tên màu :</b></label>
+                    <Form.Item hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
+                      <Input type='text' value={ten} />
+                    </Form.Item>
+                  </div>
+                </div>
               </Form>
             </Modal>
-             {/* Update ms */}
-             <Modal
+            {/* Update ms */}
+            <Modal
               title="Sửa Màu Sắc"
               centered
               open={openUpdate}
@@ -311,7 +326,7 @@ export default function MauSac() {
                 <Button onClick={() => setOpenUpdate(false)}>Hủy</Button>,
                 <Button type="primary" onClick={() => {
                   Modal.confirm({
-                    centered : true,
+                    centered: true,
                     title: 'Thông báo',
                     content: 'Bạn có chắc chắn muốn thêm không?',
                     onOk: () => { form.submit(); },
@@ -327,6 +342,7 @@ export default function MauSac() {
               width={500}
             >
               <Form
+                {...formItemLayout}
                 initialValues={{
                   size: componentSize,
                 }}
@@ -340,20 +356,20 @@ export default function MauSac() {
                 <Form.Item label=" Mã" name='ma' hasFeedback rules={[{ required: true, message: '', },]} >
                   <Input readOnly="true" className="border" value={msUpdate.ma} type="text" />
                 </Form.Item>
-                <Form.Item label="Tên"  hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
+                <Form.Item label="Tên" hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
 
-                  <Input 
-                  type='text'
-                  value={msUpdate.ten}
-                  onChange={(e) => setmsUpdates({ ...msUpdate, ten: e })}
+                  <Input
+                    type='text'
+                    value={msUpdate.ten}
+                    onChange={(e) => setmsUpdates({ ...msUpdate, ten: e })}
                   />
                 </Form.Item>
                 <Form.Item label={<b>Trạng thái </b>}>
-                      <Select defaultValue={msUpdate.trangThai == 0 ? 'Còn bán' : 'Dừng bán'} onChange={(e) => setmsUpdates({ ...msUpdate, trangThai: e })}>
-                        <Select.Option value='0'>Còn Bán</Select.Option>
-                        <Select.Option value='1'>Dừng Bán</Select.Option>
-                      </Select>
-                    </Form.Item>
+                  <Select defaultValue={msUpdate.trangThai == 0 ? 'Còn bán' : 'Dừng bán'} onChange={(e) => setmsUpdates({ ...msUpdate, trangThai: e })}>
+                    <Select.Option value='0'>Còn Bán</Select.Option>
+                    <Select.Option value='1'>Dừng Bán</Select.Option>
+                  </Select>
+                </Form.Item>
               </Form>
             </Modal>
           </div>

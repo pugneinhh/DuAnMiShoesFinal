@@ -82,10 +82,10 @@ public class HoaDonServicee {
         return hoaDonRepository.save(hoaDon);
     }
     public HoaDon updateHD(HoaDon hoaDon,String id){
-        HoaDon hoaDon1= findHoaDonbyID(id);
+//        HoaDon hoaDon1= findHoaDonbyID(id);
         Optional<HoaDon> optional = hoaDonRepository.findById(id);
         return optional.map(o->{
-            o.setTrangThai((hoaDon1.getTrangThai())+1);
+//            o.setTrangThai((hoaDon1.getTrangThai())+1);
             return hoaDonRepository.save(o);
         }).orElse(null);
 //         return hoaDonResponn.save(hoaDon);
@@ -107,6 +107,7 @@ public class HoaDonServicee {
         hoaDon.setSoDienThoai(hd.getSoDienThoai());
         hoaDon.setEmail(hd.getEmail());
         hoaDon.setTienVanChuyen(hd.getTienVanChuyen());
+        hoaDon.setNgayMua(LocalDateTime.now());
         hoaDon.setTrangThai(4);
         return hoaDonRepository.save(hoaDon);
     }
@@ -180,7 +181,7 @@ public class HoaDonServicee {
             HoaDon hoaDonCT=hoaDonRepository.findById(idHD).get();
         hoaDonCT.setTrangThai(4);
         hoaDonCT.setNgayMua(LocalDateTime.now());
-      return   hoaDonRepository.save(hoaDonCT);
+      return  hoaDonRepository.save(hoaDonCT);
     }
 
     public HoaDon addHoaDon (HoaDon hd){

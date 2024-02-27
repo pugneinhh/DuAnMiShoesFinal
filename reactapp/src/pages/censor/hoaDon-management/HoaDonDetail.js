@@ -3,7 +3,7 @@ import { Timeline, TimelineEvent } from "@mailtop/horizontal-timeline";
 import { FaCheckCircle } from "react-icons/fa";
 import { RiTruckFill } from "react-icons/ri";
 import { SlNotebook } from "react-icons/sl";
-import { GiNotebook, GiPiggyBank } from "react-icons/gi";
+import { GiNotebook, GiPiggyBank, GiReturnArrow } from "react-icons/gi";
 import { FaTruckFast } from "react-icons/fa6";
 import { Button, Modal, Table, Tag, Input, Flex, Form } from "antd";
 import { useParams } from "react-router-dom";
@@ -26,9 +26,8 @@ export default function HoaDonDetail() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [openSanPham, setOpenSanPham] = useState(false);
   const [activeKey, setActiveKey] = useState(0);
-  const onChange = (key) => {
-    setActiveKey(key);
-  };
+  const [listHDTimeLine, setlistHDTimeLine] = useState([]);
+  const [form] = Form.useForm();
   const handleOk = () => {
     setIsModalOpen(false);
     setOpenModalTimeLine(false);
@@ -55,29 +54,24 @@ export default function HoaDonDetail() {
         theme: "light",
       }),
   });
+
   const { TextArea } = Input;
   const [hoaDondetail, setHoaDondetail] = useState([]);
-    const [maNV, setmaNV] = useState("");
+  const [maNV, setmaNV] = useState("");
   useEffect(() => {
     const storedData = get("userData");
-      setmaNV(storedData.ma);
+    setmaNV(storedData.ma);
     loadHoaDon();
-    loadNgayTimeLine();
     loadListSanPhams();
     loadLichSuThanhToan();
+    loadTimeLineHoaDon();
   }, []);
   // load hóa đơn
-
+ 
   const loadHoaDon = async () => {
     HoaDonAPI.detailHD(id).then((res) => {
       setHoaDondetail(res.data);
       setTrangThai(res.data.trangThai);
-      setLoaiHD(res.data.loaiHD);
-      setTenKH(res.data.tenKH);
-      setsdtKH(res.data.sdt);
-      setdiaChiKH(res.data.diaChi);
-      setThanhTienHD(res.data.thanhTien);
-      setGhiChuHD(res.data.ghiChuHD);
     });
   };
 
@@ -85,13 +79,14 @@ export default function HoaDonDetail() {
     setIsModalOpen(true);
   };
 
-  const [form] = Form.useForm();
+
   // update trạng thái hóa đơn
   const handleSubmit = (values) => {
-    HoaDonAPI.updateTTHoaDon(id,maNV ,values).then((res) => {
+    HoaDonAPI.updateTTHoaDon(id, maNV, values).then((res) => {
+      console.log("values",values);
+        console.log("trang thau", trangThai);
       loadHoaDon();
-      loadNgayTimeLine();
-      setTrangThai(res.data.trangThai);
+      loadTimeLineHoaDon();
       form.resetFields();
       setIsModalOpen(false);
       toast("🦄 Thành công!", {
@@ -107,21 +102,10 @@ export default function HoaDonDetail() {
     });
   };
 
-  // giờ time line
-  const [ngayTimeLine, setngayTimeLine] = useState([]);
-
-  const ngay = ngayTimeLine.map((item) => item.hdtimeLine);
-  const loadNgayTimeLine = (idHD) => {
-    HoaDonAPI.getAllTimeLine(idHD).then((res) => {
-      setngayTimeLine(res.data);
-   
-    });
-  };
-    const [LichSuThanhToan, setLichSuThanhToan] = useState([]);
+  const [LichSuThanhToan, setLichSuThanhToan] = useState([]);
   const loadLichSuThanhToan = () => {
     ThanhToanAPI.LichSuThanhToanByIdHD(id).then((res) => {
       setLichSuThanhToan(res.data);
-   
     });
   };
 
@@ -161,11 +145,6 @@ export default function HoaDonDetail() {
       center: "true",
       render: (ngayTao) => <>{moment(ngayTao).format("hh:mm:ss DD/MM/YYYY")}</>,
     },
-    // {
-    //   title: "Loại giao dịch",
-    //   dataIndex: "trangThai",
-    //   key: "trangThai",
-    // },
     {
       title: "Phương thức thanh toán",
       dataIndex: "phuongThuc",
@@ -193,12 +172,7 @@ export default function HoaDonDetail() {
   ];
 
   const [trangThai, setTrangThai] = useState([]);
-  const [loaiHD, setLoaiHD] = useState([]);
-  const [tenKH, setTenKH] = useState([]);
-  const [sdtKH, setsdtKH] = useState([]);
-  const [diaChi, setdiaChiKH] = useState([]);
-  const [thanhTienHD, setThanhTienHD] = useState([]);
-  const [ghiChuHD, setGhiChuHD] = useState([]);
+
   const [listSanPhams, setlistSanPhams] = useState([]);
 
   const loadListSanPhams = () => {
@@ -206,371 +180,93 @@ export default function HoaDonDetail() {
       setlistSanPhams(res.data);
     });
   };
-  const VALUES = ["Chờ xác nhận","Xác nhận","Chờ vận chuyển","Đang vận chuyển","Đã thanh toán","Thành công",];
-  const textButton = ["Xác nhận","Chờ vận chuyển","Đang vận chuyển","Đã thanh toán","Thành công",];
-  const icon = [
-    GiNotebook,
-    SlNotebook,
-    RiTruckFill,
-    FaTruckFast,
-    GiPiggyBank,
-    FaCheckCircle,
+  const textButton = [
+    "Xác nhận",
+    "Chờ vận chuyển",
+    "Đang vận chuyển",
+    "Đã thanh toán",
+    "Thành công",
   ];
 
+  const loadTimeLineHoaDon = () => {
+    HoaDonAPI.getAllLichSuHoaDon(id).then((res) => {
+      setlistHDTimeLine(res.data);
+    });
+  };
+  const showIcon = (trangThai) => {
+    if (trangThai === "0") {
+      return GiNotebook;
+    } else if (trangThai === "1") {
+      return SlNotebook;
+    } else if (trangThai === "2") {
+      return RiTruckFill;
+    } else if (trangThai === "3") {
+      return FaTruckFast;
+    } else if (trangThai === "4") {
+      return GiPiggyBank;
+    } else if (trangThai === "5") {
+      return FaCheckCircle;
+    } else if (trangThai === "-1") {
+      return GiReturnArrow;
+    }
+  };
+  const showTitle = (trangThai) => {
+    if (trangThai === "0") {
+      return "Chờ xác nhận";
+    } else if (trangThai === "1") {
+      return "Xác Nhận";
+    } else if (trangThai === "2") {
+      return "Chờ vận chuyển";
+    } else if (trangThai === "3") {
+      return "Đang vận chuyển";
+    } else if (trangThai === "4") {
+      return "Đã thanh toán";
+    } else if (trangThai === "5") {
+      return "Thành công";
+    } else if (trangThai === "-1") {
+      return "Hủy";
+    }
+  };
+  const showTitleButtonVanDon = (trangThai) => {
+    if (trangThai === "0") {
+      return "Xác nhận";
+    } else if (trangThai === "1") {
+      return "Chờ vận chuyển";
+    } else if (trangThai === "2") {
+      return "Đang vận chuyển";
+    } else if (trangThai === "3") {
+      return "Đã thanh toán";
+    } else if (trangThai === "4") {
+      return "Thành công";
+    }
+     else if (trangThai === "-1") {
+      return "Hủy";
+    }
+  };
   return (
     <div className="container mt-4 radius  ">
       <div className="container-fuild  row pt-3 pb-4 bg-light rounded border-danger ">
         <div className="scroll-hoa-don mb-4">
           <div className="hoa-don-cuon-ngang">
-            {/* hóa đơn time line */}
-            <>
-              {loaiHD == 1 ? (
-                <Timeline index={trangThai}>
-                  {trangThai == 0 ? (
-                    <Flex horizontal>
-                      <TimelineEvent
-                        color="#3d874d"
-                        icon={icon[0]}
-                        index={trangThai}
-                        values={"Chờ xác nhận"}
-                        // indexClick={({ trangThai }) => setValue({ trangThai })}
-                        isOpenEnding={true}
-                        title={"Chờ xác nhận"}
-                        subtitle={moment(ngay[trangThai]).format(
-                          "hh:mm:ss DD/MM/YYYY"
-                        )}
-                      />
-                      <TimelineEvent color="#e6e3e3" />
-                      <TimelineEvent color="#e6e3e3" />
-                      <TimelineEvent color="#e6e3e3" />
-                      <TimelineEvent color="#e6e3e3" />
-                      <TimelineEvent color="#e6e3e3" />
-                    </Flex>
-                  ) : (
-                    <Flex horizontal>
-                      <TimelineEvent
-                        color="#3d874d"
-                        icon={icon[0]}
-                        index={0}
-                        values={0}
-                        // indexClick={({ trangThai }) => setValue({ trangThai })}
-                        isOpenEnding={true}
-                        title={"Chờ xác nhận"}
-                        subtitle={moment(ngay[0]).format("hh:mm:ss DD/MM/YYYY")}
-                      />
-                      <TimelineEvent
-                        color="#3d874d"
-                        icon={icon[trangThai]}
-                        index={trangThai}
-                        values={trangThai}
-                        // indexClick={({trangThai}) => setValue({trangThai})}
-                        isOpenEnding={true}
-                        title={"Thành Công"}
-                        subtitle={moment(ngay[trangThai]).format(
-                          "hh:mm:ss DD/MM/YYYY"
-                        )}
-                      />
-                      <TimelineEvent color="#e6e3e3" />
-                      <TimelineEvent color="#e6e3e3" />
-                      <TimelineEvent color="#e6e3e3" />
-                      <TimelineEvent color="#e6e3e3" />
-                    </Flex>
-                  )}
-                </Timeline>
-              ) : (
-                <Timeline minEvents={6} index={trangThai} placeholder>
-                  {trangThai == 0 ? (
-                    <Flex horizontal>
-                      <TimelineEvent
-                        color="#3d874d"
-                        icon={icon[trangThai]}
-                        index={trangThai}
-                        values={trangThai}
-                        // indexClick={({ trangThai }) => setValue({ trangThai })}
-                        isOpenEnding={true}
-                        title={VALUES[trangThai]}
-                        subtitle={moment(ngay[trangThai]).format(
-                          "hh:mm:ss DD/MM/YYYY"
-                        )}
-                      />
-                      <TimelineEvent color="#e6e3e3" />
-                      <TimelineEvent color="#e6e3e3" />
-                      <TimelineEvent color="#e6e3e3" />
-                      <TimelineEvent color="#e6e3e3" />
-                      <TimelineEvent color="#e6e3e3" />
-                    </Flex>
-                  ) : trangThai == 1 ? (
-                    <Flex horizontal>
-                      <TimelineEvent
-                        color="#3d874d"
-                        icon={icon[trangThai - 1]}
-                        index={trangThai - 1}
-                        values={trangThai - 1}
-                        // indexClick={({ trangThai }) => setValue({ trangThai })}
-                        isOpenEnding={true}
-                        title={VALUES[trangThai - 1]}
-                        subtitle={moment(ngay[trangThai - 1]).format(
-                          "hh:mm:ss DD/MM/YYYY"
-                        )}
-                      />
-                      <TimelineEvent
-                        color="#3d874d"
-                        icon={icon[trangThai]}
-                        index={trangThai}
-                        values={trangThai}
-                        // indexClick={({trangThai}) => setValue({trangThai})}
-                        isOpenEnding={true}
-                        title={VALUES[trangThai]}
-                        subtitle={moment(ngay[trangThai]).format(
-                          "hh:mm:ss DD/MM/YYYY"
-                        )}
-                      />
-                      <TimelineEvent color="#e6e3e3" />
-                      <TimelineEvent color="#e6e3e3" />
-                      <TimelineEvent color="#e6e3e3" />
-                      <TimelineEvent color="#e6e3e3" />
-                    </Flex>
-                  ) : trangThai == 2 ? (
-                    <Flex horizontal>
-                      <TimelineEvent
-                        color="#3d874d"
-                        icon={icon[trangThai - 2]}
-                        index={trangThai - 2}
-                        values={trangThai - 2}
-                        // indexClick={({ trangThai }) => setValue({ trangThai })}
-                        isOpenEnding={true}
-                        title={VALUES[trangThai - 2]}
-                        subtitle={moment(ngay[trangThai - 2]).format(
-                          "hh:mm:ss DD/MM/YYYY"
-                        )}
-                      />
-                      <TimelineEvent
-                        color="#3d874d"
-                        icon={icon[trangThai - 1]}
-                        index={trangThai - 1}
-                        values={trangThai - 1}
-                        // indexClick={({trangThai}) => setValue({trangThai})}
-                        isOpenEnding={true}
-                        title={VALUES[trangThai - 1]}
-                        subtitle={moment(ngay[trangThai - 1]).format(
-                          "hh:mm:ss DD/MM/YYYY"
-                        )}
-                      />
-                      <TimelineEvent
-                        color="#3d874d"
-                        icon={icon[trangThai]}
-                        index={trangThai}
-                        values={trangThai}
-                        // indexClick={({trangThai}) => setValue({trangThai})}
-                        isOpenEnding={true}
-                        title={VALUES[trangThai]}
-                        subtitle={moment(ngay[trangThai]).format(
-                          "hh:mm:ss DD/MM/YYYY"
-                        )}
-                      />
-                      <TimelineEvent color="#e6e3e3" />
-                      <TimelineEvent color="#e6e3e3" />
-                      <TimelineEvent color="#e6e3e3" />
-                    </Flex>
-                  ) : trangThai == 3 ? (
-                    <Flex horizontal>
-                      <TimelineEvent
-                        color="#3d874d"
-                        icon={icon[trangThai - 3]}
-                        index={trangThai - 3}
-                        values={trangThai - 3}
-                        // indexClick={({ trangThai }) => setValue({ trangThai })}
-                        isOpenEnding={true}
-                        title={VALUES[trangThai - 3]}
-                        subtitle={moment(ngay[trangThai - 3]).format(
-                          "hh:mm:ss DD/MM/YYYY"
-                        )}
-                      />
-                      <TimelineEvent
-                        color="#3d874d"
-                        icon={icon[trangThai - 2]}
-                        index={trangThai - 2}
-                        values={trangThai - 2}
-                        // indexClick={({ trangThai }) => setValue({ trangThai })}
-                        isOpenEnding={true}
-                        title={VALUES[trangThai - 2]}
-                        subtitle={moment(ngay[trangThai - 2]).format(
-                          "hh:mm:ss DD/MM/YYYY"
-                        )}
-                      />
-                      <TimelineEvent
-                        color="#3d874d"
-                        icon={icon[trangThai - 1]}
-                        index={trangThai - 1}
-                        values={trangThai - 1}
-                        // indexClick={({trangThai}) => setValue({trangThai})}
-                        isOpenEnding={true}
-                        title={VALUES[trangThai - 1]}
-                        subtitle={moment(ngay[trangThai - 1]).format(
-                          "hh:mm:ss DD/MM/YYYY"
-                        )}
-                      />
-                      <TimelineEvent
-                        color="#3d874d"
-                        icon={icon[trangThai]}
-                        index={trangThai}
-                        values={trangThai}
-                        // indexClick={({trangThai}) => setValue({trangThai})}
-                        isOpenEnding={true}
-                        title={VALUES[trangThai]}
-                        subtitle={moment(ngay[trangThai]).format(
-                          "hh:mm:ss DD/MM/YYYY"
-                        )}
-                      />
-                      <TimelineEvent color="#e6e3e3" />
-                      <TimelineEvent color="#e6e3e3" />
-                    </Flex>
-                  ) : trangThai == 4 ? (
-                    <Flex horizontal>
-                      <TimelineEvent
-                        color="#3d874d"
-                        icon={icon[trangThai - 4]}
-                        index={trangThai - 4}
-                        values={trangThai - 4}
-                        // indexClick={({ trangThai }) => setValue({ trangThai })}
-                        isOpenEnding={true}
-                        title={VALUES[trangThai - 4]}
-                        subtitle={moment(ngay[trangThai - 4]).format(
-                          "hh:mm:ss DD/MM/YYYY"
-                        )}
-                      />
-                      <TimelineEvent
-                        color="#3d874d"
-                        icon={icon[trangThai - 3]}
-                        index={trangThai - 3}
-                        values={trangThai - 3}
-                        // indexClick={({ trangThai }) => setValue({ trangThai })}
-                        isOpenEnding={true}
-                        title={VALUES[trangThai - 3]}
-                        subtitle={moment(ngay[trangThai - 3]).format(
-                          "hh:mm:ss DD/MM/YYYY"
-                        )}
-                      />
-                      <TimelineEvent
-                        color="#3d874d"
-                        icon={icon[trangThai - 2]}
-                        index={trangThai - 2}
-                        values={trangThai - 2}
-                        // indexClick={({ trangThai }) => setValue({ trangThai })}
-                        isOpenEnding={true}
-                        title={VALUES[trangThai - 2]}
-                        subtitle={moment(ngay[trangThai - 2]).format(
-                          "hh:mm:ss DD/MM/YYYY"
-                        )}
-                      />
-                      <TimelineEvent
-                        color="#3d874d"
-                        icon={icon[trangThai - 1]}
-                        index={trangThai - 1}
-                        values={trangThai - 1}
-                        // indexClick={({trangThai}) => setValue({trangThai})}
-                        isOpenEnding={true}
-                        title={VALUES[trangThai - 1]}
-                        subtitle={moment(ngay[trangThai - 1]).format(
-                          "hh:mm:ss DD/MM/YYYY"
-                        )}
-                      />
-                      <TimelineEvent
-                        color="#3d874d"
-                        icon={icon[trangThai]}
-                        index={trangThai}
-                        values={trangThai}
-                        // indexClick={({trangThai}) => setValue({trangThai})}
-                        isOpenEnding={true}
-                        title={VALUES[trangThai]}
-                        subtitle={moment(ngay[trangThai]).format(
-                          "hh:mm:ss DD/MM/YYYY"
-                        )}
-                      />
-                      <TimelineEvent color="#e6e3e3" />
-                    </Flex>
-                  ) : (
-                    <Flex horizontal style={{ width: 50 }}>
-                      <TimelineEvent
-                        color="#3d874d"
-                        iconStyle={{ marginLeft: 10 }}
-                        icon={icon[trangThai - 5]}
-                        index={trangThai - 5}
-                        values={trangThai - 5}
-                        // indexClick={({ trangThai }) => setValue({ trangThai })}
-                        isOpenEnding={true}
-                        title={VALUES[trangThai - 5]}
-                        subtitle={moment(ngay[trangThai - 5]).format(
-                          "hh:mm:ss DD/MM/YYYY"
-                        )}
-                      />
-                      <TimelineEvent
-                        color="#3d874d"
-                        icon={icon[trangThai - 4]}
-                        index={trangThai - 4}
-                        values={trangThai - 4}
-                        // indexClick={({ trangThai }) => setValue({ trangThai })}
-                        isOpenEnding={true}
-                        title={VALUES[trangThai - 4]}
-                        subtitle={moment(ngay[trangThai - 4]).format(
-                          "hh:mm:ss DD/MM/YYYY"
-                        )}
-                      />
-                      <TimelineEvent
-                        color="#3d874d"
-                        icon={icon[trangThai - 3]}
-                        index={trangThai - 3}
-                        values={trangThai - 3}
-                        // indexClick={({ trangThai }) => setValue({ trangThai })}
-                        isOpenEnding={true}
-                        title={VALUES[trangThai - 3]}
-                        subtitle={moment(ngay[trangThai - 3]).format(
-                          "hh:mm:ss DD/MM/YYYY"
-                        )}
-                      />
-                      <TimelineEvent
-                        color="#3d874d"
-                        icon={icon[trangThai - 2]}
-                        index={trangThai - 2}
-                        values={trangThai - 2}
-                        // indexClick={({ trangThai }) => setValue({ trangThai })}
-                        isOpenEnding={true}
-                        title={VALUES[trangThai - 2]}
-                        subtitle={moment(ngay[trangThai - 2]).format(
-                          "hh:mm:ss DD/MM/YYYY"
-                        )}
-                      />
-                      <TimelineEvent
-                        color="#3d874d"
-                        icon={icon[trangThai - 1]}
-                        index={trangThai - 1}
-                        values={trangThai - 1}
-                        // indexClick={({trangThai}) => setValue({trangThai})}
-                        isOpenEnding={true}
-                        title={VALUES[trangThai - 1]}
-                        subtitle={moment(ngay[trangThai - 1]).format(
-                          "hh:mm:ss DD/MM/YYYY"
-                        )}
-                      />
-                      <TimelineEvent
-                        color="#3d874d"
-                        icon={icon[trangThai]}
-                        index={trangThai}
-                        values={trangThai}
-                        // indexClick={({trangThai}) => setValue({trangThai})}
-                        isOpenEnding={true}
-                        title={VALUES[trangThai]}
-                        subtitle={moment(ngay[trangThai]).format(
-                          "hh:mm:ss DD/MM/YYYY"
-                        )}
-                      />
-                    </Flex>
-                  )}
-                </Timeline>
-              )}
-            </>
-
-            {/* hóa đơn online */}
+            <Timeline
+              minEvents={6}
+              // maxEvents={10}
+              style={{ borderBottom: "1px solid rgb(224, 224, 224)" }}
+              placeholder
+            >
+              {listHDTimeLine.map((item, index) => (
+                <TimelineEvent
+                  minEvents={6}
+                  key={index}
+                  color={"#3d874d"}
+                  icon={showIcon(item.trangThai)}
+                  values={showTitle(item.trangThai)}
+                  isOpenEnding={true}
+                  title={showTitle(item.trangThai)}
+                  subtitle={moment(item.ngayTao).format("hh:mm:ss DD/MM/YYYY")}
+                />
+              ))}
+            </Timeline>
           </div>
         </div>
 
@@ -578,36 +274,37 @@ export default function HoaDonDetail() {
 
         <div className="col-md-2 ">
           <>
-            {loaiHD == 0 ? (
+            {hoaDondetail.loaiHD == 0 ? (
               <>
                 {trangThai == 0 ? (
                   <Button className="ms-5 " type="primary" onClick={showModal}>
-                    {textButton[trangThai]}
+                    {showTitleButtonVanDon(trangThai)}
                   </Button>
                 ) : trangThai == 1 ? (
                   <Button className="ms-5 " type="primary" onClick={showModal}>
-                    {textButton[trangThai]}
+                    {showTitleButtonVanDon(trangThai)}
                   </Button>
                 ) : trangThai == 2 ? (
                   <Button className="ms-5 " type="primary" onClick={showModal}>
-                    {textButton[trangThai]}
+                    {showTitleButtonVanDon(trangThai)}
                   </Button>
                 ) : trangThai == 3 ? (
                   <Button className="ms-5 " type="primary" onClick={showModal}>
-                    {textButton[trangThai]}
+                    {showTitleButtonVanDon(trangThai)}
                   </Button>
                 ) : trangThai == 4 ? (
                   <Button className="ms-5 " type="primary" onClick={showModal}>
-                    {textButton[trangThai]}
+                    {showTitleButtonVanDon(trangThai)}
                   </Button>
                 ) : (
-                  <></>
+                  <>
+                  
+                  </>
                 )}
               </>
             ) : (
               <> </>
             )}
-
             <Modal
               title="Xác nhận đơn hàng"
               footer={[]}
@@ -718,13 +415,13 @@ export default function HoaDonDetail() {
                   </div>
                   <div className="col-md-3">
                     <div>
-                      <p>{tenKH}</p>
+                      <p>{hoaDondetail.tenKH}</p>
                     </div>
                     <div className="mt-4">
-                      <p>{sdtKH}</p>
+                      <p>{hoaDondetail.sdtKH}</p>
                     </div>
                     <div className="mt-4">
-                      <p>{diaChi}</p>
+                      <p>{hoaDondetail.diaChi}</p>
                     </div>
                   </div>
                   <div className="col-md-3">
@@ -755,7 +452,7 @@ export default function HoaDonDetail() {
                       )}
                     </div>
                     <div className="mt-4">
-                      {loaiHD == 0 ? (
+                      {hoaDondetail.loaiHD == 0 ? (
                         <Tag color="orange">Online</Tag>
                       ) : (
                         <Tag color="red">Tại quầy</Tag>
@@ -767,7 +464,7 @@ export default function HoaDonDetail() {
                         <IntlProvider locale="vi-VN">
                           <div>
                             <FormattedNumber
-                              value={thanhTienHD}
+                              value={hoaDondetail.thanhTienHD}
                               style="currency"
                               currency="VND"
                               minimumFractionDigits={0}
@@ -826,7 +523,9 @@ export default function HoaDonDetail() {
                               <IntlProvider locale="vi-VN">
                                 <div>
                                   <FormattedNumber
-                                    value={listSanPham.thanhTienSP}
+                                    value={
+                                      listSanPham.gia * listSanPham.soLuongSP
+                                    }
                                     style="currency"
                                     currency="VND"
                                     minimumFractionDigits={0}
@@ -849,7 +548,7 @@ export default function HoaDonDetail() {
                             <IntlProvider locale="vi-VN">
                               <div>
                                 <FormattedNumber
-                                  value={thanhTienHD}
+                                  value={hoaDondetail.thanhTienHD}
                                   style="currency"
                                   currency="VND"
                                   minimumFractionDigits={0}
@@ -872,14 +571,14 @@ export default function HoaDonDetail() {
                             <IntlProvider locale="vi-VN">
                               <div>
                                 <FormattedNumber
-                                  value={thanhTienHD}
+                                  value={hoaDondetail.thanhTien}
                                   style="currency"
                                   currency="VND"
                                   minimumFractionDigits={0}
                                 />
                               </div>
                             </IntlProvider>
-                          </p>{" "}
+                          </p>
                         </div>
                       </div>
                     </tr>
@@ -928,7 +627,6 @@ export default function HoaDonDetail() {
         <h5 style={{ marginTop: "20px", paddingTop: "20px" }}>
           Thông tin đơn hàng
         </h5>
-
         <hr />
         <div className="col-md-3">
           <div className="ps-4">
@@ -958,14 +656,14 @@ export default function HoaDonDetail() {
             )}
           </div>
           <div className="mt-4">
-            {loaiHD == 0 ? (
+            {hoaDondetail.loaiHD == 0 ? (
               <Tag color="orange">Online</Tag>
             ) : (
               <Tag color="red">Tại quầy</Tag>
             )}
           </div>
           <div className="mt-4">
-            <p>{diaChi}</p>
+            <p>{hoaDondetail.diaChi}</p>
           </div>
         </div>
         <div className="col-md-3">
@@ -981,13 +679,13 @@ export default function HoaDonDetail() {
         </div>
         <div className="col-md-3">
           <div>
-            <p>{tenKH}</p>
+            <p>{hoaDondetail.tenKH}</p>
           </div>
           <div className="mt-4">
-            <p>{sdtKH}</p>
+            <p>{hoaDondetail.sdtKH}</p>
           </div>
           <div className="mt-4">
-            <p>{ghiChuHD}</p>
+            <p>{hoaDondetail.ghiChuHD}</p>
           </div>
         </div>
       </div>
@@ -1001,7 +699,7 @@ export default function HoaDonDetail() {
         </div>
         {/* chỉnh sửa sản phẩm */}
         <>
-          {loaiHD == 0 && trangThai == 0 ? (
+          {hoaDondetail.loaiHD == 0 && trangThai == 0 ? (
             <div className="bd-highlight">
               <Button
                 className="btn btn-danger "
@@ -1042,9 +740,25 @@ export default function HoaDonDetail() {
                 />
               </div>
               <div className="col-md-5 ">
-                <div className="mt-3">
+                <div className="mt-1">
                   <h6>
                     {listSanPham.tenHang} {listSanPham.tenSP}{" "}
+                  </h6>
+                </div>
+                <div className="text-danger">
+                  <h6>
+                    <del>
+                      <IntlProvider locale="vi-VN">
+                        <div>
+                          <FormattedNumber
+                            value={listSanPham.giaBanSP}
+                            style="currency"
+                            currency="VND"
+                            minimumFractionDigits={0}
+                          />
+                        </div>
+                      </IntlProvider>
+                    </del>
                   </h6>
                 </div>
                 <div className="text-danger">
@@ -1052,7 +766,7 @@ export default function HoaDonDetail() {
                     <IntlProvider locale="vi-VN">
                       <div>
                         <FormattedNumber
-                          value={listSanPham.giaBanSP}
+                          value={listSanPham.thanhTienSP}
                           style="currency"
                           currency="VND"
                           minimumFractionDigits={0}
@@ -1078,7 +792,7 @@ export default function HoaDonDetail() {
                   <IntlProvider locale="vi-VN">
                     <div>
                       <FormattedNumber
-                        value={listSanPham.thanhTienSP}
+                        value={listSanPham.thanhTienSP * listSanPham.soLuongSP}
                         style="currency"
                         currency="VND"
                         minimumFractionDigits={0}
@@ -1106,7 +820,7 @@ export default function HoaDonDetail() {
                 <IntlProvider locale="vi-VN">
                   <div>
                     <FormattedNumber
-                      value={thanhTienHD}
+                      value={hoaDondetail.thanhTien}
                       style="currency"
                       currency="VND"
                       minimumFractionDigits={0}
@@ -1116,51 +830,52 @@ export default function HoaDonDetail() {
               </p>
             </div>
             <div className="d-flex">
-              <h6 className="col-md-8">Phí vận chuyển:</h6>{" "}
+              <h6 className="col-md-8">Phí vận chuyển:</h6>
               <p className="col-md-4">
-                {" "}
                 <IntlProvider locale="vi-VN">
                   <div>
                     <FormattedNumber
-                      value={0}
+                      value={hoaDondetail.tienVanChuyen}
                       style="currency"
                       currency="VND"
                       minimumFractionDigits={0}
                     />
                   </div>
                 </IntlProvider>
-              </p>{" "}
+              </p>
             </div>
             <div className="d-flex">
-              <h6 className="col-md-8">Tổng tiền giảm:</h6>{" "}
+              <h6 className="col-md-8">Tổng tiền giảm:</h6>
               <p className="col-md-4">
-                {" "}
                 <IntlProvider locale="vi-VN">
                   <div>
                     <FormattedNumber
-                      value={0}
+                      value={
+                        listSanPhams.giaBanSP * listSanPhams.soLuongSP -
+                        hoaDondetail.thanhTien
+                      }
                       style="currency"
                       currency="VND"
                       minimumFractionDigits={0}
                     />
                   </div>
                 </IntlProvider>
-              </p>{" "}
+              </p>
             </div>
             <div className="d-flex">
-              <h6 className="col-md-8">Tổng giảm:</h6>{" "}
+              <h6 className="col-md-8">Tổng giảm:</h6>
               <p className="col-md-4">
                 <IntlProvider locale="vi-VN">
                   <div>
                     <FormattedNumber
-                      value={thanhTienHD}
+                      value={hoaDondetail.thanhTien}
                       style="currency"
                       currency="VND"
                       minimumFractionDigits={0}
                     />
                   </div>
                 </IntlProvider>
-              </p>{" "}
+              </p>
             </div>
           </div>
         </tr>

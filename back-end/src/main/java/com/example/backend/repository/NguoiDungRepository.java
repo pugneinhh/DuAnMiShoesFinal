@@ -192,4 +192,6 @@ public interface NguoiDungRepository extends JpaRepository<NguoiDung, String> {
            select  * from nguoi_dung where  email=:email
                     """,nativeQuery = true)
     Optional<NguoiDung> findByEmail(@Param("email") String email);
+
+    NguoiDung findNguoiDungByEmail(String email);
 }

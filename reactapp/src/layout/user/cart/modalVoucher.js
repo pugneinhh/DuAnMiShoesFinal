@@ -5,7 +5,7 @@ import { SellAPI } from "../../../pages/censor/api/sell/sell.api";
 import imgTicket from "../../../assets/images/discountTicket.png";
 
 const ModalVoucher = (props) => {
-  const { openModalVoucher, setOpenModalVoucher, userID } = props;
+  const { openModalVoucher, setOpenModalVoucher, userID , voucherID,setVoucherID,total,loadGiamGia} = props;
   const [top, setTop] = useState("none");
   const [bottom, setBottom] = useState("bottomRight");
   const [datas, setData] = useState([]);
@@ -32,16 +32,26 @@ const ModalVoucher = (props) => {
   };
 
   useEffect(() => {
-    if (userID != null && userID != undefined) {
+    // if (userID != null && userID != undefined) {
       loadVoucher();
-    }
-  }, [userID]);
+      // console.log("hóa đơn",hoaDonID)
+    // }
+  }, []);
+
+  const handleChonVoucher = (record) => {
+    setVoucherID(record);
+    loadGiamGia(record);
+    console.log("voucher được chọn",record);
+    setOpenModalVoucher(false);
+    
+  }
 
   const dataSource = datas.map((item, index) => ({
     key: item.id,
     id: item.id,
     ma: item.ma,
     ten: item.ten,
+    mucDo:item.mucDo,
     giamToiDa: item.giamToiDa,
     loaiVoucher: item.loaiVoucher,
     dieuKien: item.dieuKien
@@ -113,10 +123,15 @@ const ModalVoucher = (props) => {
       title: "Action",
       key: "action",
 
-      render: () => (
+      render: (record) => (
+        total>=record.dieuKien?(
         <Space size="middle">
-          <a className='btn btn-danger'>Chọn</a>
+          <button className='btn btn-danger' onClick={()=>{handleChonVoucher(record)}}>Chọn</button>
         </Space>
+        ):(<Space size="middle">
+        <button className='btn btn-danger' disabled>Chọn</button>
+      </Space>)
+      
       ),
     },
   ]

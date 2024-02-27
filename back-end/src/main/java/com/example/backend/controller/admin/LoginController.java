@@ -3,6 +3,8 @@ package com.example.backend.controller.admin;
 import com.example.backend.dto.login.LoginPayLoad;
 import com.example.backend.dto.login.LoginRespon;
 import com.example.backend.dto.login.LoginService;
+import com.example.backend.dto.request.loginReqest.ForgotPassRequest;
+import com.example.backend.dto.request.loginReqest.SignUpRequest;
 import com.example.backend.repository.NguoiDungRepository;
 import com.example.backend.service.KhachHangService;
 import com.example.backend.service.NguoiDungService;
@@ -27,6 +29,8 @@ public class LoginController {
     NguoiDungRepository nguoiDungRepository;
     @Autowired
     NguoiDungService nguoiDungService;
+  @Autowired
+  KhachHangService khachHangService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -60,6 +64,14 @@ public class LoginController {
 //            ResponseDTO response = new ResponseDTO(false, "Invalid Username or Password", null, ex.getMessage(), HttpStatus.UNAUTHORIZED.value());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex);
         }
+    }
+    @PostMapping("/sign-up")
+    public ResponseEntity<?> signUP(@RequestBody SignUpRequest signUpRequest) {
+        return ResponseEntity.ok(khachHangService.signUp(signUpRequest));
+    }
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPass(@RequestBody ForgotPassRequest forgotPassRequest) {
+        return ResponseEntity.ok(khachHangService.forgotPass(forgotPassRequest));
     }
 
 }

@@ -55,6 +55,13 @@ import { Home } from "../layout/user/home";
 import { Login } from "../layout/login/login";
 import { GioHang } from "../layout/user/cart/gioHang";
 import { Shop } from "../layout/user/shop/shop";
+import ChiTietDonHang from "../layout/user/history/ChiTietDonHang";
+import ALLTabHistoryClient from "../layout/user/history/ALLTabHistoryClient";
+import TraCuuDonHangClient from "../layout/user/history/TraCuuDonHangClient";
+import DetailTraCuuDonHang from "../layout/user/history/DetailTraCuuDonHang";
+import { SignUp } from "../layout/login/signUp";
+import { ForgotPass } from "../layout/login/forgotPassword";
+import AccountProfile from "../layout/user/profile/profile";
 function App() {
   const isLoading = useAppSelector(GetLoading);
 
@@ -401,13 +408,79 @@ function App() {
                 </GuestGuard>
               }
             />
+            <Route
+              path="/history"
+              element={
+                <GuestGuard>
+                  <DashboardClient>
+                    <ALLTabHistoryClient />
+                  </DashboardClient>
+                </GuestGuard>
+              }
+            />
+            <Route
+              path="/chi-tiet-don-hang/:idHD"
+              element={
+                <GuestGuard>
+                  <DashboardClient>
+                    <ChiTietDonHang />
+                  </DashboardClient>
+                </GuestGuard>
+              }
+            />
+            <Route
+              path="/tra-cuu-don-hang"
+              element={
+                <GuestGuard>
+                  <DashboardClient>
+                    <TraCuuDonHangClient />
+                  </DashboardClient>
+                </GuestGuard>
+              }
+            />
+            <Route
+              path="/hd/:idHD"
+              element={
+                <GuestGuard>
+                  <DashboardClient>
+                    <DetailTraCuuDonHang />
+                  </DashboardClient>
+                </GuestGuard>
+              }
+            />
+            <Route
+              path="/tai-khoan-cua-toi"
+              element={
+                <GuestGuard>
+                  <DashboardClient>
+                    <AccountProfile />
+                  </DashboardClient>
+                </GuestGuard>
+              }
+            />
             {/* Màn login */}
-            
+
             <Route
               path="/login"
               element={
                 <GuestGuard>
                   <Login />
+                </GuestGuard>
+              }
+            />
+            <Route
+              path="/sign-up"
+              element={
+                <GuestGuard>
+                  <SignUp />
+                </GuestGuard>
+              }
+            />
+            <Route
+              path="/forgot-password"
+              element={
+                <GuestGuard>
+                  <ForgotPass />
                 </GuestGuard>
               }
             />

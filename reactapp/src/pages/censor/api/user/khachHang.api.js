@@ -52,6 +52,12 @@ export class KhachHangAPI {
             url: `/admin/khach-hang/dia-chi/${id}`,
         });
     };
+    static getDiaChiMacDinh= (id) => {
+        return requestAdmin({
+            method: "GET",
+            url: `/khach-hang/dia-chi-mac-dinh/${id}`,
+        });
+    };
     static updateDiaChiMacDinh= (id) => {
         return requestAdmin({
             method: "POST",
