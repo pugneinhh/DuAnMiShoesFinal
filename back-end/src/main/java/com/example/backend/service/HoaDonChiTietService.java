@@ -56,21 +56,21 @@ public class HoaDonChiTietService {
     }
 
 
-    public HoaDonChiTiet updateSL1(String idCTSP,String idHD){
-        HoaDonChiTiet hdct = hoaDonChiTietRepository.getHDCTByCTSPAndHD(idCTSP,idHD);
+    public HoaDonChiTiet updateSL1(String idCTSP,String idHD) {
+        HoaDonChiTiet hdct = hoaDonChiTietRepository.getHDCTByCTSPAndHD(idCTSP, idHD);
         ChiTietSanPham ctsp = ctspRepository.getReferenceById(idCTSP);
         int slt = ctsp.getSoLuong();
         int slh = hdct.getSoLuong();
         int sltd = slh + 1;
         hdct.setSoLuong(sltd);
-        ctsp.setSoLuong(slt-1);
-        System.out.println("HDCT sau update"+hdct);
-        System.out.println("CTSP sau update"+ctsp);
+        ctsp.setSoLuong(slt - 1);
+        System.out.println("HDCT sau update" + hdct);
+        System.out.println("CTSP sau update" + ctsp);
         HoaDon hoaDon = hoaDonRepository.getHoaDonByIDHD(idHD);
         BigDecimal tong = new BigDecimal("0");
         List<HoaDonChiTiet> list = hoaDonChiTietRepository.getAllHDCTByIDHD(idHD);
         for (HoaDonChiTiet x : list) {
-            if (x.getChiTietSanPham().getId().equals(idCTSP)){
+            if (x.getChiTietSanPham().getId().equals(idCTSP)) {
                 tong = tong.add(x.getGiaSauGiam().multiply(BigDecimal.valueOf(sltd)));
 
             } else {
@@ -83,7 +83,7 @@ public class HoaDonChiTietService {
         hoaDonRepository.save(hoaDon);
         ctspRepository.save(ctsp);
         return hoaDonChiTietRepository.save(hdct);
-
+    }
     public HoaDonChiTiet addHDCTClient(HoaDonChiTietRequest request){
         HoaDonChiTiet hdct=request.map(new HoaDonChiTiet());
         return  hoaDonChiTietRepository.save(hdct);
