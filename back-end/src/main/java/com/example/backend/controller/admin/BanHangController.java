@@ -80,6 +80,12 @@ public class BanHangController {
     public ResponseEntity<?> updateSLHDCT(@RequestBody HoaDonChiTietRequest request){
         return ResponseEntity.ok(hoaDonChiTietService.updateTruSl(request));
     }
+
+    @PostMapping("/update-so-luong-hdct1")
+    public ResponseEntity<?> updateSLHDCT1(@RequestBody HoaDonChiTietRequest request){
+        return ResponseEntity.ok(hoaDonChiTietService.updateTruSl(request));
+    }
+
     @PostMapping("/delete-hdct")
     public ResponseEntity<?> deleteHDCT(@RequestBody HoaDonChiTietRequest request){
         return ResponseEntity.ok(hoaDonChiTietService.deleteHDCT(request));
@@ -133,9 +139,21 @@ public class BanHangController {
         return ResponseEntity.ok(hoaDonChiTietService.updateSL(idCTSP,idHD,value));
     }
 
+    @PutMapping("/hoa-don/updateSL1/{idCTSP}/{idHD}")
+    public ResponseEntity<?> updateSL1 (@PathVariable("idCTSP")String idCTSP,@PathVariable("idHD") String idHD) {
+
+        return ResponseEntity.ok(hoaDonChiTietService.updateSL1(idCTSP,idHD));
+    }
+
     @PutMapping("/hoa-don/update-van-chuyen/{idHD}")
     public ResponseEntity<?> updateVanChuyen (@PathVariable("idHD")String idHD, @RequestBody HoaDon hd){
         System.out.println("req hóa đơn"+hd);
+        return ResponseEntity.ok(hoaDonServicee.update1(hd,idHD));
+    }
+
+    @PutMapping("/hoa-don/delete-van-chuyen/{idHD}")
+    public ResponseEntity<?> updateVanChuyen (@PathVariable("idHD")String idHD){
+        return ResponseEntity.ok(hoaDonServicee.deleteVanChuyen(idHD));
         HoaDon hoaDon=hoaDonServicee.findHoaDonbyID(idHD);
 
         LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
@@ -189,6 +207,11 @@ public class BanHangController {
     @PutMapping("/thanh-toan/hoa-don/{idHD}/{idNV}")
     public ResponseEntity<?> thanhToanHoaDon (@PathVariable("idHD") String idHD,@PathVariable("idNV") String idNV) {
         HoaDon hoaDon=hoaDonServicee.findHoaDonbyID(idHD);
+        List<HoaDonChiTiet> listHDCT = hoaDonChiTietService.getAllHDCTByIDHD(idHD);
+        for (HoaDonChiTiet h : listHDCT) {
+            h.setTrangThai(1);
+            hoaDonChiTietService.saveHDCT(h);
+        }
         NguoiDung nguoiDung = nguoiDungService.findByID(idNV);
         System.out.println("Người dùng thanh toán"+nguoiDung);
         System.out.println("Hóa đơn thanh toán"+hoaDon);
@@ -201,5 +224,12 @@ public class BanHangController {
 
         return ResponseEntity.ok(  hoaDonServicee.thanhToanHoaDon(idHD));
        
+    }
+
+
+    @PutMapping("/tra-sau/hoa-don/{idHD}/{idNV}")
+    public ResponseEntity<?> traSauHoaDon (@PathVariable("idHD") String idHD,@PathVariable("idNV") String idNV) {
+        return ResponseEntity.ok(  hoaDonServicee.updateTraSau(idHD,idNV));
+
     }
 }

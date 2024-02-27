@@ -19,6 +19,7 @@ import {
 import {SellAPI} from "../../censor/api/sell/sell.api";
 import ModalAddKhachHang from "./ModalAddKhachHang";
 import { KhachHangAPI } from "../api/user/khachHang.api";
+import { NguoiDungAPI } from "../api/nguoiDung/nguoiDungAPI";
 // import { KhachHangAPI } from "../api/user/khachHang.api";
 
 const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) => {
@@ -38,7 +39,7 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
   const idKH = activeKey
     ? bill.filter((item) => item.id === activeKey)[0]?.nguoiDung
     : "";
-console.log("cliennnnnnnnnnnn",client);
+  
   const handleClickAddClient = async (record) => {
     console.log("recorrd id",record);
     dispatch(
@@ -51,6 +52,7 @@ console.log("cliennnnnnnnnnnn",client);
       })
     );
     await SellAPI.getVoucherWithIDKH(record.idND).then((res) => onVoucher(res));
+   await NguoiDungAPI.getDiaChiByIDND(record.idND).then((resData) => console.log(resData.data));
    SellAPI.updateKH(activeKey, record.idND);
     setOpenKhachHang(false);
   };
@@ -157,7 +159,7 @@ console.log("cliennnnnnnnnnnn",client);
       render: (record) => (
         <Space size="middle">
           <>
-            {idKH !== null && idKH === record.id ? (
+            {idKH !== null && idKH === record.idND ? (
               <button
                 type="primary"
                 shape="round"

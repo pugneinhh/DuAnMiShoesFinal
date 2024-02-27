@@ -8,5 +8,10 @@ export class NguoiDungAPI {
       //   params: filter,
     });
   };
-
+  static getDiaChiByIDND = (id) => {
+    return requestAdmin({
+      method: "GET",
+      url: `/admin/khach-hang/ban-hang/dia-chi/${id}`,
+    });
+  }
 }

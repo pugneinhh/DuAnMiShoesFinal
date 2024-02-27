@@ -95,6 +95,13 @@ export class SellAPI {
     });
   };
 
+  static updateTraSau = (idHD,idNV) => {
+    return requestAdmin({
+      method: "PUT",
+      url: `/ban-hang/tra-sau/hoa-don/${idHD}/${idNV}`,
+    });
+  }
+
   static getLinkVnpay = (hoaDon, money) => {
     return requestAdmin({
       method: "GET",
@@ -125,6 +132,13 @@ export class SellAPI {
     return requestAdmin({
       method: "PUT",
       url: `/ban-hang/hoa-don/updateSL/${idCTSP}/${idHD}/${Value}`,
+    });
+  };
+
+  static updateSL1 = (idCTSP, idHD) => {
+    return requestAdmin({
+      method: "PUT",
+      url: `/ban-hang/hoa-don/updateSL1/${idCTSP}/${idHD}`,
     });
   };
 
@@ -186,6 +200,14 @@ export class SellAPI {
       data: data,
     });
   };
+
+  static deleteVanChuyen = (idHD) => {
+    return requestAdmin({
+      method: "PUT",
+      url: `/ban-hang/hoa-don/delete-van-chuyen/${idHD}`,
+    });
+  };
+
   static addBillClient = (data) => {
     return requestAdmin({
       method: "POST",

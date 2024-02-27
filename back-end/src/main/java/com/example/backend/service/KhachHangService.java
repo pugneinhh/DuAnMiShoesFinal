@@ -7,6 +7,7 @@ import com.example.backend.dto.request.NguoiDungSeacrh;
 import com.example.backend.dto.request.loginReqest.ForgotPassRequest;
 import com.example.backend.dto.request.loginReqest.SignUpRequest;
 import com.example.backend.dto.request.sanphamsearch.CTSPSearch;
+import com.example.backend.dto.response.DiaChiKHResponse;
 import com.example.backend.dto.response.DiaChiKhachHangRespon;
 import com.example.backend.dto.response.KhachHangRespon;
 import com.example.backend.dto.response.sanpham.CTSPSearchRespone;
@@ -148,6 +149,10 @@ public class KhachHangService {
     }
     public DiaChi detailDiaChi(String id){
         return diaChiRepository.findById(id).get();
+    }
+
+    public List<DiaChiKHResponse> getAllDiaChiByIDKH(String idKH){
+        return diaChiRepository.getAllDiachiByIDKH(idKH);
     }
     public DiaChi updateDiaChi(String id,DiaChiRequest diaChiRequest){
         DiaChi diaChi=diaChiRequest.map(new DiaChi());

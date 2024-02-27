@@ -4,6 +4,7 @@ package com.example.backend.controller.admin;
 import com.example.backend.dto.request.KhuyenMaiRequest;
 import com.example.backend.dto.request.KhuyenMaiSearch;
 import com.example.backend.entity.ChiTietSanPham;
+import com.example.backend.entity.HoaDonChiTiet;
 import com.example.backend.entity.KhuyenMai;
 import com.example.backend.service.CTSPService;
 import com.example.backend.service.HoaDonChiTietService;
@@ -100,7 +101,12 @@ public class KhuyenMaiController {
             for (String x: list) {
                 ChiTietSanPham ctsp = ctspService.findChiTietSanPhamByID(x);
                 ctspService.deleteKM(x);
-                hoaDonChiTietService.updateGia(x,new BigDecimal(0),ctsp.getGiaBan());
+                for (HoaDonChiTiet h : hoaDonChiTietService.getAllHDCTByIDCTSP(x)) {
+                    if(h.getTrangThai() == 0) {
+                        hoaDonChiTietService.updateGia(x,new BigDecimal(0),ctsp.getGiaBan());
+
+                    }
+                }
 
             }
         }

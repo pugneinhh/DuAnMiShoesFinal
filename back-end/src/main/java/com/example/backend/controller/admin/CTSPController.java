@@ -6,6 +6,7 @@ import com.example.backend.dto.request.sanpham.HinhAnhRequest;
 import com.example.backend.dto.request.sanphamsearch.CTSPSearch;
 import com.example.backend.dto.request.sanphamupdate.UpdateCTSPRequest;
 import com.example.backend.entity.ChiTietSanPham;
+import com.example.backend.entity.HoaDonChiTiet;
 import com.example.backend.entity.KhuyenMai;
 import com.example.backend.service.CTSPService;
 import com.example.backend.service.HinhAnhService;
@@ -85,7 +86,13 @@ public class CTSPController {
     @PutMapping("/deleteKM/{idCTSP}")
     public ResponseEntity<?> delete(@PathVariable("idCTSP")String idCTSP){
         ChiTietSanPham ctsp = ctspService.findChiTietSanPhamByID(idCTSP);
-        hoaDonChiTietService.updateGia(idCTSP,new BigDecimal(0),ctsp.getGiaBan());
+        for (HoaDonChiTiet h : hoaDonChiTietService.getAllHDCTByIDCTSP(idCTSP)) {
+            if(h.getTrangThai() == 0) {
+                hoaDonChiTietService.updateGia(idCTSP,new BigDecimal(0),ctsp.getGiaBan());
+
+            }
+        }
+
         return ResponseEntity.ok(ctspService.deleteKM(idCTSP));
     }
 

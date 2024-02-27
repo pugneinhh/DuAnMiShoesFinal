@@ -4,13 +4,18 @@ import com.example.backend.dto.request.DiaChiRequest;
 import com.example.backend.dto.request.KhachHangRequest;
 import com.example.backend.dto.request.NguoiDungSeacrh;
 import com.example.backend.dto.request.sanphamsearch.CTSPSearch;
+import com.example.backend.dto.response.DiaChiKHResponse;
+import com.example.backend.entity.DiaChi;
 import com.example.backend.service.KhachHangService;
 import com.google.gson.Gson;
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @CrossOrigin("http://localhost:3000/")
 @RestController
@@ -92,5 +97,11 @@ public class KhachHangController {
         String idUser = gson.fromJson(id, String.class);
         String statusGson = gson.fromJson(status, String.class);
         return ResponseEntity.ok(khachHangService.updateStatus(idUser, statusGson));
+    }
+
+    @GetMapping("/ban-hang/dia-chi/{idKH}")
+    public ResponseEntity<?> getDiaChiByIDKH(@PathVariable("idKH") String idKH){
+        List<DiaChiKHResponse> list = khachHangService.getAllDiaChiByIDKH(idKH);
+        return ResponseEntity.ok(khachHangService.getAllDiaChiByIDKH(idKH).get(0));
     }
 }

@@ -33,6 +33,7 @@ const ModalSanPham = (props) => {
   const invoice = useSelector(GetInvoice)
   const [chiTietSanPham,setChiTietSanPham] = useState([""]);
   const [CTSP,setCTSPs] = useState([""]);
+  const [HDCT,setHDCT] = useState([]);
   const handleClose = () => {
     setOpenSanPham(false);
 
@@ -54,7 +55,12 @@ const ModalSanPham = (props) => {
   //Tìm kiếm
   const onChangeFilter = (changedValues, allValues) => {
     console.log("All values : ", allValues)
+    if (!allValues.tenCT && !allValues.idKT && !allValues.idMS && !allValues.idDC && !allValues.idCL && !allValues.trangThaiCT && !allValues.giaBanCT && !allValues.idDM && !allValues.idH) {
+      setCTSPs(chiTietSanPham);
+      console.log("Không có gì tìm kiếm")
+    } else {
     timKiemCT(allValues);
+    }
   }
   const timKiemCT = (dataSearch) => {
     axios.post(`http://localhost:8080/admin/ctsp/search-ctsp-banhang`, dataSearch)
@@ -62,9 +68,11 @@ const ModalSanPham = (props) => {
         // Update the list of items
         response.data.map((i)=> dispatch(AddProduct({id:i.idCTSP,soLuong:i.soLuong,linkAnh:i.linkAnh,tenSP:i.tenSP,tenKT:i.tenKT,tenMS:i.tenMS,maMS:i.maMS,loaiKM:i.loaiKM,giaTriKhuyenMai: parseInt(i.giaKhuyenMai, 10),giaBan:i.giaBan,tenKM:i.tenKM})))
         setCTSPs(response.data)
+
       })
       .catch(error => console.error('Error adding item:', error));
-  }
+    }
+  
 
 //Load kich thước
 const [kt, setKT] = useState([]);
@@ -280,26 +288,46 @@ const addHang = (value) => {
 
   useEffect(() => {
     loadCTSP();
-  }, [chiTietSanPham.tenKM]);
+  }, [chiTietSanPham.tenKM,chiTietSanPham.soLuong,openSanPham]);
 
-  const loadCTSP = async () => {
-    const result = await SellAPI.getAllProducts();
-    result.data.map((i)=> dispatch(AddProduct({id:i.idCTSP,soLuong:i.soLuong,linkAnh:i.linkAnh,tenSP:i.tenSP,tenKT:i.tenKT,tenMS:i.tenMS,maMS:i.maMS,loaiKM:i.loaiKM,giaTriKhuyenMai: parseInt(i.giaTriKhuyenMai, 10),giaBan:i.giaBan,tenKM:i.tenKM})))
-    setChiTietSanPham(result.data);
-    console.log(result.data)
-    setCTSPs(result.data)
+  useEffect(() => {
+    loadHDCTByHD();
+  },[activeKey]);
+  const loadCTSP =  () => {
+    const result =  SellAPI.getAllProducts().then((item) => {
+      item.data.map((i)=> dispatch(AddProduct({id:i.idCTSP,soLuong:i.soLuong,linkAnh:i.linkAnh,tenSP:i.tenSP,tenKT:i.tenKT,tenMS:i.tenMS,maMS:i.maMS,loaiKM:i.loaiKM,giaTriKhuyenMai: parseInt(i.giaTriKhuyenMai, 10),giaBan:i.giaBan,tenKM:i.tenKM})))
+      setChiTietSanPham(item.data);
+      console.log(item.data)
+      setCTSPs(item.data)
+    });
+
   };
 
+  const loadHDCTByHD = async() => {
+    const result = await SellAPI.getAllHDCTByHD(activeKey);
+    console.log(result.data)
+    setHDCT(result.data);
 
+  }
+  console.log(HDCT);
   const handleClickAddProduct = (record) => {
     const id =  uuid();
     const hdct = [{id:id,hoaDon:activeKey,chiTietSanPham:record.idCTSP,soLuong:1,giaSauGiam: (parseFloat(record.giaBan) -parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan*record.giaTriKhuyenMai/100))),giaGiam:(parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan*record.giaTriKhuyenMai/100)))}]
     dispatch(AddInvoice({id:id,chiTietSanPham:record.idCTSP,tenSP:record.tenSP,maMS:record.maMS,linkAnh : record.linkAnh,tenKT:record.tenKT,giaBan: record.giaBan,hoaDon:activeKey,tenMS:record.tenMS,giaGiam: (parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan*record.giaTriKhuyenMai/100))),giaSauGiam: (parseFloat(record.giaBan) -parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan*record.giaTriKhuyenMai/100))),nguoiTao:record.nguoiTao,giaBan:record.giaBan,tenKM:record.tenKM,loaiKM:record.loaiKM,giaTriKhuyenMai:record.giaTriKhuyenMai}));
     dispatch(UpdateApartProduct({id:record.idCTSP,soLuong:1})); 
+    // if (HDCT.filter((i) => i.hoaDon === activeKey && i.chiTietSanPham === record.idCTSP).length > 0) {
+    //   SellAPI.updateSL1(record.idCTSP,activeKey)
+    //   console.log(HDCT)
+    //   console.log("Vào update SL")
+    // } else {
+    //   SellAPI.addInvoice(hdct[0])
+    //   console.log("Vào add hdct")
+    //   console.log(HDCT)
+    // }
     SellAPI.addInvoice(hdct[0]);
-   // SellAPI.updateThanhTien(activeKey);
+    SellAPI.getAllProducts().then((item) => {      setCTSPs(item.data) ;       setChiTietSanPham(item.data);})
     setOpenSanPham(false);
-    
+
   };
 
   const columns = [
