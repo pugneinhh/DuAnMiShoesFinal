@@ -1369,7 +1369,7 @@ console.log("Địa chỉ KH",diaChiKhachHang)
                               //     : (hd[0].tienVanChuyen && hd[0].tienVanChuyen !== shipMoney)
                               //     ? shipMoney
                               //     : shipMoney
-                                (hd[0].tienVanChuyen && !shipMoney  ) ? hd[0].tienVanChuyen : (hd[0].tienVanChuyen && hd[0].tienVanChuyen !== shipMoney) ? shipMoney : shipMoney
+                                (hd[0]?.tienVanChuyen && !shipMoney  ) ? hd[0]?.tienVanChuyen : (hd[0]?.tienVanChuyen && hd[0]?.tienVanChuyen !== shipMoney) ? shipMoney : shipMoney
                                   
                               )}` : 0}
                             </h6>
@@ -1422,7 +1422,7 @@ console.log("Địa chỉ KH",diaChiKhachHang)
                                         100
                                       : voucherHienTai.giamToiDa
                                     : 0) +
-                                  (isSwitchOn ? (hd[0].tienVanChuyen && !shipMoney  ) ? hd[0].tienVanChuyen : (hd[0].tienVanChuyen && hd[0].tienVanChuyen !== shipMoney) ? shipMoney : shipMoney
+                                  (isSwitchOn ? (hd[0]?.tienVanChuyen && !shipMoney  ) ? hd[0]?.tienVanChuyen : (hd[0]?.tienVanChuyen && hd[0]?.tienVanChuyen !== shipMoney) ? shipMoney : shipMoney
                                     : 0)
                               )}`}
                             </h6>
