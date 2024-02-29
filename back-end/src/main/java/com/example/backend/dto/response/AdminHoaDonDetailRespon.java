@@ -33,4 +33,9 @@ public interface AdminHoaDonDetailRespon {
     String getGhiChuHD();
     @Value("#{target.tienVanChuyen}")
     String getTienVanChuyen();
+    @Value("#{target.TraSau}")
+    String getTraSau();
+    @Value("#{target.PhuongThucVNP}")
+    String getPhuongThucVNP();
+
 }
