@@ -75,15 +75,13 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
     //    @Query("select o from KhachHang o where o.ten=:keyword or o.ma=:keyword")List<KhachHang> search(@Param("keyword")String keyword)
 
     @Query(value = """
-          SELECT hd.ghi_chu AS ghiChuHD, hd.id AS idHD,hd.ma AS ma, hd.nhan_vien_id AS maNV, CASE
-                             WHEN hd.khach_hang_id IS NULL  THEN N'Khách lẻ'
-                             ELSE kh.ten END  as tenKH ,CASE WHEN hd.so_dien_thoai is  NULL   THEN N''
-                             ELSE hd.so_dien_thoai END  as sdt,
-                       CASE WHEN hd.dia_chi IS  NULL THEN N''
-                             else hd.dia_chi end as diaChi,
-                       ngay_mua as ngayMua,hd.thanh_tien as thanhTien,hd.trang_thai as trangThai,hd.loai_hoa_don AS loaiHD, hd.tien_van_chuyen as tienVanChuyen
-                       		 FROM  duanmishoes.hoa_don hd LEFT JOIN duanmishoes.nguoi_dung kh ON kh.id = hd.khach_hang_id
-                       	WHERE hd.id=:key
+
+      SELECT hd.ghi_chu AS ghiChuHD, hd.id AS idHD,hd.ma AS ma, hd.nhan_vien_id AS maNV, CASE
+      WHEN hd.khach_hang_id IS NULL  THEN N'Khách lẻ' ELSE kh.ten END  as tenKH ,CASE WHEN hd.so_dien_thoai\s
+      is  NULL THEN N''ELSE hd.so_dien_thoai END  as sdt,CASE WHEN hd.dia_chi IS  NULL THEN N''else hd.dia_chi\s
+      end as diaChi,ngay_mua as ngayMua,hd.thanh_tien as thanhTien,hd.trang_thai as trangThai,hd.loai_hoa_don
+      AS loaiHD, hd.tien_van_chuyen as tienVanChuyen,hd.tra_sau as traSau, thanh_toan.phuong_thuc_vnp as phuongThucVNP
+      FROM  duanmishoes.hoa_don hd LEFT JOIN duanmishoes.nguoi_dung kh ON kh.id = hd.khach_hang_id left join thanh_toan on thanh_toan.hoa_don_id=hd.id where hd.id=:key
             	    """,
             nativeQuery = true)
     AdminHoaDonDetailRespon detailHD(String key);
