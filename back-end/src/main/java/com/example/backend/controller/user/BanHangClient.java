@@ -77,7 +77,7 @@ public class BanHangClient {
 //        lichSuHoaDon.setTrangThai(0);
 //        lichSuHoaDon.setNgayTao(LocalDateTime.now());
 //        lichSuHoaDonService.save(lichSuHoaDon);
-        return  ResponseEntity.ok(banHangService.addHoaDon(hoaDonRequest));
+        return  ResponseEntity.ok(banHangService.addHoaDonClient(hoaDonRequest));
     }
     @PostMapping("/addHDCT")
     public ResponseEntity<?> addHDCT(@RequestBody HoaDonChiTietRequest request){

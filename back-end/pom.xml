@@ -164,7 +164,10 @@
             <artifactId>jjwt</artifactId>
             <version>0.9.1</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
 <!--        <dependency>-->
 <!--            <groupId>com.nimbusds</groupId>-->
 <!--            <artifactId>nimbus-jose-jwt</artifactId>-->
@@ -175,6 +178,7 @@
 <!--            <artifactId>spring-security-oauth2-client</artifactId>-->
 <!--            <version>5.7.5</version>-->
 <!--        </dependency>-->
+
     </dependencies>
 
     <build>

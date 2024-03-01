@@ -16,6 +16,7 @@ import { v4 as uuid } from "uuid";
 import { SellAPI } from "../../../pages/censor/api/sell/sell.api";
 import { KhachHangAPI } from "../../../pages/censor/api/user/khachHang.api";
 import { ShipAPI } from "../../../pages/censor/api/ship/ship.api";
+import { AdThongBaoDatHang, KHGuiThongBaoDatHang } from "../../../utils/socket/socket";
 export const GioHang = ({ children }) => {
   const [openModalDiaChi, setOpenModalDiaChi] = useState(false);
   const [openModalVoucher, setOpenModalVoucher] = useState(false);
@@ -29,10 +30,10 @@ export const GioHang = ({ children }) => {
   const [clickCountVNP, setClickCountVNP] = useState(0);
   const [phuongThuc, setPhuongThuc] = useState(0);
   const [discount, setDiscount] = useState(0);
-
+  
   let total = 0;
-  let tienShip = 0;
-  let thanhTien = 0;
+  let tienShip=0;
+  let thanhTien=0;
   const storedData = get("userData");
   const storedGioHang = get("GioHang");
 
@@ -62,27 +63,27 @@ export const GioHang = ({ children }) => {
     }
     loadGHCT();
   }, []);
-  const loadGiamGia = (voucher) => {
-    console.log("vsd", voucher);
-    if (voucher !== null) {
-      if (voucher.loaiVoucher === "Tiền mặt") {
-        setDiscount(voucher.giamToiDa);
-      } else {
-        setDiscount(Math.min(total * (voucher.mucDo / 100), voucher.giamToiDa));
+  const loadGiamGia=(voucher)=>{
+    console.log("vsd",voucher)
+    if(voucher!==null){
+      if(voucher.loaiVoucher==='Tiền mặt'){
+        setDiscount(voucher.giamToiDa);;
+      }else{
+        setDiscount(Math.min(total * (voucher.mucDo / 100), voucher.giamToiDa) );
       }
     }
-    console.log("discount", discount);
-  };
+    console.log("discount",discount)
+  }
   const loadDiaChiMacDinh = () => {
     KhachHangAPI.getDiaChiMacDinh(storedData.userID).then((res) => {
       setDiaChi(res.data);
-      console.log(res.data);
-      console.log(
-        ShipAPI.fetchAllDayShip(res.data.idHuyen, res.data.idXa).then(
-          (res) => res.data.data
-        )
-      );
+      console.log(res.data)
+      console.log(ShipAPI.fetchAllDayShip(res.data.idHuyen, res.data.idXa).then(
+        (res) => res.data.data
+      )
+     );
     });
+    
   };
   const loadGHCT = () => {
     if (storedData !== null) {
@@ -102,10 +103,11 @@ export const GioHang = ({ children }) => {
       });
     }
   };
-
+  
   const [isSwitchOn, setIsSwitchOn] = useState(false);
   const [isSwitchTraSau, setIsSwitchTraSau] = useState(false);
   const [isDiaChiGiaoHangVisible, setIsDiaChiGiaoHangVisible] = useState(false);
+
 
   //mua hàng
   const handleMuaHang = (
@@ -117,97 +119,100 @@ export const GioHang = ({ children }) => {
     diaChi,
     phuongThuc
   ) => {
-    const currentDate = new Date();
-    const currentDateInMilliseconds = Date.UTC(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      currentDate.getDate(),
-      currentDate.getHours(),
-      currentDate.getMinutes(),
-      currentDate.getSeconds(),
-      currentDate.getMilliseconds()
-    );
-    const idHD = uuid();
-    let hoaDonID;
-    const hoaDon = {
-      id: idHD,
-      ma: "HD" + currentDateInMilliseconds,
-      nguoiDung: khachHang,
-      giaGoc: total,
-      giaGiamGia: discount,
-      thanhTien: total - discount,
-    };
 
-    console.log("hóa đơn",hoaDon)
-    BanHangClientAPI.addHD(hoaDon).then((res)=>{
-      console.log("hóa đơn tạo",res.data);
-        hoaDonID=res.data.id;
-        console.log("giot hàng",gioHangCT);
-      gioHangCT.map((ghct)=>{
-        const id = uuid();
-        console.log(hoaDonID)
+    KHGuiThongBaoDatHang(); 
+    // const currentDate = new Date();
+    // const currentDateInMilliseconds = Date.UTC(
+    //   currentDate.getFullYear(),
+    //   currentDate.getMonth(),
+    //   currentDate.getDate(),
+    //   currentDate.getHours(),
+    //   currentDate.getMinutes(),
+    //   currentDate.getSeconds(),
+    //   currentDate.getMilliseconds(),
+    // );
+    // const idHD = uuid();
+    // let hoaDonID;
+    // const hoaDon = {
+    //   id: idHD,
+    //   ma: "HD" + currentDateInMilliseconds,
+    //   nguoiDung: khachHang,
+    //   giaGoc: total,
+    //   giaGiamGia: discount,
+    //   thanhTien: total - discount,
+    // };
+    // console.log("hóa đơn",hoaDon)
+    // BanHangClientAPI.addHD(hoaDon).then((res)=>{
+    //   console.log("hóa đơn tạo",res.data);
+    //     hoaDonID=res.data.id;
+    //     console.log("giot hàng",gioHangCT);
+    //   gioHangCT.map((ghct)=>{
+    //     const id = uuid();
+    //     console.log(hoaDonID)
 
-        const hdct = {
-          id: id,
-          hoaDon: res.data.id,
-          chiTietSanPham: ghct.chiTietSanPham,
-          soLuong: ghct.soLuong,
-          giaSauGiam: ghct.thanhTien,
-        };
-
-         
-        BanHangClientAPI.addHDCT(hdct).then((res)=>{
-          console.log("hóa đơn chi tiết",res.data);
-        });
-        GioHangAPI.deleteGHCT(ghct.id);
-      });
-
-
-    if (voucher !== null) {
-      console.log("add voucher to hóa đơn",res.data.hoaDon.id,voucher.id)
-      BanHangClientAPI.updateVoucherToHD(res.data.hoaDon.id,voucher.id)
-    }
-    
-    const thanhToanTM={
-      hoaDon:res.data.id,
-      phuongThuc:phuongThuc,
-      tienMat:total-discount,
-      tongTien:total-discount,
-    }
-    
-    
-    if(phuongThuc==0){
-      console.log("hóa đơn trước thanh toán",res.data.hoaDon);
-      console.log("thanhToanTM",thanhToanTM)
-      BanHangClientAPI.thanhToanTienMat(thanhToanTM).then((res)=>{
-        console.log("hóa đơn tm",res.data);
-      });
-    }else{
-      BanHangClientAPI.thanhToanHoaDon(hoaDonID).then((res)=>{
-        console.log("thanh toán",res.data)
-      });
-      BanHangClientAPI.getLinkVnpay(res.data.id,total-discount).then((res) => {
-        window.open(res.data.url, '_blank');
-        console.log("url",res.data.url.substring(res.data.url.indexOf('vnp_TxnRef')+11).substring(0,8)); // mã giao dịch  
-        console.log("dataa",res.data)
-        const thanhToanVNP={
-          hoaDon:hoaDonID,
-          phuongThuc:phuongThuc,
-          chuyenKhoan:total-discount,
-          tongTien:total-discount,
-          phuongThucVnp:res.data.url.substring(res.data.url.indexOf('vnp_TxnRef')+11).substring(0,8)
-        }
-        console.log("thanh toán vnp",thanhToanVNP)
+    //     const hdct = {
+    //       id: id,
+    //       hoaDon: res.data.id,
+    //       chiTietSanPham: ghct.chiTietSanPham,
+    //       soLuong: ghct.soLuong,
+    //       giaSauGiam: ghct.thanhTien,
+    //     };
        
-        BanHangClientAPI.thanhToanChuyenKhoan(thanhToanVNP);
-      });
-     
-     
+        
+    //     BanHangClientAPI.addHDCT(hdct).then((res)=>{
+    //       console.log("hóa đơn chi tiết",res.data);
+    //     });
+    //     GioHangAPI.deleteGHCT(ghct.id);
+
+    //   });
+
     
-    }  
-    });
-    loadGHCT();
-    setVoucher(null);
+
+    // if (voucher !== null) {
+    //   console.log("add voucher to hóa đơn",res.data.id,voucher.id)
+    //   BanHangClientAPI.updateVoucherToHD(res.data.id,voucher.id)
+    // }
+    
+    // const thanhToanTM={
+    //   hoaDon:res.data.id,
+    //   phuongThuc:phuongThuc,
+    //   tienMat:total-discount,
+    //   tongTien:total-discount,
+    // }
+    
+    
+    // if(phuongThuc==0){
+    //   console.log("hóa đơn trước thanh toán",res.data.hoaDon);
+    //   console.log("thanhToanTM",thanhToanTM)
+    //   BanHangClientAPI.thanhToanTienMat(thanhToanTM).then((res)=>{
+    //     console.log("hóa đơn tm",res.data);
+    //   });
+    // }else{
+    //   BanHangClientAPI.thanhToanHoaDon(hoaDonID).then((res)=>{
+    //     console.log("thanh toán",res.data)
+    //   });
+    //   BanHangClientAPI.getLinkVnpay(res.data.id,total-discount).then((res) => {
+    //     window.open(res.data.url, '_blank');
+    //     console.log("url",res.data.url.substring(res.data.url.indexOf('vnp_TxnRef')+11).substring(0,8)); // mã giao dịch  
+    //     console.log("dataa",res.data)
+    //     const thanhToanVNP={
+    //       hoaDon:hoaDonID,
+    //       phuongThuc:phuongThuc,
+    //       chuyenKhoan:total-discount,
+    //       tongTien:total-discount,
+    //       phuongThucVnp:res.data.url.substring(res.data.url.indexOf('vnp_TxnRef')+11).substring(0,8)
+    //     }
+    //     console.log("thanh toán vnp",thanhToanVNP)
+       
+    //     BanHangClientAPI.thanhToanChuyenKhoan(thanhToanVNP);
+    //   });
+    // } 
+   
+    // });
+    
+    // loadGHCT();
+    // setVoucher(null);
+    
   };
 
   return (
@@ -342,12 +347,14 @@ export const GioHang = ({ children }) => {
             </div>
 
             <div className="col-md-5">
-              <span>
-                <span style={{ color: "blue" }}>
-                  {Intl.NumberFormat("en-US").format(discount)}
+             
+                <span>
+                  <span style={{ color: "blue" }} >
+                    {Intl.NumberFormat("en-US").format(discount)}
+                  </span>
+                  <span> VND</span>
                 </span>
-                <span> VND</span>
-              </span>
+              
             </div>
           </div>
           <div
@@ -359,8 +366,8 @@ export const GioHang = ({ children }) => {
             </h5>
             <h5 className="col-md-5">
               <span style={{ color: "blue" }}>
-                {Intl.NumberFormat("en-US").format(total - discount)} VND
-              </span>
+                {Intl.NumberFormat("en-US").format(total-discount)} VND
+                </span>
             </h5>
           </div>
         </div>
@@ -429,23 +436,19 @@ export const GioHang = ({ children }) => {
           </div>
           <div className="row mt-3">
             <h5 className="col">Phí vận chuyển</h5>
-            <h5 className="col">
-              : {Intl.NumberFormat("en-US").format(tienShip)} VND
-            </h5>
+            <h5 className="col">: {Intl.NumberFormat("en-US").format(tienShip)} VND</h5>
           </div>
           <div className="row  mt-3">
             <h5 className="col">Mã Giảm giá</h5>
-
-            <h5 className="col">
-              : {Intl.NumberFormat("en-US").format(discount)} VND
-            </h5>
+            
+              <h5 className="col">
+                : {Intl.NumberFormat("en-US").format(discount)} VND
+              </h5>
+            
           </div>
           <div className="row mt-3" style={{ color: "red" }}>
             <h5 className="col">Tổng thanh toán</h5>
-            <h5 className="col">
-              : {Intl.NumberFormat("en-US").format(total + tienShip - discount)}{" "}
-              VND
-            </h5>
+            <h5 className="col">: {Intl.NumberFormat("en-US").format(total+tienShip-discount)} VND</h5>
           </div>
           <hr className="mt-5 mb-5"></hr>
           <div className="d-flex flex-row-reverse bd-highlight">
