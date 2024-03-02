@@ -16,27 +16,63 @@ import { HoaDonAPI } from "../../../pages/censor/api/hoaDon/hoaDon.api";
 import moment from "moment";
 import { ToastContainer } from "react-toastify";
 import { FormattedNumber, IntlProvider } from "react-intl";
+import SockJS from "sockjs-client";
+import { Stomp } from "@stomp/stompjs";
 const DetailTraCuuDonHang = ({ listBill }) => {
   const idHD = useParams();
   console.log(idHD);
   const nav = useNavigate();
   const [listTimeLine, setlistTimeLine] = useState([]);
   const [bill, setBill] = useState({});
-   const [listSanPhams, setlistSanPhams] = useState([]);
+  const [listSanPhams, setlistSanPhams] = useState([]);
+
+      var stomp = null;
+      const socket = new SockJS("http://localhost:8080/ws");
+      stomp = Stomp.over(socket);
+
+      useEffect(() => {
+        stomp.connect({}, () => {
+          console.log("connect websocket");
+
+          stomp.subscribe("/topic/admin/hoa-don", (mes) => {
+            try {
+              const pare = JSON.parse(mes.body);
+              console.log(pare);
+              // ví du: bạn muốn khi khách hàng bấm đặt hàng mà load lại hóa đơn màn admin thì hãy gọi hàm load all hóa đơn ở đây
+              // thí dụ: đây là hàm laod hóa đơn: loadHoaDon(); allThongBao(); CountThongBao();
+           loadTimeLine();
+            } catch (e) {
+              console.log("lỗi mẹ ròi xem code di: ", e);
+            }
+          });
+        });
+
+        return () => {
+          stomp.disconnect();
+        };
+      }, []);
+
+  const loadTimeLine = () => {
+    HoaDonAPI.getAllLichSuHoaDon().then((res) => {
+      setlistTimeLine(res.data);
+      console.log(res);
+    });
+  };
   useEffect(() => {
     HoaDonClientAPI.DetailHoaDonClient(idHD.idHD).then((res) => {
       setBill(res.data);
     });
-   HoaDonAPI.detailSanPham(idHD.idHD).then((res) => {
-     setlistSanPhams(res.data);
-   });
-    HoaDonAPI.getAllLichSuHoaDon(idHD.idHD).then((res) => {
-      setlistTimeLine(res.data);
-      console.log(res);
+    HoaDonAPI.detailSanPham(idHD.idHD).then((res) => {
+      setlistSanPhams(res.data);
     });
+    loadTimeLine();
+    // HoaDonAPI.getAllLichSuHoaDon(idHD.idHD).then((res) => {
+    //   setlistTimeLine(res.data);
+    //   console.log(res);
+    // });
   }, []);
 
- console.log(listSanPhams);
+  console.log(listSanPhams);
   const showIcon = (trangThai) => {
     if (trangThai === "0") {
       return GiNotebook;
@@ -215,8 +251,6 @@ const DetailTraCuuDonHang = ({ listBill }) => {
                 <div className="col-md-2  mt-5">
                   <Button className=" btn btn-danger">Trả hàng</Button>
                 </div>
-
-            
               </tr>
             ))}
           </div>

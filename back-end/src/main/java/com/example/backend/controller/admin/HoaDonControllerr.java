@@ -8,10 +8,7 @@ import com.example.backend.entity.HoaDon;
 import com.example.backend.entity.LichSuHoaDon;
 import com.example.backend.entity.ThanhToan;
 import com.example.backend.entity.Voucher;
-import com.example.backend.service.HoaDonServicee;
-import com.example.backend.service.LichSuHoaDonService;
-import com.example.backend.service.ThanhToanService;
-import com.example.backend.service.VoucherService;
+import com.example.backend.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,6 +36,8 @@ public class HoaDonControllerr {
     private VoucherService voucherService;
     @Autowired
     private ThanhToanService thanhToanService;
+    @Autowired
+    ThongBaoService thongBaoService;
     @GetMapping()
     public ResponseEntity<?> getALL(){
         return  ResponseEntity.ok(hoaDonService.getALL());
@@ -58,6 +57,7 @@ public class HoaDonControllerr {
     }
     @PutMapping("/update-hoa-don/{idHD}/{maNV}")
     public ResponseEntity<?> updateTTHDvaADDLSHD(@RequestBody LichSuHoaDonRequest ls, @PathVariable("idHD") String id, @PathVariable("maNV") String maNV ){
+
         HoaDon hoaDon=hoaDonService.findHoaDonbyID(id);
         ls.setNgayTao(LocalDateTime.now());
         ls.setIdHD(id);
