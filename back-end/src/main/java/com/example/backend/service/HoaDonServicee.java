@@ -37,7 +37,8 @@ public class HoaDonServicee {
 
     @Autowired
     VoucherRepository voucherRepository;
-
+    @Autowired
+    ThongBaoService thongBaoService;
     @Autowired
     HoaDonChiTietRepository hoaDonChiTietRepository;
     public List<AdminHoaDonResponn> getALL() {
@@ -82,6 +83,7 @@ public class HoaDonServicee {
         return hoaDonRepository.save(hoaDon);
     }
     public HoaDon updateHD(HoaDon hoaDon,String id){
+        thongBaoService.VanDon(id);
 //        HoaDon hoaDon1= findHoaDonbyID(id);
         Optional<HoaDon> optional = hoaDonRepository.findById(id);
         return optional.map(o->{

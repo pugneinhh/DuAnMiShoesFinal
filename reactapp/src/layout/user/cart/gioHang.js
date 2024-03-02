@@ -121,97 +121,97 @@ export const GioHang = ({ children }) => {
   ) => {
 
     KHGuiThongBaoDatHang(); 
-    // const currentDate = new Date();
-    // const currentDateInMilliseconds = Date.UTC(
-    //   currentDate.getFullYear(),
-    //   currentDate.getMonth(),
-    //   currentDate.getDate(),
-    //   currentDate.getHours(),
-    //   currentDate.getMinutes(),
-    //   currentDate.getSeconds(),
-    //   currentDate.getMilliseconds(),
-    // );
-    // const idHD = uuid();
-    // let hoaDonID;
-    // const hoaDon = {
-    //   id: idHD,
-    //   ma: "HD" + currentDateInMilliseconds,
-    //   nguoiDung: khachHang,
-    //   giaGoc: total,
-    //   giaGiamGia: discount,
-    //   thanhTien: total - discount,
-    // };
-    // console.log("hóa đơn",hoaDon)
-    // BanHangClientAPI.addHD(hoaDon).then((res)=>{
-    //   console.log("hóa đơn tạo",res.data);
-    //     hoaDonID=res.data.id;
-    //     console.log("giot hàng",gioHangCT);
-    //   gioHangCT.map((ghct)=>{
-    //     const id = uuid();
-    //     console.log(hoaDonID)
+    const currentDate = new Date();
+    const currentDateInMilliseconds = Date.UTC(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      currentDate.getDate(),
+      currentDate.getHours(),
+      currentDate.getMinutes(),
+      currentDate.getSeconds(),
+      currentDate.getMilliseconds(),
+    );
+    const idHD = uuid();
+    let hoaDonID;
+    const hoaDon = {
+      id: idHD,
+      ma: "HD" + currentDateInMilliseconds,
+      nguoiDung: khachHang,
+      giaGoc: total,
+      giaGiamGia: discount,
+      thanhTien: total - discount,
+    };
+    console.log("hóa đơn",hoaDon)
+    BanHangClientAPI.addHD(hoaDon).then((res)=>{
+      console.log("hóa đơn tạo",res.data);
+        hoaDonID=res.data.id;
+        console.log("giot hàng",gioHangCT);
+      gioHangCT.map((ghct)=>{
+        const id = uuid();
+        console.log(hoaDonID)
 
-    //     const hdct = {
-    //       id: id,
-    //       hoaDon: res.data.id,
-    //       chiTietSanPham: ghct.chiTietSanPham,
-    //       soLuong: ghct.soLuong,
-    //       giaSauGiam: ghct.thanhTien,
-    //     };
+        const hdct = {
+          id: id,
+          hoaDon: res.data.id,
+          chiTietSanPham: ghct.chiTietSanPham,
+          soLuong: ghct.soLuong,
+          giaSauGiam: ghct.thanhTien,
+        };
        
         
-    //     BanHangClientAPI.addHDCT(hdct).then((res)=>{
-    //       console.log("hóa đơn chi tiết",res.data);
-    //     });
-    //     GioHangAPI.deleteGHCT(ghct.id);
+        BanHangClientAPI.addHDCT(hdct).then((res)=>{
+          console.log("hóa đơn chi tiết",res.data);
+        });
+        GioHangAPI.deleteGHCT(ghct.id);
 
-    //   });
+      });
 
     
 
-    // if (voucher !== null) {
-    //   console.log("add voucher to hóa đơn",res.data.id,voucher.id)
-    //   BanHangClientAPI.updateVoucherToHD(res.data.id,voucher.id)
-    // }
+    if (voucher !== null) {
+      console.log("add voucher to hóa đơn",res.data.id,voucher.id)
+      BanHangClientAPI.updateVoucherToHD(res.data.id,voucher.id)
+    }
     
-    // const thanhToanTM={
-    //   hoaDon:res.data.id,
-    //   phuongThuc:phuongThuc,
-    //   tienMat:total-discount,
-    //   tongTien:total-discount,
-    // }
+    const thanhToanTM={
+      hoaDon:res.data.id,
+      phuongThuc:phuongThuc,
+      tienMat:total-discount,
+      tongTien:total-discount,
+    }
     
     
-    // if(phuongThuc==0){
-    //   console.log("hóa đơn trước thanh toán",res.data.hoaDon);
-    //   console.log("thanhToanTM",thanhToanTM)
-    //   BanHangClientAPI.thanhToanTienMat(thanhToanTM).then((res)=>{
-    //     console.log("hóa đơn tm",res.data);
-    //   });
-    // }else{
-    //   BanHangClientAPI.thanhToanHoaDon(hoaDonID).then((res)=>{
-    //     console.log("thanh toán",res.data)
-    //   });
-    //   BanHangClientAPI.getLinkVnpay(res.data.id,total-discount).then((res) => {
-    //     window.open(res.data.url, '_blank');
-    //     console.log("url",res.data.url.substring(res.data.url.indexOf('vnp_TxnRef')+11).substring(0,8)); // mã giao dịch  
-    //     console.log("dataa",res.data)
-    //     const thanhToanVNP={
-    //       hoaDon:hoaDonID,
-    //       phuongThuc:phuongThuc,
-    //       chuyenKhoan:total-discount,
-    //       tongTien:total-discount,
-    //       phuongThucVnp:res.data.url.substring(res.data.url.indexOf('vnp_TxnRef')+11).substring(0,8)
-    //     }
-    //     console.log("thanh toán vnp",thanhToanVNP)
+    if(phuongThuc==0){
+      console.log("hóa đơn trước thanh toán",res.data.hoaDon);
+      console.log("thanhToanTM",thanhToanTM)
+      BanHangClientAPI.thanhToanTienMat(thanhToanTM).then((res)=>{
+        console.log("hóa đơn tm",res.data);
+      });
+    }else{
+      BanHangClientAPI.thanhToanHoaDon(hoaDonID).then((res)=>{
+        console.log("thanh toán",res.data)
+      });
+      BanHangClientAPI.getLinkVnpay(res.data.id,total-discount).then((res) => {
+        window.open(res.data.url, '_blank');
+        console.log("url",res.data.url.substring(res.data.url.indexOf('vnp_TxnRef')+11).substring(0,8)); // mã giao dịch  
+        console.log("dataa",res.data)
+        const thanhToanVNP={
+          hoaDon:hoaDonID,
+          phuongThuc:phuongThuc,
+          chuyenKhoan:total-discount,
+          tongTien:total-discount,
+          phuongThucVnp:res.data.url.substring(res.data.url.indexOf('vnp_TxnRef')+11).substring(0,8)
+        }
+        console.log("thanh toán vnp",thanhToanVNP)
        
-    //     BanHangClientAPI.thanhToanChuyenKhoan(thanhToanVNP);
-    //   });
-    // } 
+        BanHangClientAPI.thanhToanChuyenKhoan(thanhToanVNP);
+      });
+    } 
    
-    // });
+    });
     
-    // loadGHCT();
-    // setVoucher(null);
+    loadGHCT();
+    setVoucher(null);
     
   };
 

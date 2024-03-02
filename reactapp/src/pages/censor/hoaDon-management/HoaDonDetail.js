@@ -20,6 +20,7 @@ import ModalTimeLine from "./ModalTimeLine";
 import ModalSanPham from "./ModalSanPham";
 import { get, set } from "local-storage";
 import { ThanhToanAPI } from "../api/thanhToan/thanhToan.api";
+import { AdminGuiThongBaoXacNhanDatHang } from "../../../utils/socket/socket";
 export default function HoaDonDetail() {
   const { id } = useParams();
   const [openModalTimeLine, setOpenModalTimeLine] = useState(false);
@@ -81,6 +82,7 @@ export default function HoaDonDetail() {
 
   // update trạng thái hóa đơn
   const handleSubmit = (values) => {
+    AdminGuiThongBaoXacNhanDatHang();
     HoaDonAPI.updateTTHoaDon(id, maNV, values).then((res) => {
       console.log("values", values);
       console.log("trang thau", trangThai);

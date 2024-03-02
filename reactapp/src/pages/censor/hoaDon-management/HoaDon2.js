@@ -10,7 +10,8 @@ import { FormattedNumber, IntlProvider } from 'react-intl';
 import { FaMoneyBills } from 'react-icons/fa6';
 import { FilterFilled, RetweetOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import { HoaDonAPI } from '../api/hoaDon/hoaDon.api';
-
+import SockJS from "sockjs-client";
+import { Stomp } from "@stomp/stompjs";
 
 
 export default function HoaDon() {
@@ -24,6 +25,32 @@ export default function HoaDon() {
       setHoaDons(res.data);
     });
   };
+      var stomp = null;
+      const socket = new SockJS("http://localhost:8080/ws");
+      stomp = Stomp.over(socket);
+
+      useEffect(() => {
+        stomp.connect({}, () => {
+          console.log("connect websocket");
+
+          stomp.subscribe("/topic/admin/hoa-don", (mes) => {
+            try {
+              const pare = JSON.parse(mes.body);
+              console.log(pare);
+              // ví du: bạn muốn khi khách hàng bấm đặt hàng mà load lại hóa đơn màn admin thì hãy gọi hàm load all hóa đơn ở đây
+              // thí dụ: đây là hàm laod hóa đơn: loadHoaDon(); allThongBao(); CountThongBao();
+                loadHoaDon();
+                loadHoaDonCho();
+            } catch (e) {
+              console.log("lỗi mẹ ròi xem code di: ", e);
+            }
+          });
+        });
+
+        return () => {
+          stomp.disconnect();
+        };
+      }, []);
   useEffect(() => {
     loadHoaDon();
     loadHoaDonCho();
