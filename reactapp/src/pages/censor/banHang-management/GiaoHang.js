@@ -467,7 +467,7 @@ const DiaChiGiaoHang = ({ money, quantity, hoaDon, thongTinVanChuyen ,thongTinKh
               <span className="text-danger">
                 {/* {new Date(timeShip * 1).getDate()} / {new Date(timeShip * 1).getUTCMonth()} / {new Date(timeShip * 1).getFullYear()} */}
                 {thongTinVanChuyen && timeShip1===timeShip
-                  ? new Date(thongTinVanChuyen.ngayDuKienNhan).toLocaleDateString()
+                  ? thongTinVanChuyen.ngayDuKienNhan
                   : timeShip1
                   ? new Date(timeShip1).toLocaleDateString()
                   : timeShip

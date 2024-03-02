@@ -96,6 +96,7 @@ public class HoaDonServicee {
         HoaDon hoaDon = findHoaDonbyID(idHD);
         hoaDon.setTraSau(1);
         hoaDon.setNhanVien(idNV);
+        hoaDon.setNgayMua(LocalDateTime.now());
         return hoaDonRepository.save(hoaDon);
     }
 
@@ -179,7 +180,11 @@ public class HoaDonServicee {
 
     public HoaDon thanhToanHoaDon(String idHD) {
             HoaDon hoaDonCT=hoaDonRepository.findById(idHD).get();
-        hoaDonCT.setTrangThai(4);
+         if(hoaDonCT.getTraSau() == 0) {
+             hoaDonCT.setTrangThai(4);
+         }  else {
+             hoaDonCT.setTrangThai(2);
+         }
         hoaDonCT.setNgayMua(LocalDateTime.now());
       return  hoaDonRepository.save(hoaDonCT);
     }
