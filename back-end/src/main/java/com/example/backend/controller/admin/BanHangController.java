@@ -213,7 +213,12 @@ public class BanHangController {
     public ResponseEntity<?> thanhToanHoaDon (@PathVariable("idHD") String idHD,@PathVariable("idNV") String idNV) {
         HoaDon hoaDon=hoaDonServicee.findHoaDonbyID(idHD);
         if(hoaDon.getTraSau() == 0) {
-            hoaDon.setTrangThai(4);
+            if (hoaDon.getDiaChi() != null){
+                hoaDon.setTrangThai(2);
+            } else {
+                hoaDon.setTrangThai(4);
+            }
+ 
         }  else {
             hoaDon.setTrangThai(2);
         }

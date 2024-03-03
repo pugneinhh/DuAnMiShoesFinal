@@ -77,8 +77,8 @@ const BanHang = () => {
   const [voucherByIDKH, setVoucherByIDKH] = useState([""]);
   const [voucherNoLimited, setVoucherNoLimited] = useState([""]);
   const [diaChiKhachHang, setDiaChiKhachHang] = useState("");
-  const [SL, setSL] = useState(0);
-  const [SLT, setSLT] = useState(0);
+  console.log("ship money ", shipMoney);
+  console.log("ship money 1 ", shipMoney1);
   console.log("Địa chỉ KH", diaChiKhachHang);
 
   const handleSwitchToggle = () => {
@@ -581,21 +581,28 @@ const BanHang = () => {
         hoaDons.filter((item) => item.id === key)[0].voucher
       ).then((res) => setVoucherHienTai(res.data));
     }
-    if (hoaDons.filter((item) => item.id === key && item.nguoiDung)[0]) {
-      console.log("Vào hóa đơn filter")
-      NguoiDungAPI.getDiaChiByIDND(
-        hoaDons.filter((item) => item.id === key && item.nguoiDung)[0].nguoiDung
-      ).then((resData) => setDiaChiKhachHang(resData.data));
-    } else {
-      setDiaChiKhachHang("");
-    }
+    // if (
+    //   hoaDons.filter((item) => item.id === key && item.nguoiDung)[0]
+    // ) {
+   
+    //   NguoiDungAPI.getDiaChiByIDND(
+    //     hoaDons.filter((item) => item.id === key && item.nguoiDung)[0]
+    //       .nguoiDung
+    //   ).then((resData) => setDiaChiKhachHang(resData.data)
+      
+    //   );
+     
+    // } else {
+    //   setDiaChiKhachHang("");
+    //   // setShipMoney(0);
+    // }
 
     SellAPI.getVoucherWithIDKH(
       hoaDons.filter((item) => item.id === key && item.nguoiDung)[0]?.nguoiDung
     ).then((res) => setVoucherByIDKH(res));
     //voucherKH(nguoiDung);
-        setShipMoney(0);
-        setShipMoney1(0);
+    setShipMoney(0);
+    setShipMoney1(0);
   };
 
   ////tạo hóa đơn bằng redux
@@ -1408,7 +1415,7 @@ const BanHang = () => {
                                     //     ? shipMoney
                                     //     : shipMoney
                                     // (hd[0]?.tienVanChuyen && !shipMoney  ) ? hd[0]?.tienVanChuyen : (hd[0]?.tienVanChuyen && hd[0]?.tienVanChuyen !== shipMoney) ? shipMoney : shipMoney
-                                    hd[0]?.tienVanChuyen && shipMoney === shipMoney1
+                                    (hd[0]?.tienVanChuyen && (shipMoney === shipMoney1))
                                       ? hd[0]?.tienVanChuyen
                                       : shipMoney1          
                                       ? shipMoney1
