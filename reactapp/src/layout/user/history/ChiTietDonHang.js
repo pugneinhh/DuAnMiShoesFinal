@@ -18,6 +18,8 @@ import moment from "moment";
 import { ToastContainer } from "react-toastify";
 import { MdArrowBackIos } from "react-icons/md";
 import { get, set } from "local-storage";
+import SockJS from "sockjs-client";
+import { Stomp } from "@stomp/stompjs";
 const ChiTietDonHang = (props) => {
   const idHD = useParams();
     const storedData = get("userData");
@@ -32,19 +34,48 @@ const ChiTietDonHang = (props) => {
       const taiKhoanCuaToi = () => {
         nav("/tai-khoan-cua-toi");
       };
+       var stomp = null;
+       const socket = new SockJS("http://localhost:8080/ws");
+       stomp = Stomp.over(socket);
+
+       useEffect(() => {
+         stomp.connect({}, () => {
+           console.log("connect websocket");
+
+           stomp.subscribe("/topic/KH/hoa-don", (mes) => {
+             try {
+               const pare = JSON.parse(mes.body);
+               console.log(pare);
+               // ví du: bạn muốn khi khách hàng bấm đặt hàng mà load lại hóa đơn màn admin thì hãy gọi hàm load all hóa đơn ở đây
+               // thí dụ: đây là hàm laod hóa đơn: loadHoaDon(); allThongBao(); CountThongBao();
+               loadTimeLine();
+         
+             } catch (e) {
+               console.log("lỗi mẹ ròi xem code di: ", e);
+             }
+           });
+         });
+
+         return () => {
+           stomp.disconnect();
+         };
+       }, []);
+       
   useEffect(() => {
        setUserName(storedData.ten);
        setLinkAnhUser(storedData.anh);
     HoaDonClientAPI.DetailHoaDonClient(idHD.idHD).then((res) => {
       setBill(res.data);
     });
+loadTimeLine();
 
+  }, []);
+  const loadTimeLine = () => {
     HoaDonAPI.getAllLichSuHoaDon(idHD.idHD).then((res) => {
       setlistTimeLine(res.data);
       console.log(res);
     });
-  }, []);
-
+  };
     const goBack = () => {
       window.history.back(); // Quay lại trang trước đó trong lịch sử duyệt
     };
