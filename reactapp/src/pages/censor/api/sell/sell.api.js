@@ -215,4 +215,18 @@ export class SellAPI {
       data: data,
     });
   };
+
+  static getSLAndSLT = (idSP,idHD) => {
+    return requestAdmin({
+      method: "GET",
+      url : `/ban-hang/hoa-don/san-pham/so-luong/${idSP}/${idHD}`,
+    });
+  };
+
+  static updateTienVanChuyen = (idHD,tien) => {
+    return requestAdmin({
+      method: "PUT",
+      url : `/ban-hang/hoa-don/update-tien-van-chuyen/${idHD}/${tien}`,
+    });
+  }
 }

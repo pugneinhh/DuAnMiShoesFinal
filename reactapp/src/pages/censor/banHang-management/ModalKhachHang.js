@@ -39,18 +39,26 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
   const idKH = activeKey
     ? bill.filter((item) => item.id === activeKey)[0]?.nguoiDung
     : "";
-  
   const handleClickAddClient = async (record) => {
     console.log("recorrd id",record);
-    dispatch(
-      UpdateKHToBill({
-        key: activeKey,
-        nguoiDung: record.idND,
-        tenNguoiDung: record.tenND,
-        gtNguoiDung: record.gioiTinh,
-        diemNguoiDung: record.diem,
-      })
-    );
+
+    NguoiDungAPI.getDiaChiByIDND(record.idND).then((res) => {
+      console.log("res",res.data);
+      console.log("huyen id",res.data.idHuyen);
+      console.log("xa id",res.data.idXa);
+      dispatch(
+        UpdateKHToBill({
+          key: activeKey,
+          nguoiDung: record.idND,
+          tenNguoiDung: record.tenND,
+          gtNguoiDung: record.gioiTinh,
+          diemNguoiDung: record.diem,
+          idHuyen: res.data.idHuyen,
+          idXa: res.data.idXa,
+        })
+      );
+    })
+
     await SellAPI.getVoucherWithIDKH(record.idND).then((res) => onVoucher(res));
    await NguoiDungAPI.getDiaChiByIDND(record.idND).then((resData) => console.log(resData.data));
    SellAPI.updateKH(activeKey, record.idND);
