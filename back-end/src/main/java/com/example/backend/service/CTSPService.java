@@ -3,6 +3,7 @@ import com.example.backend.dto.request.sanphamsearch.CTSPSearch;
 import com.example.backend.dto.request.sanpham.ChiTietSanPhamRequest;
 import com.example.backend.dto.request.sanphamupdate.UpdateCTSPRequest;
 import com.example.backend.dto.response.ChiTietSanPhamForBanHang;
+import com.example.backend.dto.response.SoLuongVaSoLuongTon;
 import com.example.backend.dto.response.sanpham.CTSPSearchRespone;
 import com.example.backend.dto.response.sanpham.ChiTietSanPhamRespone;
 import com.example.backend.dto.response.sanpham.DetailCTSPRespone;
@@ -92,5 +93,9 @@ public class CTSPService {
 
     public ChiTietSanPham findChiTietSanPhamByID(String idCTSP){
         return ctspRepository.getReferenceById(idCTSP);
+    }
+
+    public SoLuongVaSoLuongTon getSLVaSLT(String idSP,String idHD){
+        return ctspRepository.getSLAndSLT(idSP,idHD);
     }
 }

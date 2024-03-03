@@ -5,6 +5,7 @@ import com.example.backend.dto.request.sanphamsearch.CTSPSearch;
 import com.example.backend.dto.response.SanPhamClient.DetailCTSPClientRespon;
 import com.example.backend.dto.response.SanPhamClient.ListMauSacBySPClientRespon;
 import com.example.backend.dto.response.SanPhamClient.ListSizeBySPClientRespon;
+import com.example.backend.dto.response.SoLuongVaSoLuongTon;
 import com.example.backend.dto.response.sanpham.CTSPSearchRespone;
 import com.example.backend.dto.response.sanpham.ChiTietSanPhamRespone;
 import com.example.backend.dto.response.sanpham.DetailCTSPRespone;
@@ -234,4 +235,10 @@ public interface CTSPRepository extends JpaRepository<ChiTietSanPham, String> {
             WHERE o.id=:idCT
                      """, nativeQuery = true)
     DetailCTSPRespone detailCTSPGioHang(@Param("idCT") String idCT);
+
+
+    @Query(value = "select chi_tiet_san_pham.so_luong as soLuongTon , " +
+            "hoa_don_chi_tiet.so_luong as soLuong " +
+            "from chi_tiet_san_pham left join hoa_don_chi_tiet on chi_tiet_san_pham.id = hoa_don_chi_tiet.chi_tiet_san_pham_id where chi_tiet_san_pham.id =:idSP and hoa_don_chi_tiet.hoa_don_id =:idHD",nativeQuery = true)
+    SoLuongVaSoLuongTon getSLAndSLT(String idSP,String idHD);
 }

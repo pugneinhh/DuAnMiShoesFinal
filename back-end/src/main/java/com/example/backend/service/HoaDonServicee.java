@@ -182,15 +182,14 @@ public class HoaDonServicee {
 
     public HoaDon thanhToanHoaDon(String idHD) {
             HoaDon hoaDonCT=hoaDonRepository.findById(idHD).get();
-         if(hoaDonCT.getTraSau() == 0) {
-             hoaDonCT.setTrangThai(4);
-         }  else {
-             hoaDonCT.setTrangThai(2);
-         }
         hoaDonCT.setNgayMua(LocalDateTime.now());
       return  hoaDonRepository.save(hoaDonCT);
     }
 
+    public HoaDon updateTrangThaiHoaDon(HoaDon hd){
+        return  hoaDonRepository.save(hd);
+
+    }
     public HoaDon addHoaDon (HoaDon hd){
 
         hd.setTraSau(0);

@@ -28,7 +28,7 @@ public interface DiaChiRepository extends JpaRepository<DiaChi, String> {
             "dia_chi.trang_thai as trangThai," +
             "dia_chi.id_thanh_pho as idThanhPho," +
             "dia_chi.id_huyen as idHuyen," +
-            "dia_chi.id_xa as idXa from dia_chi left join nguoi_dung on dia_chi.nguoi_dung_id = nguoi_dung.id where dia_chi.nguoi_dung_id=:id",nativeQuery = true)
+            "dia_chi.id_xa as idXa from dia_chi left join nguoi_dung on dia_chi.nguoi_dung_id = nguoi_dung.id where dia_chi.nguoi_dung_id=:id and dia_chi.trang_thai = 0",nativeQuery = true)
     List<DiaChiKHResponse> getAllDiachiByIDKH (String id );
 
     @Query(value = "SELECT id , nguoi_dung_id as nguoiDung,id_thanh_pho as idThanhPho,id_huyen as idHuyen,id_xa as idXa, ten_nguoi_nhan as tenNguoiNhan, so_dien_thoai as soDienThoai,dia_chi as diaChi,ten_xa as tenXa,ten_huyen as tenHuyen,ten_thanh_pho as tenThanhPho, trang_thai as trangThai from dia_chi where nguoi_dung_id =:id and trang_thai=0",nativeQuery = true)

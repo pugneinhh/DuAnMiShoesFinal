@@ -50,4 +50,11 @@ public interface AdminBillForSellRespon {
     Date getNgayDuKienNhan();
     @Value("#{target.tienVanChuyen}")
     Float getTienVanChuyen();
+
+    @Value("#{target.idHuyen}")
+    String getIdHuyen();
+    @Value("#{target.idXa}")
+    String getIdXa();
+    @Value("#{target.idThanhPho}")
+    String getIdThanhPho();
 }
