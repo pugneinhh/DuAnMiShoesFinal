@@ -6,7 +6,7 @@ import { ShipAPI } from "../api/ship/ship.api";
 import LogoGHN from "../../../assets/images/LogoGHN.png";
 import { SellAPI } from "../api/sell/sell.api";
 import { toast } from "react-toastify";
-import { UpdateVanChuyenToBill } from "../../../store/reducer/Bill.reducer";
+import { UpdateVanChuyenToBill , UpdateTienVanChuyen} from "../../../store/reducer/Bill.reducer";
 import { DeleteVanChuyenFromBill } from "../../../store/reducer/Bill.reducer";
 import { dispatch } from "../../../store/redux/store";
 import { useSelector } from "react-redux";
@@ -24,6 +24,7 @@ const DiaChiGiaoHang = ({
   const [listDistricts, setListDistricts] = useState([]);
   const [listWard, setListWard] = useState([]);
   const [districtID, setDistrictID] = useState("");
+  const [hoaDon1, setHoaDon1] = useState("");
   const [wardCode, setWardCode] = useState("");
   const [timeShip, setTimeShip] = useState("");
   const [timeShip1, setTimeShip1] = useState("");
@@ -54,12 +55,39 @@ const DiaChiGiaoHang = ({
   let soNhaDaCo = "";
 
   useEffect(() => {
-    changeQuantity();
-    console.log("Số lượng thay đổi", quantity);
+    if (hoaDon === hoaDon1) {
+      ShipAPI.fetchAllMoneyShip(districtID, wardCode, quantity).then((res) =>
+        SellAPI.updateTienVanChuyen(
+          hoaDon,
+          roundToThousands(res.data.data.total)
+        )
+
+      );
+      money(
+         ShipAPI.fetchAllMoneyShip(districtID, wardCode, quantity).then(
+          (res) => res.data.data.total
+        )
+      );
+      setMoneyShip(
+         ShipAPI.fetchAllMoneyShip(districtID, wardCode, quantity).then(
+          (res) => res.data.data.total
+        )
+      );
+      money1(0);
+      setMoneyShip(0);
+      ShipAPI.fetchAllMoneyShip(districtID, wardCode, quantity).then((res) =>
+      dispatch(UpdateTienVanChuyen({key:hoaDon,tienVanChuyen:  roundToThousands(res.data.data.total)}))
+
+    );
+
+    } else {
+      setHoaDon1(hoaDon);
+    }
   }, [quantity]);
 
   useEffect(() => {
     loadDataProvince();
+    setHoaDon1(hoaDon);
   }, []);
 
   useEffect(() => {
@@ -87,8 +115,8 @@ const DiaChiGiaoHang = ({
         tenXa: phuongDaCo,
         soNha: soNhaDaCo,
       });
-      console.log("Thông tin vận chuyển idHuyen",thongTinVanChuyen.idHuyen);
-      console.log("Thông tin vận chuyển idXa",thongTinVanChuyen.idXa);
+      console.log("Thông tin vận chuyển idHuyen", thongTinVanChuyen.idHuyen);
+      console.log("Thông tin vận chuyển idXa", thongTinVanChuyen.idXa);
 
       if (
         thongTinVanChuyen?.idHuyen !== null &&
@@ -105,18 +133,16 @@ const DiaChiGiaoHang = ({
           }
         );
         setDistrictID(thongTinVanChuyen.idHuyen);
-        AddressApi.fetchAllProvinceWard(thongTinVanChuyen.idHuyen).then((res) => {
-          setListWard(res.data.data);
-        });
+        AddressApi.fetchAllProvinceWard(thongTinVanChuyen.idHuyen).then(
+          (res) => {
+            setListWard(res.data.data);
+          }
+        );
         setWardCode(thongTinVanChuyen.idXa);
-
       } else {
         money1(0);
       }
     } else if (thongTinKhachHang) {
-      console.log("Thông tin khách hàng ",thongTinKhachHang);
-      console.log("Thông tin khách hàng  idHuyen",thongTinKhachHang.idHuyen);
-      console.log("Thông tin khách hàng  idXa",thongTinKhachHang.idXa);
       form.setFieldsValue({
         tenNguoiNhan: thongTinKhachHang.tenNguoiNhan,
         soDienThoai: thongTinKhachHang.soDienThoai,
@@ -126,8 +152,11 @@ const DiaChiGiaoHang = ({
         tenXa: thongTinKhachHang.tenXa,
         soNha: thongTinKhachHang.diaChi,
       });
-      
-      if (thongTinKhachHang.idHuyen !== null && thongTinKhachHang.idXa !== null) {
+
+      if (
+        thongTinKhachHang.idHuyen !== null &&
+        thongTinKhachHang.idXa !== null
+      ) {
         loadTimeAndMoney(
           thongTinKhachHang.idHuyen,
           thongTinKhachHang.idXa,
@@ -139,16 +168,17 @@ const DiaChiGiaoHang = ({
           }
         );
         setDistrictID(thongTinKhachHang.idHuyen);
-        AddressApi.fetchAllProvinceWard(thongTinKhachHang.idHuyen).then((res) => {
-          setListWard(res.data.data);
-        });
+        AddressApi.fetchAllProvinceWard(thongTinKhachHang.idHuyen).then(
+          (res) => {
+            setListWard(res.data.data);
+          }
+        );
         setWardCode(thongTinKhachHang.idXa);
-        
       } else {
         money(0);
       }
-     }
-  }, [thongTinKhachHang, thongTinVanChuyen, hoaDon]);
+    }
+  }, [thongTinKhachHang, thongTinVanChuyen, hoaDon, quantity]);
 
   const loadDataProvince = () => {
     AddressApi.fetchAllProvince().then((res) => {
@@ -160,15 +190,12 @@ const DiaChiGiaoHang = ({
     setComponentSize(size);
   };
   const loadTimeAndMoney = async (districtID, valueWard, quantity) => {
-    console.log("idHuyen",districtID);
-    console.log("idXa",valueWard);
-    console.log("số lượng",quantity);
-
     setTimeShip(
       await ShipAPI.fetchAllDayShip(districtID, valueWard).then(
         (res) => res.data.data.leadtime * 1000
       )
     );
+
     money(
       await ShipAPI.fetchAllMoneyShip(districtID, valueWard, quantity).then(
         (res) => res.data.data.total
@@ -228,15 +255,16 @@ const DiaChiGiaoHang = ({
           value.tenThanhPho,
         ngayDuKienNhan:
           timeShip !== timeShip1 && !timeShip1 ? timeShip : timeShip1,
-        tienVanChuyen:
-        roundToThousands(moneyShip !== moneyShip1 && !moneyShip1 ? moneyShip : moneyShip1),
+        tienVanChuyen: roundToThousands(
+          moneyShip !== moneyShip1 && !moneyShip1 ? moneyShip : moneyShip1
+        ),
       },
     ];
     SellAPI.updateVanChuyen(hoaDon, data[0]);
   };
 
-  const handleProvinceChange = (value,valueProvince) => {
-     form.setFieldsValue({ provinceId: valueProvince.valueProvince });
+  const handleProvinceChange = (value, valueProvince) => {
+    form.setFieldsValue({ provinceId: valueProvince.valueProvince });
     AddressApi.fetchAllProvinceDistricts(valueProvince.valueProvince).then(
       (res) => {
         setListDistricts(res.data.data);
@@ -244,72 +272,53 @@ const DiaChiGiaoHang = ({
     );
   };
 
-  const handleDistrictChange = (value,valueDistrict) => {
+  const handleDistrictChange = (value, valueDistrict) => {
     form.setFieldsValue({ toDistrictId: valueDistrict.valueDistrict });
     setDistrictID(valueDistrict.valueDistrict);
-    console.log("Phường",valueDistrict.valueDistrict)
+    console.log("Phường", valueDistrict.valueDistrict);
     AddressApi.fetchAllProvinceWard(valueDistrict.valueDistrict).then((res) => {
       setListWard(res.data.data);
     });
   };
 
-  const handleWardChange = async (value,valueWard) => {
-     form.setFieldsValue({ wardCode: valueWard.valueWard });
+  const handleWardChange = async (value, valueWard) => {
+    form.setFieldsValue({ wardCode: valueWard.valueWard });
     setWardCode(valueWard.valueWard);
-    
+
     // setTimeShip(
     //   await ShipAPI.fetchAllDayShip(districtID, valueWard.valueWard).then(
     //     (res) => res.data.data.leadtime * 1000
     //   )
     // );
-    if (districtID && valueWard)
-    {
-    setTimeShip1(
-      await ShipAPI.fetchAllDayShip(districtID, valueWard.valueWard).then(
-        (res) => res.data.data.leadtime * 1000
-      )
-    );
-    money1(
-      await ShipAPI.fetchAllMoneyShip(
-        districtID,
-        valueWard.valueWard,
-        quantity
-      ).then((res) => res.data.data.total)
-    );
-    console.log(
-      await ShipAPI.fetchAllDayShip(districtID, valueWard.valueWard).then(
-        (res) => res.data.data.leadtime * 1000
-      )
-    );
-    setMoneyShip1(
-      await ShipAPI.fetchAllMoneyShip(
-        districtID,
-        valueWard.valueWard,
-        quantity
-      ).then((res) => res.data.data.total)
-    );
-      }
-  };
-
-  const changeQuantity = async () => {
-    if (districtID && wardCode) {
-      await ShipAPI.fetchAllMoneyShip(districtID, wardCode, quantity).then(
-        (res) => SellAPI.updateTienVanChuyen(hoaDon,roundToThousands(res.data.data.total))
-      )
-
-      money(
-        await ShipAPI.fetchAllMoneyShip(districtID, wardCode, quantity).then(
-          (res) => res.data.data.total
+    if (districtID && valueWard) {
+      setTimeShip1(
+        await ShipAPI.fetchAllDayShip(districtID, valueWard.valueWard).then(
+          (res) => res.data.data.leadtime * 1000
         )
       );
-      setMoneyShip(
-        await ShipAPI.fetchAllMoneyShip(districtID, wardCode, quantity).then(
-          (res) => res.data.data.total
+      money1(
+        await ShipAPI.fetchAllMoneyShip(
+          districtID,
+          valueWard.valueWard,
+          quantity
+        ).then((res) => res.data.data.total)
+      );
+      console.log(
+        await ShipAPI.fetchAllDayShip(districtID, valueWard.valueWard).then(
+          (res) => res.data.data.leadtime * 1000
         )
+      );
+      setMoneyShip1(
+        await ShipAPI.fetchAllMoneyShip(
+          districtID,
+          valueWard.valueWard,
+          quantity
+        ).then((res) => res.data.data.total)
       );
     }
-    
   };
+
+  const changeQuantity = async () => {};
 
   return (
     <>

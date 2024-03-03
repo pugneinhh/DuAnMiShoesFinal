@@ -158,6 +158,15 @@ const billSlice = createSlice({
       state[index].idThanhPho = "";
     }
   },
+
+  UpdateTienVanChuyen : (state,action) => {
+    const updatedBill = action.payload; // backend
+    const index = state.findIndex((period) => period.key === updatedBill.key);
+    if (index !== -1) {
+      state[index].tienVanChuyen = updatedBill.tienVanChuyen;;
+
+    }
+  }
 },
 },
 );
@@ -173,7 +182,8 @@ export const {
   UpdateNullVoucher,
   UpdateVoucherToBill,
   UpdateVanChuyenToBill,
-  DeleteVanChuyenFromBill
+  DeleteVanChuyenFromBill,
+  UpdateTienVanChuyen
 } = billSlice.actions;
 export default billSlice.reducer;
 export const GetBill = (state) => state.bill;
