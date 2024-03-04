@@ -223,7 +223,7 @@ public interface CTSPRepository extends JpaRepository<ChiTietSanPham, String> {
     List<ChiTietSanPhamForBanHang> getTimBanHang(CTSPSearch ctspSearch);
     @Query(value = """
             SELECT o.ghi_chu as ghiChu,o.id AS id,o.mo_ta AS moTa ,sp.id AS sanPham,sp.ten AS tenSP ,kt.ten AS kichThuoc,ms.ma AS mauSac,cl.ten AS chatLieu,dc.ten AS deGiay,dm.ten AS danhMuc
-            ,h.ten AS hang,o.so_luong AS soLuong,o.gia_ban AS giaBan,o.trang_thai AS trangThai
+            ,h.ten AS hang,o.so_luong AS soLuong,o.gia_ban AS giaBan,o.trang_thai AS trangThai , km.loai as loaiKM , km.gia_tri_khuyen_mai as giaTriKhuyenMai
             FROM chi_tiet_san_pham o
             JOIN san_pham sp  on o.san_pham_id=sp.id
             JOIN kich_thuoc kt  on o.kich_thuoc_id=kt.id
@@ -232,6 +232,7 @@ public interface CTSPRepository extends JpaRepository<ChiTietSanPham, String> {
             JOIN de_giay dc  on o.de_giay_id=dc.id
             JOIN danh_muc dm  on o.danh_muc_id=dm.id
             JOIN hang h  on o.hang_id=h.id
+            LEFT JOIN khuyen_mai km on o.khuyen_mai_id = km.id
             WHERE o.id=:idCT
                      """, nativeQuery = true)
     DetailCTSPRespone detailCTSPGioHang(@Param("idCT") String idCT);

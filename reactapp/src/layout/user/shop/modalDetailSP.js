@@ -18,12 +18,14 @@ const ModalDetailSP = (props) => {
   const storedData = get("userData");
   const storedGioHang = get("GioHang");
   console.log("IDCTSP",idCt);
+  console.log("modalDetailSP Chi Tiết Sản Phẩm",ChiTietSanPham);
   useEffect(() => {
     loadCTSP();
     if (storedData != null) {
       setKhachHang(storedData.userID);
     } 
   }, []);
+  
   const loadCTSP = () => {
     SanPhamClientAPI.getCTSP(idCt).then((res) => {
       setChiTietSanPham(res.data);
@@ -136,7 +138,11 @@ const ModalDetailSP = (props) => {
                   gioHang: idCTSP[0].gioHang,
                   chiTietSanPham: ChiTietSanPham.id,
                   soLuong: soLuong,
-                  thanhTien: ChiTietSanPham.giaBan * soLuong,
+                  thanhTien: ChiTietSanPham.loaiKM ? 
+                  (ChiTietSanPham.loaiKM === "Tiền mặt" ? 
+                  (ChiTietSanPham.giaBan - ChiTietSanPham.giaTriKhuyenMai) * soLuong 
+                  : (ChiTietSanPham.giaBan - (ChiTietSanPham.giaBan * ChiTietSanPham.giaTriKhuyenMai / 100))* soLuong )
+                  : ChiTietSanPham.giaBan * soLuong,
                 };
                  
                 GioHangAPI.updateSLGHCT(GHCT).then((res)=>{
@@ -156,7 +162,11 @@ const ModalDetailSP = (props) => {
                   gioHang:idgh,
                   chiTietSanPham: ChiTietSanPham.id,
                   soLuong: soLuong,
-                  thanhTien: ChiTietSanPham.giaBan * soLuong,
+                  thanhTien: ChiTietSanPham.loaiKM ? 
+                  (ChiTietSanPham.loaiKM === "Tiền mặt" ? 
+                  (ChiTietSanPham.giaBan - ChiTietSanPham.giaTriKhuyenMai) * soLuong 
+                  : (ChiTietSanPham.giaBan - (ChiTietSanPham.giaBan * ChiTietSanPham.giaTriKhuyenMai / 100))* soLuong )
+                  : ChiTietSanPham.giaBan * soLuong,
                 };
                
                 GioHangAPI.addGHCT(data).then((res) => {
@@ -181,7 +191,11 @@ const ModalDetailSP = (props) => {
                   gioHang: res.data.id,
                   chiTietSanPham: ChiTietSanPham.id,
                   soLuong: soLuong,
-                  thanhTien: ChiTietSanPham.giaBan * soLuong,
+                  thanhTien: ChiTietSanPham.loaiKM ? 
+                  (ChiTietSanPham.loaiKM === "Tiền mặt" ? 
+                  (ChiTietSanPham.giaBan - ChiTietSanPham.giaTriKhuyenMai) * soLuong 
+                  : (ChiTietSanPham.giaBan - (ChiTietSanPham.giaBan * ChiTietSanPham.giaTriKhuyenMai / 100))* soLuong )
+                  : ChiTietSanPham.giaBan * soLuong,
                 };
                 if (soLuong > ChiTietSanPham.soLuong) {
                   toast.error("Số lượng sản phẩm không đủ!", {
@@ -222,7 +236,11 @@ const ModalDetailSP = (props) => {
             gioHang: res.data.id,
             chiTietSanPham: ChiTietSanPham.id,
             soLuong: soLuong,
-            thanhTien: ChiTietSanPham.giaBan * soLuong,
+            thanhTien: ChiTietSanPham.loaiKM ? 
+            (ChiTietSanPham.loaiKM === "Tiền mặt" ? 
+            (ChiTietSanPham.giaBan - ChiTietSanPham.giaTriKhuyenMai) * soLuong 
+            : (ChiTietSanPham.giaBan - (ChiTietSanPham.giaBan * ChiTietSanPham.giaTriKhuyenMai / 100))* soLuong )
+            : ChiTietSanPham.giaBan * soLuong,
           };
           if (soLuong > ChiTietSanPham.soLuong) {
             toast.error("Số lượng sản phẩm không đủ!", {
@@ -263,7 +281,11 @@ const ModalDetailSP = (props) => {
             gioHang: res.data[0].gioHang,
             chiTietSanPham: ChiTietSanPham.id,
             soLuong: soLuong,
-            thanhTien: ChiTietSanPham.giaBan * soLuong,
+            thanhTien: ChiTietSanPham.loaiKM ? 
+            (ChiTietSanPham.loaiKM === "Tiền mặt" ? 
+            (ChiTietSanPham.giaBan - ChiTietSanPham.giaTriKhuyenMai) * soLuong 
+            : (ChiTietSanPham.giaBan - (ChiTietSanPham.giaBan * ChiTietSanPham.giaTriKhuyenMai / 100))* soLuong )
+            : ChiTietSanPham.giaBan * soLuong,
           };
            
           GioHangAPI.updateSLGHCT(GHCT).then((res)=>{
@@ -283,7 +305,11 @@ const ModalDetailSP = (props) => {
             gioHang: res.data[0].gioHang,
             chiTietSanPham: ChiTietSanPham.id,
             soLuong: soLuong,
-            thanhTien: ChiTietSanPham.giaBan * soLuong,
+            thanhTien: ChiTietSanPham.loaiKM ? 
+            (ChiTietSanPham.loaiKM === "Tiền mặt" ? 
+            (ChiTietSanPham.giaBan - ChiTietSanPham.giaTriKhuyenMai) * soLuong 
+            : (ChiTietSanPham.giaBan - (ChiTietSanPham.giaBan * ChiTietSanPham.giaTriKhuyenMai / 100))* soLuong )
+            : ChiTietSanPham.giaBan * soLuong,
           };
           GioHangAPI.addGHCT(data).then((res) => {
             toast("✔️ Thêm thành công!", {
