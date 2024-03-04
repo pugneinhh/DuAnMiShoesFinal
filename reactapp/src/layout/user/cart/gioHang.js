@@ -94,30 +94,32 @@ export const GioHang = ({ children }) => {
       idHuyen = res.data.idHuyen;
       idXa = res.data.idXa;
     });
-    setNgayShip(
-      await ShipAPI.fetchAllDayShip(idHuyen, idXa).then(
-        (res) => res.data.data.leadtime * 1000
-      )
-    );
-    setMoneyShip(
-      await ShipAPI.fetchAllMoneyShip(idHuyen, idXa, soLuongSPGH).then(
-        (res) => res.data.data.total
-      )
-    );
-    console.log("IDHuyen", idHuyen);
-    console.log("IDXa", idXa);
-    console.log(
-      "Tiền vận chuyển",
-      await ShipAPI.fetchAllMoneyShip(idHuyen, idXa, soLuongSPGH).then(
-        (res) => res.data.data.total
-      )
-    );
-    console.log(
-      "Thời gian vận chuyển",
-      await ShipAPI.fetchAllDayShip(idHuyen, idXa).then(
-        (res) => res.data.data.leadtime * 1000
-      )
-    );
+    if (idHuyen && idXa) {
+      setNgayShip(
+        await ShipAPI.fetchAllDayShip(idHuyen, idXa).then(
+          (res) => res.data.data.leadtime * 1000
+        )
+      );
+      setMoneyShip(
+        await ShipAPI.fetchAllMoneyShip(idHuyen, idXa, soLuongSPGH).then(
+          (res) => res.data.data.total
+        )
+      );
+      console.log("IDHuyen", idHuyen);
+      console.log("IDXa", idXa);
+      console.log(
+        "Tiền vận chuyển",
+        await ShipAPI.fetchAllMoneyShip(idHuyen, idXa, soLuongSPGH).then(
+          (res) => res.data.data.total
+        )
+      );
+      console.log(
+        "Thời gian vận chuyển",
+        await ShipAPI.fetchAllDayShip(idHuyen, idXa).then(
+          (res) => res.data.data.leadtime * 1000
+        )
+      );
+    }
   };
 
   const loadGHCT = () => {
