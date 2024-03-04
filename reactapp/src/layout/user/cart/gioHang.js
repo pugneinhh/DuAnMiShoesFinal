@@ -234,41 +234,41 @@ export const GioHang = ({ children }) => {
       //   tongTien: total - discount,
       // };
 
-      if (phuongThuc == 0) {
-        console.log("hóa đơn trước thanh toán", res.data.hoaDon);
-        console.log("thanhToanTM", thanhToanTM);
-        BanHangClientAPI.thanhToanTienMat(thanhToanTM).then((res) => {
-          console.log("hóa đơn tm", res.data);
-        });
-      } else {
-        BanHangClientAPI.thanhToanHoaDon(hoaDonID).then((res) => {
-          console.log("thanh toán", res.data);
-        });
-        BanHangClientAPI.getLinkVnpay(res.data.id, total - discount).then(
-          (res) => {
-            window.open(res.data.url, "_blank");
-            console.log(
-              "url",
-              res.data.url
-                .substring(res.data.url.indexOf("vnp_TxnRef") + 11)
-                .substring(0, 8)
-            ); // mã giao dịch
-            console.log("dataa", res.data);
-            const thanhToanVNP = {
-              hoaDon: hoaDonID,
-              phuongThuc: phuongThuc,
-              chuyenKhoan: total - discount,
-              tongTien: total - discount,
-              phuongThucVnp: res.data.url
-                .substring(res.data.url.indexOf("vnp_TxnRef") + 11)
-                .substring(0, 8),
-            };
-            console.log("thanh toán vnp", thanhToanVNP);
+      // if (phuongThuc == 0) {
+      //   console.log("hóa đơn trước thanh toán", res.data.hoaDon);
+      //   // console.log("thanhToanTM", thanhToanTM);
+      //   BanHangClientAPI.thanhToanTienMat(thanhToanTM).then((res) => {
+      //     console.log("hóa đơn tm", res.data);
+      //   });
+      // } else {
+      //   BanHangClientAPI.thanhToanHoaDon(hoaDonID).then((res) => {
+      //     console.log("thanh toán", res.data);
+      //   });
+      //   BanHangClientAPI.getLinkVnpay(res.data.id, total - discount).then(
+      //     (res) => {
+      //       window.open(res.data.url, "_blank");
+      //       console.log(
+      //         "url",
+      //         res.data.url
+      //           .substring(res.data.url.indexOf("vnp_TxnRef") + 11)
+      //           .substring(0, 8)
+      //       ); // mã giao dịch
+      //       console.log("dataa", res.data);
+      //       const thanhToanVNP = {
+      //         hoaDon: hoaDonID,
+      //         phuongThuc: phuongThuc,
+      //         chuyenKhoan: total - discount,
+      //         tongTien: total - discount,
+      //         phuongThucVnp: res.data.url
+      //           .substring(res.data.url.indexOf("vnp_TxnRef") + 11)
+      //           .substring(0, 8),
+      //       };
+      //       console.log("thanh toán vnp", thanhToanVNP);
 
-            BanHangClientAPI.thanhToanChuyenKhoan(thanhToanVNP);
-          }
-        );
-      }
+      //       BanHangClientAPI.thanhToanChuyenKhoan(thanhToanVNP);
+      //     }
+      //   );
+      // }
 
       if (voucher !== null) {
         console.log("add voucher to hóa đơn", res.data.id, voucher.id);
