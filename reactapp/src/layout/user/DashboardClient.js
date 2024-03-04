@@ -21,6 +21,7 @@ import logoShop from "../../assets/images/logoNgang.png";
 import "./client.css";
 import { get, set } from "local-storage";
 import { GioHangAPI } from "../../pages/censor/api/gioHang/gioHang.api";
+import { KHThongBao } from "../../utils/socket/socket";
 const { Header, Content, Footer } = Layout;
 
 export const DashboardClient = ({ children }) => {
@@ -63,6 +64,7 @@ export const DashboardClient = ({ children }) => {
       }
     }
   }, []);
+  KHThongBao();
   const openHistory = () => {
     nav("/history");
   };

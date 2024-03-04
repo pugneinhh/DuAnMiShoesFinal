@@ -77,7 +77,7 @@ public class BanHangClient {
 //        lichSuHoaDon.setTrangThai(0);
 //        lichSuHoaDon.setNgayTao(LocalDateTime.now());
 //        lichSuHoaDonService.save(lichSuHoaDon);
-        return  ResponseEntity.ok(banHangService.addHoaDon(hoaDonRequest));
+        return  ResponseEntity.ok(banHangService.addHoaDonClient(hoaDonRequest));
     }
     @PostMapping("/addHDCT")
     public ResponseEntity<?> addHDCT(@RequestBody HoaDonChiTietRequest request){
@@ -89,6 +89,8 @@ public class BanHangClient {
     public ResponseEntity<?> updateVoucherToHD(@PathVariable("idHD") String idHD, @PathVariable("idVoucher") String idVoucher) {
         return ResponseEntity.ok(hoaDonServicee.addVoucherToHD(idHD,idVoucher));
     }
+
+    //thanh toán hóa đơn client
     @PutMapping("/thanh-toan-hoa-don/{idHD}")
     public ResponseEntity<?> thanhToanHoaDon (@PathVariable("idHD") String idHD) {
         HoaDon hoaDon=hoaDonServicee.findHoaDonbyID(idHD);
@@ -101,6 +103,7 @@ public class BanHangClient {
         lichSuHoaDonService.save(lichSuHoaDon);
         return ResponseEntity.ok(  hoaDonServicee.thanhToanHoaDon(idHD));
     }
+    //thanh toán tiền mặt client
     @PostMapping("/thanh-toan-tien-mat")
     public ResponseEntity<?> thanhToan(@RequestBody ThanhToanRequest request){
         request.setNgayTao(LocalDateTime.now());

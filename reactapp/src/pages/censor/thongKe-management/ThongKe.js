@@ -23,7 +23,16 @@ import { PiChartLineUpBold, PiChartLineDownBold } from "react-icons/pi";
 import { ToastContainer, toast } from "react-toastify";
 import * as XLSX from "xlsx";
 import { ThongKeAPI } from "../api/thongKe/thongKe.api";
+import {SocketConnect} from "../../../utils/socket/socket";
+
+
 export default function ThongKe() {
+  const [stompClient,setStompClient]=useState(null);
+  const [notification,setNotification]=useState('');
+ 
+
+
+
   useEffect(() => {
     loadThongKeTheoNgay();
     loadThongKeTheoThang();
