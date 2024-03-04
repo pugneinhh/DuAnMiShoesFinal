@@ -122,7 +122,7 @@ export default function UpdateKhachHang() {
                         theme: "light",
 
                     });
-                    nav("/khach-hang");
+                    nav("/admin-khach-hang");
               
                 })
                 .catch((error) => {

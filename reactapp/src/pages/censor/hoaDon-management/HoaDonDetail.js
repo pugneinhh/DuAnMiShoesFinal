@@ -390,6 +390,7 @@ export default function HoaDonDetail() {
               </>
             ) : (
               <>
+              
                 {hoaDondetail.traSau == 1 ? (
                   <>
                     {trangThai == 0 ? (
@@ -489,7 +490,7 @@ export default function HoaDonDetail() {
                       <></>
                     )}
                   </>
-                )}
+                )} <></>
               </>
             )}
             <Modal
