@@ -153,7 +153,7 @@ export const GioHang = ({ children }) => {
   }, [idGH]);
 
   useEffect(() => {
-    loadSoLuongSPTrongGH();
+    loadSoLuongSPTrongGH(idGH);
     loadDiaChiMacDinh();
   }, [diaChi?.tenHuyen, diaChi?.tenXa, soLuongSPGH]);
 
