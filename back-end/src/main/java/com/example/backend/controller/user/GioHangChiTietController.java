@@ -42,4 +42,9 @@ public class GioHangChiTietController {
     public ResponseEntity<?> deleteGHCT(@PathVariable("id") String id){
         return ResponseEntity.ok(gioHangChiTietService.deleteGHCT(id));
     }
+
+    @GetMapping("/so-luong-san-pham-trong-gio-hang/{idGH}")
+    public Integer soLuongSPtrongGH(@PathVariable("idGH")String idGH){
+        return gioHangChiTietService.soLuongSanPhamTrongGioHang(idGH);
+    }
 }

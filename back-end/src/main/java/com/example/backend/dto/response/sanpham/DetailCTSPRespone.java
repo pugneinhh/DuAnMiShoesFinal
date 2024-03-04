@@ -29,4 +29,7 @@ public interface DetailCTSPRespone {
     String getMoTa();
 
     int getTrangThai();
+
+    String getLoaiKM();
+    BigDecimal getGiaTriKhuyenMai();
 }

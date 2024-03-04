@@ -62,4 +62,11 @@ export class GioHangAPI{
             url: `gio-hang-chi-tiet/deleteGHCT/${id}`,
         });
     };
+
+    static soLuongTrongGioHang = (idGH) => {
+        return requestAdmin({
+            method : 'GET',
+            url : `gio-hang-chi-tiet/so-luong-san-pham-trong-gio-hang/${idGH}`
+        });
+    }
 }

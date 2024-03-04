@@ -16,6 +16,8 @@ import { v4 as uuid } from "uuid";
 import { SellAPI } from "../../../pages/censor/api/sell/sell.api";
 import { KhachHangAPI } from "../../../pages/censor/api/user/khachHang.api";
 import { ShipAPI } from "../../../pages/censor/api/ship/ship.api";
+import Moment from "moment";
+
 export const GioHang = ({ children }) => {
   const [openModalDiaChi, setOpenModalDiaChi] = useState(false);
   const [openModalVoucher, setOpenModalVoucher] = useState(false);
@@ -29,10 +31,15 @@ export const GioHang = ({ children }) => {
   const [clickCountVNP, setClickCountVNP] = useState(0);
   const [phuongThuc, setPhuongThuc] = useState(0);
   const [discount, setDiscount] = useState(0);
+  const [ngayShip, setNgayShip] = useState("");
+  const [moneyShip, setMoneyShip] = useState("");
+  const [soLuongSPGH, setSoLuongSPGH] = useState(0);
+  const [idGH, setIDGH] = useState("");
 
   let total = 0;
   let tienShip = 0;
   let thanhTien = 0;
+  let soLuongSLGH = 0;
   const storedData = get("userData");
   const storedGioHang = get("GioHang");
 
@@ -73,34 +80,75 @@ export const GioHang = ({ children }) => {
     }
     console.log("discount", discount);
   };
-  const loadDiaChiMacDinh = () => {
-    KhachHangAPI.getDiaChiMacDinh(storedData.userID).then((res) => {
+  const loadDiaChiMacDinh = async () => {
+    let idHuyen = "";
+    let idXa = "";
+    await KhachHangAPI.getDiaChiMacDinh(storedData.userID).then((res) => {
       setDiaChi(res.data);
       console.log(res.data);
-      console.log(
-        ShipAPI.fetchAllDayShip(res.data.idHuyen, res.data.idXa).then(
-          (res) => res.data.data
-        )
-      );
+      idHuyen = res.data.idHuyen;
+      idXa = res.data.idXa;
     });
+    setNgayShip(
+      await ShipAPI.fetchAllDayShip(idHuyen, idXa).then(
+        (res) => res.data.data.leadtime * 1000
+      )
+    );
+    setMoneyShip(
+     await ShipAPI.fetchAllMoneyShip(idHuyen, idXa, soLuongSPGH).then(
+        (res) => res.data.data.total
+      )
+    );
+    console.log("IDHuyen",idHuyen);
+    console.log("IDXa",idXa);
+    console.log("Tiền vận chuyển",await ShipAPI.fetchAllMoneyShip(idHuyen, idXa, soLuongSPGH).then(
+      (res) => res.data.data.total
+    ))
+    console.log ("Thời gian vận chuyển", await ShipAPI.fetchAllDayShip(idHuyen, idXa).then(
+      (res) => res.data.data.leadtime * 1000
+    ))
   };
   const loadGHCT = () => {
     if (storedData !== null) {
       GioHangAPI.getByIDKH(storedData.userID).then((response) => {
+        setIDGH(response.data.id);
         GioHangAPI.getAllGHCTByIDGH(response.data.id).then((res) => {
           setGioHangCT(res.data);
+
           console.log("GioHangct", res.data);
         });
       });
     }
     if (storedGioHang !== null) {
-      GioHangAPI.getByID(storedGioHang.id).then((res) => {
-        GioHangAPI.getAllGHCTByIDGH(res.data.id).then((res) => {
+      GioHangAPI.getByID(storedGioHang.id).then((response) => {
+        setIDGH(response.data.id);
+        GioHangAPI.getAllGHCTByIDGH(response.data.id).then((res) => {
           setGioHangCT(res.data);
+
           console.log("GioHan", res.data);
         });
       });
     }
+  };
+
+  useEffect(() => {
+    console.log("ID GH", idGH);
+    if (idGH) {
+      loadSoLuongSPTrongGH(idGH);
+    }
+  }, [idGH]);
+
+
+  useEffect(() => {
+    loadSoLuongSPTrongGH();
+    loadDiaChiMacDinh();
+
+  },[diaChi?.tenHuyen,diaChi?.tenXa,soLuongSPGH]);
+  
+  const loadSoLuongSPTrongGH = async (idGH) => {
+    await GioHangAPI.soLuongTrongGioHang(idGH).then((res) =>
+      setSoLuongSPGH(res.data)
+    );
   };
 
   const [isSwitchOn, setIsSwitchOn] = useState(false);
@@ -138,14 +186,14 @@ export const GioHang = ({ children }) => {
       thanhTien: total - discount,
     };
 
-    console.log("hóa đơn",hoaDon)
-    BanHangClientAPI.addHD(hoaDon).then((res)=>{
-      console.log("hóa đơn tạo",res.data);
-        hoaDonID=res.data.id;
-        console.log("giot hàng",gioHangCT);
-      gioHangCT.map((ghct)=>{
+    console.log("hóa đơn", hoaDon);
+    BanHangClientAPI.addHD(hoaDon).then((res) => {
+      console.log("hóa đơn tạo", res.data);
+      hoaDonID = res.data.id;
+      console.log("giot hàng", gioHangCT);
+      gioHangCT.map((ghct) => {
         const id = uuid();
-        console.log(hoaDonID)
+        console.log(hoaDonID);
 
         const hdct = {
           id: id,
@@ -155,56 +203,59 @@ export const GioHang = ({ children }) => {
           giaSauGiam: ghct.thanhTien,
         };
 
-         
-        BanHangClientAPI.addHDCT(hdct).then((res)=>{
-          console.log("hóa đơn chi tiết",res.data);
+        BanHangClientAPI.addHDCT(hdct).then((res) => {
+          console.log("hóa đơn chi tiết", res.data);
         });
         GioHangAPI.deleteGHCT(ghct.id);
       });
 
+      if (voucher !== null) {
+        console.log("add voucher to hóa đơn", res.data.hoaDon.id, voucher.id);
+        BanHangClientAPI.updateVoucherToHD(res.data.hoaDon.id, voucher.id);
+      }
 
-    if (voucher !== null) {
-      console.log("add voucher to hóa đơn",res.data.hoaDon.id,voucher.id)
-      BanHangClientAPI.updateVoucherToHD(res.data.hoaDon.id,voucher.id)
-    }
-    
-    const thanhToanTM={
-      hoaDon:res.data.id,
-      phuongThuc:phuongThuc,
-      tienMat:total-discount,
-      tongTien:total-discount,
-    }
-    
-    
-    if(phuongThuc==0){
-      console.log("hóa đơn trước thanh toán",res.data.hoaDon);
-      console.log("thanhToanTM",thanhToanTM)
-      BanHangClientAPI.thanhToanTienMat(thanhToanTM).then((res)=>{
-        console.log("hóa đơn tm",res.data);
-      });
-    }else{
-      BanHangClientAPI.thanhToanHoaDon(hoaDonID).then((res)=>{
-        console.log("thanh toán",res.data)
-      });
-      BanHangClientAPI.getLinkVnpay(res.data.id,total-discount).then((res) => {
-        window.open(res.data.url, '_blank');
-        console.log("url",res.data.url.substring(res.data.url.indexOf('vnp_TxnRef')+11).substring(0,8)); // mã giao dịch  
-        console.log("dataa",res.data)
-        const thanhToanVNP={
-          hoaDon:hoaDonID,
-          phuongThuc:phuongThuc,
-          chuyenKhoan:total-discount,
-          tongTien:total-discount,
-          phuongThucVnp:res.data.url.substring(res.data.url.indexOf('vnp_TxnRef')+11).substring(0,8)
-        }
-        console.log("thanh toán vnp",thanhToanVNP)
-       
-        BanHangClientAPI.thanhToanChuyenKhoan(thanhToanVNP);
-      });
-     
-     
-    
-    }  
+      const thanhToanTM = {
+        hoaDon: res.data.id,
+        phuongThuc: phuongThuc,
+        tienMat: total - discount,
+        tongTien: total - discount,
+      };
+
+      if (phuongThuc == 0) {
+        console.log("hóa đơn trước thanh toán", res.data.hoaDon);
+        console.log("thanhToanTM", thanhToanTM);
+        BanHangClientAPI.thanhToanTienMat(thanhToanTM).then((res) => {
+          console.log("hóa đơn tm", res.data);
+        });
+      } else {
+        BanHangClientAPI.thanhToanHoaDon(hoaDonID).then((res) => {
+          console.log("thanh toán", res.data);
+        });
+        BanHangClientAPI.getLinkVnpay(res.data.id, total - discount).then(
+          (res) => {
+            window.open(res.data.url, "_blank");
+            console.log(
+              "url",
+              res.data.url
+                .substring(res.data.url.indexOf("vnp_TxnRef") + 11)
+                .substring(0, 8)
+            ); // mã giao dịch
+            console.log("dataa", res.data);
+            const thanhToanVNP = {
+              hoaDon: hoaDonID,
+              phuongThuc: phuongThuc,
+              chuyenKhoan: total - discount,
+              tongTien: total - discount,
+              phuongThucVnp: res.data.url
+                .substring(res.data.url.indexOf("vnp_TxnRef") + 11)
+                .substring(0, 8),
+            };
+            console.log("thanh toán vnp", thanhToanVNP);
+
+            BanHangClientAPI.thanhToanChuyenKhoan(thanhToanVNP);
+          }
+        );
+      }
     });
     loadGHCT();
     setVoucher(null);
@@ -254,6 +305,16 @@ export const GioHang = ({ children }) => {
                   Thay đổi
                 </Button>
               </h6>
+            </div>
+            <div className="col-md-6 align-self-center fw-bold">
+              <p>
+                Thời gian giao hàng dự kiến :{" "}
+                <span className="text-danger">
+                  {ngayShip
+                    ? Moment(ngayShip).format("DD/MM/yyyy")
+                    : "dd/MM/yyyy"}
+                </span>
+              </p>
             </div>
           </div>
         ) : (
@@ -430,7 +491,8 @@ export const GioHang = ({ children }) => {
           <div className="row mt-3">
             <h5 className="col">Phí vận chuyển</h5>
             <h5 className="col">
-              : {Intl.NumberFormat("en-US").format(tienShip)} VND
+              : {Intl.NumberFormat("en-US").format(roundToThousands(moneyShip ? moneyShip : 0))}{" "}
+              VND
             </h5>
           </div>
           <div className="row  mt-3">
@@ -443,7 +505,7 @@ export const GioHang = ({ children }) => {
           <div className="row mt-3" style={{ color: "red" }}>
             <h5 className="col">Tổng thanh toán</h5>
             <h5 className="col">
-              : {Intl.NumberFormat("en-US").format(total + tienShip - discount)}{" "}
+              : {Intl.NumberFormat("en-US").format(roundToThousands(total + (moneyShip ? moneyShip : 0) - discount))}{" "}
               VND
             </h5>
           </div>
@@ -493,3 +555,7 @@ export const GioHang = ({ children }) => {
     </div>
   );
 };
+
+function roundToThousands(amount) {
+  return Math.round(amount / 100) * 100;
+}

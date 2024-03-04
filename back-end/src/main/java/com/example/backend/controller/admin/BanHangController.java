@@ -218,7 +218,7 @@ public class BanHangController {
             } else {
                 hoaDon.setTrangThai(4);
             }
- 
+
         }  else {
             hoaDon.setTrangThai(2);
         }

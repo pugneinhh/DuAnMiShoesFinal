@@ -40,4 +40,7 @@ public class GioHangChiTietService {
         ghct.setTrangThai(1);
         return gioHangChiTietRepository.save(ghct);
     }
+    public Integer soLuongSanPhamTrongGioHang(String idGH){
+        return gioHangChiTietRepository.soLuongSanPhamTrongGioHang(idGH);
+    }
 }
