@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./shop.css";
-import { Button, Slider, Checkbox, Card, Col, Collapse, Dropdown, Input, Popover, Row, Space } from "antd";
+import { Button, Slider, Checkbox, Card, Col, Collapse, Dropdown, Input, Popover, Row, Space, Form, Pagination, Flex } from "antd";
 import { ProductCard } from "../productCard";
 import ModalDetailSP from "./modalDetailSP";
 import { HomeAPI } from "../../../pages/censor/api/home/homeApi";
@@ -9,6 +9,7 @@ import { HangAPI } from "../../../pages/censor/api/SanPham/hang.api";
 import { MauSacAPI } from "../../../pages/censor/api/SanPham/mauSac.api";
 import { KichThuocAPI } from "../../../pages/censor/api/SanPham/kichThuoc.api";
 import { SortDescendingOutlined } from "@ant-design/icons";
+import da from "date-fns/esm/locale/da/index.js";
 
 export const Shop = ({ children }) => {
   const [products, setProducts] = useState([]);
@@ -17,10 +18,9 @@ export const Shop = ({ children }) => {
   const [kichThuoc, setKichThuocs] = useState([]);
   const [openModalDetailSP, setOpenModalDetailSP] = useState(false);
   const [hoveredCard, setHoveredCard] = useState(null);
+  const [sortType, setSortType] = useState('');
   const { Search } = Input;
-  const onChange = (value) => {
-    console.log('onChange: ', value);
-  };
+
   const onChangeComplete = (value) => {
     console.log('onChangeComplete: ', value);
   };
@@ -38,6 +38,7 @@ export const Shop = ({ children }) => {
     HomeAPI.getAllSanPham()
       .then((res) => {
         setProducts(res.data);
+        console.log(res.data)
       })
   }
 
@@ -61,7 +62,7 @@ export const Shop = ({ children }) => {
         setKichThuocs(res.data);
       })
   }
-  console.log(mauSac)
+  console.log(products)
 
   useEffect(() => {
     getAll();
@@ -70,48 +71,125 @@ export const Shop = ({ children }) => {
     getAllKichThuoc();
   }, [])
 
+  //Sort
+  const sortProducts = (type) => {
+    let sortedProducts = [...products];
+    switch (type) {
+      case '1': // Giá tăng dần
+        sortedProducts.sort((a, b) => a.price - b.price);
+        break;
+      case '2': // Giá giảm dần
+        sortedProducts.sort((a, b) => b.price - a.price);
+        break;
+      case '3': // Từ A-Z
+        sortedProducts.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case '4': // Từ Z-A
+        sortedProducts.sort((a, b) => b.name.localeCompare(a.name));
+        break;
+      default:
+        break;
+    }
+    setProducts(sortedProducts);
+  };
+
+  const handleSortChange = (type) => {
+    setSortType(type);
+    sortProducts(type);
+  };
+
   const items = [
     {
       key: '1',
       label: (
-        <a>
-          Phổ biến
+        <a onClick={() => handleSortChange('1')}>
+          Giá tăng dần
         </a>
       ),
     },
     {
       key: '2',
       label: (
-        <a>
-          Giá tăng dần
+        <a onClick={() => handleSortChange('2')}>
+          Giá giảm dần
         </a>
       ),
     },
     {
       key: '3',
       label: (
-        <a>
-          Giá giảm dần
+        <a onClick={() => handleSortChange('3')}>
+          Từ A-Z
         </a>
       ),
     },
     {
       key: '4',
       label: (
-        <a>
-          Từ A-Z
-        </a>
-      ),
-    },
-    {
-      key: '5',
-      label: (
-        <a>
+        <a onClick={() => handleSortChange('4')}>
           Từ Z-A
         </a>
       ),
     },
   ]
+
+  //Tìm kiếm đa trường
+  const [arraySanPham, setArraySanPham] = useState([]);
+  const [arrayMauSac, setArrayMauSac] = useState([]);
+  const [arrayKichThuoc, setArrayKichThuoc] = useState([]);
+  const [giaBatDau, setGiaBatDau] = useState(1000000);
+  const [giaKetThuc, setGiaKetThuc] = useState(40000000);
+
+  const dataTimKiem = {
+    arraySanPham: arraySanPham,
+    arrayMauSac: arrayMauSac,
+    arrayKichThuoc: arrayKichThuoc,
+    giaBatDau: giaBatDau,
+    giaKetThuc: giaKetThuc
+  }
+
+  const changeSanPham = (idHang, checked) => {
+    if (checked) {
+      setArraySanPham(prevArray => [...prevArray, idHang]);
+    } else {
+      setArraySanPham(prevArray => prevArray.filter(item => item !== idHang));
+    }
+  };
+
+  const changeMauSac = (idMau, checked) => {
+    if (checked) {
+      setArrayMauSac(prevArray => [...prevArray, idMau]);
+    } else {
+      setArrayMauSac(prevArray => prevArray.filter(item => item !== idMau));
+    }
+  };
+
+  const changeKichThuoc = (idKichThuoc, checked) => {
+    if (checked) {
+      setArrayKichThuoc(prevArray => [...prevArray, idKichThuoc]);
+    } else {
+      setArrayKichThuoc(prevArray => prevArray.filter(item => item !== idKichThuoc));
+    }
+  };
+
+  const onChange = (value) => {
+    setGiaBatDau(value[0]);
+    setGiaKetThuc(value[1]);
+  };
+
+  const getTimMang = (data) => {
+    console.log(data)
+    HomeAPI.timMang(data)
+      .then((res) => {
+        console.log("hihi")
+        setProducts(res.data)
+      })
+  }
+
+  useEffect(() => {
+    getTimMang(dataTimKiem);
+  }, [dataTimKiem.arraySanPham, dataTimKiem.arrayMauSac, dataTimKiem.arrayKichThuoc, dataTimKiem.giaBatDau, dataTimKiem.giaKetThuc])
+
 
   return (
     <div>
@@ -122,10 +200,12 @@ export const Shop = ({ children }) => {
         </h1>
       </div>
       <br></br> <br></br>
+
       <div className="row mt-5">
         {/* lọc filter */}
         <Space direction="vertical" className="col-md-2">
           <Collapse
+            className="mb-2"
             collapsible="header"
             defaultActiveKey={["1"]}
             items={[
@@ -147,19 +227,33 @@ export const Shop = ({ children }) => {
             ]}
           />
           <Collapse
+            className="mb-2"
             collapsible="header"
             defaultActiveKey={["1"]}
             items={[
               {
                 key: "1",
                 label: "Sản phẩm",
-                children: hang.map((hang) => (
-                  <div key={hang.id}>{hang.ten}</div>
-                )),
+                children: (
+                  <div className="scrollable-content">
+                    <Checkbox.Group>
+                      {hang.map((hang, index) => {
+                        return (
+                          <Checkbox
+                            key={hang.id}
+                            value={hang.id}
+                            onChange={(e) => changeSanPham(hang.id, e.target.checked)}>
+                            <b>{hang.ten}</b></Checkbox>
+                        );
+                      })}
+                    </Checkbox.Group>
+                  </div>
+                ),
               },
             ]}
           />
           <Collapse
+            className="mb-2"
             collapsible="icon"
             defaultActiveKey={["1"]}
             items={[
@@ -168,23 +262,19 @@ export const Shop = ({ children }) => {
                 label: "Màu sắc",
                 children: (
                   <div>
-                    <div className="row">
-                      {mauSac.map((mau, index) => {
-                        return (
-                          <div className="col-md-2 ">
-                            <Button
-                              className="mt-2 "
-                              style={{
-                                backgroundColor: `${mau.ma}`, //`${listSanPham.tenMauSac}`
-                                borderRadius: 20,
-                                width: 30,
-                                height: 30,
-                              }}
-                            ></Button>
-                          </div>
-                        );
-                      })}
-
+                    <div className="scrollable-content">
+                      <Checkbox.Group>
+                        {mauSac.map((mau, index) => {
+                          return (
+                            <Checkbox
+                              key={mau.id}
+                              value={mau.id}
+                              onChange={(e) => changeMauSac(mau.id, e.target.checked)}
+                            >
+                              <b>{mau.ten.charAt(0).toUpperCase() + mau.ten.slice(1)}</b></Checkbox>
+                          );
+                        })}
+                      </Checkbox.Group>
                     </div>
                   </div>
                 ),
@@ -192,6 +282,7 @@ export const Shop = ({ children }) => {
             ]}
           />
           <Collapse
+            className="mb-2"
             collapsible="icon"
             defaultActiveKey={["1"]}
             items={[
@@ -204,7 +295,11 @@ export const Shop = ({ children }) => {
                       {kichThuoc.map((kichThuoc, index) => {
                         return (
                           <Col>
-                            <Checkbox value={kichThuoc.id}><b>{kichThuoc.ten}</b></Checkbox>
+                            <Checkbox
+                              key={kichThuoc.id}
+                              value={kichThuoc.id}
+                              onChange={(e) => changeKichThuoc(kichThuoc.id, e.target.checked)}>
+                              <b>{kichThuoc.ten}</b></Checkbox>
                           </Col>
                         );
                       })}
@@ -218,27 +313,20 @@ export const Shop = ({ children }) => {
         </Space>
         <div className="col-md-10  ">
           <Row gutter={16} className="mb-3">
-             <div className="ms-4 me-2">
-              <Search
-                placeholder="Nhập tên sản phẩm ..."
-                style={{
-                  width: 200,
-                }}
-              />
-            </div>
-            <div>
-              <Dropdown
-                menu={{
-                  items,
-                }}
-                placement="bottomLeft"
-                arrow
-              >
-                <Button icon={<SortDescendingOutlined/>}>Sắp xếp</Button>
-              </Dropdown>
-            </div>
-           
+
+
             <div class="container">
+              <div className="d-flex justify-content-end">
+                <Dropdown
+                  menu={{
+                    items,
+                  }}
+                  placement="bottomLeft"
+                  arrow
+                >
+                  <Button icon={<SortDescendingOutlined />}>Sắp xếp</Button>
+                </Dropdown>
+              </div>
               <div className="row me-2">
                 {products.map((product, index) => {
                   return (
@@ -249,9 +337,12 @@ export const Shop = ({ children }) => {
                 })}
               </div>
             </div>
+            <Pagination style={{ marginLeft: 450, marginTop: 50 }} defaultCurrent={1} total={50}></Pagination>
           </Row>
         </div>
       </div>
+
+
       <ModalDetailSP
         openModalDetailSP={openModalDetailSP}
         setOpenModalDetailSP={setOpenModalDetailSP}

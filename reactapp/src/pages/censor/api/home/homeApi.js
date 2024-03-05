@@ -29,4 +29,12 @@ export class HomeAPI {
             url: `/home/${tenSP}`,
         });
     };
+    // Tìm mảng 
+    static timMang = (data) => {
+        return requestAdmin({
+            method: "POST",
+            url: `/home/searchMang`,
+            data: data
+        });
+    };
 }

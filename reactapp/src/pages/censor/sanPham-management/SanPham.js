@@ -155,7 +155,7 @@ export default function SanPham() {
             </div>
             <div className='col-md-4'>
               <Form.Item label="Số lượng" name="soLuong">
-                <Slider defaultValue={1000} min={1} />
+                <Slider defaultValue={100000} min={0} max={100000} step={100} />
               </Form.Item>
             </div>
             <Form.Item className='text-center' style={{ paddingLeft: 200 }}>

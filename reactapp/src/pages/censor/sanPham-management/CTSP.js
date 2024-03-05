@@ -908,13 +908,13 @@ export default function CTSP() {
               </div>
               <div className='col-md-4'>
                 <Form.Item label="Số lượng" name="soLuongCT">
-                  <Slider style={{ width: '200px' }} min={1} />
+                  <Slider style={{ width: '200px' }} min={1} max={2000} step={100} defaultValue={2000}/>
                 </Form.Item>
               </div>
             </div>
             <div className='col'>
               <Form.Item style={{ marginLeft: 100 }} label="Giá bán" name="giaBanCT">
-                <Slider style={{ width: '430px' }} min={1000000} max={10000000} step={1000000} />
+                <Slider style={{ width: '430px' }} min={1000000} max={40000000} step={1000000} defaultValue={40000000}/>
               </Form.Item>
             </div>
 

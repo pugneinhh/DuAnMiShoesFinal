@@ -129,8 +129,8 @@ public interface CTSPRepository extends JpaRepository<ChiTietSanPham, String> {
             (:#{#ctspSearch.idDM} IS NULL OR o.danh_muc_id =:#{#ctspSearch.idDM} ) AND
             (:#{#ctspSearch.idH} IS NULL OR o.hang_id =:#{#ctspSearch.idH} ) AND
             (:#{#ctspSearch.trangThaiCT} IS NULL OR o.trang_thai =:#{#ctspSearch.trangThaiCT}) AND
-            (:#{#ctspSearch.soLuongCT} IS NULL OR o.so_luong <=:#{#ctspSearch.soLuongCT} OR o.so_luong > 0) AND
-            (:#{#ctspSearch.giaBanCT} IS NULL OR o.gia_ban <=:#{#ctspSearch.giaBanCT} OR o.gia_ban > 0)) 
+            (:#{#ctspSearch.soLuongCT} IS NULL OR o.so_luong <= :#{#ctspSearch.soLuongCT}) AND
+            (:#{#ctspSearch.giaBanCT} IS NULL OR o.gia_ban <= :#{#ctspSearch.giaBanCT})) 
             AND o.san_pham_id = :idSP
                      """, nativeQuery = true)
     List<CTSPSearchRespone> getTim(@Param("idSP") String idSP, CTSPSearch ctspSearch);
