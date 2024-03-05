@@ -185,7 +185,7 @@ export default function ChatLieu() {
       ),
     },
     {
-      title: "Action",
+      title: "Hành động",
       key: "action",
       dataIndex: "id",
       render: (title) => (

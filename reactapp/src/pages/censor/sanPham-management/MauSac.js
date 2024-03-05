@@ -190,7 +190,7 @@ export default function MauSac() {
       ),
     },
     {
-      title: "Action",
+      title: "Hành động",
       key: "action",
       dataIndex: "id",
       render: (title) => (

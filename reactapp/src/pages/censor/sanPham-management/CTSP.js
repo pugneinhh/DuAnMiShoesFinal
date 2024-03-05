@@ -603,7 +603,7 @@ export default function CTSP() {
       ),
     },
     {
-      title: "Action",
+      title: "Hành động",
       dataIndex: "idCTSP",
       render: (title) => (
         <Space size="middle">

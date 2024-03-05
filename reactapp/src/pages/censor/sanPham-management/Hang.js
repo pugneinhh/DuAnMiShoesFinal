@@ -186,7 +186,7 @@ export default function Hang() {
       ),
     },
     {
-      title: "Action",
+      title: "Hành động",
       key: "action",
       dataIndex: "id",
       render: (title) => (

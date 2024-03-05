@@ -94,7 +94,9 @@ export const GioHang = ({ children }) => {
       idHuyen = res.data.idHuyen;
       idXa = res.data.idXa;
     });
-    if (idHuyen && idXa) {
+    if (idHuyen  && idXa ) {
+      console.log("IDHuyen", idHuyen);
+      console.log("IDXa", idXa);
       setNgayShip(
         await ShipAPI.fetchAllDayShip(idHuyen, idXa).then(
           (res) => res.data.data.leadtime * 1000
@@ -105,8 +107,7 @@ export const GioHang = ({ children }) => {
           (res) => res.data.data.total
         )
       );
-      console.log("IDHuyen", idHuyen);
-      console.log("IDXa", idXa);
+
       console.log(
         "Tiền vận chuyển",
         await ShipAPI.fetchAllMoneyShip(idHuyen, idXa, soLuongSPGH).then(
@@ -120,6 +121,7 @@ export const GioHang = ({ children }) => {
         )
       );
     }
+
   };
 
   const loadGHCT = () => {
@@ -147,9 +149,7 @@ export const GioHang = ({ children }) => {
 
   useEffect(() => {
     console.log("ID GH", idGH);
-    if (idGH) {
-      loadSoLuongSPTrongGH(idGH);
-    }
+      loadSoLuongSPTrongGH();
   }, [idGH]);
 
   useEffect(() => {
@@ -157,10 +157,12 @@ export const GioHang = ({ children }) => {
     loadDiaChiMacDinh();
   }, [diaChi?.tenHuyen, diaChi?.tenXa, soLuongSPGH]);
 
-  const loadSoLuongSPTrongGH = async (idGH) => {
+  const loadSoLuongSPTrongGH = async () => {
+    if (idGH) {
     await GioHangAPI.soLuongTrongGioHang(idGH).then((res) =>
       setSoLuongSPGH(res.data)
     );
+    }
   };
 
   const [isSwitchOn, setIsSwitchOn] = useState(false);
