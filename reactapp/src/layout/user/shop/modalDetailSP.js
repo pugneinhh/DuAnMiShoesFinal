@@ -23,11 +23,14 @@ const ModalDetailSP = (props) => {
     loadCTSP();
     if (storedData != null) {
       setKhachHang(storedData.userID);
-    } 
+    }
   }, []);
   
   const loadCTSP = () => {
     SanPhamClientAPI.getCTSP(idCt).then((res) => {
+      if (res.data === undefined || res.data === '') {
+        return;
+      }
       setChiTietSanPham(res.data);
       setIDSanPham(res.data.sanPhamID);
       setSelectedMauSac(res.data.mauSacID);
@@ -45,6 +48,7 @@ const ModalDetailSP = (props) => {
           if (kichThuocExists) {
             setSelectedSize(selectedSize);
           } else {
+
             setSelectedSize(res.data[0].kichThuocID);
           }
         }
@@ -53,6 +57,9 @@ const ModalDetailSP = (props) => {
     });
   };
   const loadCTSPChange = (idSP, mauSelect, sizeSelect) => {
+    if(idSP === '' || mauSelect === null || sizeSelect === null){
+      return;
+    }
     SanPhamClientAPI.getCTSPChange(idSP, mauSelect, sizeSelect).then((res) => {
       setChiTietSanPham(res.data);
       console.log("list sp change", res.data);
@@ -96,6 +103,7 @@ const ModalDetailSP = (props) => {
     // window.location.href = `/client/sanpham/kich-thuoc-sp/${IDSanPham}/${mauSacId}`;
     SanPhamClientAPI.changeListSizeBySPandMS(IDSanPham, mauSacId).then(
       (res) => {
+        console.log("data nè")
         setListSizeByMS(res.data);
         const kichThuocExists = res.data.some(
           (item) => item.kichThuocID === selectedSize
@@ -103,10 +111,12 @@ const ModalDetailSP = (props) => {
         if (kichThuocExists) {
           setSelectedSize(selectedSize);
         } else {
-          setSelectedSize(res.data[0].kichThuocID);
+          if (res.data != null) {
+            setSelectedSize(res.data[0].kichThuocID);
+          }
         }
       }
-    );
+    )
   };
 
   const handleSizeClick = (sizeId) => {
@@ -122,19 +132,19 @@ const ModalDetailSP = (props) => {
     }
 
     if (storedGioHang === null) {
-      if(khachHang!==null){
-        GioHangAPI.getByIDKH(khachHang).then((res)=>{
-          
-          if(res.data!==null&&res.data!==''){//nếu như tồn tại giỏ hàng của khách đăng nhập thì kiểm tra xem sp có trùng vs sp trong ghct đó k
-            console.log("res.data",res.data);
-            
-            const idgh=res.data.id;
-            
+      if (khachHang !== null) {
+        GioHangAPI.getByIDKH(khachHang).then((res) => {
+
+          if (res.data !== null && res.data !== '') {//nếu như tồn tại giỏ hàng của khách đăng nhập thì kiểm tra xem sp có trùng vs sp trong ghct đó k
+            console.log("res.data", res.data);
+
+            const idgh = res.data.id;
+
             GioHangAPI.getAllGHCTByIDGH(res.data.id).then((res) => {
               const idCTSP = res.data.filter((item) => item.chiTietSanPham === ChiTietSanPham.id);
               if (idCTSP.length > 0) {
                 const GHCT = {
-                  id:idCTSP[0].id,
+                  id: idCTSP[0].id,
                   gioHang: idCTSP[0].gioHang,
                   chiTietSanPham: ChiTietSanPham.id,
                   soLuong: soLuong,
@@ -144,8 +154,8 @@ const ModalDetailSP = (props) => {
                   : (ChiTietSanPham.giaBan - (ChiTietSanPham.giaBan * ChiTietSanPham.giaTriKhuyenMai / 100))* soLuong )
                   : ChiTietSanPham.giaBan * soLuong,
                 };
-                 
-                GioHangAPI.updateSLGHCT(GHCT).then((res)=>{
+
+                GioHangAPI.updateSLGHCT(GHCT).then((res) => {
                   toast("✔️ Thêm thành công!", {
                     position: "top-right",
                     autoClose: 5000,
@@ -157,9 +167,9 @@ const ModalDetailSP = (props) => {
                     theme: "light",
                   });
                 })
-              }else{
+              } else {
                 const data = {
-                  gioHang:idgh,
+                  gioHang: idgh,
                   chiTietSanPham: ChiTietSanPham.id,
                   soLuong: soLuong,
                   thanhTien: ChiTietSanPham.loaiKM ? 
@@ -168,7 +178,7 @@ const ModalDetailSP = (props) => {
                   : (ChiTietSanPham.giaBan - (ChiTietSanPham.giaBan * ChiTietSanPham.giaTriKhuyenMai / 100))* soLuong )
                   : ChiTietSanPham.giaBan * soLuong,
                 };
-               
+
                 GioHangAPI.addGHCT(data).then((res) => {
                   toast("✔️ Thêm thành công!", {
                     position: "top-right",
@@ -183,7 +193,7 @@ const ModalDetailSP = (props) => {
                 });
               }
             });
-          }else{
+          } else {
             GioHangAPI.addGH({ ma: randomString, khachHang: khachHang }).then(
               (res) => {
                 // set("GioHang", res.data);
@@ -220,7 +230,7 @@ const ModalDetailSP = (props) => {
                       progress: undefined,
                       theme: "light",
                     });
-                  
+
                   });
                 }
               }
@@ -265,19 +275,31 @@ const ModalDetailSP = (props) => {
                 progress: undefined,
                 theme: "light",
               });
-            
-            });
+            } else {
+              GioHangAPI.addGHCT(data).then((res) => {
+                toast("✔️ Thêm thành công!", {
+                  position: "top-right",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "light",
+                });
+
+              });
+            }
           }
-        }
-      );
-    }
+        );
+      }
     } else {
       GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res) => {
         const idCTSP = res.data.filter((item) => item.chiTietSanPham === ChiTietSanPham.id);
-       
+
         if (idCTSP.length > 0) {
           const GHCT = {
-            id:idCTSP[0].id,
+            id: idCTSP[0].id,
             gioHang: res.data[0].gioHang,
             chiTietSanPham: ChiTietSanPham.id,
             soLuong: soLuong,
@@ -287,8 +309,8 @@ const ModalDetailSP = (props) => {
             : (ChiTietSanPham.giaBan - (ChiTietSanPham.giaBan * ChiTietSanPham.giaTriKhuyenMai / 100))* soLuong )
             : ChiTietSanPham.giaBan * soLuong,
           };
-           
-          GioHangAPI.updateSLGHCT(GHCT).then((res)=>{
+
+          GioHangAPI.updateSLGHCT(GHCT).then((res) => {
             toast("✔️ Thêm thành công!", {
               position: "top-right",
               autoClose: 5000,
@@ -300,7 +322,7 @@ const ModalDetailSP = (props) => {
               theme: "light",
             });
           })
-        }else{
+        } else {
           const data = {
             gioHang: res.data[0].gioHang,
             chiTietSanPham: ChiTietSanPham.id,
@@ -400,21 +422,21 @@ const ModalDetailSP = (props) => {
         <div className="col-md-6 ">
           <h3>{ChiTietSanPham.tenSP}</h3>
           <h5 className="mb-3" style={{ color: "red" }}>
-            { 
-            ChiTietSanPham.loaiKM ?
-            (
-            <span>
-            <del style={{color:"black"}}>{Intl.NumberFormat("en-US").format(ChiTietSanPham.giaBan)} VNĐ     </del>
-            
-            {Intl.NumberFormat("en-US").format(ChiTietSanPham.loaiKM === "Tiền mặt" ? ChiTietSanPham.giaBan - ChiTietSanPham.giaTriKhuyenMai : ChiTietSanPham.giaBan - (ChiTietSanPham.giaBan*ChiTietSanPham.giaTriKhuyenMai/100))} VNĐ
-            </span>
-            )
-            : 
-            (<span style={{color:"black"}}>{Intl.NumberFormat("en-US").format(ChiTietSanPham.giaBan)} VNĐ</span>)
+            {
+              ChiTietSanPham.loaiKM ?
+                (
+                  <span>
+                    <del style={{ color: "black" }}>{Intl.NumberFormat("en-US").format(ChiTietSanPham.giaBan)} VNĐ     </del>
+
+                    {Intl.NumberFormat("en-US").format(ChiTietSanPham.loaiKM === "Tiền mặt" ? ChiTietSanPham.giaBan - ChiTietSanPham.giaTriKhuyenMai : ChiTietSanPham.giaBan - (ChiTietSanPham.giaBan * ChiTietSanPham.giaTriKhuyenMai / 100))} VNĐ
+                  </span>
+                )
+                :
+                (<span style={{ color: "black" }}>{Intl.NumberFormat("en-US").format(ChiTietSanPham.giaBan)} VNĐ</span>)
 
             }
-            
-            
+
+
           </h5>
           <hr></hr>
           <h6>Màu</h6>
@@ -460,7 +482,7 @@ const ModalDetailSP = (props) => {
                   disabled={!ListSizeByMS.some(size => size.kichThuocID === listsize.kichThuocID)}
                 >
                   {listsize.tenKichThuoc}
-                
+
                 </Button>
               </div>
             ))}

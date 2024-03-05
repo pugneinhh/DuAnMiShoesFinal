@@ -47,6 +47,10 @@ public class CTSPService {
     }
 
     public List<CTSPSearchRespone> getSearch(String idSP, CTSPSearch ctspSearch){
+        if(ctspSearch.getSoLuongCT()==0 || ctspSearch.getGiaBanCT() == 0 ){
+            ctspSearch.setGiaBanCT(40000000);
+            ctspSearch.setSoLuongCT(2000);
+        }
         return ctspRepository.getTim(idSP,ctspSearch);
     }
 

@@ -2,6 +2,7 @@
     width: 1380px;
     height: 200px;
 }
+
 /* .react-slidedown.pro-inner-list-item{
         background-color: white;
             color: black;
@@ -16,6 +17,7 @@
 .sanpham-item {
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 5px 10px 0 rgba(0, 0, 0, 0.19);
 }
+
 .image-container {
     position: relative;
     overflow: hidden;
@@ -37,3 +39,7 @@
     opacity: 0;
 }
 
+.scrollable-content {
+    max-height: 200px; /* Thiết lập chiều cao tối đa để hiển thị thanh cuộn */
+    overflow-y: auto; /* Bật thanh cuộn dọc khi nội dung vượt quá chiều cao */
+  }

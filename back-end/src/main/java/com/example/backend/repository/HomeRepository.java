@@ -1,5 +1,6 @@
 package com.example.backend.repository;
 
+import com.example.backend.dto.request.sanphamsearch.TimSanPhamTheoMang;
 import com.example.backend.dto.response.HangRespone;
 import com.example.backend.dto.response.sanpham.HomeRespone;
 import com.example.backend.entity.ChiTietSanPham;
@@ -128,4 +129,320 @@ public interface HomeRepository extends JpaRepository<ChiTietSanPham, String> {
             	ms.ma
                  """, nativeQuery = true)
     List<HomeRespone> getHotSale();
+
+    @Query(value = """
+            select
+                ctsp.san_pham_id as idSanPham,
+                ctsp.id as idCt,
+            	sp.ten as name,
+            	kt.ten as size,
+            	ms.ten as color,
+            	km.loai as loaiKM,
+            	km.gia_tri_khuyen_mai as giaTriKhuyenMai,
+            	ms.ma as colorCode,
+            	ctsp.gia_ban as price,
+            	ctsp.ghi_chu as image,
+            	ctsp.ghi_chu as hoverImage
+            from
+            	chi_tiet_san_pham ctsp
+            join san_pham sp on
+            	ctsp.san_pham_id = sp.id
+            join mau_sac ms on
+            	ctsp.mau_sac_id = ms.id
+            join kich_thuoc kt on
+            	ctsp.kich_thuoc_id = kt.id
+            	left join khuyen_mai km on
+            	ctsp.khuyen_mai_id = km.id
+            	where
+             	ctsp.so_luong > 0 AND
+             	( ctsp.gia_ban BETWEEN :#{#req.giaBatDau} AND :#{#req.giaKetThuc} )
+            group by
+            	ctsp.gia_ban,
+            	ms.ten,
+            	sp.ten,
+            	kt.ten,
+            	ctsp.ghi_chu,
+            	km.ten,
+            	ctsp.id,
+            	ms.ma
+            """, nativeQuery = true)
+    List<HomeRespone> getLocSanPhamNoData(@Param("req") TimSanPhamTheoMang req);
+
+    @Query(value = """
+            select
+                ctsp.san_pham_id as idSanPham,
+                ctsp.id as idCt,
+            	sp.ten as name,
+            	kt.ten as size,
+            	ms.ten as color,
+            	km.loai as loaiKM,
+            	km.gia_tri_khuyen_mai as giaTriKhuyenMai,
+            	ms.ma as colorCode,
+            	ctsp.gia_ban as price,
+            	ctsp.ghi_chu as image,
+            	ctsp.ghi_chu as hoverImage
+            from
+            	chi_tiet_san_pham ctsp
+            join san_pham sp on
+            	ctsp.san_pham_id = sp.id
+            join mau_sac ms on
+            	ctsp.mau_sac_id = ms.id
+            join kich_thuoc kt on
+            	ctsp.kich_thuoc_id = kt.id
+            	left join khuyen_mai km on
+            	ctsp.khuyen_mai_id = km.id
+            	where
+             	ctsp.so_luong > 0 AND
+             	( ctsp.mau_sac_id IN :#{#req.arrayMauSac} ) AND
+             	( ctsp.hang_id IN :#{#req.arraySanPham} ) AND 
+             	( ctsp.kich_thuoc_id IN :#{#req.arrayKichThuoc} ) AND
+             	( ctsp.gia_ban BETWEEN :#{#req.giaBatDau} AND :#{#req.giaKetThuc} )
+            group by
+            	ctsp.gia_ban,
+            	ms.ten,
+            	sp.ten,
+            	kt.ten,
+            	ctsp.ghi_chu,
+            	km.ten,
+            	ctsp.id,
+            	ms.ma
+            """, nativeQuery = true)
+    List<HomeRespone> getLocSanPhamAll(@Param("req") TimSanPhamTheoMang req);
+
+    @Query(value = """
+            select
+                ctsp.san_pham_id as idSanPham,
+                ctsp.id as idCt,
+            	sp.ten as name,
+            	kt.ten as size,
+            	ms.ten as color,
+            	km.loai as loaiKM,
+            	km.gia_tri_khuyen_mai as giaTriKhuyenMai,
+            	ms.ma as colorCode,
+            	ctsp.gia_ban as price,
+            	ctsp.ghi_chu as image,
+            	ctsp.ghi_chu as hoverImage
+            from
+            	chi_tiet_san_pham ctsp
+            join san_pham sp on
+            	ctsp.san_pham_id = sp.id
+            join mau_sac ms on
+            	ctsp.mau_sac_id = ms.id
+            join kich_thuoc kt on
+            	ctsp.kich_thuoc_id = kt.id
+            	left join khuyen_mai km on
+            	ctsp.khuyen_mai_id = km.id
+            	where
+             	ctsp.so_luong > 0 AND
+             	( ctsp.hang_id IN :#{#req.arraySanPham} ) AND
+             	( ctsp.gia_ban BETWEEN :#{#req.giaBatDau} AND :#{#req.giaKetThuc} )
+            group by
+            	ctsp.gia_ban,
+            	ms.ten,
+            	sp.ten,
+            	kt.ten,
+            	ctsp.ghi_chu,
+            	km.ten,
+            	ctsp.id,
+            	ms.ma
+            """, nativeQuery = true)
+    List<HomeRespone> getLocSanPham(@Param("req") TimSanPhamTheoMang req);
+
+    @Query(value = """
+            select
+                ctsp.san_pham_id as idSanPham,
+                ctsp.id as idCt,
+            	sp.ten as name,
+            	kt.ten as size,
+            	ms.ten as color,
+            	km.loai as loaiKM,
+            	km.gia_tri_khuyen_mai as giaTriKhuyenMai,
+            	ms.ma as colorCode,
+            	ctsp.gia_ban as price,
+            	ctsp.ghi_chu as image,
+            	ctsp.ghi_chu as hoverImage
+            from
+            	chi_tiet_san_pham ctsp
+            join san_pham sp on
+            	ctsp.san_pham_id = sp.id
+            join mau_sac ms on
+            	ctsp.mau_sac_id = ms.id
+            join kich_thuoc kt on
+            	ctsp.kich_thuoc_id = kt.id
+            	left join khuyen_mai km on
+            	ctsp.khuyen_mai_id = km.id
+            	where
+             	ctsp.so_luong > 0 AND
+             	( ctsp.mau_sac_id IN :#{#req.arrayMauSac} ) AND
+             	( ctsp.hang_id IN :#{#req.arraySanPham} ) AND
+             	( ctsp.gia_ban BETWEEN :#{#req.giaBatDau} AND :#{#req.giaKetThuc} )
+            group by
+            	ctsp.gia_ban,
+            	ms.ten,
+            	sp.ten,
+            	kt.ten,
+            	ctsp.ghi_chu,
+            	km.ten,
+            	ctsp.id,
+            	ms.ma
+            """, nativeQuery = true)
+    List<HomeRespone> getLocSanPhamMauSac(@Param("req") TimSanPhamTheoMang req);
+
+    @Query(value = """
+            select
+                ctsp.san_pham_id as idSanPham,
+                ctsp.id as idCt,
+            	sp.ten as name,
+            	kt.ten as size,
+            	ms.ten as color,
+            	km.loai as loaiKM,
+            	km.gia_tri_khuyen_mai as giaTriKhuyenMai,
+            	ms.ma as colorCode,
+            	ctsp.gia_ban as price,
+            	ctsp.ghi_chu as image,
+            	ctsp.ghi_chu as hoverImage
+            from
+            	chi_tiet_san_pham ctsp
+            join san_pham sp on
+            	ctsp.san_pham_id = sp.id
+            join mau_sac ms on
+            	ctsp.mau_sac_id = ms.id
+            join kich_thuoc kt on
+            	ctsp.kich_thuoc_id = kt.id
+            	left join khuyen_mai km on
+            	ctsp.khuyen_mai_id = km.id
+            	where
+             	ctsp.so_luong > 0 AND
+             	( ctsp.hang_id IN :#{#req.arraySanPham} ) AND 
+             	( ctsp.kich_thuoc_id IN :#{#req.arrayKichThuoc} ) AND
+             	( ctsp.gia_ban BETWEEN :#{#req.giaBatDau} AND :#{#req.giaKetThuc} )                
+            group by
+            	ctsp.gia_ban,
+            	ms.ten,
+            	sp.ten,
+            	kt.ten,
+            	ctsp.ghi_chu,
+            	km.ten,
+            	ctsp.id,
+            	ms.ma
+            """, nativeQuery = true)
+    List<HomeRespone> getLocSanPhamKichThuoc(@Param("req") TimSanPhamTheoMang req);
+
+    @Query(value = """
+            select
+                ctsp.san_pham_id as idSanPham,
+                ctsp.id as idCt,
+            	sp.ten as name,
+            	kt.ten as size,
+            	ms.ten as color,
+            	km.loai as loaiKM,
+            	km.gia_tri_khuyen_mai as giaTriKhuyenMai,
+            	ms.ma as colorCode,
+            	ctsp.gia_ban as price,
+            	ctsp.ghi_chu as image,
+            	ctsp.ghi_chu as hoverImage
+            from
+            	chi_tiet_san_pham ctsp
+            join san_pham sp on
+            	ctsp.san_pham_id = sp.id
+            join mau_sac ms on
+            	ctsp.mau_sac_id = ms.id
+            join kich_thuoc kt on
+            	ctsp.kich_thuoc_id = kt.id
+            	left join khuyen_mai km on
+            	ctsp.khuyen_mai_id = km.id
+            	where
+             	ctsp.so_luong > 0 AND
+             	( ctsp.mau_sac_id IN :#{#req.arrayMauSac} ) AND
+             	( ctsp.gia_ban BETWEEN :#{#req.giaBatDau} AND :#{#req.giaKetThuc} )
+            group by
+            	ctsp.gia_ban,
+            	ms.ten,
+            	sp.ten,
+            	kt.ten,
+            	ctsp.ghi_chu,
+            	km.ten,
+            	ctsp.id,
+            	ms.ma
+            """, nativeQuery = true)
+    List<HomeRespone> getLocMauSac(@Param("req") TimSanPhamTheoMang req);
+
+    @Query(value = """
+            select
+                ctsp.san_pham_id as idSanPham,
+                ctsp.id as idCt,
+            	sp.ten as name,
+            	kt.ten as size,
+            	ms.ten as color,
+            	km.loai as loaiKM,
+            	km.gia_tri_khuyen_mai as giaTriKhuyenMai,
+            	ms.ma as colorCode,
+            	ctsp.gia_ban as price,
+            	ctsp.ghi_chu as image,
+            	ctsp.ghi_chu as hoverImage
+            from
+            	chi_tiet_san_pham ctsp
+            join san_pham sp on
+            	ctsp.san_pham_id = sp.id
+            join mau_sac ms on
+            	ctsp.mau_sac_id = ms.id
+            join kich_thuoc kt on
+            	ctsp.kich_thuoc_id = kt.id
+            	left join khuyen_mai km on
+            	ctsp.khuyen_mai_id = km.id
+            	where
+             	ctsp.so_luong > 0 AND
+             	( ctsp.mau_sac_id IN :#{#req.arrayMauSac} ) AND
+             	( ctsp.kich_thuoc_id IN :#{#req.arrayKichThuoc} ) AND
+             	( ctsp.gia_ban BETWEEN :#{#req.giaBatDau} AND :#{#req.giaKetThuc} )
+            group by
+            	ctsp.gia_ban,
+            	ms.ten,
+            	sp.ten,
+            	kt.ten,
+            	ctsp.ghi_chu,
+            	km.ten,
+            	ctsp.id,
+            	ms.ma
+            """, nativeQuery = true)
+    List<HomeRespone> getLocMauSacKichthuoc(@Param("req") TimSanPhamTheoMang req);
+
+    @Query(value = """
+            select
+                ctsp.san_pham_id as idSanPham,
+                ctsp.id as idCt,
+            	sp.ten as name,
+            	kt.ten as size,
+            	ms.ten as color,
+            	km.loai as loaiKM,
+            	km.gia_tri_khuyen_mai as giaTriKhuyenMai,
+            	ms.ma as colorCode,
+            	ctsp.gia_ban as price,
+            	ctsp.ghi_chu as image,
+            	ctsp.ghi_chu as hoverImage
+            from
+            	chi_tiet_san_pham ctsp
+            join san_pham sp on
+            	ctsp.san_pham_id = sp.id
+            join mau_sac ms on
+            	ctsp.mau_sac_id = ms.id
+            join kich_thuoc kt on
+            	ctsp.kich_thuoc_id = kt.id
+            	left join khuyen_mai km on
+            	ctsp.khuyen_mai_id = km.id
+            	where
+             	ctsp.so_luong > 0 AND
+             	( ctsp.kich_thuoc_id IN :#{#req.arrayKichThuoc} ) AND
+             	( ctsp.gia_ban BETWEEN :#{#req.giaBatDau} AND :#{#req.giaKetThuc} )
+            group by
+            	ctsp.gia_ban,
+            	ms.ten,
+            	sp.ten,
+            	kt.ten,
+            	ctsp.ghi_chu,
+            	km.ten,
+            	ctsp.id,
+            	ms.ma
+            """, nativeQuery = true)
+    List<HomeRespone> getLocKichThuoc(@Param("req") TimSanPhamTheoMang req);
 }
