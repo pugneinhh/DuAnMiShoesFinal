@@ -33,7 +33,6 @@ import BillReducer, {
   RemoveBill,
   UpdateBill,
   UpdateVoucherToBill,
-
 } from "../../../store/reducer/Bill.reducer";
 import {
   AddProduct,
@@ -47,7 +46,8 @@ import {
   GetInvoice,
   UpdateInvoice,
   RemoveInvoice,
-  LoadInvoice,  RemoveInvoiceByHoaDon,
+  LoadInvoice,
+  RemoveInvoiceByHoaDon,
 } from "../../../store/reducer/DetailInvoice.reducer";
 import { VoucherNguoiDungAPI } from "../../censor/api/voucher/nguoiDungVoucher.api";
 import { SellAPI } from "../api/sell/sell.api";
@@ -67,12 +67,19 @@ const BanHang = () => {
   const ctsp = useSelector(GetProduct);
   const client = useSelector(GetClient);
   const [shipMoney, setShipMoney] = useState("");
+  const [shipMoney1, setShipMoney1] = useState("");
   const [prevValue, setPrevValue] = useState(undefined);
   let lengthSP = 0;
   let data = [""];
-  let hd = [""]; 
+  let hd = [""];
   const [isSwitchOn, setIsSwitchOn] = useState(false);
   const [isSwitchTraSau, setIsSwitchTraSau] = useState(false);
+  const [voucherByIDKH, setVoucherByIDKH] = useState([""]);
+  const [voucherNoLimited, setVoucherNoLimited] = useState([""]);
+  const [diaChiKhachHang, setDiaChiKhachHang] = useState("");
+  console.log("ship money ", shipMoney);
+  console.log("ship money 1 ", shipMoney1);
+  console.log("Địa chỉ KH", diaChiKhachHang);
 
   const handleSwitchToggle = () => {
     setIsSwitchOn(!isSwitchOn);
@@ -80,36 +87,55 @@ const BanHang = () => {
       setIsSwitchTraSau(false);
     }
     if (isSwitchOn === false) {
-      if(hoaDons.filter((item) => item.id === activeKey && item.nguoiDung)[0]){
-        NguoiDungAPI.getDiaChiByIDND(hoaDons.filter((item) => item.id === activeKey && item.nguoiDung)[0].nguoiDung).then((resData) => setDiaChiKhachHang(resData.data));
-     } else {
-       setDiaChiKhachHang("");
-      // setShipMoney(0);
-     }
+      if (
+        hoaDons.filter((item) => item.id === activeKey && item.nguoiDung)[0]
+      ) {
+     
+        NguoiDungAPI.getDiaChiByIDND(
+          hoaDons.filter((item) => item.id === activeKey && item.nguoiDung)[0]
+            .nguoiDung
+        ).then((resData) => setDiaChiKhachHang(resData.data)
+        
+        );
+       
+      } else {
+        setDiaChiKhachHang("");
+        // setShipMoney(0);
+      }
+
+      
     }
   };
 
   useEffect(() => {
-     console.log("Hóa đơns",hoaDons);
-    console.log(hoaDons.filter((item) => item.id === activeKey && item.tenNguoiNhan).length)
-    if (hoaDons.filter((item) => item.id === activeKey && item.tenNguoiNhan).length === 0) {
+    console.log("Hóa đơns", hoaDons);
+    console.log(
+      hoaDons.filter((item) => item.id === activeKey && item.tenNguoiNhan)
+        .length
+    );
+    if (
+      hoaDons.filter((item) => item.id === activeKey && item.tenNguoiNhan)
+        .length === 0
+    ) {
       setIsSwitchOn(false);
     } else {
       setIsSwitchOn(true);
     }
-  }, [activeKey,hoaDons.tenNguoiNhan,hoaDons.ngayDuKienNhan]);
+  }, [activeKey, hoaDons.tenNguoiNhan, hoaDons.ngayDuKienNhan]);
   //đang fixx
   const handleSwitchTraSau = () => {
     setIsSwitchTraSau(!isSwitchTraSau);
     if (!isSwitchTraSau) {
       Modal.confirm({
         title: "Thông báo",
-        content:
-          "Bạn có chắc chắn muốn hóa đơn này trả sau hay không?",
+        content: "Bạn có chắc chắn muốn hóa đơn này trả sau hay không?",
         onOk: () => {
-          console.log("Tên người nhaanjn vận chuyển:",hoaDons.filter((i) => i.id === activeKey)[0].tenNguoiNhan)
-          if (!hoaDons.filter((i) => i.id === activeKey)[0].tenNguoiNhan){
-              toast("Hóa đơn chưa có thông tin vận chuyển!", {
+          console.log(
+            "Tên người nhaanjn vận chuyển:",
+            hoaDons.filter((i) => i.id === activeKey)[0].tenNguoiNhan
+          );
+          if (!hoaDons.filter((i) => i.id === activeKey)[0].tenNguoiNhan) {
+            toast("Hóa đơn chưa có thông tin vận chuyển!", {
               position: "top-right",
               autoClose: 1000,
               hideProgressBar: false,
@@ -118,26 +144,25 @@ const BanHang = () => {
               draggable: true,
               progress: undefined,
               theme: "light",
-              
             });
             return setIsSwitchTraSau(false);
-          } else {       
-            SellAPI.updateTraSau(activeKey,storedData)
-          toast("✔️ Cập nhật thành công!", {
-            position: "top-right",
-            autoClose: 1000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
-          
-          dispatch(RemoveInvoiceByHoaDon({hoaDon:activeKey}))
-          dispatch(RemoveBill({key:activeKey}));
-          setIsSwitchTraSau(false);
-        }
+          } else {
+            SellAPI.updateTraSau(activeKey, storedData);
+            toast("✔️ Cập nhật thành công!", {
+              position: "top-right",
+              autoClose: 1000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+
+            dispatch(RemoveInvoiceByHoaDon({ hoaDon: activeKey }));
+            dispatch(RemoveBill({ key: activeKey }));
+            setIsSwitchTraSau(false);
+          }
         },
         onCancel: () => {
           return setIsSwitchTraSau(false);
@@ -154,18 +179,13 @@ const BanHang = () => {
 
   const [voucherHienTai, setVoucherHienTai] = useState("");
 
-
-
-
   const onChangeVoucher = (value, option) => {
     dispatch(UpdateVoucherToBill({ voucher: value, key: activeKey }));
     VoucherAPI.detail(value).then((res) => setVoucherHienTai(res.data));
 
     SellAPI.updateVoucherToHD(activeKey, value);
   };
-  const onSearchVoucher = (value, option) => {
-
-  };
+  const onSearchVoucher = (value, option) => {};
   // Lấy thông tin nhân viên
   const [storedData, setStoredData] = useState(null);
 
@@ -180,17 +200,11 @@ const BanHang = () => {
     }
   }, []);
 
-
-
   //Hết
 
- 
-    // option.label.toLowerCase().includes(input.toLowerCase());
+  // option.label.toLowerCase().includes(input.toLowerCase());
 
-  const [voucherByIDKH, setVoucherByIDKH] = useState([""]);
-  const [voucherNoLimited, setVoucherNoLimited] = useState([""]);
-  const [diaChiKhachHang, setDiaChiKhachHang] = useState([""]);
-console.log("Địa chỉ KH",diaChiKhachHang)
+
 
   //load nguoi dung voucher
 
@@ -199,7 +213,6 @@ console.log("Địa chỉ KH",diaChiKhachHang)
     console.log(result.data);
     setVoucherNoLimited(result.data);
   };
-
 
   const filterOptionVoucher = (input, option) => {
     voucherByIDKH?.map((item) =>
@@ -247,10 +260,8 @@ console.log("Địa chỉ KH",diaChiKhachHang)
         })
       )
     );
-   // setCTSPSS(result.data);
+    // setCTSPSS(result.data);
   };
-
-
 
   const load = async (id) => {
     const result_hdct = await SellAPI.getAllHDCTByHD(id);
@@ -289,10 +300,11 @@ console.log("Địa chỉ KH",diaChiKhachHang)
     if (result.data.length > 0) {
       setActiveKey(result.data[0].id);
       if (result.data[0].nguoiDung) {
-      SellAPI.getVoucherWithIDKH(result.data[0].nguoiDung).then(res => setVoucherByIDKH(res));
+        SellAPI.getVoucherWithIDKH(result.data[0].nguoiDung).then((res) =>
+          setVoucherByIDKH(res)
+        );
       }
       result.data.map((item) => {
-
         dispatch(
           CreateBill({
             id: item.id,
@@ -317,6 +329,9 @@ console.log("Địa chỉ KH",diaChiKhachHang)
             ngayNhan: "null",
             ngayTraHang: null,
             nguoiTao: item.nguoiTao,
+            idHuyen: item.idHuyen,
+            idXa: item.idXa,
+            idThanhPho : item.idThanhPho,
             // nguoiSua: item.nguoiSua,
             // ngaySua: item.ngaySua,
             // ngayTao: item.ngayTao,
@@ -399,16 +414,24 @@ console.log("Địa chỉ KH",diaChiKhachHang)
     loadAllBill();
   }, []);
 
-  const onChangeSoLuong = (value, record) => {
-    console.log("value", value);
-    console.log("prevvlue", prevValue);
+  const onChangeSoLuong = async (value, record) => {
+    console.log("số lượng", value);
     console.log("record", record);
-    if (prevValue === 0) {
-      setPrevValue(undefined);
-      return;
-    }
-    if (value === 0 || !value) {
-      setPrevValue(0);
+    let SL = 0; // số lượng trước 
+    let SLT = 0; // số lượng tồn
+    await SellAPI.getSLAndSLT(record.chiTietSanPham,activeKey).then((res) => {
+      SL = res.data.soLuong;
+      SLT = res.data.soLuongTon;
+      console.log(res.data);
+      console.log("Số lượng trước",SL);
+      console.log("Số lượng tồn",SLT);
+    })
+    setShipMoney(0);
+    setShipMoney1(0);
+    console.log("Số lượng trước",SL);
+    console.log("Số lượng tồn",SLT);
+    if (value === 0) {
+      
       Modal.confirm({
         title: "Thông báo",
         content:
@@ -454,9 +477,7 @@ console.log("Địa chỉ KH",diaChiKhachHang)
         ),
       });
     } else {
-      const slt = ctsp.filter((i) => i.id === record.chiTietSanPham)[0].soLuong;
-      console.log("Số lượng tồn", slt);
-      if (slt < value) {
+      if ((SLT+SL) < value) {
         toast("Số lượng tồn không thỏa mãn yêu cầu!", {
           position: "top-right",
           autoClose: 1000,
@@ -467,7 +488,7 @@ console.log("Địa chỉ KH",diaChiKhachHang)
           progress: undefined,
           theme: "light",
         });
-        value = slt;
+        value = (SLT+SL);
         dispatch(
           UpdateInvoice({
             soLuong: value,
@@ -553,21 +574,35 @@ console.log("Địa chỉ KH",diaChiKhachHang)
   const onChange = (key) => {
     setActiveKey(key);
     if (!hoaDons.filter((item) => item.id === key)[0].voucher) {
-      console.log("Voucher null")
-      setVoucherHienTai("");  
+      console.log("Voucher null");
+      setVoucherHienTai("");
     } else {
       VoucherAPI.detail(
         hoaDons.filter((item) => item.id === key)[0].voucher
       ).then((res) => setVoucherHienTai(res.data));
     }
-    if(hoaDons.filter((item) => item.id === key && item.nguoiDung)[0]){
-       NguoiDungAPI.getDiaChiByIDND(hoaDons.filter((item) => item.id === key && item.nguoiDung)[0].nguoiDung).then((resData) => setDiaChiKhachHang(resData.data));
-    } else {
-      setDiaChiKhachHang("");
-    }
-    //setShipMoney(0);
-     SellAPI.getVoucherWithIDKH(hoaDons.filter((item) => item.id === key && item.nguoiDung)[0]?.nguoiDung).then(res => setVoucherByIDKH(res));
+    // if (
+    //   hoaDons.filter((item) => item.id === key && item.nguoiDung)[0]
+    // ) {
+   
+    //   NguoiDungAPI.getDiaChiByIDND(
+    //     hoaDons.filter((item) => item.id === key && item.nguoiDung)[0]
+    //       .nguoiDung
+    //   ).then((resData) => setDiaChiKhachHang(resData.data)
+      
+    //   );
+     
+    // } else {
+    //   setDiaChiKhachHang("");
+    //   // setShipMoney(0);
+    // }
+
+    SellAPI.getVoucherWithIDKH(
+      hoaDons.filter((item) => item.id === key && item.nguoiDung)[0]?.nguoiDung
+    ).then((res) => setVoucherByIDKH(res));
     //voucherKH(nguoiDung);
+    setShipMoney(0);
+    setShipMoney1(0);
   };
 
   ////tạo hóa đơn bằng redux
@@ -636,6 +671,9 @@ console.log("Địa chỉ KH",diaChiKhachHang)
         ngayNhan: "null",
         ngayTraHang: null,
         nguoiTao: storedData,
+        idHuyen : null,
+        idXa : null,
+        idThanhPho: null,
         nguoiSua: null,
         ngaySua: null,
         trangThai: 0,
@@ -940,7 +978,8 @@ console.log("Địa chỉ KH",diaChiKhachHang)
             (tab) => (
               (data = ctspHD.filter((f) => f.hoaDon === activeKey)),
               (hd = hoaDons.filter((f) => f.id === activeKey)),
-              console.log("hóa đơn 0",hd[0]),
+              console.log("hóa đơn 0", hd[0]),
+              console.log("activekey", activeKey),
               // (KH = client.filter((k) => k.activeKey === activeKey)),
               (lengthSP = ctspHD
                 .filter((f) => f.hoaDon === tab.key)
@@ -1124,6 +1163,7 @@ console.log("Địa chỉ KH",diaChiKhachHang)
                         {hd[0]?.tenNguoiNhan ? (
                           <DiaChiGiaoHang
                             money={setShipMoney}
+                            money1={setShipMoney1}
                             quantity={lengthSP}
                             hoaDon={activeKey}
                             thongTinVanChuyen={hd[0]}
@@ -1133,6 +1173,7 @@ console.log("Địa chỉ KH",diaChiKhachHang)
                           isSwitchOn && (
                             <DiaChiGiaoHang
                               money={setShipMoney}
+                              money1={setShipMoney1}
                               quantity={lengthSP}
                               hoaDon={activeKey}
                               thongTinKhachHang={diaChiKhachHang}
@@ -1209,12 +1250,12 @@ console.log("Địa chỉ KH",diaChiKhachHang)
                                     value={option.id}
                                     label={option.ma}
                                     imgTicket={imgTicket}
-                                    dieuKien = {option.dieuKien}
-                                    giamToiDa = {option.giamToiDa}
-                                    loai = {option.loaiVoucher}
-                                    mucDo = {option.mucDo}
+                                    dieuKien={option.dieuKien}
+                                    giamToiDa={option.giamToiDa}
+                                    loai={option.loaiVoucher}
+                                    mucDo={option.mucDo}
                                     style={{ width: "100%", height: "100%" }}
-                               
+
                                     // filterOption={filterOptionVoucher}
                                   >
                                     <div className="row">
@@ -1232,7 +1273,10 @@ console.log("Địa chỉ KH",diaChiKhachHang)
                                           }}
                                         />
                                       </div>
-                                      <div className="col" style={{marginLeft: "50px"}}>
+                                      <div
+                                        className="col"
+                                        style={{ marginLeft: "50px" }}
+                                      >
                                         Mã giảm giá: {option.ma}
                                         <br></br>
                                         Điều kiện:
@@ -1264,7 +1308,7 @@ console.log("Địa chỉ KH",diaChiKhachHang)
                                     value={option.id}
                                     label={option.ma}
                                     style={{ width: "100%", height: 100 }}
-                                
+
                                     // filterOption={filterOptionVoucher}
                                   >
                                     <div className="row">
@@ -1334,7 +1378,7 @@ console.log("Địa chỉ KH",diaChiKhachHang)
                               //   : isSwitchOn
                               //   ? true
                               //   : false
-                             isSwitchOn
+                              isSwitchOn
                             }
                           />
                         </h6>
@@ -1363,38 +1407,44 @@ console.log("Địa chỉ KH",diaChiKhachHang)
                             </h6>
                             <h6 className="mt-4">
                               Phí vận chuyển:{" "}
-                              {isSwitchOn ? `${Intl.NumberFormat("en-US").format(
-                              //  (hd[0].tienVanChuyen && hd[0].tienVanChuyen === shipMoney)
-                              //     ? hd[0].tienVanChuyen 
-                              //     : (hd[0].tienVanChuyen && hd[0].tienVanChuyen !== shipMoney)
-                              //     ? shipMoney
-                              //     : shipMoney
-                                (hd[0]?.tienVanChuyen && !shipMoney  ) ? hd[0]?.tienVanChuyen : (hd[0]?.tienVanChuyen && hd[0]?.tienVanChuyen !== shipMoney) ? shipMoney : shipMoney
-                                  
-                              )}` : 0}
+                              {isSwitchOn
+                                ? `${Intl.NumberFormat("en-US").format(roundToThousands(
+                                    //  (hd[0].tienVanChuyen && hd[0].tienVanChuyen === shipMoney)
+                                    //     ? hd[0].tienVanChuyen
+                                    //     : (hd[0].tienVanChuyen && hd[0].tienVanChuyen !== shipMoney)
+                                    //     ? shipMoney
+                                    //     : shipMoney
+                                    // (hd[0]?.tienVanChuyen && !shipMoney  ) ? hd[0]?.tienVanChuyen : (hd[0]?.tienVanChuyen && hd[0]?.tienVanChuyen !== shipMoney) ? shipMoney : shipMoney
+                                    (hd[0]?.tienVanChuyen && (shipMoney === shipMoney1))
+                                      ? hd[0]?.tienVanChuyen
+                                      : shipMoney1          
+                                      ? shipMoney1
+                                      : shipMoney 
+                                      ? shipMoney
+                                      : 0
+              ))}`
+                                : 0}
                             </h6>
                             <h6 className="mt-4">
-                              Giảm giá:{" "}                    
-                                     {`${Intl.NumberFormat("en-US").format(
+                              Giảm giá:{" "}
+                              {`${Intl.NumberFormat("en-US").format(
                                 voucherHienTai
                                   ? voucherHienTai.loaiVoucher === "Tiền mặt"
                                     ? voucherHienTai.mucDo <
                                       voucherHienTai.giamToiDa
                                       ? voucherHienTai.mucDo
                                       : voucherHienTai.giamToiDa
-                                  //   : (((parseFloat(hd[0].thanhTien) * voucherHienTai.mucDo) /
-                                  //       100 ) <
-                                  //       parseFloat(voucherHienTai.giamToiDa))
-                                  //   ? ((parseFloat(hd[0].thanhTien) * voucherHienTai.mucDo) / 100)
-                                  //   : parseFloat(voucherHienTai.giamToiDa)
-                                  // : 0
-                                  : (data.total * voucherHienTai.mucDo) /
-                                  100 <
-                                voucherHienTai.giamToiDa
-                              ? (data.total * voucherHienTai.mucDo) /
-                                100
-                              : voucherHienTai.giamToiDa
-                            : 0
+                                    : //   : (((parseFloat(hd[0].thanhTien) * voucherHienTai.mucDo) /
+                                    //       100 ) <
+                                    //       parseFloat(voucherHienTai.giamToiDa))
+                                    //   ? ((parseFloat(hd[0].thanhTien) * voucherHienTai.mucDo) / 100)
+                                    //   : parseFloat(voucherHienTai.giamToiDa)
+                                    // : 0
+                                    (data.total * voucherHienTai.mucDo) / 100 <
+                                      voucherHienTai.giamToiDa
+                                    ? (data.total * voucherHienTai.mucDo) / 100
+                                    : voucherHienTai.giamToiDa
+                                  : 0
                               )}`}
                             </h6>
                             <h6 className="mt-4">
@@ -1422,9 +1472,24 @@ console.log("Địa chỉ KH",diaChiKhachHang)
                                         100
                                       : voucherHienTai.giamToiDa
                                     : 0) +
-                                  (isSwitchOn ? (hd[0]?.tienVanChuyen && !shipMoney  ) ? hd[0]?.tienVanChuyen : (hd[0]?.tienVanChuyen && hd[0]?.tienVanChuyen !== shipMoney) ? shipMoney : shipMoney
-                                    : 0)
-                              )}`}
+                                    roundToThousands(isSwitchOn
+                                    // ? hd[0]?.tienVanChuyen && !shipMoney
+                                    //   ? hd[0]?.tienVanChuyen
+                                    //   : hd[0]?.tienVanChuyen &&
+                                    //     hd[0]?.tienVanChuyen !== shipMoney
+                                    //   ? shipMoney
+                                    //   : shipMoney
+                                    // : 0
+                                    ? hd[0]?.tienVanChuyen && shipMoney === shipMoney1
+                                    ? hd[0]?.tienVanChuyen
+                                    : shipMoney1           
+                                    ? shipMoney1
+                                    : shipMoney 
+                                    ? shipMoney
+                                    : 0
+                                    :0
+                                    )
+                              )} VND`}
                             </h6>
                           </div>
                           <div className="col-md-4">
@@ -1643,3 +1708,7 @@ console.log("Địa chỉ KH",diaChiKhachHang)
   );
 };
 export default BanHang;
+
+function roundToThousands(amount) {
+  return Math.round(amount / 100) * 100;
+}

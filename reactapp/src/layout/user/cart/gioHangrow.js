@@ -1,69 +1,91 @@
 import React, { useEffect, useState } from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { GioHangAPI } from "../../../pages/censor/api/gioHang/gioHang.api";
-
-function ProductRow({product,loadghct}) {
+import { Badge, Image } from "antd";
+function ProductRow({ product, loadghct }) {
   const [quantity, setQuantity] = useState();
   const [price, setPrice] = useState();
-  const [ctsp,setCtsp]=useState({});
+  const [ctsp, setCtsp] = useState({});
   const [priceOne, setPriceOne] = useState();
+  console.log("gioHangRow 10 product", product);
+  console.log("gioHangRow 11 Chi tiết giỏ hàng", ctsp);
   useEffect(() => {
     setQuantity(product.soLuong);
     setPrice(product.thanhTien);
-    setPriceOne(product.thanhTien/product.soLuong);
-    GioHangAPI.detailCTSP(product.chiTietSanPham).then((res)=>{
+    setPriceOne(product.thanhTien / product.soLuong);
+    GioHangAPI.detailCTSP(product.chiTietSanPham).then((res) => {
       setCtsp(res.data);
-      console.log("ctspgh",res.data);
-    })
+      console.log("ctspgh", res.data);
+    });
   }, []);
 
   const decreaseQuantity = () => {
     setQuantity(quantity - 1 > 0 ? quantity - 1 : 0);
-    setPrice(quantity>0?price-priceOne:0)
-    if(quantity>0){
-    handleUpdateGHCT(quantity-1, price-priceOne,product);
+    setPrice(quantity > 0 ? price - priceOne : 0);
+    if (quantity > 0) {
+      handleUpdateGHCT(quantity - 1, price - priceOne, product);
     }
-    if(quantity===1){
-     handleDeleteGHCT();
+    if (quantity === 1) {
+      handleDeleteGHCT();
     }
   };
 
   const increaseQuantity = () => {
-    setQuantity(quantity + 1 <ctsp.soLuong ? quantity +1 : ctsp.soLuong);
-    setPrice(quantity<ctsp.soLuong?price+priceOne:price);
-    if(quantity<ctsp.soLuong){
-    handleUpdateGHCT(quantity+1, price+priceOne,product);
+    setQuantity(quantity + 1 < ctsp.soLuong ? quantity + 1 : ctsp.soLuong);
+    setPrice(quantity < ctsp.soLuong ? price + priceOne : price);
+    if (quantity < ctsp.soLuong) {
+      handleUpdateGHCT(quantity + 1, price + priceOne, product);
     }
   };
   const handleDeleteGHCT = () => {
-    GioHangAPI.deleteGHCT(product.id).then((res)=>{
-      console.log("remove ghct",res.data)
+    GioHangAPI.deleteGHCT(product.id).then((res) => {
+      console.log("remove ghct", res.data);
       loadghct();
-    })
+    });
   };
-  const handleUpdateGHCT = (quantity,price,product) => {
-    console.log("qqqqqq",quantity,price,product)
+  const handleUpdateGHCT = (quantity, price, product) => {
+    console.log("qqqqqq", quantity, price, product);
     const data = {
-      id:product.id,
+      id: product.id,
       gioHang: product.gioHang,
       chiTietSanPham: product.chiTietSanPham,
       soLuong: quantity,
       thanhTien: price,
     };
-    GioHangAPI.updateGHCT(data).then((res)=>{
-      console.log("ghctupdate",res.data);
+    GioHangAPI.updateGHCT(data).then((res) => {
+      console.log("ghctupdate", res.data);
       loadghct();
-    })
+    });
   };
   return (
     <tr>
       <td className="row">
         <div className="col-md-3">
-          <img
-            style={{ width: 150, height: 150 }}
-            src={ctsp.ghiChu}
-            alt="Product"
-          ></img>
+          <Badge.Ribbon
+            text={
+              ctsp.loaiKM
+                ? ctsp.loaiKM === "Tiền mặt"
+                  ? "-" +
+                    `${Intl.NumberFormat("en-US").format(
+                      ctsp.giaTriKhuyenMai
+                    )} VNĐ`
+                  : "-" + ctsp.giaTriKhuyenMai + "%"
+                : ""
+            }
+            color={ctsp.loaiKM !== null ? "red" : "rgba(255, 255, 255, 0)"}
+            size="small"
+            style={{
+              marginRight: -65,
+              width: ctsp.loaiKM ? 50 : 0,
+              height: ctsp.loaiKM ? 25 : 0,
+            }}
+          >
+            <Image
+              style={{ width: 150, height: 150 }}
+              src={ctsp.ghiChu}
+              alt="Product"
+            />
+          </Badge.Ribbon>
         </div>
         <div className="col-md-6 fw-bold mt-3" style={{ paddingLeft: 80 }}>
           <h6> {ctsp.tenSP}</h6>
@@ -81,7 +103,17 @@ function ProductRow({product,loadghct}) {
       </td>
       <td>
         <h6 className=" fw-bold" style={{ color: "red", marginTop: "50px" }}>
-          {Intl.NumberFormat("en-US").format(ctsp.giaBan)} VND
+          <del style={{ color: "black" }} hidden={ctsp.loaiKM ? false : true}>
+            {Intl.NumberFormat("en-US").format(ctsp.loaiKM ? ctsp.giaBan : 0)}{" "}
+            VND
+            <br />
+          </del>
+          {Intl.NumberFormat("en-US").format(
+            ctsp.loaiKM === "Tiền mặt"
+              ? ctsp.giaBan - ctsp.giaTriKhuyenMai
+              : ctsp.giaBan - (ctsp.giaBan * ctsp.giaTriKhuyenMai) / 100
+          )}{" "}
+          VND
         </h6>
       </td>
       <td>
@@ -112,11 +144,14 @@ function ProductRow({product,loadghct}) {
       </td>
       <td>
         <h6 className=" fw-bold" style={{ color: "red", marginTop: "50px" }}>
-         {Intl.NumberFormat("en-US").format(price)}VNĐ
+          {Intl.NumberFormat("en-US").format(price)}VNĐ
         </h6>
       </td>
       <td>
-        <button  style={{borderRadius: 5, marginTop: "45px" }} onClick={handleDeleteGHCT}>
+        <button
+          style={{ borderRadius: 5, marginTop: "45px" }}
+          onClick={handleDeleteGHCT}
+        >
           <FaRegTrashAlt />
         </button>
       </td>

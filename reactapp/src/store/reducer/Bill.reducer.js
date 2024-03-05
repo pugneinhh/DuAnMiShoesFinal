@@ -45,6 +45,9 @@ const billSlice = createSlice({
         //  ngaySua: data.ngaySua,
         gtNguoiDung: null,
         email: data.email,
+        idHuyen : data.idHuyen,
+        idXa : data.idXa,
+        idThanhPho: data.idThanhPho,
         diemNguoiDung: null,
         tienVanChuyen: data.tienVanChuyen,
       };
@@ -91,6 +94,9 @@ const billSlice = createSlice({
         state[index].tenNguoiDung = updatedBill.tenNguoiDung;
         state[index].gtNguoiDung = updatedBill.gtNguoiDung;
         state[index].diemNguoiDung = updatedBill.diemNguoiDung;
+        state[index].idHuyen = updatedBill.idHuyen;
+        state[index].idXa = updatedBill.idXa;
+        state[index].idThanhPho = updatedBill.idThanhPho;
       }
     },
 
@@ -132,6 +138,7 @@ const billSlice = createSlice({
         state[index].tienVanChuyen = updatedBill.tienVanChuyen;
         state[index].ngayDuKienNhan = updatedBill.ngayDuKienNhan;
         state[index].diaChi = updatedBill.diaChi;
+
       }
     },
   DeleteVanChuyenFromBill: (state, action) => {
@@ -146,8 +153,20 @@ const billSlice = createSlice({
       state[index].tienVanChuyen = "";
       state[index].ngayDuKienNhan = "";
       state[index].diaChi = "";
+      state[index].idHuyen = "";
+      state[index].idXa = "" ;
+      state[index].idThanhPho = "";
     }
   },
+
+  UpdateTienVanChuyen : (state,action) => {
+    const updatedBill = action.payload; // backend
+    const index = state.findIndex((period) => period.key === updatedBill.key);
+    if (index !== -1) {
+      state[index].tienVanChuyen = updatedBill.tienVanChuyen;;
+
+    }
+  }
 },
 },
 );
@@ -163,7 +182,8 @@ export const {
   UpdateNullVoucher,
   UpdateVoucherToBill,
   UpdateVanChuyenToBill,
-  DeleteVanChuyenFromBill
+  DeleteVanChuyenFromBill,
+  UpdateTienVanChuyen
 } = billSlice.actions;
 export default billSlice.reducer;
 export const GetBill = (state) => state.bill;

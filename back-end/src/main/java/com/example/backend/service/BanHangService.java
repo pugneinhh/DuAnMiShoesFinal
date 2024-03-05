@@ -18,7 +18,8 @@ public class BanHangService {
     HoaDonRepository hoaDonRepository;
     @Autowired
     CTSPRepository ctspRepository;
-
+    @Autowired
+    ThongBaoService thongBaoService;
 
    public List<ChiTietSanPhamForBanHang> getALLCTSPBanHang(){
         return ctspRepository.getALLCTSPBanHang();
@@ -27,6 +28,12 @@ public class BanHangService {
     public HoaDon addHoaDon(HoaDonRequest hoaDonRequest){
        HoaDon hd =hoaDonRequest.map(new HoaDon());
        return hoaDonRepository.save(hd);
+    }
+    public HoaDon addHoaDonClient(HoaDonRequest hoaDonRequest){
+        HoaDon hd =hoaDonRequest.map(new HoaDon());
+        HoaDon hd2 =  hoaDonRepository.save(hd);
+        thongBaoService.thanhToan(hd2.getId());
+        return hd2;
     }
 
 }

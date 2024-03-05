@@ -37,7 +37,8 @@ public class HoaDonServicee {
 
     @Autowired
     VoucherRepository voucherRepository;
-
+    @Autowired
+    ThongBaoService thongBaoService;
     @Autowired
     HoaDonChiTietRepository hoaDonChiTietRepository;
     public List<AdminHoaDonResponn> getALL() {
@@ -82,6 +83,7 @@ public class HoaDonServicee {
         return hoaDonRepository.save(hoaDon);
     }
     public HoaDon updateHD(HoaDon hoaDon,String id){
+        thongBaoService.VanDon(id);
 //        HoaDon hoaDon1= findHoaDonbyID(id);
         Optional<HoaDon> optional = hoaDonRepository.findById(id);
         return optional.map(o->{
@@ -96,6 +98,7 @@ public class HoaDonServicee {
         HoaDon hoaDon = findHoaDonbyID(idHD);
         hoaDon.setTraSau(1);
         hoaDon.setNhanVien(idNV);
+        hoaDon.setNgayMua(LocalDateTime.now());
         return hoaDonRepository.save(hoaDon);
     }
 
@@ -179,11 +182,14 @@ public class HoaDonServicee {
 
     public HoaDon thanhToanHoaDon(String idHD) {
             HoaDon hoaDonCT=hoaDonRepository.findById(idHD).get();
-        hoaDonCT.setTrangThai(4);
         hoaDonCT.setNgayMua(LocalDateTime.now());
       return  hoaDonRepository.save(hoaDonCT);
     }
 
+    public HoaDon updateTrangThaiHoaDon(HoaDon hd){
+        return  hoaDonRepository.save(hd);
+
+    }
     public HoaDon addHoaDon (HoaDon hd){
 
         hd.setTraSau(0);

@@ -45,6 +45,7 @@ import { useNavigate } from "react-router-dom";
 import { IoNotifications } from "react-icons/io5";
 import { get, set } from "local-storage";
 import logoShop from "../../assets/images/logo.png";
+import { AdThongBaoDatHang } from "../../utils/socket/socket";
 const { Header, Sider, Content } = Layout;
 const DashboardCensor = ({ children }) => {
   const [userName, setUserName] = useState("");
@@ -87,7 +88,7 @@ const DashboardCensor = ({ children }) => {
       ),
     },
   ];
-
+  AdThongBaoDatHang();
   return (
     <Layout className="layout-censor">
       <Sider trigger={null} collapsible collapsed={collapsed} width={235}>

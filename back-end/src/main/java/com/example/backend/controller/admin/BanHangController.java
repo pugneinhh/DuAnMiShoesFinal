@@ -4,6 +4,7 @@ import com.example.backend.dto.request.HoaDonChiTietRequest;
 import com.example.backend.dto.request.HoaDonRequest;
 import com.example.backend.dto.request.LichSuHoaDonRequest;
 import com.example.backend.dto.response.ChiTietSanPhamForBanHang;
+import com.example.backend.dto.response.HoaDonChiTietRespone;
 import com.example.backend.entity.*;
 import com.example.backend.repository.CTSPRepository;
 import com.example.backend.repository.CongThucRepository;
@@ -41,6 +42,9 @@ public class BanHangController {
     NguoiDungService nguoiDungService;
     @Autowired
     LichSuHoaDonService lichSuHoaDonService;
+    @Autowired
+    CTSPService ctspService;
+
 
     @GetMapping("/getHoaDonChoTaiQuay")
     public ResponseEntity<?> getHoaDonChoTaiQuay(){
@@ -208,6 +212,17 @@ public class BanHangController {
     @PutMapping("/thanh-toan/hoa-don/{idHD}/{idNV}")
     public ResponseEntity<?> thanhToanHoaDon (@PathVariable("idHD") String idHD,@PathVariable("idNV") String idNV) {
         HoaDon hoaDon=hoaDonServicee.findHoaDonbyID(idHD);
+        if(hoaDon.getTraSau() == 0) {
+            if (hoaDon.getDiaChi() != null){
+                hoaDon.setTrangThai(2);
+            } else {
+                hoaDon.setTrangThai(4);
+            }
+
+        }  else {
+            hoaDon.setTrangThai(2);
+        }
+        hoaDonServicee.updateTrangThaiHoaDon(hoaDon);
         List<HoaDonChiTiet> listHDCT = hoaDonChiTietService.getAllHDCTByIDHD(idHD);
         for (HoaDonChiTiet h : listHDCT) {
             h.setTrangThai(1);
@@ -232,5 +247,16 @@ public class BanHangController {
     public ResponseEntity<?> traSauHoaDon (@PathVariable("idHD") String idHD,@PathVariable("idNV") String idNV) {
         return ResponseEntity.ok(  hoaDonServicee.updateTraSau(idHD,idNV));
 
+    }
+
+    @GetMapping("/hoa-don/san-pham/so-luong/{idSP}/{idHD}")
+    public ResponseEntity<?> soLuongSanPham(@PathVariable("idSP") String idSP, @PathVariable("idHD")String idHD){
+        return ResponseEntity.ok(ctspService.getSLVaSLT(idSP,idHD));
+    }
+    @PutMapping("/hoa-don/update-tien-van-chuyen/{idHD}/{tien}")
+    public ResponseEntity<?> updateTienVanChuyen(@PathVariable("idHD") String idHD,@PathVariable("tien")String tien){
+        HoaDon hd = hoaDonServicee.findHoaDonbyID(idHD);
+        hd.setTienVanChuyen(Float.parseFloat(tien));
+        return ResponseEntity.ok(hoaDonServicee.updateTrangThaiHoaDon(hd));
     }
 }
