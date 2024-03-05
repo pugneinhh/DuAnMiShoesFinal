@@ -258,7 +258,7 @@ export default function HoaDon() {
       onFilter: (value, record) => record.trangThai.indexOf(value) === 0,
     },
     {
-      title: "Action",
+      title: "Hành động",
       key: "action",
       dataIndex: "idHD",
 

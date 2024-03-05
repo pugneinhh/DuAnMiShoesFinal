@@ -879,7 +879,7 @@ const BanHang = () => {
       ),
     },
     {
-      title: "Thao tác",
+      title: "Hành động ",
       render: (record) => (
         <Space size="middle">
           <button

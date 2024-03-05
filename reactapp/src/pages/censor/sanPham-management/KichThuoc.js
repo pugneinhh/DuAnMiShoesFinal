@@ -187,7 +187,7 @@ export default function KichThuoc() {
       ),
     },
     {
-      title: "Action",
+      title: "Hành động",
       key: "action",
       dataIndex: "id",
       render: (title) => (

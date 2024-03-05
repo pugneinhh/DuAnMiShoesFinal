@@ -183,7 +183,7 @@ export default function DeGiay() {
       ),
     },
     {
-      title: "Action",
+      title: "Hành động",
       key: "action",
       dataIndex: "id",
       render: (title) => (

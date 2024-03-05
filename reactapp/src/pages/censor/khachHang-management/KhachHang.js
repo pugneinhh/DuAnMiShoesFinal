@@ -142,7 +142,7 @@ export default function KhachHang() {
       onFilter: (value, record) => record.trangThai.toString() === value,
     },
     {
-      title: "Action",
+      title: "Hành động",
       key: "action",
       dataIndex: 'idND',
       render: (record) => (

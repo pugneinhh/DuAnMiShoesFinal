@@ -28,13 +28,11 @@ import moment from "moment";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { PromotionAPI } from "../../censor/api/promotion/promotion.api";
-
+import { BsFillEyeFill } from "react-icons/bs";
 const KhuyenMai = () => {
   const currentTime = moment(); // thời gian hiện tại
 
-  const onChange = (value) => {
- 
-  };
+  const onChange = (value) => {};
 
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
@@ -74,7 +72,6 @@ const KhuyenMai = () => {
     const result = await PromotionAPI.getAll()
       .then((response) => {
         setKhuyenMais(response.data);
-      
       })
       .catch((error) => console.error("Error adding item:", error));
   };
@@ -88,7 +85,6 @@ const KhuyenMai = () => {
     const handleUpdateStatus = (status) => {
       const currentTime = new Date();
       khuyenMai.forEach((x) => {
-      
         currentTime > new Date(x.ngay_bat_dau) &&
         currentTime < new Date(x.ngay_ket_thuc)
           ? PromotionAPI.updateAutoStart(x.id, x)
@@ -183,7 +179,7 @@ const KhuyenMai = () => {
       dataIndex: "ma",
       center: "true",
 
-      sorter: (a, b) => a.ma.slice(2) - b.ma.slice(2),
+      // sorter: (a, b) => a.ma.slice(2) - b.ma.slice(2),
     },
     {
       title: "Tên",
@@ -195,12 +191,12 @@ const KhuyenMai = () => {
       key: "loai",
       filters: [
         {
-          text: "Tiền Mặt",
-          value: "Tiền Mặt",
+          text: "Tiền mặt",
+          value: "Tiền mặt",
         },
         {
-          text: "Phần Trăm",
-          value: "Phần Trăm",
+          text: "Phần trăm",
+          value: "Phần trăm",
         },
       ],
       onFilter: (value, record) => record.loai.indexOf(value) === 0,
@@ -264,43 +260,35 @@ const KhuyenMai = () => {
       filters: [
         {
           text: "Sắp diễn ra",
-          value: "0",
+          value: 0,
         },
         {
           text: "Đang diễn ra",
-          value: "1",
+          value: 1,
         },
         {
           text: "Đã kết thúc",
-          value: "2",
+          value: 2,
         },
         ,
         {
           text: "Tạm dừng",
-          value: "3",
+          value: 3,
         },
       ],
       onFilter: (value, record) => record.trangThai === parseInt(value),
     },
     {
-      title: "Action",
+      title: "Hành động",
       key: "action",
       render: (record) => (
         <Space size="middle">
           <a>
             <Link
               to={{ pathname: `/admin-sua-khuyen-mai/${record.id}` }}
-              className="btn rounded-pill"
+              className="btn btn-danger"
             >
-              <EyeOutlined
-                style={{
-                  fontSize: 30,
-                  backgroundColor: "#ffff00",
-                  borderRadius: 90,
-                  borderWidth: 10,
-                  borderColor: "#000000",
-                }}
-              />
+              <BsFillEyeFill size={20} />
             </Link>
           </a>
           <>
@@ -380,15 +368,35 @@ const KhuyenMai = () => {
     },
   ];
 
+  const [top] = useState("none");
+  const [bottom] = useState("bottomCenter");
+  const [ellipsis] = useState(false);
+  const [yScroll] = useState(false);
+  const [xScroll] = useState();
+  const scroll = {};
+  if (yScroll) {
+    scroll.y = 240;
+  }
+  if (xScroll) {
+    scroll.x = "100vw";
+  }
+  const tableColumns = columns.map((item) => ({
+    ...item,
+    ellipsis,
+  }));
+  if (xScroll === "fixed") {
+    tableColumns[0].fixed = true;
+    tableColumns[tableColumns.length - 1].fixed = "right";
+  }
   return (
     <div className="container">
       <Breadcrumb
         style={{ marginTop: "10px" }}
         items={[
           {
-             href: '/admin-ban-hang',
+            href: "/admin-ban-hang",
             //path: '/admin-ban-hang',
-            title:  <HomeOutlined />,
+            title: <HomeOutlined />,
           },
           {
             href: "/admin-khuyen-mai",
@@ -455,7 +463,7 @@ const KhuyenMai = () => {
                     value={selectedValue}
                     onChange={handleChange}
                     className="rounded-pill border-warning"
-                      id="abc"
+                    id="abc"
                     status="warning"
                   >
                     <option value="">Tất cả</option>
@@ -556,10 +564,14 @@ const KhuyenMai = () => {
                 dataSource={khuyenMai}
                 columns={columns}
                 id="bang"
+                scroll={scroll}
                 pagination={{
                   showQuickJumper: true,
+                  position: [top, bottom],
                   defaultCurrentPage: 1,
                   defaultPageSize: 5,
+                  pageSizeOptions: ["5", "10", "20", "30", "50", "100"],
+                  showSizeChanger: true,
                   total: khuyenMai.length,
                 }}
               />

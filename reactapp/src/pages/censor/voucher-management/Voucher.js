@@ -20,6 +20,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { FaTag } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { VoucherAPI } from "../api/voucher/voucher.api";
+import { BsFillEyeFill } from "react-icons/bs";
 
 const Voucher = () => {
 
@@ -115,17 +116,17 @@ const Voucher = () => {
       showSortTooltip: false,
     },
     {
-      title: "Mã Voucher",
+      title: "Mã ",
       dataIndex: "ma",
       sorter: (a, b) => a.ma - b.ma,
     },
     {
-      title: "Tên Voucher",
+      title: "Tên ",
       dataIndex: "ten",
       sorter: (a, b) => a.ma - b.ma,
     },
     {
-      title: "Loại Voucher",
+      title: "Loại ",
       dataIndex: "loaiVoucher",
     },
     {
@@ -168,19 +169,14 @@ const Voucher = () => {
       // onFilter: (value, record) => record.trangThai.indexOf(value) === 0,
     },
     {
-      title: "Action",
+      title: "Hành động",
       key: "action",
       sorter: true,
       render: (record) => (
         <Space size="middle">
           <a>
-            <Link to={`/admin-detail-voucher/${record.id}`} className="btn">
-              <EyeOutlined
-                style={{
-                  fontSize: 30,
-                  backgroundColor: "#ffff00",
-                }}
-              />
+            <Link to={`/admin-detail-voucher/${record.id}`} className="btn btn-danger">
+            <BsFillEyeFill size={20} />
             </Link>
           </a>
           <a>

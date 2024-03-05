@@ -98,7 +98,7 @@ export default function SanPham() {
       ),
     },
     {
-      title: "Action",
+      title: "Hành động",
       key: "action",
       dataIndex: "idSP",
 

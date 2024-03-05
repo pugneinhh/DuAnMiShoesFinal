@@ -59,6 +59,7 @@ const ModalDiaChi = (props) => {
   // load dia chi khach hang
   const [datas, setData] = useState([]);
   const loadDiaChi = () => {
+    if (userID) {
     KhachHangAPI.getDiaChiByKH(userID)
       .then((result) => {
         setData(result.data);
@@ -71,6 +72,7 @@ const ModalDiaChi = (props) => {
       .catch((error) => {
         console.log(error);
       });
+    }
   };
 
   useEffect(() => {
