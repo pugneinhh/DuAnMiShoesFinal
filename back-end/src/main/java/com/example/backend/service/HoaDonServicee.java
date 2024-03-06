@@ -112,6 +112,7 @@ public class HoaDonServicee {
         hoaDon.setTienVanChuyen(hd.getTienVanChuyen());
         hoaDon.setNgayMua(LocalDateTime.now());
         hoaDon.setTrangThai(4);
+        hoaDon.setGhiChu(hd.getGhiChu());
         return hoaDonRepository.save(hoaDon);
     }
 

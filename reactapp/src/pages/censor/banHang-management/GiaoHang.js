@@ -24,6 +24,7 @@ const DiaChiGiaoHang = ({
   const [listDistricts, setListDistricts] = useState([]);
   const [listWard, setListWard] = useState([]);
   const [districtID, setDistrictID] = useState("");
+  const [proID,setProID] = useState("");
   const [hoaDon1, setHoaDon1] = useState("");
   const [wardCode, setWardCode] = useState("");
   const [timeShip, setTimeShip] = useState("");
@@ -54,6 +55,14 @@ const DiaChiGiaoHang = ({
   let indexSoNhaDaCo = "";
   let soNhaDaCo = "";
 
+  let indexIDThanhPhoDaCo = "";
+  let idThanhPhoDaCo = "";
+  let ghiChu1 = "";
+  let indexIDQuanDaCo = "";
+  let idQuanDaCo = "";
+  let ghiChu2 = "";
+  let indexIDPhuongDaCo = "";
+  let idPhuongDaCo = "";
   useEffect(() => {
     if (hoaDon === hoaDon1) {
       ShipAPI.fetchAllMoneyShip(districtID, wardCode, quantity).then((res) =>
@@ -92,6 +101,9 @@ const DiaChiGiaoHang = ({
 
   useEffect(() => {
     if (thongTinVanChuyen) {
+      console.log("Thông tin vận chuyển",thongTinVanChuyen)
+
+      // lấy ra tên xã , huyện , thành phố trong địa chỉ
       indexThanhPhoDaCo = thongTinVanChuyen.diaChi.lastIndexOf("/");
       thanhPhoDaCo = thongTinVanChuyen.diaChi.substring(
         indexThanhPhoDaCo + 1,
@@ -106,6 +118,22 @@ const DiaChiGiaoHang = ({
       diaChi3 = diaChi2.substring(0, indexPhuongDaCo);
       indexSoNhaDaCo = diaChi3.lastIndexOf("/");
       soNhaDaCo = diaChi3.substring(indexSoNhaDaCo + 1, diaChi3.length);
+      // lấy ra id của xã , huyện , thành phố có trong ghi chú
+      if (thongTinVanChuyen.ghiChu !== null) {
+      indexIDThanhPhoDaCo = thongTinVanChuyen.ghiChu.lastIndexOf("/");
+      idThanhPhoDaCo = thongTinVanChuyen.ghiChu.substring(
+        indexIDThanhPhoDaCo + 1,
+        thongTinVanChuyen.ghiChu.length
+      );
+      ghiChu1 = thongTinVanChuyen.ghiChu.substring(0, indexIDThanhPhoDaCo);
+      indexIDQuanDaCo = ghiChu1.lastIndexOf("/");
+      idQuanDaCo = ghiChu1.substring(indexIDQuanDaCo + 1, ghiChu1.length);
+      ghiChu2 = ghiChu1.substring(0, indexIDQuanDaCo);
+      indexIDPhuongDaCo = ghiChu2.lastIndexOf("/");
+      idPhuongDaCo = ghiChu2.substring(indexIDPhuongDaCo + 1, ghiChu2.length);
+
+      }
+      
       form.setFieldsValue({
         tenNguoiNhan: thongTinVanChuyen.tenNguoiNhan,
         soDienThoai: thongTinVanChuyen.soDienThoai,
@@ -117,16 +145,9 @@ const DiaChiGiaoHang = ({
       });
       console.log("Thông tin vận chuyển idHuyen", thongTinVanChuyen.idHuyen);
       console.log("Thông tin vận chuyển idXa", thongTinVanChuyen.idXa);
-
-      if (
-        thongTinVanChuyen?.idHuyen !== null &&
-        thongTinVanChuyen?.idXa !== null
-      ) {
-        loadTimeAndMoney(
-          thongTinVanChuyen.idHuyen,
-          thongTinVanChuyen.idXa,
-          quantity
-        );
+      if (thongTinVanChuyen.idHuyen && thongTinVanChuyen.idXa) {
+        setTimeShip(thongTinVanChuyen.ngayDuKienNhan);
+        money1(thongTinVanChuyen.tienVanChuyen);
         AddressApi.fetchAllProvinceDistricts(thongTinVanChuyen.idThanhPho).then(
           (res) => {
             setListDistricts(res.data.data);
@@ -139,9 +160,36 @@ const DiaChiGiaoHang = ({
           }
         );
         setWardCode(thongTinVanChuyen.idXa);
-      } else {
-        money1(0);
-      }
+        }
+        else if (
+          thongTinVanChuyen.ghiChu
+        ) {
+          // loadTimeAndMoney(
+          //   thongTinVanChuyen.idHuyen,
+          //   thongTinVanChuyen.idXa,
+          //   quantity
+          // );
+          setTimeShip(thongTinVanChuyen.ngayDuKienNhan);
+          money1(thongTinVanChuyen.tienVanChuyen);
+          AddressApi.fetchAllProvinceDistricts(idThanhPhoDaCo).then(
+            (res) => {
+              setListDistricts(res.data.data);
+            }
+          );
+          setDistrictID(idQuanDaCo);
+          AddressApi.fetchAllProvinceWard(idQuanDaCo).then(
+            (res) => {
+              setListWard(res.data.data);
+            }
+          );
+          setWardCode(idPhuongDaCo);
+  
+        } else {
+          console.log("Tiền vận chuyển",thongTinVanChuyen.tienVanChuyen);
+          money1(0);
+        }
+      
+
     } else if (thongTinKhachHang) {
       form.setFieldsValue({
         tenNguoiNhan: thongTinKhachHang.tenNguoiNhan,
@@ -219,6 +267,9 @@ const DiaChiGiaoHang = ({
   };
 
   const handleSubmit = (value) => {
+    console.log("Thành phố hiện tại",proID);
+    console.log("Quận hiện tại",districtID);
+    console.log("Phường hiện tại",wardCode);
     dispatch(
       UpdateVanChuyenToBill({
         key: hoaDon,
@@ -236,8 +287,11 @@ const DiaChiGiaoHang = ({
           value.tenThanhPho,
         ngayDuKienNhan:
           timeShip !== timeShip1 && !timeShip1 ? timeShip : timeShip1,
-        tienVanChuyen:
-          moneyShip !== moneyShip1 && !moneyShip1 ? moneyShip : moneyShip1,
+        tienVanChuyen:roundToThousands(
+          moneyShip !== moneyShip1 && !moneyShip1 ? moneyShip : moneyShip1),
+        idHuyen: districtID,
+        idXa: wardCode,
+        idThanhPho: proID,
       })
     );
     const data = [
@@ -258,6 +312,7 @@ const DiaChiGiaoHang = ({
         tienVanChuyen: roundToThousands(
           moneyShip !== moneyShip1 && !moneyShip1 ? moneyShip : moneyShip1
         ),
+        ghiChu: wardCode+"/"+districtID+"/"+proID,
       },
     ];
     SellAPI.updateVanChuyen(hoaDon, data[0]);
@@ -265,6 +320,7 @@ const DiaChiGiaoHang = ({
 
   const handleProvinceChange = (value, valueProvince) => {
     form.setFieldsValue({ provinceId: valueProvince.valueProvince });
+    setProID(valueProvince.valueProvince);
     AddressApi.fetchAllProvinceDistricts(valueProvince.valueProvince).then(
       (res) => {
         setListDistricts(res.data.data);
@@ -275,7 +331,6 @@ const DiaChiGiaoHang = ({
   const handleDistrictChange = (value, valueDistrict) => {
     form.setFieldsValue({ toDistrictId: valueDistrict.valueDistrict });
     setDistrictID(valueDistrict.valueDistrict);
-    console.log("Phường", valueDistrict.valueDistrict);
     AddressApi.fetchAllProvinceWard(valueDistrict.valueDistrict).then((res) => {
       setListWard(res.data.data);
     });
