@@ -1,81 +1,46 @@
-import React, { useEffect, useState } from 'react';
-import { Avatar, Button, List, Skeleton } from 'antd';
-const count = 3;
-const fakeDataUrl = `https://randomuser.me/api/?results=${count}&inc=name,gender,email,nat,picture&noinfo`;
+import { Dropdown,Avatar, Menu, Badge } from "antd";
+import { BellOutlined } from "@ant-design/icons";
+import { IoNotifications } from "react-icons/io5";
 
-const Notification = () => {
-  const [initLoading, setInitLoading] = useState(true);
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState([]);
-  const [list, setList] = useState([]);
-  useEffect(() => {
-    fetch(fakeDataUrl)
-      .then((res) => res.json())
-      .then((res) => {
-        setInitLoading(false);
-        setData(res.results);
-        setList(res.results);
-      });
-  }, []);
-  const onLoadMore = () => {
-    setLoading(true);
-    setList(
-      data.concat(
-        [...new Array(count)].map(() => ({
-          loading: true,
-          name: {},
-          picture: {},
-        })),
-      ),
-    );
-    fetch(fakeDataUrl)
-      .then((res) => res.json())
-      .then((res) => {
-        const newData = data.concat(res.results);
-        setData(newData);
-        setList(newData);
-        setLoading(false);
-        // Resetting window's offsetTop so as to display react-virtualized demo underfloor.
-        // In real scene, you can using public method of react-virtualized:
-        // https://stackoverflow.com/questions/46700726/how-to-use-public-method-updateposition-of-react-virtualized
-        window.dispatchEvent(new Event('resize'));
-      });
-  };
-  const loadMore =
-    !initLoading && !loading ? (
-      <div
-        style={{
-          textAlign: 'center',
-          marginTop: 12,
-          height: 32,
-          lineHeight: '32px',
-        }}
-      >
-        <Button onClick={onLoadMore}>loading more</Button>
-      </div>
-    ) : null;
-  return (
-    <List
-      className="demo-loadmore-list"
-      loading={initLoading}
-      itemLayout="horizontal"
-      loadMore={loadMore}
-      dataSource={list}
-      renderItem={(item) => (
-        <List.Item
-          actions={[<a key="list-loadmore-edit">edit</a>, <a key="list-loadmore-more">more</a>]}
-        >
-          <Skeleton avatar title={false} loading={item.loading} active>
-            <List.Item.Meta
-              avatar={<Avatar src={item.picture.large} />}
-              title={<a href="https://ant.design">{item.name?.last}</a>}
-              description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-            />
-            <div>content</div>
-          </Skeleton>
-        </List.Item>
-      )}
-    />
-  );
-};
-export default Notification;
+const notifications = [
+  { id: 1, content: "Thông báo 1", imageUrl: "https://i.pinimg.com/564x/40/81/08/4081083e8895a9a620ada4b0fac3d436.jpg?fbclid=IwAR0HZwn_m42pqnvest56DrS32EKJXbpfIQvedmzUNReYtTiipdjSBjz6r-o" , text: "Khách hàng A đã mua 12.500.000 VNĐ"},
+  { id: 2, content: "Thông báo 2", imageUrl: "https://i.pinimg.com/564x/40/81/08/4081083e8895a9a620ada4b0fac3d436.jpg?fbclid=IwAR0HZwn_m42pqnvest56DrS32EKJXbpfIQvedmzUNReYtTiipdjSBjz6r-o" ,text : "Đơn ABC đã được giao thành công"},
+  { id: 3, content: "Thông báo 3", imageUrl: "https://i.pinimg.com/564x/40/81/08/4081083e8895a9a620ada4b0fac3d436.jpg?fbclid=IwAR0HZwn_m42pqnvest56DrS32EKJXbpfIQvedmzUNReYtTiipdjSBjz6r-o" , text : "ABCDEFGHIJKLMNOPQRSTUVWXYZ"},
+];
+
+const menu = (
+  <Menu>
+    {notifications.map((notification) => (
+      <Menu.Item key={notification.id}>
+        <img
+          src={notification.imageUrl}
+          alt="Notification"
+          style={{ width: "24px", marginRight: "8px" }}
+        />
+        <span>
+        [<strong>{notification.content}</strong>]
+        {notification.text}
+        </span>
+
+      </Menu.Item>
+    ))}
+  </Menu>
+);
+
+const Notifications = () => (
+  <Dropdown overlay={menu} trigger={["click"]}>
+    <div>
+      <Badge count={notifications.length} color="red">
+        <Avatar
+          shape="circle"
+          className="align-content-center"
+          size="default"
+          icon={<IoNotifications size={20} color="#9e9e9e" />}
+          style={{ backgroundColor: "#f7faf9" }}
+        />
+      </Badge>
+    </div>
+  </Dropdown>
+);
+
+export default Notifications;
