@@ -46,6 +46,7 @@ import { IoNotifications } from "react-icons/io5";
 import { get, set } from "local-storage";
 import logoShop from "../../assets/images/logo.png";
 import { AdThongBaoDatHang } from "../../utils/socket/socket";
+import Notification from "../user/notification";
 const { Header, Sider, Content } = Layout;
 const DashboardCensor = ({ children }) => {
   const [userName, setUserName] = useState("");
@@ -89,6 +90,18 @@ const DashboardCensor = ({ children }) => {
     },
   ];
   AdThongBaoDatHang();
+  const [clickCount, setClickCount] = useState(0);
+  const handleThongBao = () => {
+    // Tăng giá trị biến đếm sau mỗi lần click
+    setClickCount((prevCount) => prevCount + 1);
+    
+    if (clickCount % 2 != 0) {
+      setClickCount((prevCount) => prevCount + 1);
+    }else{
+      <Notification/>
+    }
+    
+  };
   return (
     <Layout className="layout-censor">
       <Sider trigger={null} collapsible collapsed={collapsed} width={235}>
@@ -298,17 +311,18 @@ const DashboardCensor = ({ children }) => {
             Ưu đãi khủng cho hóa đơn từ 20.000.000 VND ! Mua ngay{" "}
           </marquee>
           <div className="admin-right float-end">
-            <a href="#">
+          
               <Badge count={5} color="red">
                 <Avatar
                   shape="circle"
                   className="align-content-center"
                   size="default"
                   icon={<IoNotifications size={20} color="#9e9e9e" />}
+                  onClick={handleThongBao}
                   style={{ backgroundColor: "#f7faf9" }}
                 />
               </Badge>
-            </a>
+           
 
             <Dropdown
               menu={{
