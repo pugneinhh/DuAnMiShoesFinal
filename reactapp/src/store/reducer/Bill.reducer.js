@@ -138,6 +138,9 @@ const billSlice = createSlice({
         state[index].tienVanChuyen = updatedBill.tienVanChuyen;
         state[index].ngayDuKienNhan = updatedBill.ngayDuKienNhan;
         state[index].diaChi = updatedBill.diaChi;
+        state[index].idThanhPho = updatedBill.idThanhPho;
+        state[index].idHuyen = updatedBill.idHuyen;
+        state[index].idXa = updatedBill.idXa;
 
       }
     },

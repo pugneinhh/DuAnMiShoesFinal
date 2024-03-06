@@ -67,11 +67,11 @@ export const GioHang = ({ children }) => {
     setPhuongThuc(1);
   };
   useEffect(() => {
-    if (storedData != null) {
-      setKhachHang(storedData.userID);
-      setUserID(storedData.userID);
-      loadDiaChiMacDinh();
-    }
+    // if (storedData !== null) {
+    //   setKhachHang(storedData.userID);
+    //   setUserID(storedData.userID);
+    //   loadDiaChiMacDinh();
+    // }
     loadGHCT();
   }, []);
   const loadGiamGia = (voucher) => {
@@ -88,12 +88,14 @@ export const GioHang = ({ children }) => {
   const loadDiaChiMacDinh = async () => {
     let idHuyen = "";
     let idXa = "";
+    if (storedData?.userID) {
     await KhachHangAPI.getDiaChiMacDinh(storedData.userID).then((res) => {
       setDiaChi(res.data);
       console.log(res.data);
       idHuyen = res.data.idHuyen;
       idXa = res.data.idXa;
     });
+  }
     if (idHuyen  && idXa ) {
       console.log("IDHuyen", idHuyen);
       console.log("IDXa", idXa);
@@ -125,22 +127,23 @@ export const GioHang = ({ children }) => {
   };
 
   const loadGHCT = () => {
-    if (storedData !== null) {
+
+    if (storedData && storedData.userID) {
       GioHangAPI.getByIDKH(storedData.userID).then((response) => {
         setIDGH(response.data.id);
         GioHangAPI.getAllGHCTByIDGH(response.data.id).then((res) => {
           setGioHangCT(res.data);
-
           console.log("GioHangct", res.data);
         });
       });
     }
-    if (storedGioHang !== null) {
+    else if (storedGioHang && storedGioHang.id) {
+      console.log(storedGioHang)
       GioHangAPI.getByID(storedGioHang.id).then((response) => {
+        console.log(response.data)
         setIDGH(response.data.id);
         GioHangAPI.getAllGHCTByIDGH(response.data.id).then((res) => {
           setGioHangCT(res.data);
-
           console.log("GioHan", res.data);
         });
       });
