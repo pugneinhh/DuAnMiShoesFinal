@@ -49,24 +49,34 @@ import { AdThongBaoDatHang } from "../../utils/socket/socket";
 import Notification from "../user/notification";
 const { Header, Sider, Content } = Layout;
 const DashboardCensor = ({ children }) => {
+  const [isNotificationOn, setIsNotificationOn] = useState(false);
+
+  const handleNotificationChange = () => {
+    setIsNotificationOn(!isNotificationOn);
+
+    // if (isNotificationOn === false) {
+    //   <Notification />
+    // }
+  };
+
   const [userName, setUserName] = useState("");
   const [linkAnh, setLinkAnh] = useState("");
-    const nav = useNavigate();
+  const nav = useNavigate();
   useEffect(() => {
     const storedData = get("userData");
-      if (storedData.accessToken == null) {
-        nav("/login");
-      }
+    if (storedData.accessToken == null) {
+      nav("/login");
+    }
     setUserName(storedData.ten);
     setLinkAnh(storedData.anh);
-    if(storedData.accessToken==null){
-       nav("/login");
+    if (storedData.accessToken == null) {
+      nav("/login");
     }
   }, []);
-      const dangXuat = () => {
-             nav("/login");
-             localStorage.clear();
-      };
+  const dangXuat = () => {
+    nav("/login");
+    localStorage.clear();
+  };
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
@@ -89,18 +99,21 @@ const DashboardCensor = ({ children }) => {
       ),
     },
   ];
+
+ 
+
   AdThongBaoDatHang();
   const [clickCount, setClickCount] = useState(0);
   const handleThongBao = () => {
     // Tăng giá trị biến đếm sau mỗi lần click
-    setClickCount((prevCount) => prevCount + 1);
-    
-    if (clickCount % 2 != 0) {
-      setClickCount((prevCount) => prevCount + 1);
-    }else{
-      <Notification/>
-    }
-    
+    // setClickCount((prevCount) => prevCount + 1);
+
+    // if (clickCount % 2 != 0) {
+    //   setClickCount((prevCount) => prevCount + 1);
+    // }else{
+    //   <Notification/>
+    // }
+    <Notification />;
   };
   return (
     <Layout className="layout-censor">
@@ -311,19 +324,43 @@ const DashboardCensor = ({ children }) => {
             Ưu đãi khủng cho hóa đơn từ 20.000.000 VND ! Mua ngay{" "}
           </marquee>
           <div className="admin-right float-end">
-          
+            {/* <a onClick={handleNotificationChange}>
               <Badge count={5} color="red">
                 <Avatar
                   shape="circle"
                   className="align-content-center"
                   size="default"
                   icon={<IoNotifications size={20} color="#9e9e9e" />}
-                  onClick={handleThongBao}
+               
                   style={{ backgroundColor: "#f7faf9" }}
                 />
               </Badge>
-           
-
+              </a> */}
+            {/* <Dropdown
+              // menu={{
+              //   items: itemsNotification,
+              //   selectable: true,
+              //   defaultSelectedKeys: ["3"],
+                
+              // }}
+              className="ms-4"
+              overlay={menu}
+            >
+              <Typography.Link>
+                <Space>
+                  <Badge count={notifications.length} color="red">
+                    <Avatar
+                      shape="circle"
+                      className="align-content-center"
+                      size="default"
+                      icon={<IoNotifications size={20} color="#9e9e9e" />}
+                      style={{ backgroundColor: "#f7faf9" }}
+                    />
+                  </Badge>
+                </Space>
+              </Typography.Link>
+            </Dropdown> */}
+            <Notification />
             <Dropdown
               menu={{
                 items,
@@ -341,14 +378,11 @@ const DashboardCensor = ({ children }) => {
                     src={linkAnh}
                     style={{ marginLeft: 40 }}
                   />
-      
                 </Space>
-   
               </Typography.Link>
-    
             </Dropdown>
 
-              <div className="bold ms-2">
+            <div className="bold ms-2">
               <strong>{userName}</strong>
             </div>
           </div>
