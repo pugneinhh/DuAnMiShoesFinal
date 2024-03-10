@@ -152,6 +152,7 @@ export const GioHang = ({ children }) => {
 
   useEffect(() => {
     console.log("ID GH", idGH);
+    loadDiaChiMacDinh();
     loadSoLuongSPTrongGH();
   }, [idGH]);
 
@@ -233,8 +234,8 @@ export const GioHang = ({ children }) => {
       });
 
       if (voucher !== null) {
-        console.log("add voucher to hóa đơn", res.data.hoaDon.id, voucher.id);
-        BanHangClientAPI.updateVoucherToHD(res.data.hoaDon.id, voucher.id);
+        //console.log("add voucher to hóa đơn", res.data.hoaDon.id, voucher.id);
+        BanHangClientAPI.updateVoucherToHD(hoaDonID, voucher?.id);
       }
 
       // const thanhToanTM = {
