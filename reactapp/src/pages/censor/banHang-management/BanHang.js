@@ -77,6 +77,7 @@ const BanHang = () => {
   const [voucherByIDKH, setVoucherByIDKH] = useState([""]);
   const [voucherNoLimited, setVoucherNoLimited] = useState([""]);
   const [diaChiKhachHang, setDiaChiKhachHang] = useState("");
+  const [soTienHoaDon, setSoTienHoaDon] = useState(0);
   console.log("ship money ", shipMoney);
   console.log("ship money 1 ", shipMoney1);
   console.log("Địa chỉ KH", diaChiKhachHang);
@@ -90,22 +91,35 @@ const BanHang = () => {
       if (
         hoaDons.filter((item) => item.id === activeKey && item.nguoiDung)[0]
       ) {
-     
         NguoiDungAPI.getDiaChiByIDND(
           hoaDons.filter((item) => item.id === activeKey && item.nguoiDung)[0]
             .nguoiDung
-        ).then((resData) => setDiaChiKhachHang(resData.data)
-        
-        );
-       
+        ).then((resData) => setDiaChiKhachHang(resData.data));
       } else {
         setDiaChiKhachHang("");
         // setShipMoney(0);
       }
-
-      
     }
   };
+
+  const getSoTien = async () => {
+    console.log("Hóa đơn", activeKey);
+    await SellAPI.getThanhTienbyIDHD(activeKey).then((res) =>
+      setSoTienHoaDon(res.data ? res.data : 0)
+    );
+    console.log(
+      "Số tiền",
+      await SellAPI.getThanhTienbyIDHD(activeKey).then((res) =>
+        res.data ? res.data : 0
+      )
+    );
+  };
+
+  useEffect(() => {
+    if (soTienHoaDon < (voucherHienTai ? voucherHienTai.dieuKien : 0)) {
+      setVoucherHienTai(null);
+    }
+  }, [soTienHoaDon]);
 
   useEffect(() => {
     console.log("Hóa đơns", hoaDons);
@@ -122,6 +136,7 @@ const BanHang = () => {
       setIsSwitchOn(true);
     }
   }, [activeKey, hoaDons.tenNguoiNhan, hoaDons.ngayDuKienNhan]);
+
   //đang fixx
   const handleSwitchTraSau = () => {
     setIsSwitchTraSau(!isSwitchTraSau);
@@ -130,39 +145,56 @@ const BanHang = () => {
         title: "Thông báo",
         content: "Bạn có chắc chắn muốn hóa đơn này trả sau hay không?",
         onOk: () => {
-          console.log(
-            "Tên người nhaanjn vận chuyển:",
-            hoaDons.filter((i) => i.id === activeKey)[0].tenNguoiNhan
-          );
-          if (!hoaDons.filter((i) => i.id === activeKey)[0].tenNguoiNhan) {
-            toast("Hóa đơn chưa có thông tin vận chuyển!", {
-              position: "top-right",
-              autoClose: 1000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-            });
-            return setIsSwitchTraSau(false);
-          } else {
-            SellAPI.updateTraSau(activeKey, storedData);
-            toast("✔️ Cập nhật thành công!", {
-              position: "top-right",
-              autoClose: 1000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-            });
+          SellAPI.getThanhTienbyIDHD(activeKey).then((res) => {
+            if (
+              (res.data ? res.data : 0) <
+              (voucherHienTai ? voucherHienTai.dieuKien : 0)
+            ) {
+              setVoucherHienTai(null);
+              setIsSwitchTraSau(false);
+              return toast.error("Voucher hiện tại không hợp lệ!", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              });
+            } else {
+              handleAddBill(activeKey);
+              if (!hoaDons.filter((i) => i.id === activeKey)[0].tenNguoiNhan) {
+                toast("Hóa đơn chưa có thông tin vận chuyển!", {
+                  position: "top-right",
+                  autoClose: 1000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "light",
+                });
+                return setIsSwitchTraSau(false);
+              } else {
+                SellAPI.updateTraSau(activeKey, storedData);
+                toast("✔️ Cập nhật thành công!", {
+                  position: "top-right",
+                  autoClose: 1000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "light",
+                });
 
-            dispatch(RemoveInvoiceByHoaDon({ hoaDon: activeKey }));
-            dispatch(RemoveBill({ key: activeKey }));
-            setIsSwitchTraSau(false);
-          }
+                dispatch(RemoveInvoiceByHoaDon({ hoaDon: activeKey }));
+                dispatch(RemoveBill({ key: activeKey }));
+                setIsSwitchTraSau(false);
+              }
+            }
+          });
         },
         onCancel: () => {
           return setIsSwitchTraSau(false);
@@ -177,13 +209,30 @@ const BanHang = () => {
     }
   };
 
-  const [voucherHienTai, setVoucherHienTai] = useState("");
+  const [voucherHienTai, setVoucherHienTai] = useState(null);
 
-  const onChangeVoucher = (value, option) => {
-    dispatch(UpdateVoucherToBill({ voucher: value, key: activeKey }));
-    VoucherAPI.detail(value).then((res) => setVoucherHienTai(res.data));
-
-    SellAPI.updateVoucherToHD(activeKey, value);
+  const onChangeVoucher = async (value, option) => {
+    console.log("Option", option);
+    console.log("Số tiền", soTienHoaDon);
+    await SellAPI.getThanhTienbyIDHD(activeKey).then((res) => {
+      if ((res.data ? res.data : 0) < option.dieuKien) {
+        toast("Không đủ điều kiện!", {
+          position: "top-right",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        return setVoucherHienTai(null);
+      }
+      setVoucherHienTai(option);
+      dispatch(UpdateVoucherToBill({ voucher: value, key: activeKey }));
+      // VoucherAPI.detail(value).then((res) => setVoucherHienTai(res.data));
+      //SellAPI.updateVoucherToHD(activeKey, value); - update voucher vào HD
+    });
   };
   const onSearchVoucher = (value, option) => {};
   // Lấy thông tin nhân viên
@@ -203,8 +252,6 @@ const BanHang = () => {
   //Hết
 
   // option.label.toLowerCase().includes(input.toLowerCase());
-
-
 
   //load nguoi dung voucher
 
@@ -331,7 +378,7 @@ const BanHang = () => {
             nguoiTao: item.nguoiTao,
             idHuyen: item.idHuyen,
             idXa: item.idXa,
-            idThanhPho : item.idThanhPho,
+            idThanhPho: item.idThanhPho,
             // nguoiSua: item.nguoiSua,
             // ngaySua: item.ngaySua,
             // ngayTao: item.ngayTao,
@@ -417,21 +464,20 @@ const BanHang = () => {
   const onChangeSoLuong = async (value, record) => {
     console.log("số lượng", value);
     console.log("record", record);
-    let SL = 0; // số lượng trước 
+    let SL = 0; // số lượng trước
     let SLT = 0; // số lượng tồn
-    await SellAPI.getSLAndSLT(record.chiTietSanPham,activeKey).then((res) => {
+    await SellAPI.getSLAndSLT(record.chiTietSanPham, activeKey).then((res) => {
       SL = res.data.soLuong;
       SLT = res.data.soLuongTon;
       console.log(res.data);
-      console.log("Số lượng trước",SL);
-      console.log("Số lượng tồn",SLT);
-    })
+      console.log("Số lượng trước", SL);
+      console.log("Số lượng tồn", SLT);
+    });
     setShipMoney(0);
     setShipMoney1(0);
-    console.log("Số lượng trước",SL);
-    console.log("Số lượng tồn",SLT);
+    console.log("Số lượng trước", SL);
+    console.log("Số lượng tồn", SLT);
     if (value === 0) {
-      
       Modal.confirm({
         title: "Thông báo",
         content:
@@ -453,6 +499,7 @@ const BanHang = () => {
             record.chiTietSanPham,
             record.hoaDon
           );
+          getSoTien();
           // SellAPI.updateThanhTien(record.hoaDon);
           data = ctspHD.filter((f) => f.hoaDon === activeKey);
           toast("✔️ Cập nhật giỏ hàng thành công!", {
@@ -477,7 +524,7 @@ const BanHang = () => {
         ),
       });
     } else {
-      if ((SLT+SL) < value) {
+      if (SLT + SL < value) {
         toast("Số lượng tồn không thỏa mãn yêu cầu!", {
           position: "top-right",
           autoClose: 1000,
@@ -488,7 +535,7 @@ const BanHang = () => {
           progress: undefined,
           theme: "light",
         });
-        value = (SLT+SL);
+        value = SLT + SL;
         dispatch(
           UpdateInvoice({
             soLuong: value,
@@ -584,14 +631,14 @@ const BanHang = () => {
     // if (
     //   hoaDons.filter((item) => item.id === key && item.nguoiDung)[0]
     // ) {
-   
+
     //   NguoiDungAPI.getDiaChiByIDND(
     //     hoaDons.filter((item) => item.id === key && item.nguoiDung)[0]
     //       .nguoiDung
     //   ).then((resData) => setDiaChiKhachHang(resData.data)
-      
+
     //   );
-     
+
     // } else {
     //   setDiaChiKhachHang("");
     //   // setShipMoney(0);
@@ -671,8 +718,8 @@ const BanHang = () => {
         ngayNhan: "null",
         ngayTraHang: null,
         nguoiTao: storedData,
-        idHuyen : null,
-        idXa : null,
+        idHuyen: null,
+        idXa: null,
         idThanhPho: null,
         nguoiSua: null,
         ngaySua: null,
@@ -907,6 +954,7 @@ const BanHang = () => {
                     record.chiTietSanPham,
                     record.hoaDon
                   );
+                  getSoTien();
                   //SellAPI.updateThanhTien(record.hoaDon);
                   //  data = ctspHD.filter((f) => f.hoaDon === activeKey);
                   toast("✔️ Cập nhật giỏ hàng thành công!", {
@@ -1032,6 +1080,7 @@ const BanHang = () => {
                             setOpenSanPham={setOpenSanPham}
                             onOk={handleCloseSanPham}
                             onCancel={handleCloseSanPham}
+                            getSoTien={getSoTien}
                           />
                         </div>
                       </div>
@@ -1195,8 +1244,35 @@ const BanHang = () => {
                               <MdOutlinePayments
                                 size={25}
                                 onClick={() => {
+                                  SellAPI.getThanhTienbyIDHD(activeKey).then(
+                                    (res) => {
+                                      if (
+                                        (res.data ? res.data : 0) <
+                                        (voucherHienTai
+                                          ? voucherHienTai.dieuKien
+                                          : 0)
+                                      ) {
+                                        setVoucherHienTai(null);
+                                        return toast.error(
+                                          "Voucher hiện tại không hợp lệ!",
+                                          {
+                                            position: "top-right",
+                                            autoClose: 5000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: true,
+                                            progress: undefined,
+                                            theme: "light",
+                                          }
+                                        );
+                                      } else {
+                                        handleAddBill(activeKey);
+                                      }
+                                    }
+                                  );
+
                                   //handleAddBill(dispatch(GetBillByKey({activeKey})))}
-                                  handleAddBill(activeKey);
                                 }}
                               />
                             }
@@ -1224,7 +1300,7 @@ const BanHang = () => {
                                 : 0)
                             }
                             hoaDon={activeKey}
-                            voucher={voucherHienTai.id}
+                            voucher={voucherHienTai?.id}
                           />
                         </div>
 
@@ -1236,11 +1312,13 @@ const BanHang = () => {
                               showSearch
                               style={{ width: 800, height: 120 }}
                               placeholder="Lựa chọn voucher"
-                              optionLabelProp="label"
-                              optionFilterProp="label"
+                              //optionLabelProp="label"
+                              //optionFilterProp="label"
                               onChange={onChangeVoucher}
                               onSearch={onSearchVoucher}
-                              filterOption={filterOptionVoucher}
+                              //filterOption={filterOptionVoucher}
+                              value={voucherHienTai}
+                              optionFilterProp="label"
                               //  options={voucherByIDKH.data ? voucherByIDKH.data : voucherNoLimited}
                             >
                               {voucherByIDKH.data ? (
@@ -1255,7 +1333,6 @@ const BanHang = () => {
                                     loai={option.loaiVoucher}
                                     mucDo={option.mucDo}
                                     style={{ width: "100%", height: "100%" }}
-
                                     // filterOption={filterOptionVoucher}
                                   >
                                     <div className="row">
@@ -1389,40 +1466,44 @@ const BanHang = () => {
                               {`${Intl.NumberFormat("en-US").format(
                                 data.reduce((accumulator, currentProduct) => {
                                   return accumulator + currentProduct.total;
-                                }, 0) -
-                                  (voucherHienTai
-                                    ? voucherHienTai.loaiVoucher === "Tiền mặt"
-                                      ? voucherHienTai.mucDo <
-                                        voucherHienTai.giamToiDa
-                                        ? voucherHienTai.mucDo
-                                        : voucherHienTai.giamToiDa
-                                      : (data.total * voucherHienTai.mucDo) /
-                                          100 <
-                                        voucherHienTai.giamToiDa
-                                      ? (data.total * voucherHienTai.mucDo) /
-                                        100
-                                      : voucherHienTai.giamToiDa
-                                    : 0)
+                                }, 0)
+                                // -
+                                //   (voucherHienTai
+                                //     ? voucherHienTai.loaiVoucher === "Tiền mặt"
+                                //       ? voucherHienTai.mucDo <
+                                //         voucherHienTai.giamToiDa
+                                //         ? voucherHienTai.mucDo
+                                //         : voucherHienTai.giamToiDa
+                                //       : (data.total * voucherHienTai.mucDo) /
+                                //           100 <
+                                //         voucherHienTai.giamToiDa
+                                //       ? (data.total * voucherHienTai.mucDo) /
+                                //         100
+                                //       : voucherHienTai.giamToiDa
+                                //     : 0)
                               )}`}
                             </h6>
                             <h6 className="mt-4">
                               Phí vận chuyển:{" "}
                               {isSwitchOn
-                                ? `${Intl.NumberFormat("en-US").format(roundToThousands(
-                                    //  (hd[0].tienVanChuyen && hd[0].tienVanChuyen === shipMoney)
-                                    //     ? hd[0].tienVanChuyen
-                                    //     : (hd[0].tienVanChuyen && hd[0].tienVanChuyen !== shipMoney)
-                                    //     ? shipMoney
-                                    //     : shipMoney
-                                    // (hd[0]?.tienVanChuyen && !shipMoney  ) ? hd[0]?.tienVanChuyen : (hd[0]?.tienVanChuyen && hd[0]?.tienVanChuyen !== shipMoney) ? shipMoney : shipMoney
-                                    (hd[0]?.tienVanChuyen && (shipMoney === shipMoney1))
-                                      ? hd[0]?.tienVanChuyen
-                                      : shipMoney1          
-                                      ? shipMoney1
-                                      : shipMoney 
-                                      ? shipMoney
-                                      : 0
-              ))}`
+                                ? `${Intl.NumberFormat("en-US").format(
+                                    roundToThousands(
+                                      //  (hd[0].tienVanChuyen && hd[0].tienVanChuyen === shipMoney)
+                                      //     ? hd[0].tienVanChuyen
+                                      //     : (hd[0].tienVanChuyen && hd[0].tienVanChuyen !== shipMoney)
+                                      //     ? shipMoney
+                                      //     : shipMoney
+                                      // (hd[0]?.tienVanChuyen && !shipMoney  ) ? hd[0]?.tienVanChuyen : (hd[0]?.tienVanChuyen && hd[0]?.tienVanChuyen !== shipMoney) ? shipMoney : shipMoney
+                                      hd[0]?.tienVanChuyen &&
+                                        shipMoney === shipMoney1
+                                        ? hd[0]?.tienVanChuyen
+                                        : shipMoney1
+                                        ? shipMoney1
+                                        : shipMoney
+                                        ? shipMoney
+                                        : 0
+                                    )
+                                  )}`
                                 : 0}
                             </h6>
                             <h6 className="mt-4">
@@ -1472,23 +1553,25 @@ const BanHang = () => {
                                         100
                                       : voucherHienTai.giamToiDa
                                     : 0) +
-                                    roundToThousands(isSwitchOn
-                                    // ? hd[0]?.tienVanChuyen && !shipMoney
-                                    //   ? hd[0]?.tienVanChuyen
-                                    //   : hd[0]?.tienVanChuyen &&
-                                    //     hd[0]?.tienVanChuyen !== shipMoney
-                                    //   ? shipMoney
-                                    //   : shipMoney
-                                    // : 0
-                                    ? hd[0]?.tienVanChuyen && shipMoney === shipMoney1
-                                    ? hd[0]?.tienVanChuyen
-                                    : shipMoney1           
-                                    ? shipMoney1
-                                    : shipMoney 
-                                    ? shipMoney
-                                    : 0
-                                    :0
-                                    )
+                                  roundToThousands(
+                                    isSwitchOn
+                                      ? // ? hd[0]?.tienVanChuyen && !shipMoney
+                                        //   ? hd[0]?.tienVanChuyen
+                                        //   : hd[0]?.tienVanChuyen &&
+                                        //     hd[0]?.tienVanChuyen !== shipMoney
+                                        //   ? shipMoney
+                                        //   : shipMoney
+                                        // : 0
+                                        hd[0]?.tienVanChuyen &&
+                                        shipMoney === shipMoney1
+                                        ? hd[0]?.tienVanChuyen
+                                        : shipMoney1
+                                        ? shipMoney1
+                                        : shipMoney
+                                        ? shipMoney
+                                        : 0
+                                      : 0
+                                  )
                               )} VND`}
                             </h6>
                           </div>

@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class KhachHangService {
@@ -145,6 +146,8 @@ public class KhachHangService {
     }
     public DiaChi addDiaChi(DiaChiRequest diaChiRequest){
         DiaChi diaChi=diaChiRequest.map(new DiaChi());
+
+        System.out.println("Địa chỉ"+diaChi);
         return diaChiRepository.save(diaChi);
     }
     public DiaChi detailDiaChi(String id){

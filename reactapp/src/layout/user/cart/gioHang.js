@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./gioHang.css";
-import { Button, Switch, Tag } from "antd";
+import { Button, Switch, Tag ,Modal} from "antd";
 import { FaRegTrashAlt, FaMapMarkerAlt } from "react-icons/fa";
 import { BiSolidDiscount } from "react-icons/bi";
 import ModalDiaChi from "./modalDiaChi";
@@ -16,6 +16,8 @@ import { v4 as uuid } from "uuid";
 import { SellAPI } from "../../../pages/censor/api/sell/sell.api";
 import { KhachHangAPI } from "../../../pages/censor/api/user/khachHang.api";
 import { ShipAPI } from "../../../pages/censor/api/ship/ship.api";
+import { toast, ToastContainer } from "react-toastify";
+
 import Moment from "moment";
 import {
   AdThongBaoDatHang,
@@ -37,13 +39,14 @@ export const GioHang = ({ children }) => {
   const [discount, setDiscount] = useState(0);
   const [ngayShip, setNgayShip] = useState("");
   const [moneyShip, setMoneyShip] = useState("");
+  const [dataVanChuyen, setDataVanchuyen] = useState("");
   const [soLuongSPGH, setSoLuongSPGH] = useState(0);
   const [idGH, setIDGH] = useState("");
-
+  console.log("Data vận chuyển",dataVanChuyen);
+  console.log("user id",userID);
+  console.log("voucher đang chọn",voucher);
   let total = 0;
-  let tienShip = 0;
-  let thanhTien = 0;
-  let soLuongSLGH = 0;
+
 
   const storedData = get("userData");
   const storedGioHang = get("GioHang");
@@ -67,11 +70,11 @@ export const GioHang = ({ children }) => {
     setPhuongThuc(1);
   };
   useEffect(() => {
-    // if (storedData !== null) {
-    //   setKhachHang(storedData.userID);
-    //   setUserID(storedData.userID);
-    //   loadDiaChiMacDinh();
-    // }
+    if (storedData) {
+      setKhachHang(storedData.userID);
+      setUserID(storedData.userID);
+      loadDiaChiMacDinh();
+    }
     loadGHCT();
   }, []);
   const loadGiamGia = (voucher) => {
@@ -89,14 +92,14 @@ export const GioHang = ({ children }) => {
     let idHuyen = "";
     let idXa = "";
     if (storedData?.userID) {
-    await KhachHangAPI.getDiaChiMacDinh(storedData.userID).then((res) => {
-      setDiaChi(res.data);
-      console.log(res.data);
-      idHuyen = res.data.idHuyen;
-      idXa = res.data.idXa;
-    });
-  }
-    if (idHuyen  && idXa ) {
+      await KhachHangAPI.getDiaChiMacDinh(storedData.userID).then((res) => {
+        setDiaChi(res.data);
+        console.log(res);
+        idHuyen = res.data.idHuyen;
+        idXa = res.data.idXa;
+      });
+    }
+    if (idHuyen && idXa) {
       console.log("IDHuyen", idHuyen);
       console.log("IDXa", idXa);
       setNgayShip(
@@ -123,11 +126,9 @@ export const GioHang = ({ children }) => {
         )
       );
     }
-
   };
 
   const loadGHCT = () => {
-
     if (storedData && storedData.userID) {
       GioHangAPI.getByIDKH(storedData.userID).then((response) => {
         setIDGH(response.data.id);
@@ -136,11 +137,10 @@ export const GioHang = ({ children }) => {
           console.log("GioHangct", res.data);
         });
       });
-    }
-    else if (storedGioHang && storedGioHang.id) {
-      console.log(storedGioHang)
+    } else if (storedGioHang && storedGioHang.id) {
+      console.log(storedGioHang);
       GioHangAPI.getByID(storedGioHang.id).then((response) => {
-        console.log(response.data)
+        console.log(response.data);
         setIDGH(response.data.id);
         GioHangAPI.getAllGHCTByIDGH(response.data.id).then((res) => {
           setGioHangCT(res.data);
@@ -152,7 +152,7 @@ export const GioHang = ({ children }) => {
 
   useEffect(() => {
     console.log("ID GH", idGH);
-      loadSoLuongSPTrongGH();
+    loadSoLuongSPTrongGH();
   }, [idGH]);
 
   useEffect(() => {
@@ -162,9 +162,9 @@ export const GioHang = ({ children }) => {
 
   const loadSoLuongSPTrongGH = async () => {
     if (idGH) {
-    await GioHangAPI.soLuongTrongGioHang(idGH).then((res) =>
-      setSoLuongSPGH(res.data)
-    );
+      await GioHangAPI.soLuongTrongGioHang(idGH).then((res) =>
+        setSoLuongSPGH(res.data)
+      );
     }
   };
 
@@ -180,7 +180,7 @@ export const GioHang = ({ children }) => {
     khachHang,
     voucher,
     diaChi,
-    phuongThuc
+    phuongThuc,
   ) => {
     KHGuiThongBaoDatHang();
     const currentDate = new Date();
@@ -202,6 +202,11 @@ export const GioHang = ({ children }) => {
       giaGoc: total,
       giaGiamGia: discount,
       thanhTien: total - discount,
+      diaChi : diaChi ? diaChi.diaChi +"/"+ diaChi.tenXa +"/"+ diaChi.tenHuyen + "/" + diaChi.tenThanhPho : dataVanChuyen.diaChi,
+      email : diaChi ? diaChi.email : dataVanChuyen.email,
+      tenNguoiNhan : diaChi ? diaChi.tenNguoiNhan : dataVanChuyen.tenNguoiNhan,
+      tienVanChuyen : moneyShip ? moneyShip : dataVanChuyen.tienVanChuyen,
+      ngayDuKienNhan : ngayShip ? ngayShip : dataVanChuyen.ngayDuKienNhan,
     };
 
     console.log("hóa đơn", hoaDon);
@@ -324,8 +329,23 @@ export const GioHang = ({ children }) => {
       }
     });
 
-    loadGHCT();
+   // loadGHCT();
+    setGioHangCT([]);
     setVoucher(null);
+    if (isDiaChiGiaoHangVisible === true) {
+    setIsDiaChiGiaoHangVisible(!isDiaChiGiaoHangVisible);
+    }
+    setMoneyShip(0);
+    toast("✔️ Đặt hàng thành công!", {
+      position: "top-right",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
   };
 
   return (
@@ -340,7 +360,7 @@ export const GioHang = ({ children }) => {
       <div className="row mt-5">
         {/* kẻ ngang */}
         <div className="xBNaac"></div>
-        {khachHang != null && diaChi != null ? (
+        {khachHang !== null && diaChi !== null ? (
           <div className="mt-4 row">
             {/* địa chỉ  */}
             <h5 style={{ color: "red" }}>
@@ -384,9 +404,16 @@ export const GioHang = ({ children }) => {
               </p>
             </div>
           </div>
-        ) : (
-          <></>
-        )}
+        ) : (khachHang && !diaChi) ? (
+          <>
+            <Button
+              style={{ marginLeft: 30, width: 100, height: 50, marginTop: 20 }}
+              onClick={() => setOpenModalDiaChi(true)}
+            >
+              Chọn địa chỉ
+            </Button>
+          </>
+        ) : <></>}
       </div>
       <div className="row mt-5">
         <div className="col-md-8">
@@ -401,11 +428,12 @@ export const GioHang = ({ children }) => {
               </tr>
             </thead>
             <tbody>
-              {gioHangCT.map((ghct, index) => {
+              {gioHangCT ? 
+              (gioHangCT?.map((ghct, index) => {
                 return (
                   <ProductRow key={index} product={ghct} loadghct={loadGHCT} />
                 );
-              })}
+              })) : <ProductRow/>}
             </tbody>
           </table>
         </div>
@@ -496,7 +524,7 @@ export const GioHang = ({ children }) => {
       <hr className="mt-5 mb-5"></hr>
       {/* giao hàng khi khách ko có tài khoản */}
       <div>
-        {khachHang == null ? (
+        {khachHang === null && !storedData?.userID ? (
           <div className="row">
             <h5 className="text-danger col-md-2 ">Giao hàng</h5>
             <div className="col-md-2">
@@ -504,6 +532,7 @@ export const GioHang = ({ children }) => {
                 onChange={() =>
                   setIsDiaChiGiaoHangVisible(!isDiaChiGiaoHangVisible)
                 }
+                checked={isDiaChiGiaoHangVisible}
               />
             </div>
           </div>
@@ -511,7 +540,7 @@ export const GioHang = ({ children }) => {
           <></>
         )}
         <div className=" col-md-10 ms-5">
-          {isDiaChiGiaoHangVisible && <DiaChiGiaoHang />}
+          {isDiaChiGiaoHangVisible && <DiaChiGiaoHang money={setMoneyShip} thongTinVanChuyen={setDataVanchuyen}/>}
         </div>
         {khachHang == null ? <hr className="mt-5 mb-5"></hr> : <></>}
       </div>
@@ -594,15 +623,31 @@ export const GioHang = ({ children }) => {
                 color: "white",
               }}
               onClick={() => {
-                handleMuaHang(
-                  total,
-                  discount,
-                  gioHangCT,
-                  khachHang,
-                  voucher,
-                  diaChi,
-                  phuongThuc
-                );
+                Modal.confirm({
+                  title: "Thông báo",
+                  content: "Bạn có xác nhận đặt hàng không?",
+                  onOk : () => {
+                    handleMuaHang(
+                      total,
+                      discount,
+                      gioHangCT,
+                      khachHang,
+                      voucher,
+                      diaChi,
+                      phuongThuc
+                    );
+                  } ,
+                  onCancel: () => {
+                    return;
+                  },
+                  footer: (_, { OkBtn, CancelBtn }) => (
+                    <>
+                      <CancelBtn />
+                      <OkBtn />
+                    </>
+                  ),
+                })
+
               }}
             >
               Đặt hàng
@@ -626,6 +671,20 @@ export const GioHang = ({ children }) => {
         total={total}
         loadGiamGia={loadGiamGia}
       />
+            <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      {/* Same as */}
+      <ToastContainer />
     </div>
   );
 };

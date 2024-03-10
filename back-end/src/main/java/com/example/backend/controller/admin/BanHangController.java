@@ -256,7 +256,14 @@ public class BanHangController {
     @PutMapping("/hoa-don/update-tien-van-chuyen/{idHD}/{tien}")
     public ResponseEntity<?> updateTienVanChuyen(@PathVariable("idHD") String idHD,@PathVariable("tien")String tien){
         HoaDon hd = hoaDonServicee.findHoaDonbyID(idHD);
-        hd.setTienVanChuyen(Float.parseFloat(tien));
+        hd.setTienVanChuyen(new BigDecimal(tien));
         return ResponseEntity.ok(hoaDonServicee.updateTrangThaiHoaDon(hd));
+    }
+
+    @GetMapping("/hoa-don/so-tien/{idHD}")
+    public ResponseEntity<?> getThanhTienByIDHD(@PathVariable("idHD") String idHD){
+        System.out.println("ID"+idHD);
+        System.out.println("Hóa đơn"+hoaDonServicee.getHDByIDHD(idHD).getThanhTien());
+        return ResponseEntity.ok(hoaDonServicee.getHDByIDHD(idHD).getThanhTien());
     }
 }

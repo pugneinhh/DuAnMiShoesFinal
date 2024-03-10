@@ -14,13 +14,14 @@ const AddModalDiaChi = (props) => {
         setOpenModalAddDiaChi(false);
     };
     //add dia chi khach hang
+    console.log("ID Khashc hàng",idKH)
     const handleSubmit = (value) => {
        
         const data={
             ...value,
             idThanhPho: province.key == null ? province.ProvinceID : province.key,
             idHuyen: district.key == null ? district.DistrictID : district.key,
-            idXa: ward.key == null ? ward.WardCode : ward.key,
+            idXa: ward.key == null ? ward.WardCode : ward.key, idNguoiDung : idKH ,
         };
         KhachHangAPI.addDCKH(data)
         .then((result) => {

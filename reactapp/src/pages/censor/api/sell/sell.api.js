@@ -229,4 +229,11 @@ export class SellAPI {
       url : `/ban-hang/hoa-don/update-tien-van-chuyen/${idHD}/${tien}`,
     });
   }
+
+  static getThanhTienbyIDHD = (idHD) => {
+    return requestAdmin({
+      method: "GET",
+      url : `/ban-hang/hoa-don/so-tien/${idHD}`,
+    });
+  }
 }

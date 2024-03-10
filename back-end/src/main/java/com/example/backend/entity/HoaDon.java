@@ -48,7 +48,7 @@ public class HoaDon {
     private LocalDateTime ngayTao;
     private LocalDateTime ngaySua;
     private int trangThai;
-    private Float tienVanChuyen;
+    private BigDecimal tienVanChuyen;
     private int traSau;
 
 

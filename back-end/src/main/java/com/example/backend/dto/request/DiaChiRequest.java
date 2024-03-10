@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-
+@ToString
 public class DiaChiRequest {
     private String id;
     private String idNguoiDung;

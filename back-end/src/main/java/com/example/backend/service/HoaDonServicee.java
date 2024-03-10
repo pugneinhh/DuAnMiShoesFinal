@@ -225,4 +225,9 @@ public class HoaDonServicee {
 //             return o;
 //        }).orElse(null) ;
 //    }
+
+    public HoaDon getHDByIDHD(String idHD){
+        System.out.println("Hóa đơn service"+hoaDonRepository.getHoaDonByIDHD(idHD));
+        return hoaDonRepository.getHoaDonByIDHD(idHD);
+    }
 }
