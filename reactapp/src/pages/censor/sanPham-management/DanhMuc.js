@@ -132,6 +132,19 @@ export default function DanhMuc() {
         setDanhMucs(res.data);
       })
   }
+  //Validate
+  const validateDateDanhMuc = (_, value) => {
+    const { getFieldValue } = form1;
+    const tenDanhMuc = getFieldValue("ten");
+  if (!tenDanhMuc.trim()) {
+    return Promise.reject("Tên không được để trống");
+  }
+  const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+  if (specialCharacterRegex.test(tenDanhMuc)) {
+    return Promise.reject("Tên không được chứa ký tự đặc biệt");
+  }
+    return Promise.resolve();
+  };
   //Table
   const [danhMuc, setDanhMucs] = useState([]);
 
@@ -296,7 +309,7 @@ export default function DanhMuc() {
                 }}
                 onFinish={addDanhMuc}
                 form={form1}>
-                <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
+                <Form.Item label="Tên" name='ten' hasFeedback rules={[{validator: validateDateDanhMuc}]} >
                   <Input className='border'></Input>
                 </Form.Item>
               </Form>

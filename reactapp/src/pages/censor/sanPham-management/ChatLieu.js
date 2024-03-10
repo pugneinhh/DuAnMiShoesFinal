@@ -131,6 +131,19 @@ export default function ChatLieu() {
         setChatLieus(res.data);
       })
   }
+  //Validate
+  const validateDateChatLieu = (_, value) => {
+    const { getFieldValue } = form;
+    const tenChatLieu = getFieldValue("ten");
+  if (!tenChatLieu.trim()) {
+    return Promise.reject("Tên không được để trống");
+  }
+  const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+  if (specialCharacterRegex.test(tenChatLieu)) {
+    return Promise.reject("Tên không được chứa ký tự đặc biệt");
+  }
+    return Promise.resolve();
+  };
   //Table
   const [chatLieu, setChatLieus] = useState([]);
 
@@ -291,7 +304,7 @@ export default function ChatLieu() {
                 }}
                 onFinish={addChatLieu}
                 form={form}>
-                <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
+                <Form.Item label="Tên" name='ten' hasFeedback rules={[{validator: validateDateChatLieu}]} >
                   <Input className="border" />
                 </Form.Item>
               </Form>
