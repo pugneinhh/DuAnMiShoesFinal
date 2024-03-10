@@ -80,6 +80,32 @@ export default function HoaDonDetail() {
     setIsModalOpen(true);
   };
 
+  const handleHuyHoaDon = () => {
+    Modal.confirm({
+      title: "Thông báo",
+      content: "Bạn có chắc chắn muốn xóa hóa đơn này không?",
+      onOk: () => {
+      HoaDonAPI.huyHoaDon(id);
+      toast("✔️ Xóa hóa đơn thành công!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      },
+      onCancel: () => {},
+      footer: (_, { OkBtn, CancelBtn }) => (
+        <>
+          <CancelBtn />
+          <OkBtn />
+        </>
+      ),
+    });
+  }
   // update trạng thái hóa đơn
   const handleSubmit = (values) => {
     AdminGuiThongBaoXacNhanDatHang();
@@ -542,7 +568,7 @@ export default function HoaDonDetail() {
           <>
             <>
               {trangThai == 0 ? (
-                <Button className="ms-5 btn btn-danger " type="primary">
+                <Button className="ms-5 btn btn-danger " type="primary" onClick={handleHuyHoaDon}>
                   Hủy
                 </Button>
               ) : trangThai == 1 ? (
