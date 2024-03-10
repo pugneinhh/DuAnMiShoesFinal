@@ -11,6 +11,8 @@ const TableKhachHang = ({ onSelectedKH, suaKH }) => {
   const [form] = Form.useForm();
   const [khachHang, setKhachHangs] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [top] = useState("none");
+  const [bottom] = useState("bottomCenter");
   const onChangeFilter = (changedValues, allValues) => {
    
     timKiemKH(allValues);
@@ -125,7 +127,13 @@ const TableKhachHang = ({ onSelectedKH, suaKH }) => {
         defaultSelectedRowKeys={selectedRowKeys}
         columns={columnsKhachHang}
         dataSource={dataSource}
-        pagination={{ defaultPageSize: 5 }}
+        pagination={{
+          showQuickJumper: true,
+          position: [top, bottom],
+          defaultPageSize: 10,
+          defaultCurrent: 1,
+          total: 100,
+        }}
       />
     </div>
 
