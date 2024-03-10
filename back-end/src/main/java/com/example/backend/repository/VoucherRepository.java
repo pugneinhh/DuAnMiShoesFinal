@@ -35,6 +35,7 @@ public interface VoucherRepository extends JpaRepository<Voucher, String> {
                         ( :#{#voucherSearch.trangThai} IS NULL OR
                          v.trang_thai LIKE (%:#{#voucherSearch.trangThai}) )AND
                         ( :#{#voucherSearch.ngayBatDau} IS NULL OR
+                        (v.ngay_bat_dau BETWEEN (:#{#voucherSearch.ngayBatDau}) AND (:#{#voucherSearch.ngayKetThuc}))
                         :#{#voucherSearch.ngayKetThuc} IS NULL OR
                         (v.ngay_bat_dau BETWEEN (:#{#voucherSearch.ngayBatDau}) AND (:#{#voucherSearch.ngayKetThuc}))
                         AND (ngay_ket_thuc BETWEEN (:#{#voucherSearch.ngayBatDau}) AND (:#{#voucherSearch.ngayKetThuc})))

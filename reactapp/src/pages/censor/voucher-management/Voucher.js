@@ -10,6 +10,7 @@ import {
   Table,
   Tag,
 } from "antd";
+import "./voucher.scss";
 import { EyeOutlined } from "@ant-design/icons";
 import { FilterFilled, UnorderedListOutlined } from "@ant-design/icons";
 import { BsPencilSquare } from "react-icons/bs";
@@ -26,7 +27,6 @@ const Voucher = () => {
 
   const [dataSearch, setDataSearch] = useState({});
   const [voucher, setVouchers] = useState([]);
-
   const onChangeFilter = (changedValues, allValues) => {
     timKiemVoucher(allValues);
     setDataSearch(allValues);
@@ -328,13 +328,22 @@ const Voucher = () => {
                   placeholder="Nhập mã hoặc tên hoặc mức độ giảm giá"
                 />
               </Form.Item>
-              <Form.Item label="Loại voucher" name="loaiVoucher">
-                <Select
-                  defaultValue={"Tiền mặt"}
-                  style={{ borderColor: "yellow" }}
+              <Form.Item label="Loại voucher" name="loaiVoucher" >
+              <Select
+                  defaultValue={"Tất cả"}
+                  status="warning"
+                  className="rounded-pill border-warning"
+                  style={{ borderRadius:"30px" }}
                 >
-                  <Select.Option value="Tiền mặt">Tiền mặt</Select.Option>
-                  <Select.Option value="Phần trăm">Phần trăm</Select.Option>
+                  <Select.Option style={{ borderRadius:"30px" }} value="">
+                    Tất cả
+                  </Select.Option>
+                  <Select.Option style={{ borderRadius:"30px" }} value="Tiền mặt">
+                    Tiền mặt
+                  </Select.Option>
+                  <Select.Option style={{ borderRadius:"30px" }} value="Phần trăm">
+                    Phần trăm
+                  </Select.Option>
                 </Select>
               </Form.Item>
             </div>
@@ -343,6 +352,7 @@ const Voucher = () => {
               <Form.Item label="Trạng thái" name="trangThai">
                 <Select
                   defaultValue={"Tất cả"}
+                  status="warning"
                   style={{ borderColor: "yellow" }}
                 >
                   <Select.Option value="SAP_DIEN_RA">Sắp diễn ra</Select.Option>
