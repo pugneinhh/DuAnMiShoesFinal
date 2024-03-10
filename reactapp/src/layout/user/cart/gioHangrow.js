@@ -76,7 +76,7 @@ function ProductRow({ product, loadghct }) {
             size="small"
             style={{
               marginRight: -65,
-              width: ctsp.loaiKM ? 50 : 0,
+             // width: ctsp.loaiKM ? 50 : ctsp.loaiKM === "Tiền mặt" ? 200 :0,
               height: ctsp.loaiKM ? 25 : 0,
             }}
           >

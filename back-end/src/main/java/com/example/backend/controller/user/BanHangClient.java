@@ -59,7 +59,7 @@ public class BanHangClient {
 
     @PostMapping("/add-hoa-don")
     public ResponseEntity<?> addHD(@RequestBody HoaDonRequest hoaDonRequest){
-
+        System.out.println("Hóa đơn client"+hoaDonRequest);
         CongThuc ct=congThucRepository.getCongThucByTrangThai(0);
         // hoaDonRequest.setMa("HDTQ"+ RandomStringUtils.randomNumeric(6));
         hoaDonRequest.setLoaiHoaDon(0);

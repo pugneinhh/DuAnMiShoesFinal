@@ -9,10 +9,10 @@ const ModalVoucher = (props) => {
   const [top, setTop] = useState("none");
   const [bottom, setBottom] = useState("bottomRight");
   const [datas, setData] = useState([]);
-
+  console.log("userID voucher",userID);
   const loadVoucher =  () => {
     console.log("UUUUU" + userID)
-    if (userID !== null && userID !== undefined && userID !== "") {
+    if (userID) {
        SellAPI.getVoucherWithIDKH(userID).then((result) => {
         console.log("limit")
         setData(result.data);
@@ -36,7 +36,7 @@ const ModalVoucher = (props) => {
       loadVoucher();
       // console.log("hóa đơn",hoaDonID)
     // }
-  }, []);
+  }, [userID]);
 
   const handleChonVoucher = (record) => {
     setVoucherID(record);

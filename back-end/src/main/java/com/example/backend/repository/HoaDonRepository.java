@@ -16,6 +16,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
@@ -151,6 +152,8 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
     @Query(value = "select * from hoa_don where id =:id",nativeQuery = true)
     HoaDon getHoaDonByIDHD(String id);
 
+    @Query(value ="select thanh_tien from hoa_don where id =:id",nativeQuery = true)
+    String getThanhTienByIDHD(String id);
 
 
 }

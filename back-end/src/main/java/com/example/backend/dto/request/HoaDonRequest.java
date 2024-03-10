@@ -24,6 +24,7 @@ public class HoaDonRequest {
     BigDecimal giaGoc;
     BigDecimal giaGiamGia;
     BigDecimal thanhTien;
+    BigDecimal tienVanChuyen;
     int diemSuDung;
     int giaTriDiem;
     int loaiHoaDon;
@@ -67,6 +68,8 @@ public class HoaDonRequest {
         hoaDon.setNgayTao(this.ngayTao);
         hoaDon.setNgaySua(this.ngaySua);
         hoaDon.setTrangThai(this.trangThai);
+        hoaDon.setNgayDuKienNhan(this.ngayDuKienNhan);
+        hoaDon.setTienVanChuyen(this.tienVanChuyen);
         if (this.nguoiDung == null) {
             hoaDon.setNguoiDung(null);
         } else {

@@ -313,7 +313,7 @@ const ModalDetailSP = (props) => {
           })
         } else {
           const data = {
-            gioHang: res.data[0].gioHang,
+            gioHang: storedGioHang.id,
             chiTietSanPham: ChiTietSanPham.id,
             soLuong: soLuong,
             thanhTien: ChiTietSanPham.loaiKM ? 
