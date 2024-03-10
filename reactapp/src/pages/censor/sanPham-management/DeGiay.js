@@ -129,6 +129,20 @@ export default function DeGiay() {
         setDeGiays(res.data);
       })
   }
+  //Validate
+  const validateDateDeGiay = (_, value) => {
+    const { getFieldValue } = form;
+    const tenDeGiay = getFieldValue("ten");
+  if (!tenDeGiay.trim()) {
+    return Promise.reject("Tên không được để trống");
+  }
+  const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+  if (specialCharacterRegex.test(tenDeGiay)) {
+    return Promise.reject("Tên không được chứa ký tự đặc biệt");
+  }
+    return Promise.resolve();
+  };
+
   //Table
   const [deGiay, setDeGiays] = useState([]);
 
@@ -288,7 +302,7 @@ export default function DeGiay() {
                 }}
                 onFinish={addDeGiay}
                 form={form}>
-                    <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
+                    <Form.Item label="Tên" name='ten' hasFeedback rules={[{validator: validateDateDeGiay}]} >
                       <Input className="border" />
                     </Form.Item>
               </Form>

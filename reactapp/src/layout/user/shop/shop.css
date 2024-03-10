@@ -40,6 +40,42 @@
 }
 
 .scrollable-content {
-    max-height: 200px; /* Thiết lập chiều cao tối đa để hiển thị thanh cuộn */
-    overflow-y: auto; /* Bật thanh cuộn dọc khi nội dung vượt quá chiều cao */
-  }
+    max-height: 200px;
+    /* Thiết lập chiều cao tối đa để hiển thị thanh cuộn */
+    overflow-y: auto;
+    /* Bật thanh cuộn dọc khi nội dung vượt quá chiều cao */
+}
+
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    justify-content: center;
+}
+
+.pagination li {
+    margin: 0 2px;
+}
+
+.pagination li a {
+    background-color: aliceblue;
+    color: black;
+    text-decoration: none;
+    padding: 6px 12px; 
+}
+
+.pagination li.active a {
+    background-color: lightskyblue;
+    color: white;
+    font-weight: 8px;
+}
+
+.pagination li a:hover {
+    background-color: transparent;
+    color: black;
+}
+
+.pagination li.previous a,
+.pagination li.next a {
+ background-color: white;
+}

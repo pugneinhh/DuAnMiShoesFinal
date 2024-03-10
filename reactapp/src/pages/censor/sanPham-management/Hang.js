@@ -132,6 +132,21 @@ export default function Hang() {
        setHangs(res.data);
      })
  }
+
+   //Validate
+   const validateDateHang = (_, value) => {
+    const { getFieldValue } = form;
+    const tenHang = getFieldValue("ten");
+  if (!tenHang.trim()) {
+    return Promise.reject("Tên không được để trống");
+  }
+  const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+  if (specialCharacterRegex.test(tenHang)) {
+    return Promise.reject("Tên không được chứa ký tự đặc biệt");
+  }
+    return Promise.resolve();
+  };
+
   //Table
   const [hang, setHangs] = useState([]);
 
@@ -292,7 +307,7 @@ export default function Hang() {
                 }}
                 onFinish={addHang}
                 form={form}>
-                <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
+                <Form.Item label="Tên" name='ten' hasFeedback rules={[{validator: validateDateHang}]} >
                   <Input className="border" />
                 </Form.Item>
               </Form>

@@ -8,8 +8,9 @@ import { HomeAPI } from "../../../pages/censor/api/home/homeApi";
 import { HangAPI } from "../../../pages/censor/api/SanPham/hang.api";
 import { MauSacAPI } from "../../../pages/censor/api/SanPham/mauSac.api";
 import { KichThuocAPI } from "../../../pages/censor/api/SanPham/kichThuoc.api";
-import { SortDescendingOutlined } from "@ant-design/icons";
+import {  LeftOutlined, RightOutlined, SortDescendingOutlined } from "@ant-design/icons";
 import da from "date-fns/esm/locale/da/index.js";
+import ReactPaginate from 'react-paginate';
 
 export const Shop = ({ children }) => {
   const [products, setProducts] = useState([]);
@@ -190,6 +191,18 @@ export const Shop = ({ children }) => {
     getTimMang(dataTimKiem);
   }, [dataTimKiem.arraySanPham, dataTimKiem.arrayMauSac, dataTimKiem.arrayKichThuoc, dataTimKiem.giaBatDau, dataTimKiem.giaKetThuc])
 
+  //Phân trang
+  const [currentPage, setCurrentPage] = useState(0);
+  const productsPerPage = 12;
+  const handlePageChange = ({ selected }) => {
+    setCurrentPage(selected);
+  };
+
+  const pageCount = Math.ceil(products.length / productsPerPage);
+  console.log(pageCount)
+  const offset = currentPage * productsPerPage;
+  const currentPageData = products.slice(offset, offset + productsPerPage);
+
 
   return (
     <div>
@@ -328,7 +341,7 @@ export const Shop = ({ children }) => {
                 </Dropdown>
               </div>
               <div className="row me-2">
-                {products.map((product, index) => {
+                {currentPageData.map((product, index) => {
                   return (
                     <div className="col-md-3" >
                       <ProductCard key={index} product={product} />
@@ -337,7 +350,21 @@ export const Shop = ({ children }) => {
                 })}
               </div>
             </div>
-            <Pagination style={{ marginLeft: 450, marginTop: 50 }} defaultCurrent={1} total={50}></Pagination>
+            <div class="container mt-3">
+              <div className="d-flex justify-content-center">
+                <ReactPaginate
+                  previousLabel={<LeftOutlined/>}
+                  nextLabel={<RightOutlined/>}
+                  breakLabel={'...'}
+                  pageCount={pageCount}
+                  marginPagesDisplayed={2}
+                  pageRangeDisplayed={3}
+                  onPageChange={handlePageChange}
+                  containerClassName={'pagination'}
+                  activeClassName={'active'}
+                />
+              </div>
+            </div>
           </Row>
         </div>
       </div>

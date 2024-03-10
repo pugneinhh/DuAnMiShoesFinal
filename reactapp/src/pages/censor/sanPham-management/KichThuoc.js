@@ -133,6 +133,21 @@ export default function KichThuoc() {
         setKichThuocs(res.data);
       })
   }
+
+    //Validate
+    const validateDateKichThuoc = (_, value) => {
+      const { getFieldValue } = form;
+      const tenKichThuoc = getFieldValue("ten");
+    if (!tenKichThuoc.trim()) {
+      return Promise.reject("Tên không được để trống");
+    }
+    const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+    if (specialCharacterRegex.test(tenKichThuoc)) {
+      return Promise.reject("Tên không được chứa ký tự đặc biệt");
+    }
+      return Promise.resolve();
+    };
+
   //Table
   const [kichThuoc, setKichThuocs] = useState([]);
 
@@ -293,7 +308,7 @@ export default function KichThuoc() {
                 }}
                 onFinish={addKichThuoc}
                 form={form}>
-                    <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
+                    <Form.Item label="Tên" name='ten' hasFeedback rules={[{validator: validateDateKichThuoc}]} >
                       <Input className="border" />
                     </Form.Item>
               </Form>
