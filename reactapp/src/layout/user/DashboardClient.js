@@ -22,6 +22,8 @@ import "./client.css";
 import { get, set } from "local-storage";
 import { GioHangAPI } from "../../pages/censor/api/gioHang/gioHang.api";
 import { KHThongBao } from "../../utils/socket/socket";
+import Notification from "../user/notification";
+
 const { Header, Content, Footer } = Layout;
 
 export const DashboardClient = ({ children }) => {
@@ -227,7 +229,9 @@ export const DashboardClient = ({ children }) => {
           </Link>
         </Col> */}
         <Col span={7} className="float-end"></Col>
-
+        <Col span={1} className="float-end">
+        <Notification />
+        </Col>
         <Col span={0.5} className="float-end">
           <Link to={"/gio-hang"} className="float-end justify-content-end ">
             <Badge count={countgioHang} offset={[8, 1]} className="menuButton">

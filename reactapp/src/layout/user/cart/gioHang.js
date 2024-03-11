@@ -45,6 +45,7 @@ export const GioHang = ({ children }) => {
   console.log("Data vận chuyển",dataVanChuyen);
   console.log("user id",userID);
   console.log("voucher đang chọn",voucher);
+  console.log("Địa chỉ",diaChi);
   let total = 0;
 
 
@@ -208,6 +209,7 @@ export const GioHang = ({ children }) => {
       tenNguoiNhan : diaChi ? diaChi.tenNguoiNhan : dataVanChuyen.tenNguoiNhan,
       tienVanChuyen : moneyShip ? moneyShip : dataVanChuyen.tienVanChuyen,
       ngayDuKienNhan : ngayShip ? ngayShip : dataVanChuyen.ngayDuKienNhan,
+      soDienThoai : diaChi ? diaChi.soDienThoai : dataVanChuyen.soDienThoai
     };
 
     console.log("hóa đơn", hoaDon);
