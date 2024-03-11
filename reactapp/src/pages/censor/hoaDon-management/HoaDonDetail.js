@@ -55,9 +55,10 @@ export default function HoaDonDetail() {
         theme: "light",
       }),
   });
-
+  
   const { TextArea } = Input;
   const [hoaDondetail, setHoaDondetail] = useState([]);
+   console.log("hdddddddd", hoaDondetail);
   const [maNV, setmaNV] = useState("");
   useEffect(() => {
     const storedData = get("userData");
@@ -68,7 +69,7 @@ export default function HoaDonDetail() {
     loadTimeLineHoaDon();
   }, []);
   // load hóa đơn
-
+ 
   const loadHoaDon = async () => {
     HoaDonAPI.detailHD(id).then((res) => {
       setHoaDondetail(res.data);
