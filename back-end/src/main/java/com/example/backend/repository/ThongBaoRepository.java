@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface ThongBaoRepository extends JpaRepository<ThongBao,String> {
-    @Query("select  pot from  ThongBao  pot where pot.loai =0 or  pot.loai =3 or  pot.loai =6")
+    @Query("select  pot from  ThongBao  pot where pot.loai =0 or  pot.loai =3 or  pot.loai =6 order by pot.trangThai asc ")
     List<ThongBao> findAllAdmin();
 
     @Query(value = """
@@ -18,13 +18,13 @@ public interface ThongBaoRepository extends JpaRepository<ThongBao,String> {
     Integer countAdmin();
 
 
-    @Query("select  pot from  ThongBao  pot where (pot.loai =1 or  pot.loai =2 or  pot.loai =4 or  pot.loai =5 or  pot.loai =7 or  pot.loai =8) and pot.nguoiDung.id=:id")
+    @Query("select  pot from  ThongBao  pot where (pot.loai =1 or  pot.loai =2 or  pot.loai =4 or  pot.loai =5 or  pot.loai =7 or  pot.loai =8) and pot.nguoiDung.id=:id order by pot.trangThai asc ")
     List<ThongBao> findAllKH(String id);
 
     @Query(value = """
             SELECT COUNT(pot.id) AS total  FROM thong_bao pot WHERE 
             (pot.loai =1 or  pot.loai =2 or  pot.loai =4 or  pot.loai =5 or  pot.loai =7 or  pot.loai =8) 
-            and pot.trang_thai=1 and pot.nguoi_dung=:id
+            and pot.trang_thai=0 and pot.nguoi_dung=:id
             """,nativeQuery = true)
     Integer countKH(String id);
 }

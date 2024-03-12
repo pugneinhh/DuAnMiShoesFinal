@@ -316,159 +316,15 @@ export default function HoaDonDetail() {
 
         <div className="col-md-2 ">
           <>
-            {/* hóa đơn onl trả tiền rồi*/}
-            {hoaDondetail.loaiHD == 0 ? (
-              <>
-                {hoaDondetail.phuongThucVNP != null ? (
-                  <>
-                    {trangThai == 0 ? (
-                      <Button
-                        className="ms-5 "
-                        type="primary"
-                        onClick={showModal}
-                      >
-                        {showTitleButtonVanDonTraTruoc(trangThai)}
-                      </Button>
-                    ) : trangThai == 1 ? (
-                      <Button
-                        className="ms-5 "
-                        type="primary"
-                        onClick={showModal}
-                      >
-                        {showTitleButtonVanDonTraTruoc(trangThai)}
-                      </Button>
-                    ) : trangThai == 2 ? (
-                      <Button
-                        className="ms-5 "
-                        type="primary"
-                        onClick={showModal}
-                      >
-                        {showTitleButtonVanDonTraTruoc(trangThai)}
-                      </Button>
-                    ) : trangThai == 3 ? (
-                      <Button
-                        className="ms-5 "
-                        type="primary"
-                        onClick={showModal}
-                      >
-                        {showTitleButtonVanDonTraTruoc(trangThai)}
-                      </Button>
-                    ) : trangThai == 4 ? (
-                      <Button
-                        className="ms-5 "
-                        type="primary"
-                        onClick={showModal}
-                      >
-                        {showTitleButtonVanDonTraTruoc(trangThai)}
-                      </Button>
-                    ) : (
-                      <></>
-                    )}
-                  </>
-                ) : (
-                    
-                    <>
-                      {trangThai == 0 ? (
-                        <Button
-                          className="ms-5 "
-                          type="primary"
-                          onClick={showModal}
-                        >
-                          {showTitleButtonVanDonTraSau(trangThai)}
-                        </Button>
-                      ) : trangThai == 1 ? (
-                        <Button
-                          className="ms-5 "
-                          type="primary"
-                          onClick={showModal}
-                        >
-                          {showTitleButtonVanDonTraSau(trangThai)}
-                        </Button>
-                      ) : trangThai == 2 ? (
-                        <Button
-                          className="ms-5 "
-                          type="primary"
-                          onClick={showModal}
-                        >
-                          {showTitleButtonVanDonTraSau(trangThai)}
-                        </Button>
-                      ) : trangThai == 3 ? (
-                        <Button
-                          className="ms-5 "
-                          type="primary"
-                          onClick={showModal}
-                        >
-                          {showTitleButtonVanDonTraSau(trangThai)}
-                        </Button>
-                      ) : trangThai == 4 ? (
-                        <Button
-                          className="ms-5 "
-                          type="primary"
-                          onClick={showModal}
-                        >
-                          {showTitleButtonVanDonTraSau(trangThai)}
-                        </Button>
-                      ) : (
-                        <></>
-                      )}
-                    </>
-                  
-                )}
-              </>
+            {trangThai == 4 ? (
+              <></>
             ) : (
               <>
-              
-                {hoaDondetail.traSau == 1 ? (
+                {" "}
+                {hoaDondetail.loaiHD == 0 ? (
                   <>
-                    {trangThai == 0 ? (
-                      <Button
-                        className="ms-5 "
-                        type="primary"
-                        onClick={showModal}
-                      >
-                        {showTitleButtonVanDonTraSau(trangThai)}
-                      </Button>
-                    ) : trangThai == 1 ? (
-                      <Button
-                        className="ms-5 "
-                        type="primary"
-                        onClick={showModal}
-                      >
-                        {showTitleButtonVanDonTraSau(trangThai)}
-                      </Button>
-                    ) : trangThai == 2 ? (
-                      <Button
-                        className="ms-5 "
-                        type="primary"
-                        onClick={showModal}
-                      >
-                        {showTitleButtonVanDonTraSau(trangThai)}
-                      </Button>
-                    ) : trangThai == 3 ? (
-                      <Button
-                        className="ms-5 "
-                        type="primary"
-                        onClick={showModal}
-                      >
-                        {showTitleButtonVanDonTraSau(trangThai)}
-                      </Button>
-                    ) : trangThai == 4 ? (
-                      <Button
-                        className="ms-5 "
-                        type="primary"
-                        onClick={showModal}
-                      >
-                        {showTitleButtonVanDonTraSau(trangThai)}
-                      </Button>
-                    ) : (
-                      <></>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    {hoaDondetail.diaChi != null ? (
+                    {hoaDondetail.phuongThucVNP != null ? (
                       <>
-                        {" "}
                         {trangThai == 0 ? (
                           <Button
                             className="ms-5 "
@@ -514,12 +370,162 @@ export default function HoaDonDetail() {
                         )}
                       </>
                     ) : (
-                      <></>
+                      <>
+                        {trangThai == 0 ? (
+                          <Button
+                            className="ms-5 "
+                            type="primary"
+                            onClick={showModal}
+                          >
+                            {showTitleButtonVanDonTraSau(trangThai)}
+                          </Button>
+                        ) : trangThai == 1 ? (
+                          <Button
+                            className="ms-5 "
+                            type="primary"
+                            onClick={showModal}
+                          >
+                            {showTitleButtonVanDonTraSau(trangThai)}
+                          </Button>
+                        ) : trangThai == 2 ? (
+                          <Button
+                            className="ms-5 "
+                            type="primary"
+                            onClick={showModal}
+                          >
+                            {showTitleButtonVanDonTraSau(trangThai)}
+                          </Button>
+                        ) : trangThai == 3 ? (
+                          <Button
+                            className="ms-5 "
+                            type="primary"
+                            onClick={showModal}
+                          >
+                            {showTitleButtonVanDonTraSau(trangThai)}
+                          </Button>
+                        ) : trangThai == 4 ? (
+                          <Button
+                            className="ms-5 "
+                            type="primary"
+                            onClick={showModal}
+                          >
+                            {showTitleButtonVanDonTraSau(trangThai)}
+                          </Button>
+                        ) : (
+                          <></>
+                        )}
+                      </>
                     )}
                   </>
-                )} <></>
+                ) : (
+                  <>
+                    {hoaDondetail.traSau == 1 ? (
+                      <>
+                        {trangThai == 0 ? (
+                          <Button
+                            className="ms-5 "
+                            type="primary"
+                            onClick={showModal}
+                          >
+                            {showTitleButtonVanDonTraSau(trangThai)}
+                          </Button>
+                        ) : trangThai == 1 ? (
+                          <Button
+                            className="ms-5 "
+                            type="primary"
+                            onClick={showModal}
+                          >
+                            {showTitleButtonVanDonTraSau(trangThai)}
+                          </Button>
+                        ) : trangThai == 2 ? (
+                          <Button
+                            className="ms-5 "
+                            type="primary"
+                            onClick={showModal}
+                          >
+                            {showTitleButtonVanDonTraSau(trangThai)}
+                          </Button>
+                        ) : trangThai == 3 ? (
+                          <Button
+                            className="ms-5 "
+                            type="primary"
+                            onClick={showModal}
+                          >
+                            {showTitleButtonVanDonTraSau(trangThai)}
+                          </Button>
+                        ) : trangThai == 4 ? (
+                          <Button
+                            className="ms-5 "
+                            type="primary"
+                            onClick={showModal}
+                          >
+                            {showTitleButtonVanDonTraSau(trangThai)}
+                          </Button>
+                        ) : (
+                          <></>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        {hoaDondetail.diaChi != null ? (
+                          <>
+                            {" "}
+                            {trangThai == 0 ? (
+                              <Button
+                                className="ms-5 "
+                                type="primary"
+                                onClick={showModal}
+                              >
+                                {showTitleButtonVanDonTraTruoc(trangThai)}
+                              </Button>
+                            ) : trangThai == 1 ? (
+                              <Button
+                                className="ms-5 "
+                                type="primary"
+                                onClick={showModal}
+                              >
+                                {showTitleButtonVanDonTraTruoc(trangThai)}
+                              </Button>
+                            ) : trangThai == 2 ? (
+                              <Button
+                                className="ms-5 "
+                                type="primary"
+                                onClick={showModal}
+                              >
+                                {showTitleButtonVanDonTraTruoc(trangThai)}
+                              </Button>
+                            ) : trangThai == 3 ? (
+                              <Button
+                                className="ms-5 "
+                                type="primary"
+                                onClick={showModal}
+                              >
+                                {showTitleButtonVanDonTraTruoc(trangThai)}
+                              </Button>
+                            ) : trangThai == 4 ? (
+                              <Button
+                                className="ms-5 "
+                                type="primary"
+                                onClick={showModal}
+                              >
+                                {showTitleButtonVanDonTraTruoc(trangThai)}
+                              </Button>
+                            ) : (
+                              <></>
+                            )}
+                          </>
+                        ) : (
+                          <></>
+                        )}
+                      </>
+                    )}{" "}
+                    <></>
+                  </>
+                )}
               </>
             )}
+            {/* hóa đơn onl trả tiền rồi*/}
+
             <Modal
               title="Xác nhận đơn hàng"
               footer={[]}
@@ -569,7 +575,11 @@ export default function HoaDonDetail() {
           <>
             <>
               {trangThai == 0 ? (
-                <Button className="ms-5 btn btn-danger " type="primary" onClick={handleHuyHoaDon}>
+                <Button
+                  className="ms-5 btn btn-danger "
+                  type="primary"
+                  onClick={handleHuyHoaDon}
+                >
                   Hủy
                 </Button>
               ) : trangThai == 1 ? (
@@ -894,10 +904,10 @@ export default function HoaDonDetail() {
         </div>
         <div className="col-md-3">
           <div>
-            <p>{hoaDondetail.tenKH}</p>
+            <p>{hoaDondetail.tenNguoiNhan}</p>
           </div>
           <div className="mt-4">
-            <p>{hoaDondetail.sdtKH}</p>
+            <p>{hoaDondetail.sdt}</p>
           </div>
           <div className="mt-4">
             <p>{hoaDondetail.ghiChuHD}</p>

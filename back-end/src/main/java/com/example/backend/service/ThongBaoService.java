@@ -98,4 +98,15 @@ public class ThongBaoService {
         thongBaoRepository.save(thongBao);
         messagingTemplate.convertAndSend("/topic/KH/hoa-don", thongBao);
     }
+
+
+    // hàm đổi trạng thái thông báo: chưa xem --> đã xem
+    public ThongBao daxem(String id){
+        ThongBao thongBao = thongBaoRepository.findById(id).get();
+        if(thongBao != null){
+            thongBao.setTrangThai(1);
+            return  thongBaoRepository.save(thongBao);
+        }
+        return  thongBao;
+    }
 }

@@ -37,5 +37,6 @@ public interface AdminHoaDonDetailRespon {
     String getTraSau();
     @Value("#{target.PhuongThucVNP}")
     String getPhuongThucVNP();
-
+    @Value("#{target.TenNguoiNhan}")
+    String getTenNguoiNhan();
 }

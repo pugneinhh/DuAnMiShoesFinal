@@ -323,43 +323,7 @@ const DashboardCensor = ({ children }) => {
           >
             Ưu đãi khủng cho hóa đơn từ 20.000.000 VND ! Mua ngay{" "}
           </marquee>
-          <div className="admin-right float-end">
-            {/* <a onClick={handleNotificationChange}>
-              <Badge count={5} color="red">
-                <Avatar
-                  shape="circle"
-                  className="align-content-center"
-                  size="default"
-                  icon={<IoNotifications size={20} color="#9e9e9e" />}
-               
-                  style={{ backgroundColor: "#f7faf9" }}
-                />
-              </Badge>
-              </a> */}
-            {/* <Dropdown
-              // menu={{
-              //   items: itemsNotification,
-              //   selectable: true,
-              //   defaultSelectedKeys: ["3"],
-                
-              // }}
-              className="ms-4"
-              overlay={menu}
-            >
-              <Typography.Link>
-                <Space>
-                  <Badge count={notifications.length} color="red">
-                    <Avatar
-                      shape="circle"
-                      className="align-content-center"
-                      size="default"
-                      icon={<IoNotifications size={20} color="#9e9e9e" />}
-                      style={{ backgroundColor: "#f7faf9" }}
-                    />
-                  </Badge>
-                </Space>
-              </Typography.Link>
-            </Dropdown> */}
+          <div className="admin-right float-end hover">
             <Notification />
             <Dropdown
               menu={{
