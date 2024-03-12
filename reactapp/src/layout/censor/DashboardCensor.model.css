@@ -65,3 +65,6 @@
     border-radius: 40px 40px;
     border: 2px solid white;
   }
+    .hover{
+      cursor: pointer;
+    }
