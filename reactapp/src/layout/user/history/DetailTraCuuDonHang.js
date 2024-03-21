@@ -25,7 +25,17 @@ const DetailTraCuuDonHang = ({ listBill }) => {
   const [listTimeLine, setlistTimeLine] = useState([]);
   const [bill, setBill] = useState({});
   const [listSanPhams, setlistSanPhams] = useState([]);
-
+  useEffect(() => {
+    HoaDonAPI.detailSanPham(idHD.idHD).then((res) => {
+      setlistSanPhams(res.data);
+    });
+    loadDetailHoaDonClient();
+    loadTimeLine();
+    // HoaDonAPI.getAllLichSuHoaDon(idHD.idHD).then((res) => {
+    //   setlistTimeLine(res.data);
+    //   console.log(res);
+    // });
+  }, [listSanPhams.trangThai]);
       var stomp = null;
       const socket = new SockJS("http://localhost:8080/ws");
       stomp = Stomp.over(socket);
@@ -54,9 +64,9 @@ const DetailTraCuuDonHang = ({ listBill }) => {
       }, []);
 
   const loadTimeLine = () => {
-    HoaDonAPI.getAllLichSuHoaDon().then((res) => {
+    HoaDonAPI.getAllLichSuHoaDon(idHD.idHD).then((res) => {
       setlistTimeLine(res.data);
-      console.log(res.data);
+      console.log("abc", res.data);
     });
   };
     const loadDetailHoaDonClient = () => {
@@ -64,18 +74,7 @@ const DetailTraCuuDonHang = ({ listBill }) => {
       setBill(res.data);
     });
     };
-  useEffect(() => {
 
-    HoaDonAPI.detailSanPham(idHD.idHD).then((res) => {
-      setlistSanPhams(res.data);
-    });
-    loadDetailHoaDonClient();
-    loadTimeLine();
-    // HoaDonAPI.getAllLichSuHoaDon(idHD.idHD).then((res) => {
-    //   setlistTimeLine(res.data);
-    //   console.log(res);
-    // });
-  }, [listSanPhams.trangThai]);
 
   console.log(listSanPhams);
   const showIcon = (trangThai) => {

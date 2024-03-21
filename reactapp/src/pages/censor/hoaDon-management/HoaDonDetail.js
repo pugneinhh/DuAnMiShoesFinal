@@ -320,7 +320,7 @@ export default function HoaDonDetail() {
               <></>
             ) : (
               <>
-                {" "}
+         
                 {hoaDondetail.loaiHD == 0 ? (
                   <>
                     {hoaDondetail.phuongThucVNP != null ? (
