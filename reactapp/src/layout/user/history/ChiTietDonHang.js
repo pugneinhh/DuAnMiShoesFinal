@@ -30,6 +30,7 @@ const ChiTietDonHang = (props) => {
   const [listTimeLine, setlistTimeLine] = useState([]);
   const [statusPresent, setStatusPresent] = useState([]);
   const [bill, setBill] = useState({});
+  console.log("bill",bill);
   const [paymentMethod, setPaymentMethod] = useState({});
       const taiKhoanCuaToi = () => {
         nav("/tai-khoan-cua-toi");
