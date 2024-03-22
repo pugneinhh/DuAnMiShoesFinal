@@ -22,7 +22,7 @@ import "./client.css";
 import { get, set } from "local-storage";
 import { GioHangAPI } from "../../pages/censor/api/gioHang/gioHang.api";
 import { KHThongBao } from "../../utils/socket/socket";
-import NotificationUser from "../user/notificationUser";
+import Notification from "./notificationUser";
 
 const { Header, Content, Footer } = Layout;
 
@@ -230,7 +230,7 @@ export const DashboardClient = ({ children }) => {
         </Col> */}
         <Col span={6} className="float-end"></Col>
         <Col span={1} className="float-end">
-        <NotificationUser />
+        <Notification />
         </Col>
         <Col span={0.5} className="float-end">
           <Link to={"/gio-hang"} className="float-end justify-content-end ">

@@ -129,21 +129,31 @@ join san_pham on san_pham.id=chi_tiet_san_pham.san_pham_id
             group by chi_tiet_san_pham.id,chi_tiet_san_pham.gia_ban,hinh_anh.url,mau_sac.ten,san_pham.ten,kich_thuoc.ten,hang.ten
             """,nativeQuery = true)
     List<SanPhamBanChayRespon> getSPSapHet();
-    @Query(value = "Select DATE(hoa_don_chi_tiet.ngay_tao) AS ngay, count(distinct hoa_don_chi_tiet.hoa_don_id) as tongHoaDon,sum(hoa_don_chi_tiet.so_luong) as tongSanPham from hoa_don_chi_tiet \n" +
-            "where date(hoa_don_chi_tiet.ngay_tao)= curdate()  group by hoa_don_chi_tiet.ngay_tao", nativeQuery = true)
+    @Query(value = """
+SELECT\s
+    DATE(hoa_don_chi_tiet.ngay_tao) AS ngay,
+    COUNT(DISTINCT hoa_don_chi_tiet.hoa_don_id) AS tongHoaDon,
+    SUM(hoa_don_chi_tiet.so_luong) AS tongSanPham\s
+FROM\s
+    hoa_don_chi_tiet\s
+WHERE\s
+    DATE(hoa_don_chi_tiet.ngay_tao) = CURDATE() \s
+GROUP BY\s
+    DATE(hoa_don_chi_tiet.ngay_tao)
+""", nativeQuery = true)
     List<BieuDoRespon> getBieuDoNgay();
 
     @Query(value = "Select DATE(hoa_don_chi_tiet.ngay_tao) AS ngay, count(distinct hoa_don_chi_tiet.hoa_don_id) as tongHoaDon,sum(hoa_don_chi_tiet.so_luong) as tongSanPham from hoa_don_chi_tiet \n" +
-            "where yearweek(hoa_don_chi_tiet.ngay_tao)= yearweek(curdate())  group by hoa_don_chi_tiet.ngay_tao", nativeQuery = true)
+            "            where yearweek(hoa_don_chi_tiet.ngay_tao)= yearweek(curdate())  group by date (hoa_don_chi_tiet.ngay_tao)", nativeQuery = true)
     List<BieuDoRespon> getBieuDoTuan();
 
     @Query(value = "Select DATE(hoa_don_chi_tiet.ngay_tao) AS ngay,count(distinct hoa_don_chi_tiet.hoa_don_id) as tongHoaDon,sum(hoa_don_chi_tiet.so_luong) as tongSanPham from hoa_don_chi_tiet \n" +
-            "where year(hoa_don_chi_tiet.ngay_tao)= year(curdate()) and month(hoa_don_chi_tiet.ngay_tao)=month(curdate())  group by hoa_don_chi_tiet.ngay_tao", nativeQuery = true)
+            "where year(hoa_don_chi_tiet.ngay_tao)= year(curdate()) and month(hoa_don_chi_tiet.ngay_tao)=month(curdate())  group by date(hoa_don_chi_tiet.ngay_tao) ", nativeQuery = true)
     List<BieuDoRespon> getBieuDoThang();
 
     @Query(value = """
             Select count(distinct hoa_don_chi_tiet.hoa_don_id) as tongHoaDon,sum(hoa_don_chi_tiet.so_luong) as tongSanPham from hoa_don_chi_tiet
-            where year(hoa_don_chi_tiet.ngay_tao)= year(curdate())\s
+            where year(date (hoa_don_chi_tiet.ngay_tao))= year(curdate())
             """, nativeQuery = true)
     List<BieuDoRespon> getBieuDoNam();
 
