@@ -292,7 +292,7 @@ const AddVoucher = () => {
                 </Form.Item>
                 <Form.Item
                   label="Ngày bắt đầu"
-                  name="ngay_bat_dau"
+                  name="ngayBatDau"
                   style={{ marginLeft: 0, width: 500 }}
                   hasFeedback
                   rules={[
@@ -312,7 +312,7 @@ const AddVoucher = () => {
                 </Form.Item>
                 <Form.Item
                   label="Ngày kết thúc"
-                  name="ngay_ket_thuc"
+                  name="ngayKetThuc"
                   style={{ marginLeft: 0, width: 500 }}
                   hasFeedback
                   rules={[
