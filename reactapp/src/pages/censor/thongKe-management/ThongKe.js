@@ -132,7 +132,7 @@ export default function ThongKe() {
     });
   };
   const loadBieuDoNam = async () => {
-    ThongKeAPI.bieuDoThang().then((res) => {
+    ThongKeAPI.bieuDoNam().then((res) => {
       const bieudo = res.data.flatMap((item) => {
         return [
           {
