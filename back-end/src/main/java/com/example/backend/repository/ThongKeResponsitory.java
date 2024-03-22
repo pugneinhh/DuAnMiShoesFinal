@@ -130,20 +130,20 @@ join san_pham on san_pham.id=chi_tiet_san_pham.san_pham_id
             """,nativeQuery = true)
     List<SanPhamBanChayRespon> getSPSapHet();
     @Query(value = "Select DATE(hoa_don_chi_tiet.ngay_tao) AS ngay, count(distinct hoa_don_chi_tiet.hoa_don_id) as tongHoaDon,sum(hoa_don_chi_tiet.so_luong) as tongSanPham from hoa_don_chi_tiet \n" +
-            "where date(hoa_don_chi_tiet.ngay_tao)= current_date()  group by hoa_don_chi_tiet.ngay_tao", nativeQuery = true)
+            "where date(hoa_don_chi_tiet.ngay_tao)= curdate()  group by hoa_don_chi_tiet.ngay_tao", nativeQuery = true)
     List<BieuDoRespon> getBieuDoNgay();
 
     @Query(value = "Select DATE(hoa_don_chi_tiet.ngay_tao) AS ngay, count(distinct hoa_don_chi_tiet.hoa_don_id) as tongHoaDon,sum(hoa_don_chi_tiet.so_luong) as tongSanPham from hoa_don_chi_tiet \n" +
-            "where yearweek(hoa_don_chi_tiet.ngay_tao)= yearweek(current_date())  group by hoa_don_chi_tiet.ngay_tao", nativeQuery = true)
+            "where yearweek(hoa_don_chi_tiet.ngay_tao)= yearweek(curdate())  group by hoa_don_chi_tiet.ngay_tao", nativeQuery = true)
     List<BieuDoRespon> getBieuDoTuan();
 
     @Query(value = "Select DATE(hoa_don_chi_tiet.ngay_tao) AS ngay,count(distinct hoa_don_chi_tiet.hoa_don_id) as tongHoaDon,sum(hoa_don_chi_tiet.so_luong) as tongSanPham from hoa_don_chi_tiet \n" +
-            "where year(hoa_don_chi_tiet.ngay_tao)= year(current_date()) and month(hoa_don_chi_tiet.ngay_tao)=month(current_date())  group by hoa_don_chi_tiet.ngay_tao", nativeQuery = true)
+            "where year(hoa_don_chi_tiet.ngay_tao)= year(curdate()) and month(hoa_don_chi_tiet.ngay_tao)=month(curdate())  group by hoa_don_chi_tiet.ngay_tao", nativeQuery = true)
     List<BieuDoRespon> getBieuDoThang();
 
     @Query(value = """
             Select count(distinct hoa_don_chi_tiet.hoa_don_id) as tongHoaDon,sum(hoa_don_chi_tiet.so_luong) as tongSanPham from hoa_don_chi_tiet
-            where year(hoa_don_chi_tiet.ngay_tao)= year(current_date())\s
+            where year(hoa_don_chi_tiet.ngay_tao)= year(curdate())\s
             """, nativeQuery = true)
     List<BieuDoRespon> getBieuDoNam();
 
