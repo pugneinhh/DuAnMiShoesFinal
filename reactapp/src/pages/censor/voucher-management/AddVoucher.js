@@ -94,7 +94,27 @@ const AddVoucher = () => {
     }
     return Promise.resolve();
   };
-
+  const validateDateMa = (_, value) => {
+    const { getFieldValue } = form;
+    const maVoucher = getFieldValue("ma");
+  const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+  if (specialCharacterRegex.test(maVoucher)) {
+    return Promise.reject("Mã không được chứa ký tự đặc biệt");
+  }
+    return Promise.resolve();
+  };
+  const validateDateTen = (_, value) => {
+    const { getFieldValue } = form;
+    const tenVoucher = getFieldValue("ten");
+    if (!tenVoucher.trim()) {
+      return Promise.reject("Tên không được để trống");
+    }
+  const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+  if (specialCharacterRegex.test(tenVoucher)) {
+    return Promise.reject("Tên không được chứa ký tự đặc biệt");
+  }
+    return Promise.resolve();
+  };
   return (
     <div
       className="container-fluid  m-2 p-3 pt-2"
@@ -148,12 +168,7 @@ const AddVoucher = () => {
                   style={{ marginLeft: 0, width: 500 }}
                   name="ma"
                   // hasFeedback
-                  // rules={[
-                  //   {
-                  //     required: true,
-                  //     message: "Vui lòng không để trống mã!",
-                  //   },
-                  // ]}
+                  rules={[{validator: validateDateMa}]}
                 >
                   <Input
                     placeholder="Mã phiếu giảm giá"
@@ -165,12 +180,7 @@ const AddVoucher = () => {
                   style={{ marginLeft: 0, width: 500 }}
                   name="ten"
                   hasFeedback
-                  rules={[
-                    {
-                      required: true,
-                      message: "Vui lòng không để trống tên!",
-                    },
-                  ]}
+                  rules={[{validator: validateDateTen}]}
                 >
                   <Input
                     placeholder="Tên phiếu giảm giá"

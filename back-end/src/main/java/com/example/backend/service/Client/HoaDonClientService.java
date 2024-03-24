@@ -27,4 +27,5 @@ public class HoaDonClientService {
     public DetailHoaDonClientByIdHDRespon search(SearchHDByMaAndSdtRequest req){
         return hoaDonRepository.searchHDClient(req);
     }
+
 }

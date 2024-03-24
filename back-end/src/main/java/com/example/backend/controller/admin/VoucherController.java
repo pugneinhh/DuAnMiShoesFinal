@@ -116,6 +116,9 @@ public class VoucherController {
         request.setNgayKetThuc(ngayKT);
         return ResponseEntity.ok(vs.updateTTSap(id,request));
     }
-
+    @PutMapping("/updateTTTamDung/{id}")
+    public ResponseEntity<?> updateTTamDung(@PathVariable("id")String id,@RequestBody VoucherRequest request){
+        return ResponseEntity.ok(vs.updateTTTamDung(id,request));
+    }
 
 }

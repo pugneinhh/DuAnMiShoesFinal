@@ -15,6 +15,7 @@ import com.example.backend.service.*;
 import com.example.backend.vnp_1.Config;
 import com.example.backend.vnp_1.PayService;
 import com.example.backend.vnp_1.PaymentResDTO;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -22,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -34,6 +36,7 @@ import java.util.*;
 @RequestMapping("/ban-hang-client")
 @RequiredArgsConstructor
 public class BanHangClient {
+
     @Autowired
     BanHangService banHangService;
     @Autowired
@@ -56,6 +59,10 @@ public class BanHangClient {
     ThanhToanService thanhToanService;
     @Autowired
     HoaDonRepository hoaDonRepository;
+
+    private  String  BASE_FRONTEND_ENDPOINT = "http://localhost:3000";
+    private String  BASE_BACKEND_ENDPOINT = "http://localhost:8080";
+    private String  Vnp_returnUrl = BASE_BACKEND_ENDPOINT+  "/ban-hang-client/payment-callback";
 
     @PostMapping("/add-hoa-don")
     public ResponseEntity<?> addHD(@RequestBody HoaDonRequest hoaDonRequest){
@@ -166,7 +173,7 @@ public class BanHangClient {
         vnp_Params.put("vnp_BankCode", "NCB"); // Tên ngân hàng
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef); //
         vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang:" +hoaDon  +" - "+ vnp_TxnRef); // Thông tin yêu cầu
-        vnp_Params.put("vnp_ReturnUrl", "http://localhost:3000/home"); // Địa chỉ được trả về
+        vnp_Params.put("vnp_ReturnUrl", Vnp_returnUrl); // Địa chỉ được trả về
         vnp_Params.put("vnp_IpAddr", Config.vnp_IpAddr); // Địa chỉ IP
         vnp_Params.put("vnp_OrderType", Config.orderType); // kiểu yêu cầu
         vnp_Params.put("vnp_Locale", Config.vnp_Locale); // vị trí
@@ -228,5 +235,18 @@ public class BanHangClient {
         headers.add("Location", "/home");
         // System.out.println("REturrn"+ ResponseEntity.status(HttpStatus.OK).body(paymentResDTO));
         return ResponseEntity.status(HttpStatus.OK).body(paymentResDTO);
+    }
+
+
+    @GetMapping("/payment-callback")
+    public ResponseEntity<Boolean> paymentCallback(@RequestParam Map<String, String> queryParams, HttpServletResponse response) throws IOException {
+        String vnp_ResponseCode = queryParams.get("vnp_ResponseCode");
+        if ("00".equals(vnp_ResponseCode)) {
+            response.sendRedirect(BASE_FRONTEND_ENDPOINT + "/thanh-toan-thanh-cong");
+            return ResponseEntity.ok(true);
+        } else{
+            response.sendRedirect(BASE_FRONTEND_ENDPOINT + "/thanh-toan-that-bai");
+        }
+        return ResponseEntity.ok(false);
     }
 }
