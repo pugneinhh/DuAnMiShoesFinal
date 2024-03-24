@@ -62,6 +62,8 @@ import DetailTraCuuDonHang from "../layout/user/history/DetailTraCuuDonHang";
 import { SignUp } from "../layout/login/signUp";
 import { ForgotPass } from "../layout/login/forgotPassword";
 import AccountProfile from "../layout/user/profile/profile";
+import ThanhToanThanhCong from "../layout/user/thongBaoThanhToan/thanhToanThanhCong";
+import ThanhToanThatBai from "../layout/user/thongBaoThanhToan/thanhToanThatBai";
 function App() {
   const isLoading = useAppSelector(GetLoading);
 
@@ -454,6 +456,26 @@ function App() {
                 <GuestGuard>
                   <DashboardClient>
                     <AccountProfile />
+                  </DashboardClient>
+                </GuestGuard>
+              }
+            />
+            <Route
+              path="/thanh-toan-thanh-cong"
+              element={
+                <GuestGuard>
+                  <DashboardClient>
+                    <ThanhToanThanhCong/>
+                  </DashboardClient>
+                </GuestGuard>
+              }
+            />
+            <Route
+              path="/thanh-toan-that-bai"
+              element={
+                <GuestGuard>
+                  <DashboardClient>
+                   <ThanhToanThatBai/>
                   </DashboardClient>
                 </GuestGuard>
               }
