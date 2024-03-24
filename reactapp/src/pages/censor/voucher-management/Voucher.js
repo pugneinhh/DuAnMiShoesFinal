@@ -9,9 +9,10 @@ import {
   Space,
   Table,
   Tag,
+  Modal
 } from "antd";
 import "./voucher.scss";
-import { EyeOutlined } from "@ant-design/icons";
+import { PlayCircleOutlined,PauseCircleOutlined } from "@ant-design/icons";
 import { FilterFilled, UnorderedListOutlined } from "@ant-design/icons";
 import { BsPencilSquare } from "react-icons/bs";
 import moment from "moment";
@@ -22,9 +23,10 @@ import { FaTag } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { VoucherAPI } from "../api/voucher/voucher.api";
 import { BsFillEyeFill } from "react-icons/bs";
+import { toast } from "react-toastify";
 
 const Voucher = () => {
-
+  const currentTime = moment();
   const [dataSearch, setDataSearch] = useState({});
   const [voucher, setVouchers] = useState([]);
   const onChangeFilter = (changedValues, allValues) => {
@@ -64,7 +66,7 @@ const Voucher = () => {
           console.log("ngayBatDau",x.ngayBatDau);
           currentTime > new Date(x.ngayBatDau) &&
           currentTime < new Date(x.ngayKetThuc)
-            ? console.log(VoucherAPI.updateTTHD(x.id, x))
+            ? VoucherAPI.updateTTHD(x.id, x)
             : currentTime > new Date(x.ngayKetThuc)
             ? VoucherAPI.updateTTNgung(x.id, x)
             : console.log("Không có dữ liệu update");
@@ -96,6 +98,24 @@ const Voucher = () => {
   ///call api
 
   const [myVoucher, setMyVoucher] = useState({});
+  const updateTrangThaiTamDung =  (id, value) => {
+    console.log(value,"value neeeeeeeeeeeeeeeeeeeeeeeee", id);
+     VoucherAPI.updateTTTamDung(id, value).then((response) => {
+      console.log(response,"res neeeeeeeeeeeeee>>>>>>>>>>>>>");
+      loadVoucher();
+        toast("✔️ Cập nhật thành công!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      
+    });
+  };
 
   //tìm kiếm
 
@@ -150,6 +170,8 @@ const Voucher = () => {
             <Tag color="yellow">Sắp hoạt động</Tag>
           ) : trangThai === "DANG_HOAT_DONG" ? (
             <Tag color="green">Hoạt động</Tag>
+          ) : trangThai === "TAM_DUNG" ? (
+            <Tag color="lime">Tạm dừng</Tag>
           ) : (
             <Tag color="red">Ngừng hoạt động</Tag>
           )}
@@ -189,6 +211,77 @@ const Voucher = () => {
               />
             </Link>
           </a>
+          <>
+            {new Date(record.ngayKetThuc) > currentTime ? (
+              record.trangThai === "TAM_DUNG" ? (
+                <a
+                  className="btn rounded-pill"
+                  //onClick={() =>updateTrangThai1(record.id,record)}
+                  onClick={() => {
+                    Modal.confirm({
+                      title: "Thông báo",
+                      content: "Bạn có chắc chắn muốn sửa không?",
+                      onOk: () => {
+                        VoucherAPI.updateTTHD(record.id, record);
+                        // form.finish();
+                      },
+                      footer: (_, { OkBtn, CancelBtn }) => (
+                        <>
+                          <CancelBtn />
+                          <OkBtn />
+                        </>
+                      ),
+                    });
+                  }}
+                >
+                  <PlayCircleOutlined
+                    style={{
+                      fontSize: 30,
+                      backgroundColor: "#ffff00",
+                      borderRadius: 90,
+                    }}
+                  />
+                </a>
+              ) : (
+                <a
+                  className="btn rounded-pill"
+                  onClick={() => {
+                    Modal.confirm({
+                      title: "Thông báo",
+                      content: "Bạn có chắc chắn muốn sửa không?",
+                      onOk: () => {
+                        updateTrangThaiTamDung(record.id, record)
+                      },
+                      footer: (_, { OkBtn, CancelBtn }) => (
+                        <>
+                          <CancelBtn />
+                          <OkBtn />
+                        </>
+                      ),
+                    });
+                  }}
+                >
+                  <PauseCircleOutlined
+                    style={{
+                      fontSize: 30,
+                      backgroundColor: "#ffff00",
+                      borderRadius: 90,
+                    }}
+                  />
+                </a>
+              )
+            ) : (
+              <a className="btn rounded-pill" disabled>
+                <PlayCircleOutlined
+                  style={{
+                    fontSize: 30,
+                    backgroundColor: "#ffff00",
+                    borderRadius: 90,
+                  }}
+                />
+              </a>
+            )}
+          </>
         </Space>
       ),
       center: "true",
