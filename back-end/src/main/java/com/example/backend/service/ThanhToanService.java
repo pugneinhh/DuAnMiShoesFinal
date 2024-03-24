@@ -74,7 +74,7 @@ private EmailSenderService emailSenderService;
 
         String finalHtmlSendMail = null;
         Context dataContextSendMail = exportFilePdfFormHtml.setDataSendMail(invoice, url);
-        finalHtmlSendMail = springTemplateEngine.process("Bill", dataContextSendMail);
+        finalHtmlSendMail = springTemplateEngine.process("BillMail", dataContextSendMail);
         String subject = "Biên lai ";
         emailSenderService.sendSimpleEmail(email, subject, finalHtmlSendMail);
 
