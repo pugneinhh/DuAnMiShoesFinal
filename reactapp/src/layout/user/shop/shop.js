@@ -11,7 +11,7 @@ import { KichThuocAPI } from "../../../pages/censor/api/SanPham/kichThuoc.api";
 import {  LeftOutlined, RightOutlined, SortDescendingOutlined } from "@ant-design/icons";
 import da from "date-fns/esm/locale/da/index.js";
 import ReactPaginate from 'react-paginate';
-
+import logoBanner from '../../../assets/images/page-header-bg.jpg';
 export const Shop = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [hang, setHangs] = useState([]);
@@ -207,13 +207,10 @@ export const Shop = ({ children }) => {
   return (
     <div>
       <div className="banner-san-pham-shop">
-        <img src="https://d-themes.com/react/molla/demo-10/images/page-header-bg.jpg?fbclid=IwAR1a29UEcWcX-xX8mdyf6lSt9-lm8LB4tzbz4wscKg5yBPhlzyzWfIcjmF0"></img>
-        <h1 className="text-center" style={{ marginTop: -130 }}>
-          Sản phẩm
-        </h1>
+        <img src={logoBanner} alt="Logo Banner"></img>
+        <h1 className="banner-title">Sản phẩm</h1>
       </div>
       <br></br> <br></br>
-
       <div className="row mt-5">
         {/* lọc filter */}
         <Space direction="vertical" className="col-md-2">
@@ -246,7 +243,7 @@ export const Shop = ({ children }) => {
             items={[
               {
                 key: "1",
-                label: "Sản phẩm",
+                label: "Hãng",
                 children: (
                   <div className="scrollable-content">
                     <Checkbox.Group>
@@ -255,8 +252,12 @@ export const Shop = ({ children }) => {
                           <Checkbox
                             key={hang.id}
                             value={hang.id}
-                            onChange={(e) => changeSanPham(hang.id, e.target.checked)}>
-                            <b>{hang.ten}</b></Checkbox>
+                            onChange={(e) =>
+                              changeSanPham(hang.id, e.target.checked)
+                            }
+                          >
+                            <b>{hang.ten}</b>
+                          </Checkbox>
                         );
                       })}
                     </Checkbox.Group>
@@ -282,9 +283,15 @@ export const Shop = ({ children }) => {
                             <Checkbox
                               key={mau.id}
                               value={mau.id}
-                              onChange={(e) => changeMauSac(mau.id, e.target.checked)}
+                              onChange={(e) =>
+                                changeMauSac(mau.id, e.target.checked)
+                              }
                             >
-                              <b>{mau.ten.charAt(0).toUpperCase() + mau.ten.slice(1)}</b></Checkbox>
+                              <b>
+                                {mau.ten.charAt(0).toUpperCase() +
+                                  mau.ten.slice(1)}
+                              </b>
+                            </Checkbox>
                           );
                         })}
                       </Checkbox.Group>
@@ -311,12 +318,15 @@ export const Shop = ({ children }) => {
                             <Checkbox
                               key={kichThuoc.id}
                               value={kichThuoc.id}
-                              onChange={(e) => changeKichThuoc(kichThuoc.id, e.target.checked)}>
-                              <b>{kichThuoc.ten}</b></Checkbox>
+                              onChange={(e) =>
+                                changeKichThuoc(kichThuoc.id, e.target.checked)
+                              }
+                            >
+                              <b>{kichThuoc.ten}</b>
+                            </Checkbox>
                           </Col>
                         );
                       })}
-
                     </Checkbox.Group>
                   </div>
                 ),
@@ -326,8 +336,6 @@ export const Shop = ({ children }) => {
         </Space>
         <div className="col-md-10  ">
           <Row gutter={16} className="mb-3">
-
-
             <div class="container">
               <div className="d-flex justify-content-end">
                 <Dropdown
@@ -343,7 +351,7 @@ export const Shop = ({ children }) => {
               <div className="row me-2">
                 {currentPageData.map((product, index) => {
                   return (
-                    <div className="col-md-3" >
+                    <div className="col-md-3">
                       <ProductCard key={index} product={product} />
                     </div>
                   );
@@ -353,23 +361,21 @@ export const Shop = ({ children }) => {
             <div class="container mt-3">
               <div className="d-flex justify-content-center">
                 <ReactPaginate
-                  previousLabel={<LeftOutlined/>}
-                  nextLabel={<RightOutlined/>}
-                  breakLabel={'...'}
+                  previousLabel={<LeftOutlined />}
+                  nextLabel={<RightOutlined />}
+                  breakLabel={"..."}
                   pageCount={pageCount}
                   marginPagesDisplayed={2}
                   pageRangeDisplayed={3}
                   onPageChange={handlePageChange}
-                  containerClassName={'pagination'}
-                  activeClassName={'active'}
+                  containerClassName={"pagination"}
+                  activeClassName={"active"}
                 />
               </div>
             </div>
           </Row>
         </div>
       </div>
-
-
       <ModalDetailSP
         openModalDetailSP={openModalDetailSP}
         setOpenModalDetailSP={setOpenModalDetailSP}

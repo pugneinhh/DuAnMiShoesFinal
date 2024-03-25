@@ -1,8 +1,47 @@
-.banner-san-pham-shop>img {
+/* .banner-san-pham-shop>img {
     width: 1380px;
     height: 200px;
+} */
+.banner-san-pham-shop {
+    text-align: center;
+    position: relative;
 }
 
+.banner-san-pham-shop img {
+    width: 100%;
+    /* Giúp ảnh banner phủ kín chiều rộng */
+    height: auto;
+    /* Giữ tỉ lệ ảnh */
+}
+
+.banner-title {
+    position: absolute;
+    top: 50%;
+    /* Đặt tiêu đề vào giữa ảnh theo chiều dọc */
+    left: 50%;
+    /* Đặt tiêu đề vào giữa ảnh theo chiều ngang */
+    transform: translate(-50%, -50%);
+    /* Cân chỉnh chính xác tiêu đề vào giữa */
+    color: black;
+    /* Màu chữ, tùy chỉnh theo yêu cầu */
+    margin: 0;
+    /* Loại bỏ margin mặc định */
+}
+
+/* Media Queries để điều chỉnh cho các kích thước màn hình khác nhau */
+@media (max-width: 768px) {
+    .banner-title {
+        font-size: 20px;
+        /* Giảm kích thước font cho màn hình nhỏ hơn */
+    }
+}
+
+@media (max-width: 480px) {
+    .banner-title {
+        font-size: 16px;
+        /* Giảm kích thước font cho màn hình rất nhỏ */
+    }
+}
 /* .react-slidedown.pro-inner-list-item{
         background-color: white;
             color: black;
