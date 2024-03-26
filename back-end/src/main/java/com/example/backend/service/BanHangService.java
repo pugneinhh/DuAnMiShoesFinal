@@ -1,15 +1,25 @@
 package com.example.backend.service;
 
+import com.example.backend.dto.request.HoaDonCLient.HoaDonClientRequest;
+import com.example.backend.dto.request.HoaDonCLient.KHHoaDonChiTietRequest;
 import com.example.backend.dto.request.HoaDonRequest;
+import com.example.backend.dto.request.ThanhToanRequest;
 import com.example.backend.dto.response.ChiTietSanPhamForBanHang;
-import com.example.backend.entity.HoaDon;
-import com.example.backend.repository.CTSPRepository;
-import com.example.backend.repository.HoaDonRepository;
+import com.example.backend.dto.response.KhachHangRespon;
+import com.example.backend.entity.*;
+import com.example.backend.infrastructure.email.EmailSenderService;
+import com.example.backend.repository.*;
+import com.example.backend.util.Status;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.type.descriptor.DateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +30,24 @@ public class BanHangService {
     CTSPRepository ctspRepository;
     @Autowired
     ThongBaoService thongBaoService;
+    @Autowired
+    NguoiDungRepository nguoiDungRepository;
+    @Autowired
+    LichSuHoaDonService lichSuHoaDonService;
+
+    @Autowired
+    private DiaChiRepository diaChiRepository;
+
+    @Autowired
+    private VoucherRepository voucherRepository;
+
+    @Autowired
+    private HoaDonChiTietRepository hoaDonChiTietRepository;
+
+    @Autowired
+    private GioHangChiTietRepository gioHangChiTietRepository;
+    @Autowired
+    ThanhToanService thanhToanService;
 
    public List<ChiTietSanPhamForBanHang> getALLCTSPBanHang(){
         return ctspRepository.getALLCTSPBanHang();
@@ -36,4 +64,129 @@ public class BanHangService {
         return hd2;
     }
 
+    public HoaDon createHoaDon(HoaDonClientRequest hoaDonRequest) {
+        NguoiDung kh ;
+
+ if(hoaDonRequest.getIdUser() != "" ){
+  kh =  this.nguoiDungRepository.findById(hoaDonRequest.getIdUser()).get();
+ }else {
+     kh = null;
+ }
+
+        BigDecimal tienSauGiam;
+        if(hoaDonRequest.getTienSauGiam() == null || hoaDonRequest.getTienSauGiam().compareTo(BigDecimal.ZERO) == 0){
+            tienSauGiam = hoaDonRequest.getTongTien();
+        }else{
+            tienSauGiam = hoaDonRequest.getTienSauGiam();
+        }
+
+        HoaDon hoaDon = HoaDon.builder()
+                .nguoiDung(kh)
+                .diaChi(hoaDonRequest.getDiaChi())
+                .giaGoc(hoaDonRequest.getTongTien())
+                .tenNguoiNhan(hoaDonRequest.getTenNguoiNhan())
+                .ngayTao(LocalDateTime.now())
+                .tienVanChuyen(hoaDonRequest.getTienShip())
+                .email(hoaDonRequest.getEmail())
+                .soDienThoai(hoaDonRequest.getSdt())
+                .ngayMua(LocalDateTime.now())
+                .ngayDuKienNhan(hoaDonRequest.getNgayDuKienNhan())
+                .giaGiamGia(hoaDonRequest.getGiaGiamGia())
+                .thanhTien(tienSauGiam)
+                .trangThai(0)
+                .build();
+
+
+        if(hoaDonRequest.getIdVoucher() != null) {
+            Voucher voucher = voucherRepository.findAllById(hoaDonRequest.getIdVoucher()).get();
+            hoaDon.setVoucher(voucher);
+        }
+
+        HoaDon saveHoaDon = hoaDonRepository.save(hoaDon);
+        Random random1 = new Random();
+        int randomNumber1 = random1.nextInt(9000) + 1000;
+        saveHoaDon.setMa("HD" + randomNumber1);
+        hoaDonRepository.save(saveHoaDon);
+
+        if(hoaDonRequest.getIdVoucher() != null) {
+            Voucher voucher = voucherRepository.findAllById(hoaDonRequest.getIdVoucher()).get();
+            voucher.setSoLuong(voucher.getSoLuong() - 1);
+            if(voucher.getSoLuong() == 0){
+                voucher.setTrangThai(Status.NGUNG_HOAT_DONG);
+            }
+            voucherRepository.save(voucher);
+        }
+
+        for (KHHoaDonChiTietRequest request : hoaDonRequest.getListHDCT()) {
+
+            ChiTietSanPham spct = ctspRepository.findById(request.getIdCTSP()).get();
+
+            if (spct.getSoLuong() < request.getSoLuong()) {
+                throw new RuntimeException("So luong khong du");
+            }
+
+            HoaDonChiTiet hdct = HoaDonChiTiet.builder()
+                    .chiTietSanPham(spct)
+                    .soLuong(request.getSoLuong())
+                    .giaSauGiam(request.getDonGia())
+                    .trangThai(0)
+                    .hoaDon(hoaDon)
+                    .ngayTao(LocalDateTime.now())
+                    .build();
+
+            hoaDonChiTietRepository.save(hdct);
+
+            spct.setSoLuong(spct.getSoLuong() - request.getSoLuong());
+
+            if (spct.getSoLuong() == 0) {
+                spct.setTrangThai(1);
+            }
+
+            ctspRepository.save(spct);
+
+
+        }
+        for (KHHoaDonChiTietRequest x : hoaDonRequest.getListHDCT()) {
+if( hoaDonRequest.getIdUser() ==""){
+    GioHangChiTiet gioHangChiTiet = gioHangChiTietRepository.listGHCTByIdGioHangAndSanPham(x.getIdGioHang(), x.getIdCTSP());
+    System.out.println("gio hang: "+gioHangChiTiet.getId());
+    if(gioHangChiTiet != null){
+        gioHangChiTietRepository.deleteById(gioHangChiTiet.getId());
+    }
+}else{
+    GioHangChiTiet gioHangChiTiet = gioHangChiTietRepository.listGHCTByID(hoaDonRequest.getIdUser(), x.getIdCTSP());
+    if(gioHangChiTiet != null){
+        gioHangChiTietRepository.deleteById(gioHangChiTiet.getId());
+    }
+}
+
+
+        }
+        LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
+//        lichSuHoaDon.setId(saveHoaDon.getId());
+        lichSuHoaDon.setHoaDon(saveHoaDon);
+        lichSuHoaDon.setNguoiTao(hoaDonRequest.getTenNguoiNhan());
+        lichSuHoaDon.setTrangThai(0);
+        lichSuHoaDon.setNgayTao(LocalDateTime.now());
+        lichSuHoaDonService.save(lichSuHoaDon);
+
+        ///Thanh toánif
+
+            ThanhToanRequest thanhToanRequest = new ThanhToanRequest();
+            thanhToanRequest.setHoaDon(saveHoaDon.getId());
+            thanhToanRequest.setNgayTao(LocalDateTime.now());
+        thanhToanRequest.setTongTien(saveHoaDon.getThanhTien());
+        if(hoaDonRequest.getIdPayMethod()==0) {
+            thanhToanRequest.setTienMat(saveHoaDon.getThanhTien());
+            thanhToanRequest.setPhuongThuc(0);
+        }else{
+            thanhToanRequest.setChuyenKhoan(saveHoaDon.getThanhTien());
+            thanhToanRequest.setPhuongThuc(1);
+            thanhToanRequest.setPhuongThucVnp(hoaDonRequest.getMaGiaoDich());
+        }
+            thanhToanService.thanhToan(thanhToanRequest);
+        this.thongBaoService.thanhToan(saveHoaDon.getId());
+      //  sendMailOnline(hoaDon.getId());
+        return hoaDon;
+    }
 }

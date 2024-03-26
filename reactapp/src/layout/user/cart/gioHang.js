@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./gioHang.css";
-import { Button, Switch, Tag ,Modal} from "antd";
+import { Button, Switch, Tag, Modal } from "antd";
 import { FaRegTrashAlt, FaMapMarkerAlt } from "react-icons/fa";
 import { BiSolidDiscount } from "react-icons/bi";
 import ModalDiaChi from "./modalDiaChi";
@@ -18,21 +18,25 @@ import { KhachHangAPI } from "../../../pages/censor/api/user/khachHang.api";
 import { ShipAPI } from "../../../pages/censor/api/ship/ship.api";
 import { toast, ToastContainer } from "react-toastify";
 import logoBanner from "../../../assets/images/page-header-bg.jpg";
+import { useNavigate } from "react-router-dom";
 import Moment from "moment";
 import {
   AdThongBaoDatHang,
   KHGuiThongBaoDatHang,
 } from "../../../utils/socket/socket";
+import HoaDon from "../../../pages/censor/hoaDon-management/HoaDon2";
 
 export const GioHang = ({ children }) => {
   const [openModalDiaChi, setOpenModalDiaChi] = useState(false);
   const [openModalVoucher, setOpenModalVoucher] = useState(false);
   const [khachHang, setKhachHang] = useState(null);
+  const [email, setEmail] = useState(null);
   const [gioHangCT, setGioHangCT] = useState([]);
   const [userID, setUserID] = useState("");
   const [hoaDonID, setHoaDonID] = useState("");
   const [voucher, setVoucher] = useState(null);
   const [diaChi, setDiaChi] = useState(null);
+  const [maGiaoDich, setMaGiaoDich] = useState(null);
   const [clickCountTM, setClickCountTM] = useState(1);
   const [clickCountVNP, setClickCountVNP] = useState(0);
   const [phuongThuc, setPhuongThuc] = useState(0);
@@ -42,12 +46,8 @@ export const GioHang = ({ children }) => {
   const [dataVanChuyen, setDataVanchuyen] = useState("");
   const [soLuongSPGH, setSoLuongSPGH] = useState(0);
   const [idGH, setIDGH] = useState("");
-  console.log("Data vận chuyển",dataVanChuyen);
-  console.log("user id",userID);
-  console.log("voucher đang chọn",voucher);
-  console.log("Địa chỉ",diaChi);
+  const router = useNavigate();
   let total = 0;
-
 
   const storedData = get("userData");
   const storedGioHang = get("GioHang");
@@ -73,6 +73,7 @@ export const GioHang = ({ children }) => {
   useEffect(() => {
     if (storedData) {
       setKhachHang(storedData.userID);
+      setEmail(storedData.email);
       setUserID(storedData.userID);
       loadDiaChiMacDinh();
     }
@@ -179,12 +180,12 @@ export const GioHang = ({ children }) => {
     total,
     discount,
     gioHangCT,
-    khachHang,
+    userID,
     voucher,
     diaChi,
-    phuongThuc,
+    phuongThuc
   ) => {
-    KHGuiThongBaoDatHang();
+    // KHGuiThongBaoDatHang();
     const currentDate = new Date();
     const currentDateInMilliseconds = Date.UTC(
       currentDate.getFullYear(),
@@ -195,160 +196,87 @@ export const GioHang = ({ children }) => {
       currentDate.getSeconds(),
       currentDate.getMilliseconds()
     );
-    const idHD = uuid();
-    let hoaDonID;
+    // const idHD = uuid();
+    // let hoaDonID;
+
+    const hdct = gioHangCT.map((ghct) => {
+      return {
+        idCTSP: ghct.chiTietSanPham,
+        donGia: ghct.thanhTien,
+        soLuong: ghct.soLuong,
+        idGioHang: ghct.gioHang,
+      };
+    });
+
     const hoaDon = {
-      id: idHD,
-      ma: "HD" + currentDateInMilliseconds,
-      nguoiDung: khachHang,
-      giaGoc: total,
+      idVoucher: voucher?.id,
+      idPayMethod: phuongThuc,
+      maGiaoDich: '',
+      // ma: "HD" + currentDateInMilliseconds,
+      idUser: userID,
+      tongTien: total + (moneyShip ? moneyShip : 0),
       giaGiamGia: discount,
-      thanhTien: total - discount,
-      diaChi : diaChi ? diaChi.diaChi +"/"+ diaChi.tenXa +"/"+ diaChi.tenHuyen + "/" + diaChi.tenThanhPho : dataVanChuyen.diaChi,
-      email : diaChi ? diaChi.email : dataVanChuyen.email,
-      tenNguoiNhan : diaChi ? diaChi.tenNguoiNhan : dataVanChuyen.tenNguoiNhan,
-      tienVanChuyen : moneyShip ? moneyShip : dataVanChuyen.tienVanChuyen,
-      ngayDuKienNhan : ngayShip ? ngayShip : dataVanChuyen.ngayDuKienNhan,
-      soDienThoai : diaChi ? diaChi.soDienThoai : dataVanChuyen.soDienThoai
+      tienSauGiam: total + (moneyShip ? moneyShip : 0) - discount,
+      diaChi: diaChi
+        ? diaChi.diaChi +
+          "/" +
+          diaChi.tenXa +
+          "/" +
+          diaChi.tenHuyen +
+          "/" +
+          diaChi.tenThanhPho
+        : dataVanChuyen.diaChi,
+      email: email ? email : dataVanChuyen.email,
+      tenNguoiNhan: diaChi ? diaChi.tenNguoiNhan : dataVanChuyen.tenNguoiNhan,
+      tienShip: moneyShip ? moneyShip : dataVanChuyen.tienVanChuyen,
+      ngayDuKienNhan: ngayShip ? ngayShip : dataVanChuyen.ngayDuKienNhan,
+      sdt: diaChi ? diaChi.soDienThoai : dataVanChuyen.soDienThoai,
+      listHDCT: hdct,
     };
+console.log(hoaDon);
+    if (phuongThuc == 1) {
+      BanHangClientAPI.getLinkVnpay(
+        total + (moneyShip ? moneyShip : 0) - discount
+      ).then((res) => {
+        if (res.data) {
+          const maGiaoDichs = Object.keys(res.data)[0];
+          const url = res.data[maGiaoDichs];
 
-    console.log("hóa đơn", hoaDon);
-    BanHangClientAPI.addHD(hoaDon).then((res) => {
-      console.log("hóa đơn tạo", res.data);
-      hoaDonID = res.data.id;
-      console.log("giot hàng", gioHangCT);
-      gioHangCT.map((ghct) => {
-        const id = uuid();
-        console.log(hoaDonID);
-
-        const hdct = {
-          id: id,
-          hoaDon: res.data.id,
-          chiTietSanPham: ghct.chiTietSanPham,
-          soLuong: ghct.soLuong,
-          giaSauGiam: ghct.thanhTien,
-        };
-
-        BanHangClientAPI.addHDCT(hdct).then((res) => {
-          console.log("hóa đơn chi tiết", res.data);
-        });
-        GioHangAPI.deleteGHCT(ghct.id);
+          const formString = JSON.stringify({
+            ...hoaDon,
+            maGiaoDich: maGiaoDichs, // Gán mã giao dịch vào hoaDon
+          });
+          localStorage.setItem("formData", formString);
+          window.location.href = url;
+        } else {
+          console.log("lỗi ");
+        }
       });
 
-      if (voucher !== null) {
-        //console.log("add voucher to hóa đơn", res.data.hoaDon.id, voucher.id);
-        BanHangClientAPI.updateVoucherToHD(hoaDonID, voucher?.id);
+      console.log(maGiaoDich);
+    } else {
+      BanHangClientAPI.checkout(hoaDon);
+
+      setVoucher(null);
+      if (isDiaChiGiaoHangVisible === true) {
+        setIsDiaChiGiaoHangVisible(!isDiaChiGiaoHangVisible);
       }
-
-      // const thanhToanTM = {
-      //   hoaDon: res.data.id,
-      //   phuongThuc: phuongThuc,
-      //   tienMat: total - discount,
-      //   tongTien: total - discount,
-      // };
-
-      // if (phuongThuc == 0) {
-      //   console.log("hóa đơn trước thanh toán", res.data.hoaDon);
-      //   // console.log("thanhToanTM", thanhToanTM);
-      //   BanHangClientAPI.thanhToanTienMat(thanhToanTM).then((res) => {
-      //     console.log("hóa đơn tm", res.data);
-      //   });
-      // } else {
-      //   BanHangClientAPI.thanhToanHoaDon(hoaDonID).then((res) => {
-      //     console.log("thanh toán", res.data);
-      //   });
-      //   BanHangClientAPI.getLinkVnpay(res.data.id, total - discount).then(
-      //     (res) => {
-      //       window.open(res.data.url, "_blank");
-      //       console.log(
-      //         "url",
-      //         res.data.url
-      //           .substring(res.data.url.indexOf("vnp_TxnRef") + 11)
-      //           .substring(0, 8)
-      //       ); // mã giao dịch
-      //       console.log("dataa", res.data);
-      //       const thanhToanVNP = {
-      //         hoaDon: hoaDonID,
-      //         phuongThuc: phuongThuc,
-      //         chuyenKhoan: total - discount,
-      //         tongTien: total - discount,
-      //         phuongThucVnp: res.data.url
-      //           .substring(res.data.url.indexOf("vnp_TxnRef") + 11)
-      //           .substring(0, 8),
-      //       };
-      //       console.log("thanh toán vnp", thanhToanVNP);
-
-      //       BanHangClientAPI.thanhToanChuyenKhoan(thanhToanVNP);
-      //     }
-      //   );
-      // }
-
-      if (voucher !== null) {
-        console.log("add voucher to hóa đơn", res.data.id, voucher.id);
-        BanHangClientAPI.updateVoucherToHD(res.data.id, voucher.id);
-      }
-
-      const thanhToanTM = {
-        hoaDon: res.data.id,
-        phuongThuc: phuongThuc,
-        tienMat: total - discount,
-        tongTien: total - discount,
-      };
-
-      if (phuongThuc == 0) {
-        console.log("hóa đơn trước thanh toán", res.data.hoaDon);
-        console.log("thanhToanTM", thanhToanTM);
-        BanHangClientAPI.thanhToanTienMat(thanhToanTM).then((res) => {
-          console.log("hóa đơn tm", res.data);
-        });
-      } else {
-        BanHangClientAPI.thanhToanHoaDon(hoaDonID).then((res) => {
-          console.log("thanh toán", res.data);
-        });
-        BanHangClientAPI.getLinkVnpay(res.data.id, total - discount).then(
-          (res) => {
-            window.open(res.data.url, "_blank");
-            console.log(
-              "url",
-              res.data.url
-                .substring(res.data.url.indexOf("vnp_TxnRef") + 11)
-                .substring(0, 8)
-            ); // mã giao dịch
-            console.log("dataa", res.data);
-            const thanhToanVNP = {
-              hoaDon: hoaDonID,
-              phuongThuc: phuongThuc,
-              chuyenKhoan: total - discount,
-              tongTien: total - discount,
-              phuongThucVnp: res.data.url
-                .substring(res.data.url.indexOf("vnp_TxnRef") + 11)
-                .substring(0, 8),
-            };
-            console.log("thanh toán vnp", thanhToanVNP);
-
-            BanHangClientAPI.thanhToanChuyenKhoan(thanhToanVNP);
-          }
-        );
-      }
-    });
-
-   // loadGHCT();
-    setGioHangCT([]);
-    setVoucher(null);
-    if (isDiaChiGiaoHangVisible === true) {
-    setIsDiaChiGiaoHangVisible(!isDiaChiGiaoHangVisible);
+      setMoneyShip(0);
+      router("/thanh-toan-thanh-cong");
+      KHGuiThongBaoDatHang();
+      // toast("✔️ Đặt hàng thành công!", {
+      //   position: "top-right",
+      //   autoClose: 1000,
+      //   hideProgressBar: false,
+      //   closeOnClick: true,
+      //   pauseOnHover: true,
+      //   draggable: true,
+      //   progress: undefined,
+      //   theme: "light",
+      // });
     }
-    setMoneyShip(0);
-    toast("✔️ Đặt hàng thành công!", {
-      position: "top-right",
-      autoClose: 1000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
+
+    //   setGioHangCT([]);
   };
 
   return (
@@ -646,7 +574,7 @@ export const GioHang = ({ children }) => {
                       total,
                       discount,
                       gioHangCT,
-                      khachHang,
+                      userID,
                       voucher,
                       diaChi,
                       phuongThuc

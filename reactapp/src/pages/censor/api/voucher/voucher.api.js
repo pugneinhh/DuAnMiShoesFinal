@@ -48,7 +48,13 @@ export class VoucherAPI {
             data: data,
         });
     };
-
+    static updateTTTamDung = (id,data) => {
+        return requestAdmin({
+            method: "PUT",
+            url: `/admin/voucher/updateTTTamDung/${id}`,
+            data: data,
+        });
+    };
     static detail = (id) => {
         return requestAdmin({
             method: "GET",

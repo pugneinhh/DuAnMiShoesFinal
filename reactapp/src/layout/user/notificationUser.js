@@ -18,9 +18,13 @@ export default function Notification() {
   const storedItem = localStorage.getItem("userData");
   const parsedItem = JSON.parse(storedItem);
   const loadAll = () => {
+    if(parsedItem!=null){
     ThongBaoAPI.getALlThongBaoKH(parsedItem.accessToken).then((res) => {
       setNotification(res.data);
     });
+  }else{
+    return null;
+  }
   };
 
   const updateStatus = (id) => {
@@ -38,9 +42,13 @@ export default function Notification() {
   };
 
   const count = () => {
+    if(parsedItem!=null){
     ThongBaoAPI.countThongBaoKH(parsedItem.accessToken).then((res) => {
       setNotificationLength(res.data);
     });
+  }else{
+    return null;
+  }
   };
 
   const menu = (

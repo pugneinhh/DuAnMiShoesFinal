@@ -17,4 +17,10 @@ SELECT gh.id,gh.gio_hang_id as gioHang,gh.chi_tiet_sp_id as chiTietSanPham,gh.so
 
     @Query(value = "select sum(so_luong) from gio_hang_chi_tiet where trang_thai = 0 and gio_hang_id =:idGH",nativeQuery = true)
     Integer soLuongSanPhamTrongGioHang(String idGH);
+
+    @Query("Select pt from GioHangChiTiet pt where pt.gioHang.khachHang.id=:id and pt.chiTietSanPham.id=:idctsp")
+    GioHangChiTiet listGHCTByID(String id, String idctsp);
+
+    @Query("Select pt from GioHangChiTiet pt where pt.gioHang.id=:id and pt.chiTietSanPham.id=:idctsp")
+    GioHangChiTiet listGHCTByIdGioHangAndSanPham(String id, String idctsp);
 }
