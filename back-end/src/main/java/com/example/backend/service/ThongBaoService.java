@@ -15,6 +15,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -75,7 +76,7 @@ public class ThongBaoService {
         thongBao.setHoaDon(hoaDon);
         thongBao.setNoiDung("hóa đơn " + hoaDon.getMa() + " chờ xác nhận");
         thongBao.setTrangThai(0);//0 : chưa xem, 1: đã xem
-        thongBao.setNgayTao(new Date(new java.util.Date().getTime()));
+        thongBao.setNgayTao(LocalDateTime.now());
         thongBaoRepository.save(thongBao);
         messagingTemplate.convertAndSend("/topic/admin/hoa-don", thongBao);
     }
@@ -94,7 +95,7 @@ public class ThongBaoService {
         thongBao.setHoaDon(hoaDon);
         thongBao.setNoiDung("hóa đơn " + hoaDon.getMa() + " đã xác nhận đơn hàng");
         thongBao.setTrangThai(0);//0 : chưa xem, 1: đã xem
-        thongBao.setNgayTao(new Date(new java.util.Date().getTime()));
+        thongBao.setNgayTao(LocalDateTime.now());
         thongBaoRepository.save(thongBao);
         messagingTemplate.convertAndSend("/topic/KH/hoa-don", thongBao);
     }

@@ -10,6 +10,15 @@ export class BanHangClientAPI{
             data: data,
         });
     };
+
+    static checkout = (data) => {
+      return requestAdmin({
+          method : 'POST',
+          url: 'ban-hang-client/check-out',
+          data: data,
+      });
+  };
+
     static addHDCT = (data) => {
         return requestAdmin({
             method : 'POST',
@@ -43,10 +52,10 @@ export class BanHangClientAPI{
           url: `ban-hang-client/thanh-toan-hoa-don/${id}`,
         });
     };
-    static getLinkVnpay = (hoaDon, money) => {
+    static getLinkVnpay = ( money) => {
         return requestAdmin({
-          method: "GET",
-          url: `ban-hang-client/chuyen-khoan/${hoaDon}/${money}`,
+          method: "POST",
+          url: `ban-hang-client/chuyen-khoan/${money}`,
         });
       };
 }

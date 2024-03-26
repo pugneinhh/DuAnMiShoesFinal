@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface ThongBaoRepository extends JpaRepository<ThongBao,String> {
-    @Query("select  pot from  ThongBao  pot where pot.loai =0 or  pot.loai =3 or  pot.loai =6 order by pot.trangThai asc ")
+    @Query("select  pot from  ThongBao  pot where pot.loai =0 or  pot.loai =3 or  pot.loai =6 order by pot.ngayTao desc ")
     List<ThongBao> findAllAdmin();
 
     @Query(value = """

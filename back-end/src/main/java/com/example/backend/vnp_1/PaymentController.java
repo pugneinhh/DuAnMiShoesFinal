@@ -130,12 +130,12 @@ public class PaymentController {
         return "thankyou";
     }
 
-    @GetMapping("/pay")
-    public String pay( HttpServletRequest request){
-        try {
-            return payService.payWithVNPAY(request);
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    @GetMapping("/pay")
+//    public String pay( HttpServletRequest request){
+//        try {
+//            return payService.payWithVNPAY(request);
+//        } catch (UnsupportedEncodingException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 }

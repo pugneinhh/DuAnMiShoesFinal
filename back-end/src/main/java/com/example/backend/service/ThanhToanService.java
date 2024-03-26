@@ -64,8 +64,13 @@ private EmailSenderService emailSenderService;
         String finalHtml = null;
         HoaDon hoaDon = hoaDonRepository.findAllById(idHoaDon);
         BienLaiHoaDon invoice = exportFilePdfFormHtml.getInvoiceResponse(hoaDon);
+        if(hoaDon.getNguoiDung()!=null){
        NguoiDung user = nguoiDungRepository.findAllById(hoaDon.getNguoiDung().getId());
-        sendMail(invoice,  user.getEmail(),BASE_FRONTEND_ENDPOINT + "/hd/"+hoaDon.getId());
+            sendMail(invoice,  user.getEmail(),BASE_FRONTEND_ENDPOINT + "/hd/"+hoaDon.getId());
+    }else{
+            sendMail(invoice,  hoaDon.getEmail(),BASE_FRONTEND_ENDPOINT + "/hd/"+hoaDon.getId());
+        }
+
 //        sendMail(invoice, user.getEmail());
         //}
     }

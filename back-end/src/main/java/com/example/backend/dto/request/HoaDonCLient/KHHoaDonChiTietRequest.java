@@ -16,5 +16,5 @@ public class KHHoaDonChiTietRequest {
 
     private Integer soLuong;
 
-
+   private String idGioHang;
 }
