@@ -89,6 +89,7 @@ const ModalAddKhachHang = (props) => {
     loadDataProvince();
     loadKhachHangKa();
     loadNguoiDung();
+    loadKhachHang();
   }, []);
 
   // QR code
@@ -209,19 +210,7 @@ const ModalAddKhachHang = (props) => {
     form
       .validateFields()
       .then((values) => {
-        if (fileImage === null) {
-         toast.error("🦄 Chưa thêm ảnh!", {
-           position: "top-right",
-           autoClose: 3000,
-           hideProgressBar: false,
-           closeOnClick: true,
-           pauseOnHover: true,
-           draggable: true,
-           progress: undefined,
-           theme: "light",
-         });
-         return;
-        }
+  
         if (checkTrungEmail(values.email)) {
           toast.error("🦄 Email đã tồn tại!", {
             position: "top-right",
@@ -258,15 +247,15 @@ const ModalAddKhachHang = (props) => {
           idXa: ward.key == null ? ward.WardCode : ward.key,
         };
         const formData = new FormData();
-        formData.append(`file`, fileImage);
+        formData.append("file", fileImage);
         formData.append("request", JSON.stringify(data));
-        KhachHangAPI.create(formData)
-           
+        KhachHangAPI.create(formData)   
               .then((result) => {
+                 loadKhachHang();
                  setopenModalAddKhachHang(false);
                  form.resetFields();
                  fileImage.resetFields();
-                 loadKhachHang();
+                
                 toast("🦄 Thêm Thành công!", {
                   position: "top-right",
                   autoClose: 3000,

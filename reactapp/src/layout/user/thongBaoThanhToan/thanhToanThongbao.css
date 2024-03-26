@@ -1,0 +1,12 @@
+.resultContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* Căn giữa theo chiều dọc */
+    align-items: center;
+    /* Căn giữa theo chiều ngang nếu cần */
+    min-height: 74vh;
+    /* Đảm bảo chiều cao tối thiểu bằng với chiều cao viewport */
+    padding: 20px;
+    /* Đảm bảo có không gian padding xung quanh */
+}
