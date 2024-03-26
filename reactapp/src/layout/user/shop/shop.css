@@ -14,7 +14,7 @@
     /* Giữ tỉ lệ ảnh */
 }
 
-.banner-title {
+.banner-title-logo {
     position: absolute;
     top: 50%;
     /* Đặt tiêu đề vào giữa ảnh theo chiều dọc */
@@ -30,14 +30,14 @@
 
 /* Media Queries để điều chỉnh cho các kích thước màn hình khác nhau */
 @media (max-width: 768px) {
-    .banner-title {
+    .banner-title-logo {
         font-size: 20px;
         /* Giảm kích thước font cho màn hình nhỏ hơn */
     }
 }
 
 @media (max-width: 480px) {
-    .banner-title {
+    .banner-title-logo {
         font-size: 16px;
         /* Giảm kích thước font cho màn hình rất nhỏ */
     }
