@@ -212,19 +212,6 @@ export default function AddNhanVien() {
     form
       .validateFields()
       .then((values) => {
-        if (fileImage === null) {
-          toast.error("🦄 Không để trống ảnh!", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
-          return;
-        }
         if (checkTrungEmail(values.email)) {
           toast.error("🦄 Email đã tồn tại!", {
             position: "top-right",
@@ -262,25 +249,39 @@ export default function AddNhanVien() {
           idXa: ward.key == null ? ward.WardCode : ward.key,
         };
         const formData = new FormData();
-        formData.append("file", fileImage);
-        formData.append("request", JSON.stringify(data));
-        NhanVienAPI.create(formData)
+        console.log(fileImage, "->>>>>>>>>>>>>>");
 
-          .then((result) => {
-            nav("/admin-nhan-vien");
-            toast("🦄 Thêm Thành công!", {
-              position: "top-right",
-              autoClose: 3000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-            });
-          })
+        formData.append("file", fileImage);
+
+        formData.append("request", JSON.stringify(data));
+
+        NhanVienAPI.create(formData)
+        .then((result) => {
+          nav("/admin-nhan-vien");
+          toast("🦄 Thêm Thành công!", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        });
       })
-      
+      .catch(() => {
+        toast("🦄 Thêm Thất bại!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      });
   };
 
   return (
