@@ -17,6 +17,7 @@ import { SellAPI } from "../../../pages/censor/api/sell/sell.api";
 import { KhachHangAPI } from "../../../pages/censor/api/user/khachHang.api";
 import { ShipAPI } from "../../../pages/censor/api/ship/ship.api";
 import { toast, ToastContainer } from "react-toastify";
+import logoBanner from "../../../assets/images/page-header-bg.jpg";
 import { useNavigate } from "react-router-dom";
 import Moment from "moment";
 import {
@@ -280,11 +281,9 @@ console.log(hoaDon);
 
   return (
     <div>
-      <div className="banner-gio-hang-san-pham">
-        <img src="https://d-themes.com/react/molla/demo-10/images/page-header-bg.jpg?fbclid=IwAR1a29UEcWcX-xX8mdyf6lSt9-lm8LB4tzbz4wscKg5yBPhlzyzWfIcjmF0"></img>
-        <h1 className="text-center" style={{ marginTop: -130 }}>
-          Giỏ hàng
-        </h1>
+      <div className="banner-san-pham-shop">
+        <img src={logoBanner} alt="Logo Banner"></img>
+        <h1 className="banner-title-logo">Giỏ hàng</h1>
       </div>
       <br></br> <br></br>
       <div className="row mt-5">

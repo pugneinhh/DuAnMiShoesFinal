@@ -208,7 +208,7 @@ export const Shop = ({ children }) => {
     <div>
       <div className="banner-san-pham-shop">
         <img src={logoBanner} alt="Logo Banner"></img>
-        <h1 className="banner-title">Sản phẩm</h1>
+        <h1 className="banner-title-logo">Sản phẩm</h1>
       </div>
       <br></br> <br></br>
       <div className="row mt-5">
