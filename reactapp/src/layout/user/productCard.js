@@ -16,7 +16,7 @@ export const ProductCard = ({ product }) => {
   };
   const [idCt, setidCTSP] = useState("");
   const detailCTSP = (row) => {
-    console.log("click", row);
+   
     setidCTSP(row);
     setOpenModalDetailSP(true);
   };

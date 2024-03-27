@@ -26,11 +26,15 @@ public class NhanVienController {
 
     @PostMapping()
     public ResponseEntity<?> add(@RequestParam("request") String request,
-                                 @RequestParam(value = "file") MultipartFile file){
+                                 @RequestParam(value = "file",required = false) MultipartFile file){
+
         Gson gson = new Gson();
+
         NhanVienRequest nhanVienRequest=gson.fromJson(request, NhanVienRequest.class);
 
-        return  ResponseEntity.ok(nhanVienService.add(nhanVienRequest,file));
+            return  ResponseEntity.ok(nhanVienService.add(nhanVienRequest,file));
+
+
     }
     @PutMapping()
     public ResponseEntity<?> update(@RequestParam("request") String request,

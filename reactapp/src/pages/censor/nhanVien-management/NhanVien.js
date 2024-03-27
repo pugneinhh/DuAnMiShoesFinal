@@ -181,7 +181,7 @@ export default function NhanVien() {
   };
 
   return (
-    <div className="container">
+    <div className="container-fuild">
       <div className="container-fluid">
         <Divider orientation="center" color="none">
           <h2 className="text-first pt-1 fw-bold">
@@ -216,12 +216,12 @@ export default function NhanVien() {
             }}
             onValuesChange={onChangeFilter}
             size={componentSize}
-            style={{
-              maxWidth: 1400,
-            }}
+            // style={{
+            //   maxWidth: 1400,
+            // }}
             form={form}
           >
-            <div className="col-md-6">
+            <div className="col-md-5">
               <Form.Item label="Tìm kiếm" name="ten">
                 <Input
                   className="rounded-pill border-warning"
@@ -229,7 +229,7 @@ export default function NhanVien() {
                 />
               </Form.Item>
             </div>
-            <div className="col-md-6">
+            <div className="col-md-5">
               <Form.Item label="Trạng thái" name="trangThai">
                 <Select
                   defaultValue={"Tất cả"}
@@ -240,12 +240,12 @@ export default function NhanVien() {
                 </Select>
               </Form.Item>
             </div>
-            <Form.Item className="text-end ">
-              <Button type="primary" htmlType="reset" onClick={loadNhanVien}>
-                Làm mới
-              </Button>
-            </Form.Item>
           </Form>
+          <Form.Item className="text-center ">
+            <Button type="primary" htmlType="reset" onClick={loadNhanVien}>
+              Làm mới
+            </Button>
+          </Form.Item>
         </div>
         {/* hết form tìm kiếm */}
         {/* view add nhân viên */}
