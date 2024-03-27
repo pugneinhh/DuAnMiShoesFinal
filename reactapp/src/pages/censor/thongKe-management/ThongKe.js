@@ -736,7 +736,7 @@ export default function ThongKe() {
         <Card
           title={
             <>
-              <h5 style={{ marginLeft: 350 }}>
+              <h5  className="text-center">
                 {" "}
                 <IoStatsChart className="mb-2" /> Biểu Đồ Thống Kê Hóa Đơn và
                 Sản Phẩm{" "}
@@ -751,10 +751,10 @@ export default function ThongKe() {
 
       <div className="row mt-4">
         <Card
-          style={{ marginLeft: 13, width: 790 }}
-          className="col-md-7 border-left-primary shadow h-100 py-2"
+          // style={{ marginLeft: 13, width: 790 }}
+          className="col-md-8 border-left-primary shadow h-100 py-2"
         >
-          <h5 style={{ marginLeft: 240, marginTop: 5 }}>
+          <h5 className="text-center">
             <BiSolidHot color="red" size={30} style={{ marginBottom: 10 }} />{" "}
             Sản Phẩm Bán Chạy
           </h5>
@@ -772,7 +772,7 @@ export default function ThongKe() {
           ></Table>
           <br />
 
-          <h5 style={{ marginLeft: 310, marginTop: 20 }}>
+          <h5 className="text-center">
             <HiMiniShieldExclamation
               color="red"
               size={30}
@@ -793,11 +793,11 @@ export default function ThongKe() {
           ></Table>
         </Card>
         <Card
-          style={{ marginLeft: 10 }}
+          // style={{ marginLeft: 10 }}
           className="col-md-4 border-left-primary shadow h-100 py-2"
         >
           {/* biểu đồ tròn */}
-          <h6 style={{ marginLeft: 20, marginTop: 12 }}>
+          <h6 className="text-center">
             <RiBillLine size={30} style={{ marginBottom: 7 }} /> Tổng Hợp Đơn
             Trong Tháng
           </h6>
@@ -809,7 +809,7 @@ export default function ThongKe() {
             Trưởng Cửa Hàng
           </h6>
           <div className="border rounded shadow">
-            <Carousel style={{ width: 331 }} autoplay autoplaySpeed={1000}>
+            <Carousel autoplay autoplaySpeed={1000}>
               <div>
                 <h6 style={contentStyle}>
                   <RiMoneyDollarCircleFill

@@ -373,7 +373,7 @@ const Voucher = () => {
   };
 
   return (
-    <div className="container" style={{ borderRadius: 20 }}>
+    <div className="container-fluid" style={{ borderRadius: 20 }}>
       <div className="container-fluid">
         <Divider orientation="center" color="#d0aa73">
           <h4 className="text-first pt-1 fw-bold">
@@ -421,20 +421,26 @@ const Voucher = () => {
                   placeholder="Nhập mã hoặc tên hoặc mức độ giảm giá"
                 />
               </Form.Item>
-              <Form.Item label="Loại voucher" name="loaiVoucher" >
-              <Select
+              <Form.Item label="Loại voucher" name="loaiVoucher">
+                <Select
                   defaultValue={"Tất cả"}
                   status="warning"
                   className="rounded-pill border-warning"
-                  style={{ borderRadius:"30px" }}
+                  style={{ borderRadius: "30px" }}
                 >
-                  <Select.Option style={{ borderRadius:"30px" }} value="">
+                  <Select.Option style={{ borderRadius: "30px" }} value="">
                     Tất cả
                   </Select.Option>
-                  <Select.Option style={{ borderRadius:"30px" }} value="Tiền mặt">
+                  <Select.Option
+                    style={{ borderRadius: "30px" }}
+                    value="Tiền mặt"
+                  >
                     Tiền mặt
                   </Select.Option>
-                  <Select.Option style={{ borderRadius:"30px" }} value="Phần trăm">
+                  <Select.Option
+                    style={{ borderRadius: "30px" }}
+                    value="Phần trăm"
+                  >
                     Phần trăm
                   </Select.Option>
                 </Select>
