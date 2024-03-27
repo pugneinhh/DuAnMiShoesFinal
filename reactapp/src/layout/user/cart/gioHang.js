@@ -153,9 +153,11 @@ export const GioHang = ({ children }) => {
         setIDGH(response.data.id);
         GioHangAPI.getAllGHCTByIDGH(response.data.id).then((res) => {
           setGioHangCT(res.data); 
+          console.log("->>>>>>>>>>>>>>>>>>>>>>",res.data);
         });
       });
-    } else if (storedGioHang && storedGioHang.id) {
+    } 
+    if (storedGioHang && storedGioHang!=null) {
       console.log(storedGioHang);
       // GioHangAPI.getByID(storedGioHang.id).then((response) => {
       //   console.log(response.data);

@@ -21,6 +21,7 @@ function ProductRow({ product, loadghct }) {
     GioHangAPI.detailCTSP(product.chiTietSanPham).then((res) => {
       setCtsp(res.data);
     });
+      loadghct();
   }, []);
 
   const decreaseQuantity = () => {
