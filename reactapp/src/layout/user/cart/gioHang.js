@@ -254,25 +254,33 @@ console.log(hoaDon);
 
       console.log(maGiaoDich);
     } else {
-      BanHangClientAPI.checkout(hoaDon);
-
-      setVoucher(null);
-      if (isDiaChiGiaoHangVisible === true) {
-        setIsDiaChiGiaoHangVisible(!isDiaChiGiaoHangVisible);
+      BanHangClientAPI.checkout(hoaDon).then(check =>{
+        console.log('->>>>>>>>>>>>>>>>>>>>>>',check);
+      if(check.data){
+        setVoucher(null);
+        if (isDiaChiGiaoHangVisible === true) {
+          setIsDiaChiGiaoHangVisible(!isDiaChiGiaoHangVisible);
+        }
+        setMoneyShip(0);
+        router("/thanh-toan-thanh-cong");
+        KHGuiThongBaoDatHang();
+      }else{
+       toast("✔️ số lượng sản phẩm không đủ!", {
+          position: "top-right",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       }
-      setMoneyShip(0);
-      router("/thanh-toan-thanh-cong");
-      KHGuiThongBaoDatHang();
-      // toast("✔️ Đặt hàng thành công!", {
-      //   position: "top-right",
-      //   autoClose: 1000,
-      //   hideProgressBar: false,
-      //   closeOnClick: true,
-      //   pauseOnHover: true,
-      //   draggable: true,
-      //   progress: undefined,
-      //   theme: "light",
-      // });
+    });
+   
+   
+     
+      
     }
 
     //   setGioHangCT([]);

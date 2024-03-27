@@ -49,34 +49,35 @@ public class BanHangService {
     @Autowired
     ThanhToanService thanhToanService;
 
-   public List<ChiTietSanPhamForBanHang> getALLCTSPBanHang(){
+    public List<ChiTietSanPhamForBanHang> getALLCTSPBanHang() {
         return ctspRepository.getALLCTSPBanHang();
     }
 
-    public HoaDon addHoaDon(HoaDonRequest hoaDonRequest){
-       HoaDon hd =hoaDonRequest.map(new HoaDon());
-       return hoaDonRepository.save(hd);
+    public HoaDon addHoaDon(HoaDonRequest hoaDonRequest) {
+        HoaDon hd = hoaDonRequest.map(new HoaDon());
+        return hoaDonRepository.save(hd);
     }
-    public HoaDon addHoaDonClient(HoaDonRequest hoaDonRequest){
-        HoaDon hd =hoaDonRequest.map(new HoaDon());
-        HoaDon hd2 =  hoaDonRepository.save(hd);
+
+    public HoaDon addHoaDonClient(HoaDonRequest hoaDonRequest) {
+        HoaDon hd = hoaDonRequest.map(new HoaDon());
+        HoaDon hd2 = hoaDonRepository.save(hd);
         thongBaoService.thanhToan(hd2.getId());
         return hd2;
     }
 
-    public HoaDon createHoaDon(HoaDonClientRequest hoaDonRequest) {
-        NguoiDung kh ;
+    public Boolean createHoaDon(HoaDonClientRequest hoaDonRequest) {
+        NguoiDung kh;
 
- if(hoaDonRequest.getIdUser() != "" ){
-  kh =  this.nguoiDungRepository.findById(hoaDonRequest.getIdUser()).get();
- }else {
-     kh = null;
- }
+        if (hoaDonRequest.getIdUser() != "") {
+            kh = this.nguoiDungRepository.findById(hoaDonRequest.getIdUser()).get();
+        } else {
+            kh = null;
+        }
 
         BigDecimal tienSauGiam;
-        if(hoaDonRequest.getTienSauGiam() == null || hoaDonRequest.getTienSauGiam().compareTo(BigDecimal.ZERO) == 0){
+        if (hoaDonRequest.getTienSauGiam() == null || hoaDonRequest.getTienSauGiam().compareTo(BigDecimal.ZERO) == 0) {
             tienSauGiam = hoaDonRequest.getTongTien();
-        }else{
+        } else {
             tienSauGiam = hoaDonRequest.getTienSauGiam();
         }
 
@@ -97,10 +98,20 @@ public class BanHangService {
                 .build();
 
 
-        if(hoaDonRequest.getIdVoucher() != null) {
+        if (hoaDonRequest.getIdVoucher() != null) {
             Voucher voucher = voucherRepository.findAllById(hoaDonRequest.getIdVoucher()).get();
             hoaDon.setVoucher(voucher);
         }
+        for (KHHoaDonChiTietRequest request : hoaDonRequest.getListHDCT()) {
+
+            ChiTietSanPham spct = ctspRepository.findById(request.getIdCTSP()).get();
+
+            if (spct.getSoLuong() < request.getSoLuong()) {
+                //   throw new RuntimeException("So luong khong du");
+                return false;
+            }
+        }
+
 
         HoaDon saveHoaDon = hoaDonRepository.save(hoaDon);
         Random random1 = new Random();
@@ -108,10 +119,10 @@ public class BanHangService {
         saveHoaDon.setMa("HD" + randomNumber1);
         hoaDonRepository.save(saveHoaDon);
 
-        if(hoaDonRequest.getIdVoucher() != null) {
+        if (hoaDonRequest.getIdVoucher() != null) {
             Voucher voucher = voucherRepository.findAllById(hoaDonRequest.getIdVoucher()).get();
             voucher.setSoLuong(voucher.getSoLuong() - 1);
-            if(voucher.getSoLuong() == 0){
+            if (voucher.getSoLuong() == 0) {
                 voucher.setTrangThai(Status.NGUNG_HOAT_DONG);
             }
             voucherRepository.save(voucher);
@@ -120,10 +131,6 @@ public class BanHangService {
         for (KHHoaDonChiTietRequest request : hoaDonRequest.getListHDCT()) {
 
             ChiTietSanPham spct = ctspRepository.findById(request.getIdCTSP()).get();
-
-            if (spct.getSoLuong() < request.getSoLuong()) {
-                throw new RuntimeException("So luong khong du");
-            }
 
             HoaDonChiTiet hdct = HoaDonChiTiet.builder()
                     .chiTietSanPham(spct)
@@ -147,22 +154,22 @@ public class BanHangService {
 
         }
         for (KHHoaDonChiTietRequest x : hoaDonRequest.getListHDCT()) {
-if( hoaDonRequest.getIdUser() ==""){
-    GioHangChiTiet gioHangChiTiet = gioHangChiTietRepository.listGHCTByIdGioHangAndSanPham(x.getIdGioHang(), x.getIdCTSP());
-    System.out.println("gio hang: "+gioHangChiTiet.getId());
-    if(gioHangChiTiet != null){
-        gioHangChiTietRepository.deleteById(gioHangChiTiet.getId());
-    }
-}else{
-    GioHangChiTiet gioHangChiTiet = gioHangChiTietRepository.listGHCTByID(hoaDonRequest.getIdUser(), x.getIdCTSP());
-    if(gioHangChiTiet != null){
-        gioHangChiTietRepository.deleteById(gioHangChiTiet.getId());
-    }
-}
+            if (hoaDonRequest.getIdUser() == "") {
+                GioHangChiTiet gioHangChiTiet = gioHangChiTietRepository.listGHCTByIdGioHangAndSanPham(x.getIdGioHang(), x.getIdCTSP());
+                System.out.println("gio hang: " + gioHangChiTiet.getId());
+                if (gioHangChiTiet != null) {
+                    gioHangChiTietRepository.deleteById(gioHangChiTiet.getId());
+                }
+            } else {
+                GioHangChiTiet gioHangChiTiet = gioHangChiTietRepository.listGHCTByID(hoaDonRequest.getIdUser(), x.getIdCTSP());
+                if (gioHangChiTiet != null) {
+                    gioHangChiTietRepository.deleteById(gioHangChiTiet.getId());
+                }
+            }
 
 
         }
-        LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
+        LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
 //        lichSuHoaDon.setId(saveHoaDon.getId());
         lichSuHoaDon.setHoaDon(saveHoaDon);
         lichSuHoaDon.setNguoiTao(hoaDonRequest.getTenNguoiNhan());
@@ -172,21 +179,21 @@ if( hoaDonRequest.getIdUser() ==""){
 
         ///Thanh toánif
 
-            ThanhToanRequest thanhToanRequest = new ThanhToanRequest();
-            thanhToanRequest.setHoaDon(saveHoaDon.getId());
-            thanhToanRequest.setNgayTao(LocalDateTime.now());
+        ThanhToanRequest thanhToanRequest = new ThanhToanRequest();
+        thanhToanRequest.setHoaDon(saveHoaDon.getId());
+        thanhToanRequest.setNgayTao(LocalDateTime.now());
         thanhToanRequest.setTongTien(saveHoaDon.getThanhTien());
-        if(hoaDonRequest.getIdPayMethod()==0) {
+        if (hoaDonRequest.getIdPayMethod() == 0) {
             thanhToanRequest.setTienMat(saveHoaDon.getThanhTien());
             thanhToanRequest.setPhuongThuc(0);
-        }else{
+        } else {
             thanhToanRequest.setChuyenKhoan(saveHoaDon.getThanhTien());
             thanhToanRequest.setPhuongThuc(1);
             thanhToanRequest.setPhuongThucVnp(hoaDonRequest.getMaGiaoDich());
         }
-            thanhToanService.thanhToan(thanhToanRequest);
+        thanhToanService.thanhToan(thanhToanRequest);
         this.thongBaoService.thanhToan(saveHoaDon.getId());
-      //  sendMailOnline(hoaDon.getId());
-        return hoaDon;
+        //  sendMailOnline(hoaDon.getId());
+        return true;
     }
 }
