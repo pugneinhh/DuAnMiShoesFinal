@@ -25,6 +25,7 @@ import {
   KHGuiThongBaoDatHang,
 } from "../../../utils/socket/socket";
 import HoaDon from "../../../pages/censor/hoaDon-management/HoaDon2";
+import { useCart } from "./CartContext";
 
 export const GioHang = ({ children }) => {
   const [openModalDiaChi, setOpenModalDiaChi] = useState(false);
@@ -48,10 +49,25 @@ export const GioHang = ({ children }) => {
   const [idGH, setIDGH] = useState("");
   const router = useNavigate();
   let total = 0;
-
+    const { updateTotalQuantity } = useCart();
   const storedData = get("userData");
   const storedGioHang = get("GioHang");
 
+
+  const loadCountGioHang = () => {
+    if (storedData != null) {
+      GioHangAPI.getByIDKH(storedData.userID).then((res) => {
+        GioHangAPI.getAllGHCTByIDGH(res.data.id).then((res) => {
+          updateTotalQuantity(res.data.length);
+        });
+      });
+    } else {
+      console.log("giỏ hàng", storedGioHang);
+      GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res) => {
+        updateTotalQuantity(res.data.length);
+      });
+    }
+  };
   const getButtonTMType = () => {
     // Xác định loại button dựa trên giá trị biến đếm
     return clickCountTM % 2 === 0 ? "default" : "primary";
@@ -70,6 +86,7 @@ export const GioHang = ({ children }) => {
     setClickCountTM(0);
     setPhuongThuc(1);
   };
+  
   useEffect(() => {
     if (storedData) {
       setKhachHang(storedData.userID);
@@ -264,6 +281,7 @@ console.log(hoaDon);
         }
         setMoneyShip(0);
         router("/thanh-toan-thanh-cong");
+        loadCountGioHang();
         KHGuiThongBaoDatHang();
       }else{
        toast("✔️ số lượng sản phẩm không đủ!", {
