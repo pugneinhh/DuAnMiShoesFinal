@@ -7,15 +7,13 @@ function ProductRow({ product, loadghct }) {
   const [price, setPrice] = useState();
   const [ctsp, setCtsp] = useState({});
   const [priceOne, setPriceOne] = useState();
-  console.log("gioHangRow 10 product", product);
-  console.log("gioHangRow 11 Chi tiết giỏ hàng", ctsp);
+
   useEffect(() => {
     setQuantity(product.soLuong);
     setPrice(product.thanhTien);
     setPriceOne(product.thanhTien / product.soLuong);
     GioHangAPI.detailCTSP(product.chiTietSanPham).then((res) => {
       setCtsp(res.data);
-      console.log("ctspgh", res.data);
     });
   }, []);
 
@@ -38,13 +36,13 @@ function ProductRow({ product, loadghct }) {
     }
   };
   const handleDeleteGHCT = () => {
-    GioHangAPI.deleteGHCT(product.id).then((res) => {
-      console.log("remove ghct", res.data);
+   
+    GioHangAPI.deleteGHCT(product.id).then((res)=>{
       loadghct();
-    });
+    })
+    
   };
   const handleUpdateGHCT = (quantity, price, product) => {
-    console.log("qqqqqq", quantity, price, product);
     const data = {
       id: product.id,
       gioHang: product.gioHang,
@@ -53,7 +51,6 @@ function ProductRow({ product, loadghct }) {
       thanhTien: price,
     };
     GioHangAPI.updateGHCT(data).then((res) => {
-      console.log("ghctupdate", res.data);
       loadghct();
     });
   };

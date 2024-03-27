@@ -134,25 +134,25 @@ export const GioHang = ({ children }) => {
       GioHangAPI.getByIDKH(storedData.userID).then((response) => {
         setIDGH(response.data.id);
         GioHangAPI.getAllGHCTByIDGH(response.data.id).then((res) => {
-          setGioHangCT(res.data);
-          console.log("GioHangct", res.data);
+          setGioHangCT(res.data); 
         });
       });
     } else if (storedGioHang && storedGioHang.id) {
       console.log(storedGioHang);
-      GioHangAPI.getByID(storedGioHang.id).then((response) => {
-        console.log(response.data);
-        setIDGH(response.data.id);
-        GioHangAPI.getAllGHCTByIDGH(response.data.id).then((res) => {
+      // GioHangAPI.getByID(storedGioHang.id).then((response) => {
+      //   console.log(response.data);
+        setIDGH(storedGioHang.id);
+        GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res) => {
           setGioHangCT(res.data);
           console.log("GioHan", res.data);
         });
-      });
+      // });
     }
+    
   };
-
+  
   useEffect(() => {
-    console.log("ID GH", idGH);
+    
     loadDiaChiMacDinh();
     loadSoLuongSPTrongGH();
   }, [idGH]);
@@ -255,7 +255,6 @@ console.log(hoaDon);
       console.log(maGiaoDich);
     } else {
       BanHangClientAPI.checkout(hoaDon).then(check =>{
-        console.log('->>>>>>>>>>>>>>>>>>>>>>',check);
       if(check.data){
         setVoucher(null);
         if (isDiaChiGiaoHangVisible === true) {
