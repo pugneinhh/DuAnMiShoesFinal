@@ -2,17 +2,23 @@ import React, { useEffect, useState } from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { GioHangAPI } from "../../../pages/censor/api/gioHang/gioHang.api";
 import { Badge, Image } from "antd";
+import { get, set } from "local-storage";
+import { useCart } from "../cart/CartContext";
 function ProductRow({ product, loadghct }) {
   const [quantity, setQuantity] = useState();
   const [price, setPrice] = useState();
   const [ctsp, setCtsp] = useState({});
   const [priceOne, setPriceOne] = useState();
+     const { updateTotalQuantity } = useCart();
+    const storedData = get("userData");
+    const storedGioHang = get("GioHang");
   console.log("gioHangRow 10 product", product);
-  console.log("gioHangRow 11 Chi tiết giỏ hàng", ctsp);
+;
   useEffect(() => {
     setQuantity(product.soLuong);
     setPrice(product.thanhTien);
     setPriceOne(product.thanhTien / product.soLuong);
+    loadCountGioHang();
     GioHangAPI.detailCTSP(product.chiTietSanPham).then((res) => {
       setCtsp(res.data);
       console.log("ctspgh", res.data);
@@ -37,11 +43,32 @@ function ProductRow({ product, loadghct }) {
       handleUpdateGHCT(quantity + 1, price + priceOne, product);
     }
   };
+
+  const loadCountGioHang = () => {
+    if (storedData != null) {
+      GioHangAPI.getByIDKH(storedData.userID).then((res) => {
+        GioHangAPI.getAllGHCTByIDGH(res.data.id).then((res) => {
+          updateTotalQuantity(res.data.length);
+          console.log("counttttttt", res.data.length);
+        });
+      });
+    } else {
+      
+        console.log("giỏ hàng", storedGioHang);
+        GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res) => {
+          updateTotalQuantity(res.data.length);
+          console.log("count", res.data);
+        });
+      
+    }
+  };
   const handleDeleteGHCT = () => {
     GioHangAPI.deleteGHCT(product.id).then((res) => {
       console.log("remove ghct", res.data);
       loadghct();
+       loadCountGioHang();
     });
+       
   };
   const handleUpdateGHCT = (quantity, price, product) => {
     console.log("qqqqqq", quantity, price, product);

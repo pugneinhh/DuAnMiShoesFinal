@@ -4,8 +4,10 @@ import { ToastContainer, toast } from "react-toastify";
 import { SanPhamClientAPI } from "../../../pages/censor/api/home/sanPham/sanPham.api";
 import { GioHangAPI } from "../../../pages/censor/api/gioHang/gioHang.api";
 import { get, set } from "local-storage";
+import { useCart } from "../cart/CartContext";
 const ModalDetailSP = (props) => {
   const { openModalDetailSP, setOpenModalDetailSP, idCt, setidCTSP } = props;
+  const { updateTotalQuantity } = useCart();
   const [largeImage, setLargeImage] = useState("");
   const [ChiTietSanPham, setChiTietSanPham] = useState([]);
   const [selectedMauSac, setSelectedMauSac] = useState(null);
@@ -17,18 +19,33 @@ const ModalDetailSP = (props) => {
   const [khachHang, setKhachHang] = useState(null);
   const storedData = get("userData");
   const storedGioHang = get("GioHang");
-  console.log("IDCTSP",idCt);
-  console.log("modalDetailSP Chi Tiết Sản Phẩm",ChiTietSanPham);
+
+  const loadCountGioHang = () => {
+    if (storedData != null) {
+      GioHangAPI.getByIDKH(storedData.userID).then((res) => {
+        GioHangAPI.getAllGHCTByIDGH(res.data.id).then((res) => {
+          updateTotalQuantity(res.data.length);
+          
+        });
+      });
+    } else {
+      console.log("giỏ hàng", storedGioHang);
+      GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res) => {
+        updateTotalQuantity(res.data.length);
+      });
+    }
+  };
   useEffect(() => {
     loadCTSP();
+    loadCountGioHang();
     if (storedData != null) {
       setKhachHang(storedData.userID);
     }
   }, []);
-  
+
   const loadCTSP = () => {
     SanPhamClientAPI.getCTSP(idCt).then((res) => {
-      if (res.data === undefined || res.data === '') {
+      if (res.data === undefined || res.data === "") {
         return;
       }
       setChiTietSanPham(res.data);
@@ -39,30 +56,29 @@ const ModalDetailSP = (props) => {
       setIDSize(res.data.kichThuocID);
       loadListMauSacBySP(res.data.sanPhamID);
       loadListSizeBySP(res.data.sanPhamID);
-      SanPhamClientAPI.changeListSizeBySPandMS(res.data.sanPhamID, res.data.mauSacID).then(
-        (res) => {
-          setListSizeByMS(res.data);
-          const kichThuocExists = res.data.some(
-            (item) => item.kichThuocID === selectedSize
-          );
-          if (kichThuocExists) {
-            setSelectedSize(selectedSize);
-          } else {
-
-            setSelectedSize(res.data[0].kichThuocID);
-          }
+      SanPhamClientAPI.changeListSizeBySPandMS(
+        res.data.sanPhamID,
+        res.data.mauSacID
+      ).then((res) => {
+        setListSizeByMS(res.data);
+        const kichThuocExists = res.data.some(
+          (item) => item.kichThuocID === selectedSize
+        );
+        if (kichThuocExists) {
+          setSelectedSize(selectedSize);
+        } else {
+          setSelectedSize(res.data[0].kichThuocID);
         }
-      );
+      });
       setLargeImage(res.data.anh);
     });
   };
   const loadCTSPChange = (idSP, mauSelect, sizeSelect) => {
-    if(idSP === '' || mauSelect === null || sizeSelect === null){
+    if (idSP === "" || mauSelect === null || sizeSelect === null) {
       return;
     }
     SanPhamClientAPI.getCTSPChange(idSP, mauSelect, sizeSelect).then((res) => {
       setChiTietSanPham(res.data);
-      console.log("list sp change", res.data);
     });
   };
   const [ListMauSacBySP, setListMauSacBySP] = useState([]);
@@ -93,6 +109,7 @@ const ModalDetailSP = (props) => {
     setLargeImage(url);
   };
   const handleClose = () => {
+    loadCountGioHang();
     setOpenModalDetailSP(false);
     setidCTSP("");
   };
@@ -103,7 +120,7 @@ const ModalDetailSP = (props) => {
     // window.location.href = `/client/sanpham/kich-thuoc-sp/${IDSanPham}/${mauSacId}`;
     SanPhamClientAPI.changeListSizeBySPandMS(IDSanPham, mauSacId).then(
       (res) => {
-        console.log("data nè")
+      
         setListSizeByMS(res.data);
         const kichThuocExists = res.data.some(
           (item) => item.kichThuocID === selectedSize
@@ -116,7 +133,7 @@ const ModalDetailSP = (props) => {
           }
         }
       }
-    )
+    );
   };
 
   const handleSizeClick = (sizeId) => {
@@ -134,25 +151,33 @@ const ModalDetailSP = (props) => {
     if (storedGioHang === null) {
       if (khachHang !== null) {
         GioHangAPI.getByIDKH(khachHang).then((res) => {
-
-          if (res.data !== null && res.data !== '') {//nếu như tồn tại giỏ hàng của khách đăng nhập thì kiểm tra xem sp có trùng vs sp trong ghct đó k
-            console.log("res.data", res.data);
+          if (res.data !== null && res.data !== "") {
+            //nếu như tồn tại giỏ hàng của khách đăng nhập thì kiểm tra xem sp có trùng vs sp trong ghct đó k
+          
 
             const idgh = res.data.id;
 
             GioHangAPI.getAllGHCTByIDGH(res.data.id).then((res) => {
-              const idCTSP = res.data.filter((item) => item.chiTietSanPham === ChiTietSanPham.id);
+              const idCTSP = res.data.filter(
+                (item) => item.chiTietSanPham === ChiTietSanPham.id
+              );
               if (idCTSP.length > 0) {
                 const GHCT = {
                   id: idCTSP[0].id,
                   gioHang: idCTSP[0].gioHang,
                   chiTietSanPham: ChiTietSanPham.id,
                   soLuong: soLuong,
-                  thanhTien: ChiTietSanPham.loaiKM ? 
-                  (ChiTietSanPham.loaiKM === "Tiền mặt" ? 
-                  (ChiTietSanPham.giaBan - ChiTietSanPham.giaTriKhuyenMai) * soLuong 
-                  : (ChiTietSanPham.giaBan - (ChiTietSanPham.giaBan * ChiTietSanPham.giaTriKhuyenMai / 100))* soLuong )
-                  : ChiTietSanPham.giaBan * soLuong,
+                  thanhTien: ChiTietSanPham.loaiKM
+                    ? ChiTietSanPham.loaiKM === "Tiền mặt"
+                      ? (ChiTietSanPham.giaBan -
+                          ChiTietSanPham.giaTriKhuyenMai) *
+                        soLuong
+                      : (ChiTietSanPham.giaBan -
+                          (ChiTietSanPham.giaBan *
+                            ChiTietSanPham.giaTriKhuyenMai) /
+                            100) *
+                        soLuong
+                    : ChiTietSanPham.giaBan * soLuong,
                 };
 
                 GioHangAPI.updateSLGHCT(GHCT).then((res) => {
@@ -166,17 +191,24 @@ const ModalDetailSP = (props) => {
                     progress: undefined,
                     theme: "light",
                   });
-                })
+                  loadCountGioHang();
+                });
               } else {
                 const data = {
                   gioHang: idgh,
                   chiTietSanPham: ChiTietSanPham.id,
                   soLuong: soLuong,
-                  thanhTien: ChiTietSanPham.loaiKM ? 
-                  (ChiTietSanPham.loaiKM === "Tiền mặt" ? 
-                  (ChiTietSanPham.giaBan - ChiTietSanPham.giaTriKhuyenMai) * soLuong 
-                  : (ChiTietSanPham.giaBan - (ChiTietSanPham.giaBan * ChiTietSanPham.giaTriKhuyenMai / 100))* soLuong )
-                  : ChiTietSanPham.giaBan * soLuong,
+                  thanhTien: ChiTietSanPham.loaiKM
+                    ? ChiTietSanPham.loaiKM === "Tiền mặt"
+                      ? (ChiTietSanPham.giaBan -
+                          ChiTietSanPham.giaTriKhuyenMai) *
+                        soLuong
+                      : (ChiTietSanPham.giaBan -
+                          (ChiTietSanPham.giaBan *
+                            ChiTietSanPham.giaTriKhuyenMai) /
+                            100) *
+                        soLuong
+                    : ChiTietSanPham.giaBan * soLuong,
                 };
 
                 GioHangAPI.addGHCT(data).then((res) => {
@@ -190,6 +222,7 @@ const ModalDetailSP = (props) => {
                     progress: undefined,
                     theme: "light",
                   });
+                  loadCountGioHang();
                 });
               }
             });
@@ -201,11 +234,17 @@ const ModalDetailSP = (props) => {
                   gioHang: res.data.id,
                   chiTietSanPham: ChiTietSanPham.id,
                   soLuong: soLuong,
-                  thanhTien: ChiTietSanPham.loaiKM ? 
-                  (ChiTietSanPham.loaiKM === "Tiền mặt" ? 
-                  (ChiTietSanPham.giaBan - ChiTietSanPham.giaTriKhuyenMai) * soLuong 
-                  : (ChiTietSanPham.giaBan - (ChiTietSanPham.giaBan * ChiTietSanPham.giaTriKhuyenMai / 100))* soLuong )
-                  : ChiTietSanPham.giaBan * soLuong,
+                  thanhTien: ChiTietSanPham.loaiKM
+                    ? ChiTietSanPham.loaiKM === "Tiền mặt"
+                      ? (ChiTietSanPham.giaBan -
+                          ChiTietSanPham.giaTriKhuyenMai) *
+                        soLuong
+                      : (ChiTietSanPham.giaBan -
+                          (ChiTietSanPham.giaBan *
+                            ChiTietSanPham.giaTriKhuyenMai) /
+                            100) *
+                        soLuong
+                    : ChiTietSanPham.giaBan * soLuong,
                 };
                 if (soLuong > ChiTietSanPham.soLuong) {
                   toast.error("Số lượng sản phẩm không đủ!", {
@@ -230,41 +269,43 @@ const ModalDetailSP = (props) => {
                       progress: undefined,
                       theme: "light",
                     });
-
+                    loadCountGioHang();
                   });
                 }
               }
             );
           }
-        })
-      }else{
-      
-      GioHangAPI.addGH({ ma: randomString, khachHang: khachHang }).then(
-        (res) => {
-          set("GioHang", res.data);
-          const data = {
-            gioHang: res.data.id,
-            chiTietSanPham: ChiTietSanPham.id,
-            soLuong: soLuong,
-            thanhTien: ChiTietSanPham.loaiKM ? 
-            (ChiTietSanPham.loaiKM === "Tiền mặt" ? 
-            (ChiTietSanPham.giaBan - ChiTietSanPham.giaTriKhuyenMai) * soLuong 
-            : (ChiTietSanPham.giaBan - (ChiTietSanPham.giaBan * ChiTietSanPham.giaTriKhuyenMai / 100))* soLuong )
-            : ChiTietSanPham.giaBan * soLuong,
-          };
-          if (soLuong > ChiTietSanPham.soLuong) {
-            toast.error("Số lượng sản phẩm không đủ!", {
-              position: "top-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-            });
-          } else {
-          
+        });
+      } else {
+        GioHangAPI.addGH({ ma: randomString, khachHang: khachHang }).then(
+          (res) => {
+            set("GioHang", res.data);
+            const data = {
+              gioHang: res.data.id,
+              chiTietSanPham: ChiTietSanPham.id,
+              soLuong: soLuong,
+              thanhTien: ChiTietSanPham.loaiKM
+                ? ChiTietSanPham.loaiKM === "Tiền mặt"
+                  ? (ChiTietSanPham.giaBan - ChiTietSanPham.giaTriKhuyenMai) *
+                    soLuong
+                  : (ChiTietSanPham.giaBan -
+                      (ChiTietSanPham.giaBan * ChiTietSanPham.giaTriKhuyenMai) /
+                        100) *
+                    soLuong
+                : ChiTietSanPham.giaBan * soLuong,
+            };
+            if (soLuong > ChiTietSanPham.soLuong) {
+              toast.error("Số lượng sản phẩm không đủ!", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              });
+            } else {
               GioHangAPI.addGHCT(data).then((res) => {
                 toast("✔️ Thêm thành công!", {
                   position: "top-right",
@@ -276,7 +317,7 @@ const ModalDetailSP = (props) => {
                   progress: undefined,
                   theme: "light",
                 });
-
+                loadCountGioHang();
               });
             }
           }
@@ -284,7 +325,9 @@ const ModalDetailSP = (props) => {
       }
     } else {
       GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res) => {
-        const idCTSP = res.data.filter((item) => item.chiTietSanPham === ChiTietSanPham.id);
+        const idCTSP = res.data.filter(
+          (item) => item.chiTietSanPham === ChiTietSanPham.id
+        );
 
         if (idCTSP.length > 0) {
           const GHCT = {
@@ -292,11 +335,15 @@ const ModalDetailSP = (props) => {
             gioHang: res.data[0].gioHang,
             chiTietSanPham: ChiTietSanPham.id,
             soLuong: soLuong,
-            thanhTien: ChiTietSanPham.loaiKM ? 
-            (ChiTietSanPham.loaiKM === "Tiền mặt" ? 
-            (ChiTietSanPham.giaBan - ChiTietSanPham.giaTriKhuyenMai) * soLuong 
-            : (ChiTietSanPham.giaBan - (ChiTietSanPham.giaBan * ChiTietSanPham.giaTriKhuyenMai / 100))* soLuong )
-            : ChiTietSanPham.giaBan * soLuong,
+            thanhTien: ChiTietSanPham.loaiKM
+              ? ChiTietSanPham.loaiKM === "Tiền mặt"
+                ? (ChiTietSanPham.giaBan - ChiTietSanPham.giaTriKhuyenMai) *
+                  soLuong
+                : (ChiTietSanPham.giaBan -
+                    (ChiTietSanPham.giaBan * ChiTietSanPham.giaTriKhuyenMai) /
+                      100) *
+                  soLuong
+              : ChiTietSanPham.giaBan * soLuong,
           };
 
           GioHangAPI.updateSLGHCT(GHCT).then((res) => {
@@ -310,17 +357,22 @@ const ModalDetailSP = (props) => {
               progress: undefined,
               theme: "light",
             });
-          })
+            loadCountGioHang();
+          });
         } else {
           const data = {
             gioHang: storedGioHang.id,
             chiTietSanPham: ChiTietSanPham.id,
             soLuong: soLuong,
-            thanhTien: ChiTietSanPham.loaiKM ? 
-            (ChiTietSanPham.loaiKM === "Tiền mặt" ? 
-            (ChiTietSanPham.giaBan - ChiTietSanPham.giaTriKhuyenMai) * soLuong 
-            : (ChiTietSanPham.giaBan - (ChiTietSanPham.giaBan * ChiTietSanPham.giaTriKhuyenMai / 100))* soLuong )
-            : ChiTietSanPham.giaBan * soLuong,
+            thanhTien: ChiTietSanPham.loaiKM
+              ? ChiTietSanPham.loaiKM === "Tiền mặt"
+                ? (ChiTietSanPham.giaBan - ChiTietSanPham.giaTriKhuyenMai) *
+                  soLuong
+                : (ChiTietSanPham.giaBan -
+                    (ChiTietSanPham.giaBan * ChiTietSanPham.giaTriKhuyenMai) /
+                      100) *
+                  soLuong
+              : ChiTietSanPham.giaBan * soLuong,
           };
           GioHangAPI.addGHCT(data).then((res) => {
             toast("✔️ Thêm thành công!", {
@@ -333,6 +385,7 @@ const ModalDetailSP = (props) => {
               progress: undefined,
               theme: "light",
             });
+            loadCountGioHang();
           });
         }
       });
@@ -411,21 +464,26 @@ const ModalDetailSP = (props) => {
         <div className="col-md-6 ">
           <h3>{ChiTietSanPham.tenSP}</h3>
           <h5 className="mb-3" style={{ color: "red" }}>
-            {
-              ChiTietSanPham.loaiKM ?
-                (
-                  <span>
-                    <del style={{ color: "black" }}>{Intl.NumberFormat("en-US").format(ChiTietSanPham.giaBan)} VNĐ     </del>
-
-                    {Intl.NumberFormat("en-US").format(ChiTietSanPham.loaiKM === "Tiền mặt" ? ChiTietSanPham.giaBan - ChiTietSanPham.giaTriKhuyenMai : ChiTietSanPham.giaBan - (ChiTietSanPham.giaBan * ChiTietSanPham.giaTriKhuyenMai / 100))} VNĐ
-                  </span>
-                )
-                :
-                (<span style={{ color: "black" }}>{Intl.NumberFormat("en-US").format(ChiTietSanPham.giaBan)} VNĐ</span>)
-
-            }
-
-
+            {ChiTietSanPham.loaiKM ? (
+              <span>
+                <del style={{ color: "black" }}>
+                  {Intl.NumberFormat("en-US").format(ChiTietSanPham.giaBan)} VNĐ{" "}
+                </del>
+                {Intl.NumberFormat("en-US").format(
+                  ChiTietSanPham.loaiKM === "Tiền mặt"
+                    ? ChiTietSanPham.giaBan - ChiTietSanPham.giaTriKhuyenMai
+                    : ChiTietSanPham.giaBan -
+                        (ChiTietSanPham.giaBan *
+                          ChiTietSanPham.giaTriKhuyenMai) /
+                          100
+                )}{" "}
+                VNĐ
+              </span>
+            ) : (
+              <span style={{ color: "black" }}>
+                {Intl.NumberFormat("en-US").format(ChiTietSanPham.giaBan)} VNĐ
+              </span>
+            )}
           </h5>
           <hr></hr>
           <h6>Màu</h6>
@@ -468,10 +526,13 @@ const ModalDetailSP = (props) => {
                         : "1px solid #d9d9d9",
                   }}
                   onClick={() => handleSizeClick(listsize.kichThuocID)}
-                  disabled={!ListSizeByMS.some(size => size.kichThuocID === listsize.kichThuocID)}
+                  disabled={
+                    !ListSizeByMS.some(
+                      (size) => size.kichThuocID === listsize.kichThuocID
+                    )
+                  }
                 >
                   {listsize.tenKichThuoc}
-
                 </Button>
               </div>
             ))}
