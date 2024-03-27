@@ -37,8 +37,8 @@ public class GioHangChiTietService {
     }
     public GioHangChiTiet deleteGHCT(String id){
         GioHangChiTiet ghct=gioHangChiTietRepository.findById(id).get();
-        ghct.setTrangThai(1);
-        return gioHangChiTietRepository.save(ghct);
+        gioHangChiTietRepository.delete(ghct);
+        return ghct;
     }
     public Integer soLuongSanPhamTrongGioHang(String idGH){
         return gioHangChiTietRepository.soLuongSanPhamTrongGioHang(idGH);

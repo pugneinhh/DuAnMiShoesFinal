@@ -12,8 +12,7 @@ function ProductRow({ product, loadghct }) {
      const { updateTotalQuantity } = useCart();
     const storedData = get("userData");
     const storedGioHang = get("GioHang");
-  console.log("gioHangRow 10 product", product);
-;
+
   useEffect(() => {
     setQuantity(product.soLuong);
     setPrice(product.thanhTien);
@@ -21,7 +20,6 @@ function ProductRow({ product, loadghct }) {
     loadCountGioHang();
     GioHangAPI.detailCTSP(product.chiTietSanPham).then((res) => {
       setCtsp(res.data);
-      console.log("ctspgh", res.data);
     });
   }, []);
 
@@ -63,15 +61,14 @@ function ProductRow({ product, loadghct }) {
     }
   };
   const handleDeleteGHCT = () => {
-    GioHangAPI.deleteGHCT(product.id).then((res) => {
-      console.log("remove ghct", res.data);
+   
+    GioHangAPI.deleteGHCT(product.id).then((res)=>{
       loadghct();
        loadCountGioHang();
     });
-       
+      
   };
   const handleUpdateGHCT = (quantity, price, product) => {
-    console.log("qqqqqq", quantity, price, product);
     const data = {
       id: product.id,
       gioHang: product.gioHang,
@@ -80,7 +77,6 @@ function ProductRow({ product, loadghct }) {
       thanhTien: price,
     };
     GioHangAPI.updateGHCT(data).then((res) => {
-      console.log("ghctupdate", res.data);
       loadghct();
     });
   };
