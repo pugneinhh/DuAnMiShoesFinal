@@ -250,7 +250,7 @@ export default function KhachHang() {
    
   };
   return (
-    <div className="container">
+    <div className="container-fluid">
       <div className="container-fluid">
         <Divider orientation="center" color="none">
           <h2 className="text-first pt-1 fw-bold">
@@ -260,7 +260,7 @@ export default function KhachHang() {
 
         {/* form tìm kiếm */}
         <div
-          className=" bg-light m-2 p-3 pt-2"
+          className=" bg-light  p-3 pt-2"
           style={{
             border: "1px solid #ddd", // Border color
             boxShadow: "0 3px 8px rgba(0, 0, 0, 0.1)", // Box shadow
@@ -272,7 +272,7 @@ export default function KhachHang() {
           </h5>
           <hr />
           <Form
-            className="row col-md-12"
+            className="d-flex justify-content-center align-items-center"
             labelCol={{
               span: 8,
             }}
@@ -285,12 +285,12 @@ export default function KhachHang() {
             }}
             onValuesChange={onChangeFilter}
             size={componentSize}
-            style={{
-              maxWidth: 1400,
-            }}
+            // style={{
+            //   maxWidth: 1400,
+            // }}
             form={form}
           >
-            <div className="col-md-6">
+            <div className="col-md-5">
               <Form.Item label="Tìm kiếm" name="ten">
                 <Input
                   className="rounded-pill border-warning"
@@ -298,7 +298,7 @@ export default function KhachHang() {
                 />
               </Form.Item>
             </div>
-            <div className="col-md-6">
+            <div className="col-md-5 me-5">
               <Form.Item label="Trạng thái" name="trangThai">
                 <Select
                   defaultValue={"Tất cả"}
@@ -309,12 +309,13 @@ export default function KhachHang() {
                 </Select>
               </Form.Item>
             </div>
-            <Form.Item className="text-end ">
-              <Button type="primary" htmlType="reset" onClick={loadKhachHang}>
-                Làm mới
-              </Button>
-            </Form.Item>
           </Form>
+
+          <Form.Item className="text-center ">
+            <Button type="primary" htmlType="reset" onClick={loadKhachHang}>
+              Làm mới
+            </Button>
+          </Form.Item>
         </div>
         {/* hết form tìm kiếm */}
         {/* view add nhân viên */}
@@ -327,8 +328,13 @@ export default function KhachHang() {
             <PlusCircleOutlined /> Thêm{" "}
           </Link>
 
-    
-          <Link onClick={exportToExcel} className="btn btn-primary bg-gradient fw-bold nut-them rounded-pill"><SiMicrosoftexcel />Export Excel</Link>
+          <Link
+            onClick={exportToExcel}
+            className="btn btn-primary bg-gradient fw-bold nut-them rounded-pill"
+          >
+            <SiMicrosoftexcel />
+            Export Excel
+          </Link>
         </div>
       </div>
       <div className="container-fluid mt-4">
@@ -347,11 +353,14 @@ export default function KhachHang() {
             scroll={scroll}
           />
         </div>
-        {idKH&&<ModalDiaChi openModalDiaChi={openModalDiaChi}
-          setOpenModalDiaChi={setOpenModalDiaChi}
-          idKH={idKH}
-          setIdKH={setIdKH}
-        />}
+        {idKH && (
+          <ModalDiaChi
+            openModalDiaChi={openModalDiaChi}
+            setOpenModalDiaChi={setOpenModalDiaChi}
+            idKH={idKH}
+            setIdKH={setIdKH}
+          />
+        )}
         <ToastContainer
           position="top-right"
           autoClose={5000}
