@@ -174,7 +174,7 @@ public class BanHangClient {
 
 
     @PostMapping("/check-out")
-    public  HoaDon create(@RequestBody HoaDonClientRequest hoaDonClientRequest){
+    public  Boolean create(@RequestBody HoaDonClientRequest hoaDonClientRequest){
         return banHangService.createHoaDon(hoaDonClientRequest);
     }
 }
