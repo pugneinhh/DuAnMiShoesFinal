@@ -71,13 +71,13 @@ function App() {
 
   return (
     <div className="App">
-      {isLoading && (
+      {/* {isLoading && (
         <div className="loading-overlay">
           <div className="loading-logo">
             <img src={loading} alt="Logo" />
           </div>
         </div>
-      )}
+      )} */}
 
       <BrowserRouter basename={AppConfig.routerBase}>
         <Suspense>

@@ -7,7 +7,7 @@ import { PlusCircleOutlined } from "@ant-design/icons";
 import { ToastContainer } from "react-toastify";
 import { BiSolidUserBadge } from "react-icons/bi";
 import { NhanVienAPI } from "../api/user/nhanVien.api";
-
+import './nhanvien.css';
 export default function NhanVien() {
   const [componentSize, setComponentSize] = useState("default");
   const onFormLayoutChange = ({ size }) => {
@@ -250,6 +250,10 @@ export default function NhanVien() {
         {/* hết form tìm kiếm */}
         {/* view add nhân viên */}
         <div className=" text-end mt-3">
+          <button class="button-30" role="button">
+            Button 30
+          </button>
+
           <Link
             to="/admin-them-nhan-vien"
             className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill"

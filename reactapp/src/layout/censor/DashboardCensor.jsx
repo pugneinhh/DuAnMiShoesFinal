@@ -125,7 +125,7 @@ const DashboardCensor = ({ children }) => {
           collapsed={collapsed}
           width={235}
           breakPoint="md"
-          image="https://i.pinimg.com/564x/40/81/08/4081083e8895a9a620ada4b0fac3d436.jpg?fbclid=IwAR0HZwn_m42pqnvest56DrS32EKJXbpfIQvedmzUNReYtTiipdjSBjz6r-o"
+          image="https://i.pinimg.com/564x/1e/49/73/1e4973a1a63fe26c8201259c8d9c77cb.jpg"
         >
           <SidebarHeader>
             <div
@@ -249,9 +249,10 @@ const DashboardCensor = ({ children }) => {
               </MenuItem>
             </SubMenu>
           </Menu>
-          <SidebarFooter style={{ textAlign: "center" }}>
+          <SidebarFooter style={{ textAlign: "center", marginTop:"auto" }}>
             <div
-              className="sidebar-btn-wrapper"
+            
+              className="sidebar-btn-wrapper "
               style={{
                 padding: "20px 24px",
               }}
