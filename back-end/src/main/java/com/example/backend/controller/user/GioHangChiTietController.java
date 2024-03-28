@@ -34,7 +34,7 @@ public class GioHangChiTietController {
     public ResponseEntity<?> updateGHCT(@RequestBody GioHangChiTietRequest request){
         return ResponseEntity.ok(gioHangChiTietService.updateGHCT(request));
     }
-    @GetMapping("/detailCTSP/{idCT}")
+    @GetMapping("/detailCTSP/{idCT}") // truyền vào ictsp lấy ra detail
     public ResponseEntity<?> getDetail(@PathVariable("idCT") String id) {
         return  ResponseEntity.ok(ctspService.detailCTSPGioHang(id));
     }

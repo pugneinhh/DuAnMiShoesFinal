@@ -106,7 +106,7 @@ export const DashboardClient = ({ children }) => {
           display: "flex",
           position: "sticky",
           top: 0,
-          zIndex: 1,
+          zIndex:30,
           width: "100%",
           backgroundColor: "#ffffff",
           color: "black",

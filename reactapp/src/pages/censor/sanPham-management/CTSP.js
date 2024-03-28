@@ -774,15 +774,25 @@ export default function CTSP() {
   ]
 
   return (
-    <div className='container-fluid' style={{ borderRadius: 20 }}>
+    <div className="container-fluid" style={{ borderRadius: 20 }}>
       <div className="container-fluid">
-        <Divider orientation="center" color="#d0aa73"><h4 className="text-first pt-1 fw-bold"> <InfoCircleFilled size={35} /> Quản lý chi tiết sản phẩm</h4></Divider>
-        <div className=' bg-light m-2 p-3 pt-2' style={{
-          border: '1px solid #ddd', // Border color
-          boxShadow: '0 3px 8px rgba(0, 0, 0, 0.1)', // Box shadow
-          borderRadius: '8px'
-        }}>
-          <h5><FilterFilled size={30} /> Bộ lọc</h5>
+        <Divider orientation="center" color="#d0aa73">
+          <h4 className="text-first pt-1 fw-bold">
+            {" "}
+            <InfoCircleFilled size={35} /> Quản lý chi tiết sản phẩm
+          </h4>
+        </Divider>
+        <div
+          className=" bg-light m-2 p-3 pt-2"
+          style={{
+            border: "1px solid #ddd", // Border color
+            boxShadow: "0 3px 8px rgba(0, 0, 0, 0.1)", // Box shadow
+            borderRadius: "8px",
+          }}
+        >
+          <h5>
+            <FilterFilled size={30} /> Bộ lọc
+          </h5>
           <hr />
           <Form
             labelCol={{
@@ -801,10 +811,9 @@ export default function CTSP() {
               maxWidth: 1600,
             }}
           >
-
             {/* Form tìm kiếm */}
             {/* Các Thuộc Tính Dòng 1 */}
-            <div className='row mt-3'>
+            <div className="row mt-3">
               {/* Tên & Mã */}
               <div className="col-md-4">
                 <Form.Item label="Tên & Mã" name="tenCT">
@@ -812,10 +821,10 @@ export default function CTSP() {
                 </Form.Item>
               </div>
               {/* Kích Thước */}
-              <div className='col-md-4' >
+              <div className="col-md-4">
                 <Form.Item label="Kích Thước" name="idKT">
-                  <Select placeholder="Chọn một giá trị" >
-                    {kt.map(item => (
+                  <Select placeholder="Chọn một giá trị">
+                    {kt.map((item) => (
                       <Option key={item.id} value={item.id}>
                         {item.ten}
                       </Option>
@@ -824,17 +833,19 @@ export default function CTSP() {
                 </Form.Item>
               </div>
               {/* Màu Sắc */}
-              <div className='col-md-4'>
+              <div className="col-md-4">
                 <Form.Item label="Màu Sắc" name="idMS">
                   <Select placeholder="Chọn một giá trị">
-                    {ms.map(item => (
+                    {ms.map((item) => (
                       <Option key={item.id} value={item.id}>
-                        <div style={{
-                          backgroundColor: `${item.ma}`,
-                          borderRadius: 6,
-                          width: 170,
-                          height: 25,
-                        }}></div >
+                        <div
+                          style={{
+                            backgroundColor: `${item.ma}`,
+                            borderRadius: 6,
+                            width: 170,
+                            height: 25,
+                          }}
+                        ></div>
                       </Option>
                     ))}
                   </Select>
@@ -842,14 +853,13 @@ export default function CTSP() {
               </div>
             </div>
 
-
             {/* Các Thuộc Tính Dòng 2 */}
-            <div className='row'>
+            <div className="row">
               {/* Chất Liệu */}
-              <div className='col-md-4' >
+              <div className="col-md-4">
                 <Form.Item label="Chất Liệu" name="idCL">
                   <Select placeholder="Chọn một giá trị">
-                    {cl.map(item => (
+                    {cl.map((item) => (
                       <Option key={item.id} value={item.id}>
                         {item.ten}
                       </Option>
@@ -858,10 +868,10 @@ export default function CTSP() {
                 </Form.Item>
               </div>
               {/* Độ Cao */}
-              <div className='col-md-4'>
+              <div className="col-md-4">
                 <Form.Item label="Đế giày" name="idDC">
                   <Select placeholder="Chọn một giá trị">
-                    {dc.map(item => (
+                    {dc.map((item) => (
                       <Option key={item.ma} value={item.id}>
                         {item.ten}
                       </Option>
@@ -870,10 +880,10 @@ export default function CTSP() {
                 </Form.Item>
               </div>
               {/* Danh Mục */}
-              <div className='col-md-4'>
+              <div className="col-md-4">
                 <Form.Item label="Danh Mục" name="idDM">
                   <Select placeholder="Chọn một giá trị">
-                    {dm.map(item => (
+                    {dm.map((item) => (
                       <Option key={item.id} value={item.id}>
                         {item.ten}
                       </Option>
@@ -884,12 +894,12 @@ export default function CTSP() {
             </div>
 
             {/* Các Thuộc Tính Dòng 3 */}
-            <div className='row'>
+            <div className="row">
               {/* Hãng */}
-              <div className='col-md-4'>
+              <div className="col-md-4">
                 <Form.Item label="Hãng" name="idH">
                   <Select placeholder="Chọn một giá trị">
-                    {h.map(item => (
+                    {h.map((item) => (
                       <Option key={item.id} value={item.id}>
                         {item.ten}
                       </Option>
@@ -898,58 +908,94 @@ export default function CTSP() {
                 </Form.Item>
               </div>
               {/* Trạng Thái */}
-              <div className='col-md-4'>
+              <div className="col-md-4">
                 <Form.Item label="Trạng thái" name="trangThaiCT">
                   <Select placeholder="Chọn một giá trị" defaultValue="0">
-                    <Select.Option value='0'>Còn Bán</Select.Option>
-                    <Select.Option value='1'>Dừng Bán</Select.Option>
+                    <Select.Option value="0">Còn Bán</Select.Option>
+                    <Select.Option value="1">Dừng Bán</Select.Option>
                   </Select>
                 </Form.Item>
               </div>
-              <div className='col-md-4'>
+              <div className="col-md-4">
                 <Form.Item label="Số lượng" name="soLuongCT">
-                  <Slider style={{ width: '200px' }} min={1} max={2000} step={100} defaultValue={2000}/>
+                  <Slider
+                    style={{ width: "200px" }}
+                    min={1}
+                    max={2000}
+                    step={100}
+                    defaultValue={2000}
+                  />
                 </Form.Item>
               </div>
             </div>
-            <div className='col'>
-              <Form.Item style={{ marginLeft: 100 }} label="Giá bán" name="giaBanCT">
-                <Slider style={{ width: '430px' }} min={1000000} max={40000000} step={1000000} defaultValue={40000000}/>
+            <div className="col">
+              <Form.Item
+                style={{ marginLeft: 100 }}
+                label="Giá bán"
+                name="giaBanCT"
+              >
+                <Slider
+                  style={{ width: "430px" }}
+                  min={1000000}
+                  max={40000000}
+                  step={1000000}
+                  defaultValue={40000000}
+                />
               </Form.Item>
             </div>
 
-
-            <div className='container-fluid'>
-              <Form.Item className='text-center' style={{ paddingLeft: 360 }}>
-                <Button type="primary" htmlType='reset' onClick={loadCTSP} icon={<RetweetOutlined />}>Làm mới</Button>
+            <div className="container-fluid">
+              <Form.Item className="text-center" style={{ paddingLeft: 360 }}>
+                <Button
+                  type="primary"
+                  htmlType="reset"
+                  onClick={loadCTSP}
+                  icon={<RetweetOutlined />}
+                >
+                  Làm mới
+                </Button>
               </Form.Item>
             </div>
-
           </Form>
         </div>
-        <div className=' bg-light m-2 p-3 pt-2' style={{
-          border: '1px solid #ddd', // Border color
-          boxShadow: '0 3px 8px rgba(0, 0, 0, 0.1)', // Box shadow
-          borderRadius: '8px'
-        }}>
-          <h5><BookFilled size={30} /> Danh sách chi tiết sản phẩm</h5>
+        <div
+          className=" bg-light m-2 p-3 pt-2"
+          style={{
+            border: "1px solid #ddd", // Border color
+            boxShadow: "0 3px 8px rgba(0, 0, 0, 0.1)", // Box shadow
+            borderRadius: "8px",
+          }}
+        >
+          <h5>
+            <BookFilled size={30} /> Danh sách chi tiết sản phẩm
+          </h5>
           <hr />
-          <div className='text-end'>
-            <a onClick={UpdateNhanh} className="btn btn-success bg-gradient fw-bold nut-them rounded-pill" role="button"> <HighlightOutlined />  Sửa sản phẩm </a>
+          <div className="text-end">
+            <button onClick={UpdateNhanh} class="button-them">
+              <span class="text">
+                <HighlightOutlined /> Sửa sản phẩm{" "}
+              </span>
+            </button>
+     
           </div>
           <div className="container-fluid mt-4">
             <div>
-              <Table className='text-center' dataSource={dataSource} columns={columns} pagination={{
-                showQuickJumper: true,
-                defaultPageSize: 5,
-                position: ['bottomCenter'],
-                defaultCurrent: 1,
-                total: 100,
-              }} rowSelection={rowSelection} />
+              <Table
+                className="text-center"
+                dataSource={dataSource}
+                columns={columns}
+                pagination={{
+                  showQuickJumper: true,
+                  defaultPageSize: 5,
+                  position: ["bottomCenter"],
+                  defaultCurrent: 1,
+                  total: 100,
+                }}
+                rowSelection={rowSelection}
+              />
             </div>
           </div>
         </div>
-
       </div>
       <ToastContainer
         position="top-right"
@@ -966,5 +1012,5 @@ export default function CTSP() {
       {/* Same as */}
       <ToastContainer />
     </div>
-  )
+  );
 }
