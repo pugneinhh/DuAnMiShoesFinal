@@ -62,18 +62,22 @@ import DetailTraCuuDonHang from "../layout/user/history/DetailTraCuuDonHang";
 import { SignUp } from "../layout/login/signUp";
 import { ForgotPass } from "../layout/login/forgotPassword";
 import AccountProfile from "../layout/user/profile/profile";
+import ThanhToanThanhCong from "../layout/user/thongBaoThanhToan/thanhToanThanhCong";
+import ThanhToanThatBai from "../layout/user/thongBaoThanhToan/thanhToanThatBai";
+import { CartProvider } from "../layout/user/cart/CartContext";
+
 function App() {
   const isLoading = useAppSelector(GetLoading);
 
   return (
     <div className="App">
-      {isLoading && (
+      {/* {isLoading && (
         <div className="loading-overlay">
           <div className="loading-logo">
             <img src={loading} alt="Logo" />
           </div>
         </div>
-      )}
+      )} */}
 
       <BrowserRouter basename={AppConfig.routerBase}>
         <Suspense>
@@ -382,9 +386,11 @@ function App() {
               path="/home"
               element={
                 <GuestGuard>
-                  <DashboardClient>
-                    <Home />
-                  </DashboardClient>
+                  <CartProvider>
+                    <DashboardClient>
+                      <Home />
+                    </DashboardClient>
+                  </CartProvider>
                 </GuestGuard>
               }
             />
@@ -392,9 +398,11 @@ function App() {
               path="/gio-hang"
               element={
                 <GuestGuard>
-                  <DashboardClient>
-                    <GioHang />
-                  </DashboardClient>
+                  <CartProvider>
+                    <DashboardClient>
+                      <GioHang />
+                    </DashboardClient>
+                  </CartProvider>
                 </GuestGuard>
               }
             />
@@ -402,9 +410,11 @@ function App() {
               path="/san-pham"
               element={
                 <GuestGuard>
-                  <DashboardClient>
-                    <Shop />
-                  </DashboardClient>
+                  <CartProvider>
+                    <DashboardClient>
+                      <Shop />
+                    </DashboardClient>
+                  </CartProvider>
                 </GuestGuard>
               }
             />
@@ -412,9 +422,11 @@ function App() {
               path="/history"
               element={
                 <GuestGuard>
-                  <DashboardClient>
-                    <ALLTabHistoryClient />
-                  </DashboardClient>
+                  <CartProvider>
+                    <DashboardClient>
+                      <ALLTabHistoryClient />
+                    </DashboardClient>
+                  </CartProvider>
                 </GuestGuard>
               }
             />
@@ -422,9 +434,11 @@ function App() {
               path="/chi-tiet-don-hang/:idHD"
               element={
                 <GuestGuard>
-                  <DashboardClient>
-                    <ChiTietDonHang />
-                  </DashboardClient>
+                  <CartProvider>
+                    <DashboardClient>
+                      <ChiTietDonHang />
+                    </DashboardClient>
+                  </CartProvider>
                 </GuestGuard>
               }
             />
@@ -432,9 +446,11 @@ function App() {
               path="/tra-cuu-don-hang"
               element={
                 <GuestGuard>
-                  <DashboardClient>
-                    <TraCuuDonHangClient />
-                  </DashboardClient>
+                  <CartProvider>
+                    <DashboardClient>
+                      <TraCuuDonHangClient />
+                    </DashboardClient>
+                  </CartProvider>
                 </GuestGuard>
               }
             />
@@ -442,9 +458,11 @@ function App() {
               path="/hd/:idHD"
               element={
                 <GuestGuard>
-                  <DashboardClient>
-                    <DetailTraCuuDonHang />
-                  </DashboardClient>
+                  <CartProvider>
+                    <DashboardClient>
+                      <DetailTraCuuDonHang />
+                    </DashboardClient>
+                  </CartProvider>
                 </GuestGuard>
               }
             />
@@ -452,9 +470,35 @@ function App() {
               path="/tai-khoan-cua-toi"
               element={
                 <GuestGuard>
-                  <DashboardClient>
-                    <AccountProfile />
-                  </DashboardClient>
+                  <CartProvider>
+                    <DashboardClient>
+                      <AccountProfile />
+                    </DashboardClient>
+                  </CartProvider>
+                </GuestGuard>
+              }
+            />
+            <Route
+              path="/thanh-toan-thanh-cong"
+              element={
+                <GuestGuard>
+                  <CartProvider>
+                    <DashboardClient>
+                      <ThanhToanThanhCong />
+                    </DashboardClient>
+                  </CartProvider>
+                </GuestGuard>
+              }
+            />
+            <Route
+              path="/thanh-toan-that-bai"
+              element={
+                <GuestGuard>
+                  <CartProvider>
+                    <DashboardClient>
+                      <ThanhToanThatBai />
+                    </DashboardClient>
+                  </CartProvider>
                 </GuestGuard>
               }
             />

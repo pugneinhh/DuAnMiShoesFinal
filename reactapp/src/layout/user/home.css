@@ -149,3 +149,16 @@ border-color: #445f84;
 .border-box{
     border-right: #bdbdbd 1.5px solid;
 }
+.custom-scrollbar-thong-bao::-webkit-scrollbar {
+    width: 8px;
+    /* Điều chỉnh độ rộng của thanh cuộn */
+}
+.custom-scrollbar-thong-bao::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    /* Màu nền của track */
+}
+
+.custom-scrollbar-thong-bao::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    /* Màu của thumb */
+}

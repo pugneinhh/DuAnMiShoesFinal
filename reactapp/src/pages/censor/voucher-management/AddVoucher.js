@@ -94,7 +94,27 @@ const AddVoucher = () => {
     }
     return Promise.resolve();
   };
-
+  const validateDateMa = (_, value) => {
+    const { getFieldValue } = form;
+    const maVoucher = getFieldValue("ma");
+  const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+  if (specialCharacterRegex.test(maVoucher)) {
+    return Promise.reject("Mã không được chứa ký tự đặc biệt");
+  }
+    return Promise.resolve();
+  };
+  const validateDateTen = (_, value) => {
+    const { getFieldValue } = form;
+    const tenVoucher = getFieldValue("ten");
+    if (!tenVoucher.trim()) {
+      return Promise.reject("Tên không được để trống");
+    }
+  const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+  if (specialCharacterRegex.test(tenVoucher)) {
+    return Promise.reject("Tên không được chứa ký tự đặc biệt");
+  }
+    return Promise.resolve();
+  };
   return (
     <div
       className="container-fluid  m-2 p-3 pt-2"
@@ -118,250 +138,236 @@ const AddVoucher = () => {
             boxShadow: "0 3px 8px rgba(0, 0, 0, 0.1)",
             borderRadius: "8px",
             marginBottom: 10,
-            height: 600,
+            height: 700,
           }}
         >
-          <h4 className="text-center">Thông tin phiếu giảm giá</h4>
+          <h4 className="text-center mt-3 mb-4">Thông tin phiếu giảm giá</h4>
           {/* form add voucher */}
           <Form
-            labelCol={{
-              span: 6,
-            }}
-            wrapperCol={{
-              span: 14,
-            }}
-            layout="horizontal"
-            initialValues={{
-              size: componentSize,
-            }}
-            onValuesChange={onFormLayoutChange}
-            size={componentSize}
-            style={{
-              maxWidth: 1600,
-            }}
-            onFinish={handleSubmit}
-            form={form}
-          >
-            <div className="col-md-4">
-              <Form.Item
-                label="Mã phiếu giảm giá"
-                style={{ paddingLeft: 0, width: 550 }}
-                name="ma"
-                // hasFeedback
-                // rules={[
-                //   {
-                //     required: true,
-                //     message: "Vui lòng không để trống mã!",
-                //   },
-                // ]}
-                labelCol={{ span: 6 }}
-                wrapperCol={{ span: 10 }}
+                // className=" row col-md-12"
+                labelCol={{
+                  span: 6,
+                }}
+                wrapperCol={{
+                  span: 14,
+                }}
+                layout="horizontal"
+                initialValues={{
+                  size: componentSize,
+                }}
+                onValuesChange={onFormLayoutChange}
+                size={componentSize}
+                style={{
+                  maxWidth: 1600,
+                }}
+                onFinish={handleSubmit}
+                form={form}
               >
-                <Input
-                  placeholder="Mã giảm giá"
-                  className="border-warning"
-                  // style={{ width: 200 }}
-                />
-              </Form.Item>
-              <Form.Item
-                label="Tên phiếu giảm giá"
-                name="ten"
-                style={{ paddingLeft: 0, width: 550 }}
-                hasFeedback
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng không để trống tên!",
-                  },
-                ]}
-                labelCol={{ span: 6 }}
-                wrapperCol={{ span: 10 }}
-              >
-                <Input
-                  placeholder="Tên phiếu giảm giá"
-                  className="border-warning"
-                />
-              </Form.Item>
-              <Form.Item
-                label="Loại voucher"
-                name="loaiVoucher"
-                style={{ borderColor: "yellow", marginLeft: 0, width: 550 }}
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng chọn loại voucher!",
-                  },
-                ]}
-                labelCol={{ span: 6 }}
-                wrapperCol={{ span: 10 }}
-              >
-                <Select
-                  defaultValue={"Tiền mặt"}
-                  style={{ borderColor: "yellow" }}
-                  onChange={handleChange}
-                  className="border-warning"
+                <Form.Item
+                  label="Mã phiếu giảm giá"
+                  style={{ marginLeft: 0, width: 500 }}
+                  name="ma"
+                  // hasFeedback
+                  rules={[{validator: validateDateMa}]}
                 >
-                  <Select.Option value="Tiền mặt">Tiền mặt</Select.Option>
-                  <Select.Option value="Phần trăm">Phần trăm</Select.Option>
-                </Select>
-              </Form.Item>
-            </div>
-
-            <div className="col-md-4">
-              <Form.Item
-                label="Số lượng"
-                name="soLuong"
-                labelCol={{ span: 20 }}
-              >
-                <InputNumber
-                  className="border-warning"
-                  style={{ marginLeft: 30, width: 230 }}
-                  defaultValue={"1"}
-                  min={1}
-                />
-              </Form.Item>
-
-              <Form.Item label="Mức độ" labelCol={{ span: 20 }} name="mucDo">
-                {selectedValue === "Tiền mặt" ? (
-                  <InputNumber
-                    className="border-warning"
-                    defaultValue={0}
-                    formatter={(value) =>
-                      `VND ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                    }
-                    parser={(value) => value.replace(/\VND\s?|(,*)/g, "")}
-                    style={{ marginLeft: 30, width: 230 }}
+                  <Input
+                    placeholder="Mã phiếu giảm giá"
+                    style={{ marginLeft: 20, width: 220 }}
                   />
-                ) : (
-                  <InputNumber
-                    className="border-warning"
-                    defaultValue={0}
-                    min={0}
-                    max={100}
-                    formatter={(value) => `${value}%`}
-                    parser={(value) => value.replace("%", "")}
-                    style={{ marginLeft: 30, width: 230 }}
-                  />
-                )}
-              </Form.Item>
-              <Form.Item
-                label="Giảm tối đa"
-                name="giamToiDa"
-                labelCol={{ span: 20 }}
-                wrapperCol={{ span: 10 }}
-                hasFeedback
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng nhập giá trị giảm tối đa!",
-                  },
-                ]}
-              >
-                <InputNumber
-                  className="border-warning"
-                  defaultValue={0}
-                  formatter={(value) =>
-                    `VND ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                  }
-                  parser={(value) => value.replace(/\VND\s?|(,*)/g, "")}
-                  style={{ marginLeft: 30, width: 230 }}
-                />
-              </Form.Item>
-            </div>
-            <div className="col-md-4">
-              <Form.Item
-                label="Điều kiện"
-                name="dieuKien"
-                labelCol={{ span: 20 }}
-                wrapperCol={{ span: 10 }}
-                hasFeedback
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng nhập điều kiện giảm!",
-                  },
-                ]}
-              >
-                <InputNumber
-                  className="border-warning"
-                  defaultValue={0}
-                  formatter={(value) =>
-                    `VND ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                  }
-                  parser={(value) => value.replace(/\VND\s?|(,*)/g, "")}
-                  style={{ marginLeft: 30, width: 230 }}
-                />
-              </Form.Item>
-              <Form.Item
-                label="Ngày bắt đầu"
-                name="ngayBatDau"
-                hasFeedback
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng chọn ngày bắt đầu!",
-                  },
-                  { validator: validateDateBD },
-                ]}
-                labelCol={{ span: 20 }}
-                wrapperCol={{ span: 10 }}
-              >
-                <DatePicker
-                  showTime
-                  style={{ marginLeft: 30, width: 230 }}
-                  className="border-warning"
-                  placeholder="Ngày bắt đầu"
-                />
-              </Form.Item>
-              <Form.Item
-                label="Ngày kết thúc"
-                labelCol={{ span: 20 }}
-                wrapperCol={{ span: 10 }}
-                name="ngayKetThuc"
-                hasFeedback
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng chọn ngày kết thúc!",
-                  },
-                  { validator: validateDateKT },
-                ]}
-              >
-                <DatePicker
-                  showTime
-                  style={{ marginLeft: 30, width: 230 }}
-                  className="border-warning"
-                  placeholder="Ngày kết thúc"
-                />
-              </Form.Item>
-            </div>
-            {/* <div className="col-md-4"></div>
-<div className="col-md-1"></div> */}
-            <div className="text-end">
-              <Form.Item>
-                <Button
-                  type="primary"
-                  onClick={() => {
-                    Modal.confirm({
-                      title: "Thông báo",
-                      content: "Bạn có chắc chắn muốn thêm không?",
-                      onOk: () => {
-                        form.submit();
-                      },
-                      footer: (_, { OkBtn, CancelBtn }) => (
-                        <>
-                          <CancelBtn />
-                          <OkBtn />
-                        </>
-                      ),
-                    });
-                  }}
+                </Form.Item>
+                <Form.Item
+                  label="Tên phiếu giảm giá"
+                  style={{ marginLeft: 0, width: 500 }}
+                  name="ten"
+                  hasFeedback
+                  rules={[{validator: validateDateTen}]}
                 >
-                  Thêm
-                </Button>
-              </Form.Item>
-            </div>
-          </Form>
+                  <Input
+                    placeholder="Tên phiếu giảm giá"
+                    style={{ marginLeft: 20, width: 220 }}
+                  />
+                </Form.Item>
+                <Form.Item
+                  label="Loại voucher"
+                  name="loaiVoucher"
+                  style={{ marginLeft: 0, width: 500 }}
+                  hasFeedback
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng chọn loại voucher!",
+                    },
+                  ]}
+                >
+                  <Select
+                    value={selectedValue}
+                    onChange={handleChange}
+                    style={{ marginLeft: 20, width: 220 }}
+                  >
+                    <Select.Option value="Tiền mặt">Tiền mặt</Select.Option>
+                    <Select.Option value="Phần trăm">Phần trăm</Select.Option>
+                  </Select>
+                </Form.Item>
+                <Form.Item
+                  label="Số lượng"
+                  style={{ marginLeft: 0, width: 500 }}
+                  name="soLuong"
+                  hasFeedback
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng không để trống số lượng!",
+                    },
+                  ]}
+                >
+                  <Input
+                    defaultValue={"1"}
+                    min={"1"}
+                    style={{ marginLeft: 20, width: 220 }}
+                  />
+                </Form.Item>
+                <Form.Item
+                  label="Giá trị giảm"
+                  name="mucDo"
+                  style={{ marginLeft: 0, width: 500 }}
+                  hasFeedback
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng nhập giá trị giảm !",
+                    },
+                  ]}
+                >
+                  {selectedValue === "Tiền mặt" ? (
+                    <InputNumber
+                      defaultValue={0}
+                      formatter={(value) =>
+                        `VND ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                      }
+                      parser={(value) => value.replace(/\VND\s?|(,*)/g, "")}
+                      style={{ marginLeft: 20, width: 220 }}
+                    />
+                  ) : (
+                    <InputNumber
+                      defaultValue={0}
+                      min={0}
+                      max={100}
+                      formatter={(value) => `${value}%`}
+                      parser={(value) => value.replace("%", "")}
+                      style={{ marginLeft: 20, width: 220 }}
+                    />
+                  )}
+                </Form.Item>
+                <Form.Item
+                  label="Giảm tối đa"
+                  style={{ marginLeft: 0, width: 500 }}
+                  name="giamToiDa"
+                  hasFeedback
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng không để trống giá trị giảm tối đa!",
+                    },
+                  ]}
+                >
+                  <InputNumber
+                      defaultValue={0}
+                      formatter={(value) =>
+                        `VND ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                      }
+                      parser={(value) => value.replace(/\VND\s?|(,*)/g, "")}
+                      style={{ marginLeft: 20, width: 220 }}
+                    />
+                </Form.Item>
+                <Form.Item
+                  label="Điều kiện"
+                  style={{ marginLeft: 0, width: 500 }}
+                  name="dieuKien"
+                  hasFeedback
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng không để trống điều kiện giảm!",
+                    },
+                  ]}
+                >
+                  <InputNumber
+                      defaultValue={0}
+                      formatter={(value) =>
+                        `VND ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                      }
+                      parser={(value) => value.replace(/\VND\s?|(,*)/g, "")}
+                      style={{ marginLeft: 20, width: 220 }}
+                    />
+                </Form.Item>
+                <Form.Item
+                  label="Ngày bắt đầu"
+                  name="ngayBatDau"
+                  style={{ marginLeft: 0, width: 500 }}
+                  hasFeedback
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng chọn ngày bắt đầu!",
+                    },
+                    { validator: validateDateBD },
+                  ]}
+                >
+                  <DatePicker
+                    showTime
+                    format="YYYY-MM-DD HH:mm:ss"
+                    style={{ marginLeft: 20, width: 220 }}
+                    placeholder="Ngày bắt đầu"
+                  />
+                </Form.Item>
+                <Form.Item
+                  label="Ngày kết thúc"
+                  name="ngayKetThuc"
+                  style={{ marginLeft: 0, width: 500 }}
+                  hasFeedback
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng chọn ngày kết thúc!",
+                    },
+                    { validator: validateDateKT },
+                  ]}
+                >
+                  <DatePicker
+                    showTime
+                    format="YYYY-MM-DD HH:mm:ss"
+                    style={{ marginLeft: 20, width: 220 }}
+                    placeholder="Ngày kết thúc"
+                  />
+                </Form.Item>
+
+                <div className="text-end" style={{ marginTop: 40 }}>
+                  <Form.Item>
+                    <Button
+                      type="primary"
+                      className=" bg-warning rounded-pill"
+                      onClick={() => {
+                        Modal.confirm({
+                          title: "Thông báo",
+                          content: "Bạn có chắc chắn muốn thêm không?",
+                          onOk: () => {
+                            form.submit();
+                            // form.finish();
+                          },
+                          footer: (_, { OkBtn, CancelBtn }) => (
+                            <>
+                              <CancelBtn />
+                              <OkBtn />
+                            </>
+                          ),
+                        });
+                      }}
+                    >
+                      Thêm
+                    </Button>
+                  </Form.Item>
+                </div>
+              </Form>
         </div>
         <div
           className="bg-light col"

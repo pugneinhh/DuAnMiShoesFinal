@@ -53,7 +53,7 @@ public class KhachHangService {
 
    public KhachHangResponImplDTO add(KhachHangRequest request, MultipartFile file){
        String password = RandomStringUtils.random(8, true, true);
-       String url = uploadImageToCloudinary.uploadImage(file);
+
        int size=nguoiDungRepository.getAllKhachHang().size()+1;
        emailService.sendEmailPasword(request.getEmail(),"Mật khẩu bạn là ",password);
        NguoiDung add= new NguoiDung();
@@ -66,7 +66,13 @@ public class KhachHangService {
        add.setChungMinhThu(request.getCanCuocCongDan());
        add.setTrangThai(0);
        add.setNgaySinh(request.getNgaySinh());
-       add.setAnh(url);
+       if(file==null){
+           add.setAnh("https://res-console.cloudinary.com/dm0w2qws8/media_explorer_thumbnails/be19b81150473723fdb75be9bf327062/detailed");
+       }else{
+           String url = uploadImageToCloudinary.uploadImage(file);
+           add.setAnh(url);
+       }
+
        add.setMatKhau(passwordEncoder.encode(password));
        add.setNgayTao(LocalDateTime.now());
        add.setNgayThamGia(LocalDateTime.now());

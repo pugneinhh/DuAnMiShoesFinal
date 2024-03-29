@@ -35,16 +35,18 @@ public interface AdminHoaDonDetailRespon {
     String getTienVanChuyen();
     @Value("#{target.TraSau}")
     String getTraSau();
-/*    @Value("#{target.PhuongThucVNP}")
-    String getPhuongThucVNP();*/
     @Value("#{target.voucher}")
     String getVoucher();
     @Value("#{target.giaGiam}")
     String getGiaGiam();
-
     @Value("#{target.nguoiDung}")
     String getNguoiDung();
 
     @Value("#{target.giaGoc}")
     String getGiaGoc();
+
+    @Value("#{target.PhuongThucVNP}")
+    String getPhuongThucVNP();
+    @Value("#{target.TenNguoiNhan}")
+    String getTenNguoiNhan();
 }

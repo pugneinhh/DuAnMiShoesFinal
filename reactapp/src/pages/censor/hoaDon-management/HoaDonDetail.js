@@ -72,9 +72,10 @@ export default function HoaDonDetail() {
         theme: "light",
       }),
   });
-
+  
   const { TextArea } = Input;
   const [hoaDondetail, setHoaDondetail] = useState([]);
+   console.log("hdddddddd", hoaDondetail);
   const [maNV, setmaNV] = useState("");
   console.log("Hóa đơn detail", hoaDondetail);
   useEffect(() => {
@@ -86,6 +87,7 @@ export default function HoaDonDetail() {
     loadTimeLineHoaDon();
   }, []);
   // load hóa đơn
+
 
   const loadVoucherTotNhatVaVoucherTiepTheo = (idKH,money) => {
     console.log("money", money);
@@ -476,56 +478,17 @@ export default function HoaDonDetail() {
             ) : (
               <>
                 {hoaDondetail.traSau == 1 ? (
+
+            {trangThai == 4 ? (
+              <></>
+            ) : (
+              <>
+         
+                {hoaDondetail.loaiHD == 0 ? (
+
                   <>
-                    {trangThai == 0 ? (
-                      <Button
-                        className="ms-5 "
-                        type="primary"
-                        onClick={showModal}
-                      >
-                        {showTitleButtonVanDonTraSau(trangThai)}
-                      </Button>
-                    ) : trangThai == 1 ? (
-                      <Button
-                        className="ms-5 "
-                        type="primary"
-                        onClick={showModal}
-                      >
-                        {showTitleButtonVanDonTraSau(trangThai)}
-                      </Button>
-                    ) : trangThai == 2 ? (
-                      <Button
-                        className="ms-5 "
-                        type="primary"
-                        onClick={showModal}
-                      >
-                        {showTitleButtonVanDonTraSau(trangThai)}
-                      </Button>
-                    ) : trangThai == 3 ? (
-                      <Button
-                        className="ms-5 "
-                        type="primary"
-                        onClick={showModal}
-                      >
-                        {showTitleButtonVanDonTraSau(trangThai)}
-                      </Button>
-                    ) : trangThai == 4 ? (
-                      <Button
-                        className="ms-5 "
-                        type="primary"
-                        onClick={showModal}
-                      >
-                        {showTitleButtonVanDonTraSau(trangThai)}
-                      </Button>
-                    ) : (
-                      <></>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    {hoaDondetail.diaChi != null ? (
+                    {hoaDondetail.phuongThucVNP != null ? (
                       <>
-                        {" "}
                         {trangThai == 0 ? (
                           <Button
                             className="ms-5 "
@@ -571,13 +534,166 @@ export default function HoaDonDetail() {
                         )}
                       </>
                     ) : (
-                      <></>
+                      <>
+                        {trangThai == 0 ? (
+                          <Button
+                            className="ms-5 "
+                            type="primary"
+                            onClick={showModal}
+                          >
+                            {showTitleButtonVanDonTraSau(trangThai)}
+                          </Button>
+                        ) : trangThai == 1 ? (
+                          <Button
+                            className="ms-5 "
+                            type="primary"
+                            onClick={showModal}
+                          >
+                            {showTitleButtonVanDonTraSau(trangThai)}
+                          </Button>
+                        ) : trangThai == 2 ? (
+                          <Button
+                            className="ms-5 "
+                            type="primary"
+                            onClick={showModal}
+                          >
+                            {showTitleButtonVanDonTraSau(trangThai)}
+                          </Button>
+                        ) : trangThai == 3 ? (
+                          <Button
+                            className="ms-5 "
+                            type="primary"
+                            onClick={showModal}
+                          >
+                            {showTitleButtonVanDonTraSau(trangThai)}
+                          </Button>
+                        ) : trangThai == 4 ? (
+                          <Button
+                            className="ms-5 "
+                            type="primary"
+                            onClick={showModal}
+                          >
+                            {showTitleButtonVanDonTraSau(trangThai)}
+                          </Button>
+                        ) : (
+                          <></>
+                        )}
+                      </>
                     )}
                   </>
+
                 )}{" "}
                 <></>
+                ) : (
+                  <>
+                    {hoaDondetail.traSau == 1 ? (
+                      <>
+                        {trangThai == 0 ? (
+                          <Button
+                            className="ms-5 "
+                            type="primary"
+                            onClick={showModal}
+                          >
+                            {showTitleButtonVanDonTraSau(trangThai)}
+                          </Button>
+                        ) : trangThai == 1 ? (
+                          <Button
+                            className="ms-5 "
+                            type="primary"
+                            onClick={showModal}
+                          >
+                            {showTitleButtonVanDonTraSau(trangThai)}
+                          </Button>
+                        ) : trangThai == 2 ? (
+                          <Button
+                            className="ms-5 "
+                            type="primary"
+                            onClick={showModal}
+                          >
+                            {showTitleButtonVanDonTraSau(trangThai)}
+                          </Button>
+                        ) : trangThai == 3 ? (
+                          <Button
+                            className="ms-5 "
+                            type="primary"
+                            onClick={showModal}
+                          >
+                            {showTitleButtonVanDonTraSau(trangThai)}
+                          </Button>
+                        ) : trangThai == 4 ? (
+                          <Button
+                            className="ms-5 "
+                            type="primary"
+                            onClick={showModal}
+                          >
+                            {showTitleButtonVanDonTraSau(trangThai)}
+                          </Button>
+                        ) : (
+                          <></>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        {hoaDondetail.diaChi != null ? (
+                          <>
+                            {" "}
+                            {trangThai == 0 ? (
+                              <Button
+                                className="ms-5 "
+                                type="primary"
+                                onClick={showModal}
+                              >
+                                {showTitleButtonVanDonTraTruoc(trangThai)}
+                              </Button>
+                            ) : trangThai == 1 ? (
+                              <Button
+                                className="ms-5 "
+                                type="primary"
+                                onClick={showModal}
+                              >
+                                {showTitleButtonVanDonTraTruoc(trangThai)}
+                              </Button>
+                            ) : trangThai == 2 ? (
+                              <Button
+                                className="ms-5 "
+                                type="primary"
+                                onClick={showModal}
+                              >
+                                {showTitleButtonVanDonTraTruoc(trangThai)}
+                              </Button>
+                            ) : trangThai == 3 ? (
+                              <Button
+                                className="ms-5 "
+                                type="primary"
+                                onClick={showModal}
+                              >
+                                {showTitleButtonVanDonTraTruoc(trangThai)}
+                              </Button>
+                            ) : trangThai == 4 ? (
+                              <Button
+                                className="ms-5 "
+                                type="primary"
+                                onClick={showModal}
+                              >
+                                {showTitleButtonVanDonTraTruoc(trangThai)}
+                              </Button>
+                            ) : (
+                              <></>
+                            )}
+                          </>
+                        ) : (
+                          <></>
+                        )}
+                      </>
+                    )}{" "}
+                    <></>
+                  </>
+                )}
+
               </>
             )}
+            {/* hóa đơn onl trả tiền rồi*/}
+
             <Modal
               title="Xác nhận đơn hàng"
               footer={[]}
@@ -1034,7 +1150,7 @@ export default function HoaDonDetail() {
         </div>
         <div className="col-md-3">
           <div>
-            <p>{hoaDondetail.tenKH}</p>
+            <p>{hoaDondetail.tenNguoiNhan}</p>
           </div>
           <div className="mt-4">
             <p>{hoaDondetail.sdt}</p>
@@ -1189,7 +1305,6 @@ export default function HoaDonDetail() {
                               showSearch
                               style={{ width: 800, height: 120 }}
                               placeholder="Lựa chọn voucher"
-                              s
                               onChange={onChangeVoucher}
                               //onSearch={onSearchVoucher}
                               //value={voucherHienTai}

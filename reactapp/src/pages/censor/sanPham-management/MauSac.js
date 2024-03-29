@@ -202,17 +202,28 @@ export default function MauSac() {
   ]
 
   return (
-    <div className='container-fluid' style={{ borderRadius: 20 }}>
+    <div className="container-fluid" style={{ borderRadius: 20 }}>
       <div className="container-fluid">
-        <Divider orientation="center" color="#d0aa73"><h4 className="text-first pt-1 fw-bold"> <IoColorPalette size={35} /> Quản lý màu sắc</h4></Divider>
-        <div className=' bg-light m-2 p-3 pt-2' style={{
-          border: '1px solid #ddd', // Border color
-          boxShadow: '0 3px 8px rgba(0, 0, 0, 0.1)', // Box shadow
-          borderRadius: '8px'
-        }}>
-          <h5><FilterFilled size={30} /> Bộ lọc</h5>
+        <Divider orientation="center" color="#d0aa73">
+          <h4 className="text-first pt-1 fw-bold">
+            {" "}
+            <IoColorPalette size={35} /> Quản lý màu sắc
+          </h4>
+        </Divider>
+        <div
+          className=" bg-light m-2 p-3 pt-2"
+          style={{
+            border: "1px solid #ddd", // Border color
+            boxShadow: "0 3px 8px rgba(0, 0, 0, 0.1)", // Box shadow
+            borderRadius: "8px",
+          }}
+        >
+          <h5>
+            <FilterFilled size={30} /> Bộ lọc
+          </h5>
           <hr />
-          <Form className="row"
+          <Form
+            className="row"
             labelCol={{
               span: 10,
             }}
@@ -231,32 +242,55 @@ export default function MauSac() {
           >
             <div className="col-md-5">
               <Form.Item label="Tên & Mã" name="ten">
-                <Input className='rounded-pill border-warning' placeholder='Nhập tên hoặc mã' />
+                <Input
+                  className="rounded-pill border-warning"
+                  placeholder="Nhập tên hoặc mã"
+                />
               </Form.Item>
             </div>
-            <div className='col-md-5'>
+            <div className="col-md-5">
               <Form.Item label="Trạng Thái" name="trangThai">
-                <Select placeholder="Chọn trạng thái" value={selectedValue} onChange={handleChange}>
+                <Select
+                  placeholder="Chọn trạng thái"
+                  value={selectedValue}
+                  onChange={handleChange}
+                >
                   <Select.Option value="0">Còn Bán</Select.Option>
                   <Select.Option value="1">Dừng Bán</Select.Option>
                 </Select>
               </Form.Item>
             </div>
-            <Form.Item className='text-center' style={{ paddingLeft: 200 }}>
-              <Button type="primary" htmlType='reset' icon={<RetweetOutlined />} onClick={loadMauSac}>Làm mới</Button>
+            <Form.Item className="text-center" style={{ paddingLeft: 200 }}>
+              <Button
+                type="primary"
+                htmlType="reset"
+                icon={<RetweetOutlined />}
+                onClick={loadMauSac}
+              >
+                Làm mới
+              </Button>
             </Form.Item>
           </Form>
         </div>
 
-        <div className='text-end'>
-          <a className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill" role="button" onClick={() => setOpen(true)}> <PlusCircleOutlined />  Thêm màu sắc </a>
+        <div className="text-end">
+          <button onClick={() => setOpen(true)} class="button-them">
+            <span class="text">
+              <PlusCircleOutlined /> Thêm màu sắc{" "}
+            </span>
+          </button>
         </div>
-        <div className=' bg-light m-2 p-3 pt-2' style={{
-          border: '1px solid #ddd', // Border color
-          boxShadow: '0 3px 8px rgba(0, 0, 0, 0.1)', // Box shadow
-          borderRadius: '8px'
-        }}>
-          <h5><BookFilled size={30} /> Danh sách màu sắc</h5>
+        <div
+          className=" bg-light m-2 p-3 pt-2"
+          style={{
+            border: "1px solid #ddd", // Border color
+            boxShadow: "0 3px 8px rgba(0, 0, 0, 0.1)", // Box shadow
+            borderRadius: "8px",
+          }}
+        >
+          <h5>
+            <BookFilled size={30} /> Danh sách màu sắc
+          </h5>
           <hr />
           <div className="ms-3">
             {/* Add ms */}
@@ -268,20 +302,27 @@ export default function MauSac() {
               onCancel={() => setOpen(false)}
               footer={[
                 <Button onClick={() => setOpen(false)}>Hủy</Button>,
-                <Button type="primary" onClick={() => {
-                  Modal.confirm({
-                    centered: true,
-                    title: 'Thông báo',
-                    content: 'Bạn có chắc chắn muốn thêm không?',
-                    onOk: () => { form.submit(); },
-                    footer: (_, { OkBtn, CancelBtn }) => (
-                      <>
-                        <CancelBtn />
-                        <OkBtn />
-                      </>
-                    ),
-                  });
-                }}>Thêm</Button>
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    Modal.confirm({
+                      centered: true,
+                      title: "Thông báo",
+                      content: "Bạn có chắc chắn muốn thêm không?",
+                      onOk: () => {
+                        form.submit();
+                      },
+                      footer: (_, { OkBtn, CancelBtn }) => (
+                        <>
+                          <CancelBtn />
+                          <OkBtn />
+                        </>
+                      ),
+                    });
+                  }}
+                >
+                  Thêm
+                </Button>,
               ]}
               width={500}
             >
@@ -293,23 +334,50 @@ export default function MauSac() {
                 onValuesChange={onFormLayoutChange}
                 size={componentSize}
                 onFinish={addMauSac}
-                layout='vertical'
-                form={form}>
-                <div className='row'>
-                  <div className='col-md-6'>
-                    <label><b>Màu sắc :</b></label>
-                    <Form.Item name='ma' hasFeedback rules={[{ required: true, message: 'Vui lòng chọn màu', },]} >
-                      <Input className="card-mau" type="color" onChange={doiMau} />
+                layout="vertical"
+                form={form}
+              >
+                <div className="row">
+                  <div className="col-md-6">
+                    <label>
+                      <b>Màu sắc :</b>
+                    </label>
+                    <Form.Item
+                      name="ma"
+                      hasFeedback
+                      rules={[{ required: true, message: "Vui lòng chọn màu" }]}
+                    >
+                      <Input
+                        className="card-mau"
+                        type="color"
+                        onChange={doiMau}
+                      />
                     </Form.Item>
                   </div>
-                  <div className='col-md-6 mt-5'>
-                  <label><b>Mã màu :</b></label>
-                    <Form.Item name='ma' hasFeedback rules={[{ required: true, message: '', },]} >
+                  <div className="col-md-6 mt-5">
+                    <label>
+                      <b>Mã màu :</b>
+                    </label>
+                    <Form.Item
+                      name="ma"
+                      hasFeedback
+                      rules={[{ required: true, message: "" }]}
+                    >
                       <Input readOnly="true" className="border" type="text" />
                     </Form.Item>
-                    <label><b>Tên màu :</b></label>
-                    <Form.Item hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
-                      <Input type='text' value={ten} />
+                    <label>
+                      <b>Tên màu :</b>
+                    </label>
+                    <Form.Item
+                      hasFeedback
+                      rules={[
+                        {
+                          required: true,
+                          message: "Vui lòng không để trống tên!",
+                        },
+                      ]}
+                    >
+                      <Input type="text" value={ten} />
                     </Form.Item>
                   </div>
                 </div>
@@ -324,20 +392,27 @@ export default function MauSac() {
               onCancel={() => setOpenUpdate(false)}
               footer={[
                 <Button onClick={() => setOpenUpdate(false)}>Hủy</Button>,
-                <Button type="primary" onClick={() => {
-                  Modal.confirm({
-                    centered: true,
-                    title: 'Thông báo',
-                    content: 'Bạn có chắc chắn muốn thêm không?',
-                    onOk: () => { form.submit(); },
-                    footer: (_, { OkBtn, CancelBtn }) => (
-                      <>
-                        <CancelBtn />
-                        <OkBtn />
-                      </>
-                    ),
-                  });
-                }}>Sửa</Button>
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    Modal.confirm({
+                      centered: true,
+                      title: "Thông báo",
+                      content: "Bạn có chắc chắn muốn thêm không?",
+                      onOk: () => {
+                        form.submit();
+                      },
+                      footer: (_, { OkBtn, CancelBtn }) => (
+                        <>
+                          <CancelBtn />
+                          <OkBtn />
+                        </>
+                      ),
+                    });
+                  }}
+                >
+                  Sửa
+                </Button>,
               ]}
               width={500}
             >
@@ -349,25 +424,58 @@ export default function MauSac() {
                 onValuesChange={onFormLayoutChange}
                 size={componentSize}
                 onFinish={addMauSac}
-                form={form}>
-                <Form.Item label="Màu" name='ma' hasFeedback rules={[{ required: true, message: 'Vui lòng chọn màu', },]} >
-                  <Input className="border" type="color" value={msUpdate.ma} onChange={doiMau} />
-                </Form.Item>
-                <Form.Item label=" Mã" name='ma' hasFeedback rules={[{ required: true, message: '', },]} >
-                  <Input readOnly="true" className="border" value={msUpdate.ma} type="text" />
-                </Form.Item>
-                <Form.Item label="Tên" hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
-
+                form={form}
+              >
+                <Form.Item
+                  label="Màu"
+                  name="ma"
+                  hasFeedback
+                  rules={[{ required: true, message: "Vui lòng chọn màu" }]}
+                >
                   <Input
-                    type='text'
+                    className="border"
+                    type="color"
+                    value={msUpdate.ma}
+                    onChange={doiMau}
+                  />
+                </Form.Item>
+                <Form.Item
+                  label=" Mã"
+                  name="ma"
+                  hasFeedback
+                  rules={[{ required: true, message: "" }]}
+                >
+                  <Input
+                    readOnly="true"
+                    className="border"
+                    value={msUpdate.ma}
+                    type="text"
+                  />
+                </Form.Item>
+                <Form.Item
+                  label="Tên"
+                  hasFeedback
+                  rules={[
+                    { required: true, message: "Vui lòng không để trống tên!" },
+                  ]}
+                >
+                  <Input
+                    type="text"
                     value={msUpdate.ten}
                     onChange={(e) => setmsUpdates({ ...msUpdate, ten: e })}
                   />
                 </Form.Item>
                 <Form.Item label={<b>Trạng thái </b>}>
-                  <Select defaultValue={msUpdate.trangThai == 0 ? 'Còn bán' : 'Dừng bán'} onChange={(e) => setmsUpdates({ ...msUpdate, trangThai: e })}>
-                    <Select.Option value='0'>Còn Bán</Select.Option>
-                    <Select.Option value='1'>Dừng Bán</Select.Option>
+                  <Select
+                    defaultValue={
+                      msUpdate.trangThai == 0 ? "Còn bán" : "Dừng bán"
+                    }
+                    onChange={(e) =>
+                      setmsUpdates({ ...msUpdate, trangThai: e })
+                    }
+                  >
+                    <Select.Option value="0">Còn Bán</Select.Option>
+                    <Select.Option value="1">Dừng Bán</Select.Option>
                   </Select>
                 </Form.Item>
               </Form>
@@ -375,17 +483,21 @@ export default function MauSac() {
           </div>
           <div className="container-fluid mt-4">
             <div>
-              <Table className='text-center' dataSource={mauSac} columns={columns} pagination={{
-                showQuickJumper: true,
-                defaultPageSize: 5,
-                position: ['bottomCenter'],
-                defaultCurrent: 1,
-                total: 100,
-              }} />
+              <Table
+                className="text-center"
+                dataSource={mauSac}
+                columns={columns}
+                pagination={{
+                  showQuickJumper: true,
+                  defaultPageSize: 5,
+                  position: ["bottomCenter"],
+                  defaultCurrent: 1,
+                  total: 100,
+                }}
+              />
             </div>
           </div>
         </div>
-
       </div>
       <ToastContainer
         position="top-right"
@@ -402,5 +514,5 @@ export default function MauSac() {
       {/* Same as */}
       <ToastContainer />
     </div>
-  )
+  );
 }

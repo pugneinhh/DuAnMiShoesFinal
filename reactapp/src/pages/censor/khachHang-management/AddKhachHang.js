@@ -191,7 +191,7 @@ export default function AddKhachHang() {
     };
     const checkTrungSDT = (code) => {
       return ListKhachHang.some(
-        (khachHang) =>
+        (khachHang) =>    
           khachHang.sdt.trim().toLowerCase() === code.trim().toLowerCase()
       );
     };
@@ -199,19 +199,7 @@ export default function AddKhachHang() {
     form
       .validateFields()
       .then((values) => {
-        if (fileImage === null) {
-         toast.error("🦄 Chưa thêm ảnh!", {
-           position: "top-right",
-           autoClose: 3000,
-           hideProgressBar: false,
-           closeOnClick: true,
-           pauseOnHover: true,
-           draggable: true,
-           progress: undefined,
-           theme: "light",
-         });
-         return;
-        }
+        
         if (checkTrungEmail(values.email)) {
           toast.error("🦄 Email đã tồn tại!", {
             position: "top-right",
@@ -248,10 +236,9 @@ export default function AddKhachHang() {
           idXa: ward.key == null ? ward.WardCode : ward.key,
         };
         const formData = new FormData();
-        formData.append(`file`, fileImage);
+        formData.append("file", fileImage);
         formData.append("request", JSON.stringify(data));
         KhachHangAPI.create(formData)
-
           .then((result) => {
             nav("/admin-khach-hang");
             toast("🦄 Thêm Thành công!", {
@@ -264,13 +251,10 @@ export default function AddKhachHang() {
               progress: undefined,
               theme: "light",
             });
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+          })     
       })
       .catch(() => {
-        toast("🦄 Thêm Thất bại!", {
+        toast("🦄 Thêm Thất bại! lỗi r", {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,

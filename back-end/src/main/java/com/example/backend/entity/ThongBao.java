@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "thong_bao")
@@ -28,6 +29,6 @@ public class ThongBao {
     private String noiDung;
     private int loai;
     private int trangThai;
-    private Date ngayTao;
-    private Date ngaySua;
+    private LocalDateTime ngayTao;
+    private LocalDateTime ngaySua;
 }

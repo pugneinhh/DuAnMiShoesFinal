@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface VoucherRepository extends JpaRepository<Voucher, String> {
@@ -63,6 +64,6 @@ public interface VoucherRepository extends JpaRepository<Voucher, String> {
             """, nativeQuery = true)
     List<VoucherRespone> getVoucherTatCa();
 
-
+     Optional<Voucher> findAllById(String id);
 
 }

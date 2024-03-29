@@ -59,7 +59,7 @@ public class KhachHangController {
     }
     @PostMapping()
     public ResponseEntity<?> add(@RequestParam("request") String request,
-                                 @RequestParam(value = "file") MultipartFile file) {
+                                 @RequestParam(value = "file", required = false) MultipartFile file) {
 
         Gson gson = new Gson();
         KhachHangRequest khachHangRequest = gson.fromJson(request, KhachHangRequest.class);

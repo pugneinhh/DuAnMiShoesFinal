@@ -8,21 +8,18 @@ import {
   Avatar,
   Dropdown,
   Space,
-  Row,
   Col,
   Typography,
-  Button,
 } from "antd";
 
 import { Link, useNavigate } from "react-router-dom";
-import { DownOutlined, SmileOutlined, UserOutlined } from "@ant-design/icons";
 import { TbShoppingCartHeart } from "react-icons/tb";
 import logoShop from "../../assets/images/logoNgang.png";
 import "./client.css";
 import { get, set } from "local-storage";
-import { GioHangAPI } from "../../pages/censor/api/gioHang/gioHang.api";
 import { KHThongBao } from "../../utils/socket/socket";
-import Notification from "../user/notification";
+import Notification from "./notificationUser";
+import { useCart } from "./cart/CartContext";
 
 const { Header, Content, Footer } = Layout;
 
@@ -30,22 +27,17 @@ export const DashboardClient = ({ children }) => {
   const nav = useNavigate();
   const [userName, setUserName] = useState("");
   const [linkAnh, setLinkAnh] = useState("");
-  const [countgioHang, setCountGioHang] = useState(0);
   const storedData = get("userData");
   const storedDataGoogle = get("userGoogle");
   const storedDataFaceBook = get("userFacebook");
-  const storedGioHang = get("GioHang");
+  const { totalQuantity } = useCart();
 
+    
   useEffect(() => {
     if (storedData !== null) {
       setUserName(storedData.ten);
       setLinkAnh(storedData.anh);
-      GioHangAPI.getByIDKH(storedData.userID).then((res) => {
-        GioHangAPI.getAllGHCTByIDGH(res.data.id).then((res) => {
-          console.log("giỏ hàng của khách", res.data);
-          setCountGioHang(res.data.length);
-        });
-      });
+
     } else if (storedDataGoogle != null) {
       setUserName(storedDataGoogle.name);
       setLinkAnh(storedDataGoogle.imageUrl);
@@ -57,13 +49,6 @@ export const DashboardClient = ({ children }) => {
     else {
       setUserName(null);
       setLinkAnh(null);
-      if (storedGioHang !== null) {
-        console.log("giỏ hàng", storedGioHang);
-        GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res) => {
-          setCountGioHang(res.data.length);
-          console.log("count", res.data);
-        });
-      }
     }
   }, []);
   KHThongBao();
@@ -111,52 +96,7 @@ export const DashboardClient = ({ children }) => {
       ),
     },
   ];
-  const item2 = [
-    {
-      key: "1",
-      label: (
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.antgroup.com"
-        >
-          Quanh nguu
-        </a>
-      ),
-    },
-    {
-      key: "2",
-      label: (
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.aliyun.com"
-        >
-          TIến bịp
-        </a>
-      ),
-
-      disabled: true,
-    },
-    {
-      key: "3",
-      label: (
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.luohanacademy.com"
-        >
-          3rd menu item (disabled)
-        </a>
-      ),
-      disabled: true,
-    },
-    {
-      key: "4",
-      danger: true,
-      label: "a danger item",
-    },
-  ];
+ 
   return (
     <Layout>
       {/* tiêu đề */}
@@ -166,7 +106,7 @@ export const DashboardClient = ({ children }) => {
           display: "flex",
           position: "sticky",
           top: 0,
-          zIndex: 1,
+          zIndex:30,
           width: "100%",
           backgroundColor: "#ffffff",
           color: "black",
@@ -228,13 +168,13 @@ export const DashboardClient = ({ children }) => {
             </h6>
           </Link>
         </Col> */}
-        <Col span={7} className="float-end"></Col>
+        <Col span={6} className="float-end"></Col>
         <Col span={1} className="float-end">
-        <Notification />
+          <Notification />
         </Col>
         <Col span={0.5} className="float-end">
           <Link to={"/gio-hang"} className="float-end justify-content-end ">
-            <Badge count={countgioHang} offset={[8, 1]} className="menuButton">
+            <Badge count={totalQuantity} offset={[8, 1]} className="menuButton">
               <TbShoppingCartHeart size={30} className="menuButton" />
             </Badge>
           </Link>

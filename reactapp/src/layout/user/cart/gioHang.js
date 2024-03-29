@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./gioHang.css";
-import { Button, Switch, Tag ,Modal} from "antd";
+import { Button, Switch, Tag, Modal } from "antd";
 import { FaRegTrashAlt, FaMapMarkerAlt } from "react-icons/fa";
 import { BiSolidDiscount } from "react-icons/bi";
 import ModalDiaChi from "./modalDiaChi";
@@ -17,22 +17,28 @@ import { SellAPI } from "../../../pages/censor/api/sell/sell.api";
 import { KhachHangAPI } from "../../../pages/censor/api/user/khachHang.api";
 import { ShipAPI } from "../../../pages/censor/api/ship/ship.api";
 import { toast, ToastContainer } from "react-toastify";
-
+import logoBanner from "../../../assets/images/page-header-bg.jpg";
+import { useNavigate } from "react-router-dom";
 import Moment from "moment";
 import {
   AdThongBaoDatHang,
   KHGuiThongBaoDatHang,
 } from "../../../utils/socket/socket";
+import HoaDon from "../../../pages/censor/hoaDon-management/HoaDon2";
+import { useCart } from "./CartContext";
+import CheckoutButton from "../thongBaoThanhToan/button";
 
 export const GioHang = ({ children }) => {
   const [openModalDiaChi, setOpenModalDiaChi] = useState(false);
   const [openModalVoucher, setOpenModalVoucher] = useState(false);
   const [khachHang, setKhachHang] = useState(null);
+  const [email, setEmail] = useState(null);
   const [gioHangCT, setGioHangCT] = useState([]);
   const [userID, setUserID] = useState("");
   const [hoaDonID, setHoaDonID] = useState("");
   const [voucher, setVoucher] = useState(null);
   const [diaChi, setDiaChi] = useState(null);
+  const [maGiaoDich, setMaGiaoDich] = useState(null);
   const [clickCountTM, setClickCountTM] = useState(1);
   const [clickCountVNP, setClickCountVNP] = useState(0);
   const [phuongThuc, setPhuongThuc] = useState(0);
@@ -42,16 +48,28 @@ export const GioHang = ({ children }) => {
   const [dataVanChuyen, setDataVanchuyen] = useState("");
   const [soLuongSPGH, setSoLuongSPGH] = useState(0);
   const [idGH, setIDGH] = useState("");
-  console.log("Data vận chuyển",dataVanChuyen);
-  console.log("user id",userID);
-  console.log("voucher đang chọn",voucher);
-  console.log("Địa chỉ",diaChi);
+  const router = useNavigate();
   let total = 0;
-
-
+    const { updateTotalQuantity } = useCart();
   const storedData = get("userData");
   const storedGioHang = get("GioHang");
 
+
+
+  const loadCountGioHang = () => {
+    if (storedData != null) {
+      GioHangAPI.getByIDKH(storedData.userID).then((res) => {
+        GioHangAPI.getAllGHCTByIDGH(res.data.id).then((res) => {
+          updateTotalQuantity(res.data.length);
+        });
+      });
+    } else {
+      console.log("giỏ hàng", storedGioHang);
+      GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res) => {
+        updateTotalQuantity(res.data.length);
+      });
+    }
+  };
   const getButtonTMType = () => {
     // Xác định loại button dựa trên giá trị biến đếm
     return clickCountTM % 2 === 0 ? "default" : "primary";
@@ -70,14 +88,23 @@ export const GioHang = ({ children }) => {
     setClickCountTM(0);
     setPhuongThuc(1);
   };
+  
   useEffect(() => {
     if (storedData) {
       setKhachHang(storedData.userID);
+      setEmail(storedData.email);
       setUserID(storedData.userID);
       loadDiaChiMacDinh();
     }
     loadGHCT();
   }, []);
+
+  useEffect(() => {
+    loadGHCT();
+  },[soLuongSPGH]);
+
+
+
   const loadGiamGia = (voucher) => {
     console.log("vsd", voucher);
     if (voucher !== null) {
@@ -134,25 +161,27 @@ export const GioHang = ({ children }) => {
       GioHangAPI.getByIDKH(storedData.userID).then((response) => {
         setIDGH(response.data.id);
         GioHangAPI.getAllGHCTByIDGH(response.data.id).then((res) => {
-          setGioHangCT(res.data);
-          console.log("GioHangct", res.data);
+          setGioHangCT(res.data); 
+          console.log("->>>>>>>>>>>>>>>>>>>>>>",res.data);
         });
       });
-    } else if (storedGioHang && storedGioHang.id) {
+    } 
+    else if (storedGioHang && storedGioHang!=null) {
       console.log(storedGioHang);
-      GioHangAPI.getByID(storedGioHang.id).then((response) => {
-        console.log(response.data);
-        setIDGH(response.data.id);
-        GioHangAPI.getAllGHCTByIDGH(response.data.id).then((res) => {
+      // GioHangAPI.getByID(storedGioHang.id).then((response) => {
+      //   console.log(response.data);
+        setIDGH(storedGioHang.id);
+        GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res) => {
           setGioHangCT(res.data);
           console.log("GioHan", res.data);
         });
-      });
+      // });
     }
+    
   };
-
+  
   useEffect(() => {
-    console.log("ID GH", idGH);
+    
     loadDiaChiMacDinh();
     loadSoLuongSPTrongGH();
   }, [idGH]);
@@ -179,12 +208,12 @@ export const GioHang = ({ children }) => {
     total,
     discount,
     gioHangCT,
-    khachHang,
+    userID,
     voucher,
     diaChi,
-    phuongThuc,
+    phuongThuc
   ) => {
-    KHGuiThongBaoDatHang();
+    // KHGuiThongBaoDatHang();
     const currentDate = new Date();
     const currentDateInMilliseconds = Date.UTC(
       currentDate.getFullYear(),
@@ -195,169 +224,103 @@ export const GioHang = ({ children }) => {
       currentDate.getSeconds(),
       currentDate.getMilliseconds()
     );
-    const idHD = uuid();
-    let hoaDonID;
+    // const idHD = uuid();
+    // let hoaDonID;
+
+    const hdct = gioHangCT.map((ghct) => {
+      console.log("ctp",ghct);
+      return {
+        idCTSP: ghct.chiTietSanPham,
+        donGia: ghct.thanhTien,
+        soLuong: ghct.soLuong,
+        idGioHang: ghct.gioHang,
+      };
+    });
+
     const hoaDon = {
-      id: idHD,
-      ma: "HD" + currentDateInMilliseconds,
-      nguoiDung: khachHang,
-      giaGoc: total,
+      idVoucher: voucher?.id,
+      idPayMethod: phuongThuc,
+      maGiaoDich: '',
+      // ma: "HD" + currentDateInMilliseconds,
+      idUser: userID,
+      tongTien: total + (moneyShip ? moneyShip : 0),
       giaGiamGia: discount,
-      thanhTien: total - discount,
-      diaChi : diaChi ? diaChi.diaChi +"/"+ diaChi.tenXa +"/"+ diaChi.tenHuyen + "/" + diaChi.tenThanhPho : dataVanChuyen.diaChi,
-      email : diaChi ? diaChi.email : dataVanChuyen.email,
-      tenNguoiNhan : diaChi ? diaChi.tenNguoiNhan : dataVanChuyen.tenNguoiNhan,
-      tienVanChuyen : moneyShip ? moneyShip : dataVanChuyen.tienVanChuyen,
-      ngayDuKienNhan : ngayShip ? ngayShip : dataVanChuyen.ngayDuKienNhan,
-      soDienThoai : diaChi ? diaChi.soDienThoai : dataVanChuyen.soDienThoai
+      tienSauGiam: total + (moneyShip ? moneyShip : 0) - discount,
+      diaChi: diaChi
+        ? diaChi.diaChi +
+          "/" +
+          diaChi.tenXa +
+          "/" +
+          diaChi.tenHuyen +
+          "/" +
+          diaChi.tenThanhPho
+        : dataVanChuyen.diaChi,
+      email: email ? email : dataVanChuyen.email,
+      tenNguoiNhan: diaChi ? diaChi.tenNguoiNhan : dataVanChuyen.tenNguoiNhan,
+      tienShip: moneyShip ? moneyShip : dataVanChuyen.tienVanChuyen,
+      ngayDuKienNhan: ngayShip ? ngayShip : dataVanChuyen.ngayDuKienNhan,
+      sdt: diaChi ? diaChi.soDienThoai : dataVanChuyen.soDienThoai,
+      listHDCT: hdct,
     };
+console.log(hoaDon);
+    if (phuongThuc == 1) {
+      BanHangClientAPI.getLinkVnpay(
+        total + (moneyShip ? moneyShip : 0) - discount
+      ).then((res) => {
+        if (res.data) {
+          const maGiaoDichs = Object.keys(res.data)[0];
+          const url = res.data[maGiaoDichs];
 
-    console.log("hóa đơn", hoaDon);
-    BanHangClientAPI.addHD(hoaDon).then((res) => {
-      console.log("hóa đơn tạo", res.data);
-      hoaDonID = res.data.id;
-      console.log("giot hàng", gioHangCT);
-      gioHangCT.map((ghct) => {
-        const id = uuid();
-        console.log(hoaDonID);
-
-        const hdct = {
-          id: id,
-          hoaDon: res.data.id,
-          chiTietSanPham: ghct.chiTietSanPham,
-          soLuong: ghct.soLuong,
-          giaSauGiam: ghct.thanhTien,
-        };
-
-        BanHangClientAPI.addHDCT(hdct).then((res) => {
-          console.log("hóa đơn chi tiết", res.data);
-        });
-        GioHangAPI.deleteGHCT(ghct.id);
+          const formString = JSON.stringify({
+            ...hoaDon,
+            maGiaoDich: maGiaoDichs, // Gán mã giao dịch vào hoaDon
+          });
+          localStorage.setItem("formData", formString);
+          window.location.href = url;
+        } else {
+          console.log("lỗi ");
+        }
       });
 
-      if (voucher !== null) {
-        //console.log("add voucher to hóa đơn", res.data.hoaDon.id, voucher.id);
-        BanHangClientAPI.updateVoucherToHD(hoaDonID, voucher?.id);
-      }
-
-      // const thanhToanTM = {
-      //   hoaDon: res.data.id,
-      //   phuongThuc: phuongThuc,
-      //   tienMat: total - discount,
-      //   tongTien: total - discount,
-      // };
-
-      // if (phuongThuc == 0) {
-      //   console.log("hóa đơn trước thanh toán", res.data.hoaDon);
-      //   // console.log("thanhToanTM", thanhToanTM);
-      //   BanHangClientAPI.thanhToanTienMat(thanhToanTM).then((res) => {
-      //     console.log("hóa đơn tm", res.data);
-      //   });
-      // } else {
-      //   BanHangClientAPI.thanhToanHoaDon(hoaDonID).then((res) => {
-      //     console.log("thanh toán", res.data);
-      //   });
-      //   BanHangClientAPI.getLinkVnpay(res.data.id, total - discount).then(
-      //     (res) => {
-      //       window.open(res.data.url, "_blank");
-      //       console.log(
-      //         "url",
-      //         res.data.url
-      //           .substring(res.data.url.indexOf("vnp_TxnRef") + 11)
-      //           .substring(0, 8)
-      //       ); // mã giao dịch
-      //       console.log("dataa", res.data);
-      //       const thanhToanVNP = {
-      //         hoaDon: hoaDonID,
-      //         phuongThuc: phuongThuc,
-      //         chuyenKhoan: total - discount,
-      //         tongTien: total - discount,
-      //         phuongThucVnp: res.data.url
-      //           .substring(res.data.url.indexOf("vnp_TxnRef") + 11)
-      //           .substring(0, 8),
-      //       };
-      //       console.log("thanh toán vnp", thanhToanVNP);
-
-      //       BanHangClientAPI.thanhToanChuyenKhoan(thanhToanVNP);
-      //     }
-      //   );
-      // }
-
-      if (voucher !== null) {
-        console.log("add voucher to hóa đơn", res.data.id, voucher.id);
-        BanHangClientAPI.updateVoucherToHD(res.data.id, voucher.id);
-      }
-
-      const thanhToanTM = {
-        hoaDon: res.data.id,
-        phuongThuc: phuongThuc,
-        tienMat: total - discount,
-        tongTien: total - discount,
-      };
-
-      if (phuongThuc == 0) {
-        console.log("hóa đơn trước thanh toán", res.data.hoaDon);
-        console.log("thanhToanTM", thanhToanTM);
-        BanHangClientAPI.thanhToanTienMat(thanhToanTM).then((res) => {
-          console.log("hóa đơn tm", res.data);
+      console.log(maGiaoDich);
+    } else {
+      BanHangClientAPI.checkout(hoaDon).then(check =>{
+      if(check.data){
+        setVoucher(null);
+        if (isDiaChiGiaoHangVisible === true) {
+          setIsDiaChiGiaoHangVisible(!isDiaChiGiaoHangVisible);
+        }
+        setMoneyShip(0);
+        router("/thanh-toan-thanh-cong");
+        loadCountGioHang();
+        KHGuiThongBaoDatHang();
+      }else{
+       toast("✔️ số lượng sản phẩm không đủ!", {
+          position: "top-right",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
         });
-      } else {
-        BanHangClientAPI.thanhToanHoaDon(hoaDonID).then((res) => {
-          console.log("thanh toán", res.data);
-        });
-        BanHangClientAPI.getLinkVnpay(res.data.id, total - discount).then(
-          (res) => {
-            window.open(res.data.url, "_blank");
-            console.log(
-              "url",
-              res.data.url
-                .substring(res.data.url.indexOf("vnp_TxnRef") + 11)
-                .substring(0, 8)
-            ); // mã giao dịch
-            console.log("dataa", res.data);
-            const thanhToanVNP = {
-              hoaDon: hoaDonID,
-              phuongThuc: phuongThuc,
-              chuyenKhoan: total - discount,
-              tongTien: total - discount,
-              phuongThucVnp: res.data.url
-                .substring(res.data.url.indexOf("vnp_TxnRef") + 11)
-                .substring(0, 8),
-            };
-            console.log("thanh toán vnp", thanhToanVNP);
-
-            BanHangClientAPI.thanhToanChuyenKhoan(thanhToanVNP);
-          }
-        );
       }
     });
-
-   // loadGHCT();
-    setGioHangCT([]);
-    setVoucher(null);
-    if (isDiaChiGiaoHangVisible === true) {
-    setIsDiaChiGiaoHangVisible(!isDiaChiGiaoHangVisible);
+   
+   
+     
+      
     }
-    setMoneyShip(0);
-    toast("✔️ Đặt hàng thành công!", {
-      position: "top-right",
-      autoClose: 1000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
+
+    //   setGioHangCT([]);
   };
 
   return (
     <div>
-      <div className="banner-gio-hang-san-pham">
-        <img src="https://d-themes.com/react/molla/demo-10/images/page-header-bg.jpg?fbclid=IwAR1a29UEcWcX-xX8mdyf6lSt9-lm8LB4tzbz4wscKg5yBPhlzyzWfIcjmF0"></img>
-        <h1 className="text-center" style={{ marginTop: -130 }}>
-          Giỏ hàng
-        </h1>
+      <div className="banner-san-pham-shop">
+        <img src={logoBanner} alt="Logo Banner"></img>
+        <h1 className="banner-title-logo">Giỏ hàng</h1>
       </div>
       <br></br> <br></br>
       <div className="row mt-5">
@@ -407,7 +370,7 @@ export const GioHang = ({ children }) => {
               </p>
             </div>
           </div>
-        ) : (khachHang && !diaChi) ? (
+        ) : khachHang && !diaChi ? (
           <>
             <Button
               style={{ marginLeft: 30, width: 100, height: 50, marginTop: 20 }}
@@ -416,7 +379,9 @@ export const GioHang = ({ children }) => {
               Chọn địa chỉ
             </Button>
           </>
-        ) : <></>}
+        ) : (
+          <></>
+        )}
       </div>
       <div className="row mt-5">
         <div className="col-md-8">
@@ -431,12 +396,20 @@ export const GioHang = ({ children }) => {
               </tr>
             </thead>
             <tbody>
-              {gioHangCT ? 
-              (gioHangCT?.map((ghct, index) => {
-                return (
-                  <ProductRow key={index} product={ghct} loadghct={loadGHCT} />
-                );
-              })) : <ProductRow/>}
+              {gioHangCT ? (
+                gioHangCT?.map((ghct, index) => {
+                  return (
+                    <ProductRow
+                      // key={index}
+                      product={ghct}
+                      loadghct={loadGHCT}
+                      // oadSoLuongSPTrongGH={loadSoLuongSPTrongGH}
+                    />
+                  );
+                })
+              ) : (
+                <ProductRow />
+              )}
             </tbody>
           </table>
         </div>
@@ -543,7 +516,12 @@ export const GioHang = ({ children }) => {
           <></>
         )}
         <div className=" col-md-10 ms-5">
-          {isDiaChiGiaoHangVisible && <DiaChiGiaoHang money={setMoneyShip} thongTinVanChuyen={setDataVanchuyen}/>}
+          {isDiaChiGiaoHangVisible && (
+            <DiaChiGiaoHang
+              money={setMoneyShip}
+              thongTinVanChuyen={setDataVanchuyen}
+            />
+          )}
         </div>
         {khachHang == null ? <hr className="mt-5 mb-5"></hr> : <></>}
       </div>
@@ -617,7 +595,7 @@ export const GioHang = ({ children }) => {
           </div>
           <hr className="mt-5 mb-5"></hr>
           <div className="d-flex flex-row-reverse bd-highlight">
-            <Button
+            {/* <Button
               className="p-2 bd-highlight"
               style={{
                 width: 250,
@@ -629,17 +607,17 @@ export const GioHang = ({ children }) => {
                 Modal.confirm({
                   title: "Thông báo",
                   content: "Bạn có xác nhận đặt hàng không?",
-                  onOk : () => {
+                  onOk: () => {
                     handleMuaHang(
                       total,
                       discount,
                       gioHangCT,
-                      khachHang,
+                      userID,
                       voucher,
                       diaChi,
                       phuongThuc
                     );
-                  } ,
+                  },
                   onCancel: () => {
                     return;
                   },
@@ -649,12 +627,53 @@ export const GioHang = ({ children }) => {
                       <OkBtn />
                     </>
                   ),
-                })
-
+                });
               }}
             >
               Đặt hàng
-            </Button>
+            </Button> */}
+            <a
+              href="#btnCheckout"
+              className="checkout-button"
+              onClick={() => {
+                Modal.confirm({
+                  title: "Thông báo",
+                  content: "Bạn có xác nhận đặt hàng không?",
+                  onOk: () => {
+                    handleMuaHang(
+                      total,
+                      discount,
+                      gioHangCT,
+                      userID,
+                      voucher,
+                      diaChi,
+                      phuongThuc
+                    );
+                  },
+                  onCancel: () => {
+                    return;
+                  },
+                  footer: (_, { OkBtn, CancelBtn }) => (
+                    <>
+                      <CancelBtn />
+                      <OkBtn />
+                    </>
+                  ),
+                });
+              }}
+              id="btnCheckout"
+            >
+              Checkout now!
+              <figure className="truck">
+                <img
+                  src="https://assets.codepen.io/430361/truck.svg"
+                  alt="Checkout animation"
+                />
+              </figure>
+              <div className="thank-you">Cảm ơn</div>
+              <div className="other-day">Bạn đã đặt hàng</div>
+              <div className="click-run">Click run text</div>
+            </a>
           </div>
         </div>
       </div>
@@ -674,7 +693,7 @@ export const GioHang = ({ children }) => {
         total={total}
         loadGiamGia={loadGiamGia}
       />
-            <ToastContainer
+      <ToastContainer
         position="top-right"
         autoClose={5000}
         hideProgressBar={false}

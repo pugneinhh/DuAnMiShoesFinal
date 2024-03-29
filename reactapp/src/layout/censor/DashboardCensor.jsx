@@ -125,7 +125,7 @@ const DashboardCensor = ({ children }) => {
           collapsed={collapsed}
           width={235}
           breakPoint="md"
-          image="https://i.pinimg.com/564x/40/81/08/4081083e8895a9a620ada4b0fac3d436.jpg?fbclid=IwAR0HZwn_m42pqnvest56DrS32EKJXbpfIQvedmzUNReYtTiipdjSBjz6r-o"
+          image="https://i.pinimg.com/564x/1e/49/73/1e4973a1a63fe26c8201259c8d9c77cb.jpg"
         >
           <SidebarHeader>
             <div
@@ -158,7 +158,7 @@ const DashboardCensor = ({ children }) => {
           </SidebarHeader>
           <Menu iconShape="circle">
             <MenuItem icon={<RxDashboard color="#f7faf9" size={20} />}>
-              Dashboard
+              Quản lý Thu Chi
               <Link to="/admin-thong-ke"></Link>
             </MenuItem>
           </Menu>
@@ -249,9 +249,10 @@ const DashboardCensor = ({ children }) => {
               </MenuItem>
             </SubMenu>
           </Menu>
-          <SidebarFooter style={{ textAlign: "center" }}>
+          <SidebarFooter style={{ textAlign: "center", marginTop:"auto" }}>
             <div
-              className="sidebar-btn-wrapper"
+            
+              className="sidebar-btn-wrapper "
               style={{
                 padding: "20px 24px",
               }}
@@ -323,43 +324,7 @@ const DashboardCensor = ({ children }) => {
           >
             Ưu đãi khủng cho hóa đơn từ 20.000.000 VND ! Mua ngay{" "}
           </marquee>
-          <div className="admin-right float-end">
-            {/* <a onClick={handleNotificationChange}>
-              <Badge count={5} color="red">
-                <Avatar
-                  shape="circle"
-                  className="align-content-center"
-                  size="default"
-                  icon={<IoNotifications size={20} color="#9e9e9e" />}
-               
-                  style={{ backgroundColor: "#f7faf9" }}
-                />
-              </Badge>
-              </a> */}
-            {/* <Dropdown
-              // menu={{
-              //   items: itemsNotification,
-              //   selectable: true,
-              //   defaultSelectedKeys: ["3"],
-                
-              // }}
-              className="ms-4"
-              overlay={menu}
-            >
-              <Typography.Link>
-                <Space>
-                  <Badge count={notifications.length} color="red">
-                    <Avatar
-                      shape="circle"
-                      className="align-content-center"
-                      size="default"
-                      icon={<IoNotifications size={20} color="#9e9e9e" />}
-                      style={{ backgroundColor: "#f7faf9" }}
-                    />
-                  </Badge>
-                </Space>
-              </Typography.Link>
-            </Dropdown> */}
+          <div className="admin-right float-end hover">
             <Notification />
             <Dropdown
               menu={{

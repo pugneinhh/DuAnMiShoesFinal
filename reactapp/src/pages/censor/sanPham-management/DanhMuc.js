@@ -132,6 +132,19 @@ export default function DanhMuc() {
         setDanhMucs(res.data);
       })
   }
+  //Validate
+  const validateDateDanhMuc = (_, value) => {
+    const { getFieldValue } = form1;
+    const tenDanhMuc = getFieldValue("ten");
+  if (!tenDanhMuc.trim()) {
+    return Promise.reject("Tên không được để trống");
+  }
+  const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+  if (specialCharacterRegex.test(tenDanhMuc)) {
+    return Promise.reject("Tên không được chứa ký tự đặc biệt");
+  }
+    return Promise.resolve();
+  };
   //Table
   const [danhMuc, setDanhMucs] = useState([]);
 
@@ -200,15 +213,25 @@ export default function DanhMuc() {
   const [form1] = Form.useForm();
   const [form2] = Form.useForm();
   return (
-    <div className='container-fluid' style={{ borderRadius: 20 }}>
+    <div className="container-fluid" style={{ borderRadius: 20 }}>
       <div className="container-fluid">
-        <Divider orientation="center" color="#d0aa73"><h4 className="text-first pt-1 fw-bold"> <BiSolidCategory size={35} /> Quản lý danh mục</h4></Divider>
-        <div className=' bg-light m-2 p-3 pt-2' style={{
-          border: '1px solid #ddd', // Border color
-          boxShadow: '0 3px 8px rgba(0, 0, 0, 0.1)', // Box shadow
-          borderRadius: '8px'
-        }}>
-          <h5><FilterFilled size={30} /> Bộ lọc</h5>
+        <Divider orientation="center" color="#d0aa73">
+          <h4 className="text-first pt-1 fw-bold">
+            {" "}
+            <BiSolidCategory size={35} /> Quản lý danh mục
+          </h4>
+        </Divider>
+        <div
+          className=" bg-light m-2 p-3 pt-2"
+          style={{
+            border: "1px solid #ddd", // Border color
+            boxShadow: "0 3px 8px rgba(0, 0, 0, 0.1)", // Box shadow
+            borderRadius: "8px",
+          }}
+        >
+          <h5>
+            <FilterFilled size={30} /> Bộ lọc
+          </h5>
           <hr />
           <Form
             className="row"
@@ -231,31 +254,54 @@ export default function DanhMuc() {
           >
             <div className="col-md-5">
               <Form.Item label="Tên & Mã" name="ten">
-                <Input className='rounded-pill border-warning' placeholder='Nhập tên hoặc mã' />
+                <Input
+                  className="rounded-pill border-warning"
+                  placeholder="Nhập tên hoặc mã"
+                />
               </Form.Item>
             </div>
-            <div className='col-md-5'>
-              <Form.Item placeholder="Chọn trạng thái" label="Trạng Thái" name="trangThai">
+            <div className="col-md-5">
+              <Form.Item
+                placeholder="Chọn trạng thái"
+                label="Trạng Thái"
+                name="trangThai"
+              >
                 <Select value={selectedValue} onChange={handleChange}>
                   <Select.Option value="0">Còn Bán</Select.Option>
                   <Select.Option value="1">Dừng Bán</Select.Option>
                 </Select>
               </Form.Item>
             </div>
-            <Form.Item className='text-center' style={{ paddingLeft: 200 }}>
-              <Button type="primary" htmlType='reset' icon={<RetweetOutlined />} onClick={loadDanhMuc}>Làm mới</Button>
+            <Form.Item className="text-center" style={{ paddingLeft: 200 }}>
+              <Button
+                type="primary"
+                htmlType="reset"
+                icon={<RetweetOutlined />}
+                onClick={loadDanhMuc}
+              >
+                Làm mới
+              </Button>
             </Form.Item>
           </Form>
         </div>
-        <div className='text-end'>
-          <a className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill" role="button" onClick={() => setOpen(true)}> <PlusCircleOutlined />  Thêm danh mục</a>
+        <div className="text-end">
+          <button onClick={() => setOpen(true)} class="button-them">
+            <span class="text">
+              <PlusCircleOutlined /> Thêm danh mục
+            </span>
+          </button>
         </div>
-        <div className=' bg-light m-2 p-3 pt-2' style={{
-          border: '1px solid #ddd', // Border color
-          boxShadow: '0 3px 8px rgba(0, 0, 0, 0.1)', // Box shadow
-          borderRadius: '8px'
-        }}>
-          <h5><BookFilled size={30} /> Danh sách danh mục</h5>
+        <div
+          className=" bg-light m-2 p-3 pt-2"
+          style={{
+            border: "1px solid #ddd", // Border color
+            boxShadow: "0 3px 8px rgba(0, 0, 0, 0.1)", // Box shadow
+            borderRadius: "8px",
+          }}
+        >
+          <h5>
+            <BookFilled size={30} /> Danh sách danh mục
+          </h5>
           <hr />
           <div className="ms-3">
             {/* Add danh mục */}
@@ -268,20 +314,27 @@ export default function DanhMuc() {
               onCancel={() => setOpen(false)}
               footer={[
                 <Button onClick={() => setOpen(false)}>Hủy</Button>,
-                <Button type="primary" onClick={() => {
-                  Modal.confirm({
-                    centered: true,
-                    title: 'Thông báo',
-                    content: 'Bạn có chắc chắn muốn thêm không?',
-                    onOk: () => { form1.submit(); },
-                    footer: (_, { OkBtn, CancelBtn }) => (
-                      <>
-                        <CancelBtn />
-                        <OkBtn />
-                      </>
-                    ),
-                  });
-                }}>Thêm</Button>
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    Modal.confirm({
+                      centered: true,
+                      title: "Thông báo",
+                      content: "Bạn có chắc chắn muốn thêm không?",
+                      onOk: () => {
+                        form1.submit();
+                      },
+                      footer: (_, { OkBtn, CancelBtn }) => (
+                        <>
+                          <CancelBtn />
+                          <OkBtn />
+                        </>
+                      ),
+                    });
+                  }}
+                >
+                  Thêm
+                </Button>,
               ]}
               width={500}
             >
@@ -295,9 +348,15 @@ export default function DanhMuc() {
                   maxWidth: 1000,
                 }}
                 onFinish={addDanhMuc}
-                form={form1}>
-                <Form.Item label="Tên" name='ten' hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
-                  <Input className='border'></Input>
+                form={form1}
+              >
+                <Form.Item
+                  label="Tên"
+                  name="ten"
+                  hasFeedback
+                  rules={[{ validator: validateDateDanhMuc }]}
+                >
+                  <Input className="border"></Input>
                 </Form.Item>
               </Form>
             </Modal>
@@ -308,23 +367,38 @@ export default function DanhMuc() {
               centered
               open={openUpdate}
               onOk={() => setOpenUpdate(false)}
-              onCancel={() => { setOpenUpdate(false);}}
+              onCancel={() => {
+                setOpenUpdate(false);
+              }}
               footer={[
-                <Button onClick={() => { setOpenUpdate(false);}}>Hủy</Button>,
-                <Button type="primary" onClick={() => {
-                  Modal.confirm({
-                    centered: true,
-                    title: 'Thông báo',
-                    content: 'Bạn có chắc chắn muốn sửa không?',
-                    onOk: () => { form2.submit(); },
-                    footer: (_, { OkBtn, CancelBtn }) => (
-                      <>
-                        <CancelBtn />
-                        <OkBtn />
-                      </>
-                    ),
-                  });
-                }}>Sửa</Button>
+                <Button
+                  onClick={() => {
+                    setOpenUpdate(false);
+                  }}
+                >
+                  Hủy
+                </Button>,
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    Modal.confirm({
+                      centered: true,
+                      title: "Thông báo",
+                      content: "Bạn có chắc chắn muốn sửa không?",
+                      onOk: () => {
+                        form2.submit();
+                      },
+                      footer: (_, { OkBtn, CancelBtn }) => (
+                        <>
+                          <CancelBtn />
+                          <OkBtn />
+                        </>
+                      ),
+                    });
+                  }}
+                >
+                  Sửa
+                </Button>,
               ]}
               width={500}
             >
@@ -339,12 +413,30 @@ export default function DanhMuc() {
                   maxWidth: 1000,
                 }}
                 onFinish={updateDanhMuc}
-                form={form2}>
-                <Form.Item label={<b>Tên</b>} hasFeedback rules={[{ required: true, message: 'Vui lòng không để trống tên!', },]} >
-                  <Input className='border' value={dmUpdate.ten} onChange={(e) => setDmUpdate({ ...dmUpdate, ten: e.target.value })}></Input>
+                form={form2}
+              >
+                <Form.Item
+                  label={<b>Tên</b>}
+                  hasFeedback
+                  rules={[
+                    { required: true, message: "Vui lòng không để trống tên!" },
+                  ]}
+                >
+                  <Input
+                    className="border"
+                    value={dmUpdate.ten}
+                    onChange={(e) =>
+                      setDmUpdate({ ...dmUpdate, ten: e.target.value })
+                    }
+                  ></Input>
                 </Form.Item>
                 <Form.Item label={<b>Trạng thái </b>}>
-                  <Radio.Group onChange={(e) => setDmUpdate({ ...dmUpdate, trangThai: e.target.value})} value={dmUpdate.trangThai}>
+                  <Radio.Group
+                    onChange={(e) =>
+                      setDmUpdate({ ...dmUpdate, trangThai: e.target.value })
+                    }
+                    value={dmUpdate.trangThai}
+                  >
                     <Radio value={0}>Còn bán</Radio>
                     <Radio value={1}>Dừng bán</Radio>
                   </Radio.Group>
@@ -353,16 +445,20 @@ export default function DanhMuc() {
             </Modal>
           </div>
           <div className="container-fluid mt-4">
-            <Table align="center" dataSource={danhMuc} columns={columns} pagination={{
-              showQuickJumper: true,
-              defaultPageSize: 5,
-              position: ['bottomCenter'],
-              defaultCurrent: 1,
-              total: 100,
-            }} />
+            <Table
+              align="center"
+              dataSource={danhMuc}
+              columns={columns}
+              pagination={{
+                showQuickJumper: true,
+                defaultPageSize: 5,
+                position: ["bottomCenter"],
+                defaultCurrent: 1,
+                total: 100,
+              }}
+            />
           </div>
         </div>
-
       </div>
       <ToastContainer
         position="top-right"
@@ -379,5 +475,5 @@ export default function DanhMuc() {
       {/* Same as */}
       <ToastContainer />
     </div>
-  )
+  );
 }
