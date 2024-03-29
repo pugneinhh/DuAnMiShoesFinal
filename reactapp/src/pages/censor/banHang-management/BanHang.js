@@ -82,6 +82,7 @@ const BanHang = () => {
   const [money, setMoney] = useState(0);
   console.log("voucher", voucherHienTai);
   console.log("hoaDon",activeKey);
+  console.log("Hóa Đơn s",hoaDons);
   const loadVoucherTotNhatVaVoucherTiepTheo = () => {
     console.log("money", money);
     SellAPI.voucherTotNhat(idKH, money).then((res) =>
@@ -424,7 +425,7 @@ const BanHang = () => {
             // ngaySua: item.ngaySua,
             // ngayTao: item.ngayTao,
             trangThai: 0,
-            key: item.id,
+            key: item.ma,
             tienVanChuyen: item.tienVanChuyen,
           })
         );

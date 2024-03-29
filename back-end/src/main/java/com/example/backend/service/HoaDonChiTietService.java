@@ -35,9 +35,11 @@ public class HoaDonChiTietService {
         return hoaDonChiTietRepository.getOneHDCT(idHD,idCTSP);
     }
     public HoaDonChiTiet addHDCT(HoaDonChiTietRequest request){
-        HoaDonChiTiet hdct=request.map(new HoaDonChiTiet());
+        System.out.println("Hóa đơn chi tiết request"+request);
         String idCTSP= request.getChiTietSanPham();
-        HoaDon hoaDon = hoaDonRepository.getHoaDonByIDHD(request.getHoaDon());
+        HoaDon hoaDon = hoaDonRepository.getHDByMa(request.getHoaDon());
+        request.setHoaDon(hoaDon.getId());
+        HoaDonChiTiet hdct=request.map(new HoaDonChiTiet());
         BigDecimal giaHienTai = hoaDon.getGiaGoc() == null ? new BigDecimal("0") : hoaDon.getGiaGoc();
         BigDecimal giaThem = request.getGiaSauGiam();
         hoaDon.setGiaGoc(giaHienTai.add(giaThem));
