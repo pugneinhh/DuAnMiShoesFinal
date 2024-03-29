@@ -44,6 +44,8 @@ public class ThanhToanController {
 //            nguoiDung.setDiem(nguoiDung.getDiem()+hd.getGiaTriDiem());
 //        }
         System.out.println(request);
+        HoaDon hd = hoaDonService.getHDByMa(request.getHoaDon());
+        request.setHoaDon(hd.getId());
         NguoiDung nguoiDung = nguoiDungService.findByID(request.getNguoiTao());
         request.setNguoiTao(nguoiDung.getMa());
         request.setNgayTao(LocalDateTime.now());
@@ -67,6 +69,8 @@ public class ThanhToanController {
 //        }
         System.out.println("Người tạo: "+request.getNguoiTao());
         NguoiDung nguoiDung = nguoiDungService.findByID(request.getNguoiTao());
+        HoaDon hd = hoaDonService.getHDByMa(request.getHoaDon());
+        request.setHoaDon(hd.getId());
         request.setNguoiTao(nguoiDung.getMa());
         request.setNgayTao(LocalDateTime.now());
         request.setPhuongThuc(1);
