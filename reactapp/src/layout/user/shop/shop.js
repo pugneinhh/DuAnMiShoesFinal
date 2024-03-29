@@ -340,7 +340,7 @@ export const Shop = ({ children }) => {
         <div className="col-md-10  ">
           <Row gutter={16} className="mb-3">
             <div class="container">
-              <div className="d-flex justify-content-end">
+              <div className="d-flex justify-content-end mb-4">
                 <Dropdown
                   menu={{
                     items,
