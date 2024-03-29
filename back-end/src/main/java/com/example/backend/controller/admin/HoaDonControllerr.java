@@ -170,8 +170,9 @@ public class HoaDonControllerr {
         return  ResponseEntity.ok(hoaDonService.add(hoaDonRequest));
     }
 
-    @PutMapping("/huy-hoa-don/{idHD}")
-    public ResponseEntity<?> HuyHoaDon(@PathVariable("idHD") String idHD) {
+    @PutMapping("/huy-hoa-don/{ma}")
+    public ResponseEntity<?> HuyHoaDon(@PathVariable("ma") String ma) {
+        String idHD = hoaDonService.findHoaDonByMa(ma).getId();
         return  ResponseEntity.ok(hoaDonService.deleteHoaDon(idHD));
     }
 //    @PutMapping("/update/{ma}")
