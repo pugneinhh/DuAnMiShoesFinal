@@ -60,19 +60,15 @@ public class BanHangController {
     }
     @PostMapping("/add-hoa-don")
     public  ResponseEntity<?> addHD(@RequestBody HoaDonRequest hoaDonRequest){
-
         CongThuc ct=congThucRepository.getCongThucByTrangThai(0);
-       // hoaDonRequest.setMa("HDTQ"+ RandomStringUtils.randomNumeric(6));
         hoaDonRequest.setLoaiHoaDon(1);
         hoaDonRequest.setNgayTao(LocalDateTime.now());
         hoaDonRequest.setTrangThai(0);
+        HoaDon hd = hoaDonRequest.map(new HoaDon());
       //  hoaDonRequest.setGiaTriDiem(Integer.valueOf(hoaDonRequest.getThanhTien().intValue()/ct.getTiSo().intValue()));
-        banHangService.addHoaDon(hoaDonRequest);
-        HoaDon hoaDon=hoaDonServicee.findHoaDonByMa(hoaDonRequest.getMa());
-//        System.out.println("Hóa đơn addHD"+hoaDon);
+        banHangService.addHoaDon(hd);
         LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
-        lichSuHoaDon.setId(hoaDonRequest.getMa());
-        lichSuHoaDon.setHoaDon(hoaDon);
+        lichSuHoaDon.setHoaDon(hd);
         lichSuHoaDon.setNguoiTao(hoaDonRequest.getNhanVien());
         lichSuHoaDon.setTrangThai(0);
         lichSuHoaDon.setNgayTao(LocalDateTime.now());
@@ -105,7 +101,8 @@ public class BanHangController {
     public ResponseEntity<?> thanhToan(@PathVariable HoaDonRequest hoaDonRequest){
         hoaDonRequest.setTrangThai(1);
         hoaDonRequest.setNgayMua(LocalDateTime.now());
-        return ResponseEntity.ok(banHangService.addHoaDon(hoaDonRequest));
+        HoaDon hd = hoaDonRequest.map(new HoaDon());
+        return ResponseEntity.ok(banHangService.addHoaDon(hd));
     }
     @GetMapping("/hien-thi-hdct/{ma}")
     public ResponseEntity<?> getHDCTByHD(@PathVariable("ma") String ma){
@@ -162,18 +159,7 @@ public class BanHangController {
     public ResponseEntity<?> updateVanChuyen (@PathVariable("ma")String ma) {
         return ResponseEntity.ok(hoaDonServicee.deleteVanChuyen(ma));
     }
-//        HoaDon hoaDon=hoaDonServicee.findHoaDonbyID(idHD);
-//
-//        LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
-//        lichSuHoaDon.setId(idHD);
-//        lichSuHoaDon.setHoaDon(hoaDon);
-//        lichSuHoaDon.setNguoiTao(hd.getNhanVien());
-//        lichSuHoaDon.setTrangThai(4);
-//        lichSuHoaDon.setNgayTao(LocalDateTime.now());
-//        lichSuHoaDonService.save(lichSuHoaDon);
-////        hd.setNgayMua(LocalDateTime.now());
-//        return ResponseEntity.ok(hoaDonServicee.update(hd,idHD));
-//    }
+
 
     @PutMapping("/hoa-don/them-voucher/{idHD}/{idVoucher}")
     public ResponseEntity<?> updateVoucherToHD(@PathVariable("idHD") String idHD, @PathVariable("idVoucher") String idVoucher) {
