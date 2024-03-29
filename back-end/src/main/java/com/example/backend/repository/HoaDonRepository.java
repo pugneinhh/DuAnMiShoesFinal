@@ -81,7 +81,9 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
       WHEN hd.khach_hang_id IS NULL  THEN N'Khách lẻ' ELSE kh.ten END  as tenKH ,CASE WHEN hd.so_dien_thoai
       is  NULL THEN N''ELSE hd.so_dien_thoai END  as sdt,CASE WHEN hd.dia_chi IS  NULL THEN N''else hd.dia_chi
       end as diaChi,ngay_mua as ngayMua,hd.thanh_tien as thanhTien,hd.trang_thai as trangThai,hd.loai_hoa_don
-      AS loaiHD, hd.tien_van_chuyen as tienVanChuyen,hd.tra_sau as traSau,hd.voucher_id as voucher,hd.gia_giam_gia as giaGiam, hd.khach_hang_id as nguoiDung,hd.gia_goc as giaGoc
+      AS loaiHD, hd.tien_van_chuyen as tienVanChuyen,hd.tra_sau as traSau,
+      hd.voucher_id as voucher,hd.gia_giam_gia as giaGiam, hd.khach_hang_id as nguoiDung,
+      hd.gia_goc as giaGoc , hd.ten_nguoi_nhan as tenNguoiNhan 
       FROM  duanmishoes.hoa_don hd 
       LEFT JOIN duanmishoes.nguoi_dung kh ON kh.id = hd.khach_hang_id 
       where hd.id=:key
