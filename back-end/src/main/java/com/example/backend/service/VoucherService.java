@@ -71,7 +71,10 @@ public class VoucherService {
         v.setTrangThai(Status.SAP_DIEN_RA);
         return vr.save(v);
     }
-    public Voucher detailVoucher(String id){return vr.findById(id).get();}
+    public Voucher detailVoucher(String id){
+        System.out.println(vr.findById(id).get());
+
+        return vr.findById(id).get();}
 
     public Voucher add (Voucher v){
         return vr.save(v);

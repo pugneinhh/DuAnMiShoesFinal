@@ -5,7 +5,17 @@ import { RiTruckFill } from "react-icons/ri";
 import { SlNotebook } from "react-icons/sl";
 import { GiNotebook, GiPiggyBank, GiReturnArrow } from "react-icons/gi";
 import { FaTruckFast } from "react-icons/fa6";
-import { Button, Modal, Table, Tag, Input, Flex, Form } from "antd";
+import {
+  Button,
+  Modal,
+  Table,
+  Tag,
+  Input,
+  Flex,
+  Form,
+  Select,
+  Space,
+} from "antd";
 import { useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -21,13 +31,20 @@ import ModalSanPham from "./ModalSanPham";
 import { get, set } from "local-storage";
 import { ThanhToanAPI } from "../api/thanhToan/thanhToan.api";
 import { AdminGuiThongBaoXacNhanDatHang } from "../../../utils/socket/socket";
+import { SellAPI } from "../api/sell/sell.api";
+import imgTicket from "../../../assets/images/discountTicket.png";
 export default function HoaDonDetail() {
   const { id } = useParams();
+  const { Option } = Select;
   const [openModalTimeLine, setOpenModalTimeLine] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [openSanPham, setOpenSanPham] = useState(false);
   const [activeKey, setActiveKey] = useState(0);
   const [listHDTimeLine, setlistHDTimeLine] = useState([]);
+  const [voucherHienTai, setVoucherHienTai] = useState(null);
+  const [voucher, setVoucher] = useState([]);
+  const [soTienCanMuaThem, setSoTienCanMuaThem] = useState(0);
+  const [soTienDuocGiam, setSoTienDuocGiam] = useState(0);
   const [form] = Form.useForm();
   const handleOk = () => {
     setIsModalOpen(false);
@@ -59,6 +76,7 @@ export default function HoaDonDetail() {
   const { TextArea } = Input;
   const [hoaDondetail, setHoaDondetail] = useState([]);
   const [maNV, setmaNV] = useState("");
+  console.log("Hóa đơn detail", hoaDondetail);
   useEffect(() => {
     const storedData = get("userData");
     setmaNV(storedData.ma);
@@ -68,6 +86,48 @@ export default function HoaDonDetail() {
     loadTimeLineHoaDon();
   }, []);
   // load hóa đơn
+
+  const loadVoucherTotNhatVaVoucherTiepTheo = (idKH,money) => {
+    console.log("money", money);
+    SellAPI.voucherTotNhat(idKH, money).then((res) =>
+      setVoucherHienTai(res.data)
+    );
+    SellAPI.voucherSapDatDuoc(idKH, money).then((res) => {
+      console.log("res", res.data);
+      setSoTienCanMuaThem(res.data[0]);
+      setSoTienDuocGiam(res.data[1]);
+    });
+  };
+
+  useEffect(() => {
+    if (hoaDondetail.nguoiDung) {
+      SellAPI.getVoucherWithIDKH(hoaDondetail.nguoiDung).then((res) =>
+        setVoucher("Voucher theo KH",res.data)
+      );
+    } else {
+      SellAPI.getVoucherNoLimited().then((res) => setVoucher("Voucher Không",res.data));
+    }
+    loadVoucherTotNhatVaVoucherTiepTheo(hoaDondetail.nguoiDung ? hoaDondetail.nguoiDung : null , hoaDondetail.giaGoc ? hoaDondetail.giaGoc : 0)
+  }, [hoaDondetail.giaGoc]);
+
+  const onChangeVoucher = async (value, option) => {
+    await SellAPI.getThanhTienbyIDHD(activeKey).then((res) => {
+      if ((res.data ? res.data : 0) < option.dieuKien) {
+        toast("Không đủ điều kiện!", {
+          position: "top-right",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        return setVoucherHienTai(null);
+      }
+      setVoucherHienTai(option);
+    });
+  };
 
   const loadHoaDon = async () => {
     HoaDonAPI.detailHD(id).then((res) => {
@@ -85,17 +145,18 @@ export default function HoaDonDetail() {
       title: "Thông báo",
       content: "Bạn có chắc chắn muốn xóa hóa đơn này không?",
       onOk: () => {
-      HoaDonAPI.huyHoaDon(id);
-      toast("✔️ Xóa hóa đơn thành công!", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+        HoaDonAPI.huyHoaDon(id);
+
+        toast("✔️ Xóa hóa đơn thành công!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       },
       onCancel: () => {},
       footer: (_, { OkBtn, CancelBtn }) => (
@@ -105,7 +166,7 @@ export default function HoaDonDetail() {
         </>
       ),
     });
-  }
+  };
   // update trạng thái hóa đơn
   const handleSubmit = (values) => {
     AdminGuiThongBaoXacNhanDatHang();
@@ -201,7 +262,7 @@ export default function HoaDonDetail() {
   const [trangThai, setTrangThai] = useState([]);
 
   const [listSanPhams, setlistSanPhams] = useState([]);
-
+  console.log("list sản phẩm", listSanPhams);
   const loadListSanPhams = () => {
     HoaDonAPI.detailSanPham(id).then((res) => {
       setlistSanPhams(res.data);
@@ -269,21 +330,21 @@ export default function HoaDonDetail() {
       return "Hủy";
     }
   };
-    const showTitleButtonVanDonTraTruoc = (trangThai) => {
-      if (trangThai === "0") {
-        return "Xác nhận";
-      } else if (trangThai === "1") {
-        return "Chờ vận chuyển";
-      } else if (trangThai === "2") {
-        return "Đang vận chuyển";
-      } else if (trangThai === "3") {
-        return "Thành công";
-      } else if (trangThai === "4") {
-        return "Thành công";
-      } else if (trangThai === "-1") {
-        return "Hủy";
-      }
-    };
+  const showTitleButtonVanDonTraTruoc = (trangThai) => {
+    if (trangThai === "0") {
+      return "Xác nhận";
+    } else if (trangThai === "1") {
+      return "Chờ vận chuyển";
+    } else if (trangThai === "2") {
+      return "Đang vận chuyển";
+    } else if (trangThai === "3") {
+      return "Thành công";
+    } else if (trangThai === "4") {
+      return "Thành công";
+    } else if (trangThai === "-1") {
+      return "Hủy";
+    }
+  };
   return (
     <div className="container mt-4 radius  ">
       <div className="container-fuild  row pt-3 pb-4 bg-light rounded border-danger ">
@@ -365,58 +426,55 @@ export default function HoaDonDetail() {
                     )}
                   </>
                 ) : (
-                    
-                    <>
-                      {trangThai == 0 ? (
-                        <Button
-                          className="ms-5 "
-                          type="primary"
-                          onClick={showModal}
-                        >
-                          {showTitleButtonVanDonTraSau(trangThai)}
-                        </Button>
-                      ) : trangThai == 1 ? (
-                        <Button
-                          className="ms-5 "
-                          type="primary"
-                          onClick={showModal}
-                        >
-                          {showTitleButtonVanDonTraSau(trangThai)}
-                        </Button>
-                      ) : trangThai == 2 ? (
-                        <Button
-                          className="ms-5 "
-                          type="primary"
-                          onClick={showModal}
-                        >
-                          {showTitleButtonVanDonTraSau(trangThai)}
-                        </Button>
-                      ) : trangThai == 3 ? (
-                        <Button
-                          className="ms-5 "
-                          type="primary"
-                          onClick={showModal}
-                        >
-                          {showTitleButtonVanDonTraSau(trangThai)}
-                        </Button>
-                      ) : trangThai == 4 ? (
-                        <Button
-                          className="ms-5 "
-                          type="primary"
-                          onClick={showModal}
-                        >
-                          {showTitleButtonVanDonTraSau(trangThai)}
-                        </Button>
-                      ) : (
-                        <></>
-                      )}
-                    </>
-                  
+                  <>
+                    {trangThai == 0 ? (
+                      <Button
+                        className="ms-5 "
+                        type="primary"
+                        onClick={showModal}
+                      >
+                        {showTitleButtonVanDonTraSau(trangThai)}
+                      </Button>
+                    ) : trangThai == 1 ? (
+                      <Button
+                        className="ms-5 "
+                        type="primary"
+                        onClick={showModal}
+                      >
+                        {showTitleButtonVanDonTraSau(trangThai)}
+                      </Button>
+                    ) : trangThai == 2 ? (
+                      <Button
+                        className="ms-5 "
+                        type="primary"
+                        onClick={showModal}
+                      >
+                        {showTitleButtonVanDonTraSau(trangThai)}
+                      </Button>
+                    ) : trangThai == 3 ? (
+                      <Button
+                        className="ms-5 "
+                        type="primary"
+                        onClick={showModal}
+                      >
+                        {showTitleButtonVanDonTraSau(trangThai)}
+                      </Button>
+                    ) : trangThai == 4 ? (
+                      <Button
+                        className="ms-5 "
+                        type="primary"
+                        onClick={showModal}
+                      >
+                        {showTitleButtonVanDonTraSau(trangThai)}
+                      </Button>
+                    ) : (
+                      <></>
+                    )}
+                  </>
                 )}
               </>
             ) : (
               <>
-              
                 {hoaDondetail.traSau == 1 ? (
                   <>
                     {trangThai == 0 ? (
@@ -516,7 +574,8 @@ export default function HoaDonDetail() {
                       <></>
                     )}
                   </>
-                )} <></>
+                )}{" "}
+                <></>
               </>
             )}
             <Modal
@@ -568,7 +627,11 @@ export default function HoaDonDetail() {
           <>
             <>
               {trangThai == 0 ? (
-                <Button className="ms-5 btn btn-danger " type="primary" onClick={handleHuyHoaDon}>
+                <Button
+                  className="ms-5 btn btn-danger "
+                  type="primary"
+                  onClick={handleHuyHoaDon}
+                >
                   Hủy
                 </Button>
               ) : trangThai == 1 ? (
@@ -632,7 +695,7 @@ export default function HoaDonDetail() {
                       <p>{hoaDondetail.tenKH}</p>
                     </div>
                     <div className="mt-4">
-                      <p>{hoaDondetail.sdtKH}</p>
+                      <p>{hoaDondetail.sdt}</p>
                     </div>
                     <div className="mt-4">
                       <p>{hoaDondetail.diaChi}</p>
@@ -753,7 +816,85 @@ export default function HoaDonDetail() {
                     </div>
                     <hr></hr>
                     <tr className="pt-3 row">
-                      <div className="col-md-6"></div>
+                      <div className="col-md-6">
+                      <div className="row">
+                          <h6 className="col-md-3 mt-2">Mã giảm giá:</h6>
+
+                          <Space.Compact className="col-md-10">
+                            <Select
+                              showSearch
+                              style={{ width: 800, height: 120 }}
+                              placeholder="Lựa chọn voucher"         
+                              onChange={onChangeVoucher}
+                              value={voucherHienTai ? voucherHienTai.ma : null}
+                              defaultValue={null}
+                              optionFilterProp="label"
+                            >
+                              {voucher.data ? (
+                                voucher.data.map((option) => (
+                                  <Option
+                                    key={option.id}
+                                    value={option.id}
+                                    label={option.ma}
+                                    imgTicket={imgTicket}
+                                    dieuKien={option.dieuKien}
+                                    giamToiDa={option.giamToiDa}
+                                    loai={option.loaiVoucher}
+                                    mucDo={option.mucDo}
+                                    style={{ width: "100%", height: "100%" }}
+                                    // filterOption={filterOptionVoucher}
+                                  >
+                                    <div className="row">
+                                      <div
+                                        className="col-md-2"
+                                        //style={{ marginRight: 50 }}
+                                      >
+                                        <img
+                                          src={imgTicket}
+                                          style={{
+                                            width: 100,
+                                            marginRight: "8px",
+                                            heitgh: 80,
+                                            marginTop: "15px",
+                                          }}
+                                        />
+                                      </div>
+                                      <div
+                                        className="col"
+                                        style={{ marginLeft: "50px" }}
+                                      >
+                                        Mã giảm giá: {option.ma}
+                                        <br></br>
+                                        Điều kiện:
+                                        {Intl.NumberFormat("en-US").format(
+                                          option.dieuKien
+                                        )}{" "}
+                                        VNĐ
+                                        <br></br>
+                                        Giảm:
+                                        {option.loaiVoucher === "Phần trăm"
+                                          ? option.mucDo + "% "
+                                          : `${Intl.NumberFormat(
+                                              "en-US"
+                                            ).format(option.mucDo)} VNĐ `}
+                                        <br></br>
+                                        Tối đa:
+                                        {Intl.NumberFormat("en-US").format(
+                                          option.giamToiDa
+                                        )}
+                                        VNĐ
+                                      </div>
+                                    </div>
+                                  </Option>
+                                ))
+                              ) : (
+                                <p>Không có voucher hợp lệ</p>
+                              )}
+                            </Select>
+                            {/* <Button className="ms-5">Áp mã</Button> */}
+                          </Space.Compact>
+                        </div>
+                      </div>
                       <div className="col-md-3"></div>
                       <div className="col-md-3">
                         <div className="d-flex">
@@ -896,7 +1037,7 @@ export default function HoaDonDetail() {
             <p>{hoaDondetail.tenKH}</p>
           </div>
           <div className="mt-4">
-            <p>{hoaDondetail.sdtKH}</p>
+            <p>{hoaDondetail.sdt}</p>
           </div>
           <div className="mt-4">
             <p>{hoaDondetail.ghiChuHD}</p>
@@ -913,7 +1054,7 @@ export default function HoaDonDetail() {
         </div>
         {/* chỉnh sửa sản phẩm */}
         <>
-          {hoaDondetail.loaiHD == 0 && trangThai == 0 ? (
+          {hoaDondetail.diaChi ? (
             <div className="bd-highlight">
               <Button
                 className="btn btn-danger "
@@ -923,7 +1064,10 @@ export default function HoaDonDetail() {
               </Button>
               <ModalSanPham
                 // idHD = {tab.id}
-                activeKey={activeKey}
+                loadListSanPhams={loadListSanPhams}
+                loadHoaDon={loadHoaDon}
+                maNV={maNV}
+                activeKey={id}
                 openSanPham={openSanPham}
                 setOpenSanPham={setOpenSanPham}
                 onOk={handleCancel}
@@ -941,91 +1085,181 @@ export default function HoaDonDetail() {
       {/* detail hóa đơn */}
       <div className="container-fuild mt-3 row bg-light radius">
         <div>
-          {listSanPhams.map((listSanPham, index) => (
-            <tr className="pt-3 row">
-              <div className="col-md-3">
-                <Image
-                  cloudName="dtetgawxc"
-                  publicId={listSanPham.urlHA}
-                  width="100"
-                  crop="scale"
-                  href={listSanPham.urlHA}
-                  style={{ width: 150, height: 150, marginLeft: 15 }}
-                />
-              </div>
-              <div className="col-md-5 ">
-                <div className="mt-1">
-                  <h6>
-                    {listSanPham.tenHang} {listSanPham.tenSP}{" "}
-                  </h6>
-                </div>
-                <div className="text-danger">
-                  <h6>
-                    <del>
+          {listSanPhams.map(
+            (listSanPham, index) => (
+              console.log(listSanPham),
+              (
+                <tr className="pt-3 row">
+                  <div className="col-md-3">
+                    <Image
+                      cloudName="dtetgawxc"
+                      publicId={listSanPham.urlHA}
+                      width="100"
+                      crop="scale"
+                      href={listSanPham.urlHA}
+                      style={{ width: 150, height: 150, marginLeft: 15 }}
+                    />
+                  </div>
+                  <div className="col-md-5 ">
+                    <div className="mt-1">
+                      <h6>
+                        {listSanPham.tenHang} {listSanPham.tenSP}{" "}
+                      </h6>
+                    </div>
+                    {listSanPham.giaGiam > 0 ? (
+                      <div className="text-danger">
+                        <h6>
+                          <del>
+                            <IntlProvider locale="vi-VN">
+                              <div>
+                                <FormattedNumber
+                                  value={listSanPham.giaBanSP}
+                                  style="currency"
+                                  currency="VND"
+                                  minimumFractionDigits={0}
+                                />
+                              </div>
+                            </IntlProvider>
+                          </del>
+                        </h6>
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                    <div className="text-danger">
+                      <h6>
+                        <IntlProvider locale="vi-VN">
+                          <div>
+                            <FormattedNumber
+                              value={listSanPham.thanhTienSP}
+                              style="currency"
+                              currency="VND"
+                              minimumFractionDigits={0}
+                            />
+                          </div>
+                        </IntlProvider>
+                      </h6>
+                    </div>
+                    <h6>Size:{listSanPham.tenKichThuoc}</h6>
+                    <div
+                      style={{
+                        backgroundColor: `${listSanPham.tenMauSac}`,
+                        borderRadius: 6,
+                        width: 60,
+                        height: 25,
+                      }}
+                    ></div>
+                    <h6>x{listSanPham.soLuongSP}</h6>
+                  </div>
+
+                  <div className="col-md-2 text-danger mt-5">
+                    <h6>
                       <IntlProvider locale="vi-VN">
                         <div>
                           <FormattedNumber
-                            value={listSanPham.giaBanSP}
+                            value={
+                              listSanPham.thanhTienSP * listSanPham.soLuongSP
+                            }
                             style="currency"
                             currency="VND"
                             minimumFractionDigits={0}
                           />
                         </div>
                       </IntlProvider>
-                    </del>
-                  </h6>
-                </div>
-                <div className="text-danger">
-                  <h6>
-                    <IntlProvider locale="vi-VN">
-                      <div>
-                        <FormattedNumber
-                          value={listSanPham.thanhTienSP}
-                          style="currency"
-                          currency="VND"
-                          minimumFractionDigits={0}
-                        />
-                      </div>
-                    </IntlProvider>
-                  </h6>
-                </div>
-                <h6>Size:{listSanPham.tenKichThuoc}</h6>
-                <div
-                  style={{
-                    backgroundColor: `${listSanPham.tenMauSac}`,
-                    borderRadius: 6,
-                    width: 60,
-                    height: 25,
-                  }}
-                ></div>
-                <h6>x{listSanPham.soLuongSP}</h6>
-              </div>
+                    </h6>
+                  </div>
+                  <div className="col-md-2  mt-5">
+                    <Button className=" btn btn-danger">Trả hàng</Button>
+                  </div>
 
-              <div className="col-md-2 text-danger mt-5">
-                <h6>
-                  <IntlProvider locale="vi-VN">
-                    <div>
-                      <FormattedNumber
-                        value={listSanPham.thanhTienSP * listSanPham.soLuongSP}
-                        style="currency"
-                        currency="VND"
-                        minimumFractionDigits={0}
-                      />
-                    </div>
-                  </IntlProvider>
-                </h6>
-              </div>
-              <div className="col-md-2  mt-5">
-                <Button className=" btn btn-danger">Trả hàng</Button>
-              </div>
-
-              <hr className="mt-3"></hr>
-            </tr>
-          ))}
+                  <hr className="mt-3"></hr>
+                </tr>
+              )
+            )
+          )}
         </div>
 
         <tr className="pt-3 row">
-          <div className="col-md-6"></div>
+          <div className="col-md-6">
+          <div className="row">
+                          <h6 className="col-md-3 mt-2">Mã giảm giá:</h6>
+
+                          <Space.Compact className="col-md-10">
+                            <Select
+                              showSearch
+                              style={{ width: 800, height: 120 }}
+                              placeholder="Lựa chọn voucher"
+                              s
+                              onChange={onChangeVoucher}
+                              //onSearch={onSearchVoucher}
+                              //value={voucherHienTai}
+                              value={voucherHienTai ? voucherHienTai.ma : null}
+                              defaultValue={null}
+                              optionFilterProp="label"
+                            >
+                              {
+                                voucher?.data?.map((option) => (
+                                  <Option
+                                    key={option.id}
+                                    value={option.id}
+                                    label={option.ma}
+                                    imgTicket={imgTicket}
+                                    dieuKien={option.dieuKien}
+                                    giamToiDa={option.giamToiDa}
+                                    loai={option.loaiVoucher}
+                                    mucDo={option.mucDo}
+                                    style={{ width: "100%", height: "100%" }}
+                                    // filterOption={filterOptionVoucher}
+                                  >
+                                    <div className="row">
+                                      <div
+                                        className="col-md-2"
+                                        //style={{ marginRight: 50 }}
+                                      >
+                                        <img
+                                          src={imgTicket}
+                                          style={{
+                                            width: 100,
+                                            marginRight: "8px",
+                                            heitgh: 80,
+                                            marginTop: "15px",
+                                          }}
+                                        />
+                                      </div>
+                                      <div
+                                        className="col"
+                                        style={{ marginLeft: "50px" }}
+                                      >
+                                        Mã giảm giá: {option.ma}
+                                        <br></br>
+                                        Điều kiện:
+                                        {Intl.NumberFormat("en-US").format(
+                                          option.dieuKien
+                                        )}{" "}
+                                        VNĐ
+                                        <br></br>
+                                        Giảm:
+                                        {option.loaiVoucher === "Phần trăm"
+                                          ? option.mucDo + "% "
+                                          : `${Intl.NumberFormat(
+                                              "en-US"
+                                            ).format(option.mucDo)} VNĐ `}
+                                        <br></br>
+                                        Tối đa:
+                                        {Intl.NumberFormat("en-US").format(
+                                          option.giamToiDa
+                                        )}
+                                        VNĐ
+                                      </div>
+                                    </div>
+                                  </Option>
+                                ))
+                              }
+                            </Select>
+                            {/* <Button className="ms-5">Áp mã</Button> */}
+                          </Space.Compact>
+                        </div>
+          </div>
           <div className="col-md-3"></div>
           <div className="col-md-3">
             <div className="d-flex">
@@ -1034,7 +1268,10 @@ export default function HoaDonDetail() {
                 <IntlProvider locale="vi-VN">
                   <div>
                     <FormattedNumber
-                      value={hoaDondetail.thanhTien}
+                      value={
+                        parseFloat(hoaDondetail.thanhTien) +
+                        parseFloat(hoaDondetail.giaGiam)
+                      }
                       style="currency"
                       currency="VND"
                       minimumFractionDigits={0}
@@ -1059,14 +1296,13 @@ export default function HoaDonDetail() {
               </p>
             </div>
             <div className="d-flex">
-              <h6 className="col-md-8">Tổng tiền giảm:</h6>
-              <p className="col-md-4">
+              <h6 className="col-md-8">Giảm giá :</h6>
+              <p className="col-md-4" style={{ color: "red" }}>
                 <IntlProvider locale="vi-VN">
                   <div>
                     <FormattedNumber
                       value={
-                        listSanPhams.giaBanSP * listSanPhams.soLuongSP -
-                        hoaDondetail.thanhTien
+                        hoaDondetail.giaGiam ? "-" + hoaDondetail.giaGiam : 0
                       }
                       style="currency"
                       currency="VND"
@@ -1077,12 +1313,22 @@ export default function HoaDonDetail() {
               </p>
             </div>
             <div className="d-flex">
-              <h6 className="col-md-8">Tổng giảm:</h6>
+              <h6 className="col-md-8">Tổng tiền:</h6>
               <p className="col-md-4">
                 <IntlProvider locale="vi-VN">
                   <div>
                     <FormattedNumber
-                      value={hoaDondetail.thanhTien}
+                      value={
+                        hoaDondetail.giaGoc -
+                        parseFloat(
+                          hoaDondetail.giaGiam ? hoaDondetail.giaGiam : 0
+                        ) +
+                        parseFloat(
+                          hoaDondetail.tienVanChuyen
+                            ? hoaDondetail.tienVanChuyen
+                            : 0
+                        )
+                      }
                       style="currency"
                       currency="VND"
                       minimumFractionDigits={0}

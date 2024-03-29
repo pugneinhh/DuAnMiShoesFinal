@@ -21,6 +21,7 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, St
             "ctsp.ghi_chu as linkAnh, (select ten from san_pham where san_pham.id = ctsp.san_pham_id) as tenSP,\n" +
             "(select loai from khuyen_mai where khuyen_mai.id = ctsp.khuyen_mai_id) as loaiKM , \n" +
             "(select ten from khuyen_mai where khuyen_mai.id = ctsp.khuyen_mai_id) as tenKM,\n" +
+            "(select ma from hoa_don where hoa_don.id = hdct.hoa_don_id) as maHD,\n" +
             "(select gia_tri_khuyen_mai from khuyen_mai where khuyen_mai.id = ctsp.khuyen_mai_id) as giaTriKhuyenMai\n" +
             "FROM hoa_don_chi_tiet hdct LEFT JOIN chi_tiet_san_pham ctsp ON hdct.chi_tiet_san_pham_id = ctsp.id where hoa_don_id =:id ",nativeQuery = true)
     List<HoaDonChiTietBanHangRespone> getAllHDCTByHD(String id);

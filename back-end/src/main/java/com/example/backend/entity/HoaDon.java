@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Builder
 public class HoaDon {
     @Id
-   // @GeneratedValue(strategy = GenerationType.UUID )
+    @GeneratedValue(strategy = GenerationType.UUID )
     private String id;
     private String ma;
     @Column(name = "nhan_vien_id")

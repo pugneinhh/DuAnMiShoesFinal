@@ -29,7 +29,7 @@ const ModalSanPham = (props) => {
   const [form1] = Form.useForm();
   const { openSanPham, setOpenSanPham } = props;
   const activeKey = props.activeKey;
-  // const getSoTien = props.getSoTien();
+  //const getSoTien = props.getSoTien();
   const ctsp = useSelector(GetProduct);
   const invoice = useSelector(GetInvoice)
   const [chiTietSanPham,setChiTietSanPham] = useState([""]);
@@ -327,6 +327,7 @@ const addHang = (value) => {
     // }
     SellAPI.addInvoice(hdct[0]);
     SellAPI.getAllProducts().then((item) => {      setCTSPs(item.data) ;       setChiTietSanPham(item.data);})
+    props.getSoTien();
     setOpenSanPham(false);
 
   };

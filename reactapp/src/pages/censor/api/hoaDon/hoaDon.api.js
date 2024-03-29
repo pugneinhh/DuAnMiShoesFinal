@@ -43,13 +43,20 @@ export class HoaDonAPI {
             url: `/admin/hoa-don/ngay-hoa-don-time-line/${id}`,
         });
     };
-    static updateTTHoaDon = (id,maNV,data) => {
+    static updateTTHoaDon = (idHD,maNV,data) => {
         return requestAdmin({
           method: "PUT",
-          url: `/admin/hoa-don/update-hoa-don/${id}/${maNV}`,
+          url: `/admin/hoa-don/update-hoa-don/${idHD}/${maNV}`,
           data: data,
         });
     };
+    static themSanPham = (idHD,maNV,idCTSP) => {
+        return requestAdmin({
+           method: "PUT",
+           url: `/admin/hoa-don/them-san-pham/${idHD}/${idCTSP}/${maNV}`,
+          // data: data, 
+        });
+    }
    static search = (data) => {
         return requestAdmin({
             method: "POST",

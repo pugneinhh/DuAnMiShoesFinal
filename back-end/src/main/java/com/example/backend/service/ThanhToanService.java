@@ -16,6 +16,21 @@ public class ThanhToanService {
 
     public ThanhToan thanhToan(ThanhToanRequest request) {
         ThanhToan tt = request.map(new ThanhToan());
+//        List<ThanhToan> listTT = thanhToanRepository.getThanhToanByIdHD(tt.getHoaDon().getId());
+//
+//        if (listTT!= null && listTT.size() > 0) {
+//            for (ThanhToan t : listTT) {
+//                System.out.println("T"+t.toString());
+//                if (t.getPhuongThuc() == 0 && t.getTrangThai() != 1 && t.getPhuongThuc() ==tt.getPhuongThuc()){
+//                    t.setTienMat(t.getTienMat().add(tt.getTienMat()));
+//                    t.setTongTien(t.getTongTien().add(tt.getTienMat()));
+//                    return thanhToanRepository.save(t);
+//                } else if (t.getPhuongThuc() == 1 && t.getTrangThai() != 1 && t.getPhuongThuc() == tt.getPhuongThuc()) {
+//                    t.setTongTien(t.getTongTien().add(tt.getTongTien()));
+//                    return thanhToanRepository.save(t);
+//                }
+//            }
+//        }
         return thanhToanRepository.save(tt);
     }
 
@@ -26,7 +41,11 @@ public class ThanhToanService {
     //    public ThanhToan thanhToanTienMat(ThanhToanRequest request){
 //        ThanhToan tt = request.map(new ThanhToan())
 //    }
-    public ThanhToan getThanhToanByIdHD(String idHD) {
+    public List<ThanhToan> getThanhToanByIdHD(String idHD) {
         return thanhToanRepository.getThanhToanByIdHD(idHD);
+    }
+
+    public ThanhToan save(ThanhToan tt){
+        return thanhToanRepository.save(tt);
     }
 }

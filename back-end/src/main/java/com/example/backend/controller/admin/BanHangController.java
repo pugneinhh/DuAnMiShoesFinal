@@ -5,6 +5,7 @@ import com.example.backend.dto.request.HoaDonRequest;
 import com.example.backend.dto.request.LichSuHoaDonRequest;
 import com.example.backend.dto.response.ChiTietSanPhamForBanHang;
 import com.example.backend.dto.response.HoaDonChiTietRespone;
+import com.example.backend.dto.response.VoucherRespone;
 import com.example.backend.entity.*;
 import com.example.backend.repository.CTSPRepository;
 import com.example.backend.repository.CongThucRepository;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin("http://localhost:3000/")
@@ -35,7 +37,8 @@ public class BanHangController {
     CongThucRepository congThucRepository;
     @Autowired
     VoucherService voucherService;
-
+    @Autowired
+    ThanhToanService thanhToanService;
     @Autowired
     HoaDonServicee hoaDonServicee;
     @Autowired
@@ -65,10 +68,10 @@ public class BanHangController {
         hoaDonRequest.setTrangThai(0);
       //  hoaDonRequest.setGiaTriDiem(Integer.valueOf(hoaDonRequest.getThanhTien().intValue()/ct.getTiSo().intValue()));
         banHangService.addHoaDon(hoaDonRequest);
-        HoaDon hoaDon=hoaDonServicee.findHoaDonbyID(hoaDonRequest.getId());
-
+        HoaDon hoaDon=hoaDonServicee.findHoaDonByMa(hoaDonRequest.getMa());
+//        System.out.println("Hóa đơn addHD"+hoaDon);
         LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
-        lichSuHoaDon.setId(hoaDonRequest.getId());
+        lichSuHoaDon.setId(hoaDonRequest.getMa());
         lichSuHoaDon.setHoaDon(hoaDon);
         lichSuHoaDon.setNguoiTao(hoaDonRequest.getNhanVien());
         lichSuHoaDon.setTrangThai(0);
@@ -94,9 +97,9 @@ public class BanHangController {
     public ResponseEntity<?> deleteHDCT(@RequestBody HoaDonChiTietRequest request){
         return ResponseEntity.ok(hoaDonChiTietService.deleteHDCT(request));
     }
-    @DeleteMapping("/delete-hoa-don-chi-tiet/{idCTSP}/{idHD}")
-    public void  deleteHoaDonChiTiet (@PathVariable("idCTSP") String idCTSP,@PathVariable("idHD")String idHD) {
-        hoaDonChiTietService.deleteHDCTAndRollBackInSell(idCTSP,idHD); //  roll backed
+    @DeleteMapping("/delete-hoa-don-chi-tiet/{idCTSP}/{ma}")
+    public void  deleteHoaDonChiTiet (@PathVariable("idCTSP") String idCTSP,@PathVariable("ma")String ma) {
+        hoaDonChiTietService.deleteHDCTAndRollBackInSell(idCTSP,ma); //  roll backed
     }
     @PostMapping("/thanh-toan")
     public ResponseEntity<?> thanhToan(@PathVariable HoaDonRequest hoaDonRequest){
@@ -104,9 +107,9 @@ public class BanHangController {
         hoaDonRequest.setNgayMua(LocalDateTime.now());
         return ResponseEntity.ok(banHangService.addHoaDon(hoaDonRequest));
     }
-    @GetMapping("/hien-thi-hdct/{id}")
-    public ResponseEntity<?> getHDCTByHD(@PathVariable("id") String id){
-        return ResponseEntity.ok(hoaDonChiTietService.getAllHDCTByHD(id));
+    @GetMapping("/hien-thi-hdct/{ma}")
+    public ResponseEntity<?> getHDCTByHD(@PathVariable("ma") String ma){
+        return ResponseEntity.ok(hoaDonChiTietService.getAllHDCTByHD(ma));
     }
     @GetMapping("/hoa-don-chi-tiet/{idHD}/{idCTSP}")
     public ResponseEntity<?> getOneHDCT(@PathVariable("idHD")String idHD,
@@ -137,10 +140,10 @@ public class BanHangController {
         return ResponseEntity.ok(voucherService.noLimited());
     }
 
-    @PutMapping("/hoa-don/updateSL/{idCTSP}/{idHD}/{value}")
-    public ResponseEntity<?> updateSL (@PathVariable("idCTSP")String idCTSP,@PathVariable("idHD") String idHD,@PathVariable("value") int value) {
+    @PutMapping("/hoa-don/updateSL/{idCTSP}/{ma}/{value}")
+    public ResponseEntity<?> updateSL (@PathVariable("idCTSP")String idCTSP,@PathVariable("ma") String ma,@PathVariable("value") int value) {
 
-        return ResponseEntity.ok(hoaDonChiTietService.updateSL(idCTSP,idHD,value));
+        return ResponseEntity.ok(hoaDonChiTietService.updateSL(idCTSP,ma,value));
     }
 
     @PutMapping("/hoa-don/updateSL1/{idCTSP}/{idHD}")
@@ -149,15 +152,15 @@ public class BanHangController {
         return ResponseEntity.ok(hoaDonChiTietService.updateSL1(idCTSP,idHD));
     }
 
-    @PutMapping("/hoa-don/update-van-chuyen/{idHD}")
-    public ResponseEntity<?> updateVanChuyen (@PathVariable("idHD")String idHD, @RequestBody HoaDon hd){
+    @PutMapping("/hoa-don/update-van-chuyen/{ma}")
+    public ResponseEntity<?> updateVanChuyen (@PathVariable("ma")String ma, @RequestBody HoaDon hd){
         System.out.println("req hóa đơn"+hd);
-        return ResponseEntity.ok(hoaDonServicee.update1(hd,idHD));
+        return ResponseEntity.ok(hoaDonServicee.update1(hd,ma));
     }
 
-    @PutMapping("/hoa-don/delete-van-chuyen/{idHD}")
-    public ResponseEntity<?> updateVanChuyen (@PathVariable("idHD")String idHD) {
-        return ResponseEntity.ok(hoaDonServicee.deleteVanChuyen(idHD));
+    @PutMapping("/hoa-don/delete-van-chuyen/{ma}")
+    public ResponseEntity<?> updateVanChuyen (@PathVariable("ma")String ma) {
+        return ResponseEntity.ok(hoaDonServicee.deleteVanChuyen(ma));
     }
 //        HoaDon hoaDon=hoaDonServicee.findHoaDonbyID(idHD);
 //
@@ -192,14 +195,14 @@ public class BanHangController {
     }
 
 
-    @PutMapping("/nguoi-dung/update-nguoi-dung/{idHD}/{idND}")
-    public  ResponseEntity<?> updateNguoiDung(@PathVariable("idHD")String idHD,@PathVariable("idND")String idND) {
-        return ResponseEntity.ok(hoaDonServicee.updateKH(idHD,idND));
+    @PutMapping("/nguoi-dung/update-nguoi-dung/{ma}/{idND}")
+    public  ResponseEntity<?> updateNguoiDung(@PathVariable("ma")String ma,@PathVariable("idND")String idND) {
+        return ResponseEntity.ok(hoaDonServicee.updateKH(ma,idND));
     }
 
-    @PutMapping("/nguoi-dung/update-khach-le/{idHD}")
-    public  ResponseEntity<?> updateNguoiDung(@PathVariable("idHD")String idHD) {
-        return ResponseEntity.ok(hoaDonServicee.updateReturnKhachLe(idHD));
+    @PutMapping("/nguoi-dung/update-khach-le/{ma}")
+    public  ResponseEntity<?> updateNguoiDung(@PathVariable("ma")String ma) {
+        return ResponseEntity.ok(hoaDonServicee.updateReturnKhachLe(ma));
     }
 
 
@@ -209,9 +212,19 @@ public class BanHangController {
         return ResponseEntity.ok(lichSuHoaDonService.addLichSuHoaDon(lichSuHoaDonRequest));
     }
 
-    @PutMapping("/thanh-toan/hoa-don/{idHD}/{idNV}")
-    public ResponseEntity<?> thanhToanHoaDon (@PathVariable("idHD") String idHD,@PathVariable("idNV") String idNV) {
+    @PutMapping("/thanh-toan/hoa-don/{idHD}/{idNV}/{idVoucher}")
+    public ResponseEntity<?> thanhToanHoaDon (@PathVariable("idHD") String idHD,@PathVariable("idNV") String idNV,@PathVariable("idVoucher")String idVoucher) {
         HoaDon hoaDon=hoaDonServicee.findHoaDonbyID(idHD);
+        if (idVoucher != null) {
+            Voucher voucher = voucherService.detailVoucher(idVoucher);
+            hoaDon.setVoucher(voucher);
+            BigDecimal giamToiDa = voucher.getGiamToiDa();
+            BigDecimal giam = voucher.getLoaiVoucher().equals("Tiền mặt") ?
+                    ( BigDecimal.valueOf(voucher.getMucDo()).compareTo(giamToiDa) < 0 ?  BigDecimal.valueOf(voucher.getMucDo()) : giamToiDa ) :
+                    ((hoaDon.getThanhTien().multiply(BigDecimal.valueOf(voucher.getMucDo())).divide(new BigDecimal(100))).compareTo(giamToiDa) < 0 ? (hoaDon.getThanhTien().multiply(BigDecimal.valueOf(voucher.getMucDo())).divide(new BigDecimal(100))) : giamToiDa);
+            hoaDon.setGiaGiamGia(giam);
+            hoaDon.setThanhTien(hoaDon.getGiaGoc().subtract(giam));
+        }
         if(hoaDon.getTraSau() == 0) {
             if (hoaDon.getDiaChi() != null){
                 hoaDon.setTrangThai(2);
@@ -222,6 +235,7 @@ public class BanHangController {
         }  else {
             hoaDon.setTrangThai(2);
         }
+        System.out.println("Hóa đơn"+hoaDon);
         hoaDonServicee.updateTrangThaiHoaDon(hoaDon);
         List<HoaDonChiTiet> listHDCT = hoaDonChiTietService.getAllHDCTByIDHD(idHD);
         for (HoaDonChiTiet h : listHDCT) {
@@ -231,6 +245,11 @@ public class BanHangController {
         NguoiDung nguoiDung = nguoiDungService.findByID(idNV);
         System.out.println("Người dùng thanh toán"+nguoiDung);
         System.out.println("Hóa đơn thanh toán"+hoaDon);
+        List<ThanhToan> listTT = thanhToanService.getThanhToanByIdHD(idHD);
+        for (ThanhToan tt : listTT){
+            tt.setTrangThai(1);
+            thanhToanService.save(tt);
+        }
         LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
         lichSuHoaDon.setHoaDon(hoaDon);
         lichSuHoaDon.setNguoiTao(nguoiDung.getMa());
@@ -243,27 +262,121 @@ public class BanHangController {
     }
 
 
-    @PutMapping("/tra-sau/hoa-don/{idHD}/{idNV}")
-    public ResponseEntity<?> traSauHoaDon (@PathVariable("idHD") String idHD,@PathVariable("idNV") String idNV) {
-        return ResponseEntity.ok(  hoaDonServicee.updateTraSau(idHD,idNV));
+    @PutMapping("/tra-sau/hoa-don/{ma}/{idNV}")
+    public ResponseEntity<?> traSauHoaDon (@PathVariable("ma") String ma,@PathVariable("idNV") String idNV) {
+        return ResponseEntity.ok(  hoaDonServicee.updateTraSau(ma,idNV));
 
     }
 
-    @GetMapping("/hoa-don/san-pham/so-luong/{idSP}/{idHD}")
-    public ResponseEntity<?> soLuongSanPham(@PathVariable("idSP") String idSP, @PathVariable("idHD")String idHD){
-        return ResponseEntity.ok(ctspService.getSLVaSLT(idSP,idHD));
+    @GetMapping("/hoa-don/san-pham/so-luong/{idSP}/{ma}")
+    public ResponseEntity<?> soLuongSanPham(@PathVariable("idSP") String idSP, @PathVariable("ma")String ma){
+        return ResponseEntity.ok(ctspService.getSLVaSLT(idSP,ma));
     }
-    @PutMapping("/hoa-don/update-tien-van-chuyen/{idHD}/{tien}")
-    public ResponseEntity<?> updateTienVanChuyen(@PathVariable("idHD") String idHD,@PathVariable("tien")String tien){
-        HoaDon hd = hoaDonServicee.findHoaDonbyID(idHD);
+    @PutMapping("/hoa-don/update-tien-van-chuyen/{ma}/{tien}")
+    public ResponseEntity<?> updateTienVanChuyen(@PathVariable("ma") String ma,@PathVariable("tien")String tien){
+        HoaDon hd = hoaDonServicee.findHoaDonByMa(ma);
         hd.setTienVanChuyen(new BigDecimal(tien));
         return ResponseEntity.ok(hoaDonServicee.updateTrangThaiHoaDon(hd));
     }
 
-    @GetMapping("/hoa-don/so-tien/{idHD}")
-    public ResponseEntity<?> getThanhTienByIDHD(@PathVariable("idHD") String idHD){
-        System.out.println("ID"+idHD);
-        System.out.println("Hóa đơn"+hoaDonServicee.getHDByIDHD(idHD).getThanhTien());
-        return ResponseEntity.ok(hoaDonServicee.getHDByIDHD(idHD).getThanhTien());
+    @GetMapping("/hoa-don/so-tien/{ma}")
+    public ResponseEntity<?> getThanhTienByIDHD(@PathVariable("ma") String ma){
+        return ResponseEntity.ok(hoaDonServicee.findHoaDonByMa(ma).getThanhTien());
+    }
+
+    @GetMapping("/hoa-don/voucher-tot-nhat/{idKH}/{money}")
+    public ResponseEntity<?> getVoucherTotNhat(@PathVariable("money")String money,@PathVariable("idKH")String idKH){
+        System.out.println("idKH"+idKH);
+        String idV = "";
+        BigDecimal tienDuocKM = new BigDecimal("0");
+        if (!idKH.isEmpty()){
+           // NguoiDung kh = nguoiDungService.findByID(idKH);
+            List<VoucherRespone> listV = voucherService.getVoucherBanHang(idKH);
+            for (VoucherRespone v : listV){
+                BigDecimal mucDoKM = v.getLoaiVoucher().equalsIgnoreCase("Tiền mặt") ? new BigDecimal(v.getMucDo()) : new BigDecimal(money).multiply(new BigDecimal((v.getMucDo()))).divide(new BigDecimal("100"));
+                if (mucDoKM.compareTo(v.getGiamToiDa()) > 0){
+                    mucDoKM = v.getGiamToiDa();
+                }
+                if (new BigDecimal(money).compareTo(v.getDieuKien())>=0 && mucDoKM.compareTo(tienDuocKM)>0) {
+                    tienDuocKM = mucDoKM;
+                    idV = v.getId();
+                }
+            }
+        } else {
+            List<VoucherRespone> list = voucherService.noLimited();
+            for (VoucherRespone v : list){
+                System.out.println("Voucher"+v);
+                BigDecimal mucDoKM = v.getLoaiVoucher().equalsIgnoreCase("Tiền mặt") ? new BigDecimal(v.getMucDo()) : new BigDecimal(money).multiply(new BigDecimal((v.getMucDo()))).divide(new BigDecimal("100"));
+                if (mucDoKM.compareTo(v.getGiamToiDa()) > 0){
+                    mucDoKM = v.getGiamToiDa();
+                }
+                if (new BigDecimal(money).compareTo(v.getDieuKien())>=0 && mucDoKM.compareTo(tienDuocKM)>0) {
+                    tienDuocKM = mucDoKM;
+                    idV = v.getId();
+                }
+            }
+        }
+        if(idV.equals("")) return null;
+        return ResponseEntity.ok(voucherService.detailVoucher(idV));
+    }
+
+    @GetMapping("/hoa-don/khuyen-mai-sap-dat-duoc/{idKH}/{money}")
+    public List<BigDecimal> khuyenMaiSapDatDuoc (@PathVariable("idKH")String idKH, @PathVariable("money")String money){
+        BigDecimal soTienConThieu = new BigDecimal("0");
+        BigDecimal soTienDuocGiam = new BigDecimal("0");
+
+        System.out.println("Khashc hàng"+idKH);
+        System.out.println(idKH.isEmpty());
+        if (!idKH.equalsIgnoreCase("null")){
+            // NguoiDung kh = nguoiDungService.findByID(idKH);
+            List<VoucherRespone> listV = voucherService.getVoucherBanHang(idKH);
+            for (VoucherRespone v : listV){
+                if (v.getDieuKien().compareTo(new BigDecimal(money)) <= 0) continue;  // loại bỏ những voucher đã hợp yêu cầu
+                // giả sử vừa đủ điều kiện => giá được giảm
+                BigDecimal mucDoKM = v.getLoaiVoucher().equalsIgnoreCase("Tiền mặt") ? new BigDecimal(v.getMucDo()) : v.getDieuKien().multiply(new BigDecimal((v.getMucDo()))).divide(new BigDecimal("100"));
+                if (mucDoKM.compareTo(v.getGiamToiDa()) > 0){
+                    mucDoKM = v.getGiamToiDa(); // trường hợp lớn hơn giá giảm tối đa
+                }
+                if (soTienConThieu.compareTo(new BigDecimal("0")) == 0 && soTienDuocGiam.compareTo(new BigDecimal("0")) ==0) {
+                    soTienConThieu = v.getDieuKien().subtract(new BigDecimal(money));
+                    soTienDuocGiam = mucDoKM;
+                } else if (soTienConThieu.compareTo(v.getDieuKien().subtract(new BigDecimal(money))) >= 0 && soTienDuocGiam.compareTo(mucDoKM) <= 0) {
+                    soTienConThieu = v.getDieuKien().subtract(new BigDecimal(money));
+                    soTienDuocGiam = mucDoKM;
+                }
+
+            }
+        } else {
+            List<VoucherRespone> list = voucherService.noLimited();
+            for (VoucherRespone v : list){
+                if (v.getDieuKien().compareTo(new BigDecimal(money)) <= 0) continue;  // loại bỏ những voucher đã hợp yêu cầu
+                // giả sử vừa đủ điều kiện => giá được giảm
+                BigDecimal mucDoKM = v.getLoaiVoucher().equalsIgnoreCase("Tiền mặt") ? new BigDecimal(v.getMucDo()) : v.getDieuKien().multiply(new BigDecimal((v.getMucDo()))).divide(new BigDecimal("100"));
+                if (mucDoKM.compareTo(v.getGiamToiDa()) > 0){
+                    mucDoKM = v.getGiamToiDa(); // trường hợp lớn hơn giá giảm tối đa
+                }
+                if (soTienConThieu.compareTo(new BigDecimal("0")) == 0 && soTienDuocGiam.compareTo(new BigDecimal("0")) ==0) {
+                    soTienConThieu = v.getDieuKien().subtract(new BigDecimal(money));
+                    soTienDuocGiam = mucDoKM;
+
+                } else if (soTienConThieu.compareTo(v.getDieuKien().subtract(new BigDecimal(money))) >= 0 && soTienDuocGiam.compareTo(mucDoKM) <= 0) {
+                    soTienConThieu = v.getDieuKien().subtract(new BigDecimal(money));
+                    soTienDuocGiam = mucDoKM;
+
+                 }
+            }
+        }
+        List<BigDecimal> list = new ArrayList<>();
+        System.out.println("Money"+money);
+        System.out.println("Số tiền còn thiếu"+soTienConThieu);
+        System.out.println("Só tiền được giảm"+soTienDuocGiam);
+        list.add(soTienConThieu);
+        list.add(soTienDuocGiam);
+        return list;
+    }
+
+    @GetMapping("/detail-hoa-don/{ma}")
+    public ResponseEntity<?> detailHD(@PathVariable("ma") String ma){
+        return ResponseEntity.ok(hoaDonServicee.findHoaDonByMa(ma));
     }
 }

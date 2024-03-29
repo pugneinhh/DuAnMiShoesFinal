@@ -273,7 +273,7 @@ const DiaChiGiaoHang = ({
     dispatch(
       UpdateVanChuyenToBill({
         key: hoaDon,
-        id: hoaDon,
+        //id: hoaDon,
         tenNguoiNhan: value.tenNguoiNhan,
         soDienThoai: value.soDienThoai,
         email: value.email,

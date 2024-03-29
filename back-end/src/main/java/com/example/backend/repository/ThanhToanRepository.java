@@ -25,6 +25,6 @@ public interface ThanhToanRepository extends JpaRepository<ThanhToan, String> {
      SELECT * FROM duanmishoes.thanh_toan where hoa_don_id=:idHD
                     """, nativeQuery = true
     )
-    ThanhToan getThanhToanByIdHD(String idHD);
+    List<ThanhToan> getThanhToanByIdHD(String idHD);
 
 }

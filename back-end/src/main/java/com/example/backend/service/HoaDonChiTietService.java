@@ -27,7 +27,8 @@ public class HoaDonChiTietService {
     CTSPRepository ctspRepository;
     @Autowired
     HoaDonRepository hoaDonRepository;
-    public List<HoaDonChiTietBanHangRespone> getAllHDCTByHD(String id){
+    public List<HoaDonChiTietBanHangRespone> getAllHDCTByHD(String ma){
+        String id = hoaDonRepository.getHDByMa(ma).getId();
         return hoaDonChiTietRepository.getAllHDCTByHD(id);
     }
     public HoaDonChiTietRespone getOneHDCT(String idHD,String idCTSP){
@@ -110,7 +111,8 @@ public class HoaDonChiTietService {
         return  hoaDonChiTietRepository.save(hdctTonTai);
     }
 
-    public void deleteHDCTAndRollBackInSell(String idCTSP,String idHD){
+    public void deleteHDCTAndRollBackInSell(String idCTSP,String ma){
+        String idHD = hoaDonRepository.getHDByMa(ma).getId();
         HoaDonChiTiet hdct = hoaDonChiTietRepository.getHDCTByCTSPAndHD(idCTSP,idHD);
         System.out.println("Hóa đơn chi tiết"+hdct);
         ChiTietSanPham ctsp = ctspRepository.getReferenceById(idCTSP);
@@ -142,14 +144,17 @@ public class HoaDonChiTietService {
         System.out.println("List"+list.size());
         for (HoaDonChiTiet h : list){
             System.out.println("H"+h);
-            h.setGiaGiam(giaSauGiam.subtract(giaGiam));
-            h.setGiaSauGiam(giaGiam);
+//            h.setGiaGiam(giaSauGiam.subtract(giaGiam));
+//            h.setGiaSauGiam(giaGiam);
+            h.setGiaGiam(giaGiam);
+            h.setGiaSauGiam(giaSauGiam.subtract(giaGiam));
             hoaDonChiTietRepository.save(h);
             System.out.println( hoaDonChiTietRepository.save(h));
         }
     }
 
-    public HoaDonChiTiet updateSL(String idCTSP,String idHD,int soLuongCapNhat){
+    public HoaDonChiTiet updateSL(String idCTSP,String ma,int soLuongCapNhat){
+        String idHD = hoaDonRepository.getHDByMa(ma).getId();
         HoaDonChiTiet hdct = hoaDonChiTietRepository.getHDCTByCTSPAndHD(idCTSP,idHD);
         ChiTietSanPham ctsp = ctspRepository.getReferenceById(idCTSP);
         int slt = ctsp.getSoLuong();
@@ -192,4 +197,7 @@ public class HoaDonChiTietService {
         return list;
     }
 
+    public HoaDonChiTiet getHDCTByID(String idHDCT){
+        return hoaDonChiTietRepository.findById(idHDCT).get();
+    }
 }
