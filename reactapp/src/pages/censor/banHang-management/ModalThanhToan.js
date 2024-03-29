@@ -62,16 +62,40 @@ const ModalThanhToan = (props) => {
     }
 
     const handleTienMat = () => {
+        if (money <= 0){
+            return  toast("Vui lòng nhập số tiền!", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              });
+        } else {
         dispatch(AddPayDetail({hoaDon: hoaDon,phuongThuc:0,soTien:money}));
         dispatch(AddPay({hoaDon: hoaDon,phuongThuc:0,tienMat:money}));
-        const value = [{hoaDon:hoaDon,nguoiTao:storedData,tongTien:money}]
+        const value = [{hoaDon:hoaDon,nguoiTao:storedData,tongTien:money,tienMat:money}]
         SellAPI.thanhToanTienMat(value[0]);
         setTongThanhToan (parseFloat(tongThanhToan) + parseFloat(money));
         setMoney(0);
+        }
     }
 
     const handleChuyenKhoan = () => {
-        
+        if (money <= 0){
+            return  toast("Vui lòng nhập số tiền!", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              });
+        } else {
   
         console.log("Hóa đơn ck",hoaDon);
         console.log("Tiền ck",money);
@@ -80,7 +104,7 @@ const ModalThanhToan = (props) => {
         setTongThanhToan(parseFloat(tongThanhToan) + parseFloat(money));
         setTienCK(money);
         setMoney(0);
-        
+        }
         // navigate(linkVNP().data.url);
        // return UrlCK;
     }
@@ -101,10 +125,10 @@ const ModalThanhToan = (props) => {
         // }
         // addHD();
         // axios.post(`http://localhost:8080/ban-hang/thanh-toan`,dataHoaDon[0]);
-        if (voucher){
-        SellAPI.updateVoucherToHD(hoaDon,voucher);
-        }
-        SellAPI.thanhToanHoaDon(hoaDon, storedData);
+        // if (voucher){
+        // SellAPI.updateVoucherToHD(hoaDon,voucher.id);
+        // }
+        SellAPI.thanhToanHoaDon(hoaDon, storedData , voucher ? voucher.id : null);
 
         toast("Thanh toán thành công!", {
             position: "top-right",

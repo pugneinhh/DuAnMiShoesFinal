@@ -3,6 +3,7 @@ package com.example.backend.controller.admin;
 import com.example.backend.dto.request.ThanhToanRequest;
 import com.example.backend.entity.HoaDon;
 import com.example.backend.entity.NguoiDung;
+import com.example.backend.entity.ThanhToan;
 import com.example.backend.repository.HoaDonRepository;
 import com.example.backend.service.HoaDonServicee;
 import com.example.backend.service.KhachHangService;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @CrossOrigin("http://localhost:3000/")
 @RestController
@@ -41,6 +43,7 @@ public class ThanhToanController {
 //            }
 //            nguoiDung.setDiem(nguoiDung.getDiem()+hd.getGiaTriDiem());
 //        }
+        System.out.println(request);
         NguoiDung nguoiDung = nguoiDungService.findByID(request.getNguoiTao());
         request.setNguoiTao(nguoiDung.getMa());
         request.setNgayTao(LocalDateTime.now());

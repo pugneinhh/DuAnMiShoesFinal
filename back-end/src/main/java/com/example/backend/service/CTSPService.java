@@ -8,6 +8,7 @@ import com.example.backend.dto.response.sanpham.CTSPSearchRespone;
 import com.example.backend.dto.response.sanpham.ChiTietSanPhamRespone;
 import com.example.backend.dto.response.sanpham.DetailCTSPRespone;
 import com.example.backend.entity.ChiTietSanPham;
+import com.example.backend.entity.HoaDon;
 import com.example.backend.entity.KhuyenMai;
 import com.example.backend.model.*;
 import com.example.backend.repository.CTSPRepository;
@@ -23,6 +24,8 @@ public class CTSPService {
     CTSPRepository ctspRepository;
     @Autowired
     KhuyenMaiService khuyenMaiService;
+    @Autowired
+    HoaDonServicee hoaDonServicee;
     public List<ChiTietSanPham> getALL(){
         return ctspRepository.findAll();
     }
@@ -96,10 +99,11 @@ public class CTSPService {
     }
 
     public ChiTietSanPham findChiTietSanPhamByID(String idCTSP){
-        return ctspRepository.getReferenceById(idCTSP);
+        return ctspRepository.findById(idCTSP).get();
     }
 
-    public SoLuongVaSoLuongTon getSLVaSLT(String idSP,String idHD){
-        return ctspRepository.getSLAndSLT(idSP,idHD);
+    public SoLuongVaSoLuongTon getSLVaSLT(String idSP,String ma){
+        HoaDon hd = hoaDonServicee.findHoaDonByMa(ma);
+        return ctspRepository.getSLAndSLT(idSP,hd.getId());
     }
 }

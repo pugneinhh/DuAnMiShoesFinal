@@ -1,6 +1,7 @@
 package com.example.backend.service;
 
 import com.example.backend.dto.response.sanpham.ChiTietSanPhamRespone;
+import com.example.backend.entity.KhuyenMaiSanPham;
 import com.example.backend.repository.CTSPRepository;
 import com.example.backend.repository.KhuyenMaiRepository;
 import com.example.backend.repository.KhuyenMaiSanPhamRepository;
@@ -20,5 +21,14 @@ public class KhuyenMaiSanPhamService {
 
     public List<String> getAllPromotionsByProduct (String id){
         return  khuyenMaiSanPhamRepository.getAllProductByPromotion(id);
+    }
+    public KhuyenMaiSanPham add(KhuyenMaiSanPham kmsp){
+        return khuyenMaiSanPhamRepository.save(kmsp);
+    }
+
+    public KhuyenMaiSanPham updateTrangThai(String idKM,String idCTSP,int trangThai){
+        KhuyenMaiSanPham kmsp = khuyenMaiSanPhamRepository.findKhuyenMaiSanPham(idKM,idCTSP);
+        kmsp.setTrangThai(trangThai);
+        return khuyenMaiSanPhamRepository.save(kmsp);
     }
 }

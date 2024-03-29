@@ -37,7 +37,7 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
   const client = useSelector(GetClient);
   const bill = useSelector(GetBill);
   const idKH = activeKey
-    ? bill.filter((item) => item.id === activeKey)[0]?.nguoiDung
+    ? bill.filter((item) => item.key === activeKey)[0]?.nguoiDung
     : "";
   const handleClickAddClient = async (record) => {
     console.log("recorrd id",record);

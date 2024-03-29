@@ -71,6 +71,8 @@ public class VoucherService {
         v.setTrangThai(Status.SAP_DIEN_RA);
         return vr.save(v);
     }
+
+
     public Voucher updateTTTamDung(String id,VoucherRequest request){
         Voucher v=request.map(new Voucher());
         v.setId(id);
@@ -78,6 +80,7 @@ public class VoucherService {
         return vr.save(v);
     }
     public Voucher detailVoucher(String id){return vr.findById(id).get();}
+
 
     public Voucher add (Voucher v){
         return vr.save(v);

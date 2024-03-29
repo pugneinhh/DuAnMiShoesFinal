@@ -28,10 +28,12 @@ import {
 } from "../../../store/reducer/DetailInvoice.reducer";
 import { SellAPI } from "../api/sell/sell.api";
 import axios from "axios";
+import { HoaDonAPI } from "../api/hoaDon/hoaDon.api";
 
 const ModalSanPham = (props) => {
   const { openSanPham, setOpenSanPham } = props;
   const activeKey = props.activeKey;
+  const maNV = props.maNV;
   const ctsp = useSelector(GetProduct);
   const invoice = useSelector(GetInvoice);
 
@@ -131,7 +133,7 @@ const ModalSanPham = (props) => {
   };
   const dispatch = useDispatch();
 
-  const handleClickAddProduct = (record) => {
+  const handleClickAddProduct = async (record) => {
     dispatch(
       AddInvoice({
         chiTietSanPham: record.id,
@@ -151,8 +153,11 @@ const ModalSanPham = (props) => {
         giaTriKhuyenMai: record.giaTriKhuyenMai,
       })
     );
-
+      console.log("Record",record);
     dispatch(UpdateApartProduct({ id: record.id, soLuong: 1 }));
+    await HoaDonAPI.themSanPham(activeKey,maNV,record.id).then(res =>console.log(res));
+    props.loadHoaDon();
+    props.loadListSanPhams();
     setOpenSanPham(false);
   };
 
@@ -287,7 +292,7 @@ const ModalSanPham = (props) => {
       ),
     },
     {
-      title: "Action",
+      title: "Hành động",
       key: "action",
 
       render: (record) => (
