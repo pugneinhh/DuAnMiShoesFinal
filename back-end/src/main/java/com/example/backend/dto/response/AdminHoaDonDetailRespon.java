@@ -45,8 +45,8 @@ public interface AdminHoaDonDetailRespon {
     @Value("#{target.giaGoc}")
     String getGiaGoc();
 
-    @Value("#{target.PhuongThucVNP}")
-    String getPhuongThucVNP();
+//    @Value("#{target.PhuongThucVNP}")
+//    String getPhuongThucVNP();
     @Value("#{target.TenNguoiNhan}")
     String getTenNguoiNhan();
 }
