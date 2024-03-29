@@ -1075,7 +1075,7 @@ const BanHang = () => {
   };
 
   return (
-    <div className="container border-1">
+    <div className="container-fuild border-1">
       <div className="text-end mt-3 me-4 mb-3">
         {/* <Button type="primary" onClick={add} >Tạo hóa đơn</Button> */}
         <Button type="primary" onClick={handleClickAddHD}>
