@@ -133,6 +133,8 @@ export default function HoaDonDetail() {
     HoaDonAPI.detailHD(id).then((res) => {
       setHoaDondetail(res.data);
       setTrangThai(res.data.trangThai);
+      console.log("->>>>>hd detail",res.data);
+      console.log(res.data.trangThai,"->>>>>>>>?")
     });
   };
 
