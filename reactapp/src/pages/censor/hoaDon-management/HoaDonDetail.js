@@ -348,7 +348,7 @@ export default function HoaDonDetail() {
     }
   };
   return (
-    <div className="container mt-4 radius  ">
+    <div className="container-fuild mt-4 radius  ">
       <div className="container-fuild  row pt-3 pb-4 bg-light rounded border-danger ">
         <div className="scroll-hoa-don mb-4">
           <div className="hoa-don-cuon-ngang">

@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import {Button,Form,Input,Divider,Select,Space,Table,Tag,Image,} from "antd";
 import { SiMicrosoftexcel } from "react-icons/si";
 import { FilterFilled } from "@ant-design/icons";
-import { Link } from "react-router-dom";
 import { BsFillEyeFill, BsPencilSquare } from "react-icons/bs";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { ToastContainer, toast } from "react-toastify";
@@ -11,9 +9,16 @@ import { BiSolidUserBadge } from "react-icons/bi";
 import { GrMapLocation } from "react-icons/gr";
 import ModalDiaChi from "./ModalDiaChi";
 import * as XLSX from 'xlsx';
+import { Link, useNavigate } from "react-router-dom";
 import { KhachHangAPI } from "../api/user/khachHang.api";
 export default function KhachHang() {
   const [componentSize, setComponentSize] = useState("default");
+     const nav = useNavigate();
+     const themKH = (res) => {
+       console.log(res);
+
+       nav("/admin-them-khach-hang");
+     };
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
   };
@@ -320,21 +325,17 @@ export default function KhachHang() {
         {/* hết form tìm kiếm */}
         {/* view add nhân viên */}
         <div className=" text-end mt-3">
-          <Link
-            to="/admin-them-khach-hang"
-            className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill"
-          >
-            {" "}
-            <PlusCircleOutlined /> Thêm{" "}
-          </Link>
-
-          <Link
-            onClick={exportToExcel}
-            className="btn btn-primary bg-gradient fw-bold nut-them rounded-pill"
-          >
-            <SiMicrosoftexcel />
-            Export Excel
-          </Link>
+          <button onClick={themKH} class="button-them">
+            <span class="text">
+              <PlusCircleOutlined /> Thêm khách hàng
+            </span>
+          </button>
+          <button onClick={exportToExcel} class="button-excel btn-success">
+            <span class="text">
+              <SiMicrosoftexcel />
+              Export Excel
+            </span>
+          </button>
         </div>
       </div>
       <div className="container-fluid mt-4">

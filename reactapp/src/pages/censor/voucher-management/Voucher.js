@@ -19,11 +19,11 @@ import moment from "moment";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { FaTag } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { VoucherAPI } from "../api/voucher/voucher.api";
 import { BsFillEyeFill } from "react-icons/bs";
 import { toast } from "react-toastify";
+import { FaTag } from "react-icons/fa";
 
 const Voucher = () => {
   const currentTime = moment();
@@ -33,6 +33,14 @@ const Voucher = () => {
     timKiemVoucher(allValues);
     setDataSearch(allValues);
   };
+
+
+     const nav = useNavigate();
+     const themVoucher = (res) => {
+       console.log(res);
+
+       nav("/admin-add-voucher");
+     };
   //call api tìm kiếm
   const timKiemVoucher = (dataSearch) => {
     VoucherAPI.search(dataSearch)
@@ -492,14 +500,14 @@ const Voucher = () => {
         </div>
         {/* hết form tìm kiếm */}
         {/* view add voucher */}
-        <div className=" text-end mt-3">
-          <Link
-            to="/admin-add-voucher"
-            className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill"
-          >
-            {" "}
-            <PlusCircleOutlined /> Thêm{" "}
-          </Link>
+        <div className=" text-end mt-3 mb-4">
+      
+
+          <button onClick={themVoucher} class="button-them">
+            <span class="text">
+              <PlusCircleOutlined /> Thêm
+            </span>
+          </button>
         </div>
         {/* view table voucher */}
         <div
