@@ -212,9 +212,9 @@ public class BanHangController {
         return ResponseEntity.ok(lichSuHoaDonService.addLichSuHoaDon(lichSuHoaDonRequest));
     }
 
-    @PutMapping("/thanh-toan/hoa-don/{idHD}/{idNV}/{idVoucher}")
-    public ResponseEntity<?> thanhToanHoaDon (@PathVariable("idHD") String idHD,@PathVariable("idNV") String idNV,@PathVariable("idVoucher")String idVoucher) {
-        HoaDon hoaDon=hoaDonServicee.findHoaDonbyID(idHD);
+    @PutMapping("/thanh-toan/hoa-don/{ma}/{idNV}/{idVoucher}")
+    public ResponseEntity<?> thanhToanHoaDon (@PathVariable("ma") String ma,@PathVariable("idNV") String idNV,@PathVariable("idVoucher")String idVoucher) {
+        HoaDon hoaDon=hoaDonServicee.findHoaDonByMa(ma);
         if (idVoucher != null) {
             Voucher voucher = voucherService.detailVoucher(idVoucher);
             hoaDon.setVoucher(voucher);
@@ -237,7 +237,7 @@ public class BanHangController {
         }
         System.out.println("Hóa đơn"+hoaDon);
         hoaDonServicee.updateTrangThaiHoaDon(hoaDon);
-        List<HoaDonChiTiet> listHDCT = hoaDonChiTietService.getAllHDCTByIDHD(idHD);
+        List<HoaDonChiTiet> listHDCT = hoaDonChiTietService.getAllHDCTByIDHD(hoaDon.getId());
         for (HoaDonChiTiet h : listHDCT) {
             h.setTrangThai(1);
             hoaDonChiTietService.saveHDCT(h);
@@ -245,7 +245,7 @@ public class BanHangController {
         NguoiDung nguoiDung = nguoiDungService.findByID(idNV);
         System.out.println("Người dùng thanh toán"+nguoiDung);
         System.out.println("Hóa đơn thanh toán"+hoaDon);
-        List<ThanhToan> listTT = thanhToanService.getThanhToanByIdHD(idHD);
+        List<ThanhToan> listTT = thanhToanService.getThanhToanByIdHD(hoaDon.getId());
         for (ThanhToan tt : listTT){
             tt.setTrangThai(1);
             thanhToanService.save(tt);
@@ -257,7 +257,7 @@ public class BanHangController {
         lichSuHoaDon.setNgayTao(LocalDateTime.now());
         lichSuHoaDonService.save(lichSuHoaDon);
 
-        return ResponseEntity.ok(  hoaDonServicee.thanhToanHoaDon(idHD));
+        return ResponseEntity.ok(  hoaDonServicee.thanhToanHoaDon(hoaDon.getId()));
        
     }
 
