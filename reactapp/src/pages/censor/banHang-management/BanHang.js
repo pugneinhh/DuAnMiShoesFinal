@@ -1060,6 +1060,7 @@ const BanHang = () => {
   const totalPrice = 0;
   const [openScan, setOpenScan] = useState(false);
   const [qrData, setQrData] = useState("");
+  console.log(qrData,"QR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
   const handleCloseScan = () => {
     setOpenScan(false);
   };
@@ -1176,7 +1177,6 @@ const BanHang = () => {
                               image="https://www.vhv.rs/dpng/d/521-5212497_empty-cart-hd-png-download.png"
                               imageStyle={{
                                 height: 250,
-
                               }}
                               description={
                                 <span>Không có sản phẩm nào trong giỏ</span>
@@ -1371,8 +1371,7 @@ const BanHang = () => {
                                   ? (data.total * voucherHienTai.mucDo) / 100
                                   : voucherHienTai.giamToiDa
                                 : 0) +
-                                (hd[0]?.tienVanChuyen &&
-                                shipMoney === shipMoney1
+                              (hd[0]?.tienVanChuyen && shipMoney === shipMoney1
                                 ? hd[0]?.tienVanChuyen
                                 : shipMoney1
                                 ? shipMoney1
@@ -1385,23 +1384,22 @@ const BanHang = () => {
                           />
                         </div>
                         <div className="row">
-                          <p style={{color:"red"}} >
+                          <p style={{ color: "red" }}>
                             <b>
                               <>
-                              {soTienCanMuaThem === 0 && soTienDuocGiam === 0
-                                ? ""
-                                : "Còn thiếu " +
-                                  Intl.NumberFormat("en-US").format(
-                                    soTienCanMuaThem
-                                  ) +
-                                  "VNĐ để được giảm " +
-                                  Intl.NumberFormat("en-US").format(
-                                    soTienDuocGiam
-                                  ) +
-                                  "VNĐ"}
-                            </>
+                                {soTienCanMuaThem === 0 && soTienDuocGiam === 0
+                                  ? ""
+                                  : "Còn thiếu " +
+                                    Intl.NumberFormat("en-US").format(
+                                      soTienCanMuaThem
+                                    ) +
+                                    "VNĐ để được giảm " +
+                                    Intl.NumberFormat("en-US").format(
+                                      soTienDuocGiam
+                                    ) +
+                                    "VNĐ"}
+                              </>
                             </b>
-                          
                           </p>
                         </div>
                         <div className="row">
@@ -1417,7 +1415,6 @@ const BanHang = () => {
                               //value={voucherHienTai}
                               value={voucherHienTai ? voucherHienTai.id : null}
                               defaultValue={null}
-                              
                               optionFilterProp="label"
                             >
                               {voucherByIDKH.data ? (
@@ -1480,17 +1477,17 @@ const BanHang = () => {
                               ) : voucherNoLimited ? (
                                 voucherNoLimited.map((option) => (
                                   <Option
-                                  key={option.id}
-                                  value={option.id}
-                                  label={option.ma}
-                                  imgTicket={imgTicket}
-                                  dieuKien={option.dieuKien}
-                                  giamToiDa={option.giamToiDa}
-                                  loai={option.loaiVoucher}
-                                  mucDo={option.mucDo}
-                                  style={{ width: "100%", height: "100%" }}
-                                  // filterOption={filterOptionVoucher}
-                                >
+                                    key={option.id}
+                                    value={option.id}
+                                    label={option.ma}
+                                    imgTicket={imgTicket}
+                                    dieuKien={option.dieuKien}
+                                    giamToiDa={option.giamToiDa}
+                                    loai={option.loaiVoucher}
+                                    mucDo={option.mucDo}
+                                    style={{ width: "100%", height: "100%" }}
+                                    // filterOption={filterOptionVoucher}
+                                  >
                                     <div className="row">
                                       <div className="col-md-2">
                                         <img
@@ -1594,10 +1591,18 @@ const BanHang = () => {
                               {`${Intl.NumberFormat("en-US").format(
                                 voucherHienTai
                                   ? voucherHienTai.loaiVoucher === "Tiền mặt"
-                                    ? (voucherHienTai.mucDo < voucherHienTai.giamToiDa
-                                      ? voucherHienTai.mucDo : voucherHienTai.giamToiDa)
-                                    : (((parseFloat(data.total) * voucherHienTai.mucDo) / 100 )< voucherHienTai.giamToiDa
-                                      ? ((parseFloat(data.total) * voucherHienTai.mucDo) / 100 ): voucherHienTai.giamToiDa)
+                                    ? voucherHienTai.mucDo <
+                                      voucherHienTai.giamToiDa
+                                      ? voucherHienTai.mucDo
+                                      : voucherHienTai.giamToiDa
+                                    : (parseFloat(data.total) *
+                                        voucherHienTai.mucDo) /
+                                        100 <
+                                      voucherHienTai.giamToiDa
+                                    ? (parseFloat(data.total) *
+                                        voucherHienTai.mucDo) /
+                                      100
+                                    : voucherHienTai.giamToiDa
                                   : 0
                               )}`}
                             </h6>
@@ -1710,7 +1715,6 @@ const BanHang = () => {
                     setOpenThanhToan={setOpenThanhToan}
                     onOk={handleCloseThanhToan}
                     onCancel={handleCloseThanhToan}
-
                   />
                 </div>
 
@@ -1838,12 +1842,12 @@ const BanHang = () => {
           onScan={handleScan}
           onResult={(result, error) => {
             if (!!result) {
-              setQrData(result?.text);
+              setQrData(result.text);
             }
 
-            if (!!error) {
-              console.info(error);
-            }
+            // if (error) {
+            //   console.error(error);
+            // }
           }}
           style={{ width: "100%" }}
         />
