@@ -53,8 +53,7 @@ public class BanHangService {
         return ctspRepository.getALLCTSPBanHang();
     }
 
-    public HoaDon addHoaDon(HoaDonRequest hoaDonRequest) {
-        HoaDon hd = hoaDonRequest.map(new HoaDon());
+    public HoaDon addHoaDon(HoaDon hd) {
         return hoaDonRepository.save(hd);
     }
 

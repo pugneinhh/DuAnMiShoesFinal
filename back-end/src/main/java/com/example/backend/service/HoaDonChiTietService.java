@@ -28,6 +28,8 @@ public class HoaDonChiTietService {
     @Autowired
     HoaDonRepository hoaDonRepository;
     public List<HoaDonChiTietBanHangRespone> getAllHDCTByHD(String ma){
+        System.out.println("Ma"+ma);
+        if (hoaDonRepository.getHDByMa(ma) == null) return  null;
         String id = hoaDonRepository.getHDByMa(ma).getId();
         return hoaDonChiTietRepository.getAllHDCTByHD(id);
     }
