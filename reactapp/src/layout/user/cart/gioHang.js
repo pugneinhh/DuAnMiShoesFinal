@@ -17,6 +17,7 @@ import { SellAPI } from "../../../pages/censor/api/sell/sell.api";
 import { KhachHangAPI } from "../../../pages/censor/api/user/khachHang.api";
 import { ShipAPI } from "../../../pages/censor/api/ship/ship.api";
 import { toast, ToastContainer } from "react-toastify";
+import logoBanner from "../../../assets/images/page-header-bg.jpg";
 import { useNavigate } from "react-router-dom";
 import Moment from "moment";
 import {
@@ -26,7 +27,6 @@ import {
 import HoaDon from "../../../pages/censor/hoaDon-management/HoaDon2";
 import { useCart } from "./CartContext";
 import CheckoutButton from "../thongBaoThanhToan/button";
-
 
 export const GioHang = ({ children }) => {
   const [openModalDiaChi, setOpenModalDiaChi] = useState(false);
@@ -50,9 +50,10 @@ export const GioHang = ({ children }) => {
   const [idGH, setIDGH] = useState("");
   const router = useNavigate();
   let total = 0;
-
+    const { updateTotalQuantity } = useCart();
   const storedData = get("userData");
   const storedGioHang = get("GioHang");
+
 
 
   const loadCountGioHang = () => {
@@ -69,7 +70,6 @@ export const GioHang = ({ children }) => {
       });
     }
   };
-
   const getButtonTMType = () => {
     // Xác định loại button dựa trên giá trị biến đếm
     return clickCountTM % 2 === 0 ? "default" : "primary";
@@ -88,6 +88,7 @@ export const GioHang = ({ children }) => {
     setClickCountTM(0);
     setPhuongThuc(1);
   };
+  
   useEffect(() => {
     if (storedData) {
       setKhachHang(storedData.userID);
@@ -119,7 +120,7 @@ export const GioHang = ({ children }) => {
     let idHuyen = "";
     let idXa = "";
     if (storedData?.userID) {
-      await KhachHangAPI.getDiaChiMacDinhKHClient(storedData.userID).then((res) => {
+      await KhachHangAPI.getDiaChiMacDinh(storedData.userID).then((res) => {
         setDiaChi(res.data);
         console.log(res);
         idHuyen = res.data.idHuyen;
@@ -167,23 +168,20 @@ export const GioHang = ({ children }) => {
     } 
     else if (storedGioHang && storedGioHang!=null) {
       console.log(storedGioHang);
-      GioHangAPI.getByID(storedGioHang.id).then((response) => {
-        console.log(response.data);
-        setIDGH(response.data.id);
-        GioHangAPI.getAllGHCTByIDGH(response.data.id).then((res) => {
+      // GioHangAPI.getByID(storedGioHang.id).then((response) => {
+      //   console.log(response.data);
+        setIDGH(storedGioHang.id);
+        GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res) => {
           setGioHangCT(res.data);
           console.log("GioHan", res.data);
         });
-      });
+      // });
     }
+    
   };
-  const handleDeleteGHCT = (GHID) => {
-    const updatedGioHangCT = gioHangCT.filter(item => item.id !== GHID);
-    setGioHangCT(updatedGioHangCT);
-    GioHangAPI.deleteGHCT(GHID);   
-  };
+  
   useEffect(() => {
-    console.log("ID GH", idGH);
+    
     loadDiaChiMacDinh();
     loadSoLuongSPTrongGH();
   }, [idGH]);
@@ -294,6 +292,7 @@ console.log(hoaDon);
         }
         setMoneyShip(0);
         router("/thanh-toan-thanh-cong");
+        loadCountGioHang();
         KHGuiThongBaoDatHang();
       }else{
        toast("✔️ số lượng sản phẩm không đủ!", {
@@ -319,11 +318,9 @@ console.log(hoaDon);
 
   return (
     <div>
-      <div className="banner-gio-hang-san-pham">
-        <img src="https://d-themes.com/react/molla/demo-10/images/page-header-bg.jpg?fbclid=IwAR1a29UEcWcX-xX8mdyf6lSt9-lm8LB4tzbz4wscKg5yBPhlzyzWfIcjmF0"></img>
-        <h1 className="text-center" style={{ marginTop: -130 }}>
-          Giỏ hàng
-        </h1>
+      <div className="banner-san-pham-shop">
+        <img src={logoBanner} alt="Logo Banner"></img>
+        <h1 className="banner-title-logo">Giỏ hàng</h1>
       </div>
       <br></br> <br></br>
       <div className="row mt-5">
@@ -400,18 +397,18 @@ console.log(hoaDon);
             </thead>
             <tbody>
               {gioHangCT ? (
-                gioHangCT.map((ghct, index) => (
-                
+                gioHangCT?.map((ghct, index) => {
+                  return (
                     <ProductRow
                       // key={index}
                       product={ghct}
                       loadghct={loadGHCT}
-                      gioHangCT={gioHangCT}
-                    setGioHangCT ={setGioHangCT}
+                      // oadSoLuongSPTrongGH={loadSoLuongSPTrongGH}
                     />
-                ))
+                  );
+                })
               ) : (
-               <> </>
+                <ProductRow />
               )}
             </tbody>
           </table>
