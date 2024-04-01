@@ -117,7 +117,7 @@ const BanHang = () => {
 
   const getSoTien = async() => {
     console.log("Hóa đơn", activeKey);
-    await SellAPI.getThanhTienbyMaHD(activeKey).then((res) =>
+    await SellAPI.getThanhTienbyMaHD(activeKey).then(res =>
       setSoTienHoaDon(res.data ? res.data : 0)
     );
     console.log(
@@ -128,6 +128,7 @@ const BanHang = () => {
   };
 
   useEffect(() => {
+    console.log("Vào useEffect soTienHoaDon");
     if (soTienHoaDon < (voucherHienTai ? voucherHienTai.dieuKien : 0)) {
       setVoucherHienTai(null);
     }
@@ -141,6 +142,22 @@ const BanHang = () => {
             : null
         );
         setMoney(res.data.thanhTien ? res.data.thanhTien : 0);
+        SellAPI.voucherTotNhat(res.data.nguoiDung
+          ? res.data.nguoiDung.id
+            ? res.data.nguoiDung.id
+            : null
+          : null, res.data.thanhTien ? res.data.thanhTien : 0).then((res) =>
+        setVoucherHienTai(res.data)
+      );
+      SellAPI.voucherSapDatDuoc(res.data.nguoiDung
+        ? res.data.nguoiDung.id
+          ? res.data.nguoiDung.id
+          : null
+        : null, res.data.thanhTien ? res.data.thanhTien : 0 , voucherHienTai ? voucherHienTai.id : null).then((res) => {
+        console.log("res", res.data);
+        setSoTienCanMuaThem(res.data[0]);
+        setSoTienDuocGiam(res.data[1]);
+      });
       });
     }
   }, [soTienHoaDon]);
@@ -171,8 +188,7 @@ const BanHang = () => {
 
   useEffect(() => {
     loadVoucherTotNhatVaVoucherTiepTheo();
-    console.log("Vào useEffect idKH,money")
-  }, [idKH, money , activeKey]);
+  }, [idKH,money,activeKey]);
 
   //đang fixx
   const handleSwitchTraSau = () => {
@@ -1369,24 +1385,38 @@ const BanHang = () => {
                               data.reduce((accumulator, currentProduct) => {
                                 return accumulator + currentProduct.total;
                               }, 0) -
-                              (voucherHienTai
-                                ? voucherHienTai.loaiVoucher === "Tiền mặt"
-                                  ? voucherHienTai.mucDo <
-                                    voucherHienTai.giamToiDa
-                                    ? voucherHienTai.mucDo
+                                (voucherHienTai 
+                                  ? voucherHienTai.loaiVoucher === "Tiền mặt"
+                                    ? parseFloat(voucherHienTai.mucDo) <
+                                      parseFloat(voucherHienTai.giamToiDa)
+                                      ? voucherHienTai.mucDo
+                                      : voucherHienTai.giamToiDa
+                                    : parseFloat(
+                                        ( data.reduce((accumulator, currentProduct) => {
+                                          return accumulator + currentProduct.total;
+                                        }, 0) * voucherHienTai.mucDo) /
+                                          100
+                                      ) < parseFloat(voucherHienTai.giamToiDa)
+                                    ? (parseFloat( data.reduce((accumulator, currentProduct) => {
+                                      return accumulator + currentProduct.total;
+                                    }, 0)) *
+                                        parseFloat(voucherHienTai.mucDo)) /
+                                      100
                                     : voucherHienTai.giamToiDa
-                                  : (data.total * voucherHienTai.mucDo) / 100 <
-                                    voucherHienTai.giamToiDa
-                                  ? (data.total * voucherHienTai.mucDo) / 100
-                                  : voucherHienTai.giamToiDa
-                                : 0) +
-                              (hd[0]?.tienVanChuyen && shipMoney === shipMoney1
-                                ? hd[0]?.tienVanChuyen
-                                : shipMoney1
-                                ? shipMoney1
-                                : shipMoney
-                                ? shipMoney
-                                : 0)
+                                  : 0) +
+                                roundToThousands(
+                                  isSwitchOn
+                                    ?
+                                      hd[0]?.tienVanChuyen &&
+                                      shipMoney === shipMoney1
+                                      ? hd[0]?.tienVanChuyen
+                                      : shipMoney1
+                                      ? shipMoney1
+                                      : shipMoney
+                                      ? shipMoney
+                                      : 0
+                                    : 0
+                                )
                             }
                             hoaDon={activeKey}
                             voucher={voucherHienTai ? voucherHienTai : null}
