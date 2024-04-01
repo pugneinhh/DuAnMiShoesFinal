@@ -306,15 +306,24 @@ public class BanHangController {
         return ResponseEntity.ok(voucherService.detailVoucher(idV));
     }
 
-    @GetMapping("/hoa-don/khuyen-mai-sap-dat-duoc/{idKH}/{money}")
-    public List<BigDecimal> khuyenMaiSapDatDuoc (@PathVariable("idKH")String idKH, @PathVariable("money")String money){
+    @GetMapping("/hoa-don/khuyen-mai-sap-dat-duoc/{idKH}/{money}/{idV}")
+    public List<BigDecimal> khuyenMaiSapDatDuoc (@PathVariable("idKH")String idKH, @PathVariable("money")String money,@PathVariable("idV")String idV){
         BigDecimal soTienConThieu = new BigDecimal("0");
         BigDecimal soTienDuocGiam = new BigDecimal("0");
-
-        System.out.println("Khashc hàng"+idKH);
-        System.out.println(idKH.isEmpty());
+        Voucher vc = new Voucher();
+        if(idV != null) {
+             vc = voucherService.getVoucherByID(idV);
+        }
+        System.out.println("VC"+vc);
+        BigDecimal soTienDangDuocGiam = new BigDecimal("0");
+        if (vc != null) {
+            soTienDangDuocGiam = vc.getLoaiVoucher().equalsIgnoreCase("Tiền mặt") ?
+                    new BigDecimal(vc.getMucDo()) :
+                    (new BigDecimal(String.valueOf(vc.getMucDo()* Float.valueOf(money) / 100)).compareTo(vc.getGiamToiDa()) < 0)
+                    ? new BigDecimal(String.valueOf(vc.getMucDo()* Float.valueOf(money) / 100)) : vc.getGiamToiDa();
+        }
+        System.out.println("Số tiền đang được giảm "+soTienDangDuocGiam);
         if (!idKH.equalsIgnoreCase("null")){
-            // NguoiDung kh = nguoiDungService.findByID(idKH);
             List<VoucherRespone> listV = voucherService.getVoucherBanHang(idKH);
             for (VoucherRespone v : listV){
                 if (v.getDieuKien().compareTo(new BigDecimal(money)) <= 0) continue;  // loại bỏ những voucher đã hợp yêu cầu
@@ -323,10 +332,10 @@ public class BanHangController {
                 if (mucDoKM.compareTo(v.getGiamToiDa()) > 0){
                     mucDoKM = v.getGiamToiDa(); // trường hợp lớn hơn giá giảm tối đa
                 }
-                if (soTienConThieu.compareTo(new BigDecimal("0")) == 0 && soTienDuocGiam.compareTo(new BigDecimal("0")) ==0) {
+                if (soTienConThieu.compareTo(new BigDecimal("0")) == 0 && soTienDuocGiam.compareTo(new BigDecimal("0")) ==0 && mucDoKM.compareTo(soTienDangDuocGiam) > 0) {
                     soTienConThieu = v.getDieuKien().subtract(new BigDecimal(money));
                     soTienDuocGiam = mucDoKM;
-                } else if (soTienConThieu.compareTo(v.getDieuKien().subtract(new BigDecimal(money))) >= 0 && soTienDuocGiam.compareTo(mucDoKM) <= 0) {
+                } else if (soTienConThieu.compareTo(v.getDieuKien().subtract(new BigDecimal(money))) >= 0 && soTienDuocGiam.compareTo(mucDoKM) <= 0 && mucDoKM.compareTo(soTienDangDuocGiam) > 0) {
                     soTienConThieu = v.getDieuKien().subtract(new BigDecimal(money));
                     soTienDuocGiam = mucDoKM;
                 }
@@ -341,11 +350,11 @@ public class BanHangController {
                 if (mucDoKM.compareTo(v.getGiamToiDa()) > 0){
                     mucDoKM = v.getGiamToiDa(); // trường hợp lớn hơn giá giảm tối đa
                 }
-                if (soTienConThieu.compareTo(new BigDecimal("0")) == 0 && soTienDuocGiam.compareTo(new BigDecimal("0")) ==0) {
+                if (soTienConThieu.compareTo(new BigDecimal("0")) == 0 && soTienDuocGiam.compareTo(new BigDecimal("0")) ==0 && mucDoKM.compareTo(soTienDangDuocGiam) > 0) {
                     soTienConThieu = v.getDieuKien().subtract(new BigDecimal(money));
                     soTienDuocGiam = mucDoKM;
 
-                } else if (soTienConThieu.compareTo(v.getDieuKien().subtract(new BigDecimal(money))) >= 0 && soTienDuocGiam.compareTo(mucDoKM) <= 0) {
+                } else if (soTienConThieu.compareTo(v.getDieuKien().subtract(new BigDecimal(money))) >= 0 && soTienDuocGiam.compareTo(mucDoKM) <= 0 && mucDoKM.compareTo(soTienDangDuocGiam) > 0)  {
                     soTienConThieu = v.getDieuKien().subtract(new BigDecimal(money));
                     soTienDuocGiam = mucDoKM;
 

@@ -123,4 +123,8 @@ public class VoucherService {
         }
         return vr.save(v);
     }
+
+    public Voucher getVoucherByID(String idV){
+        return vr.detail(idV);
+    }
 }
