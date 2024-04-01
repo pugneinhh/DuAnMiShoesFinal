@@ -54,6 +54,7 @@ public class SecurityConfig {
                                         .requestMatchers("/admin/thong-ke/*").hasRole("NHANVIEN")
                                         .requestMatchers("/admin/voucher/**").hasAnyRole("NHANVIEN", "ADMIN")
                                         .requestMatchers("/admin/hoa-don/**").hasAnyRole("NHANVIEN", "ADMIN")
+//                                    .requestMatchers("/admin/hoa-don/**").hasAnyRole("NHANVIEN", "ADMIN")
                                         .requestMatchers("/admin/ban-hang/**").hasAnyRole("NHANVIEN", "ADMIN")
                                         .requestMatchers("/admin/chat-lieu/**").hasAnyRole("NHANVIEN", "ADMIN")
                                         .requestMatchers("/admin/ctsp/**").hasAnyRole("NHANVIEN", "ADMIN")
