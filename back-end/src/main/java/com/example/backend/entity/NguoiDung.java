@@ -17,7 +17,7 @@ import java.util.Collection;
 @Setter
 @Builder
 @ToString
-public class NguoiDung implements UserDetails{
+public class NguoiDung {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
@@ -39,42 +39,6 @@ public class NguoiDung implements UserDetails{
     private String hangKhachHang;
     private int diem;
     private int trangThai;
-
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
-
-    @Override
-    public String getPassword() {
-        return null;
-    }
-
-    @Override
-    public String getUsername() {
-        return null;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return false;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return false;
-    }
 
 
 }

@@ -34,7 +34,7 @@ export const Login = () => {
     LoginAPI.login(data)
       .then((respone) => {
         set("userData", respone.data);
-        if (respone.data.chucVu == "khach_hang") {
+        if (respone.data.chucVu == "KHACHHANG") {
           nav("/home");
         } else {
           nav("/admin-thong-ke");

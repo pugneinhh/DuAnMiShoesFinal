@@ -1,70 +1,70 @@
 import {
-    requestAdmin
+    requestClient
 } from "../request";
 
 export class GioHangAPI{
     static getByIDKH = (idKH) => {
-        return requestAdmin({
+        return requestClient({
             method: "GET",
             url: `gio-hang/detailGH/${idKH}`,
             
         });
     };
     static getByID = (id) => {
-        return requestAdmin({
+        return requestClient({
             method: "GET",
             url: `gio-hang/detailGHByID/${id}`,
         });
     };
     static addGH = (data) => {
-        return requestAdmin({
+        return requestClient({
             method : 'POST',
             url: 'gio-hang/addGH',
             data: data,
         });
     };
     static getAllGHCTByIDGH = (id) => {
-        return requestAdmin({
+        return requestClient({
             method: "GET",
             url: `gio-hang-chi-tiet/getAll/${id}`,
         });
     };
     static addGHCT = (data) => {
-        return requestAdmin({
+        return requestClient({
             method : 'POST',
             url: 'gio-hang-chi-tiet/addGHCT',
             data: data,
         });
     };
     static updateSLGHCT = (data) => {
-        return requestAdmin({
+        return requestClient({
             method : 'POST',
             url: 'gio-hang-chi-tiet/updateSLGHCT',
             data: data,
         });
     };
     static updateGHCT = (data) => {
-        return requestAdmin({
+        return requestClient({
             method : 'POST',
             url: 'gio-hang-chi-tiet/updateGHCT',
             data: data,
         });
     };
     static detailCTSP = (idCT) => {
-        return requestAdmin({
+        return requestClient({
             method : 'GET',
             url: `gio-hang-chi-tiet/detailCTSP/${idCT}`,
         });
     };
     static deleteGHCT = (id) => {
-        return requestAdmin({
+        return requestClient({
             method : 'DELETE',
             url: `gio-hang-chi-tiet/deleteGHCT/${id}`,
         });
     };
 
     static soLuongTrongGioHang = (idGH) => {
-        return requestAdmin({
+        return requestClient({
             method : 'GET',
             url : `gio-hang-chi-tiet/so-luong-san-pham-trong-gio-hang/${idGH}`
         });

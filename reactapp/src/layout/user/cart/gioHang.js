@@ -50,11 +50,9 @@ export const GioHang = ({ children }) => {
   const [idGH, setIDGH] = useState("");
   const router = useNavigate();
   let total = 0;
-    const { updateTotalQuantity } = useCart();
+  const { updateTotalQuantity } = useCart();
   const storedData = get("userData");
   const storedGioHang = get("GioHang");
-
-
 
   const loadCountGioHang = () => {
     if (storedData != null) {
@@ -88,7 +86,7 @@ export const GioHang = ({ children }) => {
     setClickCountTM(0);
     setPhuongThuc(1);
   };
-  
+
   useEffect(() => {
     if (storedData) {
       setKhachHang(storedData.userID);
@@ -101,9 +99,7 @@ export const GioHang = ({ children }) => {
 
   useEffect(() => {
     loadGHCT();
-  },[soLuongSPGH]);
-
-
+  }, [soLuongSPGH]);
 
   const loadGiamGia = (voucher) => {
     console.log("vsd", voucher);
@@ -161,27 +157,24 @@ export const GioHang = ({ children }) => {
       GioHangAPI.getByIDKH(storedData.userID).then((response) => {
         setIDGH(response.data.id);
         GioHangAPI.getAllGHCTByIDGH(response.data.id).then((res) => {
-          setGioHangCT(res.data); 
-          console.log("->>>>>>>>>>>>>>>>>>>>>>",res.data);
+          setGioHangCT(res.data);
+          console.log("->>>>>>>>>>>>>>>>>>>>>>", res.data);
         });
       });
-    } 
-    else if (storedGioHang && storedGioHang!=null) {
+    } else if (storedGioHang && storedGioHang != null) {
       console.log(storedGioHang);
       // GioHangAPI.getByID(storedGioHang.id).then((response) => {
       //   console.log(response.data);
-        setIDGH(storedGioHang.id);
-        GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res) => {
-          setGioHangCT(res.data);
-          console.log("GioHan", res.data);
-        });
+      setIDGH(storedGioHang.id);
+      GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res) => {
+        setGioHangCT(res.data);
+        console.log("GioHan", res.data);
+      });
       // });
     }
-    
   };
-  
+
   useEffect(() => {
-    
     loadDiaChiMacDinh();
     loadSoLuongSPTrongGH();
   }, [idGH]);
@@ -228,7 +221,7 @@ export const GioHang = ({ children }) => {
     // let hoaDonID;
 
     const hdct = gioHangCT.map((ghct) => {
-      console.log("ctp",ghct);
+      console.log("ctp", ghct);
       return {
         idCTSP: ghct.chiTietSanPham,
         donGia: ghct.thanhTien,
@@ -240,7 +233,7 @@ export const GioHang = ({ children }) => {
     const hoaDon = {
       idVoucher: voucher?.id,
       idPayMethod: phuongThuc,
-      maGiaoDich: '',
+      maGiaoDich: "",
       // ma: "HD" + currentDateInMilliseconds,
       idUser: userID,
       tongTien: total + (moneyShip ? moneyShip : 0),
@@ -262,7 +255,7 @@ export const GioHang = ({ children }) => {
       sdt: diaChi ? diaChi.soDienThoai : dataVanChuyen.soDienThoai,
       listHDCT: hdct,
     };
-console.log(hoaDon);
+    console.log(hoaDon);
     if (phuongThuc == 1) {
       BanHangClientAPI.getLinkVnpay(
         total + (moneyShip ? moneyShip : 0) - discount
@@ -284,33 +277,29 @@ console.log(hoaDon);
 
       console.log(maGiaoDich);
     } else {
-      BanHangClientAPI.checkout(hoaDon).then(check =>{
-      if(check.data){
-        setVoucher(null);
-        if (isDiaChiGiaoHangVisible === true) {
-          setIsDiaChiGiaoHangVisible(!isDiaChiGiaoHangVisible);
+      BanHangClientAPI.checkout(hoaDon).then((check) => {
+        if (check.data) {
+          setVoucher(null);
+          if (isDiaChiGiaoHangVisible === true) {
+            setIsDiaChiGiaoHangVisible(!isDiaChiGiaoHangVisible);
+          }
+          setMoneyShip(0);
+          router("/thanh-toan-thanh-cong");
+          loadCountGioHang();
+          KHGuiThongBaoDatHang();
+        } else {
+          toast("✔️ số lượng sản phẩm không đủ!", {
+            position: "top-right",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
         }
-        setMoneyShip(0);
-        router("/thanh-toan-thanh-cong");
-        loadCountGioHang();
-        KHGuiThongBaoDatHang();
-      }else{
-       toast("✔️ số lượng sản phẩm không đủ!", {
-          position: "top-right",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-      }
-    });
-   
-   
-     
-      
+      });
     }
 
     //   setGioHangCT([]);
