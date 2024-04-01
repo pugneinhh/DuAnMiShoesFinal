@@ -19,10 +19,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { Image } from "cloudinary-react";
 import { AddProduct, GetProduct, UpdateApartProduct } from "../../../store/reducer/Product.reducer";
 import { AddInvoice, GetInvoice } from "../../../store/reducer/DetailInvoice.reducer";
-import {SellAPI} from "../../censor/api/sell/sell.api"
+import { SellAPI } from "../../censor/api/sell/sell.api"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from "axios";
+import { ChiTietSanPhamAPI } from "../api/SanPham/chi_tiet_san_pham.api";
 import { v4 as uuid } from "uuid";
 
 const ModalSanPham = (props) => {
@@ -32,14 +33,14 @@ const ModalSanPham = (props) => {
   //const getSoTien = props.getSoTien();
   const ctsp = useSelector(GetProduct);
   const invoice = useSelector(GetInvoice)
-  const [chiTietSanPham,setChiTietSanPham] = useState([""]);
-  const [CTSP,setCTSPs] = useState([""]);
-  const [HDCT,setHDCT] = useState([]);
+  const [chiTietSanPham, setChiTietSanPham] = useState([""]);
+  const [CTSP, setCTSPs] = useState([""]);
+  const [HDCT, setHDCT] = useState([]);
   const handleClose = () => {
     setOpenSanPham(false);
 
   };
-  console.log("CTSP ",CTSP);
+  console.log("CTSP ", CTSP);
   const { Option } = Select;
 
   //Form
@@ -52,7 +53,7 @@ const ModalSanPham = (props) => {
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
   };
- 
+
   //Tìm kiếm
   const onChangeFilter = (changedValues, allValues) => {
     console.log("All values : ", allValues)
@@ -60,243 +61,223 @@ const ModalSanPham = (props) => {
       setCTSPs(chiTietSanPham);
       console.log("Không có gì tìm kiếm")
     } else {
-    timKiemCT(allValues);
+      timKiemCT(allValues);
     }
   }
   const timKiemCT = (dataSearch) => {
-    axios.post(`http://localhost:8080/admin/ctsp/search-ctsp-banhang`, dataSearch)
+    ChiTietSanPhamAPI.searchCTSPBanHang(dataSearch).then(response => {
+      // Update the list of items
+      response.data.map((i) => dispatch(AddProduct({ id: i.idCTSP, soLuong: i.soLuong, linkAnh: i.linkAnh, tenSP: i.tenSP, tenKT: i.tenKT, tenMS: i.tenMS, maMS: i.maMS, loaiKM: i.loaiKM, giaTriKhuyenMai: parseInt(i.giaKhuyenMai, 10), giaBan: i.giaBan, tenKM: i.tenKM })))
+      setCTSPs(response.data)
+
+    })
+      .catch(error => console.error('Error adding item:', error));
+  }
+
+
+  //Load kich thước
+  const [kt, setKT] = useState([]);
+  useEffect(() => {
+    loadKT();
+  }, []);
+  const loadKT = async () => {
+    ChiTietSanPhamAPI.getAllKichThuoc().then(response => {
+      setKT(response.data);
+    })
+
+  };
+  const addKichThuoc = (value) => {
+    ChiTietSanPhamAPI.createKichThuoc(value)
       .then(response => {
-        // Update the list of items
-        response.data.map((i)=> dispatch(AddProduct({id:i.idCTSP,soLuong:i.soLuong,linkAnh:i.linkAnh,tenSP:i.tenSP,tenKT:i.tenKT,tenMS:i.tenMS,maMS:i.maMS,loaiKM:i.loaiKM,giaTriKhuyenMai: parseInt(i.giaKhuyenMai, 10),giaBan:i.giaBan,tenKM:i.tenKM})))
-        setCTSPs(response.data)
+        console.log(response.data);
+        toast('✔️ Thêm thành công!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        loadKT();
+        form1.resetFields();
 
       })
       .catch(error => console.error('Error adding item:', error));
-    }
-  
 
-//Load kich thước
-const [kt, setKT] = useState([]);
-useEffect(() => {
-  loadKT();
-}, []);
-const loadKT = async () => {
-  const result = await axios.get("http://localhost:8080/admin/kich-thuoc", {
-    validateStatus: () => {
-      return true;
-    }
-  });
-  setKT(result.data);
-};
-const addKichThuoc = (value) => {
-  console.log(value);
-  axios.post('http://localhost:8080/admin/kich-thuoc/add', value)
-    .then(response => {
-      console.log(response.data);
-      toast('✔️ Thêm thành công!', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      loadKT();
-      form1.resetFields();
-
-    })
-    .catch(error => console.error('Error adding item:', error));
-
-}
-//Load Màu Sắc 
-const [ms, setMS] = useState([]);
-useEffect(() => {
-  loadMS();
-}, []);
-const loadMS = async () => {
-  const result = await axios.get("http://localhost:8080/admin/mau-sac", {
-    validateStatus: () => {
-      return true;
-    }
-  });
-  setMS(result.data);
-};
-const addMauSac = (value) => {
-  console.log(value);
-  axios.post('http://localhost:8080/admin/mau-sac/add', value)
-    .then(response => {
-      console.log(response.data);
-      toast('✔️ Thêm thành công!', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      loadMS();
-      form1.resetFields();
-
-    })
-    .catch(error => console.error('Error adding item:', error));
-
-}
-//Load Chất Liệu
-const [cl, setCL] = useState([]);
-useEffect(() => {
-  loadCL();
-}, []);
-const loadCL = async () => {
-  const result = await axios.get("http://localhost:8080/admin/chat-lieu", {
-    validateStatus: () => {
-      return true;
-    }
-  });
-  setCL(result.data);
-};
-const addChatLieu = (value) => {
-  console.log(value);
-  axios.post('http://localhost:8080/admin/chat-lieu/add', value)
-    .then(response => {
-      console.log(response.data);
-      toast('✔️ Thêm thành công!', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      loadCL();
-      form1.resetFields();
-
-    })
-    .catch(error => console.error('Error adding item:', error));
-
-}
-//Load Độ Cao
-const [dc, setDC] = useState([]);
-useEffect(() => {
-  loadDC();
-}, []);
-const loadDC = async () => {
-  const result = await axios.get("http://localhost:8080/admin/de-giay", {
-    validateStatus: () => {
-      return true;
-    }
-  });
-  setDC(result.data);
-};
-const addDoCao = (value) => {
-  console.log(value);
-  axios.post('http://localhost:8080/admin/de-giay/add', value)
-    .then(response => {
-      console.log(response.data);
-      toast('✔️ Thêm thành công!', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      loadDC();
-      form1.resetFields();
-
-    })
-    .catch(error => console.error('Error adding item:', error));
-
-}
-//Load Danh Mục
-const [dm, setDM] = useState([]);
-useEffect(() => {
-  loadDM();
-}, []);
-const loadDM = async () => {
-  const result = await axios.get("http://localhost:8080/admin/danh-muc", {
-    validateStatus: () => {
-      return true;
-    }
-  });
-  setDM(result.data);
-};
-const addDanhMuc = (value) => {
-  console.log(value);
-  axios.post('http://localhost:8080/admin/danh-muc/add', value)
-    .then(response => {
-      console.log(response.data);
-      toast('✔️ Thêm thành công!', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      loadDM();
-      form1.resetFields();
-
-    })
-    .catch(error => console.error('Error adding item:', error));
-
-}
-//Load Hãng
-const [h, setH] = useState([]);
-useEffect(() => {
-  loadH();
-}, []);
-const loadH = async () => {
-  const result = await axios.get("http://localhost:8080/admin/hang", {
-    validateStatus: () => {
-      return true;
-    }
-  });
-  setH(result.data);
-};
-const addHang = (value) => {
-  console.log(value);
-  axios.post('http://localhost:8080/hang/admin/add', value)
-    .then(response => {
-      console.log(response.data);
-      toast('✔️ Thêm thành công!', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      loadH();
-      form1.resetFields();
-
-    })
-    .catch(error => console.error('Error adding item:', error));
   }
-  
+  //Load Màu Sắc 
+  const [ms, setMS] = useState([]);
+  useEffect(() => {
+    loadMS();
+  }, []);
+  const loadMS = async () => {
+    ChiTietSanPhamAPI.getAllMauSac().then(response => {
+      setMS(response.data);
+    })
+  };
+  const addMauSac = (value) => {
+    console.log(value);
+    ChiTietSanPhamAPI.createMauSac(value)
+      .then(response => {
+        console.log(response.data);
+        toast('✔️ Thêm thành công!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        loadMS();
+        form1.resetFields();
+
+      })
+      .catch(error => console.error('Error adding item:', error));
+
+  }
+  //Load Chất Liệu
+  const [cl, setCL] = useState([]);
+  useEffect(() => {
+    loadCL();
+  }, []);
+  const loadCL = async () => {
+    ChiTietSanPhamAPI.getAllChatLieu().then(response => {
+      setCL(response.data);
+    })
+  };
+  const addChatLieu = (value) => {
+  ChiTietSanPhamAPI.createChatLieu(value)
+      .then(response => {
+        console.log(response.data);
+        toast('✔️ Thêm thành công!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        loadCL();
+        form1.resetFields();
+
+      })
+      .catch(error => console.error('Error adding item:', error));
+
+  }
+  //Load Độ Cao
+  const [dc, setDC] = useState([]);
+  useEffect(() => {
+    loadDC();
+  }, []);
+  const loadDC = async () => {
+    ChiTietSanPhamAPI.getAllDeGiay().then(response => {
+      setCL(response.data);
+    })
+  };
+  const addDoCao = (value) => {
+    console.log(value);
+    ChiTietSanPhamAPI.createDeGiay(value)
+      .then(response => {
+        console.log(response.data);
+        toast('✔️ Thêm thành công!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        loadDC();
+        form1.resetFields();
+
+      })
+      .catch(error => console.error('Error adding item:', error));
+
+  }
+  //Load Danh Mục
+  const [dm, setDM] = useState([]);
+  useEffect(() => {
+    loadDM();
+  }, []);
+  const loadDM = async () => {
+    ChiTietSanPhamAPI.getAllDanhMuc().then(response => {
+      setDM(response.data);
+    })
+  };
+  const addDanhMuc = (value) => {
+    console.log(value);
+    ChiTietSanPhamAPI.createDanhMuc(value)
+      .then(response => {
+        console.log(response.data);
+        toast('✔️ Thêm thành công!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        loadDM();
+        form1.resetFields();
+
+      })
+      .catch(error => console.error('Error adding item:', error));
+
+  }
+  //Load Hãng
+  const [h, setH] = useState([]);
+  useEffect(() => {
+    loadH();
+  }, []);
+  const loadH = async () => {
+    ChiTietSanPhamAPI.getAllHang().then(response => {
+      setH(response.data)
+    })
+  };
+  const addHang = (value) => {
+    console.log(value);
+    ChiTietSanPhamAPI.createHang(value)
+      .then(response => {
+        console.log(response.data);
+        toast('✔️ Thêm thành công!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        loadH();
+        form1.resetFields();
+
+      })
+      .catch(error => console.error('Error adding item:', error));
+  }
+
   const dispatch = useDispatch()
 
   useEffect(() => {
     loadCTSP();
-  }, [chiTietSanPham.tenKM,chiTietSanPham.soLuong,openSanPham]);
+  }, [chiTietSanPham.tenKM, chiTietSanPham.soLuong, openSanPham]);
 
   useEffect(() => {
     loadHDCTByHD();
-  },[activeKey]);
-  const loadCTSP =  () => {
-    const result =  SellAPI.getAllProducts().then((item) => {
-      item.data.map((i)=> dispatch(AddProduct({id:i.idCTSP,soLuong:i.soLuong,linkAnh:i.linkAnh,tenSP:i.tenSP,tenKT:i.tenKT,tenMS:i.tenMS,maMS:i.maMS,loaiKM:i.loaiKM,giaTriKhuyenMai: parseInt(i.giaTriKhuyenMai, 10),giaBan:i.giaBan,tenKM:i.tenKM})))
+  }, [activeKey]);
+  const loadCTSP = () => {
+    const result = SellAPI.getAllProducts().then((item) => {
+      item.data.map((i) => dispatch(AddProduct({ id: i.idCTSP, soLuong: i.soLuong, linkAnh: i.linkAnh, tenSP: i.tenSP, tenKT: i.tenKT, tenMS: i.tenMS, maMS: i.maMS, loaiKM: i.loaiKM, giaTriKhuyenMai: parseInt(i.giaTriKhuyenMai, 10), giaBan: i.giaBan, tenKM: i.tenKM })))
       setChiTietSanPham(item.data);
       console.log(item.data)
       setCTSPs(item.data)
@@ -304,7 +285,7 @@ const addHang = (value) => {
 
   };
 
-  const loadHDCTByHD = async() => {
+  const loadHDCTByHD = async () => {
     const result = await SellAPI.getAllHDCTByHD(activeKey);
     console.log(result.data)
     setHDCT(result.data);
@@ -312,10 +293,10 @@ const addHang = (value) => {
   }
   console.log(HDCT);
   const handleClickAddProduct = (record) => {
-    const id =  uuid();
-    const hdct = [{id:id,hoaDon:activeKey,chiTietSanPham:record.idCTSP,soLuong:1,giaSauGiam: (parseFloat(record.giaBan) -parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan*record.giaTriKhuyenMai/100))),giaGiam:(parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan*record.giaTriKhuyenMai/100)))}]
-    dispatch(AddInvoice({id:id,chiTietSanPham:record.idCTSP,tenSP:record.tenSP,maMS:record.maMS,linkAnh : record.linkAnh,tenKT:record.tenKT,giaBan: record.giaBan,hoaDon:activeKey,tenMS:record.tenMS,giaGiam: (parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan*record.giaTriKhuyenMai/100))),giaSauGiam: (parseFloat(record.giaBan) -parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan*record.giaTriKhuyenMai/100))),nguoiTao:record.nguoiTao,giaBan:record.giaBan,tenKM:record.tenKM,loaiKM:record.loaiKM,giaTriKhuyenMai:record.giaTriKhuyenMai}));
-    dispatch(UpdateApartProduct({id:record.idCTSP,soLuong:1})); 
+    const id = uuid();
+    const hdct = [{ id: id, hoaDon: activeKey, chiTietSanPham: record.idCTSP, soLuong: 1, giaSauGiam: (parseFloat(record.giaBan) - parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100))), giaGiam: (parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100))) }]
+    dispatch(AddInvoice({ id: id, chiTietSanPham: record.idCTSP, tenSP: record.tenSP, maMS: record.maMS, linkAnh: record.linkAnh, tenKT: record.tenKT, giaBan: record.giaBan, hoaDon: activeKey, tenMS: record.tenMS, giaGiam: (parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100))), giaSauGiam: (parseFloat(record.giaBan) - parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100))), nguoiTao: record.nguoiTao, giaBan: record.giaBan, tenKM: record.tenKM, loaiKM: record.loaiKM, giaTriKhuyenMai: record.giaTriKhuyenMai }));
+    dispatch(UpdateApartProduct({ id: record.idCTSP, soLuong: 1 }));
     // if (HDCT.filter((i) => i.hoaDon === activeKey && i.chiTietSanPham === record.idCTSP).length > 0) {
     //   SellAPI.updateSL1(record.idCTSP,activeKey)
     //   console.log(HDCT)
@@ -326,7 +307,7 @@ const addHang = (value) => {
     //   console.log(HDCT)
     // }
     SellAPI.addInvoice(hdct[0]);
-    SellAPI.getAllProducts().then((item) => {      setCTSPs(item.data) ;       setChiTietSanPham(item.data);})
+    SellAPI.getAllProducts().then((item) => { setCTSPs(item.data); setChiTietSanPham(item.data); })
     props.getSoTien();
     setOpenSanPham(false);
 
@@ -348,31 +329,31 @@ const addHang = (value) => {
       dataIndex: "linkAnh",
       key: "link",
       center: "true",
-      render: (link,record) => {
+      render: (link, record) => {
         return (
           <>
-          {
-          (!record.tenKM) ?
-          (
-            <Image
-              cloudName="dtetgawxc"
-              publicId={link}
-              width="100" 
-              borderRadius="10"
-              crop="scale"
-              href={link}
-            /> ) : (
-              <Badge.Ribbon text= {record.loaiKM === "Tiền mặt" ? ("-"+`${Intl.NumberFormat("en-US").format(parseInt(record.giaTriKhuyenMai, 10))} VNĐ`) : ("-"+parseInt(record.giaTriKhuyenMai, 10)+"%")} color="red" size="small">
-            <Image
-              cloudName="dtetgawxc"
-              publicId={link}
-              width="100"
-              borderRadius="10"
-              crop="scale"
-              href={link}
-            /> 
-              </Badge.Ribbon>
-            )
+            {
+              (!record.tenKM) ?
+                (
+                  <Image
+                    cloudName="dtetgawxc"
+                    publicId={link}
+                    width="100"
+                    borderRadius="10"
+                    crop="scale"
+                    href={link}
+                  />) : (
+                  <Badge.Ribbon text={record.loaiKM === "Tiền mặt" ? ("-" + `${Intl.NumberFormat("en-US").format(parseInt(record.giaTriKhuyenMai, 10))} VNĐ`) : ("-" + parseInt(record.giaTriKhuyenMai, 10) + "%")} color="red" size="small">
+                    <Image
+                      cloudName="dtetgawxc"
+                      publicId={link}
+                      width="100"
+                      borderRadius="10"
+                      crop="scale"
+                      href={link}
+                    />
+                  </Badge.Ribbon>
+                )
             }
           </>
         );
@@ -394,19 +375,19 @@ const addHang = (value) => {
       render: (text, record) => {
         return (
           <>
-          {
-          (!record.tenKM) ?
-          (
-           <span>{`${Intl.NumberFormat("en-US").format(record.giaBan)} VNĐ`}</span>
-          ) : 
-          (
-            <span style={{color:"red"}}><del style={{color:"black"}}>{`${Intl.NumberFormat("en-US").format(record.giaBan)} VNĐ`}</del>
-            <br></br>{`${Intl.NumberFormat("en-US").format(parseFloat(record.giaBan) -parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan*record.giaTriKhuyenMai/100)))} VNĐ`}</span>
-          )
-    }
-    </>
+            {
+              (!record.tenKM) ?
+                (
+                  <span>{`${Intl.NumberFormat("en-US").format(record.giaBan)} VNĐ`}</span>
+                ) :
+                (
+                  <span style={{ color: "red" }}><del style={{ color: "black" }}>{`${Intl.NumberFormat("en-US").format(record.giaBan)} VNĐ`}</del>
+                    <br></br>{`${Intl.NumberFormat("en-US").format(parseFloat(record.giaBan) - parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100)))} VNĐ`}</span>
+                )
+            }
+          </>
         )
-  },
+      },
     },
     {
       title: "Số lượng",
@@ -451,22 +432,22 @@ const addHang = (value) => {
     {
       title: "Action",
       key: "action",
-  
+
       render: (record) => (
         <Space size="middle">
           <>
-          {
-            (record.soLuong < 1) ? (
-              <button className="btn btn-danger" disabled>
-              Hết hàng
-            </button>
-            ) : (
-              <button className="btn btn-danger" onClick={() => handleClickAddProduct(record)
-              }>
-              Chọn
-            </button>
-            )
-          }
+            {
+              (record.soLuong < 1) ? (
+                <button className="btn btn-danger" disabled>
+                  Hết hàng
+                </button>
+              ) : (
+                <button className="btn btn-danger" onClick={() => handleClickAddProduct(record)
+                }>
+                  Chọn
+                </button>
+              )
+            }
           </>
         </Space>
       ),
@@ -483,11 +464,11 @@ const addHang = (value) => {
           Hủy
         </button>
       }
-      
+
       height={300}
       width={1200}
       zIndex={10000}
-      style={{top:-200}}
+      style={{ top: -200 }}
     >
       <div className="container-fluid" style={{ borderRadius: 20 }}>
         <div className="container-fluid">
@@ -505,150 +486,150 @@ const addHang = (value) => {
               borderRadius: "8px",
             }}
           >
-             <h5><FilterFilled size={30} /> Bộ lọc</h5>
-          <hr />
-          <Form
-            labelCol={{
-              span: 6,
-            }}
-            wrapperCol={{
-              span: 14,
-            }}
-            layout="horizontal"
-            initialValues={{
-              size: componentSize,
-            }}
-            onValuesChange={onChangeFilter}
-            size={componentSize}
-            style={{
-              maxWidth: 1600,
-            }}
-          >
+            <h5><FilterFilled size={30} /> Bộ lọc</h5>
+            <hr />
+            <Form
+              labelCol={{
+                span: 6,
+              }}
+              wrapperCol={{
+                span: 14,
+              }}
+              layout="horizontal"
+              initialValues={{
+                size: componentSize,
+              }}
+              onValuesChange={onChangeFilter}
+              size={componentSize}
+              style={{
+                maxWidth: 1600,
+              }}
+            >
 
-            {/* Form tìm kiếm */}
-            {/* Các Thuộc Tính Dòng 1 */}
-            <div className='row mt-3'>
-              {/* Tên & Mã */}
-              <div className="col-md-4">
-                <Form.Item label="Tên & Mã" name="tenCT">
-                  <Input className="border" />
-                </Form.Item>
+              {/* Form tìm kiếm */}
+              {/* Các Thuộc Tính Dòng 1 */}
+              <div className='row mt-3'>
+                {/* Tên & Mã */}
+                <div className="col-md-4">
+                  <Form.Item label="Tên & Mã" name="tenCT">
+                    <Input className="border" />
+                  </Form.Item>
+                </div>
+                {/* Kích Thước */}
+                <div className='col-md-4' >
+                  <Form.Item label="Kích Thước" name="idKT">
+                    <Select placeholder="Chọn một giá trị" >
+                      {kt.map(item => (
+                        <Option key={item.id} value={item.id}>
+                          {item.ten}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </div>
+                {/* Màu Sắc */}
+                <div className='col-md-4'>
+                  <Form.Item label="Màu Sắc" name="idMS">
+                    <Select placeholder="Chọn một giá trị">
+                      {ms.map(item => (
+                        <Option key={item.id} value={item.id}>
+                          <div style={{
+                            backgroundColor: `${item.ma}`,
+                            borderRadius: 6,
+                            width: 170,
+                            height: 25,
+                          }}></div >
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </div>
               </div>
-              {/* Kích Thước */}
-              <div className='col-md-4' >
-                <Form.Item label="Kích Thước" name="idKT">
-                  <Select placeholder="Chọn một giá trị" >
-                    {kt.map(item => (
-                      <Option key={item.id} value={item.id}>
-                        {item.ten}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </div>
-              {/* Màu Sắc */}
-              <div className='col-md-4'>
-                <Form.Item label="Màu Sắc" name="idMS">
-                  <Select placeholder="Chọn một giá trị">
-                    {ms.map(item => (
-                      <Option key={item.id} value={item.id}>
-                        <div style={{
-                          backgroundColor: `${item.ma}`,
-                          borderRadius: 6,
-                          width: 170,
-                          height: 25,
-                        }}></div >
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </div>
-            </div>
-
-
-            {/* Các Thuộc Tính Dòng 2 */}
-            <div className='row'>
-              {/* Chất Liệu */}
-              <div className='col-md-4' >
-                <Form.Item label="Chất Liệu" name="idCL">
-                  <Select placeholder="Chọn một giá trị">
-                    {cl.map(item => (
-                      <Option key={item.id} value={item.id}>
-                        {item.ten}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </div>
-              {/* Độ Cao */}
-              <div className='col-md-4'>
-                <Form.Item label="Đế giày" name="idDC">
-                  <Select placeholder="Chọn một giá trị">
-                    {dc.map(item => (
-                      <Option key={item.ma} value={item.id}>
-                        {item.ten}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </div>
-              {/* Danh Mục */}
-              <div className='col-md-4'>
-                <Form.Item label="Danh Mục" name="idDM">
-                  <Select placeholder="Chọn một giá trị">
-                    {dm.map(item => (
-                      <Option key={item.id} value={item.id}>
-                        {item.ten}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </div>
-            </div>
-
-            {/* Các Thuộc Tính Dòng 3 */}
-            <div className='row'>
-              {/* Hãng */}
-              <div className='col-md-4'>
-                <Form.Item label="Hãng" name="idH">
-                  <Select placeholder="Chọn một giá trị">
-                    {h.map(item => (
-                      <Option key={item.id} value={item.id}>
-                        {item.ten}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </div>
-              {/* Trạng Thái */}
-              <div className='col-md-4'>
-                <Form.Item label="Trạng thái" name="trangThaiCT">
-                  <Select placeholder="Chọn một giá trị" defaultValue="0">
-                    <Select.Option value='0'>Còn Bán</Select.Option>
-                    <Select.Option value='1'>Dừng Bán</Select.Option>
-                  </Select>
-                </Form.Item>
-              </div>
-              <div className='col-md-4'>
-                <Form.Item label="Số lượng" name="soLuongCT">
-                  <Slider style={{ width: '200px' }} min={1} />
-                </Form.Item>
-              </div>
-            </div>
-            <div className='col'>
-              <Form.Item style={{ marginLeft: 100 }} label="Giá bán" name="giaBanCT">
-                <Slider style={{ width: '430px' }} min={1000000} max={10000000} step={1000000} />
-              </Form.Item>
-            </div>
 
 
-            <div className='container-fluid'>
-              <Form.Item className='text-center' style={{ paddingLeft: 360 }}>
-                <Button type="primary" htmlType='reset' onClick={loadCTSP} icon={<RetweetOutlined />}>Làm mới</Button>
-              </Form.Item>
-            </div>
+              {/* Các Thuộc Tính Dòng 2 */}
+              <div className='row'>
+                {/* Chất Liệu */}
+                <div className='col-md-4' >
+                  <Form.Item label="Chất Liệu" name="idCL">
+                    <Select placeholder="Chọn một giá trị">
+                      {cl.map(item => (
+                        <Option key={item.id} value={item.id}>
+                          {item.ten}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </div>
+                {/* Độ Cao */}
+                <div className='col-md-4'>
+                  <Form.Item label="Đế giày" name="idDC">
+                    <Select placeholder="Chọn một giá trị">
+                      {dc.map(item => (
+                        <Option key={item.ma} value={item.id}>
+                          {item.ten}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </div>
+                {/* Danh Mục */}
+                <div className='col-md-4'>
+                  <Form.Item label="Danh Mục" name="idDM">
+                    <Select placeholder="Chọn một giá trị">
+                      {dm.map(item => (
+                        <Option key={item.id} value={item.id}>
+                          {item.ten}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </div>
+              </div>
 
-          </Form>
+              {/* Các Thuộc Tính Dòng 3 */}
+              <div className='row'>
+                {/* Hãng */}
+                <div className='col-md-4'>
+                  <Form.Item label="Hãng" name="idH">
+                    <Select placeholder="Chọn một giá trị">
+                      {h.map(item => (
+                        <Option key={item.id} value={item.id}>
+                          {item.ten}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </div>
+                {/* Trạng Thái */}
+                <div className='col-md-4'>
+                  <Form.Item label="Trạng thái" name="trangThaiCT">
+                    <Select placeholder="Chọn một giá trị" defaultValue="0">
+                      <Select.Option value='0'>Còn Bán</Select.Option>
+                      <Select.Option value='1'>Dừng Bán</Select.Option>
+                    </Select>
+                  </Form.Item>
+                </div>
+                <div className='col-md-4'>
+                  <Form.Item label="Số lượng" name="soLuongCT">
+                    <Slider style={{ width: '200px' }} min={1} />
+                  </Form.Item>
+                </div>
+              </div>
+              <div className='col'>
+                <Form.Item style={{ marginLeft: 100 }} label="Giá bán" name="giaBanCT">
+                  <Slider style={{ width: '430px' }} min={1000000} max={10000000} step={1000000} />
+                </Form.Item>
+              </div>
+
+
+              <div className='container-fluid'>
+                <Form.Item className='text-center' style={{ paddingLeft: 360 }}>
+                  <Button type="primary" htmlType='reset' onClick={loadCTSP} icon={<RetweetOutlined />}>Làm mới</Button>
+                </Form.Item>
+              </div>
+
+            </Form>
           </div>
           <div
             className=" bg-light m-2 p-3 pt-2"
