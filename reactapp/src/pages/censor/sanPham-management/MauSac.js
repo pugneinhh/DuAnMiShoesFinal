@@ -104,13 +104,10 @@ export default function MauSac() {
   //Update
   const [msUpdate, setmsUpdates] = useState({});
   const showModal = async (id) => {
-    const result = await axios.get(`http://localhost:8080/admin/mau-sac/detail/${id}`, {
-      validateStatus: () => {
-        return true;
-      }
-    });;
-    setmsUpdates(result.data)
-    setOpenUpdate(true);
+    MauSacAPI.detail.then((res) => {
+      setmsUpdates(res.data)
+      setOpenUpdate(true);
+    }); 
   };
   // const showModal = async (id) => {
   //   setOpenUpdate(true);

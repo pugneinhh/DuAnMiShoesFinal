@@ -38,6 +38,7 @@ import { useNavigate } from "react-router-dom";
 import convert from "color-convert";
 import "./SanPham.css";
 import { MauSacAPI } from "../api/SanPham/mauSac.api";
+import { ChiTietSanPhamAPI } from "../api/SanPham/chi_tiet_san_pham.api";
 
 export default function AddSanPham() {
   //Form
@@ -427,12 +428,10 @@ export default function AddSanPham() {
     loadCTSP();
   }, []);
   const loadCTSP = async () => {
-    const result = await axios.get("http://localhost:8080/admin/ctsp/show", {
-      validateStatus: () => {
-        return true;
-      },
-    });
-    setOptionsCTSP(result.data);
+    ChiTietSanPhamAPI.showCTSP().then(response => {
+      setOptionsCTSP(response.data);
+    })
+
   };
 
   const addCTSanPham = () => {
@@ -505,8 +504,7 @@ export default function AddSanPham() {
     }
 
     for (let i = 0; i < tableData.length; i++) {
-      axios
-        .post("http://localhost:8080/admin/ctsp/add", tableData[i])
+      ChiTietSanPhamAPI.createCTSP(tableData[i])
         .then((response) => {
           loadCTSP();
           loadSP();
@@ -536,15 +534,9 @@ export default function AddSanPham() {
     loadSP();
   }, []);
   const loadSP = async () => {
-    const result = await axios.get(
-      "http://localhost:8080/admin/san-pham/getAll",
-      {
-        validateStatus: () => {
-          return true;
-        },
-      }
-    );
-    setOptionsSP(result.data);
+    ChiTietSanPhamAPI.getAllSanPham().then(response => {
+      setOptionsSP(response.data);
+    })
   };
   const addSanPham = (value) => {
     const checkTrung = (code) => {
@@ -553,8 +545,7 @@ export default function AddSanPham() {
       );
     };
     if (!checkTrung(value.ten)) {
-      axios
-        .post("http://localhost:8080/admin/san-pham/add", value)
+      ChiTietSanPhamAPI.createSanPham(value)
         .then((response) => {
           loadSP();
           form1.resetFields();
@@ -593,22 +584,18 @@ export default function AddSanPham() {
     loadKT();
   }, []);
   const loadKT = async () => {
-    const result = await axios.get("http://localhost:8080/admin/kich-thuoc", {
-      validateStatus: () => {
-        return true;
-      },
-    });
-    setKTData(result.data);
-    const loadOKT = result.data.map((item) => ({
-      key: item.id,
-      value: item.id,
-      label: item.ten,
-    }));
-    setOptionsKT(loadOKT);
+    ChiTietSanPhamAPI.getAllKichThuoc().then(response => {
+      setKTData(response.data);
+      const loadOKT = response.data.map((item) => ({
+        key: item.id,
+        value: item.id,
+        label: item.ten,
+      }));
+      setOptionsKT(loadOKT);
+    })
   };
   const addKichThuoc = (value) => {
-    axios
-      .post("http://localhost:8080/admin/kich-thuoc/add", value)
+    ChiTietSanPhamAPI.createKichThuoc(value)
       .then((response) => {
         toast("✔️ Thêm thành công!", {
           position: "top-right",
@@ -647,19 +634,15 @@ export default function AddSanPham() {
     loadMS();
   }, []);
   const loadMS = async () => {
-    const result = await axios.get("http://localhost:8080/admin/mau-sac", {
-      validateStatus: () => {
-        return true;
-      },
-    });
-
-    setMSData(result.data);
-    const loadOMS = result.data.map((item) => ({
-      key: item.id,
-      value: item.id,
-      label: item.ten,
-    }));
-    setOptionsMS(loadOMS);
+    ChiTietSanPhamAPI.getAllSanPham().then(response => {
+      setMSData(response.data);
+      const loadOMS = response.data.map((item) => ({
+        key: item.id,
+        value: item.id,
+        label: item.ten,
+      }));
+      setOptionsMS(loadOMS);
+    })
   };
   const addMauSac = (value) => {
     const chekTrung = (code) => {
@@ -706,17 +689,12 @@ export default function AddSanPham() {
     loadCL();
   }, []);
   const loadCL = async () => {
-    const result = await axios.get("http://localhost:8080/admin/chat-lieu", {
-      validateStatus: () => {
-        return true;
-      },
-    });
-
-    setCL(result.data);
+    ChiTietSanPhamAPI.getAllChatLieu().then(response => {
+      setCL(response.data);
+    })
   };
   const addChatLieu = (value) => {
-    axios
-      .post("http://localhost:8080/admin/chat-lieu/add", value)
+    ChiTietSanPhamAPI.createChatLieu(value)
       .then((response) => {
         toast("✔️ Thêm thành công!", {
           position: "top-right",
@@ -740,17 +718,12 @@ export default function AddSanPham() {
     loadDC();
   }, []);
   const loadDC = async () => {
-    const result = await axios.get("http://localhost:8080/admin/de-giay", {
-      validateStatus: () => {
-        return true;
-      },
-    });
-
-    setDC(result.data);
+    ChiTietSanPhamAPI.getAllDeGiay().then(response => {
+      setDC(response.data);
+    })
   };
   const addDoCao = (value) => {
-    axios
-      .post("http://localhost:8080/admin/de-giay/add", value)
+    ChiTietSanPhamAPI.createDeGiay(value)
       .then((response) => {
         toast("✔️ Thêm thành công!", {
           position: "top-right",
@@ -774,16 +747,12 @@ export default function AddSanPham() {
     loadDM();
   }, []);
   const loadDM = async () => {
-    const result = await axios.get("http://localhost:8080/admin/danh-muc", {
-      validateStatus: () => {
-        return true;
-      },
-    });
-    setDM(result.data);
+    ChiTietSanPhamAPI.getAllDanhMuc().then(response => {
+      setDM(response.data);
+    })
   };
   const addDanhMuc = (value) => {
-    axios
-      .post("http://localhost:8080/admin/danh-muc/add", value)
+    ChiTietSanPhamAPI.createDanhMuc(value)
       .then((response) => {
         toast("✔️ Thêm thành công!", {
           position: "top-right",
@@ -807,17 +776,12 @@ export default function AddSanPham() {
     loadH();
   }, []);
   const loadH = async () => {
-    const result = await axios.get("http://localhost:8080/admin/hang", {
-      validateStatus: () => {
-        return true;
-      },
-    });
-
-    setH(result.data);
+    ChiTietSanPhamAPI.getAllHang().then(response => {
+      setH(response.data);
+    })
   };
   const addHang = (value) => {
-    axios
-      .post("http://localhost:8080/admin/hang/add", value)
+    ChiTietSanPhamAPI.createHang(value)
       .then((response) => {
         toast("✔️ Thêm thành công!", {
           position: "top-right",

@@ -17,6 +17,7 @@ import { InfoCircleFilled } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Image } from "cloudinary-react";
+import { ChiTietSanPhamAPI } from "../api/SanPham/chi_tiet_san_pham.api";
 import {
   AddProduct,
   GetProduct,
@@ -49,8 +50,7 @@ const ModalSanPham = (props) => {
   const [kt, setKT] = useState([]);
 
   const loadKT = async () => {
-    const result = await axios
-      .get("http://localhost:8080/admin/kich-thuoc")
+      ChiTietSanPhamAPI.getAllKichThuoc()
       .then((response) => setKT(response.data));
   };
 
@@ -59,53 +59,49 @@ const ModalSanPham = (props) => {
   }, []);
   // //Load Màu Sắc
   const [ms, setMS] = useState([]);
-  // useEffect(() => {
-  //   loadMS();
-  // }, []);
-  // const loadMS = async () => {
-  //   const result = await SellAPI.getAllColors();
-  //     setMS(result.data);
-
-  // };
+  useEffect(() => {
+    loadMS();
+  }, []);
+  const loadMS = async () => {
+    ChiTietSanPhamAPI.getAllMauSac()
+    .then((response) => setMS(response.data));
+  };
   // //Load Chất Liệu
   const [cl, setCL] = useState([]);
-  // useEffect(() => {
-  //   loadCL();
-  // }, []);
-  // const loadCL = async () => {
-  //   const result = await SellAPI.getAllMeterials();
-  //     setCL(result.data);
-
-  // };
+  useEffect(() => {
+    loadCL();
+  }, []);
+  const loadCL = async () => {
+    ChiTietSanPhamAPI.getAllChatLieu()
+      .then((response) => setCL(response.data));
+  };
   // //Load Độ Cao -- Đế Giầy
   const [dc, setDC] = useState([]);
-  // useEffect(() => {
-  //   loadDC();
-  // }, []);
-  // const loadDC = async () => {
-  //   const result = await SellAPI.getAllSoles();
-  //     setDC(result.data);
-
-  // };
+  useEffect(() => {
+    loadDC();
+  }, []);
+  const loadDC = async () => {
+    ChiTietSanPhamAPI.getAllDeGiay()
+      .then((response) => setDC(response.data));
+  };
   // //Load Danh Mục
   const [dm, setDM] = useState([]);
-  // useEffect(() => {
-  //   loadDM();
-  // }, []);
-  // const loadDM = async () => {
-  //   const result = await SellAPI.getAllCategories();
-  //   setDM(result.data);
-  // };
+  useEffect(() => {
+    loadDM();
+  }, []);
+  const loadDM = async () => {
+    ChiTietSanPhamAPI.getAllDanhMuc()
+    .then((response) => setDM(response.data));
+  };
   // //Load Chất Liệu
   const [h, setH] = useState([]);
-  // useEffect(() => {
-  //   loadH();
-  // }, []);
-  // const loadH = async () => {
-  //   const result = await SellAPI.getAllBrands();
-  //     setH(result.data);
-
-  // };
+  useEffect(() => {
+    loadH();
+  }, []);
+  const loadH = async () => {
+    ChiTietSanPhamAPI.getAllHang()
+    .then((response) => setH(response.data));
+  };
 
   useEffect(() => {
     loadCTSP();
