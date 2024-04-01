@@ -22,6 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.example.backend.util.security.Authentication;
 import com.example.backend.util.security.JwtAuthenticationEntryPoint;
 import com.example.backend.util.security.JwtAuthenFiltertication;
+
 @Configuration
 @EnableWebSecurity
 @EnableAutoConfiguration
@@ -49,22 +50,39 @@ public class SecurityConfig {
                 .authorizeHttpRequests
                         (authorize -> authorize
                                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                                        .requestMatchers("/**","/api/payment-vnpay","/api/payment-callback").permitAll()
-                                        .requestMatchers("/admin/hang/**").permitAll()
-//                                       .requestMatchers("/api/admin/**").permitAll()
-                                        .requestMatchers("/api/khach-hang/user/**").permitAll()
-                                        .requestMatchers("/api/khach-hang/hoa-don-chi-tiet/**").permitAll()
-                                        .requestMatchers("/api/khach-hang/checkout").permitAll()
-                                        .requestMatchers("/api/getUseNameByToken/**").permitAll()
-                                        .requestMatchers("/api/khach-hang/user-voucher/**").permitAll()
+                                        .requestMatchers("/admin/voucher/").hasAnyRole("NHANVIEN", "ADMIN")
+                                        .requestMatchers("/admin/hoa-don/").hasAnyRole("NHANVIEN", "ADMIN")
+                                        .requestMatchers("/admin/ban-hang/").hasAnyRole("NHANVIEN", "ADMIN")
+                                        .requestMatchers("/admin/chat-lieu/").hasAnyRole("NHANVIEN", "ADMIN")
+                                        .requestMatchers("/admin/ctsp/").hasAnyRole("NHANVIEN", "ADMIN")
+                                        .requestMatchers("/admin/danh-muc/").hasAnyRole("NHANVIEN", "ADMIN")
+                                        .requestMatchers("/admin/de-giay/").hasAnyRole("NHANVIEN", "ADMIN")
+                                        .requestMatchers("/admin/hang/").hasAnyRole("NHANVIEN", "ADMIN")
+                                        .requestMatchers("/admin/khach-hang/").hasAnyRole("NHANVIEN", "ADMIN")
+                                        .requestMatchers("/admin/khuyen-mai/").hasAnyRole("NHANVIEN", "ADMIN")
+                                        .requestMatchers("/admin/kich-thuoc/").hasAnyRole("NHANVIEN", "ADMIN")
+                                        .requestMatchers("/admin/mau-sac/").hasAnyRole("NHANVIEN", "ADMIN")
+                                        .requestMatchers("/admin/nguoi-dung-voucher/").hasAnyRole("NHANVIEN", "ADMIN")
+                                        .requestMatchers("/admin/nhan-vien/").hasAnyRole("NHANVIEN", "ADMIN")
+                                        .requestMatchers("/admin/san-pham/").hasAnyRole("NHANVIEN", "ADMIN")
+                                        .requestMatchers("/admin/thanh-toan/").hasAnyRole("NHANVIEN", "ADMIN")
+                                        .requestMatchers("/admin/thong-bao/").hasAnyRole("NHANVIEN", "ADMIN")
+                                        .requestMatchers("/admin/thong-ke/").hasRole("NHANVIEN")
+                                        .requestMatchers(HttpMethod.GET, "/admin/").hasAnyRole("NHANVIEN", "ADMIN")
+                                        .requestMatchers(HttpMethod.POST, "/admin/").hasAnyRole("NHANVIEN", "ADMIN")
+                                        .requestMatchers(HttpMethod.PUT, "/admin/").hasAnyRole("ADMIN")
+                                        .requestMatchers(HttpMethod.DELETE, "/admin/").hasAnyRole("ADMIN")
+                                        .requestMatchers("/ban-hang-client/payment-vnpay", "/ban-hang-client/payment-callback", "/ban-hang-client/check-out").permitAll()
+                                        .requestMatchers("/api/**").permitAll()
+                                        .requestMatchers("/ban-hang-client/**").permitAll()
+                                        .requestMatchers("/client-hoa-don/**").permitAll()
+                                        .requestMatchers("/gio-hang/**").permitAll()
+                                        .requestMatchers("/gio-hang-chi-tiet/**").permitAll()
+                                        .requestMatchers("/khach-hang/**").permitAll()
+                                        .requestMatchers("/KH/thong-bao/**").permitAll()
+                                        .requestMatchers("/client/lich-su-hoa-don/**").permitAll()
                                         .requestMatchers("/api/genToken/**").permitAll()
                                         .requestMatchers("/ws/**").permitAll()
-                                        .requestMatchers("/admin/hoa-don/**").hasAnyRole("nhan_vien","admin")
-                                        .requestMatchers("/api/admin/hoa-don-chi-tiet/**").hasAnyRole("nhan_vien","admin")
-                                        .requestMatchers(HttpMethod.GET,"/api/admin/**").hasAnyRole("nhan_vien","admin")
-                                        .requestMatchers(HttpMethod.POST,"/api/admin/**").hasAnyRole("nhan_vien","admin")
-                                        .requestMatchers(HttpMethod.PUT,"/api/admin/**").hasAnyRole("admin")
-                                        .requestMatchers(HttpMethod.DELETE,"/api/admin/**").hasAnyRole("admin")
                                         .anyRequest().permitAll()
                         )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
