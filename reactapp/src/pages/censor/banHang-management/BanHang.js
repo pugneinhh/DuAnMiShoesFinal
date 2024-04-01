@@ -83,6 +83,9 @@ const BanHang = () => {
   console.log("voucher", voucherHienTai);
   console.log("hoaDon", activeKey);
   console.log("Hóa Đơn s", hoaDons);
+
+
+  
   const loadVoucherTotNhatVaVoucherTiepTheo = () => {
     console.log("money", money);
     SellAPI.voucherTotNhat(idKH, money).then((res) =>
@@ -1273,7 +1276,7 @@ const BanHang = () => {
                                 {
                                   client.filter(
                                     (i) => i.idND === tab.nguoiDung
-                                  )[0].tenND
+                                  )[0]?.tenND
                                 }
                               </Tag>
                             </p>
@@ -1293,7 +1296,7 @@ const BanHang = () => {
                                 {
                                   client.filter(
                                     (i) => i.idND === tab.nguoiDung
-                                  )[0].sdt
+                                  )[0]?.sdt
                                   //.soDienThoai
                                 }
                               </Tag>
