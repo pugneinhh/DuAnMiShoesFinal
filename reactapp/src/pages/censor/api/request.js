@@ -8,10 +8,14 @@ import { store } from "../../../store/redux/store";
 export const getHeader = ()=>{
     const userData = localStorage.getItem('userData');
     const useJson = JSON.parse(userData);
+    console.log(useJson)
     if(useJson){
+         console.log(`Bearer ${useJson.accessToken}`)
          return  `Bearer ${useJson.accessToken}`
+
     }
 }
+
 
 export const requestAdmin = axios.create({
     baseURL: AppConfig.apiUrl,
@@ -45,7 +49,7 @@ requestAdmin.interceptors.response.use(
             return;
         }
         if (error.response && (error.response.status === 403 || error.response.status === 401)) {
-           window.location.href = "/not-access";
+        //  window.location.href = "/not-access";
             return;
         }
         store.dispatch(SetLoadingFalse());
@@ -67,7 +71,7 @@ requestClient.interceptors.response.use(
             return;
         }
         if (error.response && (error.response.status === 403 || error.response.status === 401)) {
-            window.location.href = "/not-access";
+        //    window.location.href = "/not-access";
             return;
         }
     store.dispatch(SetLoadingFalse());

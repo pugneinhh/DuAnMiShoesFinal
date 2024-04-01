@@ -30,7 +30,7 @@ export const Login = () => {
     setShowPassword(!showPassword);
   };
   const login = (data) => {
-    localStorage.clear();
+   // localStorage.clear();
     LoginAPI.login(data)
       .then((respone) => {
         set("userData", respone.data);
@@ -196,7 +196,7 @@ export const Login = () => {
                 marginLeft: 100,
               }}
             >
-              <FacebookLogin
+              {/* <FacebookLogin
                 appId="426456789850156"
                 // autoLoad={true}
                 fields="name,email,picture"
@@ -218,7 +218,7 @@ export const Login = () => {
                 buttonText="Login to Google"
                 // cssClass="mb-1 mt-2  fw-bold w-75 h-50 text-dark button-login-face-book"
                 className="mb-1 mt-2  fw-bold w-75 h-50 text-dark button-login-google"
-              />
+              /> */}
               {/* <GoogleLogin
                 clientId="689459482014-49jc7cvt8hqflu87jegh2osfo2fd17se.apps.googleusercontent.com"
                 onSuccess={onSuccess}
