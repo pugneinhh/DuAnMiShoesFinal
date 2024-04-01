@@ -61,7 +61,7 @@ public class KhachHangService {
        add.setMa("KH"+size);
        add.setEmail(request.getEmail());
        add.setGioiTinh(request.getGioiTinh());
-       add.setChucVu("khach_hang");
+       add.setChucVu("KHACHHANG");
        add.setDiem(0);
        add.setChungMinhThu(request.getCanCuocCongDan());
        add.setTrangThai(0);
@@ -190,7 +190,7 @@ public class KhachHangService {
         nguoiDung.setTen(signUpRequest.getTen());
         nguoiDung.setEmail(signUpRequest.getEmail());
         nguoiDung.setMatKhau(passwordEncoder.encode(signUpRequest.getMatKhau()));
-        nguoiDung.setChucVu("khach_hang");
+        nguoiDung.setChucVu("KHACHHANG");
         nguoiDung.setDiem(0);
         nguoiDung.setNgayTao(LocalDateTime.now());
         nguoiDung.setNgayThamGia(LocalDateTime.now());

@@ -52,7 +52,7 @@ public class NhanVienService {
         System.out.println("NV" + (nguoiDungRepository.getAllNhanVien().size() + 1));
         add.setEmail(request.getEmail());
         add.setGioiTinh(request.getGioiTinh());
-        add.setChucVu("nhan_vien");
+        add.setChucVu("NHANVIEN");
         add.setDiem(0);
         add.setChungMinhThu(request.getCanCuocCongDan());
         add.setTrangThai(0);

@@ -6,6 +6,9 @@ export class SellAPI {
     return requestAdmin({
       method: "GET",
       url: "/admin/khach-hang",
+      headers: {
+        Authorization: this.getToken,
+      },
     });
   };
 
@@ -13,6 +16,9 @@ export class SellAPI {
     return requestAdmin({
       method: "GET",
       url: "/admin/kich-thuoc",
+      headers: {
+        Authorization: this.getToken,
+      },
     });
   };
 
@@ -20,6 +26,9 @@ export class SellAPI {
     return requestAdmin({
       method: "GET",
       url: "/admin/mau-sac",
+      headers: {
+        Authorization: this.getToken,
+      },
     });
   };
 
@@ -27,6 +36,9 @@ export class SellAPI {
     return requestAdmin({
       method: "GET",
       url: "/admin/chat-lieu",
+      headers: {
+        Authorization: this.getToken,
+      },
     });
   };
 
@@ -34,6 +46,9 @@ export class SellAPI {
     return requestAdmin({
       method: "GET",
       url: "/admin/de-giay",
+      headers: {
+        Authorization: this.getToken,
+      },
     });
   };
 
@@ -41,6 +56,9 @@ export class SellAPI {
     return requestAdmin({
       method: "GET",
       url: "/admin/danh-muc",
+      headers: {
+        Authorization: this.getToken,
+      },
     });
   };
 
@@ -48,6 +66,9 @@ export class SellAPI {
     return requestAdmin({
       method: "GET",
       url: "/admin/hang",
+      headers: {
+        Authorization: this.getToken,
+      },
     });
   };
 
