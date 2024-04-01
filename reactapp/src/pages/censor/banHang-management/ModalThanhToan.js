@@ -115,19 +115,7 @@ const ModalThanhToan = (props) => {
         // Tạo hóa đơn và hóa đơn chi tiết
         const dataHoaDon = hoaDons.filter((item) => item.id === hoaDon);
         console.log(dataHoaDon[0]);
-        // Hóa đơn 
-        // const addHD = async() => {
-        //   const dataAdd =  await SellAPI.addBill(dataHoaDon[0]);
-        // // Chi tiết hóa đơn
-        //   const ctsp = ctspHD.filter((f)=> f.hoaDon === hoaDon);
-        //   Promise.all(ctsp.map(value => 
-        //    SellAPI.addInvoice(value)));
-        // }
-        // addHD();
-        // axios.post(`http://localhost:8080/ban-hang/thanh-toan`,dataHoaDon[0]);
-        // if (voucher){
-        // SellAPI.updateVoucherToHD(hoaDon,voucher.id);
-        // }
+
         SellAPI.thanhToanHoaDon(hoaDon, storedData , voucher ? voucher.id : null);
 
         toast("Thanh toán thành công!", {

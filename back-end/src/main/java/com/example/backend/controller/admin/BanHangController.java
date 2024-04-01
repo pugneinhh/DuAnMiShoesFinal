@@ -24,7 +24,7 @@ import java.util.List;
 
 @CrossOrigin("http://localhost:3000/")
 @RestController
-@RequestMapping("/ban-hang")
+@RequestMapping("/admin/ban-hang")
 @RequiredArgsConstructor
 public class BanHangController {
     @Autowired

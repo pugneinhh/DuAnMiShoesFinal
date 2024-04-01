@@ -47,12 +47,25 @@ export const GioHang = ({ children }) => {
   const [moneyShip, setMoneyShip] = useState("");
   const [dataVanChuyen, setDataVanchuyen] = useState("");
   const [soLuongSPGH, setSoLuongSPGH] = useState(0);
+  const [soTienCanMuaThem, setSoTienCanMuaThem] = useState(0);
+  const [soTienDuocGiam, setSoTienDuocGiam] = useState(0);
   const [idGH, setIDGH] = useState("");
   const router = useNavigate();
   let total = 0;
   const { updateTotalQuantity } = useCart();
   const storedData = get("userData");
   const storedGioHang = get("GioHang");
+
+  const loadVoucherTotNhatVaVoucherTiepTheo = () => {
+    SellAPI.voucherTotNhat(storedData.userID, total).then((res) => setVoucher(res.data));
+    SellAPI.voucherSapDatDuoc(storedData.userID, total, voucher ? voucher.id : null).then(
+      (res) => {
+        console.log("res", res.data);
+        setSoTienCanMuaThem(res.data[0]);
+        setSoTienDuocGiam(res.data[1]);
+      }
+    );
+  };
 
   const loadCountGioHang = () => {
     if (storedData != null) {
@@ -95,7 +108,12 @@ export const GioHang = ({ children }) => {
       loadDiaChiMacDinh();
     }
     loadGHCT();
+    loadVoucherTotNhatVaVoucherTiepTheo();
   }, []);
+
+  useEffect(() => {
+    loadVoucherTotNhatVaVoucherTiepTheo();
+  }, [total]);
 
   useEffect(() => {
     loadGHCT();
@@ -402,6 +420,20 @@ export const GioHang = ({ children }) => {
             </tbody>
           </table>
         </div>
+      
+        <p className="float-right" style={{ color: "red" }}>
+          <b>
+            <>
+              {soTienCanMuaThem === 0 && soTienDuocGiam === 0
+                ? ""
+                : "Còn thiếu " +
+                  Intl.NumberFormat("en-US").format(soTienCanMuaThem) +
+                  "VNĐ để được giảm " +
+                  Intl.NumberFormat("en-US").format(soTienDuocGiam) +
+                  "VNĐ"}
+            </>
+          </b>
+        </p>
         <div className="col-md-4 donHangOL">
           <h4 className="text-center">Hóa đơn</h4>
           <hr

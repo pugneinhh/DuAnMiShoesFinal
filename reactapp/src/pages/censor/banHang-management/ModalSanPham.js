@@ -86,27 +86,7 @@ const ModalSanPham = (props) => {
     })
 
   };
-  const addKichThuoc = (value) => {
-    ChiTietSanPhamAPI.createKichThuoc(value)
-      .then(response => {
-        console.log(response.data);
-        toast('✔️ Thêm thành công!', {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        loadKT();
-        form1.resetFields();
 
-      })
-      .catch(error => console.error('Error adding item:', error));
-
-  }
   //Load Màu Sắc 
   const [ms, setMS] = useState([]);
   useEffect(() => {
@@ -117,28 +97,7 @@ const ModalSanPham = (props) => {
       setMS(response.data);
     })
   };
-  const addMauSac = (value) => {
-    console.log(value);
-    ChiTietSanPhamAPI.createMauSac(value)
-      .then(response => {
-        console.log(response.data);
-        toast('✔️ Thêm thành công!', {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        loadMS();
-        form1.resetFields();
 
-      })
-      .catch(error => console.error('Error adding item:', error));
-
-  }
   //Load Chất Liệu
   const [cl, setCL] = useState([]);
   useEffect(() => {
@@ -149,27 +108,7 @@ const ModalSanPham = (props) => {
       setCL(response.data);
     })
   };
-  const addChatLieu = (value) => {
-  ChiTietSanPhamAPI.createChatLieu(value)
-      .then(response => {
-        console.log(response.data);
-        toast('✔️ Thêm thành công!', {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        loadCL();
-        form1.resetFields();
 
-      })
-      .catch(error => console.error('Error adding item:', error));
-
-  }
   //Load Độ Cao
   const [dc, setDC] = useState([]);
   useEffect(() => {
@@ -180,28 +119,7 @@ const ModalSanPham = (props) => {
       setCL(response.data);
     })
   };
-  const addDoCao = (value) => {
-    console.log(value);
-    ChiTietSanPhamAPI.createDeGiay(value)
-      .then(response => {
-        console.log(response.data);
-        toast('✔️ Thêm thành công!', {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        loadDC();
-        form1.resetFields();
 
-      })
-      .catch(error => console.error('Error adding item:', error));
-
-  }
   //Load Danh Mục
   const [dm, setDM] = useState([]);
   useEffect(() => {
@@ -212,28 +130,7 @@ const ModalSanPham = (props) => {
       setDM(response.data);
     })
   };
-  const addDanhMuc = (value) => {
-    console.log(value);
-    ChiTietSanPhamAPI.createDanhMuc(value)
-      .then(response => {
-        console.log(response.data);
-        toast('✔️ Thêm thành công!', {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        loadDM();
-        form1.resetFields();
 
-      })
-      .catch(error => console.error('Error adding item:', error));
-
-  }
   //Load Hãng
   const [h, setH] = useState([]);
   useEffect(() => {
@@ -244,27 +141,7 @@ const ModalSanPham = (props) => {
       setH(response.data)
     })
   };
-  const addHang = (value) => {
-    console.log(value);
-    ChiTietSanPhamAPI.createHang(value)
-      .then(response => {
-        console.log(response.data);
-        toast('✔️ Thêm thành công!', {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        loadH();
-        form1.resetFields();
 
-      })
-      .catch(error => console.error('Error adding item:', error));
-  }
 
   const dispatch = useDispatch()
 
