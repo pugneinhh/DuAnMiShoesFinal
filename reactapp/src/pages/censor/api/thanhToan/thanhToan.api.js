@@ -5,6 +5,9 @@ export class ThanhToanAPI {
     return requestAdmin({
       method: "GET",
       url: `/admin/thanh-toan/${idHD}`,
+      headers: {
+        Authorization: this.getToken,
+      },
     });
   };
 }
