@@ -3,10 +3,115 @@ import { getHeader, requestAdmin } from "../request";
 export class ChiTietSanPhamAPI {
   static getToken = getHeader();
 
+  static showCTSP = (data) => {
+    return requestAdmin({
+      method: "GET",
+      url: `/admin/ctsp/show`,
+      headers: {
+        Authorization: this.getToken,
+      },
+    });
+  };
+
+  static showCTSPBySanPhamId = (id) => {
+    return requestAdmin({
+      method: "GET",
+      url: `/admin/ctsp/showct/${id}`,
+      headers: {
+        Authorization: this.getToken,
+      },
+    });
+  };
+
+  static showCTSPKT = (id) => {
+    return requestAdmin({
+      method: "GET",
+      url: `/admin/ctsp/search/${id}`,
+      headers: {
+        Authorization: this.getToken,
+      },
+    });
+  };
+
+  static showAllCTSP = (data) => {
+    return requestAdmin({
+      method: "GET",
+      url: `/admin/ctsp/detailsp`,
+      headers: {
+        Authorization: this.getToken,
+      },
+    });
+  };
+
+  static showDetailCTSP = (id) => {
+    return requestAdmin({
+      method: "GET",
+      url: `/admin/ctsp/detail/${id}`,
+      headers: {
+        Authorization: this.getToken,
+      },
+    });
+  };
+
+  static createCTSP = (data) => {
+    return requestAdmin({
+      method: "POST",
+      url: `/admin/ctsp/add`,
+      data: data,
+      headers: {
+        Authorization: this.getToken,
+      },
+    });
+  };
+
+  static updateCTSP = (id,data) => {
+    return requestAdmin({
+      method: "POST",
+      url: `/admin/ctsp/update/${id}`,
+      data: data,
+      headers: {
+        Authorization: this.getToken,
+      },
+    });
+  };
+
+  static searchCTSP = (id,data) => {
+    return requestAdmin({
+      method: "POST",
+      url: `/admin/ctsp/search-ctsp/${id}`,
+      data: data,
+      headers: {
+        Authorization: this.getToken,
+      },
+    });
+  };
+
   static searchCTSPBanHang = (data) => {
     return requestAdmin({
       method: "POST",
       url: `/admin/ctsp/search-ctsp-banhang`,
+      data: data,
+      headers: {
+        Authorization: this.getToken,
+      },
+    });
+  };
+
+  static getAllSanPham = () => {
+    return requestAdmin({
+      method: "GET",
+      url: `/admin/san-pham/getAll`,
+      headers: {
+        Authorization: this.getToken,
+      },
+      //   params: filter,
+    });
+  };
+
+  static createSanPham = (data) => {
+    return requestAdmin({
+      method: "POST",
+      url: `/admin/san-pham/add`,
       data: data,
       headers: {
         Authorization: this.getToken,

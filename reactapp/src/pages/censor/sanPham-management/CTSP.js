@@ -13,6 +13,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './SanPham.css'
 import SuaAnhCTSP from './SuaAnhCTSP';
+import { ChiTietSanPhamAPI } from '../api/SanPham/chi_tiet_san_pham.api';
 
 export default function CTSP() {
   //Mở detail ctsp
@@ -70,12 +71,9 @@ export default function CTSP() {
     if (selectedRowKeys) {
       console.log(selectedRowKeys);
       for (let i = 0; i < selectedRowKeys.length; i++) {
-        const result = await axios.get(`http://localhost:8080/admin/ctsp/detail/${selectedRowKeys[i]}`, {
-          validateStatus: () => {
-            return true;
-          }
-        });
-        setUpdateNhanh((prevData) => [...prevData, result.data]);
+        ChiTietSanPhamAPI.showDetailCTSP(selectedRowKeys[i]).then((res) => {
+          setUpdateNhanh((prevData) => [...prevData, res.data]);
+        })
       }
     }
   };
@@ -112,7 +110,7 @@ export default function CTSP() {
     for (let i = 0; i < updateNhanh.length; i++) {
       let idSP = updateNhanh[i].id
       console.log(updateNhanh[i].id)
-      axios.put(`http://localhost:8080/admin/ctsp/update/${idSP}`, updateNhanh[i])
+      ChiTietSanPhamAPI.updateCTSP(idSP, updateNhanh[i])
         .then(response => {
           console.log(response.data);
 
@@ -161,16 +159,13 @@ export default function CTSP() {
   }
   //Update
   const showModal = async (idCT) => {
-    const result = await axios.get(`http://localhost:8080/admin/ctsp/detail/${idCT}`, {
-      validateStatus: () => {
-        return true;
-      }
-    });
-    console.log(result.data)
-    setMsCheck(result.data.mauSac)
-    setKtCheck(result.data.kichThuoc)
-    setCTDatas(result.data);
-    setIsModalOpen(true);
+    ChiTietSanPhamAPI.showDetailCTSP(idCT).then((result) => {
+      console.log(result.data)
+      setMsCheck(result.data.mauSac)
+      setKtCheck(result.data.kichThuoc)
+      setCTDatas(result.data);
+      setIsModalOpen(true);
+    })
   };
   const [optionsCTSP, setOptionsCTSP] = useState([]);
   useEffect(() => {
@@ -178,13 +173,10 @@ export default function CTSP() {
     loadCTSP_Update();
   }, []);
   const loadCTSP_Update = async () => {
-    const result = await axios.get("http://localhost:8080/admin/ctsp/detailsp", {
-      validateStatus: () => {
-        return true;
-      }
-    });
-    console.log(result.data);
-    setOptionsCTSP(result.data);
+    ChiTietSanPhamAPI.showAllCTSP().then((res) => {
+      setOptionsCTSP(res.data);
+    })
+
   };
 
   const updateCTSanPham = () => {
@@ -211,7 +203,7 @@ export default function CTSP() {
       }
     }
 
-    axios.put(`http://localhost:8080/admin/ctsp/update/${ctData.id}`, ctData)
+    ChiTietSanPhamAPI.updateCTSP(ctData.id, ctData)
       .then(response => {
         console.log(response.data);
         toast('✔️ Sửa thành công!', {
@@ -234,7 +226,7 @@ export default function CTSP() {
     timKiemCT(allValues);
   }
   const timKiemCT = (dataSearch) => {
-    axios.post(`http://localhost:8080/admin/ctsp/search-ctsp/${id}`, dataSearch)
+    ChiTietSanPhamAPI.searchCTSP(id, dataSearch)
       .then(response => {
         // Update the list of items
         setCTSPs(response.data);
@@ -248,16 +240,12 @@ export default function CTSP() {
     loadKT();
   }, []);
   const loadKT = async () => {
-    const result = await axios.get("http://localhost:8080/admin/kich-thuoc", {
-      validateStatus: () => {
-        return true;
-      }
-    });
-    setKT(result.data);
+    ChiTietSanPhamAPI.getAllKichThuoc().then((result) => {
+      setKT(result.data);
+    })
   };
   const addKichThuoc = (value) => {
-    console.log(value);
-    axios.post('http://localhost:8080/admin/kich-thuoc/add', value)
+    ChiTietSanPhamAPI.createKichThuoc(value)
       .then(response => {
         console.log(response.data);
         toast('✔️ Thêm thành công!', {
@@ -283,16 +271,12 @@ export default function CTSP() {
     loadMS();
   }, []);
   const loadMS = async () => {
-    const result = await axios.get("http://localhost:8080/admin/mau-sac", {
-      validateStatus: () => {
-        return true;
-      }
-    });
-    setMS(result.data);
+    ChiTietSanPhamAPI.getAllMauSac().then((result) => {
+      setMS(result.data);
+    })
   };
   const addMauSac = (value) => {
-    console.log(value);
-    axios.post('http://localhost:8080/admin/mau-sac/add', value)
+    ChiTietSanPhamAPI.createMauSac(value)
       .then(response => {
         console.log(response.data);
         toast('✔️ Thêm thành công!', {
@@ -318,16 +302,12 @@ export default function CTSP() {
     loadCL();
   }, []);
   const loadCL = async () => {
-    const result = await axios.get("http://localhost:8080/admin/chat-lieu", {
-      validateStatus: () => {
-        return true;
-      }
-    });
-    setCL(result.data);
+    ChiTietSanPhamAPI.getAllChatLieu().then((result) => {
+      setCL(result.data);
+    })
   };
   const addChatLieu = (value) => {
-    console.log(value);
-    axios.post('http://localhost:8080/admin/chat-lieu/add', value)
+    ChiTietSanPhamAPI.createChatLieu(value)
       .then(response => {
         console.log(response.data);
         toast('✔️ Thêm thành công!', {
@@ -353,16 +333,12 @@ export default function CTSP() {
     loadDC();
   }, []);
   const loadDC = async () => {
-    const result = await axios.get("http://localhost:8080/admin/de-giay", {
-      validateStatus: () => {
-        return true;
-      }
-    });
-    setDC(result.data);
+    ChiTietSanPhamAPI.getAllDeGiay().then((result) => {
+      setDC(result.data);
+    })
   };
   const addDoCao = (value) => {
-    console.log(value);
-    axios.post('http://localhost:8080/admin/de-giay/add', value)
+    ChiTietSanPhamAPI.createDeGiay(value)
       .then(response => {
         console.log(response.data);
         toast('✔️ Thêm thành công!', {
@@ -388,16 +364,12 @@ export default function CTSP() {
     loadDM();
   }, []);
   const loadDM = async () => {
-    const result = await axios.get("http://localhost:8080/admin/danh-muc", {
-      validateStatus: () => {
-        return true;
-      }
-    });
-    setDM(result.data);
+    ChiTietSanPhamAPI.getAllDanhMuc().then((result) => {
+      setDM(result.data);
+    })
   };
   const addDanhMuc = (value) => {
-    console.log(value);
-    axios.post('http://localhost:8080/admin/danh-muc/add', value)
+   ChiTietSanPhamAPI.createDanhMuc(value)
       .then(response => {
         console.log(response.data);
         toast('✔️ Thêm thành công!', {
@@ -423,16 +395,12 @@ export default function CTSP() {
     loadH();
   }, []);
   const loadH = async () => {
-    const result = await axios.get("http://localhost:8080/admin/hang", {
-      validateStatus: () => {
-        return true;
-      }
-    });
-    setH(result.data);
+    ChiTietSanPhamAPI.getAllHang().then((result) => {
+      setH(result.data);
+    })
   };
   const addHang = (value) => {
-    console.log(value);
-    axios.post('http://localhost:8080/hang/admin/add', value)
+    ChiTietSanPhamAPI.createHang(value)
       .then(response => {
         console.log(response.data);
         toast('✔️ Thêm thành công!', {
@@ -460,13 +428,9 @@ export default function CTSP() {
     loadCTSP();
   }, []);
   const loadCTSP = async () => {
-    const result = await axios.get(`http://localhost:8080/admin/ctsp/showct/${id}`, {
-      validateStatus: () => {
-        return true;
-      }
-    });
-    console.log(result.data);
-    setCTSPs(result.data);
+    ChiTietSanPhamAPI.showCTSPBySanPhamId(id).then((result) => {
+      setCTSPs(result.data);
+    })
   };
 
   const dataSource = cTSP.map((item) => ({
@@ -486,13 +450,9 @@ export default function CTSP() {
 
   // console.log(dataSource)
   const loadCTKT = async () => {
-    const result = await axios.get(`http://localhost:8080/admin/ctsp/search/${id}`, {
-      validateStatus: () => {
-        return true;
-      }
-    });
-    console.log(result.data);
-    setCTSPs(result.data);
+    ChiTietSanPhamAPI.showCTSPKT(id).then((result) => {
+      setCTSPs(result.data);
+    })
   };
 
   const columns = [
@@ -976,7 +936,7 @@ export default function CTSP() {
                 <HighlightOutlined /> Sửa sản phẩm{" "}
               </span>
             </button>
-     
+
           </div>
           <div className="container-fluid mt-4">
             <div>

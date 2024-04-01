@@ -46,8 +46,7 @@ export default function SanPham() {
     timKiemCT(allValues);
   };
   const timKiemCT = (dataSearch) => {
-    axios
-      .post(`http://localhost:8080/admin/san-pham/tim-kiem`, dataSearch)
+    SanPhamAPI.search(dataSearch)
       .then((response) => {
         setSanPhams(response.data);
         console.log(response.data);
