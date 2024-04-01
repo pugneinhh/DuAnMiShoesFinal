@@ -244,10 +244,10 @@ export class SellAPI {
     });
   }
 
-  static voucherSapDatDuoc = (idKH,money) => {
+  static voucherSapDatDuoc = (idKH,money,idV) => {
     return requestAdmin({
       method: "GET",
-      url : `/ban-hang/hoa-don/khuyen-mai-sap-dat-duoc/${idKH}/${money}`,
+      url : `/ban-hang/hoa-don/khuyen-mai-sap-dat-duoc/${idKH}/${money}/${idV}`,
     });
   }
 
