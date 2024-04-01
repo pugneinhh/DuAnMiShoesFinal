@@ -130,7 +130,7 @@ const ThemKhuyenMai = () => {
   };
 
   return (
-    <div className="container">
+    <div className="container-fuild">
       <div>
       <Breadcrumb
       style={{marginTop: "10px"}}

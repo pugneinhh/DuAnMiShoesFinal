@@ -9,7 +9,9 @@ const detailInvoiceSlice = createSlice({
       return action.payload;
     },
     AddInvoice: (state, action) => {
+
       const data = action.payload;
+      console.log(data);
       const exitsItem = state.findIndex(
         (item) =>
           item.chiTietSanPham === data.chiTietSanPham &&
@@ -60,10 +62,13 @@ const detailInvoiceSlice = createSlice({
       }
     },
     RemoveInvoice: (state, action) => {
-      return state.filter(
+      const exitsItem = state.findIndex(
         (item) =>
-          item.chiTietSanPham !== action.payload.chiTietSanPham &&
+          item.chiTietSanPham === action.payload.chiTietSanPham &&
           item.hoaDon === action.payload.hoaDon
+      );
+      return  state.filter((item) => 
+          item.stt !== state[exitsItem].stt
       );
     },
     GetInvoiceByHoaDon: (state, action) => {
@@ -75,6 +80,7 @@ const detailInvoiceSlice = createSlice({
       return state[index];
     },
     RemoveInvoiceByHoaDon: (state, action) => {
+      console.log("reduxx",action.payload);
       return state.filter((item) => item.hoaDon !== action.payload.hoaDon);
     },
     GetLengthListByBill: (state, action) => {
@@ -83,6 +89,7 @@ const detailInvoiceSlice = createSlice({
     },
     LoadInvoice: (state, action) => {
       const data = action.payload;
+      console.log(data);
       const exitsItem = state.findIndex(
         (item) =>
           item.chiTietSanPham === data.chiTietSanPham &&
@@ -93,7 +100,7 @@ const detailInvoiceSlice = createSlice({
         state[exitsItem].giaBan = data.giaBan;
         state[exitsItem].giaGiam = data.giaGiam;
         state[exitsItem].giaSauGiam = data.giaSauGiam;
-        state[exitsItem].total = data.giaSauGiam;
+        state[exitsItem].total = data.total;
         state[exitsItem].tenKM = data.tenKM;
         state[exitsItem].tenKT = data.tenKT;
         state[exitsItem].tenMS = data.tenMS;
@@ -108,7 +115,7 @@ const detailInvoiceSlice = createSlice({
           id: data.id,
           soLuong: data.soLuong,
           giaGiam: data.giaGiam,
-          total: data.giaSauGiam,
+         // total: data.total,
           trangThai: data.trangThai,
           giaBan: data.giaBan,
           giaSauGiam: data.giaSauGiam,

@@ -118,3 +118,19 @@
 .pagination li.next a {
  background-color: white;
 }
+
+.motaTitle{
+   
+            box-sizing: border-box;
+            color: rgba(0, 0, 0, .4);
+            font-size: .875rem;
+            padding-right: 0.75rem;
+            width: 8.75rem;
+      
+}
+.motaChitiet{
+   text-transform: capitalize;
+}
+
+
+

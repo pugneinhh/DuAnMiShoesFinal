@@ -4,10 +4,8 @@ package com.example.backend.controller.admin;
 import com.example.backend.dto.request.HoaDonRequest;
 import com.example.backend.dto.request.LichSuHoaDonRequest;
 import com.example.backend.dto.request.hoadonsearch.HoaDonSearch;
-import com.example.backend.entity.HoaDon;
-import com.example.backend.entity.LichSuHoaDon;
-import com.example.backend.entity.ThanhToan;
-import com.example.backend.entity.Voucher;
+import com.example.backend.entity.*;
+import com.example.backend.model.AdminHoaDonSanPham;
 import com.example.backend.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +14,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -37,7 +37,13 @@ public class HoaDonControllerr {
     @Autowired
     private ThanhToanService thanhToanService;
     @Autowired
+    private HoaDonChiTietService hoaDonChiTietService;
+    @Autowired
     ThongBaoService thongBaoService;
+    @Autowired
+    KhuyenMaiService khuyenMaiService;
+    @Autowired
+    CTSPService ctspService;
     @GetMapping()
     public ResponseEntity<?> getALL(){
         return  ResponseEntity.ok(hoaDonService.getALL());
@@ -65,47 +71,46 @@ public class HoaDonControllerr {
         ls.setMoTaHoatDong(ls.getMoTaHoatDong());
         System.out.println("trang thai ban dau hd"+hoaDon.getTrangThai());
         System.out.println("trang thai ban dau hoadon"+hoaDon.getTrangThai());
-        ThanhToan thanhToan= thanhToanService.getThanhToanByIdHD(id);
-        if(hoaDon.getLoaiHoaDon()==0){
-            if(hoaDon.getTrangThai()==0&&thanhToan.getPhuongThucVnp()!=null){
-                hoaDon.setTrangThai(1);
-                ls.setTrangThai(1);
-                System.out.println("if 1");
-                lichSuHoaDonService.addLichSuHoaDon(ls);
-                return ResponseEntity.ok(
-                        hoaDonService.updateHD(hoaDon,id)
-                );
-            }
-            else if(hoaDon.getTrangThai()==1&&thanhToan.getPhuongThucVnp()!=null){
-                ls.setTrangThai(2);
-                hoaDon.setTrangThai(2);
-                System.out.println("if 2");
-                lichSuHoaDonService.addLichSuHoaDon(ls);
-                return ResponseEntity.ok(
-                        hoaDonService.updateHD(hoaDon,id)
-                );
-            }
-            else if(hoaDon.getTrangThai()==2&&thanhToan.getPhuongThucVnp()!=null){
-                ls.setTrangThai(3);
-                hoaDon.setTrangThai(3);
-                System.out.println("if 2");
-                lichSuHoaDonService.addLichSuHoaDon(ls);
-                return ResponseEntity.ok(
-                        hoaDonService.updateHD(hoaDon,id)
-                );
-            }
-            else if(hoaDon.getTrangThai()==3&&thanhToan.getPhuongThucVnp()!=null){
-                ls.setTrangThai(5);
-                hoaDon.setTrangThai(5);
-                System.out.println("if 2");
-                lichSuHoaDonService.addLichSuHoaDon(ls);
-                return ResponseEntity.ok(
-                        hoaDonService.updateHD(hoaDon,id)
-                );
-            }
-            if(thanhToan.getPhuongThucVnp()==null){
-                ls.setTrangThai(hoaDon.getTrangThai()+1);
-                hoaDon.setTrangThai(hoaDon.getTrangThai()+1);
+        List<ThanhToan> listThanhToan= thanhToanService.getThanhToanByIdHD(id);
+        for (ThanhToan thanhToan : listThanhToan) {
+            if (hoaDon.getLoaiHoaDon() == 0) {
+                if (hoaDon.getTrangThai() == 0 && thanhToan.getPhuongThucVnp() != null) {
+                    hoaDon.setTrangThai(1);
+                    ls.setTrangThai(1);
+                    System.out.println("if 1");
+                    lichSuHoaDonService.addLichSuHoaDon(ls);
+                    return ResponseEntity.ok(
+                            hoaDonService.updateHD(hoaDon, id)
+                    );
+                } else if (hoaDon.getTrangThai() == 1 && thanhToan.getPhuongThucVnp() != null) {
+                    ls.setTrangThai(2);
+                    hoaDon.setTrangThai(2);
+                    System.out.println("if 2");
+                    lichSuHoaDonService.addLichSuHoaDon(ls);
+                    return ResponseEntity.ok(
+                            hoaDonService.updateHD(hoaDon, id)
+                    );
+                } else if (hoaDon.getTrangThai() == 2 && thanhToan.getPhuongThucVnp() != null) {
+                    ls.setTrangThai(3);
+                    hoaDon.setTrangThai(3);
+                    System.out.println("if 2");
+                    lichSuHoaDonService.addLichSuHoaDon(ls);
+                    return ResponseEntity.ok(
+                            hoaDonService.updateHD(hoaDon, id)
+                    );
+                } else if (hoaDon.getTrangThai() == 3 && thanhToan.getPhuongThucVnp() != null) {
+                    ls.setTrangThai(5);
+                    hoaDon.setTrangThai(5);
+                    System.out.println("if 2");
+                    lichSuHoaDonService.addLichSuHoaDon(ls);
+                    return ResponseEntity.ok(
+                            hoaDonService.updateHD(hoaDon, id)
+                    );
+                }
+                if (thanhToan.getPhuongThucVnp() == null) {
+                    ls.setTrangThai(hoaDon.getTrangThai() + 1);
+                    hoaDon.setTrangThai(hoaDon.getTrangThai() + 1);
+                }
             }
         }
        if(hoaDon.getLoaiHoaDon()==1){
@@ -165,8 +170,9 @@ public class HoaDonControllerr {
         return  ResponseEntity.ok(hoaDonService.add(hoaDonRequest));
     }
 
-    @PutMapping("/huy-hoa-don/{idHD}")
-    public ResponseEntity<?> HuyHoaDon(@PathVariable("idHD") String idHD) {
+    @PutMapping("/huy-hoa-don/{ma}")
+    public ResponseEntity<?> HuyHoaDon(@PathVariable("ma") String ma) {
+        String idHD = hoaDonService.findHoaDonByMa(ma).getId();
         return  ResponseEntity.ok(hoaDonService.deleteHoaDon(idHD));
     }
 //    @PutMapping("/update/{ma}")
@@ -193,5 +199,78 @@ public class HoaDonControllerr {
             voucherService.add(voucher);
         }
         return ResponseEntity.ok(hoaDonService.addHoaDon(hoaDon));
+    }
+
+    @PutMapping("/them-san-pham/{idHD}/{idCTSP}/{maNV}")
+    public ResponseEntity<?> themSanPham(@PathVariable("idHD") String idHD, @PathVariable("idCTSP")String idCTSP  ,@PathVariable("maNV") String maNV){
+        List<AdminHoaDonSanPham>  list = hoaDonService.detailHDSanPham(idHD); // danh sách hóa đơn chi tiết
+        ChiTietSanPham ctsp = ctspService.findChiTietSanPhamByID(idCTSP); // chi tiết sản phẩm được chọn
+        HoaDon hd = hoaDonService.findHoaDonbyID(idHD); // hóa đơn hiện tại
+        KhuyenMai km = ctsp.getKhuyenMai() != null ? khuyenMaiService.detailKhuyenMai(ctsp.getKhuyenMai().getId()) : null; // khuyến mại nếu có
+        // Kiểm tra xem phần tử được thêm vào có trùng hợp với phần tử đã có hay không
+        for (AdminHoaDonSanPham x : list){
+            if (km != null) {
+                if (km.getLoai().equals("Tiền mặt")) {
+                    if ((new BigDecimal(x.getGiaBanSP()).compareTo(ctsp.getGiaBan().subtract(km.getGia_tri_khuyen_mai())) == 0) && x.getIDCTSP().equals(ctsp.getId())) {
+                        HoaDonChiTiet hdct = hoaDonChiTietService.getHDCTByID(x.getID());
+                        hdct.setSoLuong(hdct.getSoLuong() + 1);
+                        hd.setGiaGoc(hd.getGiaGoc().add(new BigDecimal(x.getGiaBanSP())));
+                        hd.setThanhTien(hd.getThanhTien().add(new BigDecimal(x.getGiaBanSP())));
+                        ResponseEntity.ok(hoaDonChiTietService.saveHDCT(hdct));
+                        return ResponseEntity.ok(hoaDonService.updateSample(hd));
+                    }
+                }
+                else {
+                    if ((new BigDecimal(x.getGiaBanSP()).compareTo(ctsp.getGiaBan().subtract(ctsp.getGiaNhap().multiply(km.getGia_tri_khuyen_mai()).divide(new BigDecimal(100)))) == 0) && x.getIDCTSP().equals(ctsp.getId())) {
+                        HoaDonChiTiet hdct = hoaDonChiTietService.getHDCTByID(x.getID());
+                        hdct.setSoLuong(hdct.getSoLuong() + 1);
+                        hd.setGiaGoc(hd.getGiaGoc().add(new BigDecimal(x.getGiaBanSP())));
+                        hd.setThanhTien(hd.getThanhTien().add(new BigDecimal(x.getGiaBanSP())));
+                        ResponseEntity.ok(hoaDonChiTietService.saveHDCT(hdct));
+                        return ResponseEntity.ok(hoaDonService.updateSample(hd));
+                    }
+                }
+            }
+            else {
+                if ((new BigDecimal(x.getGiaBanSP()).compareTo(ctsp.getGiaBan()) == 0) && x.getIDCTSP().equals(ctsp.getId())) {
+                    HoaDonChiTiet hdct = hoaDonChiTietService.getHDCTByID(x.getID());
+                    hdct.setSoLuong(hdct.getSoLuong() + 1);
+                    hd.setGiaGoc(hd.getGiaGoc().add(new BigDecimal(x.getGiaBanSP())));
+                    hd.setThanhTien(hd.getThanhTien().add(new BigDecimal(x.getGiaBanSP())));
+                    ResponseEntity.ok(hoaDonChiTietService.saveHDCT(hdct));
+                    return ResponseEntity.ok(hoaDonService.updateSample(hd));
+                }
+            }
+        }
+        // hết kiểm tra
+        HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
+        hoaDonChiTiet.setId(UUID.randomUUID().toString());
+        hoaDonChiTiet.setHoaDon(hoaDonService.findHoaDonbyID(idHD));
+        hoaDonChiTiet.setChiTietSanPham(ctspService.findChiTietSanPhamByID(ctsp.getId()));
+        hoaDonChiTiet.setTrangThai(0);
+        hoaDonChiTiet.setSoLuong(1);
+        hoaDonChiTiet.setNgayTao(LocalDateTime.now());
+        hoaDonChiTiet.setNguoiTao(maNV);
+        if (ctsp.getKhuyenMai() != null){
+
+            if (km.getLoai().equalsIgnoreCase("Tiền mặt")) {
+                hoaDonChiTiet.setGiaSauGiam(ctsp.getGiaBan().subtract(km.getGia_tri_khuyen_mai()));
+                hoaDonChiTiet.setGiaGiam(km.getGia_tri_khuyen_mai());
+                hd.setGiaGoc(hd.getGiaGoc().add(ctsp.getGiaBan().subtract(km.getGia_tri_khuyen_mai())));
+                hd.setThanhTien(hd.getThanhTien().add(ctsp.getGiaBan().subtract(km.getGia_tri_khuyen_mai())));
+            } else {
+                hoaDonChiTiet.setGiaSauGiam(ctsp.getGiaBan().subtract(ctsp.getGiaNhap().multiply(km.getGia_tri_khuyen_mai()).divide(new BigDecimal(100))));
+                hoaDonChiTiet.setGiaGiam(ctsp.getGiaNhap().multiply(km.getGia_tri_khuyen_mai()).divide(new BigDecimal(100)));
+                hd.setGiaGoc(hd.getGiaGoc().add(ctsp.getGiaBan().subtract(ctsp.getGiaNhap().multiply(km.getGia_tri_khuyen_mai()).divide(new BigDecimal(100)))));
+                hd.setThanhTien(hd.getThanhTien().add(ctsp.getGiaBan().subtract(ctsp.getGiaNhap().multiply(km.getGia_tri_khuyen_mai()).divide(new BigDecimal(100)))));
+            }
+        } else {
+            hoaDonChiTiet.setGiaSauGiam(ctsp.getGiaBan());
+            hoaDonChiTiet.setGiaGiam(new BigDecimal(0));
+            hd.setGiaGoc(hd.getGiaGoc().add(ctsp.getGiaBan()));
+            hd.setThanhTien(hd.getThanhTien().add(ctsp.getGiaBan()));
+        }
+        ResponseEntity.ok(hoaDonChiTietService.saveHDCT(hoaDonChiTiet));
+        return ResponseEntity.ok(hoaDonService.updateSample(hd));
     }
 }

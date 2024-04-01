@@ -563,8 +563,9 @@ const ModalDetailSP = (props) => {
           <h5>Mô tả sản phẩm:</h5>
           <p>
             <p>
-              ●<span className="me-2"></span>Tên hãng:{" "}
-              <span>{ChiTietSanPham.tenHang}</span>
+              ●<span className="me-2 "></span>{" "}
+              <label className="me-2 motaTitle">Tên hãng:</label>{" "}
+              <span className="motaChitiet">{ChiTietSanPham.tenHang}</span>
             </p>
             <p>
               ●<span className="me-2"></span>Độ cao :{" "}

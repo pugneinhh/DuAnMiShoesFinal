@@ -68,16 +68,16 @@ public class HoaDonServicee {
         return hoaDonRepository.detailHD(id);
     }
 
-    public HoaDon updateKH(String idHD,String idKH){
-        HoaDon hoaDon = hoaDonRepository.getHoaDonByIDHD(idHD);
+    public HoaDon updateKH(String ma,String idKH){
+        HoaDon hoaDon = hoaDonRepository.getHDByMa(ma);
         NguoiDung nguoiDung = nguoiDungRepository.findById(idKH).get();
         System.out.println("hoa don"+hoaDon);
         hoaDon.setNguoiDung(nguoiDung);
         return hoaDonRepository.save(hoaDon);
     }
 
-    public HoaDon updateReturnKhachLe(String idHD){
-        HoaDon hoaDon = hoaDonRepository.getHoaDonByIDHD(idHD);
+    public HoaDon updateReturnKhachLe(String ma){
+        HoaDon hoaDon = hoaDonRepository.getHDByMa(ma);
         hoaDon.setNguoiDung(null);
         System.out.println("hoa don"+hoaDon);
         return hoaDonRepository.save(hoaDon);
@@ -94,8 +94,8 @@ public class HoaDonServicee {
 
     }
 
-    public HoaDon updateTraSau(String idHD,String idNV){
-        HoaDon hoaDon = findHoaDonbyID(idHD);
+    public HoaDon updateTraSau(String ma,String idNV){
+        HoaDon hoaDon = findHoaDonByMa(ma);
         hoaDon.setTraSau(1);
         hoaDon.setNhanVien(idNV);
         hoaDon.setNgayMua(LocalDateTime.now());
@@ -116,8 +116,8 @@ public class HoaDonServicee {
         return hoaDonRepository.save(hoaDon);
     }
 
-    public HoaDon update1(HoaDon hd,String idHD){
-        HoaDon hoaDon = findHoaDonbyID(idHD);
+    public HoaDon update1(HoaDon hd,String ma){
+        HoaDon hoaDon = findHoaDonByMa(ma);
         hoaDon.setDiaChi(hd.getDiaChi());
         hoaDon.setNgayDuKienNhan(hd.getNgayDuKienNhan());
         hoaDon.setTenNguoiNhan(hd.getTenNguoiNhan());
@@ -127,8 +127,8 @@ public class HoaDonServicee {
         return hoaDonRepository.save(hoaDon);
     }
 
-    public HoaDon deleteVanChuyen(String idHD){
-        HoaDon hoaDon = findHoaDonbyID(idHD);
+    public HoaDon deleteVanChuyen(String ma){
+        HoaDon hoaDon = findHoaDonByMa(ma);
         hoaDon.setDiaChi("");
         hoaDon.setNgayDuKienNhan(null);
         hoaDon.setTenNguoiNhan("");
@@ -172,6 +172,9 @@ public class HoaDonServicee {
         return  hoaDonRepository.findById(id).get();
     }
 
+    public HoaDon findHoaDonByMa(String ma){
+        return hoaDonRepository.getHDByMa(ma);
+    }
     public List<AdminHoaDonSanPham> detailHDSanPham(String  key){
         return  hoaDonRepository.detailHDSanPham(key);
     }
@@ -229,5 +232,9 @@ public class HoaDonServicee {
     public HoaDon getHDByIDHD(String idHD){
         System.out.println("Hóa đơn service"+hoaDonRepository.getHoaDonByIDHD(idHD));
         return hoaDonRepository.getHoaDonByIDHD(idHD);
+    }
+
+    public HoaDon updateSample(HoaDon hd){
+        return hoaDonRepository.save(hd);
     }
 }

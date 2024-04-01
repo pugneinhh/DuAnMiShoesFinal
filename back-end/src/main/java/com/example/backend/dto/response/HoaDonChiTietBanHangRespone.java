@@ -22,4 +22,5 @@ public interface HoaDonChiTietBanHangRespone {
     public String getTenMS();
     public String getTenKT();
     public String getLinkAnh();
+    public String getMaHD();
 }

@@ -66,4 +66,7 @@ public interface VoucherRepository extends JpaRepository<Voucher, String> {
 
      Optional<Voucher> findAllById(String id);
 
+
+     @Query(value = "select * from voucher where id =:idV and trang_thai = 'DANG_HOAT_DONG'",nativeQuery = true)
+    Voucher detail(String idV);
 }

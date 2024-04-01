@@ -24,6 +24,7 @@ export class HoaDonAPI {
     });
   };
 
+
   static detailHD = (id) => {
     return requestAdmin({
       method: "GET",
@@ -90,3 +91,4 @@ export class HoaDonAPI {
     });
   };
 }
+

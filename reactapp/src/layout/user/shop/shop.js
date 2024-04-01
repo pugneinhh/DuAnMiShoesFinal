@@ -39,7 +39,7 @@ export const Shop = ({ children }) => {
     HomeAPI.getAllSanPham()
       .then((res) => {
         setProducts(res.data);
-        console.log(res.data)
+     
       })
   }
 
@@ -54,6 +54,7 @@ export const Shop = ({ children }) => {
     MauSacAPI.getAll()
       .then((res) => {
         setMauSacs(res.data);
+   
       })
   }
 
@@ -281,6 +282,7 @@ export const Shop = ({ children }) => {
                         {mauSac.map((mau, index) => {
                           return (
                             <Checkbox
+                         
                               key={mau.id}
                               value={mau.id}
                               onChange={(e) =>
@@ -291,6 +293,7 @@ export const Shop = ({ children }) => {
                                 {mau.ten.charAt(0).toUpperCase() +
                                   mau.ten.slice(1)}
                               </b>
+                       
                             </Checkbox>
                           );
                         })}
@@ -337,7 +340,7 @@ export const Shop = ({ children }) => {
         <div className="col-md-10  ">
           <Row gutter={16} className="mb-3">
             <div class="container">
-              <div className="d-flex justify-content-end">
+              <div className="d-flex justify-content-end mb-4">
                 <Dropdown
                   menu={{
                     items,

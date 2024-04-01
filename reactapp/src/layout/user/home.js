@@ -233,20 +233,22 @@ export const Home = ({ children }) => {
       {/* Sản phẩm */}
 
       <div className="container mt-5">
-        <h3 className="text-center">New Arrivals</h3>
+        <h3 className="text-center">Sản phẩm</h3>
         <Tabs defaultActiveKey="1" centered>
-
-          <TabPane tab="HOT PRODUCT" key="1">
+      <TabPane tab="Sản phẩm bán chạy" key="1">
             <div class="container">
               <div className="row">
-                {hotProducts.map((product, index) => (
-                  <ProductCard key={index} product={product} />
-                ))}
+                {hotProducts.map((product, index) => {
+                  return (
+                    <div className="col-md-3" >
+                      <ProductCard key={index} product={product} />
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </TabPane>
-
-          <TabPane tab="NEW PRODUCTS" key="2">
+          <TabPane tab="Sản phẩm mới" key="2">
             <div class="container">
               <div className="row">
                 {newProducts.map((product, index) => {
@@ -261,7 +263,7 @@ export const Home = ({ children }) => {
           </TabPane>
 
 
-          <TabPane tab="PRODUCTS" key="3">
+          <TabPane tab="Tất cả" key="3">
             <div class="container">
               <div className="row">
               {products.map((product, index) => {

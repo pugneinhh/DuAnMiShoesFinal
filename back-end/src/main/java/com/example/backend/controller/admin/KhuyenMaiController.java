@@ -8,6 +8,7 @@ import com.example.backend.entity.HoaDonChiTiet;
 import com.example.backend.entity.KhuyenMai;
 import com.example.backend.service.CTSPService;
 import com.example.backend.service.HoaDonChiTietService;
+import com.example.backend.service.KhuyenMaiSanPhamService;
 import com.example.backend.service.KhuyenMaiService;
 //import com.example.duanmishoes.util.ScheduledCheck;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,8 @@ public class KhuyenMaiController {
     CTSPService ctspService;
     @Autowired
     HoaDonChiTietService hoaDonChiTietService;
+    @Autowired
+    KhuyenMaiSanPhamService khuyenMaiSanPhamService;
 //    private ScheduledCheck scheduledCheck;
     @GetMapping("hien-thi")
     public ResponseEntity<?> getALL(){
@@ -90,46 +93,46 @@ public class KhuyenMaiController {
 
     }
 
-    @PutMapping("/updateTrangThai/{id}")
+    @PutMapping("/updateTrangThai/{id}") // tự động update khi khuyến mại hết hạn
     public ResponseEntity<?> updateTrangThai(@PathVariable("id") String id , @RequestBody KhuyenMaiRequest request){
         KhuyenMai km = request.map();
         km.setId(id);
         LocalDateTime ngayKT =  khuyenMaiService.convertTimeForUpdate(km.getNgay_ket_thuc());
         LocalDateTime today = LocalDateTime.now();
-        if (ngayKT.isBefore(today)){
+        if (ngayKT.isBefore(today)){ // ngày kết thúc trước ngày hiện tại => kết thúc khuyến mại
             List<String> list = ctspService.getCTSPByKM(id);
             for (String x: list) {
                 ChiTietSanPham ctsp = ctspService.findChiTietSanPhamByID(x);
-                ctspService.deleteKM(x);
-                for (HoaDonChiTiet h : hoaDonChiTietService.getAllHDCTByIDCTSP(x)) {
+                ctspService.deleteKM(x); // xóa khuyến mại ở ctsp
+                for (HoaDonChiTiet h : hoaDonChiTietService.getAllHDCTByIDCTSP(x)) { // kiểm tra hóa đơn chi tiết chưa thanh toán
                     if(h.getTrangThai() == 0) {
-                        hoaDonChiTietService.updateGia(x,new BigDecimal(0),ctsp.getGiaBan());
+                        hoaDonChiTietService.updateGia(x,new BigDecimal(0),ctsp.getGiaBan()); // trả về giá nguyên
 
                     }
                 }
 
             }
         }
-        km.setTrangThai(2);
+        km.setTrangThai(2); // gắn khuyến mại với giá trị 2 - đã kết thúc
         km.setNgaySua(new Date(new java.util.Date().getTime()));
         return  ResponseEntity.ok(khuyenMaiService.addKhuyenMai(km));
     }
 
 
-    @PutMapping("/updateTrangThai1/{id}")
+    @PutMapping("/updateTrangThai1/{id}") // tự động update sắp diễn ra / diễn ra
     public ResponseEntity<?> updateTrangThai1(@PathVariable("id") String id ,@RequestBody KhuyenMaiRequest request){
         KhuyenMai km = request.map();
         km.setId(id);
-        if(km.getTrangThai() != 3) {
-            if (km.getNgay_bat_dau().isAfter(LocalDateTime.now()))
-                km.setTrangThai(0);
-            else km.setTrangThai(1);
+        if(km.getTrangThai() != 3) { // kiểm tra trạng thái có bằng 3 - tạm  dừng hay không
+            if (km.getNgay_bat_dau().isAfter(LocalDateTime.now())) // ngày bắt đầu sau ngày hiện tại
+                km.setTrangThai(0); // => sắp diễn ra
+            else km.setTrangThai(1); // => đang dễn ra
             km.setNgaySua(new Date(new java.util.Date().getTime()));
         }
         return  ResponseEntity.ok(khuyenMaiService.addKhuyenMai(km));
     }
 
-    @PutMapping("/updateTrangThai2/{id}")
+    @PutMapping("/updateTrangThai2/{id}") // tạm dừng khuyến mại
     public ResponseEntity<?> updateTrangThai2(@PathVariable("id") String id , @RequestBody KhuyenMaiRequest request){
         KhuyenMai km = request.map();
         km.setId(id);

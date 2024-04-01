@@ -12,5 +12,6 @@ public interface KhuyenMaiSanPhamRepository extends JpaRepository<KhuyenMaiSanPh
     @Query(value = "select chi_tiet_sp_id from chitietsp_khuyenmai where khuyen_mai_id =:id",nativeQuery = true)
     List<String> getAllProductByPromotion(String id);
 
-
+    @Query(value = "select * from chitietsp_khuyenmai where khuyen_mai_id =:idKM and chi_tiet_san_pham_id =:idCTSP",nativeQuery = true)
+    KhuyenMaiSanPham findKhuyenMaiSanPham(String idKM,String idCTSP);
 }

@@ -4,7 +4,7 @@
     static getCTSP = (idctsp) => {
       return requestClient({
         method: "GET",
-        url: `client/sanpham/detailCTSP/${idctsp}`,
+        url: `/client/sanpham/detailCTSP/${idctsp}`,
       });
     };
 

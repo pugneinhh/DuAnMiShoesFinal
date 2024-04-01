@@ -22,4 +22,57 @@
   .card-mau{
     height: 220px;
   }
+    /* CSS */
+    .button-them {
+      padding: 0px 20px;
+      padding-bottom: 10px;
+      border: 0;
+      font-size: 16px;
+      transition: all 150ms ease-in-out;
   
+      border-radius: 20px;
+  
+      color: white;
+      font-weight: bold;
+      background: rgb(164, 155, 146);
+      box-shadow: rgba(99, 99, 99, 0.2) 0 2px 8px 0, inset 0px -6px 0px rgba(0, 0, 0, 0.1), inset 0px -2px 0px rgba(0, 0, 0, 0.15);
+    }
+  
+    .button-them:hover {
+      filter: brightness(0.98);
+    }
+  
+    .button-them:active {
+      filter: brightness(0.97);
+      padding-top: 5px;
+      padding-bottom: 5px;
+      box-shadow: rgba(99, 99, 99, 0.2) 0 2px 6px 0, inset 0px -1px 0px rgba(0, 0, 0, 0.15);
+    }
+
+
+             /* CSS */
+             .button-excel {
+               padding: 0px 20px;
+               padding-bottom: 10px;
+               border: 0;
+               font-size: 16px;
+               transition: all 150ms ease-in-out;
+                margin-left: 10px;
+               border-radius: 20px;
+      
+               color: white;
+               font-weight: bold;
+               background: rgb(18, 105, 6);
+               box-shadow: rgba(99, 99, 99, 0.2) 0 2px 8px 0, inset 0px -6px 0px rgba(0, 0, 0, 0.1), inset 0px -2px 0px rgba(0, 0, 0, 0.15);
+             }
+      
+             .button-excel:hover {
+               filter: brightness(0.98);
+             }
+      
+             .button-excel:active {
+               filter: brightness(0.97);
+               padding-top: 5px;
+               padding-bottom: 5px;
+               box-shadow: rgba(99, 99, 99, 0.2) 0 2px 6px 0, inset 0px -1px 0px rgba(0, 0, 0, 0.15);
+             }

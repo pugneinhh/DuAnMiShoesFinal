@@ -12,11 +12,11 @@ const billSlice = createSlice({
     CreateBill: (state, action) => {
       console.log("Dài", state.length);
       const data = action.payload;
-      const index = state.findIndex((period) => period.id === data.id);
+      const index = state.findIndex((period) => period.key === data.key);
       if (index !== -1) return;
       const newBill = {
         stt: state.length + 1,
-        id: data.id,
+       // id: data.id,
         ma: data.ma,
         trangThai: 0,
         key: data.key,

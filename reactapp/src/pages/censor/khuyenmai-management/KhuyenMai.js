@@ -15,7 +15,6 @@ import "./KhuyenMai.scss";
 import { BiSolidDiscount } from "react-icons/bi";
 import {
   HomeOutlined,
-  EyeOutlined,
   PlusCircleOutlined,
   UnorderedListOutlined,
   FilterFilled,
@@ -25,13 +24,18 @@ import {
 } from "@ant-design/icons";
 import { LuBadgePercent } from "react-icons/lu";
 import moment from "moment";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { PromotionAPI } from "../../censor/api/promotion/promotion.api";
 import { BsFillEyeFill } from "react-icons/bs";
 const KhuyenMai = () => {
   const currentTime = moment(); // thời gian hiện tại
+   const nav = useNavigate();
+   const themKM = (res) => {
+     console.log(res);
 
+     nav("/admin-them-khuyen-mai");
+   };
   const onChange = (value) => {};
 
   const handleChange = (event) => {
@@ -68,8 +72,8 @@ const KhuyenMai = () => {
 
     setKhuyenMais(updatedData);
   };
-  const loadKhuyenMai = async () => {
-    const result = await PromotionAPI.getAll()
+  const loadKhuyenMai =  () => {
+     PromotionAPI.getAll()
       .then((response) => {
         setKhuyenMais(response.data);
       })
@@ -389,7 +393,7 @@ const KhuyenMai = () => {
     tableColumns[tableColumns.length - 1].fixed = "right";
   }
   return (
-    <div className="container">
+    <div className="">
       <Breadcrumb
         style={{ marginTop: "10px" }}
         items={[
@@ -545,12 +549,13 @@ const KhuyenMai = () => {
 
           <div className="text-end">
             <br />
-            <Link
-              to="/admin-them-khuyen-mai"
-              className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill"
-            >
-              <PlusCircleOutlined /> Thêm đợt giảm giá
-            </Link>
+     
+
+            <button onClick={themKM} class="button-them">
+              <span class="text">
+                <PlusCircleOutlined /> Thêm
+              </span>
+            </button>
           </div>
           <div className="text-first fw-bold">
             <p>

@@ -80,10 +80,10 @@ export class SellAPI {
     });
   };
 
-  static getAllHDCTByHD = (id) => {
+  static getAllHDCTByHD = (ma) => {
     return requestAdmin({
       method: "GET",
-      url: `/ban-hang/hien-thi-hdct/${id}`,
+      url: `/ban-hang/hien-thi-hdct/${ma}`,
     });
   };
 
@@ -95,10 +95,10 @@ export class SellAPI {
     });
   };
 
-  static updateTraSau = (idHD,idNV) => {
+  static updateTraSau = (ma,idNV) => {
     return requestAdmin({
       method: "PUT",
-      url: `/ban-hang/tra-sau/hoa-don/${idHD}/${idNV}`,
+      url: `/ban-hang/tra-sau/hoa-don/${ma}/${idNV}`,
     });
   }
 
@@ -122,16 +122,16 @@ export class SellAPI {
       url: `/ban-hang/voucher/${id}`,
     });
   };
-  static deleteInvoiceAndRollBackProduct = (idCTSP, idHD) => {
+  static deleteInvoiceAndRollBackProduct = (idCTSP, ma) => {
     return requestAdmin({
       method: "DELETE",
-      url: `/ban-hang/delete-hoa-don-chi-tiet/${idCTSP}/${idHD}`,
+      url: `/ban-hang/delete-hoa-don-chi-tiet/${idCTSP}/${ma}`,
     });
   };
-  static updateSL = (idCTSP, idHD, Value) => {
+  static updateSL = (idCTSP, ma, Value) => {
     return requestAdmin({
       method: "PUT",
-      url: `/ban-hang/hoa-don/updateSL/${idCTSP}/${idHD}/${Value}`,
+      url: `/ban-hang/hoa-don/updateSL/${idCTSP}/${ma}/${Value}`,
     });
   };
 
@@ -142,17 +142,17 @@ export class SellAPI {
     });
   };
 
-  static updateKH = (idHD, idKH) => {
+  static updateKH = (ma, idKH) => {
     return requestAdmin({
       method: "PUT",
-      url: `/ban-hang/nguoi-dung/update-nguoi-dung/${idHD}/${idKH}`,
+      url: `/ban-hang/nguoi-dung/update-nguoi-dung/${ma}/${idKH}`,
     });
   };
 
-  static updateReturnKhachLe = (idHD) => {
+  static updateReturnKhachLe = (ma) => {
     return requestAdmin({
       method: "PUT",
-      url: `/ban-hang/nguoi-dung/update-khach-le/${idHD}`,
+      url: `/ban-hang/nguoi-dung/update-khach-le/${ma}`,
     });
   };
 
@@ -186,25 +186,25 @@ export class SellAPI {
   };
 
 
-  static thanhToanHoaDon = (id,idNV) => {
+  static thanhToanHoaDon = (ma,idNV,idVoucher) => {
     return requestAdmin({
       method: "PUT",
-      url: `/ban-hang/thanh-toan/hoa-don/${id}/${idNV}`,
+      url: `/ban-hang/thanh-toan/hoa-don/${ma}/${idNV}/${idVoucher}`,
     });
   };
 
-  static updateVanChuyen = (idHD, data) => {
+  static updateVanChuyen = (ma, data) => {
     return requestAdmin({
       method: "PUT",
-      url: `/ban-hang/hoa-don/update-van-chuyen/${idHD}`,
+      url: `/ban-hang/hoa-don/update-van-chuyen/${ma}`,
       data: data,
     });
   };
 
-  static deleteVanChuyen = (idHD) => {
+  static deleteVanChuyen = (ma) => {
     return requestAdmin({
       method: "PUT",
-      url: `/ban-hang/hoa-don/delete-van-chuyen/${idHD}`,
+      url: `/ban-hang/hoa-don/delete-van-chuyen/${ma}`,
     });
   };
 
@@ -216,24 +216,45 @@ export class SellAPI {
     });
   };
 
-  static getSLAndSLT = (idSP,idHD) => {
+  static getSLAndSLT = (idSP,ma) => {
     return requestAdmin({
       method: "GET",
-      url : `/ban-hang/hoa-don/san-pham/so-luong/${idSP}/${idHD}`,
+      url : `/ban-hang/hoa-don/san-pham/so-luong/${idSP}/${ma}`,
     });
   };
 
-  static updateTienVanChuyen = (idHD,tien) => {
+  static updateTienVanChuyen = (ma,tien) => {
     return requestAdmin({
       method: "PUT",
-      url : `/ban-hang/hoa-don/update-tien-van-chuyen/${idHD}/${tien}`,
+      url : `/ban-hang/hoa-don/update-tien-van-chuyen/${ma}/${tien}`,
     });
   }
 
-  static getThanhTienbyIDHD = (idHD) => {
+  static getThanhTienbyMaHD = (ma) => {
     return requestAdmin({
       method: "GET",
-      url : `/ban-hang/hoa-don/so-tien/${idHD}`,
+      url : `/ban-hang/hoa-don/so-tien/${ma}`,
+    });
+  }
+
+  static voucherTotNhat = (idKH,money) => {
+    return requestAdmin({
+      method: "GET",
+      url : `/ban-hang/hoa-don/voucher-tot-nhat/${idKH}/${money}`,
+    });
+  }
+
+  static voucherSapDatDuoc = (idKH,money,idV) => {
+    return requestAdmin({
+      method: "GET",
+      url : `/ban-hang/hoa-don/khuyen-mai-sap-dat-duoc/${idKH}/${money}/${idV}`,
+    });
+  }
+
+  static detailHoaDon = (ma) => {
+    return requestAdmin({
+      method: "GET",
+      url : `/ban-hang/detail-hoa-don/${ma}`,
     });
   }
 }

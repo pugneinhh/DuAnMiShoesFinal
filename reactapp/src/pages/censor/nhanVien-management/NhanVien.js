@@ -1,19 +1,24 @@
 import React, { useState, useEffect } from "react";
 import {Button,Form,Input,Divider,Select,Space,Table,Tag,Image} from "antd";
 import { FilterFilled } from "@ant-design/icons";
-import { Link } from "react-router-dom";
 import { BsFillEyeFill, BsPencilSquare } from "react-icons/bs";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { ToastContainer } from "react-toastify";
 import { BiSolidUserBadge } from "react-icons/bi";
 import { NhanVienAPI } from "../api/user/nhanVien.api";
-
+import './nhanvien.css';
+import { Link, useNavigate } from "react-router-dom";
 export default function NhanVien() {
   const [componentSize, setComponentSize] = useState("default");
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
   };
+   const nav = useNavigate();
+   const themNV = (res) => {
+     console.log(res);
 
+     nav("/admin-them-nhan-vien");
+   };
   const [form] = Form.useForm();
 // load nhan vien
   useEffect(() => {
@@ -250,13 +255,12 @@ export default function NhanVien() {
         {/* hết form tìm kiếm */}
         {/* view add nhân viên */}
         <div className=" text-end mt-3">
-          <Link
-            to="/admin-them-nhan-vien"
-            className="btn btn-warning bg-gradient fw-bold nut-them rounded-pill"
-          >
-            {" "}
-            <PlusCircleOutlined /> Thêm{" "}
-          </Link>
+       
+          <button onClick={themNV} class="button-them">
+            <span class="text">
+              <PlusCircleOutlined /> Thêm nhân viên
+            </span>
+          </button>
         </div>
       </div>
       <div className="container-fluid mt-4">

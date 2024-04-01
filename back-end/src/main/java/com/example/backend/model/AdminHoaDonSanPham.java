@@ -22,5 +22,11 @@ public interface AdminHoaDonSanPham {
     String getTenHang();
     @Value("#{target.thanhTienSP}")
     String getThanhTienSP();
+    @Value("#{target.idCTSP}")
+    String getIDCTSP();
+    @Value("#{target.giaGiam}")
+    String getGiaGiam();
 
+    @Value("#{target.id}")
+    String getID();
 }

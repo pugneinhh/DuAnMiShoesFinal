@@ -24,6 +24,9 @@ import {
   KHGuiThongBaoDatHang,
 } from "../../../utils/socket/socket";
 import HoaDon from "../../../pages/censor/hoaDon-management/HoaDon2";
+import { useCart } from "./CartContext";
+import CheckoutButton from "../thongBaoThanhToan/button";
+
 
 export const GioHang = ({ children }) => {
   const [openModalDiaChi, setOpenModalDiaChi] = useState(false);
@@ -50,6 +53,22 @@ export const GioHang = ({ children }) => {
 
   const storedData = get("userData");
   const storedGioHang = get("GioHang");
+
+
+  const loadCountGioHang = () => {
+    if (storedData != null) {
+      GioHangAPI.getByIDKH(storedData.userID).then((res) => {
+        GioHangAPI.getAllGHCTByIDGH(res.data.id).then((res) => {
+          updateTotalQuantity(res.data.length);
+        });
+      });
+    } else {
+      console.log("giỏ hàng", storedGioHang);
+      GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res) => {
+        updateTotalQuantity(res.data.length);
+      });
+    }
+  };
 
   const getButtonTMType = () => {
     // Xác định loại button dựa trên giá trị biến đếm
@@ -78,6 +97,13 @@ export const GioHang = ({ children }) => {
     }
     loadGHCT();
   }, []);
+
+  useEffect(() => {
+    loadGHCT();
+  },[soLuongSPGH]);
+
+
+
   const loadGiamGia = (voucher) => {
     console.log("vsd", voucher);
     if (voucher !== null) {
@@ -139,7 +165,7 @@ export const GioHang = ({ children }) => {
         });
       });
     } 
-    if (storedGioHang && storedGioHang!=null) {
+    else if (storedGioHang && storedGioHang!=null) {
       console.log(storedGioHang);
       GioHangAPI.getByID(storedGioHang.id).then((response) => {
         console.log(response.data);
@@ -204,6 +230,7 @@ export const GioHang = ({ children }) => {
     // let hoaDonID;
 
     const hdct = gioHangCT.map((ghct) => {
+      console.log("ctp",ghct);
       return {
         idCTSP: ghct.chiTietSanPham,
         donGia: ghct.thanhTien,
@@ -376,7 +403,7 @@ console.log(hoaDon);
                 gioHangCT.map((ghct, index) => (
                 
                     <ProductRow
-                      key={index}
+                      // key={index}
                       product={ghct}
                       loadghct={loadGHCT}
                       gioHangCT={gioHangCT}
@@ -571,7 +598,7 @@ console.log(hoaDon);
           </div>
           <hr className="mt-5 mb-5"></hr>
           <div className="d-flex flex-row-reverse bd-highlight">
-            <Button
+            {/* <Button
               className="p-2 bd-highlight"
               style={{
                 width: 250,
@@ -607,7 +634,49 @@ console.log(hoaDon);
               }}
             >
               Đặt hàng
-            </Button>
+            </Button> */}
+            <a
+              href="#btnCheckout"
+              className="checkout-button"
+              onClick={() => {
+                Modal.confirm({
+                  title: "Thông báo",
+                  content: "Bạn có xác nhận đặt hàng không?",
+                  onOk: () => {
+                    handleMuaHang(
+                      total,
+                      discount,
+                      gioHangCT,
+                      userID,
+                      voucher,
+                      diaChi,
+                      phuongThuc
+                    );
+                  },
+                  onCancel: () => {
+                    return;
+                  },
+                  footer: (_, { OkBtn, CancelBtn }) => (
+                    <>
+                      <CancelBtn />
+                      <OkBtn />
+                    </>
+                  ),
+                });
+              }}
+              id="btnCheckout"
+            >
+              Checkout now!
+              <figure className="truck">
+                <img
+                  src="https://assets.codepen.io/430361/truck.svg"
+                  alt="Checkout animation"
+                />
+              </figure>
+              <div className="thank-you">Cảm ơn</div>
+              <div className="other-day">Bạn đã đặt hàng</div>
+              <div className="click-run">Click run text</div>
+            </a>
           </div>
         </div>
       </div>
