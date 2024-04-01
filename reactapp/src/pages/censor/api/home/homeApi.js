@@ -1,37 +1,37 @@
-import { requestAdmin } from "../request";
+import { requestClient } from "../request";
 
 export class HomeAPI {
     //Get sản phẩm mới
     static getAllNewSanPham = () => {
-        return requestAdmin({
+        return requestClient({
             method: "GET",
             url: `/home/new`,
         });
     };   
      //Get sản phẩm hot
     static getHotSale = () => {
-        return requestAdmin({
+        return requestClient({
             method: "GET",
             url: `/home/hot`,
         });
     };
     //Get sản phẩm
     static getAllSanPham = () => {
-        return requestAdmin({
+        return requestClient({
             method: "GET",
             url: `/home`,
         });
     };
     //Get giá
     static getGia = (tenSP) => {
-        return requestAdmin({
+        return requestClient({
             method: "GET",
             url: `/home/${tenSP}`,
         });
     };
     // Tìm mảng 
     static timMang = (data) => {
-        return requestAdmin({
+        return requestClient({
             method: "POST",
             url: `/home/searchMang`,
             data: data

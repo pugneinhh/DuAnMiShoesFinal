@@ -59,6 +59,7 @@ public class JwtAuthenFiltertication extends OncePerRequestFilter {
 
         if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")){
             String token = bearerToken.substring(7, bearerToken.length());
+
             if(jwtTokenProvider.isTokenExpired(token)){
                 return null;
             }
