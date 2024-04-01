@@ -23,7 +23,7 @@ const ModalThanhToan = (props) => {
     console.log("Hóa Đơn", hoaDon);
     console.log(payDetail);
     console.log("Voucher thanh toán",voucher);
-
+    console.log("Tổng tiền",total)
     const data = payDetail.filter((item)=> item.hoaDon === hoaDon);
     const navigate = useNavigate();
 
@@ -145,6 +145,7 @@ const ModalThanhToan = (props) => {
 
           dispatch(RemoveInvoiceByHoaDon({hoaDon:hoaDon}))
           dispatch(RemoveBill({key:hoaDon}));
+          setTongThanhToan(0);
         setOpenThanhToan(false);
     } else {
         toast("Chưa đủ điều kiện thanh toán!", {
