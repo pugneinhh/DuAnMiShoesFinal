@@ -1,40 +1,54 @@
-import {
-    requestAdmin
-} from "../request";
+import { getHeader, requestAdmin } from "../request";
 
 export class ChiTietSanPhamAPI {
-    static getAll = () => {
-        return requestAdmin({
-            method: "GET",
-            url: `/admin/danh-muc`,
-            //   params: filter,
-        });
-    };
-    static search = (data) => {
-        return requestAdmin({
-            method: "POST",
-            url: `/admin/danh-muc/tim-kiem`,
-            data: data,
-        });
-    }; 
-    static create = (data) => {
-        return requestAdmin({
-            method: "POST",
-            url: `/admin/danh-muc/add`,
-            data: data,
-        });
-    };
-    static updateDM = (id,data) => {
-        return requestAdmin({
-            method: "PUT",
-            url: `admin/danh-muc/update/${id}`,
-            data: data,
-        });
-    };
-    static detailDM = (id) => {
-        return requestAdmin({
-            method: "GET",
-            url: `/admin/danh-muc/detail/${id}`,
-        });
-    };
+  static getToken = getHeader();
+  static getAll = () => {
+    return requestAdmin({
+      method: "GET",
+      url: `/admin/danh-muc`,
+      headers: {
+        Authorization: this.getToken,
+      },
+      //   params: filter,
+    });
+  };
+  static search = (data) => {
+    return requestAdmin({
+      method: "POST",
+      url: `/admin/danh-muc/tim-kiem`,
+      data: data,
+      headers: {
+        Authorization: this.getToken,
+      },
+    });
+  };
+  static create = (data) => {
+    return requestAdmin({
+      method: "POST",
+      url: `/admin/danh-muc/add`,
+      data: data,
+      headers: {
+        Authorization: this.getToken,
+      },
+    });
+  };
+  static updateDM = (id, data) => {
+    return requestAdmin({
+      method: "PUT",
+      url: `admin/danh-muc/update/${id}`,
+      data: data,
+      headers: {
+        Authorization: this.getToken,
+      },
+    });
+  };
+  static detailDM = (id) => {
+    return requestAdmin({
+      method: "GET",
+      url: `/admin/danh-muc/detail/${id}`,
+      headers: {
+        Authorization: this.getToken,
+      },
+    });
+  };
 }

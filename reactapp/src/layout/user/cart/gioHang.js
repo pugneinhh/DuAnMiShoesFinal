@@ -93,7 +93,7 @@ export const GioHang = ({ children }) => {
     let idHuyen = "";
     let idXa = "";
     if (storedData?.userID) {
-      await KhachHangAPI.getDiaChiMacDinh(storedData.userID).then((res) => {
+      await KhachHangAPI.getDiaChiMacDinhKHClient(storedData.userID).then((res) => {
         setDiaChi(res.data);
         console.log(res);
         idHuyen = res.data.idHuyen;
@@ -134,11 +134,12 @@ export const GioHang = ({ children }) => {
       GioHangAPI.getByIDKH(storedData.userID).then((response) => {
         setIDGH(response.data.id);
         GioHangAPI.getAllGHCTByIDGH(response.data.id).then((res) => {
-          setGioHangCT(res.data);
-          console.log("GioHangct", res.data);
+          setGioHangCT(res.data); 
+          console.log("->>>>>>>>>>>>>>>>>>>>>>",res.data);
         });
       });
-    } else if (storedGioHang && storedGioHang.id) {
+    } 
+    if (storedGioHang && storedGioHang!=null) {
       console.log(storedGioHang);
       GioHangAPI.getByID(storedGioHang.id).then((response) => {
         console.log(response.data);
@@ -150,7 +151,11 @@ export const GioHang = ({ children }) => {
       });
     }
   };
-
+  const handleDeleteGHCT = (GHID) => {
+    const updatedGioHangCT = gioHangCT.filter(item => item.id !== GHID);
+    setGioHangCT(updatedGioHangCT);
+    GioHangAPI.deleteGHCT(GHID);   
+  };
   useEffect(() => {
     console.log("ID GH", idGH);
     loadDiaChiMacDinh();
@@ -368,17 +373,18 @@ console.log(hoaDon);
             </thead>
             <tbody>
               {gioHangCT ? (
-                gioHangCT?.map((ghct, index) => {
-                  return (
+                gioHangCT.map((ghct, index) => (
+                
                     <ProductRow
                       key={index}
                       product={ghct}
                       loadghct={loadGHCT}
+                      gioHangCT={gioHangCT}
+                    setGioHangCT ={setGioHangCT}
                     />
-                  );
-                })
+                ))
               ) : (
-                <ProductRow />
+               <> </>
               )}
             </tbody>
           </table>

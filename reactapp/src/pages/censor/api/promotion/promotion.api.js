@@ -1,12 +1,14 @@
-import { requestAdmin } from "../request";
+import { getHeader, requestAdmin } from "../request";
 
 export class PromotionAPI {
-
+  static getToken = getHeader();
   static getAll = () => {
     return requestAdmin({
       method: "GET",
       url: `/admin/khuyen-mai/hien-thi`,
-     
+      headers: {
+        Authorization: this.getToken,
+      },
     });
   };
 
@@ -15,6 +17,9 @@ export class PromotionAPI {
       method: "POST",
       url: "/admin/khuyen-mai/add",
       data: data,
+      headers: {
+        Authorization: this.getToken,
+      },
     });
   };
 
@@ -23,6 +28,9 @@ export class PromotionAPI {
       method: "PUT",
       url: `/admin/khuyen-mai/update/${id}`,
       data: data,
+      headers: {
+        Authorization: this.getToken,
+      },
     });
   };
 
@@ -30,6 +38,9 @@ export class PromotionAPI {
     return requestAdmin({
       method: "GET",
       url: `/admin/khuyen-mai/detail/${id}`,
+      headers: {
+        Authorization: this.getToken,
+      },
     });
   };
 
@@ -38,6 +49,9 @@ export class PromotionAPI {
       method: "PUT",
       url: `/admin/khuyen-mai/updateTrangThai/${id}`,
       data: data,
+      headers: {
+        Authorization: this.getToken,
+      },
     });
   };
 
@@ -46,6 +60,9 @@ export class PromotionAPI {
       method: "PUT",
       url: `/admin/khuyen-mai/updateTrangThai1/${id}`,
       data: data,
+      headers: {
+        Authorization: this.getToken,
+      },
     });
   };
 
@@ -54,6 +71,9 @@ export class PromotionAPI {
       method: "PUT",
       url: `/admin/khuyen-mai/updateTrangThai2/${id}`,
       data: data,
+      headers: {
+        Authorization: this.getToken,
+      },
     });
   };
 
@@ -62,6 +82,9 @@ export class PromotionAPI {
       method: "PUT",
       url: `/admin/khuyen-mai/updateTrangThai3/${id}`,
       data: data,
+      headers: {
+        Authorization: this.getToken,
+      },
     });
   };
 
@@ -70,51 +93,70 @@ export class PromotionAPI {
       method: "POST",
       url: `/admin/khuyen-mai/search-khuyen-mai`,
       data: data,
+      headers: {
+        Authorization: this.getToken,
+      },
     });
   };
 
-  static updateProductByPromotion = (id,data) => {
+  static updateProductByPromotion = (id, data) => {
     return requestAdmin({
-        method: "PUT",
-        url : `/admin/ctsp/updateKM/${id}`,
-        data : data,
+      method: "PUT",
+      url: `/admin/ctsp/updateKM/${id}`,
+      data: data,
+      headers: {
+        Authorization: this.getToken,
+      },
     });
   };
 
   static showProductByPromotion = (id) => {
     return requestAdmin({
-        method: "GET",
-        url : `/admin/ctsp/showKM/${id}`,
-        
+      method: "GET",
+      url: `/admin/ctsp/showKM/${id}`,
+      headers: {
+        Authorization: this.getToken,
+      },
     });
   };
 
   static deletePromotion = (id) => {
     return requestAdmin({
-      method:"PUT",
+      method: "PUT",
       url: `/admin/ctsp/deleteKM/${id}`,
-    });
-  }
-
-  static showSPByProduct = (id) =>{
-    return requestAdmin({
-        method :"GET",
-        url:`/admin/san-pham/showSP/${id}`,
+      headers: {
+        Authorization: this.getToken,
+      },
     });
   };
 
-  static loadCTSPBySP = (id) =>{
+  static showSPByProduct = (id) => {
     return requestAdmin({
-        method :"GET",
-        url:`/admin/ctsp/showCTSP/${id}`
+      method: "GET",
+      url: `/admin/san-pham/showSP/${id}`,
+      headers: {
+        Authorization: this.getToken,
+      },
     });
   };
- 
+
+  static loadCTSPBySP = (id) => {
+    return requestAdmin({
+      method: "GET",
+      url: `/admin/ctsp/showCTSP/${id}`,
+      headers: {
+        Authorization: this.getToken,
+      },
+    });
+  };
 
   static loadSP = () => {
     return requestAdmin({
-        method :"GET",
-        url:`/admin/san-pham`,
+      method: "GET",
+      url: `/admin/san-pham`,
+      headers: {
+        Authorization: this.getToken,
+      },
     });
   };
 }

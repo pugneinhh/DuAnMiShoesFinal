@@ -83,7 +83,7 @@ function App() {
         <Suspense>
           <Routes>
             <Route path="*" element={<NotFoud />} />
-            <Route path="/403" element={<NotAccess />} />
+            <Route path="/not-access" element={<NotAccess />} />
             <Route
               path="/"
               element={<Navigate replace to="/admin-thong-ke" />}

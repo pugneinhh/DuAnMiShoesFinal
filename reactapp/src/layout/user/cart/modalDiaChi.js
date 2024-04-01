@@ -17,7 +17,7 @@ const ModalDiaChi = (props) => {
   // cập nhật địa chỉ mặc định
   const handleUpdateTT = () => {
     console.log("diachimacdinhmoi", nowAddress);
-    KhachHangAPI.updateDiaChiMacDinh(nowAddress)
+    KhachHangAPI.updateDiaChiMacDinhKHClient(nowAddress)
       .then((result) => {
         toast("✔️ Cập nhật dịa chỉ mặc định thành công!", {
           position: "top-right",
@@ -60,7 +60,7 @@ const ModalDiaChi = (props) => {
   const [datas, setData] = useState([]);
   const loadDiaChi = () => {
     if (userID) {
-    KhachHangAPI.getDiaChiByKH(userID)
+    KhachHangAPI.getDiaChiByKHClient(userID)
       .then((result) => {
         setData(result.data);
         result.data.map((item) => {

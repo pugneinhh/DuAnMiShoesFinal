@@ -4,7 +4,7 @@ import { GioHangAPI } from "../../../pages/censor/api/gioHang/gioHang.api";
 import { Badge, Image } from "antd";
 import { get, set } from "local-storage";
 import { useCart } from "../cart/CartContext";
-function ProductRow({ product, loadghct }) {
+function ProductRow({ product, loadghct,setGioHangCT,gioHangCT }) {
   const [quantity, setQuantity] = useState();
   const [price, setPrice] = useState();
   const [ctsp, setCtsp] = useState({});
@@ -21,6 +21,7 @@ function ProductRow({ product, loadghct }) {
     GioHangAPI.detailCTSP(product.chiTietSanPham).then((res) => {
       setCtsp(res.data);
     });
+      loadghct();
   }, []);
 
   const decreaseQuantity = () => {
@@ -62,10 +63,13 @@ function ProductRow({ product, loadghct }) {
   };
   const handleDeleteGHCT = () => {
    
-    GioHangAPI.deleteGHCT(product.id).then((res)=>{
+    GioHangAPI.deleteGHCT(product.id);
+    const updatedGioHangCT=gioHangCT.filter(gioHang => gioHang.id!== product.id);
+    setGioHangCT(updatedGioHangCT);
+    console.log("deleteGHCT", updatedGioHangCT);
       loadghct();
        loadCountGioHang();
-    });
+    
       
   };
   const handleUpdateGHCT = (quantity, price, product) => {

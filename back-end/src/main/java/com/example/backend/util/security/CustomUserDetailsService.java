@@ -20,9 +20,8 @@ public class CustomUserDetailsService implements UserDetailsService{
         NguoiDung nguoiDung = nguoiDungRepository.findByEmail(Email)
                 .orElseThrow(() ->
                         new RuntimeException("Đăng nhập không thành công "));
-
         return new org.springframework.security.core.userdetails.User(nguoiDung.getEmail(),
-                nguoiDung.getPassword(),
+                nguoiDung.getMatKhau(),
                 Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + nguoiDung.getChucVu())));
     }
 }
