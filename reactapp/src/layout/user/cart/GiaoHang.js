@@ -44,51 +44,10 @@ const DiaChiGiaoHang = ({
   };
   console.log("data",data);
   console.log("Dữ liệu",duLieu);
-  // useEffect(() => {
-  //   if (thongTinVanChuyen) {
-  //     form.setFieldsValue({
-  //       tenNguoiNhan: thongTinVanChuyen.tenNguoiNhan,
-  //       soDienThoai: thongTinVanChuyen.soDienThoai,
-  //       email: thongTinVanChuyen.email,
-  //       tenThanhPho: thongTinVanChuyen.tenThanhPho,
-  //       tenHuyen: thongTinVanChuyen.tenHuyen,
-  //       tenXa: thongTinVanChuyen.tenXa,
-  //       soNha: thongTinVanChuyen.diaChi,
-  //     });
-
-  //     if (
-  //       thongTinVanChuyen.idHuyen !== null &&
-  //       thongTinVanChuyen.idXa !== null
-  //     ) {
-  //       loadTimeAndMoney(
-  //         thongTinVanChuyen.idHuyen,
-  //         thongTinVanChuyen.idXa,
-  //         quantity
-  //       );
-  //       AddressApi.fetchAllProvinceDistricts(thongTinVanChuyen.idThanhPho).then(
-  //         (res) => {
-  //           setListDistricts(res.data.data);
-  //         }
-  //       );
-  //       setDistrictID(thongTinVanChuyen.idHuyen);
-  //       AddressApi.fetchAllProvinceWard(thongTinVanChuyen.idHuyen).then(
-  //         (res) => {
-  //           setListWard(res.data.data);
-  //         }
-  //       );
-  //       setWardCode(thongTinVanChuyen.idXa);
-  //     } else {
-  //       money(0);
-  //     }
-  //   }
-  // },[thongTinVanChuyen])
-
   useEffect(() => {
     loadDataProvince();
   //  setHoaDon1(hoaDon);
   }, []);
-
-
 
   const loadDataProvince = () => {
     AddressApi.fetchAllProvince().then((res) => {
@@ -130,28 +89,6 @@ const DiaChiGiaoHang = ({
   };
 
   const handleSubmit = async (value) => {
-    //  data = [
-    //   {
-    //     tenNguoiNhan: value.tenNguoiNhan,
-    //     soDienThoai: value.soDienThoai,
-    //     email: value.email,
-    //     diaChi:
-    //       value.soNha +
-    //       "/" +
-    //       value.tenXa +
-    //       "/" +
-    //       value.tenHuyen +
-    //       "/" +
-    //       value.tenThanhPho,
-    //     ngayDuKienNhan:
-    //       timeShip ,
-    //     tienVanChuyen: roundToThousands(
-    //       moneyShip 
-    //     ),
-    //     ghiChu: wardCode+"/"+districtID+"/"+proID,
-    //   },
-    // ];
-
      data = {
       tenNguoiNhan: value.tenNguoiNhan,
       soDienThoai: value.soDienThoai,
@@ -204,12 +141,6 @@ const DiaChiGiaoHang = ({
     form.setFieldsValue({ wardCode: valueWard.valueWard });
     setWardCode(valueWard.valueWard);
     console.log("Tên Xã",valueWard.value);
-
-    // setTimeShip(
-    //   await ShipAPI.fetchAllDayShip(districtID, valueWard.valueWard).then(
-    //     (res) => res.data.data.leadtime * 1000
-    //   )
-    // );
     if (districtID && valueWard) {
       setTimeShip(
         await ShipAPI.fetchAllDayShip(districtID, valueWard.valueWard).then(

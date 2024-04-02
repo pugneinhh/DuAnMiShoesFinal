@@ -65,6 +65,7 @@ import AccountProfile from "../layout/user/profile/profile";
 import ThanhToanThanhCong from "../layout/user/thongBaoThanhToan/thanhToanThanhCong";
 import ThanhToanThatBai from "../layout/user/thongBaoThanhToan/thanhToanThatBai";
 import { CartProvider } from "../layout/user/cart/CartContext";
+import TraHang from "../pages/censor/traHang-managenment/traHang";
 
 function App() {
   const isLoading = useAppSelector(GetLoading);
@@ -376,6 +377,16 @@ function App() {
                 <AuthGuard>
                   <DashboardCensor>
                     <BanHang />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/admin-tra-hang"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <TraHang />
                   </DashboardCensor>
                 </AuthGuard>
               }

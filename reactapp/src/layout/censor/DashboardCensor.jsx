@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { FaGithub, FaTshirt, FaTag } from "react-icons/fa";
 import { GoNumber } from "react-icons/go";
 import { AiOutlineColumnHeight } from "react-icons/ai";
-import { GiMaterialsScience } from "react-icons/gi";
+import { GiMaterialsScience, GiReturnArrow } from "react-icons/gi";
 import { IoColorPalette } from "react-icons/io5";
 import { BiSolidDiscount } from "react-icons/bi";
 import {
@@ -249,9 +249,14 @@ const DashboardCensor = ({ children }) => {
               </MenuItem>
             </SubMenu>
           </Menu>
-          <SidebarFooter style={{ textAlign: "center", marginTop:"auto" }}>
+          <Menu iconShape="circle">
+            <MenuItem icon={<GiReturnArrow color="#f7faf9" size={20} />}>
+              Trả hàng
+              <Link to="/admin-tra-hang"></Link>
+            </MenuItem>
+          </Menu>
+          <SidebarFooter style={{ textAlign: "center", marginTop: "auto" }}>
             <div
-            
               className="sidebar-btn-wrapper "
               style={{
                 padding: "20px 24px",
