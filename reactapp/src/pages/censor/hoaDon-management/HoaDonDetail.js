@@ -33,12 +33,14 @@ import { ThanhToanAPI } from "../api/thanhToan/thanhToan.api";
 import { AdminGuiThongBaoXacNhanDatHang } from "../../../utils/socket/socket";
 import { SellAPI } from "../api/sell/sell.api";
 import imgTicket from "../../../assets/images/discountTicket.png";
+import ModalDiaChiUpdate from "./ModalUpdateDiaChiHoaDon";
 export default function HoaDonDetail() {
   const { id } = useParams();
   const { Option } = Select;
   const [openModalTimeLine, setOpenModalTimeLine] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [openSanPham, setOpenSanPham] = useState(false);
+  const [openDiaChiUpdate, setOpenDiaChiUpdate] = useState(false);
   const [activeKey, setActiveKey] = useState(0);
   const [listHDTimeLine, setlistHDTimeLine] = useState([]);
   const [voucherHienTai, setVoucherHienTai] = useState(null);
@@ -54,6 +56,7 @@ export default function HoaDonDetail() {
     setIsModalOpen(false);
     setOpenModalTimeLine(false);
     setOpenSanPham(false);
+    setOpenDiaChiUpdate(false);
   };
   const [openXuat, setOpenXuat] = useState(false);
   const componnentRef = useRef();
@@ -87,7 +90,7 @@ export default function HoaDonDetail() {
   }, []);
   // load hóa đơn
 
-  const loadVoucherTotNhatVaVoucherTiepTheo = (idKH,money) => {
+  const loadVoucherTotNhatVaVoucherTiepTheo = (idKH, money) => {
     console.log("money", money);
     SellAPI.voucherTotNhat(idKH, money).then((res) =>
       setVoucherHienTai(res.data)
@@ -102,12 +105,17 @@ export default function HoaDonDetail() {
   useEffect(() => {
     if (hoaDondetail.nguoiDung) {
       SellAPI.getVoucherWithIDKH(hoaDondetail.nguoiDung).then((res) =>
-        setVoucher("Voucher theo KH",res.data)
+        setVoucher("Voucher theo KH", res.data)
       );
     } else {
-      SellAPI.getVoucherNoLimited().then((res) => setVoucher("Voucher Không",res.data));
+      SellAPI.getVoucherNoLimited().then((res) =>
+        setVoucher("Voucher Không", res.data)
+      );
     }
-    loadVoucherTotNhatVaVoucherTiepTheo(hoaDondetail.nguoiDung ? hoaDondetail.nguoiDung : null , hoaDondetail.giaGoc ? hoaDondetail.giaGoc : 0)
+    loadVoucherTotNhatVaVoucherTiepTheo(
+      hoaDondetail.nguoiDung ? hoaDondetail.nguoiDung : null,
+      hoaDondetail.giaGoc ? hoaDondetail.giaGoc : 0
+    );
   }, [hoaDondetail.giaGoc]);
 
   const onChangeVoucher = async (value, option) => {
@@ -133,8 +141,8 @@ export default function HoaDonDetail() {
     HoaDonAPI.detailHD(id).then((res) => {
       setHoaDondetail(res.data);
       setTrangThai(res.data.trangThai);
-      console.log("->>>>>hd detail",res.data);
-      console.log(res.data.trangThai,"->>>>>>>>?")
+      console.log("->>>>>hd detail", res.data);
+      console.log(res.data.trangThai, "->>>>>>>>?");
     });
   };
 
@@ -304,7 +312,7 @@ export default function HoaDonDetail() {
     if (trangThai === "0") {
       return "Chờ xác nhận";
     } else if (trangThai === "1") {
-      return "Xác Nhận";
+      return "Đã xác Nhận";
     } else if (trangThai === "2") {
       return "Chờ vận chuyển";
     } else if (trangThai === "3") {
@@ -319,7 +327,7 @@ export default function HoaDonDetail() {
   };
   const showTitleButtonVanDonTraSau = (trangThai) => {
     if (trangThai === "0") {
-      return "Xác nhận";
+      return "Đã xác nhận";
     } else if (trangThai === "1") {
       return "Chờ vận chuyển";
     } else if (trangThai === "2") {
@@ -334,7 +342,7 @@ export default function HoaDonDetail() {
   };
   const showTitleButtonVanDonTraTruoc = (trangThai) => {
     if (trangThai === "0") {
-      return "Xác nhận";
+      return "Đã xác nhận";
     } else if (trangThai === "1") {
       return "Chờ vận chuyển";
     } else if (trangThai === "2") {
@@ -630,7 +638,8 @@ export default function HoaDonDetail() {
             <>
               {trangThai == 0 ? (
                 <Button
-                  className="ms-5 btn btn-danger "
+                  className="ms-5  "
+                  style={{ backgroundColor: "red", color: "white" }}
                   type="primary"
                   onClick={handleHuyHoaDon}
                 >
@@ -819,14 +828,14 @@ export default function HoaDonDetail() {
                     <hr></hr>
                     <tr className="pt-3 row">
                       <div className="col-md-6">
-                      <div className="row">
+                        <div className="row">
                           <h6 className="col-md-3 mt-2">Mã giảm giá:</h6>
 
                           <Space.Compact className="col-md-10">
                             <Select
                               showSearch
                               style={{ width: 800, height: 120 }}
-                              placeholder="Lựa chọn voucher"         
+                              placeholder="Lựa chọn voucher"
                               onChange={onChangeVoucher}
                               value={voucherHienTai ? voucherHienTai.ma : null}
                               defaultValue={null}
@@ -981,9 +990,36 @@ export default function HoaDonDetail() {
       </div>
       {/* Thông tin đơn hàng */}
       <div className="container-fuild mt-3 row bg-light radius">
-        <h5 style={{ marginTop: "20px", paddingTop: "20px" }}>
-          Thông tin đơn hàng
-        </h5>
+        <div
+          className="d-flex bd-highlight"
+          style={{
+            marginTop: "20px",
+            paddingTop: "20px",
+            paddingBottom: "20px",
+          }}
+        >
+          <div className="flex-grow-1 bd-highlight">
+            <h5>Thông tin đơn hàng</h5>
+          </div>
+          <div className="">
+            <Button
+              // className="btn-danger "
+              style={{ backgroundColor: "red", color: "white" }}
+              onClick={() => setOpenDiaChiUpdate(true)}
+            >
+              Cập nhật
+            </Button>
+            <ModalDiaChiUpdate
+              idKH={hoaDondetail.nguoiDung}
+              maNV={maNV}
+              activeKey={id}
+              openDiaChiUpdate={openDiaChiUpdate}
+              setOpenDiaChiUpdate={setOpenDiaChiUpdate}
+              onOk={handleCancel}
+              onCancel={handleCancel}
+            />
+          </div>
+        </div>
         <hr />
         <div className="col-md-3">
           <div className="ps-4">
@@ -1059,10 +1095,10 @@ export default function HoaDonDetail() {
           {hoaDondetail.diaChi ? (
             <div className="bd-highlight">
               <Button
-                className="btn btn-danger "
+                style={{ backgroundColor: "red", color: "white" }}
                 onClick={() => setOpenSanPham(true)}
               >
-                Chỉnh sửa
+                Cập nhật
               </Button>
               <ModalSanPham
                 // idHD = {tab.id}
@@ -1171,7 +1207,9 @@ export default function HoaDonDetail() {
                     </h6>
                   </div>
                   <div className="col-md-2  mt-5">
-                    <Button className=" btn btn-danger">Trả hàng</Button>
+                    <Button style={{ backgroundColor: "red", color: "white" }}>
+                      Trả hàng
+                    </Button>
                   </div>
 
                   <hr className="mt-3"></hr>
@@ -1183,84 +1221,77 @@ export default function HoaDonDetail() {
 
         <tr className="pt-3 row">
           <div className="col-md-6">
-          <div className="row">
-                          <h6 className="col-md-3 mt-2">Mã giảm giá:</h6>
+            <div className="row">
+              <h6 className="col-md-3 mt-2">Mã giảm giá:</h6>
 
-                          <Space.Compact className="col-md-10">
-                            <Select
-                              showSearch
-                              style={{ width: 800, height: 120 }}
-                              placeholder="Lựa chọn voucher"
-                              s
-                              onChange={onChangeVoucher}
-                              //onSearch={onSearchVoucher}
-                              //value={voucherHienTai}
-                              value={voucherHienTai ? voucherHienTai.ma : null}
-                              defaultValue={null}
-                              optionFilterProp="label"
-                            >
-                              {
-                                voucher?.data?.map((option) => (
-                                  <Option
-                                    key={option.id}
-                                    value={option.id}
-                                    label={option.ma}
-                                    imgTicket={imgTicket}
-                                    dieuKien={option.dieuKien}
-                                    giamToiDa={option.giamToiDa}
-                                    loai={option.loaiVoucher}
-                                    mucDo={option.mucDo}
-                                    style={{ width: "100%", height: "100%" }}
-                                    // filterOption={filterOptionVoucher}
-                                  >
-                                    <div className="row">
-                                      <div
-                                        className="col-md-2"
-                                        //style={{ marginRight: 50 }}
-                                      >
-                                        <img
-                                          src={imgTicket}
-                                          style={{
-                                            width: 100,
-                                            marginRight: "8px",
-                                            heitgh: 80,
-                                            marginTop: "15px",
-                                          }}
-                                        />
-                                      </div>
-                                      <div
-                                        className="col"
-                                        style={{ marginLeft: "50px" }}
-                                      >
-                                        Mã giảm giá: {option.ma}
-                                        <br></br>
-                                        Điều kiện:
-                                        {Intl.NumberFormat("en-US").format(
-                                          option.dieuKien
-                                        )}{" "}
-                                        VNĐ
-                                        <br></br>
-                                        Giảm:
-                                        {option.loaiVoucher === "Phần trăm"
-                                          ? option.mucDo + "% "
-                                          : `${Intl.NumberFormat(
-                                              "en-US"
-                                            ).format(option.mucDo)} VNĐ `}
-                                        <br></br>
-                                        Tối đa:
-                                        {Intl.NumberFormat("en-US").format(
-                                          option.giamToiDa
-                                        )}
-                                        VNĐ
-                                      </div>
-                                    </div>
-                                  </Option>
-                                ))
-                              }
-                            </Select>
-                            {/* <Button className="ms-5">Áp mã</Button> */}
-                          </Space.Compact>
+              <Space.Compact className="col-md-10">
+                <Select
+                  showSearch
+                  style={{ width: 800, height: 120 }}
+                  placeholder="Lựa chọn voucher"
+                  s
+                  onChange={onChangeVoucher}
+                  //onSearch={onSearchVoucher}
+                  //value={voucherHienTai}
+                  value={voucherHienTai ? voucherHienTai.ma : null}
+                  defaultValue={null}
+                  optionFilterProp="label"
+                >
+                  {voucher?.data?.map((option) => (
+                    <Option
+                      key={option.id}
+                      value={option.id}
+                      label={option.ma}
+                      imgTicket={imgTicket}
+                      dieuKien={option.dieuKien}
+                      giamToiDa={option.giamToiDa}
+                      loai={option.loaiVoucher}
+                      mucDo={option.mucDo}
+                      style={{ width: "100%", height: "100%" }}
+                      // filterOption={filterOptionVoucher}
+                    >
+                      <div className="row">
+                        <div
+                          className="col-md-2"
+                          //style={{ marginRight: 50 }}
+                        >
+                          <img
+                            src={imgTicket}
+                            style={{
+                              width: 100,
+                              marginRight: "8px",
+                              heitgh: 80,
+                              marginTop: "15px",
+                            }}
+                          />
                         </div>
+                        <div className="col" style={{ marginLeft: "50px" }}>
+                          Mã giảm giá: {option.ma}
+                          <br></br>
+                          Điều kiện:
+                          {Intl.NumberFormat("en-US").format(
+                            option.dieuKien
+                          )}{" "}
+                          VNĐ
+                          <br></br>
+                          Giảm:
+                          {option.loaiVoucher === "Phần trăm"
+                            ? option.mucDo + "% "
+                            : `${Intl.NumberFormat("en-US").format(
+                                option.mucDo
+                              )} VNĐ `}
+                          <br></br>
+                          Tối đa:
+                          {Intl.NumberFormat("en-US").format(option.giamToiDa)}
+                          VNĐ
+                        </div>
+                      </div>
+                    </Option>
+                  ))}
+                </Select>
+                {/* <Button className="ms-5">Áp mã</Button> */}
+              </Space.Compact>
+            </div>
           </div>
           <div className="col-md-3"></div>
           <div className="col-md-3">
