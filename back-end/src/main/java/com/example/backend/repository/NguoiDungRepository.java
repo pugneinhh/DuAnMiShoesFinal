@@ -19,7 +19,7 @@ public interface NguoiDungRepository extends JpaRepository<NguoiDung, String> {
             "             CASE WHEN nd.email IS NULL THEN N'Không có'ELSE nd.email END  as email,CASE WHEN nd.ngay_sinh IS NULL THEN N'Không có'ELSE nd.ngay_sinh END  as ngaySinh\n" +
             "             ,nd.gioi_tinh AS gioiTinh, nd.chung_minh_thu AS cccd, CASE WHEN nd.anh IS NULL THEN N'Không có'ELSE nd.anh END  as anh,\n" +
             "             nd.trang_thai AS trangThai \n" +
-            "            FROM nguoi_dung nd WHERE nd.chuc_vu = 'nhan_vien' order by ngay_tham_gia desc ", nativeQuery = true)
+            "            FROM nguoi_dung nd WHERE nd.chuc_vu = 'NHANVIEN' order by ngay_tham_gia desc ", nativeQuery = true)
     List<AdminNhanVienRespon> getAllNhanVien();
 
     @Query(value = """
@@ -50,7 +50,7 @@ public interface NguoiDungRepository extends JpaRepository<NguoiDung, String> {
              from
                  nguoi_dung nd
              where
-                 nd.chuc_vu = 'khach_hang'
+                 nd.chuc_vu = 'KHACHHANG'
          order by ngay_tham_gia desc
              """, nativeQuery = true)
     List<AdminKhachHangRepon> getAllKhachHang();
@@ -76,7 +76,7 @@ public interface NguoiDungRepository extends JpaRepository<NguoiDung, String> {
                             a.dia_chi AS diaChi
                        FROM nguoi_dung u
                        LEFT JOIN dia_chi a on u.id = a.nguoi_dung_id
-                       WHERE a.trang_thai=0 AND u.chuc_vu = 'khach_hang' AND u.id = :id
+                       WHERE a.trang_thai=0 AND u.chuc_vu = 'KHACHHANG' AND u.id = :id
             """, nativeQuery = true)
     KhachHangRespon findByIdCustomer(@Param("id") String id);
 
@@ -101,7 +101,7 @@ public interface NguoiDungRepository extends JpaRepository<NguoiDung, String> {
                             a.dia_chi AS diaChi
                        FROM nguoi_dung u
                        LEFT JOIN dia_chi a on u.id = a.nguoi_dung_id
-                       WHERE a.trang_thai=0 AND u.chuc_vu = 'nhan_vien' AND u.id = :id
+                       WHERE a.trang_thai=0 AND u.chuc_vu = 'NHANVIEN' AND u.id = :id
             """, nativeQuery = true)
     NhanVienRespon findByIdNhanVien(@Param("id") String id);
 
@@ -139,7 +139,7 @@ public interface NguoiDungRepository extends JpaRepository<NguoiDung, String> {
             	nd.so_dien_thoai like (%:#{#nguoiDungSeacrh.ten}%) ) AND
                 (:#{#nguoiDungSeacrh.trangThai} IS NULL OR
                 nd.trang_thai =:#{#nguoiDungSeacrh.trangThai}) AND
-            	nd.chuc_vu = 'khach_hang'
+            	nd.chuc_vu = 'NHANVIEN'
             order by
             	maND desc
                          """, nativeQuery = true)
@@ -179,7 +179,7 @@ public interface NguoiDungRepository extends JpaRepository<NguoiDung, String> {
             	nd.so_dien_thoai like (%:#{#nguoiDungSeacrh.ten}%) ) AND
                 (:#{#nguoiDungSeacrh.trangThai} IS NULL OR
                 nd.trang_thai =:#{#nguoiDungSeacrh.trangThai}) AND
-            	nd.chuc_vu = 'nhan_vien'
+            	nd.chuc_vu = 'NHANVIEN'
             order by
             	maND desc
                          """, nativeQuery = true)
