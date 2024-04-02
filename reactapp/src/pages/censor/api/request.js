@@ -49,7 +49,7 @@ requestAdmin.interceptors.response.use(
             return;
         }
         if (error.response && (error.response.status === 403 || error.response.status === 401)) {
-        //  window.location.href = "/not-access";
+         window.location.href = "/not-access";
             return;
         }
         store.dispatch(SetLoadingFalse());
@@ -71,7 +71,7 @@ requestClient.interceptors.response.use(
             return;
         }
         if (error.response && (error.response.status === 403 || error.response.status === 401)) {
-        //    window.location.href = "/not-access";
+           window.location.href = "/not-access";
             return;
         }
     store.dispatch(SetLoadingFalse());

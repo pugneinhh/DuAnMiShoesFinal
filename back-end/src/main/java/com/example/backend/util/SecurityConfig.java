@@ -71,7 +71,7 @@ public class SecurityConfig {
 //                                        .requestMatchers("/admin/thanh-toan/**").hasAnyRole("NHANVIEN", "ADMIN")
                                         .requestMatchers(HttpMethod.GET, "/admin/**").hasAnyRole("NHANVIEN", "ADMIN")
                                         .requestMatchers(HttpMethod.POST, "/admin/**").hasAnyRole("NHANVIEN", "ADMIN")
-                                        .requestMatchers(HttpMethod.PUT, "/admin/**").hasAnyRole("ADMIN")
+                                        .requestMatchers(HttpMethod.PUT, "/admin/**").hasAnyRole("NHANVIEN", "ADMIN")
                                         .requestMatchers(HttpMethod.DELETE, "/admin/**").hasAnyRole("ADMIN")
 //                                        .requestMatchers("/ban-hang-client/payment-vnpay", "/ban-hang-client/payment-callback", "/ban-hang-client/check-out").permitAll()
 //                                        .requestMatchers("/api/**").permitAll()
