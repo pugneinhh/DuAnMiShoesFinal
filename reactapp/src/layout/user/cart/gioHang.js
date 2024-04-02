@@ -55,10 +55,13 @@ export const GioHang = ({ children }) => {
   const { updateTotalQuantity } = useCart();
   const storedData = get("userData");
   const storedGioHang = get("GioHang");
-
-  const loadVoucherTotNhatVaVoucherTiepTheo = () => {
-    SellAPI.voucherTotNhat(storedData.userID, total).then((res) => setVoucher(res.data));
-    SellAPI.voucherSapDatDuoc(storedData.userID, total, voucher ? voucher.id : null).then(
+  console.log("voucher",voucher);
+  console.log("total",total);
+  console.log("Giỏ hàng",gioHangCT);
+  const loadVoucherTotNhatVaVoucherTiepTheo = (total) => {
+    SellAPI.voucherTotNhat(storedData?.userID ? storedData?.userID : null, total).then((res) => {setVoucher(res.data); loadGiamGia(res.data);});
+    
+    SellAPI.voucherSapDatDuoc(storedData?.userID ? storedData?.userID : null, total, voucher ? voucher.id : null).then(
       (res) => {
         console.log("res", res.data);
         setSoTienCanMuaThem(res.data[0]);
@@ -108,12 +111,12 @@ export const GioHang = ({ children }) => {
       loadDiaChiMacDinh();
     }
     loadGHCT();
-    loadVoucherTotNhatVaVoucherTiepTheo();
+   // loadVoucherTotNhatVaVoucherTiepTheo();
   }, []);
 
-  useEffect(() => {
-    loadVoucherTotNhatVaVoucherTiepTheo();
-  }, [total]);
+  // useEffect(() => {
+  //   loadVoucherTotNhatVaVoucherTiepTheo();
+  // }, [total]);
 
   useEffect(() => {
     loadGHCT();
@@ -177,6 +180,9 @@ export const GioHang = ({ children }) => {
         GioHangAPI.getAllGHCTByIDGH(response.data.id).then((res) => {
           setGioHangCT(res.data);
           console.log("->>>>>>>>>>>>>>>>>>>>>>", res.data);
+          let tongTien = (res.data.map(i => i.thanhTien).reduce((total,currenMoney) => total+currenMoney,0));
+          loadVoucherTotNhatVaVoucherTiepTheo(tongTien);
+      
         });
       });
     } else if (storedGioHang && storedGioHang != null) {
@@ -187,9 +193,13 @@ export const GioHang = ({ children }) => {
       GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res) => {
         setGioHangCT(res.data);
         console.log("GioHan", res.data);
+        //res.data.map((i) => total +=Number(i.thanhTien))
+        let tongTien = (res.data.map(i => i.thanhTien).reduce((total,currenMoney) => total+currenMoney,0));
+        loadVoucherTotNhatVaVoucherTiepTheo(tongTien);
       });
       // });
     }
+
   };
 
   useEffect(() => {
@@ -478,9 +488,11 @@ export const GioHang = ({ children }) => {
             <div className="col-md-5">
               <span style={{ color: "blue" }}>
                 {gioHangCT.map((gh) => {
-                  total += Number(gh.thanhTien);
+                  total += Number(gh.thanhTien) ;
+                  
                   return null;
                 })}
+
                 {Intl.NumberFormat("en-US").format(total)}
               </span>{" "}
               <span>VND</span>
