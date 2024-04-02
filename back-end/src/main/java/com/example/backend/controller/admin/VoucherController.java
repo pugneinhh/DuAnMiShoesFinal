@@ -88,7 +88,7 @@ public class VoucherController {
     }
     @PostMapping("/search-voucher")
     public ResponseEntity<?> search(@RequestBody VoucherSearch voucherSearch){
-        System.out.println(voucherSearch.getNgayBatDau());
+        System.out.println("voucherrrrrrrrrrrrrrrrrrr"+voucherSearch.getNgayBatDau());
         return ResponseEntity.ok(vs.getSearch(voucherSearch));
     }
     @PutMapping("/updateTTHD/{id}")

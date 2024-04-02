@@ -45,19 +45,17 @@ const Voucher = () => {
   const timKiemVoucher = (dataSearch) => {
     VoucherAPI.search(dataSearch)
       .then((response) => {
-        setVouchers(response.data);
-   
-      })
-      .catch((error) => console.error("Error adding item:", error));
+        setVouchers(response.data);   
+      }).catch((error) => console.error("Error adding item:", error));
   };
+
   const loadVoucher = async () => {
     await VoucherAPI.getAll()
       .then((response) => {
         // Update the list of items
-        setVouchers(response.data);
-      
-      })
-      .catch((error) => console.error("Error adding item:", error));
+        
+        setVouchers(response.data); 
+      }).catch((error) => console.error("Error adding item:", error));
   };
 
   useEffect(() => {
@@ -65,35 +63,35 @@ const Voucher = () => {
   }, []);
 
   useEffect(() => {
-    const handleUpdateStatus = (status) => {
+    // const handleUpdateStatus = (status) => {
   
-      const currentTime = new Date();
+    //   const currentTime = new Date();
 
-        voucher.forEach((x) => {
-          console.log("x",x);
-          console.log("ngayBatDau",x.ngayBatDau);
-          currentTime > new Date(x.ngayBatDau) &&
-          currentTime < new Date(x.ngayKetThuc)
-            ? VoucherAPI.updateTTHD(x.id, x)
-            : currentTime > new Date(x.ngayKetThuc)
-            ? VoucherAPI.updateTTNgung(x.id, x)
-            : console.log("Không có dữ liệu update");
-        });
-        if (
-          !dataSearch.ten &&
-          !dataSearch.trangThai &&
-          !dataSearch.ngayKetThuc &&
-          !dataSearch.ngayBatDau &&
-          !dataSearch.loaiVoucher
-        ) {
+    //     voucher.forEach((x) => {
+    //       console.log("x",x);
+    //       console.log("ngayBatDau",x.ngayBatDau);
+    //       currentTime > new Date(x.ngayBatDau) &&
+    //       currentTime < new Date(x.ngayKetThuc)
+    //         ? VoucherAPI.updateTTHD(x.id, x)
+    //         : currentTime > new Date(x.ngayKetThuc)
+    //         ? VoucherAPI.updateTTNgung(x.id, x)
+    //         : console.log("Không có dữ liệu update");
+    //     });
+    //     if (
+    //       !dataSearch.ten &&
+    //       !dataSearch.trangThai &&
+    //       !dataSearch.ngayKetThuc &&
+    //       !dataSearch.ngayBatDau &&
+    //       !dataSearch.loaiVoucher
+    //     ) {
         
-        loadVoucher();
-      }
-    };
-    const time = setInterval(handleUpdateStatus, 10000);
-    return () => {
-      clearInterval(time);
-    };
+    //     loadVoucher();
+    //   }
+    // };
+    // const time = setInterval(handleUpdateStatus, 10000);
+    // return () => {
+    //   clearInterval(time);
+    // };
   }, [voucher]);
 
   const [componentSize, setComponentSize] = useState("default");
