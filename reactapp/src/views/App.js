@@ -66,6 +66,7 @@ import ThanhToanThanhCong from "../layout/user/thongBaoThanhToan/thanhToanThanhC
 import ThanhToanThatBai from "../layout/user/thongBaoThanhToan/thanhToanThatBai";
 import { CartProvider } from "../layout/user/cart/CartContext";
 import TraHang from "../pages/censor/traHang-managenment/traHang";
+import DetailHoaDonTraHang from "../pages/censor/traHang-managenment/DetailHoaDonTraHang";
 
 function App() {
   const isLoading = useAppSelector(GetLoading);
@@ -391,7 +392,16 @@ function App() {
                 </AuthGuard>
               }
             />
-
+            <Route
+              path="/admin-detail-tra-hang/:id"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <DetailHoaDonTraHang />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
             {/* Màn client */}
             <Route
               path="/home"

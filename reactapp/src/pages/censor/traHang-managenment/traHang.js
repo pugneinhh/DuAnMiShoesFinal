@@ -1,15 +1,7 @@
 import {
   Button,
-  Divider,
   Form,
   Input,
-  Modal,
-  Select,
-  Slider,
-  Table,
-  Space,
-  Tag,
-  Badge,
   Col,
   Row,
 } from "antd";
@@ -88,10 +80,8 @@ const TraHang = () => {
         </div>
         <div className="text-center mt-4">
           <img
-            src={
-              "https://img.freepik.com/premium-vector/worker-loading-truck_530733-3017.jpg?w=1380"
-            }
-            style={{ width: 1000, height: 500 }}
+            src="https://cdn.ntlogistics.vn/images/NTX/new_images/shipper-giao-hang-nhanh-can-chu-dong-trong-qua-trinh-gui-hang.jpg"
+            style={{ width: 1000, height: 550 }}
           ></img>
         </div>
       </div>
