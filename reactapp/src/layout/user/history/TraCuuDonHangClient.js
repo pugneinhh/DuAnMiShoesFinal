@@ -116,7 +116,12 @@ const TraCuuDonHangClient = () => {
         </Form>
       </div>
       <div className="text-center">
-        <img src={LogoGHN} style={{ width: 700, height: 403 }}></img>
+        <img
+          src={
+            "https://indochinapost.vn/wp-content/uploads/2017/10/chuyen-hang-ship-cod-nhanh-chong.jpg"
+          }
+          style={{ width: 700, height: 403 }}
+        ></img>
       </div>
       <ToastContainer
         position="top-right"
