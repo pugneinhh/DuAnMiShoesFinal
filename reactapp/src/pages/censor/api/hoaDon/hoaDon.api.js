@@ -90,5 +90,16 @@ export class HoaDonAPI {
       },
     });
   };
+
+
+  static themSanPham = (idHD,maNV,idCTSP) => {
+    return requestAdmin({
+       method: "PUT",
+       url: `/admin/hoa-don/them-san-pham/${idHD}/${idCTSP}/${maNV}`,
+       headers: {
+        Authorization: this.getToken,
+      },
+    });
+}
 }
 

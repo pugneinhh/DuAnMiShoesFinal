@@ -151,7 +151,7 @@ const ModalSanPham = (props) => {
     );
       console.log("Record",record);
     dispatch(UpdateApartProduct({ id: record.id, soLuong: 1 }));
-    await HoaDonAPI.themSanPham(activeKey,maNV,record.id).then(res =>console.log(res));
+    await HoaDonAPI.themSanPham(activeKey,maNV,record.id);
     props.loadHoaDon();
     props.loadListSanPhams();
     setOpenSanPham(false);

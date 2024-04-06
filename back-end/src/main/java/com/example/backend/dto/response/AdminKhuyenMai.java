@@ -18,7 +18,7 @@ public interface AdminKhuyenMai {
     @Value("#{target.ngay_bat_dau}")
     String getNgay_bat_dau();
     @Value("#{target.ngay_ket_thuc}")
-    String get_ngay_ket_thuc();
+    String getngay_ket_thuc();
     @Value("#{target.trangThai}")
     int getTrangThai();
 }

@@ -46,32 +46,11 @@ const KhuyenMai = () => {
   const [form] = Form.useForm();
 
   const [componentSize, setComponentSize] = useState("default");
-  const onFormLayoutChange = ({ size }) => {
-    setComponentSize(size);
-  };
+
 
   const [khuyenMai, setKhuyenMais] = useState([]);
+  console.log("Khuyến mại",khuyenMai);
 
-  const checkAndUpdateStatus = () => {
-    const currentDate = new Date();
-    // Lặp qua dữ liệu và kiểm tra điều kiện
-    const updatedData = khuyenMai.map((item) => {
-      if (
-        new Date(item.ngay_bat_dau) < currentDate &&
-        new Date(item.ngay_ket_thuc) > currentDate &&
-        item.trang_thai !== 2
-      ) {
-        item.trang_thai = 1;
-        return { ...item, status: "Hoạt động" };
-      } else if (new Date(item.ngay_ket_thuc) < currentDate) {
-        item.trang_thai = 2;
-        return { ...item, status: "Hết hạn" };
-      }
-      return item;
-    });
-
-    setKhuyenMais(updatedData);
-  };
   const loadKhuyenMai =  () => {
      PromotionAPI.getAll()
       .then((response) => {
@@ -81,37 +60,13 @@ const KhuyenMai = () => {
   };
 
   // tự update
-  useEffect(() => {
-    loadKhuyenMai();
-  }, []);
+  // useEffect(() => {
+  //   loadKhuyenMai();
+  // }, []);
 
   useEffect(() => {
-    const handleUpdateStatus = (status) => {
-      const currentTime = new Date();
-      khuyenMai.forEach((x) => {
-        currentTime > new Date(x.ngay_bat_dau) &&
-        currentTime < new Date(x.ngay_ket_thuc)
-          ? PromotionAPI.updateAutoStart(x.id, x)
-          : currentTime > new Date(x.ngay_ket_thuc)
-          ? PromotionAPI.updateAutoClose(x.id, x)
-          : console.log("Không có dữ liệu update");
-      });
-      if (
-        !dataSearch.ma &&
-        !dataSearch.ten &&
-        !dataSearch.ngay_bat_dau &&
-        !dataSearch.ngay_ket_thuc &&
-        !dataSearch.loai &&
-        !dataSearch.gia_tri_khuyen_mai
-      ) {
-        loadKhuyenMai();
-      }
-    };
-    const time = setInterval(handleUpdateStatus, 10000);
-    return () => {
-      clearInterval(time);
-    };
-  }, [khuyenMai]);
+      loadKhuyenMai();
+  }, [khuyenMai,dataSearch]);
 
   // tìm kiếm
 
