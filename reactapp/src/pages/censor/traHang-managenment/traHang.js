@@ -6,10 +6,34 @@ import {
   Row,
 } from "antd";
 import { useEffect, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 import { GiReturnArrow } from "react-icons/gi";
+import { TraHangAPI } from "../api/traHang/traHang.api";
+import { useNavigate } from "react-router-dom";
 const TraHang = () => {
   const [form] = Form.useForm();
-
+  const navigate = useNavigate();
+  const handleSubmit=(value)=>{
+   
+    TraHangAPI.getHoaDonByMa(value.ma).then((res)=>{
+      
+      if(res.data===null || res.data===''){
+        toast.error("Không tìm thấy hóa đơn!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }else{
+      
+        navigate(`/admin-detail-tra-hang/${value.ma}`);
+      }
+    })
+  }
   return (
     <div className="container-fuild">
       <div
@@ -31,7 +55,7 @@ const TraHang = () => {
           <Form
             form={form}
             style={{ paddingLeft: 400 }}
-            // onFinish={handleSubmit}
+            onFinish={handleSubmit}
           >
             <Row>
               <Col span={11} style={{ marginTop: "32px" }}>
@@ -56,7 +80,7 @@ const TraHang = () => {
                     backgroundColor: "#3366CC",
                     color: "white",
                   }}
-                  // htmlType="reset"
+                  onClick={()=>{form.submit();}}
                 >
                   Tìm kiếm
                 </Button>
@@ -83,6 +107,20 @@ const TraHang = () => {
             src="https://cdn.ntlogistics.vn/images/NTX/new_images/shipper-giao-hang-nhanh-can-chu-dong-trong-qua-trinh-gui-hang.jpg"
             style={{ width: 1000, height: 550 }}
           ></img>
+          <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
+        {/* Same as */}
+        <ToastContainer />
         </div>
       </div>
     </div>

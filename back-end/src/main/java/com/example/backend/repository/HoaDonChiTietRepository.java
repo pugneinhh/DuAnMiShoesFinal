@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Repository
 public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, String> {
-    @Query(value = "SELECT hdct.hoa_don_id as idHD,hdct.chi_tiet_san_pham_id as idCTSP,hdct.so_luong as soLuong,\n" +
+    @Query(value = "SELECT hdct.id as idHDCT, hdct.hoa_don_id as idHD,hdct.chi_tiet_san_pham_id as idCTSP,hdct.so_luong as soLuong,\n" +
             "hdct.gia_giam as giaGiam,hdct.gia_sau_giam as giaSauGiam,hdct.ngay_tao as ngayTao,hdct.ngay_sua as ngaySua,\n" +
             "hdct.trang_thai as trangThai , (select ten from mau_sac where mau_sac.id = ctsp.mau_sac_id) as tenMS,\n" +
             "(select ma from mau_sac where mau_sac.id = ctsp.mau_sac_id) as maMS,\n" +

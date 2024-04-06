@@ -14,19 +14,35 @@ import {
   Row,
 } from "antd";
 import { useEffect, useState } from "react";
-import { GiReturnArrow } from "react-icons/gi";
 import { LuMousePointerClick } from "react-icons/lu";
+import { useParams } from "react-router-dom";
 import TableSanPham from "./TableSanPham";
 import { MdSimCardDownload } from "react-icons/md";
 import { FaBuilding, FaUser } from "react-icons/fa";
 import { FaBuildingUser } from "react-icons/fa6";
 import TableSanPhamHoanTra from "./TableSanPhamHoanTra";
+import { TraHangAPI } from "../api/traHang/traHang.api";
+
 const DetailHoaDonTraHang = () => {
   const [form] = Form.useForm();
     const [selectedIDSP, setSelectedIDSP] = useState([]);
+    const [sanPhamHDCT,setSanPhamHDCT]=useState([]);
+    const { id } = useParams("");
   const handleSelectedIDSP = (selectedRowKeys) => {
     setSelectedIDSP(selectedRowKeys);
+    console.log("select sản phẩm trả",selectedRowKeys)
   };
+  useEffect(()=>{
+    loadAllHDCT();
+  },[id])
+  const loadAllHDCT=()=>{
+    console.log("ma",id);
+
+    TraHangAPI.getHoaDonByMa(id).then((res)=>{
+      console.log("trả hàng hóa đơn",res.data);
+      setSanPhamHDCT(res.data);
+    })
+  }
   return (
     <div>
       <div className="d-flex flex-row bd-highlight mb-3">
@@ -40,7 +56,7 @@ const DetailHoaDonTraHang = () => {
           className="fs-6 fw-bolder "
           style={{ color: "#736f6f", paddingTop: "2px" }}
         >
-          <strong>HD01</strong>
+          <strong>{id}</strong>
         </p>
       </div>
 
@@ -63,7 +79,7 @@ const DetailHoaDonTraHang = () => {
         </h5>
         <hr></hr>
 
-        <TableSanPham onSelectedSP={handleSelectedIDSP} />
+        <TableSanPham onSelectedSP={handleSelectedIDSP} sanPhamHDCT={sanPhamHDCT} />
       </div>
 
       <div className=" d-flex flex-row mt-4" style={{ padding: "0 9px" }}>
@@ -85,7 +101,7 @@ const DetailHoaDonTraHang = () => {
           </h5>
           <hr></hr>
 
-          <TableSanPhamHoanTra onSelectedSP={handleSelectedIDSP} />
+          <TableSanPhamHoanTra onSelectedSP={handleSelectedIDSP} sanPhamHoanTra={selectedIDSP} />
         </div>
         <div
           className="col-md-3"

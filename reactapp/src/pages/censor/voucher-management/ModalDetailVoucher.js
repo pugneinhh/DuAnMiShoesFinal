@@ -28,7 +28,7 @@ const ModalDetailVoucher=(props)=>{
   },[]);
   
    //lấy ra detail voucher
-   const detailVoucher = async () => {
+   const detailVoucher =  () => {
     VoucherAPI.detail(id)
       .then((response) => {
 
