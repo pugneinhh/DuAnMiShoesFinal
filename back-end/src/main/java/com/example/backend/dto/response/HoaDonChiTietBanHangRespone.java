@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public interface HoaDonChiTietBanHangRespone {
+    public String getIdHDCT();
     public String getIdHD();
     public String getIdCTSP();
     public int getSoLuong();
