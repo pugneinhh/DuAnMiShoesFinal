@@ -2,40 +2,35 @@ import React, { useState, useEffect } from "react";
 import { Table, Form, Input } from "antd";
 import { KhachHangAPI } from "../api/user/khachHang.api";
 
-const TableSanPhamHoanTra = ({ onSelectedSP, suaKH }) => {
+const TableSanPhamHoanTra = ({ onSelectedSP, sanPhamHoanTra }) => {
   const [form] = Form.useForm();
   const [khachHang, setKhachHangs] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [top] = useState("none");
   const [bottom] = useState("bottomCenter");
 
-  const loadKhachHang = () => {
-    KhachHangAPI.getAll().then((result) => {
-      setKhachHangs(result.data);
-    });
-  };
+  // const loadKhachHang = () => {
+  //   KhachHangAPI.getAll().then((result) => {
+  //     setKhachHangs(result.data);
+  //   });
+  // };
 
-  useEffect(() => {
-    loadKhachHang();
-  }, []);
+  // useEffect(() => {
+  //   loadKhachHang();
+  // }, []);
 
-  useEffect(() => {
-    setSelectedRowKeys(suaKH);
-    onSelectedSP(suaKH);
-  }, [suaKH]);
-
-  const handleCheckboxChange = (selectedKeys, selectedRowKeys) => {
-    if (selectedRowKeys !== null) {
-      setSelectedRowKeys(selectedKeys);
-      onSelectedSP(selectedKeys);
-    }
-  };
+  // const handleCheckboxChange = (selectedKeys, selectedRowKeys) => {
+  //   if (selectedRowKeys !== null) {
+  //     setSelectedRowKeys(selectedKeys);
+  //     onSelectedSP(selectedKeys);
+  //   }
+  // };
 
   const columnsKhachHang = [
     {
       title: "#",
-      dataIndex: "idND",
-      key: "idND",
+      dataIndex: "idHDCT",
+      key: "idHDCT",
       render: (id, record, index) => {
         ++index;
         return index;
@@ -44,19 +39,21 @@ const TableSanPhamHoanTra = ({ onSelectedSP, suaKH }) => {
     },
     {
       title: "Sản phẩm",
-      dataIndex: "maND",
-      key: "maND",
-     
+      dataIndex: "tenSP",
+      key: "tenSP",
+      render: (text, record) => (
+        <span>{`${record.tenSP} [${record.tenMS}-${record.tenKT}]`}</span>
+      ),
     },
     {
       title: "Số lượng",
-      dataIndex: "tenND",
-      key: "tenND",
+      dataIndex: "soLuong",
+      key: "soLuong",
     },
     {
       title: "Đơn giá",
-      dataIndex: "diem",
-      key: "diem",
+      dataIndex: "donGia",
+      key: "donGia",
     },
     {
       title: "Tổng tiền",
@@ -65,25 +62,28 @@ const TableSanPhamHoanTra = ({ onSelectedSP, suaKH }) => {
     },
     {
       title: "Ghi chú",
-      dataIndex: "diem",
-      key: "diem",
+      dataIndex: "ghiChu",
+      key: "ghiChu",
     },
   ];
 
   const rowSelection = {
     selectedRowKeys,
-    onChange: handleCheckboxChange,
+    // onChange: handleCheckboxChange,
   };
 
-  const dataSource = khachHang.map((item, index) => ({
-    key: item.idND,
-    // checkbox: ++index,
-    idND: item.idND,
-    maND: item.maND,
-    tenND: item.tenND,
-    diem: item.diem,
-    sdt: item.sdt,
-    email: item.email,
+  const dataSource = sanPhamHoanTra.map((item, index) => ({
+    key: item.idHDCT,
+    idSP:item.idCTSP,
+    tenSP: item.tenSP,
+    soLuong: item.soLuong,
+    donGia: item.giaSauGiam,
+    tenMS:item.tenMS,
+    tenKT:item.tenKT,
+    idHDCT:item.idHDCT,
+    giaTriKhuyenMai: item.giaTriKhuyenMai,
+    giaGiam:item.giaGiam,
+    disabled: item.giaTriKhuyenMai !== null,
   }));
 
   return (
