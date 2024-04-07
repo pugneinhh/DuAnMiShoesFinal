@@ -105,6 +105,7 @@ public class VoucherService {
         List<VoucherRespone> list=new ArrayList<>();
         list.addAll(listAll);
         list.addAll(listVoucherNguoiDung);
+        System.out.println(list+">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         return list;
     }
     public Voucher updateTruSL(String id){

@@ -353,7 +353,6 @@ export const GioHang = ({ children }) => {
             <div className="row mt-1">
               <h6 className="col-md-12">
                 <b>
-                  {" "}
                   {diaChi.tenNguoiNhan} | {diaChi.soDienThoai}
                 </b>
                 <span style={{ marginLeft: 40 }}>
@@ -430,25 +429,26 @@ export const GioHang = ({ children }) => {
             </tbody>
           </table>
         </div>
-      
-        <p className="float-right" style={{ color: "red" }}>
-          <b>
-            <>
-              {soTienCanMuaThem === 0 && soTienDuocGiam === 0
-                ? ""
-                : "Còn thiếu " +
-                  Intl.NumberFormat("en-US").format(soTienCanMuaThem) +
-                  "VNĐ để được giảm " +
-                  Intl.NumberFormat("en-US").format(soTienDuocGiam) +
-                  "VNĐ"}
-            </>
-          </b>
-        </p>
+
         <div className="col-md-4 donHangOL">
           <h4 className="text-center">Hóa đơn</h4>
           <hr
             style={{ height: 2, backgroundColor: "black", fontWeight: "bold" }}
           ></hr>
+
+          <p className="float-right" style={{ color: "red" }}>
+            <b>
+              <>
+                {soTienCanMuaThem === 0 && soTienDuocGiam === 0
+                  ? ""
+                  : "Còn thiếu " +
+                    Intl.NumberFormat("en-US").format(soTienCanMuaThem) +
+                    "VNĐ để được giảm " +
+                    Intl.NumberFormat("en-US").format(soTienDuocGiam) +
+                    "VNĐ"}
+              </>
+            </b>
+          </p>
           <div
             className="row ps-2 pb-2"
             style={{ borderBottom: "1px dashed black" }}
@@ -488,8 +488,8 @@ export const GioHang = ({ children }) => {
             <div className="col-md-5">
               <span style={{ color: "blue" }}>
                 {gioHangCT.map((gh) => {
-                  total += Number(gh.thanhTien) ;
-                  
+                  total += Number(gh.thanhTien);
+
                   return null;
                 })}
 
@@ -696,7 +696,7 @@ export const GioHang = ({ children }) => {
               }}
               id="btnCheckout"
             >
-              Checkout now!
+              Thanh toán ngay!
               <figure className="truck">
                 <img
                   src="https://assets.codepen.io/430361/truck.svg"

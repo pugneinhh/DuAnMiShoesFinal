@@ -70,10 +70,10 @@ requestClient.interceptors.response.use(
             window.location.href = "/not-found";
             return;
         }
-        if (error.response && (error.response.status === 403 || error.response.status === 401)) {
-           window.location.href = "/not-access";
-            return;
-        }
+        // if (error.response && (error.response.status === 403 || error.response.status === 401)) {
+        //    window.location.href = "/not-access";
+        //     return;
+        // }
     store.dispatch(SetLoadingFalse());
         throw error;
     }

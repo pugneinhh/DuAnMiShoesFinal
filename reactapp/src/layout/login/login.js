@@ -80,7 +80,10 @@ export const Login = () => {
 
   return (
     <MDBContainer className="my-5 mb-5 ">
-      <MDBCard className="container-login form-login" style={{ width: 1000 }}>
+      <MDBCard
+        className="container-login form-login"
+        style={{ width: 1000, margin: "190px 150px" }}
+      >
         <MDBRow style={{ height: 522 }}>
           <MDBCol md="5" style={{ height: 500 }}>
             <MDBCardImage
@@ -196,7 +199,7 @@ export const Login = () => {
                 marginLeft: 100,
               }}
             >
-              {/* <FacebookLogin
+              <FacebookLogin
                 appId="426456789850156"
                 // autoLoad={true}
                 fields="name,email,picture"
@@ -206,7 +209,7 @@ export const Login = () => {
                 cssClass=" mb-1 mt-2  fw-bold w-75 h-50 text-light   button-login-face-book"
               />
 
-              <GoogleLogin
+              {/* <GoogleLogin
                 clientId="689459482014-49jc7cvt8hqflu87jegh2osfo2fd17se.apps.googleusercontent.com"
                 onSuccess={onSuccess}
                 onError={() => {
@@ -218,8 +221,8 @@ export const Login = () => {
                 buttonText="Login to Google"
                 // cssClass="mb-1 mt-2  fw-bold w-75 h-50 text-dark button-login-face-book"
                 className="mb-1 mt-2  fw-bold w-75 h-50 text-dark button-login-google"
-              /> */}
-              {/* <GoogleLogin
+              />  */}
+              <GoogleLogin
                 clientId="689459482014-49jc7cvt8hqflu87jegh2osfo2fd17se.apps.googleusercontent.com"
                 onSuccess={onSuccess}
                 onError={() => {
@@ -227,12 +230,11 @@ export const Login = () => {
                 }}
                 cookiePolicy={"single_host_origin"}
                 isSignedIn={true}
-             
                 // cssClass="mb-1 mt-2  fw-bold w-75 h-50 text-dark button-login-face-book"
                 className="mb-1 mt-2  fw-bold w-75 h-50 text-dark button-login-google"
               >
                 <span> Đăng nhập bằng Google </span>
-              </GoogleLogin> */}
+              </GoogleLogin>
             </div>
           </MDBCol>
         </MDBRow>

@@ -22,4 +22,6 @@ public interface VoucherRespone {
     public Date getNgayTao();
     public Date getNgaySua();
     public String getTrangThai();
+    public int getNgayConLai();
+
 }
