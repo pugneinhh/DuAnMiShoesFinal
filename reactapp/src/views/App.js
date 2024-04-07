@@ -67,6 +67,7 @@ import ThanhToanThatBai from "../layout/user/thongBaoThanhToan/thanhToanThatBai"
 import { CartProvider } from "../layout/user/cart/CartContext";
 import TraHang from "../pages/censor/traHang-managenment/traHang";
 import DetailHoaDonTraHang from "../pages/censor/traHang-managenment/DetailHoaDonTraHang";
+import PhieuGiamGiaCLient from "../layout/user/phieugiamgia/PhieuGiamGiaClient";
 
 function App() {
   const isLoading = useAppSelector(GetLoading);
@@ -494,6 +495,18 @@ function App() {
                   <CartProvider>
                     <DashboardClient>
                       <AccountProfile />
+                    </DashboardClient>
+                  </CartProvider>
+                </GuestGuard>
+              }
+            />
+            <Route
+              path="/phieu-giam-gia-cua-toi"
+              element={
+                <GuestGuard>
+                  <CartProvider>
+                    <DashboardClient>
+                      <PhieuGiamGiaCLient/>
                     </DashboardClient>
                   </CartProvider>
                 </GuestGuard>
