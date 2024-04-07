@@ -48,6 +48,9 @@ public class KhuyenMaiService {
     }
 
     public List<AdminKhuyenMai> getSearch(KhuyenMaiSearch khuyenMaiSearch) {
+        if (khuyenMaiSearch.getNgay_bat_dau() != null)khuyenMaiSearch.setNgay_bat_dau(convertTime(khuyenMaiSearch.getNgay_bat_dau()));
+        if (khuyenMaiSearch.getNgay_ket_thuc() != null)khuyenMaiSearch.setNgay_ket_thuc(convertTime(khuyenMaiSearch.getNgay_ket_thuc()));
+        System.out.println(khuyenMaiSearch);
         return khuyenMaiRespone.searchKhuyenMai(khuyenMaiSearch);
     }
 

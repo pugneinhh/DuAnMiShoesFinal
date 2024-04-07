@@ -101,7 +101,9 @@ const DetailHoaDonTraHang = () => {
           </h5>
           <hr></hr>
 
-          <TableSanPhamHoanTra onSelectedSP={handleSelectedIDSP} sanPhamHoanTra={selectedIDSP} />
+          <TableSanPhamHoanTra
+           //onSelectedSP={handleSelectedIDSP} 
+           sanPhamHoanTra={selectedIDSP} />
         </div>
         <div
           className="col-md-3"

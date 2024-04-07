@@ -6,6 +6,8 @@ import ClientReducer from "../reducer/Client.reducer";
 import PayReducer from "../reducer/Pay.reducer";
 import PayDetailReducer from "../reducer/PayDetail.reducer";
 import LoadingReducer from "../reducer/Loading.reducer";
+import ReturnBillReducer from "../reducer/ReturnBill.reducer";
+import NewBillReducer from "../reducer/NewBill.reducer";
 export const store = configureStore({
     reducer: {
       bill:BillReducer,
@@ -15,6 +17,8 @@ export const store = configureStore({
        pay:PayReducer,
        payDetail:PayDetailReducer,
        loading: LoadingReducer,
+       newBill: NewBillReducer,
+       returnBill : ReturnBillReducer,
     },
   });
   

@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Table, Form, Input } from "antd";
 import { KhachHangAPI } from "../api/user/khachHang.api";
+import { useDispatch, useSelector } from "react-redux";
+import { floatButtonPrefixCls } from "antd/es/float-button/FloatButton";
+import { DeleteNewBill, GetNewBill, LoadNewBill } from "../../../store/reducer/NewBill.reducer";
 
 const TableSanPhamHoanTra = ({ onSelectedSP, sanPhamHoanTra }) => {
   const [form] = Form.useForm();
@@ -8,16 +11,38 @@ const TableSanPhamHoanTra = ({ onSelectedSP, sanPhamHoanTra }) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [top] = useState("none");
   const [bottom] = useState("bottomCenter");
-
+  const dispatch= useDispatch();
+  let newBill = useSelector(GetNewBill);
+  let totalNewBill = newBill.reduce((accumulator, currentItem) => {
+    return accumulator + currentItem.tongTien;
+  }, 0);; // đây là tổng tiền của bill mới
+  console.log("sanPhamHoanTra",sanPhamHoanTra);
+  console.log("newBill",newBill);
+  console.log("Tổng tiền bill",totalNewBill);
   // const loadKhachHang = () => {
   //   KhachHangAPI.getAll().then((result) => {
   //     setKhachHangs(result.data);
   //   });
   // };
 
-  // useEffect(() => {
-  //   loadKhachHang();
-  // }, []);
+  useEffect(() => {
+    dispatch(DeleteNewBill());
+
+    sanPhamHoanTra.map((item) => {
+      dispatch(LoadNewBill({
+        key: item.idHDCT,
+        idCTSP:item.idCTSP,
+        tenSP: item.tenSP,
+        soLuong: item.soLuongHienTai,
+        donGia: item.donGia,
+        tenMS:item.tenMS,
+        tenKT:item.tenKT,
+        idHDCT:item.idHDCT,
+        tongTien: parseFloat(item.soLuongHienTai) * parseFloat(item.donGia)
+      }))
+    })
+  
+  }, [sanPhamHoanTra]);
 
   // const handleCheckboxChange = (selectedKeys, selectedRowKeys) => {
   //   if (selectedRowKeys !== null) {
@@ -29,8 +54,8 @@ const TableSanPhamHoanTra = ({ onSelectedSP, sanPhamHoanTra }) => {
   const columnsKhachHang = [
     {
       title: "#",
-      dataIndex: "idHDCT",
-      key: "idHDCT",
+      dataIndex: "idCTSP",
+      key: "idCTSP",
       render: (id, record, index) => {
         ++index;
         return index;
@@ -57,8 +82,8 @@ const TableSanPhamHoanTra = ({ onSelectedSP, sanPhamHoanTra }) => {
     },
     {
       title: "Tổng tiền",
-      dataIndex: "diem",
-      key: "diem",
+      dataIndex: "tongTien",
+      key: "tongTien",
     },
     {
       title: "Ghi chú",
@@ -76,14 +101,15 @@ const TableSanPhamHoanTra = ({ onSelectedSP, sanPhamHoanTra }) => {
     key: item.idHDCT,
     idSP:item.idCTSP,
     tenSP: item.tenSP,
-    soLuong: item.soLuong,
-    donGia: item.giaSauGiam,
+    soLuong: item.soLuongHienTai,
+    donGia: item.donGia,
     tenMS:item.tenMS,
     tenKT:item.tenKT,
     idHDCT:item.idHDCT,
     giaTriKhuyenMai: item.giaTriKhuyenMai,
     giaGiam:item.giaGiam,
     disabled: item.giaTriKhuyenMai !== null,
+    tongTien: parseFloat(item.soLuongHienTai) * parseFloat(item.donGia)
   }));
 
   return (
@@ -92,7 +118,7 @@ const TableSanPhamHoanTra = ({ onSelectedSP, sanPhamHoanTra }) => {
         rowSelection={rowSelection}
         defaultSelectedRowKeys={selectedRowKeys}
         columns={columnsKhachHang}
-        dataSource={dataSource}
+        dataSource={newBill}
         pagination={false}
       />
     </div>
