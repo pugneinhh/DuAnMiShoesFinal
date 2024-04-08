@@ -94,7 +94,7 @@ const DetailHoaDonTraHang = () => {
     
   }
   const handleTraHang=()=>{
-    
+    if(newBill.length>0){
     newBill.map((spt)=>{
       const data={
         idHDCT:spt.idHDCT,
@@ -115,7 +115,19 @@ const DetailHoaDonTraHang = () => {
         theme: "light",
       });
     })
-    
+  }else{
+   
+      toast.error("Vui lòng chọn sản phẩm muốn trả!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+  }
   }
   return (
     <div>
