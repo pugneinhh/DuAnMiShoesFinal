@@ -26,5 +26,6 @@ public class TraHang {
     private LocalDateTime ngaySua;
     private String nguoiTao;
     private String nguoiSua;
+    private String ghiChu;
     private int trangThai;
 }
