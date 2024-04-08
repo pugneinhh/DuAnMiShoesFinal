@@ -16,7 +16,7 @@ const returnBillSilde = createSlice({
                     idHD:data.idHD,
                     soLuong: data.soLuong,
                     donGia: data.donGia,
-                    soLuongHienTai: 0,
+                    soLuongHienTai: 1,
                     tenMS:data.tenMS,
                     tenKT:data.tenKT,
                     idHDCT:data.idHDCT,

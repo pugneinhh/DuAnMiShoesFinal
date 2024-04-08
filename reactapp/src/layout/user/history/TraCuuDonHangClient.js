@@ -17,7 +17,6 @@ const TraCuuDonHangClient = () => {
   const handleSubmit = (values) => {
     HoaDonClientAPI.SearchHDClient(values)
       .then((res) => {
-        console.log("22222", res);
         setlistBill(res.data);
         if (res.data.id != null) {
       
@@ -60,7 +59,6 @@ const TraCuuDonHangClient = () => {
         });
       });
   };
-  console.log("22222", listBill);
 
   return (
     <>
