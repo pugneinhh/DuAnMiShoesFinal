@@ -22,26 +22,100 @@ import { FaBuilding, FaUser } from "react-icons/fa";
 import { FaBuildingUser } from "react-icons/fa6";
 import TableSanPhamHoanTra from "./TableSanPhamHoanTra";
 import { TraHangAPI } from "../api/traHang/traHang.api";
+import { useSelector } from "react-redux";
+import {GetNewBill } from "../../../store/reducer/NewBill.reducer";
+import { SellAPI } from "../api/sell/sell.api";
+import { toast, ToastContainer } from "react-toastify";
 
 const DetailHoaDonTraHang = () => {
   const [form] = Form.useForm();
     const [selectedIDSP, setSelectedIDSP] = useState([]);
     const [sanPhamHDCT,setSanPhamHDCT]=useState([]);
+    const [thongTin,setThongTin]=useState([]);
+    const [tienGiamHDMoi,setTienGiamHDMoi]=useState(0);
+    const [tienTra,setTienTra]=useState(0);
     const { id } = useParams("");
+    let newBill = useSelector(GetNewBill);
+
+  let totalNewBill = newBill.reduce((accumulator, currentItem) => {
+    return accumulator + currentItem.tongTien;
+  }, 0);
+  console.log("newBill",newBill);
+  console.log("Tổng tiền bill",totalNewBill);
+  const sanPhamMua = [];//sản phẩm không trả
+  let tienMua=0;//tổng tiền của bill mới
+
+  const loadVoucherTotNhatVaVoucherTiepTheo = (total) => {
+    SellAPI.voucherTotNhat(thongTin.nguoiDung!=null?thongTin.nguoiDung.id : null,total ).then((res) => { loadGiamGia(res.data);});
+  };
+
+  const loadGiamGia = (voucher) => {
+    if (voucher !== null) {
+      if (voucher.loaiVoucher === "Tiền mặt") {
+        setTienGiamHDMoi(voucher.giamToiDa);
+        setTienTra(thongTin.thanhTien-tienMua+voucher.giamToiDa);
+      } else {
+        setTienGiamHDMoi(Math.min(tienMua * (voucher.mucDo / 100), voucher.giamToiDa));
+        setTienTra(thongTin.thanhTien-tienMua+(Math.min(tienMua * (voucher.mucDo / 100), voucher.giamToiDa)));
+      }
+    }
+  };
+
+  sanPhamHDCT.forEach(item1 => { //lọc những sản phẩm khách hàng không trả => bill mới
+    const foundItem = !newBill.some(item2 => item2.idHDCT === item1.idHDCT); 
+    if (foundItem) {
+      tienMua+=item1.giaSauGiam;
+      sanPhamMua.push(item1);
+    }
+  });
+
+ useEffect(()=>{
+  if(newBill.length>0){
+    loadVoucherTotNhatVaVoucherTiepTheo(tienMua);
+ }else{
+  setTienGiamHDMoi(0);
+  setTienTra(0);
+ }
+ },[newBill]);
+
   const handleSelectedIDSP = (selectedRowKeys) => {
     setSelectedIDSP(selectedRowKeys);
-    console.log("select sản phẩm trả",selectedRowKeys)
   };
   useEffect(()=>{
     loadAllHDCT();
   },[id])
   const loadAllHDCT=()=>{
-    console.log("ma",id);
-
+    TraHangAPI.getThongTinHoaDon(id).then((res)=>{
+      setThongTin(res.data);
+    })
     TraHangAPI.getHoaDonByMa(id).then((res)=>{
-      console.log("trả hàng hóa đơn",res.data);
       setSanPhamHDCT(res.data);
     })
+    
+  }
+  const handleTraHang=()=>{
+    
+    newBill.map((spt)=>{
+      const data={
+        idHDCT:spt.idHDCT,
+        idCTSP:spt.idCTSP,
+        soLuong:spt.soLuong,
+        ghiChu:spt.ghiChu,
+      };
+      console.log("sanPhamTra",data);
+      TraHangAPI.traHang(data);
+      toast.success("Trả hàng thành công!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    })
+    
   }
   return (
     <div>
@@ -132,7 +206,8 @@ const DetailHoaDonTraHang = () => {
                 <span className="fw-bolder me-3">
                   <strong>Khách hàng :</strong>
                 </span>
-                <span>Nguyễn Thị Phương Anh</span>
+                <br/>
+                <span>{thongTin.nguoiDung!=null?thongTin.nguoiDung.ten:"Khách lẻ"}</span>
               </span>
             </div>
             <div className="row mt-2">
@@ -141,7 +216,7 @@ const DetailHoaDonTraHang = () => {
                 <span className="fw-bolder me-2">
                   <strong>Người nhận :</strong>
                 </span>
-                <span>Nguyễn Thị Phương Anh</span>
+                <span>{thongTin.tenNguoiNhan!=null?thongTin.tenNguoiNhan:""}</span>
               </span>
             </div>
             <div className="row mt-2">
@@ -151,7 +226,7 @@ const DetailHoaDonTraHang = () => {
                   <strong>Địa chỉ :</strong>
                 </span>
                 <span>
-                  Số 16, Ngõ 406, phường xuân phương, nam từ liêm, hà nội
+                {thongTin.diaChi!=null?thongTin.diaChi:""}
                 </span>
               </span>
             </div>
@@ -166,19 +241,19 @@ const DetailHoaDonTraHang = () => {
             <h5 className="col" style={{ color: "#736f6f" }}>
               <strong>Tổng tiền</strong>
               <span className="float-end" style={{ color: "red" }}>
-                <storng>0 VND</storng>
+                <strong>{thongTin.thanhTien} VND</strong>
               </span>
             </h5>
             <h5 className="col mt-3" style={{ color: "#736f6f" }}>
               <strong>Giảm giá</strong>
               <span className="float-end" style={{ color: "red" }}>
-                <storng>0 VND</storng>
+                <strong>{tienGiamHDMoi} VND</strong>
               </span>
             </h5>
             <h5 className="col mt-3" style={{ color: "#736f6f" }}>
               <strong>Số tiền hoàn trả</strong>
               <span className="float-end" style={{ color: "red" }}>
-                <storng>0 VND</storng>
+                <strong>{tienTra} VND</strong>
               </span>
             </h5>
           </div>
@@ -188,12 +263,38 @@ const DetailHoaDonTraHang = () => {
               padding: "0 10px",
             }}
           >
-            <button class="button-tra-hang">
-              <span class="text">Trả hàng</span>
+            <button className="button-tra-hang" onClick={() => {
+                        Modal.confirm({
+                          title: "Thông báo",
+                          content: "Bạn có chắc chắn muốn trả hàng không?",
+                          onOk:()=>{handleTraHang();},
+                          footer: (_, { OkBtn, CancelBtn }) => (
+                            <>
+                              <CancelBtn />
+                              <OkBtn />
+                            </>
+                          ),
+                        });
+                      }}>
+              <span className="text">Trả hàng</span>
             </button>
           </div>
         </div>
       </div>
+      <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
+        {/* Same as */}
+        <ToastContainer />
     </div>
   );
 };
