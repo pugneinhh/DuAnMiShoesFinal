@@ -31,6 +31,9 @@ public class VoucherService {
 //        return vr.findAll(sort);
         return vr.findAllByOrderByNgayTaoDesc();
     }
+    public Voucher update(Voucher v){
+        return vr.save(v);
+    }
     public Voucher detail (String id){
         return  vr.findById(id).get();
     }

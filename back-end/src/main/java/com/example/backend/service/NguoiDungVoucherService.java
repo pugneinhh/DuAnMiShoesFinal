@@ -83,4 +83,8 @@ public class NguoiDungVoucherService {
     public List<AdminKhachHangRepon> getSearchKhachHang(KhachHangVoucherSearch nguoiDungSeacrh){
         return nguoiDungVoucherRepository.getKhachHangSearch(nguoiDungSeacrh);
     }
+
+    public NguoiDungVoucher update(NguoiDungVoucher ndv){
+        return nguoiDungVoucherRepository.save(ndv);
+    }
 }
