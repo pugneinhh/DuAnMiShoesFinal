@@ -65,6 +65,7 @@ public class HoaDonControllerr {
     public ResponseEntity<?> updateTTHDvaADDLSHD(@RequestBody LichSuHoaDonRequest ls, @PathVariable("idHD") String id, @PathVariable("maNV") String maNV ){
 
         HoaDon hoaDon=hoaDonService.findHoaDonbyID(id);
+        hoaDon.setNgaySua(LocalDateTime.now());
         ls.setNgayTao(LocalDateTime.now());
         ls.setIdHD(id);
         ls.setNguoiTao(maNV);
