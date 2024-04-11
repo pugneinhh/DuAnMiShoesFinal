@@ -24,7 +24,6 @@ export class HoaDonAPI {
     });
   };
 
-
   static detailHD = (id) => {
     return requestAdmin({
       method: "GET",
@@ -71,6 +70,16 @@ export class HoaDonAPI {
       },
     });
   };
+  static rollbackHoaDon = (id, maNV, data) => {
+    return requestAdmin({
+      method: "PUT",
+      url: `/admin/hoa-don/back-hoa-don/${id}/${maNV}`,
+      data: data,
+      headers: {
+        Authorization: this.getToken,
+      },
+    });
+  };
   static search = (data) => {
     return requestAdmin({
       method: "POST",
@@ -91,15 +100,14 @@ export class HoaDonAPI {
     });
   };
 
-
-  static themSanPham = (idHD,maNV,idCTSP) => {
+  static themSanPham = (idHD, maNV, idCTSP) => {
     return requestAdmin({
-       method: "PUT",
-       url: `/admin/hoa-don/them-san-pham/${idHD}/${idCTSP}/${maNV}`,
-       headers: {
+      method: "PUT",
+      url: `/admin/hoa-don/them-san-pham/${idHD}/${idCTSP}/${maNV}`,
+      headers: {
         Authorization: this.getToken,
       },
     });
-}
+  };
 }
 
