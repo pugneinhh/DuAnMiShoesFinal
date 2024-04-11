@@ -24,7 +24,7 @@ public class TraHangService {
     TraHangRepository traHangRepository;
 
     public List<HoaDonChiTietBanHangRespone> getAllHDCTByHoaDon(String ma){
-        HoaDon hoaDon=hoaDonRepository.getHDByMa(ma);
+        HoaDon hoaDon=hoaDonRepository.getHDByMaTraHang(ma);
         if(hoaDon!=null){
             List<HoaDonChiTietBanHangRespone> list=hoaDonChiTietRepository.getAllHDCTByHD(hoaDon.getId());
             return list;
@@ -32,7 +32,7 @@ public class TraHangService {
         return null;
     }
     public HoaDon getHoaDonByMa(String ma){
-        return hoaDonRepository.getHDByMa(ma);
+        return hoaDonRepository.getHDByMaTraHang(ma);
     }
     public TraHang addTraHang(TraHangRequest request){
         TraHang traHang=request.map(new TraHang());
