@@ -39,6 +39,7 @@ export default function HoaDonDetail() {
   const { Option } = Select;
   const [openModalTimeLine, setOpenModalTimeLine] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalOpenRollBack, setIsModalOpenRollBack] = useState(false);
   const [openSanPham, setOpenSanPham] = useState(false);
   const [openDiaChiUpdate, setOpenDiaChiUpdate] = useState(false);
   const [activeKey, setActiveKey] = useState(0);
@@ -48,15 +49,18 @@ export default function HoaDonDetail() {
   const [soTienCanMuaThem, setSoTienCanMuaThem] = useState(0);
   const [soTienDuocGiam, setSoTienDuocGiam] = useState(0);
   const [form] = Form.useForm();
+    const [formRollBack] = Form.useForm();
   const handleOk = () => {
     setIsModalOpen(false);
     setOpenModalTimeLine(false);
+setIsModalOpenRollBack(false);
   };
   const handleCancel = () => {
     setIsModalOpen(false);
     setOpenModalTimeLine(false);
     setOpenSanPham(false);
     setOpenDiaChiUpdate(false);
+    setIsModalOpenRollBack(false);
   };
   const [openXuat, setOpenXuat] = useState(false);
   const componnentRef = useRef();
@@ -149,7 +153,30 @@ export default function HoaDonDetail() {
   const showModal = () => {
     setIsModalOpen(true);
   };
-
+    const showModalRollback = () => {
+     setIsModalOpenRollBack(true);
+    };
+  const rollbackHD = (values) => {
+    AdminGuiThongBaoXacNhanDatHang();
+    HoaDonAPI.rollbackHoaDon(id, maNV, values).then((res) => {
+      console.log("values", values);
+      console.log("trang thau", trangThai);
+      loadHoaDon();
+      loadTimeLineHoaDon();
+      formRollBack.resetFields();
+      setIsModalOpenRollBack(false);
+      toast("🦄 Thành công!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    });
+  };
   const handleHuyHoaDon = () => {
     Modal.confirm({
       title: "Thông báo",
@@ -361,7 +388,7 @@ export default function HoaDonDetail() {
         <div className="scroll-hoa-don mb-4">
           <div className="hoa-don-cuon-ngang">
             <Timeline
-              minEvents={6}
+              minEvents={10}
               // maxEvents={10}
               style={{ borderBottom: "1px solid rgb(224, 224, 224)" }}
               placeholder
@@ -632,6 +659,53 @@ export default function HoaDonDetail() {
               </Form>
             </Modal>
           </>
+          <Button className="ms-5 " type="primary" onClick={showModalRollback}>
+            Lùi
+          </Button>
+
+          <Modal
+            title="Lùi hóa đơn hàng"
+            footer={[]}
+            open={isModalOpenRollBack}
+            onOk={handleOk}
+            onCancel={handleCancel}
+          >
+            <Form form={formRollBack} onFinish={rollbackHD}>
+              <Form.Item
+                name="moTaHoatDong"
+                hasFeedback
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng không để trống ghi chú!",
+                  },
+                ]}
+              >
+                <TextArea rows={4} />
+              </Form.Item>
+              <Button
+                style={{ marginLeft: 200 }}
+                className="bg-success text-light"
+                onClick={() => {
+                  Modal.confirm({
+                    title: "Thông báo",
+                    content: "Bạn có chắc chắn muốn tiếp tục?",
+                    onOk: () => {
+                      formRollBack.submit();
+                    },
+                    footer: (_, { OkBtn, CancelBtn }) => (
+                      <>
+                        <CancelBtn />
+                        <OkBtn />
+                      </>
+                    ),
+                  });
+                }}
+              >
+                Xác nhận
+              </Button>
+            </Form>
+          </Modal>
         </div>
         <div className="col-md-2 ">
           <>

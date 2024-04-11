@@ -152,6 +152,97 @@ public class HoaDonControllerr {
         lichSuHoaDonService.addLichSuHoaDon(ls);
         return ResponseEntity.ok(hoaDonService.updateHD(hoaDon,id));
     }
+    @PutMapping("/back-hoa-don/{idHD}/{maNV}")
+    public ResponseEntity<?> rollBackHD(@RequestBody LichSuHoaDonRequest ls, @PathVariable("idHD") String id, @PathVariable("maNV") String maNV ){
+
+        HoaDon hoaDon=hoaDonService.findHoaDonbyID(id);
+        hoaDon.setNgaySua(LocalDateTime.now());
+        ls.setNgayTao(LocalDateTime.now());
+        ls.setIdHD(id);
+        ls.setNguoiTao(maNV);
+        ls.setMoTaHoatDong(ls.getMoTaHoatDong());
+        System.out.println("trang thai ban dau hd"+hoaDon.getTrangThai());
+        System.out.println("trang thai ban dau hoadon"+hoaDon.getTrangThai());
+        List<ThanhToan> listThanhToan= thanhToanService.getThanhToanByIdHD(id);
+        for (ThanhToan thanhToan : listThanhToan) {
+            if (hoaDon.getLoaiHoaDon() == 0) {
+                if (hoaDon.getTrangThai() == 0 && thanhToan.getPhuongThucVnp() != null) {
+                    hoaDon.setTrangThai(1);
+                    ls.setTrangThai(1);
+                    System.out.println("if 1");
+                    lichSuHoaDonService.addLichSuHoaDon(ls);
+                    return ResponseEntity.ok(
+                            hoaDonService.updateHD(hoaDon, id)
+                    );
+                } else if (hoaDon.getTrangThai() == 1 && thanhToan.getPhuongThucVnp() != null) {
+                    ls.setTrangThai(2);
+                    hoaDon.setTrangThai(2);
+                    System.out.println("if 2");
+                    lichSuHoaDonService.addLichSuHoaDon(ls);
+                    return ResponseEntity.ok(
+                            hoaDonService.updateHD(hoaDon, id)
+                    );
+                } else if (hoaDon.getTrangThai() == 2 && thanhToan.getPhuongThucVnp() != null) {
+                    ls.setTrangThai(3);
+                    hoaDon.setTrangThai(3);
+                    System.out.println("if 2");
+                    lichSuHoaDonService.addLichSuHoaDon(ls);
+                    return ResponseEntity.ok(
+                            hoaDonService.updateHD(hoaDon, id)
+                    );
+                } else if (hoaDon.getTrangThai() == 3 && thanhToan.getPhuongThucVnp() != null) {
+                    ls.setTrangThai(5);
+                    hoaDon.setTrangThai(5);
+                    System.out.println("if 2");
+                    lichSuHoaDonService.addLichSuHoaDon(ls);
+                    return ResponseEntity.ok(
+                            hoaDonService.updateHD(hoaDon, id)
+                    );
+                }
+                if (thanhToan.getPhuongThucVnp() == null) {
+                    ls.setTrangThai(hoaDon.getTrangThai()  -1);
+                    hoaDon.setTrangThai(hoaDon.getTrangThai() - 1);
+                }
+            }
+        }
+        if(hoaDon.getLoaiHoaDon()==1){
+            if(hoaDon.getTraSau()==1){
+                ls.setTrangThai(hoaDon.getTrangThai()-1);
+                hoaDon.setTrangThai(hoaDon.getTrangThai()-1);
+            }
+            if(hoaDon.getTraSau()==0&&hoaDon.getDiaChi()!=null){
+                if(hoaDon.getTrangThai()==4){
+                    hoaDon.setTrangThai(2);
+                    ls.setTrangThai(2);
+                    lichSuHoaDonService.addLichSuHoaDon(ls);
+                    return ResponseEntity.ok(
+                            hoaDonService.updateHD(hoaDon,id)
+                    );
+                }
+                if(hoaDon.getTrangThai()==2){
+                    hoaDon.setTrangThai(3);
+                    ls.setTrangThai(3);
+                    lichSuHoaDonService.addLichSuHoaDon(ls);
+                    return ResponseEntity.ok(
+                            hoaDonService.updateHD(hoaDon,id)
+                    );
+                }
+                if(hoaDon.getTrangThai()==3){
+                    hoaDon.setTrangThai(5);
+                    ls.setTrangThai(5);
+                    lichSuHoaDonService.addLichSuHoaDon(ls);
+                    return ResponseEntity.ok(
+                            hoaDonService.updateHD(hoaDon,id)
+                    );
+                }
+            }
+        }
+
+
+
+        lichSuHoaDonService.addLichSuHoaDon(ls);
+        return ResponseEntity.ok(hoaDonService.updateHD(hoaDon,id));
+    }
     @GetMapping("/detail-lich-su-hoa-don/{idHD}")
     public ResponseEntity<?> detailLSHD(@PathVariable("idHD") String id){
         return  ResponseEntity.ok(lichSuHoaDonService.getLichHoaDon(id));
