@@ -62,7 +62,7 @@ public class VoucherController {
         System.out.println("LC"+lc);
         if(request.getNgayBatDau().compareTo(lc)>0){
             request.setTrangThai(Status.SAP_DIEN_RA);
-        }else if(request.getNgayBatDau().compareTo(lc)==0){
+        }else if(request.getNgayBatDau().compareTo(lc)<=0 && request.getNgayKetThuc().compareTo(lc)>0){
             request.setTrangThai(Status.DANG_HOAT_DONG);
         }else{
             request.setTrangThai(Status.NGUNG_HOAT_DONG);

@@ -53,10 +53,10 @@ const DetailHoaDonTraHang = () => {
     if (voucher !== null) {
       if (voucher.loaiVoucher === "Tiền mặt") {
         setTienGiamHDMoi(voucher.giamToiDa);
-        setTienTra(thongTin.thanhTien-tienMua+voucher.giamToiDa);
+        setTienTra(thongTin.thanhTien-totalNewBill+voucher.giamToiDa);
       } else {
-        setTienGiamHDMoi(Math.min(tienMua * (voucher.mucDo / 100), voucher.giamToiDa));
-        setTienTra(thongTin.thanhTien-tienMua+(Math.min(tienMua * (voucher.mucDo / 100), voucher.giamToiDa)));
+        setTienGiamHDMoi(Math.min(totalNewBill * (voucher.mucDo / 100), voucher.giamToiDa));
+        setTienTra(thongTin.thanhTien-totalNewBill+(Math.min(tienMua * (voucher.mucDo / 100), voucher.giamToiDa)));
       }
     }
   };
@@ -253,19 +253,19 @@ const DetailHoaDonTraHang = () => {
             <h5 className="col" style={{ color: "#736f6f" }}>
               <strong>Tổng tiền</strong>
               <span className="float-end" style={{ color: "red" }}>
-                <strong>{thongTin.thanhTien} VND</strong>
+                <strong>{thongTin.thanhTien.toLocaleString('vi-VN')} VND</strong>
               </span>
             </h5>
             <h5 className="col mt-3" style={{ color: "#736f6f" }}>
               <strong>Giảm giá</strong>
               <span className="float-end" style={{ color: "red" }}>
-                <strong>{tienGiamHDMoi} VND</strong>
+                <strong>{tienGiamHDMoi?tienGiamHDMoi.toLocaleString('vi-VN'):0} VND</strong>
               </span>
             </h5>
             <h5 className="col mt-3" style={{ color: "#736f6f" }}>
               <strong>Số tiền hoàn trả</strong>
               <span className="float-end" style={{ color: "red" }}>
-                <strong>{tienTra} VND</strong>
+                <strong>{tienTra?tienTra.toLocaleString('vi-VN'):0} VND</strong>
               </span>
             </h5>
           </div>

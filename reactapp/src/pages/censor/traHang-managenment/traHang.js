@@ -29,7 +29,6 @@ const TraHang = () => {
           theme: "light",
         });
       }else{
-      
         navigate(`/admin-detail-tra-hang/${value.ma}`);
       }
     })
