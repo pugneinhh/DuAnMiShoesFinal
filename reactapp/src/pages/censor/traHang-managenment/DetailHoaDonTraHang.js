@@ -26,6 +26,7 @@ import { useSelector } from "react-redux";
 import {GetNewBill } from "../../../store/reducer/NewBill.reducer";
 import { SellAPI } from "../api/sell/sell.api";
 import { toast, ToastContainer } from "react-toastify";
+import { VoucherAPI } from "../api/voucher/voucher.api";
 
 const DetailHoaDonTraHang = () => {
   const [form] = Form.useForm();
@@ -43,7 +44,7 @@ const DetailHoaDonTraHang = () => {
   console.log("newBill",newBill);
   console.log("Tổng tiền bill",totalNewBill);
   const sanPhamMua = [];//sản phẩm không trả
-  let tienMua=0;//tổng tiền của bill mới
+  let check=0;
 
   const loadVoucherTotNhatVaVoucherTiepTheo = (total) => {
     SellAPI.voucherTotNhat(thongTin.nguoiDung!=null?thongTin.nguoiDung.id : null,total ).then((res) => { loadGiamGia(res.data);});
@@ -53,25 +54,38 @@ const DetailHoaDonTraHang = () => {
     if (voucher !== null) {
       if (voucher.loaiVoucher === "Tiền mặt") {
         setTienGiamHDMoi(voucher.giamToiDa);
-        setTienTra(thongTin.thanhTien-totalNewBill+voucher.giamToiDa);
+        setTienTra(thongTin.giaGoc-totalNewBill+voucher.giamToiDa);
       } else {
-        setTienGiamHDMoi(Math.min(totalNewBill * (voucher.mucDo / 100), voucher.giamToiDa));
-        setTienTra(thongTin.thanhTien-totalNewBill+(Math.min(tienMua * (voucher.mucDo / 100), voucher.giamToiDa)));
+        setTienGiamHDMoi(Math.min((thongTin.giaGoc-totalNewBill) * (voucher.mucDo / 100), voucher.giamToiDa));
+        setTienTra(thongTin.giaGoc-totalNewBill+(Math.min((thongTin.giaGoc-totalNewBill) * (voucher.mucDo / 100), voucher.giamToiDa)));
       }
     }
   };
 
-  sanPhamHDCT.forEach(item1 => { //lọc những sản phẩm khách hàng không trả => bill mới
-    const foundItem = !newBill.some(item2 => item2.idHDCT === item1.idHDCT); 
-    if (foundItem) {
-      tienMua+=item1.giaSauGiam;
-      sanPhamMua.push(item1);
-    }
-  });
+  
 
  useEffect(()=>{
   if(newBill.length>0){
-    loadVoucherTotNhatVaVoucherTiepTheo(tienMua);
+    if(thongTin&&thongTin.voucher!=null){
+      console.log("thông tin",thongTin);
+      VoucherAPI.detail(thongTin.voucher.id).then((res)=>{
+        console.log("thông tin voucher",res.data);
+        if(totalNewBill>=res.data.dieuKien){
+          if (res.data.loaiVoucher === "Tiền mặt") {
+            setTienGiamHDMoi(res.data.giamToiDa);
+            setTienTra(thongTin.giaGoc-totalNewBill+res.data.giamToiDa);
+          } else {
+            setTienGiamHDMoi(Math.min((thongTin.giaGoc-totalNewBill) * (res.data.mucDo / 100), res.data.giamToiDa));
+            setTienTra(thongTin.giaGoc-totalNewBill+(Math.min((thongTin.giaGoc-totalNewBill) * (res.data.mucDo / 100), res.data.giamToiDa)));
+          }
+        }else{
+          loadVoucherTotNhatVaVoucherTiepTheo(totalNewBill);
+        }
+      })
+    }else{
+      loadVoucherTotNhatVaVoucherTiepTheo(totalNewBill);
+    }
+   
  }else{
   setTienGiamHDMoi(0);
   setTienTra(0);
@@ -103,6 +117,8 @@ const DetailHoaDonTraHang = () => {
         ghiChu:spt.ghiChu,
       };
       console.log("sanPhamTra",data);
+      if(data.ghiChu!=null&&data.ghiChu.trim()!==''){
+        check=0;
       TraHangAPI.traHang(data);
       toast.success("Trả hàng thành công!", {
         position: "top-right",
@@ -114,9 +130,11 @@ const DetailHoaDonTraHang = () => {
         progress: undefined,
         theme: "light",
       });
+    }else{
+      check=1;
+    }
     })
-  }else{
-   
+  }else{ 
       toast.error("Vui lòng chọn sản phẩm muốn trả!", {
         position: "top-right",
         autoClose: 5000,
@@ -127,6 +145,18 @@ const DetailHoaDonTraHang = () => {
         progress: undefined,
         theme: "light",
       });
+  }
+  if(check===1){
+    toast.error("Vui lòng nhập ghi chú lý do sản phẩm muốn trả!", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
   }
   }
   return (
@@ -253,7 +283,7 @@ const DetailHoaDonTraHang = () => {
             <h5 className="col" style={{ color: "#736f6f" }}>
               <strong>Tổng tiền</strong>
               <span className="float-end" style={{ color: "red" }}>
-                <strong>{thongTin.thanhTien.toLocaleString('vi-VN')} VND</strong>
+                <strong>{Number(thongTin.giaGoc).toLocaleString('vi-VN')} VND</strong>
               </span>
             </h5>
             <h5 className="col mt-3" style={{ color: "#736f6f" }}>

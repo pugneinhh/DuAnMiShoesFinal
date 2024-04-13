@@ -63,35 +63,10 @@ const Voucher = () => {
   }, []);
 
   useEffect(() => {
-    // const handleUpdateStatus = (status) => {
-  
-    //   const currentTime = new Date();
-
-    //     voucher.forEach((x) => {
-    //       console.log("x",x);
-    //       console.log("ngayBatDau",x.ngayBatDau);
-    //       currentTime > new Date(x.ngayBatDau) &&
-    //       currentTime < new Date(x.ngayKetThuc)
-    //         ? VoucherAPI.updateTTHD(x.id, x)
-    //         : currentTime > new Date(x.ngayKetThuc)
-    //         ? VoucherAPI.updateTTNgung(x.id, x)
-    //         : console.log("Không có dữ liệu update");
-    //     });
-    //     if (
-    //       !dataSearch.ten &&
-    //       !dataSearch.trangThai &&
-    //       !dataSearch.ngayKetThuc &&
-    //       !dataSearch.ngayBatDau &&
-    //       !dataSearch.loaiVoucher
-    //     ) {
-        
-    //     loadVoucher();
-    //   }
-    // };
-    // const time = setInterval(handleUpdateStatus, 10000);
-    // return () => {
-    //   clearInterval(time);
-    // };
+    if (!dataSearch.ten && !dataSearch.loaivoucher && !dataSearch.trangThai && !dataSearch.ngayBatDau && !dataSearch.ngayKetThuc){
+      console.log("Loaddddddd");
+      loadVoucher();
+    }
   }, [voucher]);
 
   const [componentSize, setComponentSize] = useState("default");
