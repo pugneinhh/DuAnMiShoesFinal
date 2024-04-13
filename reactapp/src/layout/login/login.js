@@ -33,10 +33,11 @@ export const Login = () => {
    // localStorage.clear();
     LoginAPI.login(data)
       .then((respone) => {
+         localStorage.clear();
         set("userData", respone.data);
         if (respone.data.chucVu == "KHACHHANG") {
           nav("/home");
-        } else {
+        } else {  
           nav("/admin-thong-ke");
         }
       })
