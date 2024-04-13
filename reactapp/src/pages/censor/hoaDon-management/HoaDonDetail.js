@@ -39,7 +39,7 @@ export default function HoaDonDetail() {
   const { Option } = Select;
   const [openModalTimeLine, setOpenModalTimeLine] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isModalOpenRollBack, setIsModalOpenRollBack] = useState(false);
+  const [isModalOpenRollBack, setIsModalOpenRollBack] = useState(false);
   const [openSanPham, setOpenSanPham] = useState(false);
   const [openDiaChiUpdate, setOpenDiaChiUpdate] = useState(false);
   const [activeKey, setActiveKey] = useState(0);
@@ -49,11 +49,11 @@ export default function HoaDonDetail() {
   const [soTienCanMuaThem, setSoTienCanMuaThem] = useState(0);
   const [soTienDuocGiam, setSoTienDuocGiam] = useState(0);
   const [form] = Form.useForm();
-    const [formRollBack] = Form.useForm();
+  const [formRollBack] = Form.useForm();
   const handleOk = () => {
     setIsModalOpen(false);
     setOpenModalTimeLine(false);
-setIsModalOpenRollBack(false);
+    setIsModalOpenRollBack(false);
   };
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -153,9 +153,9 @@ setIsModalOpenRollBack(false);
   const showModal = () => {
     setIsModalOpen(true);
   };
-    const showModalRollback = () => {
-     setIsModalOpenRollBack(true);
-    };
+  const showModalRollback = () => {
+    setIsModalOpenRollBack(true);
+  };
   const rollbackHD = (values) => {
     AdminGuiThongBaoXacNhanDatHang();
     HoaDonAPI.rollbackHoaDon(id, maNV, values).then((res) => {
@@ -560,9 +560,9 @@ setIsModalOpenRollBack(false);
                   </>
                 ) : (
                   <>
-                    {hoaDondetail.diaChi != null ? (
+                    {hoaDondetail.traSau == 0 &&
+                    hoaDondetail.tenNguoiNhan != null ? (
                       <>
-                        {" "}
                         {trangThai == 0 ? (
                           <Button
                             className="ms-5 "
@@ -611,8 +611,7 @@ setIsModalOpenRollBack(false);
                       <></>
                     )}
                   </>
-                )}{" "}
-                <></>
+                )}
               </>
             )}
             <Modal
@@ -659,9 +658,15 @@ setIsModalOpenRollBack(false);
               </Form>
             </Modal>
           </>
-          <Button className="ms-5 " type="primary" onClick={showModalRollback}>
-            Lùi
-          </Button>
+        </div>
+        <div className="col-md-2">
+          {hoaDondetail.loaiHD==1&&trangThai==4||trangThai == 0 || trangThai == 5 ? (
+            <></>
+          ) : (
+            <Button type="primary" onClick={showModalRollback}>
+              Hoàn tác
+            </Button>
+          )}
 
           <Modal
             title="Lùi hóa đơn hàng"
@@ -707,31 +712,20 @@ setIsModalOpenRollBack(false);
             </Form>
           </Modal>
         </div>
+
+        {/* button hủy hóa đơn */}
         <div className="col-md-2 ">
-          <>
-            <>
-              {trangThai == 0 ? (
-                <Button
-                  className="ms-5  "
-                  style={{ backgroundColor: "red", color: "white" }}
-                  type="primary"
-                  onClick={handleHuyHoaDon}
-                >
-                  Hủy
-                </Button>
-              ) : trangThai == 1 ? (
-                <Button className="ms-5 btn btn-danger " type="primary">
-                  Hủy
-                </Button>
-              ) : trangThai == 2 ? (
-                <Button className="ms-5 btn btn-danger " type="primary">
-                  Hủy
-                </Button>
-              ) : (
-                <></>
-              )}
-            </>
-          </>
+          {trangThai == 0 || trangThai == 1 || trangThai == 2 ? (
+            <Button
+              style={{ backgroundColor: "red", color: "white" }}
+              type="primary"
+              onClick={handleHuyHoaDon}
+            >
+              Hủy
+            </Button>
+          ) : (
+            <></>
+          )}
         </div>
         <div className="col-md-2">
           <>
@@ -1037,7 +1031,7 @@ setIsModalOpenRollBack(false);
         </div>
         {/* lịch sử hóa đơn */}
         <div className="col-md-2"></div>
-        <div className="col-md-2"></div>
+
         <div className="col-md-2 text-end">
           <>
             <Button
@@ -1075,14 +1069,19 @@ setIsModalOpenRollBack(false);
           <div className="flex-grow-1 bd-highlight">
             <h5>Thông tin đơn hàng</h5>
           </div>
-          <div className="">
-            <Button
-              // className="btn-danger "
-              style={{ backgroundColor: "red", color: "white" }}
-              onClick={() => setOpenDiaChiUpdate(true)}
-            >
-              Cập nhật
-            </Button>
+          <div>
+            {trangThai == 0 || trangThai == 1 || trangThai == 2 ? (
+              <Button
+                // className="btn-danger "
+                style={{ backgroundColor: "red", color: "white" }}
+                onClick={() => setOpenDiaChiUpdate(true)}
+              >
+                Cập nhật
+              </Button>
+            ) : (
+              <></>
+            )}
+
             <ModalDiaChiUpdate
               idKH={hoaDondetail.nguoiDung}
               maNV={maNV}
@@ -1165,8 +1164,9 @@ setIsModalOpenRollBack(false);
           <h5>Thông tin sản phẩm</h5>
         </div>
         {/* chỉnh sửa sản phẩm */}
+
         <>
-          {hoaDondetail.diaChi ? (
+          {trangThai == 0 || trangThai == 1 || trangThai == 2 ? (
             <div className="bd-highlight">
               <Button
                 style={{ backgroundColor: "red", color: "white" }}
@@ -1187,7 +1187,7 @@ setIsModalOpenRollBack(false);
               />
             </div>
           ) : (
-            <div></div>
+            <></>
           )}
         </>
       </div>

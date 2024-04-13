@@ -183,16 +183,16 @@ public class BanHangService {
             thanhToanRequest.setChuyenKhoan(saveHoaDon.getThanhTien());
             thanhToanRequest.setPhuongThuc(1);
             thanhToanRequest.setPhuongThucVnp(hoaDonRequest.getMaGiaoDich());
-
-        }
-        thanhToanService.thanhToan(thanhToanRequest);
-        LichSuHoaDon lichSuHoaDonTT = new LichSuHoaDon();
+            thanhToanService.thanhToan(thanhToanRequest);
+            LichSuHoaDon lichSuHoaDonTT = new LichSuHoaDon();
 //        lichSuHoaDon.setId(saveHoaDon.getId());
-        lichSuHoaDonTT.setHoaDon(saveHoaDon);
-        lichSuHoaDonTT.setNguoiTao(hoaDonRequest.getTenNguoiNhan());
-        lichSuHoaDonTT.setTrangThai(4);
-        lichSuHoaDonTT.setNgayTao(LocalDateTime.now());
-        lichSuHoaDonService.save(lichSuHoaDonTT);
+            lichSuHoaDonTT.setHoaDon(saveHoaDon);
+            lichSuHoaDonTT.setNguoiTao(hoaDonRequest.getTenNguoiNhan());
+            lichSuHoaDonTT.setTrangThai(4);
+            lichSuHoaDonTT.setNgayTao(LocalDateTime.now());
+            lichSuHoaDonService.save(lichSuHoaDonTT);
+        }
+
         this.thongBaoService.thanhToan(saveHoaDon.getId());
         LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
 //        lichSuHoaDon.setId(saveHoaDon.getId());
