@@ -118,14 +118,14 @@ const BanHang = () => {
     }
   };
 
-  const getSoTien = async() => {
+  const getSoTien = () => {
     console.log("Hóa đơn", activeKey);
-    await SellAPI.getThanhTienbyMaHD(activeKey).then(res =>
+     SellAPI.getThanhTienbyMaHD(activeKey).then(res =>
       setSoTienHoaDon(res.data ? res.data : 0)
     );
     console.log(
       "Số tiền",
-      await SellAPI.getThanhTienbyMaHD(activeKey).then(result => result.data)
+       SellAPI.getThanhTienbyMaHD(activeKey).then(result => result.data)
       
     );
   };
@@ -133,9 +133,11 @@ const BanHang = () => {
   useEffect(() => {
     console.log("Vào useEffect soTienHoaDon");
     if (soTienHoaDon < (voucherHienTai ? voucherHienTai.dieuKien : 0)) {
+      console.log("Vào lỗi");
       setVoucherHienTai(null);
     }
     if (activeKey !== "") {
+      console.log("Vào không lỗi");
       SellAPI.detailHoaDon(activeKey).then((res) => {
         setIDKH(
           res.data.nguoiDung

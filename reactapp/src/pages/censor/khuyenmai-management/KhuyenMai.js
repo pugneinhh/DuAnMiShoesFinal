@@ -60,18 +60,23 @@ const KhuyenMai = () => {
   };
 
   // tự update
-  // useEffect(() => {
-  //   loadKhuyenMai();
-  // }, []);
+  useEffect(() => {
+    loadKhuyenMai();
+  }, []);
 
   useEffect(() => {
+    if (!dataSearch.ma && !dataSearch.ten && !dataSearch.gia_tri_khuyen_mai && !dataSearch.loai && !dataSearch.ngay_bat_dau && !dataSearch.ngay_ket_thuc){
       loadKhuyenMai();
-  }, [khuyenMai,dataSearch]);
+    }
+  }, [khuyenMai]);
 
   // tìm kiếm
 
   const [dataSearch, setDataSearch] = useState({});
+
   const onChangeFilter = (changedValues, allValues) => {
+    console.log(changedValues);
+    console.log(allValues);
     timKiemKhuyenMai(allValues);
     setDataSearch(allValues);
   };
@@ -493,7 +498,7 @@ const KhuyenMai = () => {
               <div className="col-md-1"></div>
               <div className="col-md-4">
                 <Form.Item className="text-center">
-                  <button className="btn btn-warning nut-tim-kiem rounded-pill fw-bold">
+                  <button className="btn btn-warning nut-tim-kiem rounded-pill fw-bold" onClick= {() => loadKhuyenMai()}>
                     <ReloadOutlined />
                     Làm mới
                   </button>

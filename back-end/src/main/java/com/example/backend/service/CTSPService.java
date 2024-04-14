@@ -106,4 +106,8 @@ public class CTSPService {
         HoaDon hd = hoaDonServicee.findHoaDonByMa(ma);
         return ctspRepository.getSLAndSLT(idSP,hd.getId());
     }
+
+    public ChiTietSanPham updateCTSP(ChiTietSanPham ctsp){
+        return ctspRepository.save(ctsp);
+    }
 }
