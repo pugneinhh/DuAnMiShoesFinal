@@ -71,9 +71,13 @@ const AddVoucher = () => {
   ///validate ngày
   const validateDateKT = (_, value) => {
     const { getFieldValue } = form;
+    const newDate = new Date();
     const startDate = getFieldValue("ngayBatDau");
     if (startDate && value && value.isBefore(startDate)) {
       return Promise.reject("Ngày kết thúc phải sau ngày bắt đầu");
+    }
+    if (value && value < newDate) {
+      return Promise.reject("Ngày kết thúc phải sau ngày hiện tại");
     }
     return Promise.resolve();
   };
@@ -90,7 +94,7 @@ const AddVoucher = () => {
       return Promise.reject("Ngày bắt đầu phải trước ngày kết thúc");
     }
     if (value && value < newDate) {
-      return Promise.reject("Ngày bắt phải sau ngày hiện tại");
+      return Promise.reject("Ngày bắt đầu phải sau ngày hiện tại");
     }
     return Promise.resolve();
   };
