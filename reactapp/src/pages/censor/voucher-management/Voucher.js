@@ -63,51 +63,18 @@ const Voucher = () => {
   }, []);
 
   useEffect(() => {
-    // const handleUpdateStatus = (status) => {
-  
-    //   const currentTime = new Date();
-
-    //     voucher.forEach((x) => {
-    //       console.log("x",x);
-    //       console.log("ngayBatDau",x.ngayBatDau);
-    //       currentTime > new Date(x.ngayBatDau) &&
-    //       currentTime < new Date(x.ngayKetThuc)
-    //         ? VoucherAPI.updateTTHD(x.id, x)
-    //         : currentTime > new Date(x.ngayKetThuc)
-    //         ? VoucherAPI.updateTTNgung(x.id, x)
-    //         : console.log("Không có dữ liệu update");
-    //     });
-    //     if (
-    //       !dataSearch.ten &&
-    //       !dataSearch.trangThai &&
-    //       !dataSearch.ngayKetThuc &&
-    //       !dataSearch.ngayBatDau &&
-    //       !dataSearch.loaiVoucher
-    //     ) {
-        
-    //     loadVoucher();
-    //   }
-    // };
-    // const time = setInterval(handleUpdateStatus, 10000);
-    // return () => {
-    //   clearInterval(time);
-    // };
+    if (!dataSearch.ten && !dataSearch.loaivoucher && !dataSearch.trangThai && !dataSearch.ngayBatDau && !dataSearch.ngayKetThuc){
+      loadVoucher();
+    }
   }, [voucher]);
 
   const [componentSize, setComponentSize] = useState("default");
-  const onFormLayoutChange = ({ size }) => {
-    setComponentSize(size);
-  };
 
   const [form] = Form.useForm();
 
-  ///call api
 
-  const [myVoucher, setMyVoucher] = useState({});
   const updateTrangThaiTamDung =  (id, value) => {
-    console.log(value,"value neeeeeeeeeeeeeeeeeeeeeeeee", id);
      VoucherAPI.updateTTTamDung(id, value).then((response) => {
-      console.log(response,"res neeeeeeeeeeeeee>>>>>>>>>>>>>");
       loadVoucher();
         toast("✔️ Cập nhật thành công!", {
           position: "top-right",
@@ -123,12 +90,7 @@ const Voucher = () => {
     });
   };
 
-  //tìm kiếm
 
-  //loadvoucher
-
-  //của table
-  //table
 
   const columns = [
     {
@@ -294,14 +256,11 @@ const Voucher = () => {
     },
   ];
 
-  const [open, setOpen] = useState(false);
-  const [openUpdate, setOpenUpdate] = useState(false);
-  const [openDetail, setOpenDetail] = useState(false);
+
   const [bordered] = useState(false);
   const [size] = useState("large");
   const [expandable] = useState(undefined);
   const [showHeader] = useState(true);
-  const [hasData] = useState(true);
   const [tableLayout] = useState();
   const [top] = useState("none");
   const [bottom] = useState("bottomCenter");
@@ -333,45 +292,8 @@ const Voucher = () => {
     tableLayout,
   };
 
-  //khai  báo form update
-  // const editVoucher=(row)=>{
-  //   setMyVoucher(row);
-  //   setID(row.id);
-  //   setOpenUpdate(true);
 
-  // }
-  const resetMyVoucher = () => {
-    // setID('');
-    setMyVoucher({});
-  };
-  //mở form detail
-
-  ///validate ngày
-  const validateDateKT = (_, value) => {
-    const { getFieldValue } = form;
-    const startDate = getFieldValue("ngayBatDau");
-    if (startDate && value && value.isBefore(startDate)) {
-      return Promise.reject("Ngày kết thúc phải sau ngày bắt đầu");
-    }
-    return Promise.resolve();
-  };
-  const [checkNgay, setCheckNgay] = useState(false);
-
-  const validateDateBD = (_, value) => {
-    const newDate = new Date();
-    // if(startDate && value && value.isAfter(moment)){
-    //   return Promise.reject('Ngày kết thúc phải sau ngày bắt đầu');
-    // }
-    const { getFieldValue } = form;
-    const endDate = getFieldValue("ngayKetThuc");
-    if (endDate && value && value.isAfter(endDate)) {
-      return Promise.reject("Ngày bắt đầu phải trước ngày kết thúc");
-    }
-    if (value && value < newDate) {
-      return Promise.reject("Ngày bắt phải sau ngày hiện tại");
-    }
-    return Promise.resolve();
-  };
+  
   //hiển thị số lượng
   const [gioiHan, setGioiHan] = useState(false);
   const handleChangeSwitch = (value) => {
@@ -460,6 +382,9 @@ const Voucher = () => {
                   status="warning"
                   style={{ borderColor: "yellow" }}
                 >
+                  <Select.Option style={{ borderRadius: "30px" }} value="">
+                    Tất cả
+                  </Select.Option>
                   <Select.Option value="SAP_DIEN_RA">Sắp diễn ra</Select.Option>
                   <Select.Option value="DANG_HOAT_DONG">
                     Hoạt động

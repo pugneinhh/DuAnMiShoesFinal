@@ -36,11 +36,13 @@ public class ScheduledTasks {
 
 
     @Scheduled(fixedRate = 1000) // Chạy mỗi giây 
-    public void taskVoucher() {
+  public void taskVoucher() {
         LocalDateTime now = LocalDateTime.now();
         List<Voucher> listVoucher = voucherService.getAll();
         for (Voucher x : listVoucher){
-            if (x.getTrangThai() == Status.SAP_DIEN_RA  && x.getNgayBatDau().isAfter(now)) {
+            if (x.getTrangThai() == Status.SAP_DIEN_RA && x.getNgayBatDau().isBefore(now)) {
+                System.out.println("Ngày bắt đầu :"+x.getNgayBatDau());
+                System.out.println("Ngày hiện tại :"+now);
                 x.setTrangThai(Status.DANG_HOAT_DONG);
                 List<NguoiDungVoucher> listNDV = nguoiDungVoucherService.getALL();
                 for (NguoiDungVoucher v : listNDV){
@@ -51,7 +53,18 @@ public class ScheduledTasks {
                 }
                 voucherService.update(x);
             }
-            if (x.getTrangThai() == Status.DANG_HOAT_DONG && x.getNgayKetThuc().isAfter(now)){
+            if (x.getTrangThai() == Status.NGUNG_HOAT_DONG && x.getNgayKetThuc().isAfter(now)) {
+                x.setTrangThai(Status.DANG_HOAT_DONG);
+                List<NguoiDungVoucher> listNDV = nguoiDungVoucherService.getALL();
+                for (NguoiDungVoucher v : listNDV){
+                    if (v.getVoucher().getId().equals(x.getId())){
+                        v.setTrangThai(Status.DANG_SU_DUNG);
+                        nguoiDungVoucherService.update(v);
+                    }
+                }
+                voucherService.update(x);
+            }
+            if (x.getTrangThai() == Status.DANG_HOAT_DONG && x.getNgayKetThuc().isBefore(now)){
                 x.setTrangThai(Status.NGUNG_HOAT_DONG);
                 List<NguoiDungVoucher> listNDV = nguoiDungVoucherService.getALL();
                 for (NguoiDungVoucher v : listNDV){
@@ -64,6 +77,8 @@ public class ScheduledTasks {
             }
         }
     }
+
+
 
 
     @Scheduled(fixedRate = 1000) // Chạy mỗi giây
@@ -101,4 +116,5 @@ public class ScheduledTasks {
             }
         }
     }
+
 }

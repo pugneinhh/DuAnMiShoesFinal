@@ -10,6 +10,7 @@ import {
 import { HoaDonClientAPI } from "../../../pages/censor/api/HoaDonClient/HoaDonClientAPI";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router";
+
 const TraCuuDonHangClient = () => {
   const [form] = Form.useForm();
   const nav = useNavigate();
@@ -114,12 +115,7 @@ const TraCuuDonHangClient = () => {
         </Form>
       </div>
       <div className="text-center">
-        <img
-          src={
-            "https://indochinapost.vn/wp-content/uploads/2017/10/chuyen-hang-ship-cod-nhanh-chong.jpg"
-          }
-          style={{ width: 700, height: 403 }}
-        ></img>
+        <img src={LogoGHN} style={{ width: 700, height: 403 }}></img>
       </div>
       <ToastContainer
         position="top-right"

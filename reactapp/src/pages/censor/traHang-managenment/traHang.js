@@ -29,7 +29,6 @@ const TraHang = () => {
           theme: "light",
         });
       }else{
-      
         navigate(`/admin-detail-tra-hang/${value.ma}`);
       }
     })
@@ -85,20 +84,7 @@ const TraHang = () => {
                   Tìm kiếm
                 </Button>
               </Col>
-              <Col className="d-flex align-items-center ms-2 mt-2">
-                <Button
-                  style={{
-                    // width: "110px",
-                    // height: "40px",
-                    // margin: "0 10px 10px 10px ",
-                    backgroundColor: "#3366CC",
-                    color: "white",
-                  }}
-                  // htmlType="reset"
-                >
-                  QRCode
-                </Button>
-              </Col>
+ 
             </Row>
           </Form>
         </div>

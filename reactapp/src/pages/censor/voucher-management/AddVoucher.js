@@ -31,11 +31,11 @@ const AddVoucher = () => {
 
   const [form] = Form.useForm();
   const handleSubmit = (value) => {
-    if(value.ma==null || value.ma==''){
+    if(value.ma==null || value.ma===''){
       const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     for (let i = 0; i < 6; i++) {
       const randomIndex = Math.floor(Math.random() * characters.length);
-      value.ma += characters.charAt(randomIndex);
+      value.ma = characters.charAt(randomIndex);
     }
     }
    
@@ -71,9 +71,13 @@ const AddVoucher = () => {
   ///validate ngày
   const validateDateKT = (_, value) => {
     const { getFieldValue } = form;
+    const newDate = new Date();
     const startDate = getFieldValue("ngayBatDau");
     if (startDate && value && value.isBefore(startDate)) {
       return Promise.reject("Ngày kết thúc phải sau ngày bắt đầu");
+    }
+    if (value && value < newDate) {
+      return Promise.reject("Ngày kết thúc phải sau ngày hiện tại");
     }
     return Promise.resolve();
   };
@@ -90,7 +94,7 @@ const AddVoucher = () => {
       return Promise.reject("Ngày bắt đầu phải trước ngày kết thúc");
     }
     if (value && value < newDate) {
-      return Promise.reject("Ngày bắt phải sau ngày hiện tại");
+      return Promise.reject("Ngày bắt đầu phải sau ngày hiện tại");
     }
     return Promise.resolve();
   };
