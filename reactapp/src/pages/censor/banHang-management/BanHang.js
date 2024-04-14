@@ -132,10 +132,10 @@ const BanHang = () => {
 
   useEffect(() => {
     console.log("Vào useEffect soTienHoaDon");
-    if (soTienHoaDon < (voucherHienTai ? voucherHienTai.dieuKien : 0)) {
-      console.log("Vào lỗi");
-      setVoucherHienTai(null);
-    }
+    // if (soTienHoaDon < (voucherHienTai ? voucherHienTai.dieuKien : 0)) {
+    //   console.log("Vào lỗi");
+    //   setVoucherHienTai(null);
+    // }
     if (activeKey !== "") {
       console.log("Vào không lỗi");
       SellAPI.detailHoaDon(activeKey).then((res) => {
@@ -146,6 +146,7 @@ const BanHang = () => {
               : null
             : null
         );
+        console.log("Thanh tien: "+res.data.thanhTien);
         setMoney(res.data.thanhTien ? res.data.thanhTien : 0);
         SellAPI.voucherTotNhat(res.data.nguoiDung
           ? res.data.nguoiDung.id
