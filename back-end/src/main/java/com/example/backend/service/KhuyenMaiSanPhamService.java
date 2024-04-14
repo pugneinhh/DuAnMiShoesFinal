@@ -31,4 +31,12 @@ public class KhuyenMaiSanPhamService {
         kmsp.setTrangThai(trangThai);
         return khuyenMaiSanPhamRepository.save(kmsp);
     }
+
+    public List<KhuyenMaiSanPham> getAll(){
+        return khuyenMaiSanPhamRepository.getAll();
+    }
+
+    public KhuyenMaiSanPham find(String idKM, String idCTSP){
+        return  khuyenMaiSanPhamRepository.findKhuyenMaiSanPham(idKM,idCTSP);
+    }
 }

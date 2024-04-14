@@ -14,4 +14,7 @@ public interface KhuyenMaiSanPhamRepository extends JpaRepository<KhuyenMaiSanPh
 
     @Query(value = "select * from chitietsp_khuyenmai where khuyen_mai_id =:idKM and chi_tiet_san_pham_id =:idCTSP",nativeQuery = true)
     KhuyenMaiSanPham findKhuyenMaiSanPham(String idKM,String idCTSP);
+
+    @Query(value ="select * from chitietsp_khuyenmai",nativeQuery = true)
+    List<KhuyenMaiSanPham> getAll();
 }

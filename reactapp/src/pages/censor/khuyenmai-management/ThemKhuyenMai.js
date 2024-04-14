@@ -267,6 +267,7 @@ const ThemKhuyenMai = () => {
                   {selectedValue === "Tiền mặt" ? (
                     <InputNumber
                       defaultValue={0}
+                      min={0}
                       formatter={(value) =>
                         `VND ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                       }
