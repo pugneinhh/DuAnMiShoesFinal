@@ -26,7 +26,7 @@ const ModalThanhToan = (props) => {
     console.log("Tổng tiền",total)
     const data = payDetail.filter((item)=> item.hoaDon === hoaDon);
     const navigate = useNavigate();
-
+    
   const [storedData, setStoredData] = useState(null);
 
   useEffect(() => {

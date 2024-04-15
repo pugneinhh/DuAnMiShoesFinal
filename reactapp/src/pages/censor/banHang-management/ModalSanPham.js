@@ -169,7 +169,7 @@ const ModalSanPham = (props) => {
 
   }
   console.log(HDCT);
-  const handleClickAddProduct = (record) => {
+  const handleClickAddProduct =  (record) => {
     const id = uuid();
     const hdct = [{ id: id, hoaDon: activeKey, chiTietSanPham: record.idCTSP, soLuong: 1, giaSauGiam: (parseFloat(record.giaBan) - parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100))), giaGiam: (parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100))) }]
     dispatch(AddInvoice({ id: id, chiTietSanPham: record.idCTSP, tenSP: record.tenSP, maMS: record.maMS, linkAnh: record.linkAnh, tenKT: record.tenKT, giaBan: record.giaBan, hoaDon: activeKey, tenMS: record.tenMS, giaGiam: (parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100))), giaSauGiam: (parseFloat(record.giaBan) - parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100))), nguoiTao: record.nguoiTao, giaBan: record.giaBan, tenKM: record.tenKM, loaiKM: record.loaiKM, giaTriKhuyenMai: record.giaTriKhuyenMai }));
