@@ -317,7 +317,7 @@ const BanHang = () => {
 
   const voucherNoIDKH = async () => {
     const result = await SellAPI.getVoucherNoLimited();
-    console.log(result.data);
+    console.log("voucher no limited"+result.data);
     setVoucherNoLimited(result.data);
   };
 
