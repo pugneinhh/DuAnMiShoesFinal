@@ -660,7 +660,9 @@ export default function HoaDonDetail() {
           </>
         </div>
         <div className="col-md-2">
-          {hoaDondetail.loaiHD==1&&trangThai==4||trangThai == 0 || trangThai == 5 ? (
+          {(hoaDondetail.loaiHD == 1 && trangThai == 4) ||
+          trangThai == 0 ||
+          trangThai == 5 ? (
             <></>
           ) : (
             <Button type="primary" onClick={showModalRollback}>
@@ -1286,6 +1288,108 @@ export default function HoaDonDetail() {
                     </Button>
                   </div>
 
+                  <hr className="mt-3"></hr>
+                </tr>
+              )
+            )
+          )}
+        </div>
+
+        {/* thông tin trả hàng */}
+        <div
+          className="d-flex bd-highlight"
+          style={{ marginTop: "20px", paddingTop: "20px" }}
+        >
+          <div className="flex-grow-1 bd-highlight">
+            <h5>Sản phẩm trả hàng</h5>
+          </div>
+        </div>
+        <hr></hr>
+        <div>
+          {listSanPhams.map(
+            (listSanPham, index) => (
+              console.log(listSanPham),
+              (
+                <tr className="pt-3 row">
+                  <div className="col-md-3">
+                    <Image
+                      cloudName="dtetgawxc"
+                      publicId={listSanPham.urlHA}
+                      width="100"
+                      crop="scale"
+                      href={listSanPham.urlHA}
+                      style={{ width: 150, height: 150, marginLeft: 15 }}
+                    />
+                  </div>
+                  <div className="col-md-5 ">
+                    <div className="mt-1">
+                      <h6>
+                        {listSanPham.tenHang} {listSanPham.tenSP}{" "}
+                      </h6>
+                    </div>
+                    {listSanPham.giaGiam > 0 ? (
+                      <div className="text-danger">
+                        <h6>
+                          <del>
+                            <IntlProvider locale="vi-VN">
+                              <div>
+                                <FormattedNumber
+                                  value={listSanPham.giaBanSP}
+                                  style="currency"
+                                  currency="VND"
+                                  minimumFractionDigits={0}
+                                />
+                              </div>
+                            </IntlProvider>
+                          </del>
+                        </h6>
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                    <div className="text-danger">
+                      <h6>
+                        <IntlProvider locale="vi-VN">
+                          <div>
+                            <FormattedNumber
+                              value={listSanPham.thanhTienSP}
+                              style="currency"
+                              currency="VND"
+                              minimumFractionDigits={0}
+                            />
+                          </div>
+                        </IntlProvider>
+                      </h6>
+                    </div>
+                    <h6>Size:{listSanPham.tenKichThuoc}</h6>
+                    <div
+                      style={{
+                        backgroundColor: `${listSanPham.tenMauSac}`,
+                        borderRadius: 6,
+                        width: 60,
+                        height: 25,
+                      }}
+                    ></div>
+                    <h6>x{listSanPham.soLuongSP}</h6>
+                  </div>
+
+                  <div className="col-md-2 text-danger mt-5">
+                    <h6>
+                      <IntlProvider locale="vi-VN">
+                        <div>
+                          <FormattedNumber
+                            value={
+                              listSanPham.thanhTienSP * listSanPham.soLuongSP
+                            }
+                            style="currency"
+                            currency="VND"
+                            minimumFractionDigits={0}
+                          />
+                        </div>
+                      </IntlProvider>
+                    </h6>
+                  </div>
+        
                   <hr className="mt-3"></hr>
                 </tr>
               )

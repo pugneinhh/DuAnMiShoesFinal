@@ -47,6 +47,7 @@ const DetailHoaDonTraHang = () => {
   let check=0;
 
   const loadVoucherTotNhatVaVoucherTiepTheo = (total) => {
+    console.log("Totalll "+total);
     SellAPI.voucherTotNhat(thongTin.nguoiDung!=null?thongTin.nguoiDung.id : null,total ).then((res) => { loadGiamGia(res.data);});
   };
 
@@ -54,10 +55,12 @@ const DetailHoaDonTraHang = () => {
     if (voucher !== null) {
       if (voucher.loaiVoucher === "Tiền mặt") {
         setTienGiamHDMoi(voucher.giamToiDa);
-        setTienTra(thongTin.giaGoc-totalNewBill+voucher.giamToiDa);
+        setTienTra(thongTin.thanhTien-(thongTin.giaGoc-totalNewBill-voucher.giamToiDa));
       } else {
         setTienGiamHDMoi(Math.min((thongTin.giaGoc-totalNewBill) * (voucher.mucDo / 100), voucher.giamToiDa));
-        setTienTra(thongTin.giaGoc-totalNewBill+(Math.min((thongTin.giaGoc-totalNewBill) * (voucher.mucDo / 100), voucher.giamToiDa)));
+        setTienTra(thongTin.thanhTien-(thongTin.giaGoc-totalNewBill
+          -((parseFloat(thongTin.giaGoc) === parseFloat(totalNewBill) ) ? 0 : (Math.min((thongTin.giaGoc-totalNewBill) * (voucher.mucDo / 100), voucher.giamToiDa)))
+          ));
       }
     }
   };
@@ -70,20 +73,35 @@ const DetailHoaDonTraHang = () => {
       console.log("thông tin",thongTin);
       VoucherAPI.detail(thongTin.voucher.id).then((res)=>{
         console.log("thông tin voucher",res.data);
-        if(totalNewBill>=res.data.dieuKien){
+        if((thongTin.giaGoc-totalNewBill)>=res.data.dieuKien){
           if (res.data.loaiVoucher === "Tiền mặt") {
+                  console.log("vào đây.......................");
+            console.log(
+              "vào đây " +
+                (parseFloat(thongTin.giaGoc) -
+                  parseFloat(totalNewBill) -
+                  parseFloat(res.data.giamToiDa))
+            );
+            console.log("vào đây "+thongTin.thanhTien);
             setTienGiamHDMoi(res.data.giamToiDa);
-            setTienTra(thongTin.giaGoc-totalNewBill+res.data.giamToiDa);
+            setTienTra(
+              parseFloat(thongTin.thanhTien) -
+                (parseFloat(thongTin.giaGoc) -
+                  parseFloat(totalNewBill) -
+                  parseFloat(res.data.giamToiDa))
+            );
           } else {
             setTienGiamHDMoi(Math.min((thongTin.giaGoc-totalNewBill) * (res.data.mucDo / 100), res.data.giamToiDa));
-            setTienTra(thongTin.giaGoc-totalNewBill+(Math.min((thongTin.giaGoc-totalNewBill) * (res.data.mucDo / 100), res.data.giamToiDa)));
+            setTienTra(thongTin.thanhTien-(thongTin.giaGoc-totalNewBill-((parseFloat(thongTin.giaGoc) === (parseFloat(totalNewBill))) ? 0 : (Math.min((thongTin.giaGoc-totalNewBill) * (res.data.mucDo / 100), res.data.giamToiDa)))));
           }
         }else{
-          loadVoucherTotNhatVaVoucherTiepTheo(totalNewBill);
+          //trường hợp trả tất
+
+          loadVoucherTotNhatVaVoucherTiepTheo(parseFloat(thongTin.giaGoc) - parseFloat(totalNewBill));
         }
       })
     }else{
-      loadVoucherTotNhatVaVoucherTiepTheo(totalNewBill);
+      loadVoucherTotNhatVaVoucherTiepTheo(thongTin.giaGoc - totalNewBill);
     }
    
  }else{
