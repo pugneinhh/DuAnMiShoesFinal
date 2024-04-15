@@ -525,6 +525,7 @@ export default function AddSanPham() {
       progress: undefined,
       theme: "light",
     });
+    // nav("/admin-san-pham");
   };
 
   //Load san pham
@@ -634,7 +635,7 @@ export default function AddSanPham() {
     loadMS();
   }, []);
   const loadMS = async () => {
-    ChiTietSanPhamAPI.getAllSanPham().then(response => {
+    ChiTietSanPhamAPI.getAllMauSac().then(response => {
       setMSData(response.data);
       const loadOMS = response.data.map((item) => ({
         key: item.id,

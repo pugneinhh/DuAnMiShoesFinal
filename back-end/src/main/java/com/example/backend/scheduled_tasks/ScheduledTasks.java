@@ -35,7 +35,7 @@ public class ScheduledTasks {
     }
 
 
-    @Scheduled(fixedRate = 1000) // Chạy mỗi giây 
+    @Scheduled(fixedRate = 1000) // Chạy mỗi giây
   public void taskVoucher() {
         LocalDateTime now = LocalDateTime.now();
         List<Voucher> listVoucher = voucherService.getAll();

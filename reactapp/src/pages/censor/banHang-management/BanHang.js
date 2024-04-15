@@ -83,15 +83,22 @@ const BanHang = () => {
   console.log("voucher", voucherHienTai);
   console.log("hoaDon", activeKey);
   console.log("Hóa Đơn s", hoaDons);
-
-
-  
+    const hoaDonHienTai = hoaDons.filter((x) => x.key === activeKey);
+  console.log("Hóa đơn hiện tại",hoaDonHienTai);
+  lengthSP = ctspHD.filter((f) => f.hoaDon === activeKey)
+                .reduce(
+                  (accumulator, object) =>
+                    parseFloat(accumulator) + parseFloat(object.soLuong),
+                  0
+                );
+                console.log("Độ dài"+lengthSP);
   const loadVoucherTotNhatVaVoucherTiepTheo = () => {
     console.log("money", money);
+    console.log("voucher hiện tại "+voucherHienTai);
     SellAPI.voucherTotNhat(idKH, money).then((res) =>
       setVoucherHienTai(res.data)
     );
-    SellAPI.voucherSapDatDuoc(idKH, money , voucherHienTai ? voucherHienTai.id : null).then((res) => {
+    SellAPI.voucherSapDatDuoc(idKH ? idKH : null, money , voucherHienTai ? voucherHienTai.id : null).then((res) => {
       console.log("res", res.data);
       setSoTienCanMuaThem(res.data[0]);
       setSoTienDuocGiam(res.data[1]);
@@ -118,7 +125,7 @@ const BanHang = () => {
     }
   };
 
-  const getSoTien = () => {
+  const getSoTien =  () => {
     console.log("Hóa đơn", activeKey);
      SellAPI.getThanhTienbyMaHD(activeKey).then(res =>
       setSoTienHoaDon(res.data ? res.data : 0)
@@ -165,7 +172,9 @@ const BanHang = () => {
       });
       });
     }
-  }, [soTienHoaDon]);
+  }, [lengthSP,soTienHoaDon]);
+
+
 
   useEffect(() => {
     console.log("Hóa đơns", hoaDons);
@@ -193,7 +202,15 @@ const BanHang = () => {
 
   useEffect(() => {
     loadVoucherTotNhatVaVoucherTiepTheo();
+    console.log("soTienthayDoi");
   }, [idKH,money,activeKey]);
+
+  useEffect(() => {
+    console.log("Length change");
+    if (activeKey){
+    getSoTien();
+    }
+  }, [lengthSP]);
 
   //đang fixx
   const handleSwitchTraSau = () => {
@@ -267,23 +284,23 @@ const BanHang = () => {
     }
   };
 
-  const onChangeVoucher = async (value, option) => {
+  const onChangeVoucher =  (value, option) => {
     console.log("option", option);
 
     //await SellAPI.getThanhTienbyMaHD(activeKey).then((res) => {
-      if ((money ? money : 0) < option.dieuKien) {
-        toast("Không đủ điều kiện!", {
-          position: "top-right",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        return setVoucherHienTai(null);
-      }
+      // if ((money ? money : 0) < option.dieuKien) {
+      //   toast("Không đủ điều kiện!", {
+      //     position: "top-right",
+      //     autoClose: 1000,
+      //     hideProgressBar: false,
+      //     closeOnClick: true,
+      //     pauseOnHover: true,
+      //     draggable: true,
+      //     progress: undefined,
+      //     theme: "light",
+      //   });
+      //   return setVoucherHienTai(null);
+      // }
       
       if (option.key !== voucherHienTai?.id) {
       setVoucherHienTai(option);
@@ -693,11 +710,11 @@ const BanHang = () => {
   const handleCloseThanhToan = () => {
     setOpenThanhToan(false);
   };
-  const onChange = (key) => {
+  const onChange =  (key) => {
     console.log("key changed", key);
     setActiveKey(key);
     let v = null;
-    SellAPI.detailHoaDon(key).then((res) => {
+     SellAPI.detailHoaDon(key).then((res) => {
       setIDKH(
         res.data.nguoiDung
           ? res.data.nguoiDung.id
@@ -706,15 +723,15 @@ const BanHang = () => {
           : null
       );
       setMoney(res.data.thanhTien ? res.data.thanhTien : 0);
-      SellAPI.voucherTotNhat(
+       const v = SellAPI.voucherTotNhat(
         res.data.nguoiDung
           ? res.data.nguoiDung.id
             ? res.data.nguoiDung.id
             : null
           : null,
         res.data.thanhTien ? res.data.thanhTien : 0
-      ).then((res1) => { 
-      setVoucherHienTai(res1.data) ;
+      );
+      setVoucherHienTai(v.data) ;
       // SellAPI.voucherSapDatDuoc(
       //   res.data.nguoiDung
       //     ? res.data.nguoiDung.id
@@ -729,7 +746,7 @@ const BanHang = () => {
       // });
 
     });
-    });
+    // });
     // if (!hoaDons.filter((item) => item.key === key)[0].voucher) {
     //   console.log("Voucher null");
     //   setVoucherHienTai(null);
