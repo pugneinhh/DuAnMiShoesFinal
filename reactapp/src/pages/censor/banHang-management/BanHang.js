@@ -14,9 +14,7 @@ import {
 } from "antd";
 import React, { Children, useEffect, useRef, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
-import { BsQrCodeScan, BsRecordCircle } from "react-icons/bs";
 import { FaList } from "react-icons/fa";
-import { QrReader } from "react-qr-reader";
 import {
   MdOutlinePayments,
   MdOutlineShoppingCartCheckout,
@@ -97,7 +95,7 @@ const BanHang = () => {
        setShowModal(false);
      }
      setQrResult(result);
-     console.log(result);
+     console.log(qrResult);
    };
   // console.log("voucher", voucherHienTai);
   // console.log("hoaDon", activeKey);
@@ -1123,24 +1121,7 @@ const BanHang = () => {
     },
   ];
 
-  ////quét QR sản phẩm
-  const totalPrice = 0;
-  const [openScan, setOpenScan] = useState(false);
-  const [qrData, setQrData] = useState("");
-  const handleCloseScan = () => {
-    setOpenScan(false);
-  };
-  const handleScan = (data) => {
-    if (data) {
-      setQrData(data);
-      // Gửi dữ liệu mã QR lên server ở đây
-    }
-  };
-
-  const handleError = (err) => {
-    console.error(err);
-  };
-
+ 
   return (
     <div className="container border-1">
       <div className="text-end mt-3 me-4 mb-3">
@@ -1200,17 +1181,11 @@ const BanHang = () => {
                         <div className="text-end">
                           <Button
                             onClick={handleScanButtonClick}
-                            style={{
-                              width: "150px",
-                              height: "40px",
-                              margin: "0 10px 10px 10px ",
-                              backgroundColor: "#3366CC",
-                              color: "white",
-                            }}
+                            type="primary"
                           >
                             {/* <FontAwesomeIcon icon={FaQrcode} /> */}
                             <span style={{ marginLeft: "10px" }}>
-                              QR-Căn cước
+                              QR- Sản phẩm
                             </span>
                           </Button>
                           <Button
@@ -1976,7 +1951,6 @@ const BanHang = () => {
           onQRResult={handleQRResult}
         />
       )}
-   
 
       <ToastContainer
         position="top-right"

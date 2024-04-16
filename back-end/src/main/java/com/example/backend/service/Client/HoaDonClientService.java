@@ -4,6 +4,7 @@ import com.example.backend.dto.request.HoaDonCLient.SearchHDByMaAndSdtRequest;
 import com.example.backend.dto.request.HoaDonCLient.TrangThaiRequest;
 import com.example.backend.dto.response.HoaDonCLient.DetailHoaDonClientByIdHDRespon;
 import com.example.backend.dto.response.HoaDonCLient.HoaDonClientHistory;
+import com.example.backend.entity.HoaDon;
 import com.example.backend.model.AdminHoaDonSanPham;
 import com.example.backend.repository.HoaDonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,5 +28,4 @@ public class HoaDonClientService {
     public DetailHoaDonClientByIdHDRespon search(SearchHDByMaAndSdtRequest req){
         return hoaDonRepository.searchHDClient(req);
     }
-
 }

@@ -3,11 +3,18 @@ package com.example.backend.controller.user;
 
 import com.example.backend.dto.request.HoaDonCLient.SearchHDByMaAndSdtRequest;
 import com.example.backend.dto.request.HoaDonCLient.TrangThaiRequest;
+import com.example.backend.dto.request.LichSuHoaDonRequest;
+import com.example.backend.entity.HoaDon;
 import com.example.backend.service.Client.HoaDonClientService;
+import com.example.backend.service.HoaDonServicee;
+import com.example.backend.service.LichSuHoaDonService;
+import com.example.backend.service.ThongBaoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 @CrossOrigin("http://localhost:3000/")
 @RestController
@@ -17,7 +24,12 @@ public class HoaDonClientController {
 
     @Autowired
     HoaDonClientService hoaDonClientService;
-
+    @Autowired
+    HoaDonServicee hoaDonService;
+    @Autowired
+    LichSuHoaDonService lichSuHoaDonService;
+    @Autowired
+    ThongBaoService thongBaoService;
     @PostMapping("")
     public ResponseEntity<?> getALLHoaDonOL(@RequestBody TrangThaiRequest request) {
         System.out.println("tttttttt" + request.getTrangThai());
@@ -36,5 +48,22 @@ public class HoaDonClientController {
     @PostMapping("search")
     public ResponseEntity<?> detailHD(@RequestBody SearchHDByMaAndSdtRequest request ) {
         return ResponseEntity.ok(hoaDonClientService.search(request));
+    }
+    @PutMapping("/xoa-hoa-don/{id}/{maNV}")
+    public ResponseEntity<?> HuyHoaDonQuanLyHoaDon(@PathVariable("id") String id, @RequestBody LichSuHoaDonRequest ls, @PathVariable("maNV") String maNV) {
+        HoaDon hoaDon=hoaDonService.findHoaDonbyID(id);
+        hoaDon.setNgaySua(LocalDateTime.now());
+        ls.setNgayTao(LocalDateTime.now());
+        ls.setIdHD(id);
+        ls.setNguoiTao(maNV);
+        ls.setMoTaHoatDong(ls.getMoTaHoatDong());
+        ls.setTrangThai(-1);
+        lichSuHoaDonService.addLichSuHoaDon(ls);
+        this.thongBaoService.thanhToan(id);
+        return  ResponseEntity.ok(hoaDonService.deleteHoaDon(id));
+    }
+    @GetMapping("/detail-lich-su-hoa-don/{idHD}")
+    public ResponseEntity<?> detailLSHD(@PathVariable("idHD") String id){
+        return  ResponseEntity.ok(lichSuHoaDonService.getLichHoaDon(id));
     }
 }

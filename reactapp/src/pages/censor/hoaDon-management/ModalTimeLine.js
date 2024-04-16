@@ -48,15 +48,19 @@ const ModalTimeLine = (props) => {
           {trangThai == 0 ? (
             <Tag color="purple">Chờ xác nhận</Tag>
           ) : trangThai == 1 ? (
-            <Tag color="red">Xác nhận</Tag>
+            <Tag color="pink">Xác nhận</Tag>
           ) : trangThai == 2 ? (
             <Tag color="blue">Chờ vận chuyển</Tag>
           ) : trangThai == 3 ? (
             <Tag color="cyan">Đang Vận chuyển</Tag>
           ) : trangThai == 4 ? (
             <Tag color="orange">Đã Thanh toán</Tag>
-          ) : (
+          ) : trangThai == 5 ? (
             <Tag color="green">Thành công</Tag>
+          ) : trangThai == -1 ? (
+            <Tag color="#cd201f">Hủy</Tag>
+          ) : (
+            <Tag color="green">Không xác định</Tag>
           )}
         </>
       ),
