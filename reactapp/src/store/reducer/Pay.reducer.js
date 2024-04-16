@@ -42,8 +42,11 @@ const paySlice = createSlice({
         });
       }
     },
+    DeletePay:(state,action) => {
+      return initialState;
+    }
   },
 });
-export const {AddPay} = paySlice.actions;
+export const {AddPay,DeletePay} = paySlice.actions;
 export default paySlice.reducer;
 export const GetPay = (state) => state.pay;

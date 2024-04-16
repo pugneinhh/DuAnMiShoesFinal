@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { Link , useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { AddPayDetail, GetPayDetail, RemovePayDetail } from "../../../store/reducer/PayDetail.reducer";
-import { AddPay, GetPay } from "../../../store/reducer/Pay.reducer";
+import { AddPayDetail, DeletePayDetail, GetPayDetail, RemovePayDetail } from "../../../store/reducer/PayDetail.reducer";
+import { AddPay, Delete, DeletePay, GetPay } from "../../../store/reducer/Pay.reducer";
 import {SellAPI} from "../../censor/api/sell/sell.api"
 import { GetBill, RemoveBill } from "../../../store/reducer/Bill.reducer";
 import { GetInvoice, RemoveInvoiceByHoaDon } from "../../../../src/store/reducer/DetailInvoice.reducer";
+import { ThanhToanAPI } from "../api/thanhToan/thanhToan.api";
 
 const ModalThanhToan = (props) => {
     const { openThanhToan, setOpenThanhToan } = props;
@@ -46,6 +47,36 @@ const ModalThanhToan = (props) => {
       //setStoredData(dataFromLocalStorage);
     }
     },[]);
+
+    useEffect(() =>   {
+        dispatch(DeletePay());
+        dispatch(DeletePayDetail());
+        if (hoaDon) {
+            console.log("res :"+hoaDon);
+        load();
+
+
+        }
+    },[hoaDon]);
+
+    const load = async () => {
+        const tt = await ThanhToanAPI.getThanhToan(hoaDon).then((res) => res.data);
+               tt.map((res) => 
+            (res.phuongThuc == 0) ? 
+            (dispatch(AddPayDetail({hoaDon: hoaDon,phuongThuc:0,soTien:res.tongTien})),
+            dispatch(AddPay({hoaDon: hoaDon,phuongThuc:0,tienMat:res.tongTien})),
+            setTongThanhToan(parseFloat(tongThanhToan) + res.tongTien)
+            ) 
+            : (
+            dispatch(AddPayDetail({hoaDon: hoaDon,phuongThuc:1,soTien: res.tongTien})) ,
+            dispatch(AddPay({hoaDon: hoaDon,phuongThuc:1,chuyenKhoan:res.tongTien,phuongThucVNP:res.phuongThucVnp})),
+            setTongThanhToan(parseFloat(tongThanhToan) + res.tongTien)
+
+            )
+        
+        );
+    }
+
     console.log("NV",storedData);
     console.log("Nhân viên",storedData);
     const handleClose = () => {
