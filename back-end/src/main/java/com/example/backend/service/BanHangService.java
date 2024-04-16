@@ -75,7 +75,7 @@ public class BanHangService {
 
         BigDecimal tienSauGiam;
         if (hoaDonRequest.getTienSauGiam() == null || hoaDonRequest.getTienSauGiam().compareTo(BigDecimal.ZERO) == 0) {
-            tienSauGiam = hoaDonRequest.getTongTien();
+            tienSauGiam = hoaDonRequest.getTongTien().add(hoaDonRequest.getTienShip());
         } else {
             tienSauGiam = hoaDonRequest.getTienSauGiam();
         }
