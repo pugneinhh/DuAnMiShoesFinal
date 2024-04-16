@@ -156,10 +156,10 @@ const BanHang = () => {
 
   useEffect(() => {
     console.log("Vào useEffect soTienHoaDon");
-    if (soTienHoaDon < (voucherHienTai ? voucherHienTai.dieuKien : 0)) {
-      console.log("Vào lỗi");
-      setVoucherHienTai(null);
-    }
+    // if (soTienHoaDon < (voucherHienTai ? voucherHienTai.dieuKien : 0)) {
+    //   console.log("Vào lỗi");
+    //   setVoucherHienTai(null);
+    // }
     if (activeKey !== "") {
       console.log("Vào không lỗi");
       SellAPI.detailHoaDon(activeKey).then((res) => {
@@ -170,6 +170,7 @@ const BanHang = () => {
               : null
             : null
         );
+        console.log("Thanh tien: "+res.data.thanhTien);
         setMoney(res.data.thanhTien ? res.data.thanhTien : 0);
         SellAPI.voucherTotNhat(res.data.nguoiDung
           ? res.data.nguoiDung.id
@@ -350,7 +351,7 @@ const BanHang = () => {
 
   const voucherNoIDKH = async () => {
     const result = await SellAPI.getVoucherNoLimited();
-    console.log(result.data);
+    console.log("voucher no limited"+result.data);
     setVoucherNoLimited(result.data);
   };
 
@@ -1611,16 +1612,7 @@ const BanHang = () => {
                           </Space.Compact>
                         </div>
                         <h6 className="mt-4">
-                          Trả sau:
-                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                          <Switch
-                            disabled={isSwitchOn ? false : true}
-                            onChange={handleSwitchTraSau}
-                            checked={isSwitchTraSau}
-                          />
-                        </h6>
-                        <h6 className="mt-4">
-                          Giao hàng: &nbsp;&nbsp;&nbsp;
+                        Giao hàng: &nbsp;&nbsp;&nbsp;
                           <Switch
                             disabled={false}
                             onChange={handleSwitchToggle}
@@ -1632,6 +1624,16 @@ const BanHang = () => {
                               //   : false
                               isSwitchOn
                             }
+                          />
+      
+                        </h6>
+                        <h6 className="mt-4">
+                        Trả sau:
+                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          <Switch
+                            disabled={isSwitchOn ? false : true}
+                            onChange={handleSwitchTraSau}
+                            checked={isSwitchTraSau}
                           />
                         </h6>
                         <div className="row">
