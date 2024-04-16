@@ -32,17 +32,6 @@ public class ThanhToanController {
     NguoiDungService nguoiDungService;
     @PostMapping("/thanh-toan-tien-mat")
     public ResponseEntity<?> thanhToan(@RequestBody ThanhToanRequest request){
-//        HoaDon hd=hoaDonService.findById(request.getHoaDon()).get();
-//        hd.setTrangThai(4);
-//        hd.setNgayMua(LocalDateTime.now());
-//        hoaDonService.save(hd);
-//        if(hd.getNguoiDung()!=null){
-//            NguoiDung nguoiDung=hd.getNguoiDung();
-//            if(hd.getDiemSuDung()>0){
-//                nguoiDung.setDiem(nguoiDung.getDiem()-hd.getDiemSuDung());
-//            }
-//            nguoiDung.setDiem(nguoiDung.getDiem()+hd.getGiaTriDiem());
-//        }
         System.out.println(request);
         HoaDon hd = hoaDonService.getHDByMa(request.getHoaDon());
         request.setHoaDon(hd.getId());
@@ -51,22 +40,11 @@ public class ThanhToanController {
         request.setNgayTao(LocalDateTime.now());
         request.setPhuongThuc(0);
         request.setTrangThai(0);
-        return ResponseEntity.ok(thanhToanService.thanhToan(request));
+        return ResponseEntity.ok(thanhToanService.thanhToanAdmin(request));
     }
 
     @PostMapping("/thanh-toan-chuyen-khoan")
     public ResponseEntity<?> thanhToanCK(@RequestBody ThanhToanRequest request){
-//        HoaDon hd=hoaDonService.findById(request.getHoaDon()).get();
-//        hd.setTrangThai(4);
-//        hd.setNgayMua(LocalDateTime.now());
-//        hoaDonService.save(hd);
-//        if(hd.getNguoiDung()!=null){
-//            NguoiDung nguoiDung=hd.getNguoiDung();
-//            if(hd.getDiemSuDung()>0){
-//                nguoiDung.setDiem(nguoiDung.getDiem()-hd.getDiemSuDung());
-//            }
-//            nguoiDung.setDiem(nguoiDung.getDiem()+hd.getGiaTriDiem());
-//        }
         System.out.println("Người tạo: "+request.getNguoiTao());
         NguoiDung nguoiDung = nguoiDungService.findByID(request.getNguoiTao());
         HoaDon hd = hoaDonService.getHDByMa(request.getHoaDon());
@@ -75,12 +53,18 @@ public class ThanhToanController {
         request.setNgayTao(LocalDateTime.now());
         request.setPhuongThuc(1);
         request.setTrangThai(0);
-        return ResponseEntity.ok(thanhToanService.thanhToan(request));
+        return ResponseEntity.ok(thanhToanService.thanhToanAdmin(request));
     }
 
 
     @GetMapping("/{idHD}")
     public  ResponseEntity<?> getALlLichSuThanhToan(@PathVariable String idHD){
         return ResponseEntity.ok(thanhToanService.getALLLLichSuThanhToanByIDHD(idHD));
+    }
+
+    @GetMapping("/hoa-don/{maHD}")
+    public ResponseEntity<?> getTTByMa (@PathVariable("maHD") String maHD){
+        HoaDon hd = hoaDonService.getHDByMa(maHD);
+        return ResponseEntity.ok(thanhToanService.getThanhToanByIdHD(hd.getId()));
     }
 }

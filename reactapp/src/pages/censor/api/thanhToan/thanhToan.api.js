@@ -11,4 +11,15 @@ export class ThanhToanAPI {
       },
     });
   };
+
+  static getThanhToan = (maHD) => {
+    const getToken = getHeader();
+    return requestAdmin({
+      method: "GET",
+      url: `/admin/thanh-toan/hoa-don/${maHD}`,
+      headers: {
+        Authorization: getToken,
+      },
+    });
+  };
 }
