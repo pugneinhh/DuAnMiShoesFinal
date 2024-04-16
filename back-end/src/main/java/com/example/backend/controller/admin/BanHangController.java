@@ -223,7 +223,6 @@ public class BanHangController {
         }  else {
             hoaDon.setTrangThai(2);
         }
-        System.out.println("Hóa đơn"+hoaDon);
         hoaDon.setNgaySua(LocalDateTime.now());
         hoaDonServicee.updateTrangThaiHoaDon(hoaDon);
         List<HoaDonChiTiet> listHDCT = hoaDonChiTietService.getAllHDCTByIDHD(hoaDon.getId());
@@ -232,8 +231,6 @@ public class BanHangController {
             hoaDonChiTietService.saveHDCT(h);
         }
         NguoiDung nguoiDung = nguoiDungService.findByID(idNV);
-        System.out.println("Người dùng thanh toán"+nguoiDung);
-        System.out.println("Hóa đơn thanh toán"+hoaDon);
         List<ThanhToan> listTT = thanhToanService.getThanhToanByIdHD(hoaDon.getId());
         for (ThanhToan tt : listTT){
             tt.setTrangThai(1);
@@ -275,7 +272,6 @@ public class BanHangController {
 
     @GetMapping("/hoa-don/voucher-tot-nhat/{idKH}/{money}")
     public ResponseEntity<?> getVoucherTotNhat(@PathVariable("money")String money,@PathVariable("idKH")String idKH){
-        System.out.println("idKH"+idKH);
         String idV = "";
         BigDecimal tienDuocKM = new BigDecimal("0");
         if (!idKH.isEmpty()){

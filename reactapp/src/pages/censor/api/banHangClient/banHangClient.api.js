@@ -58,4 +58,36 @@ export class BanHangClientAPI{
           url: `ban-hang-client/chuyen-khoan/${money}`,
         });
       };
+      static voucherTotNhat = (idKH,money) => {
+       return requestClient({
+         method: "GET",
+         url: `/ban-hang-client/voucher-tot-nhat/${idKH}/${money}`,
+       });
+     }
+   
+     static voucherSapDatDuoc = (idKH,money,idV) => {
+       return requestClient({
+         method: "GET",
+         url: `/ban-hang-client/khuyen-mai-sap-dat-duoc/${idKH}/${money}/${idV}`,
+       });
+     }
+     static getVoucherNoLimited = () => {
+     return requestClient({
+       method: "GET",
+       url: `/ban-hang-client/voucher/no-limited`,
+     });
+   };
+ 
+   static getVoucherWithIDKH = (id) => {
+     return requestClient({
+       method: "GET",
+       url: `/ban-hang-client/voucher/${id}`,
+     });
+   };
+   static getDiaChiMacDinh = (id) => {
+   return requestClient({
+     method: "GET",
+     url: `/khach-hang/dia-chi-mac-dinh/${id}`,
+   });
+ };
 }
