@@ -94,6 +94,7 @@ export default function HoaDonDetail() {
     setmaNV(storedData.ma);
     loadHoaDon();
     loadListSanPhams();
+    loadListSanPhamTra();
     loadLichSuThanhToan();
     loadTimeLineHoaDon();
   }, []);
@@ -1298,6 +1299,8 @@ export default function HoaDonDetail() {
         </div>
 
         {/* thông tin trả hàng */}
+        {listSanPhamTra.length>0?(
+          <>
         <div
           className="d-flex bd-highlight"
           style={{ marginTop: "20px", paddingTop: "20px" }}
@@ -1398,7 +1401,8 @@ export default function HoaDonDetail() {
             )
           )}
         </div>
-
+        </>
+        ):(<></>)}
         <tr className="pt-3 row">
           <div className="col-md-6">
             <div className="row">
