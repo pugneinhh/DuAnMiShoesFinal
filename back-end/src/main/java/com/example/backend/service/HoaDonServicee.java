@@ -178,6 +178,9 @@ public class HoaDonServicee {
     public List<AdminHoaDonSanPham> detailHDSanPham(String  key){
         return  hoaDonRepository.detailHDSanPham(key);
     }
+    public List<AdminHoaDonSanPham> detailHDSanPhamTra(String  key){
+        return  hoaDonRepository.detailHDSanPhamTra(key);
+    }
     public HoaDon add(HoaDonRequest hoaDonRequest){
         HoaDon hoaDon= hoaDonRequest.map(new HoaDon());
         return  hoaDonRepository.save(hoaDon);

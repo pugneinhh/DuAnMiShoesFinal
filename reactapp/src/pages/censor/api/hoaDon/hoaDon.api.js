@@ -42,6 +42,15 @@ export class HoaDonAPI {
       },
     });
   };
+  static detailSanPhamTra = (id) => {
+    return requestAdmin({
+      method: "GET",
+      url: `/admin/hoa-don/hoa-don-san-pham-tra/${id}`,
+      headers: {
+        Authorization: this.getToken,
+      },
+    });
+  };
   static getAllLichSuHoaDon = (id) => {
     return requestAdmin({
       method: "GET",

@@ -298,13 +298,18 @@ export default function HoaDonDetail() {
   const [trangThai, setTrangThai] = useState([]);
 
   const [listSanPhams, setlistSanPhams] = useState([]);
+  const [listSanPhamTra, setlistSanPhamTra] = useState([]);
   console.log("list sản phẩm", listSanPhams);
   const loadListSanPhams = () => {
     HoaDonAPI.detailSanPham(id).then((res) => {
       setlistSanPhams(res.data);
     });
   };
-
+  const loadListSanPhamTra = () => {
+    HoaDonAPI.detailSanPhamTra(id).then((res) => {
+      setlistSanPhamTra(res.data);
+    });
+  };
   const loadTimeLineHoaDon = () => {
     HoaDonAPI.getAllLichSuHoaDon(id).then((res) => {
       setlistHDTimeLine(res.data);
@@ -1293,7 +1298,7 @@ export default function HoaDonDetail() {
         </div>
 
         {/* thông tin trả hàng */}
-        {/* <div
+        <div
           className="d-flex bd-highlight"
           style={{ marginTop: "20px", paddingTop: "20px" }}
         >
@@ -1303,7 +1308,7 @@ export default function HoaDonDetail() {
         </div>
         <hr></hr>
         <div>
-          {listSanPhams.map(
+          {listSanPhamTra.map(
             (listSanPham, index) => (
               console.log(listSanPham),
               (
@@ -1392,7 +1397,7 @@ export default function HoaDonDetail() {
               )
             )
           )}
-        </div> */}
+        </div>
 
         <tr className="pt-3 row">
           <div className="col-md-6">
