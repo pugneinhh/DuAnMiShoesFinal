@@ -1598,16 +1598,7 @@ const BanHang = () => {
                           </Space.Compact>
                         </div>
                         <h6 className="mt-4">
-                          Trả sau:
-                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                          <Switch
-                            disabled={isSwitchOn ? false : true}
-                            onChange={handleSwitchTraSau}
-                            checked={isSwitchTraSau}
-                          />
-                        </h6>
-                        <h6 className="mt-4">
-                          Giao hàng: &nbsp;&nbsp;&nbsp;
+                        Giao hàng: &nbsp;&nbsp;&nbsp;
                           <Switch
                             disabled={false}
                             onChange={handleSwitchToggle}
@@ -1619,6 +1610,16 @@ const BanHang = () => {
                               //   : false
                               isSwitchOn
                             }
+                          />
+      
+                        </h6>
+                        <h6 className="mt-4">
+                        Trả sau:
+                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          <Switch
+                            disabled={isSwitchOn ? false : true}
+                            onChange={handleSwitchTraSau}
+                            checked={isSwitchTraSau}
                           />
                         </h6>
                         <div className="row">
