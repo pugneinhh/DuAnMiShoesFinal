@@ -9,7 +9,6 @@ import { HangAPI } from "../../../pages/censor/api/SanPham/hang.api";
 import { MauSacAPI } from "../../../pages/censor/api/SanPham/mauSac.api";
 import { KichThuocAPI } from "../../../pages/censor/api/SanPham/kichThuoc.api";
 import {  LeftOutlined, RightOutlined, SortDescendingOutlined } from "@ant-design/icons";
-import da from "date-fns/esm/locale/da/index.js";
 import ReactPaginate from 'react-paginate';
 import logoBanner from '../../../assets/images/page-header-bg.jpg';
 export const Shop = ({ children }) => {
@@ -23,16 +22,16 @@ export const Shop = ({ children }) => {
   const { Search } = Input;
 
   const onChangeComplete = (value) => {
-    console.log('onChangeComplete: ', value);
+    // console.log('onChangeComplete: ', value);
   };
 
-  const handleMouseEnter = (cardId) => {
-    setHoveredCard(cardId);
-  };
+  // const handleMouseEnter = (cardId) => {
+  //   setHoveredCard(cardId);
+  // };
 
-  const handleMouseLeave = () => {
-    setHoveredCard(null);
-  };
+  // const handleMouseLeave = () => {
+  //   setHoveredCard(null);
+  // };
 
 
   const getAll = () => {
@@ -64,7 +63,7 @@ export const Shop = ({ children }) => {
         setKichThuocs(res.data);
       })
   }
-  console.log(products)
+
 
   useEffect(() => {
     getAll();
@@ -180,10 +179,10 @@ export const Shop = ({ children }) => {
   };
 
   const getTimMang = (data) => {
-    console.log(data)
+
     HomeAPI.timMang(data)
       .then((res) => {
-        console.log("hihi")
+       
         setProducts(res.data)
       })
   }
@@ -200,7 +199,7 @@ export const Shop = ({ children }) => {
   };
 
   const pageCount = Math.ceil(products.length / productsPerPage);
-  console.log(pageCount)
+  
   const offset = currentPage * productsPerPage;
   const currentPageData = products.slice(offset, offset + productsPerPage);
 
