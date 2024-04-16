@@ -164,8 +164,6 @@ export default function HoaDonDetail() {
   const rollbackHD = (values) => {
     AdminGuiThongBaoXacNhanDatHang();
     HoaDonAPI.rollbackHoaDon(id, maNV, values).then((res) => {
-      console.log("values", values);
-      console.log("trang thau", trangThai);
       loadHoaDon();
       loadTimeLineHoaDon();
       formRollBack.resetFields();
@@ -187,6 +185,7 @@ export default function HoaDonDetail() {
     };
   const handleHuyHoaDon = (values) => {
      AdminGuiThongBaoXacNhanDatHang();
+     HoaDonAPI.deleteInvoiceAndRollBackProduct(listSanPhams.id, id);
       HoaDonAPI.huyHoaDonQLHoaDon(id, maNV, values).then((res) => {
         loadHoaDon();
         loadTimeLineHoaDon();

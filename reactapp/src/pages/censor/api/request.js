@@ -8,9 +8,9 @@ import { store } from "../../../store/redux/store";
 export const getHeader = ()=>{
     const userData = localStorage.getItem('userData');
     const useJson = JSON.parse(userData);
-    console.log(useJson)
+    
     if(useJson){
-         console.log(`Bearer ${useJson.accessToken}`)
+       
          return  `Bearer ${useJson.accessToken}`
 
     }

@@ -267,6 +267,13 @@ public class HoaDonControllerr {
         String idHD = hoaDonService.findHoaDonByMa(ma).getId();
         return  ResponseEntity.ok(hoaDonService.deleteHoaDon(idHD));
     }
+
+    // xóa hóa đơn và  roll back sản phẩm
+    @DeleteMapping("/delete-hoa-don-chi-tiet/{idCTSP}/{id}")
+    public void  deleteHoaDonChiTiet (@PathVariable("idCTSP") String idCTSP,@PathVariable("id")String id) {
+        hoaDonChiTietService.deleteHDCTAndRollBackInSellByIDHD(idCTSP,id); //  roll backed
+    }
+    // xóa hóa đơn và  roll back sản phẩm 
     @PutMapping("/xoa-hoa-don/{id}/{maNV}")
     public ResponseEntity<?> HuyHoaDonQuanLyHoaDon(@PathVariable("id") String id,@RequestBody LichSuHoaDonRequest ls, @PathVariable("maNV") String maNV) {
         HoaDon hoaDon=hoaDonService.findHoaDonbyID(id);

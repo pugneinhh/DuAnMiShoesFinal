@@ -109,6 +109,16 @@ export class HoaDonAPI {
       },
     });
   };
+  static deleteInvoiceAndRollBackProduct = (idCTSP, id) => {
+    const getToken = getHeader();
+    return requestAdmin({
+      method: "DELETE",
+      url: `/admin/hoa-don/delete-hoa-don-chi-tiet/${idCTSP}/${id}`,
+      headers: {
+        Authorization: getToken,
+      },
+    });
+  };
   static themSanPham = (idHD, maNV, idCTSP) => {
     return requestAdmin({
       method: "PUT",
