@@ -255,6 +255,10 @@ public class HoaDonControllerr {
     public ResponseEntity<?> SanPhamHoaDon(@PathVariable("idHD") String id){
         return  ResponseEntity.ok(hoaDonService.detailHDSanPham(id));
     }
+    @GetMapping("/hoa-don-san-pham-tra/{idHD}")
+    public ResponseEntity<?> SanPhamHoaDonTra(@PathVariable("idHD") String id){
+        return  ResponseEntity.ok(hoaDonService.detailHDSanPhamTra(id));
+    }
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody HoaDonRequest hoaDonRequest){
         hoaDonRequest.setNgayMua(LocalDateTime.now());
