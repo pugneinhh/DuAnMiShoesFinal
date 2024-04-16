@@ -41,9 +41,9 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
     List<HoaDonClientHistory> getALLHDClientByIDKH(TrangThaiRequest req);
     //get hóa đơn by id client
     @Query(value = """
-     select id,dia_chi as diaChiShip,email,gia_giam_gia as giaGiamGia, gia_goc as giaGoc,loai_hoa_don as loaiHoaDon,ma,
-     ngay_du_kien_nhan as ngayDuKienNhan,so_dien_thoai as sdt, trang_thai as trangThai, tien_van_chuyen as tienVanChuyen,ten_nguoi_nhan as tenNguoiNhan
-   ,thanh_tien as thanhTien   from hoa_don where id=:idHD                                                                                             
+    select hd.id ,dia_chi as diaChiShip,email,gia_giam_gia as giaGiamGia, gia_goc as giaGoc,loai_hoa_don as loaiHoaDon,ma,
+      ngay_du_kien_nhan as ngayDuKienNhan,so_dien_thoai as sdt, hd.trang_thai as trangThai, tien_van_chuyen as tienVanChuyen,ten_nguoi_nhan as tenNguoiNhan
+    ,thanh_tien as thanhTien, tt.phuong_thuc_vnp as vnp   from  thanh_toan tt  join hoa_don hd on tt.hoa_don_id=hd.id where hd.id=:idHD                                                                                             
                      """, nativeQuery = true)
     DetailHoaDonClientByIdHDRespon detailHoaDonClienByIdHD(String idHD);
     @Query(value = """
