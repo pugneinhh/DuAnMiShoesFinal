@@ -185,7 +185,7 @@ export default function HoaDonDetail() {
     };
   const handleHuyHoaDon = (values) => {
      AdminGuiThongBaoXacNhanDatHang();
-     HoaDonAPI.deleteInvoiceAndRollBackProduct(listSanPhams.id, id);
+    //  HoaDonAPI.deleteInvoiceAndRollBackProduct(listSanPhams.id, id);
       HoaDonAPI.huyHoaDonQLHoaDon(id, maNV, values).then((res) => {
         loadHoaDon();
         loadTimeLineHoaDon();
