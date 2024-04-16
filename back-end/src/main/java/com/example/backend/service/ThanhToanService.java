@@ -59,10 +59,8 @@ private EmailSenderService emailSenderService;
 //        }
         sendMailOnline(tt.getHoaDon().getId());
         return thanhToanRepository.save(tt);
-
-
  //      ThanhToan thanhToan =  thanhToanRepository.save(tt);
- //      sendMailOnline(thanhToan.getHoaDon().getId());
+
  //       return thanhToan;
     }
 

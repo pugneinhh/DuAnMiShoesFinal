@@ -258,9 +258,9 @@ export const GioHang = ({ children }) => {
       maGiaoDich: "",
       // ma: "HD" + currentDateInMilliseconds,
       idUser: userID,
-      tongTien: total + (moneyShip ? moneyShip : 0),
+      tongTien: total,
       giaGiamGia: discount,
-      tienSauGiam: total + (moneyShip ? moneyShip : 0) - discount,
+      tienSauGiam: total - (discount?discount:0),
       diaChi: diaChi
         ? diaChi.diaChi +
           "/" +

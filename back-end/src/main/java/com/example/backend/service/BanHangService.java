@@ -75,7 +75,7 @@ public class BanHangService {
 
         BigDecimal tienSauGiam;
         if (hoaDonRequest.getTienSauGiam() == null || hoaDonRequest.getTienSauGiam().compareTo(BigDecimal.ZERO) == 0) {
-            tienSauGiam = hoaDonRequest.getTongTien();
+            tienSauGiam = hoaDonRequest.getTongTien().add(hoaDonRequest.getTienShip());
         } else {
             tienSauGiam = hoaDonRequest.getTienSauGiam();
         }
@@ -201,7 +201,7 @@ public class BanHangService {
         lichSuHoaDon.setTrangThai(0);
         lichSuHoaDon.setNgayTao(LocalDateTime.now());
         lichSuHoaDonService.save(lichSuHoaDon);
-        //  sendMailOnline(hoaDon.getId());
+//          sendMailOnline(hoaDon.getId());
         return true;
     }
 }
