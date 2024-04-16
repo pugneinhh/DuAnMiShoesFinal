@@ -106,4 +106,10 @@ private EmailSenderService emailSenderService;
         emailSenderService.sendSimpleEmail(email, subject, finalHtmlSendMail);
 
     }
+
+
+    public ThanhToan thanhToanAdmin(ThanhToanRequest request) {
+        ThanhToan tt = request.map(new ThanhToan());
+        return thanhToanRepository.save(tt);
+    }
 }

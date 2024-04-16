@@ -247,7 +247,7 @@ const ModalThanhToan = (props) => {
             <div className="row mt-3">
                 <h6 className="col-md-3 fw-bold ">Tiền cần thanh toán</h6>
                 <div className="col-md-5"></div>
-                <h6 className="col-md-4 text-end text-danger fw-bold" style={{ paddingRight: '25px' }}> {`${Intl.NumberFormat("en-US").format(parseFloat(total) - parseFloat(tongThanhToan))} VNĐ`}</h6>
+                <h6 className="col-md-4 text-end text-danger fw-bold" style={{ paddingRight: '25px' }}> {`${Intl.NumberFormat("en-US").format((parseFloat(total) > parseFloat(tongThanhToan)) ? parseFloat(total) - parseFloat(tongThanhToan) : 0)} VNĐ`}</h6>
             </div>
             <Table  columns={columns} 
             dataSource={data} 
