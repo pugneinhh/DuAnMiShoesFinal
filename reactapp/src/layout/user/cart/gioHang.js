@@ -125,6 +125,8 @@ export const GioHang = ({ children }) => {
       } else {
         setDiscount(Math.min(total * (voucher.mucDo / 100), voucher.giamToiDa));
       }
+    }else{
+      setDiscount(0);
     }
   };
   const loadDiaChiMacDinh = async () => {
@@ -280,9 +282,9 @@ export const GioHang = ({ children }) => {
       listHDCT: hdct,
     };
     
-    if (phuongThuc == 1) {
+    if (phuongThuc === 1) {
       BanHangClientAPI.getLinkVnpay(
-        total + (moneyShip ? moneyShip : 0) - discount
+        total + (moneyShip ? moneyShip : 0) - (discount?discount:0)
       ).then((res) => {
         if (res.data) {
           const maGiaoDichs = Object.keys(res.data)[0];
@@ -505,7 +507,7 @@ export const GioHang = ({ children }) => {
             <div className="col-md-5">
               <span>
                 <span style={{ color: "blue" }}>
-                  {Intl.NumberFormat("en-US").format(discount)}
+                  {discount?Intl.NumberFormat("en-US").format(discount):0}
                 </span>
                 <span> VND</span>
               </span>
@@ -520,7 +522,7 @@ export const GioHang = ({ children }) => {
             </h5>
             <h5 className="col-md-5">
               <span style={{ color: "blue" }}>
-                {Intl.NumberFormat("en-US").format(total - discount)} VND
+                {Intl.NumberFormat("en-US").format(total - (discount?discount:0))} VND
               </span>
             </h5>
           </div>
