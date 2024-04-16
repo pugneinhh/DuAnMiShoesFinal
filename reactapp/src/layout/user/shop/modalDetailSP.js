@@ -25,15 +25,15 @@ const ModalDetailSP = (props) => {
       GioHangAPI.getByIDKH(storedData.userID).then((res) => {
         GioHangAPI.getAllGHCTByIDGH(res.data.id).then((res) => {
           updateTotalQuantity(res.data.length);
-          console.log("counttttttt", res.data.length);
+      
         });
       });
     }else {
       if(storedGioHang!=null){
-      console.log("giỏ hàng", storedGioHang);
+
       GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res) => {
         updateTotalQuantity(res.data.length);
-        console.log("count", res.data);
+        
       });
     }
     }
