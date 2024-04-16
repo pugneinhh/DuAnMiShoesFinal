@@ -1,27 +1,24 @@
 import { Button, Modal, Table, Tag, Radio, Space, InputNumber } from "antd";
 import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
-import { SellAPI } from "../../../pages/censor/api/sell/sell.api";
 import imgTicket from "../../../assets/images/discountTicket.png";
+import { BanHangClientAPI } from "../../../pages/censor/api/banHangClient/banHangClient.api";
 
 const ModalVoucher = (props) => {
   const { openModalVoucher, setOpenModalVoucher, userID , voucherID,setVoucherID,total,loadGiamGia} = props;
   const [top, setTop] = useState("none");
   const [bottom, setBottom] = useState("bottomRight");
   const [datas, setData] = useState([]);
-  console.log("userID voucher",userID);
   const loadVoucher =  () => {
-    console.log("UUUUU" + userID)
     if (userID) {
-       SellAPI.getVoucherWithIDKH(userID).then((result) => {
-        console.log("limit")
+       BanHangClientAPI.getVoucherWithIDKH(userID).then((result) => {
         setData(result.data);
       })
         .catch((error) => {
           console.log(error);
         });
     } else {
-        SellAPI.getVoucherNoLimited().then((result) => {
+        BanHangClientAPI.getVoucherNoLimited().then((result) => {
         console.log("nolimit")
         setData(result.data);
       })
@@ -41,7 +38,6 @@ const ModalVoucher = (props) => {
   const handleChonVoucher = (record) => {
     setVoucherID(record);
     loadGiamGia(record);
-    console.log("voucher được chọn",record);
     setOpenModalVoucher(false);
     
   }

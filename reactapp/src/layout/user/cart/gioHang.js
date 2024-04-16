@@ -13,7 +13,6 @@ import DiaChiGiaoHang from "./GiaoHang";
 import LogoVNP from "../../../assets/images/vnp.png";
 import { BanHangClientAPI } from "../../../pages/censor/api/banHangClient/banHangClient.api";
 import { v4 as uuid } from "uuid";
-import { SellAPI } from "../../../pages/censor/api/sell/sell.api";
 import { KhachHangAPI } from "../../../pages/censor/api/user/khachHang.api";
 import { ShipAPI } from "../../../pages/censor/api/ship/ship.api";
 import { toast, ToastContainer } from "react-toastify";
@@ -57,9 +56,9 @@ export const GioHang = ({ children }) => {
   const storedGioHang = get("GioHang");
 
   const loadVoucherTotNhatVaVoucherTiepTheo = (total) => {
-    SellAPI.voucherTotNhat(storedData?.userID ? storedData?.userID : null, total).then((res) => {setVoucher(res.data); loadGiamGia(res.data);});
+    BanHangClientAPI.voucherTotNhat(storedData?.userID ? storedData?.userID : null, total).then((res) => {setVoucher(res.data); loadGiamGia(res.data);});
     
-    SellAPI.voucherSapDatDuoc(storedData?.userID ? storedData?.userID : null, total, voucher ? voucher.id : null).then(
+    BanHangClientAPI.voucherSapDatDuoc(storedData?.userID ? storedData?.userID : null, total, voucher ? voucher.id : null).then(
       (res) => {
         setSoTienCanMuaThem(res.data[0]);
         setSoTienDuocGiam(res.data[1]);
@@ -132,7 +131,7 @@ export const GioHang = ({ children }) => {
     let idHuyen = "";
     let idXa = "";
     if (storedData?.userID) {
-      await KhachHangAPI.getDiaChiMacDinh(storedData.userID).then((res) => {
+      await BanHangClientAPI.getDiaChiMacDinh(storedData.userID).then((res) => {
         setDiaChi(res.data);
         console.log(res);
         idHuyen = res.data.idHuyen;
