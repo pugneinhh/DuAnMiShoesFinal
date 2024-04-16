@@ -201,7 +201,7 @@ public class BanHangService {
         lichSuHoaDon.setTrangThai(0);
         lichSuHoaDon.setNgayTao(LocalDateTime.now());
         lichSuHoaDonService.save(lichSuHoaDon);
-        //  sendMailOnline(hoaDon.getId());
+//          sendMailOnline(hoaDon.getId());
         return true;
     }
 }
