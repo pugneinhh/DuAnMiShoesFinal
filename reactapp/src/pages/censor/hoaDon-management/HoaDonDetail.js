@@ -1296,7 +1296,7 @@ export default function HoaDonDetail() {
         </div>
 
         {/* thông tin trả hàng */}
-        <div
+        {/* <div
           className="d-flex bd-highlight"
           style={{ marginTop: "20px", paddingTop: "20px" }}
         >
@@ -1395,7 +1395,7 @@ export default function HoaDonDetail() {
               )
             )
           )}
-        </div>
+        </div> */}
 
         <tr className="pt-3 row">
           <div className="col-md-6">
