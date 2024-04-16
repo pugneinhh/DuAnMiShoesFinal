@@ -1,4 +1,4 @@
-import { Avatar, Badge, Button, Space, Tabs, Tag } from "antd";
+import {  Tabs } from "antd";
 
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -6,13 +6,11 @@ import { get, set } from "local-storage";
 import "./history.css";
 import { HoaDonClientAPI } from "../../../pages/censor/api/HoaDonClient/HoaDonClientAPI";
 import TabHistoryClient from "./TabHistoryClient";
-import { TfiPencil } from "react-icons/tfi";
-import { FaUser } from "react-icons/fa";
-import { BsShop } from "react-icons/bs";
 import ProfileMenu from "../profile/ProfileMenu";
-
+import SockJS from "sockjs-client";
+import { Stomp } from "@stomp/stompjs";
 const ALLTabHistoryClient = () => {
-  const nav = useNavigate();
+  
   const [listBill, setListBill] = useState([]);
   const storedData = get("userData");
   const [userName, setUserName] = useState("");
@@ -24,7 +22,7 @@ const ALLTabHistoryClient = () => {
     2: "1",
     3: "2",
     4: "3",
-    5: "4",
+    5: "5",
     6: "-1",
     10: "",
   };
@@ -34,10 +32,8 @@ const ALLTabHistoryClient = () => {
     const trangThai = keyToStatusMapping[key] ? keyToStatusMapping[key] : "";
 
     const datatest = { id: id, trangThai };
-    console.log("alo", datatest);
     HoaDonClientAPI.getALLHoaDonOnlineByIdKH(datatest).then((res) => {
       const data = res.data;
-      console.log(data, "dddddddddddddddddádasdasdasdasd");
       const promises = data.map((item) => {
         return HoaDonClientAPI.getALLChiTietSanPhamClientOlByIdHD(item.id).then(
           (res) => ({
@@ -55,19 +51,59 @@ const ALLTabHistoryClient = () => {
     });
   }, [key]);
   useEffect(() => {
-    console.log(listBill);
+
   }, [listBill]);
   //   item tab
   const onChange = (key) => {
     setKey(key);
     console.log(key);
   };
-  const donMua = () => {
-    nav("/history");
-  };
-    const taiKhoanCuaToi = () => {
-      nav("/tai-khoan-cua-toi");
-    };
+     var stomp = null;
+     const socket = new SockJS("http://localhost:8080/ws");
+     stomp = Stomp.over(socket);
+
+     useEffect(() => {
+       stomp.connect({}, () => {
+         console.log("connect websocket");
+
+         stomp.subscribe("/topic/KH/hoa-don", (mes) => {
+           try {
+             const pare = JSON.parse(mes.body);
+             console.log(pare);
+             // ví du: bạn muốn khi khách hàng bấm đặt hàng mà load lại hóa đơn màn admin thì hãy gọi hàm load all hóa đơn ở đây
+             // thí dụ: đây là hàm laod hóa đơn: loadHoaDon(); allThongBao(); CountThongBao();
+            const trangThai = keyToStatusMapping[key]
+              ? keyToStatusMapping[key]
+              : "";
+
+            const datatest = { id: id, trangThai };
+            HoaDonClientAPI.getALLHoaDonOnlineByIdKH(datatest).then((res) => {
+              const data = res.data;
+              const promises = data.map((item) => {
+                return HoaDonClientAPI.getALLChiTietSanPhamClientOlByIdHD(
+                  item.id
+                ).then((res) => ({
+                  id: item.id,
+                  thanhTien: item.thanhTien,
+                  trangThai: item.trangThaiHD,
+                  hoaDonDetail: res.data,
+                }));
+              });
+
+              Promise.all(promises).then((results) => {
+                setListBill(results);
+              });
+            });
+           } catch (e) {
+             console.log("lỗi mẹ ròi xem code di: ", e);
+           }
+         });
+       });
+
+       return () => {
+         stomp.disconnect();
+       };
+     }, []);
   return (
     <div className="row">
       <ProfileMenu></ProfileMenu>

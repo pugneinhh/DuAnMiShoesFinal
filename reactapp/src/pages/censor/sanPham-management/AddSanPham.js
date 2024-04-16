@@ -691,12 +691,16 @@ export default function AddSanPham() {
   }, []);
   const loadCL = async () => {
     ChiTietSanPhamAPI.getAllChatLieu().then(response => {
-      setCL(response.data);
+      const data = response.data;
+      const reversedData = data.reverse();
+      setCL(reversedData);
     })
   };
   const addChatLieu = (value) => {
     ChiTietSanPhamAPI.createChatLieu(value)
       .then((response) => {
+        form1.resetFields(); 
+        setOpenCL(false);
         toast("✔️ Thêm thành công!", {
           position: "top-right",
           autoClose: 5000,
@@ -707,8 +711,7 @@ export default function AddSanPham() {
           progress: undefined,
           theme: "light",
         });
-        loadCL();
-        form1.resetFields();
+        loadCL();          
       })
       .catch((error) => console.error("Error adding item:", error));
   };
@@ -985,6 +988,7 @@ export default function AddSanPham() {
                         placeholder="Chọn một giá trị"
                         style={{ width: 307 }}
                         onChange={onChangeCL}
+                        defaultValue={cl.length > 0 ? cl[0].ten : undefined}
                       >
                         {cl.map((item) => (
                           <Select.Option key={item.id} value={item.ten}>
@@ -1346,6 +1350,20 @@ export default function AddSanPham() {
                   </div>
                 </div>
               </div>
+            </div>
+            {/* Số lượng và giá bán */}
+            <div
+              className=" bg-light m-2 p-3 pt-2"
+              style={{
+                border: "1px solid #ddd", // Border color
+                boxShadow: "0 3px 8px rgba(0, 0, 0, 0.1)", // Box shadow
+                borderRadius: "8px",
+              }}
+            >
+              <h5>
+                <MdAddTask size={30} /> Số lượng & giá bán ban đầu
+              </h5>
+              <hr />
               <div className="row">
                 <div className="col-md-6">
                   <Form.Item
@@ -1383,7 +1401,6 @@ export default function AddSanPham() {
                       },
                     ]}
                   >
-                    {/* <Input onChange={onChangeNhapGia} style={{ width: 307 }} placeholder='Nhập giá sản phẩm' type='number' min={100000} className="border" /> */}
                     <InputNumber
                       className="border-warning"
                       defaultValue={0}

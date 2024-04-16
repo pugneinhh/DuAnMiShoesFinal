@@ -239,7 +239,7 @@ export default function HoaDon() {
           ) : trangThai == 5 ? (
             <Tag color="green">Hoàn thành</Tag>
           ) : trangThai == -1 ? (
-            <Tag color="lime">Hủy</Tag>
+            <Tag color="#cd201f">Hủy</Tag>
           ) : (
             <Tag color="gold">Đã thanh toán</Tag>
           )}

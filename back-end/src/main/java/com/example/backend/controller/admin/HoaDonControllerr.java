@@ -267,6 +267,18 @@ public class HoaDonControllerr {
         String idHD = hoaDonService.findHoaDonByMa(ma).getId();
         return  ResponseEntity.ok(hoaDonService.deleteHoaDon(idHD));
     }
+    @PutMapping("/xoa-hoa-don/{id}/{maNV}")
+    public ResponseEntity<?> HuyHoaDonQuanLyHoaDon(@PathVariable("id") String id,@RequestBody LichSuHoaDonRequest ls, @PathVariable("maNV") String maNV) {
+        HoaDon hoaDon=hoaDonService.findHoaDonbyID(id);
+        hoaDon.setNgaySua(LocalDateTime.now());
+        ls.setNgayTao(LocalDateTime.now());
+        ls.setIdHD(id);
+        ls.setNguoiTao(maNV);
+        ls.setMoTaHoatDong(ls.getMoTaHoatDong());
+        ls.setTrangThai(-1);
+        lichSuHoaDonService.addLichSuHoaDon(ls);
+        return  ResponseEntity.ok(hoaDonService.deleteHoaDon(id));
+    }
 //    @PutMapping("/update/{ma}")
 //    public ResponseEntity<?> update(@PathVariable String ma,@RequestBody LichSuHoaDon khachHang){
 //        return   ResponseEntity.ok(khachHangService.update(khachHang,ma));
