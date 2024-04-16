@@ -59,7 +59,7 @@ public class HoaDonServicee {
     public HoaDon huyHoaDon(String idHD) {
         HoaDon hoaDon = hoaDonRepository.findById(idHD).get();
         hoaDon.setTrangThai(-1);
-        hoaDon.set
+//        hoaDon.set
         return  hoaDonRepository.save(hoaDon);
     }
     public List<HoaDon> getAllBillToday() {
