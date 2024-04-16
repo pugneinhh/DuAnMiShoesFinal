@@ -1,45 +1,63 @@
 import {  Button, Form, Modal, Space, Tag } from "antd";
-import React, {  useState } from "react";
+import TextArea from "antd/es/input/TextArea";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { ToastContainer } from "react-toastify";
-
+import { ToastContainer, toast } from "react-toastify";
+import { KHGuiThongBaoDatHang } from "../../../utils/socket/socket";
+import { HoaDonClientAPI } from "../../../pages/censor/api/HoaDonClient/HoaDonClientAPI";
+import { get, set } from "local-storage";
 const TabHistoryClient = ({ listBill }) => {
   const nav = useNavigate();
    const [modalReason, setModalReason] = useState(false);
    const [reason, setReason] = useState("");
-   const [errror, setError] = useState("");
+
    const [id, setId] = useState("");
-   const cancelBill = () => {
-     const data = {
-       id: id,
-       description: reason,
-     };
-     console.log(data);
-     if (reason === "") {
-       setError("Vui lòng nhập lý do hủy đơn");
-       return;
-     }
-    //  BillClientApi.cancelBill(data).then((res) => {
-    //    toast.success("Hủy đơn thành công");
-    //    window.location.href = "/purchase";
-    //  });
-   };
-   const openModal = (id) => {
-     setModalReason(true);
-     setId(id);
-   };
-   const closeModal = () => {
-     setModalReason(false);
-     setReason("");
-   };
+     const storedData = get("userData");
+    const ten = storedData.ten;
+    const tenKH="Khách hàng "+ten; 
+      const [formHuyHoaDon] = Form.useForm();
+    const [isModalOpenHuyHoaDon, setIsModalHuyHoaDon] = useState(false);
+      const handleOk = () => {
+        setIsModalHuyHoaDon(false);
+      };
+      const handleCancel = () => {
+        setIsModalHuyHoaDon(false);
+      };
+    const showModalHuyHoaDon = (id) => {
+      setIsModalHuyHoaDon(true);
+       setId(id);
+    };
+
+    const handleHuyHoaDon = (values) => {
+       KHGuiThongBaoDatHang();
+      HoaDonClientAPI.huyHoaDonQLHoaDon(id, tenKH, values).then((res) => {       
+        formHuyHoaDon.resetFields();
+        setIsModalHuyHoaDon(false);
+        toast("🦄 Thành công!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+         nav(`/chi-tiet-don-hang/${id}`);
+      });
+    };
   return (
     <div className="container ">
-      <div className="row pt-3 " style={{ backgroundColor: "#F3F2F2" }}>
+      <div className="row pt-3 ">
         {listBill.map((item, index) => (
-          <div key={index} className="container mb-5">
-            <div className="mb-5">
+          <div
+            key={index}
+            className="mb-5"
+            style={{ backgroundColor: "#F3F2F2" }}
+          >
+            <div className="mb-5 pt-2">
               <Space className="float-end" size={[0, 8]} wrap>
-                <Tag color="#108ee9">
+                <Tag color={item.trangThai == -1 ? "#cd201f" : "#108ee9"}>
                   <span className={`trangThai ${" status_" + item.trangThai} `}>
                     {item.trangThai === "0"
                       ? "Chờ xác nhận"
@@ -112,7 +130,7 @@ const TabHistoryClient = ({ listBill }) => {
 
                 {/* nút thanh toán */}
                 <div className=" mt-4 d-flex justify-content-end  ">
-                  {parseInt(item.trangThai) < 2 ? (
+                  {item.trangThai == 0 ||item.trangThai ==1  ? (
                     <Button
                       style={{
                         backgroundColor: "orangered",
@@ -120,9 +138,9 @@ const TabHistoryClient = ({ listBill }) => {
                         width: 150,
                         height: 40,
                       }}
-                      onClick={() => openModal(item.id)}
+                      onClick={() => showModalHuyHoaDon(item.id)}
                     >
-                      {" "}
+                   
                       Hủy đơn
                     </Button>
                   ) : (
@@ -150,37 +168,46 @@ const TabHistoryClient = ({ listBill }) => {
       </div>
 
       <Modal
-        open={modalReason}
-        // onCancel={closeModal}
-        okButtonProps={{ style: { display: "none" } }}
-        cancelButtonProps={{ style: { display: "none" } }}
+        title="Nhập lý do hủy hóa đơn"
+        footer={[]}
+        open={isModalOpenHuyHoaDon}
+        onOk={handleOk}
+        onCancel={handleCancel}
       >
-        <Form>
+        <Form form={formHuyHoaDon} onFinish={handleHuyHoaDon}>
           <Form.Item
-            label={"Lý do hủy đơn"}
-            validateStatus={errror ? "error" : ""}
-            help={errror || ""}
+            name="moTaHoatDong"
+            hasFeedback
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng không để trống ghi chú!",
+              },
+            ]}
           >
-            <textarea
-              style={{ height: 130, width: 300, padding: 10, fontSize: 17 }}
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
-            />
+            <TextArea rows={4} />
           </Form.Item>
-          <Form.Item>
-            <div style={{ float: "right" }}>
-              <Button onClick={closeModal}>Hủy</Button>
-              <Button
-                className="button-add-promotion"
-                key="submit"
-                title="Xác nhận hủy đơn"
-                onClick={cancelBill}
-                style={{ marginLeft: "20px" }}
-              >
-                Xác nhận
-              </Button>
-            </div>
-          </Form.Item>
+          <Button
+            style={{ marginLeft: 200 }}
+            className="bg-success text-light"
+            onClick={() => {
+              Modal.confirm({
+                title: "Thông báo",
+                content: "Bạn có chắc chắn muốn tiếp tục?",
+                onOk: () => {
+                  formHuyHoaDon.submit();
+                },
+                footer: (_, { OkBtn, CancelBtn }) => (
+                  <>
+                    <CancelBtn />
+                    <OkBtn />
+                  </>
+                ),
+              });
+            }}
+          >
+            Xác nhận
+          </Button>
         </Form>
       </Modal>
       <ToastContainer

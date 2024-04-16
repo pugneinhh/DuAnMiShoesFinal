@@ -73,7 +73,7 @@ export class ChiTietSanPhamAPI {
   static updateCTSP = (id,data) => {
     const getToken = getHeader();
     return requestAdmin({
-      method: "POST",
+      method: "PUT",
       url: `/admin/ctsp/update/${id}`,
       data: data,
       headers: {

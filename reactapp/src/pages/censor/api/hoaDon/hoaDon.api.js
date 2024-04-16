@@ -99,7 +99,16 @@ export class HoaDonAPI {
       },
     });
   };
-
+  static huyHoaDonQLHoaDon = (id, maNV, data) => {
+    return requestAdmin({
+      method: "PUT",
+      url: `/admin/hoa-don/xoa-hoa-don/${id}/${maNV}`,
+      data: data,
+      headers: {
+        Authorization: this.getToken,
+      },
+    });
+  };
   static themSanPham = (idHD, maNV, idCTSP) => {
     return requestAdmin({
       method: "PUT",

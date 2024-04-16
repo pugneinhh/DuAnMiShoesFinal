@@ -24,4 +24,5 @@ public interface DetailHoaDonClientByIdHDRespon {
     public String getTienVanChuyen();
     public String getTenNguoiNhan();
     public String getThanhTien();
+     String getVnp();
 }

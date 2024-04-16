@@ -14,9 +14,7 @@ import {
 } from "antd";
 import React, { Children, useEffect, useRef, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
-import { BsQrCodeScan, BsRecordCircle } from "react-icons/bs";
 import { FaList } from "react-icons/fa";
-import { QrReader } from "react-qr-reader";
 import {
   MdOutlinePayments,
   MdOutlineShoppingCartCheckout,
@@ -55,7 +53,8 @@ import { HoaDonAPI } from "../api/hoaDon/hoaDon.api";
 import imgTicket from "../../../assets/images/discountTicket.png";
 import DiaChiGiaoHang from "./GiaoHang";
 import { NguoiDungAPI } from "../api/nguoiDung/nguoiDungAPI";
-
+import QRScannerModal from "../api/QR_Code/QrCode";
+ 
 const { Option } = Select;
 const { TabPane } = Tabs;
 const BanHang = () => {
@@ -80,18 +79,36 @@ const BanHang = () => {
   const [soTienDuocGiam, setSoTienDuocGiam] = useState(0);
   const [idKH, setIDKH] = useState(null);
   const [money, setMoney] = useState(0);
-  console.log("voucher", voucherHienTai);
-  console.log("hoaDon", activeKey);
-  console.log("Hóa Đơn s", hoaDons);
+
+  //qr san pham
+    const handleModalClose = () => {
+      setShowModal(false);
+    };
+  const [showModal, setShowModal] = useState(false);
+    const [qrResult, setQrResult] = useState("");
+ const handleScanButtonClick = () => {
+   setShowModal(true);
+ };
+
+   const handleQRResult = (result) => {
+     if (result != null) {
+       setShowModal(false);
+     }
+     setQrResult(result);
+     console.log(qrResult);
+   };
+  // console.log("voucher", voucherHienTai);
+  // console.log("hoaDon", activeKey);
+  // console.log("Hóa Đơn s", hoaDons);
     const hoaDonHienTai = hoaDons.filter((x) => x.key === activeKey);
-  console.log("Hóa đơn hiện tại",hoaDonHienTai);
+  // console.log("Hóa đơn hiện tại",hoaDonHienTai);
   lengthSP = ctspHD.filter((f) => f.hoaDon === activeKey)
                 .reduce(
                   (accumulator, object) =>
                     parseFloat(accumulator) + parseFloat(object.soLuong),
                   0
                 );
-                console.log("Độ dài"+lengthSP);
+                // console.log("Độ dài"+lengthSP);
   const loadVoucherTotNhatVaVoucherTiepTheo = () => {
     console.log("money", money);
     console.log("voucher hiện tại "+voucherHienTai);
@@ -1105,24 +1122,7 @@ const BanHang = () => {
     },
   ];
 
-  ////quét QR sản phẩm
-  const totalPrice = 0;
-  const [openScan, setOpenScan] = useState(false);
-  const [qrData, setQrData] = useState("");
-  const handleCloseScan = () => {
-    setOpenScan(false);
-  };
-  const handleScan = (data) => {
-    if (data) {
-      setQrData(data);
-      // Gửi dữ liệu mã QR lên server ở đây
-    }
-  };
-
-  const handleError = (err) => {
-    console.error(err);
-  };
-
+ 
   return (
     <div className="container border-1">
       <div className="text-end mt-3 me-4 mb-3">
@@ -1181,11 +1181,13 @@ const BanHang = () => {
                         </div>
                         <div className="text-end">
                           <Button
+                            onClick={handleScanButtonClick}
                             type="primary"
-                            icon={<BsQrCodeScan />}
-                            onClick={() => setOpenScan(true)}
                           >
-                            Quét QR sản phẩm
+                            {/* <FontAwesomeIcon icon={FaQrcode} /> */}
+                            <span style={{ marginLeft: "10px" }}>
+                              QR- Sản phẩm
+                            </span>
                           </Button>
                           <Button
                             type="primary"
@@ -1408,38 +1410,50 @@ const BanHang = () => {
                               data.reduce((accumulator, currentProduct) => {
                                 return accumulator + currentProduct.total;
                               }, 0) -
-                                (voucherHienTai 
-                                  ? voucherHienTai.loaiVoucher === "Tiền mặt"
-                                    ? parseFloat(voucherHienTai.mucDo) <
-                                      parseFloat(voucherHienTai.giamToiDa)
-                                      ? voucherHienTai.mucDo
-                                      : voucherHienTai.giamToiDa
-                                    : parseFloat(
-                                        ( data.reduce((accumulator, currentProduct) => {
-                                          return accumulator + currentProduct.total;
-                                        }, 0) * voucherHienTai.mucDo) /
-                                          100
-                                      ) < parseFloat(voucherHienTai.giamToiDa)
-                                    ? (parseFloat( data.reduce((accumulator, currentProduct) => {
-                                      return accumulator + currentProduct.total;
-                                    }, 0)) *
-                                        parseFloat(voucherHienTai.mucDo)) /
-                                      100
+                              (voucherHienTai
+                                ? voucherHienTai.loaiVoucher === "Tiền mặt"
+                                  ? parseFloat(voucherHienTai.mucDo) <
+                                    parseFloat(voucherHienTai.giamToiDa)
+                                    ? voucherHienTai.mucDo
                                     : voucherHienTai.giamToiDa
-                                  : 0) +
-                                roundToThousands(
-                                  isSwitchOn
-                                    ?
-                                      hd[0]?.tienVanChuyen &&
-                                      shipMoney === shipMoney1
-                                      ? hd[0]?.tienVanChuyen
-                                      : shipMoney1
-                                      ? shipMoney1
-                                      : shipMoney
-                                      ? shipMoney
-                                      : 0
+                                  : parseFloat(
+                                      (data.reduce(
+                                        (accumulator, currentProduct) => {
+                                          return (
+                                            accumulator + currentProduct.total
+                                          );
+                                        },
+                                        0
+                                      ) *
+                                        voucherHienTai.mucDo) /
+                                        100
+                                    ) < parseFloat(voucherHienTai.giamToiDa)
+                                  ? (parseFloat(
+                                      data.reduce(
+                                        (accumulator, currentProduct) => {
+                                          return (
+                                            accumulator + currentProduct.total
+                                          );
+                                        },
+                                        0
+                                      )
+                                    ) *
+                                      parseFloat(voucherHienTai.mucDo)) /
+                                    100
+                                  : voucherHienTai.giamToiDa
+                                : 0) +
+                              roundToThousands(
+                                isSwitchOn
+                                  ? hd[0]?.tienVanChuyen &&
+                                    shipMoney === shipMoney1
+                                    ? hd[0]?.tienVanChuyen
+                                    : shipMoney1
+                                    ? shipMoney1
+                                    : shipMoney
+                                    ? shipMoney
                                     : 0
-                                )
+                                  : 0
+                              )
                             }
                             hoaDon={activeKey}
                             voucher={voucherHienTai ? voucherHienTai : null}
@@ -1659,14 +1673,27 @@ const BanHang = () => {
                                       ? voucherHienTai.mucDo
                                       : voucherHienTai.giamToiDa
                                     : parseFloat(
-                                        ( data.reduce((accumulator, currentProduct) => {
-                                          return accumulator + currentProduct.total;
-                                        }, 0) * voucherHienTai.mucDo) /
+                                        (data.reduce(
+                                          (accumulator, currentProduct) => {
+                                            return (
+                                              accumulator + currentProduct.total
+                                            );
+                                          },
+                                          0
+                                        ) *
+                                          voucherHienTai.mucDo) /
                                           100
                                       ) < parseFloat(voucherHienTai.giamToiDa)
-                                    ? (parseFloat( data.reduce((accumulator, currentProduct) => {
-                                      return accumulator + currentProduct.total;
-                                    }, 0)) *
+                                    ? (parseFloat(
+                                        data.reduce(
+                                          (accumulator, currentProduct) => {
+                                            return (
+                                              accumulator + currentProduct.total
+                                            );
+                                          },
+                                          0
+                                        )
+                                      ) *
                                         parseFloat(voucherHienTai.mucDo)) /
                                       100
                                     : voucherHienTai.giamToiDa
@@ -1685,21 +1712,36 @@ const BanHang = () => {
                                 data.reduce((accumulator, currentProduct) => {
                                   return accumulator + currentProduct.total;
                                 }, 0) -
-                                  (voucherHienTai 
+                                  (voucherHienTai
                                     ? voucherHienTai.loaiVoucher === "Tiền mặt"
                                       ? parseFloat(voucherHienTai.mucDo) <
                                         parseFloat(voucherHienTai.giamToiDa)
                                         ? voucherHienTai.mucDo
                                         : voucherHienTai.giamToiDa
                                       : parseFloat(
-                                          ( data.reduce((accumulator, currentProduct) => {
-                                            return accumulator + currentProduct.total;
-                                          }, 0) * voucherHienTai.mucDo) /
+                                          (data.reduce(
+                                            (accumulator, currentProduct) => {
+                                              return (
+                                                accumulator +
+                                                currentProduct.total
+                                              );
+                                            },
+                                            0
+                                          ) *
+                                            voucherHienTai.mucDo) /
                                             100
                                         ) < parseFloat(voucherHienTai.giamToiDa)
-                                      ? (parseFloat( data.reduce((accumulator, currentProduct) => {
-                                        return accumulator + currentProduct.total;
-                                      }, 0)) *
+                                      ? (parseFloat(
+                                          data.reduce(
+                                            (accumulator, currentProduct) => {
+                                              return (
+                                                accumulator +
+                                                currentProduct.total
+                                              );
+                                            },
+                                            0
+                                          )
+                                        ) *
                                           parseFloat(voucherHienTai.mucDo)) /
                                         100
                                       : voucherHienTai.giamToiDa
@@ -1809,14 +1851,14 @@ const BanHang = () => {
                       {voucherNoLimited ? (
                         voucherNoLimited.map((option) => (
                           <Option
-                          key={option.id}
-                          value={option.id}
-                          label={option.ma}
-                          imgTicket={imgTicket}
-                          dieuKien={option.dieuKien}
-                          giamToiDa={option.giamToiDa}
-                          loai={option.loaiVoucher}
-                          mucDo={option.mucDo}
+                            key={option.id}
+                            value={option.id}
+                            label={option.ma}
+                            imgTicket={imgTicket}
+                            dieuKien={option.dieuKien}
+                            giamToiDa={option.giamToiDa}
+                            loai={option.loaiVoucher}
+                            mucDo={option.mucDo}
                             style={{ width: "100%", height: 80 }}
                             // filterOption={filterOptionVoucher}
                           >
@@ -1904,32 +1946,13 @@ const BanHang = () => {
           console.error()
         )}
       </div>
-
-      <Modal
-        title={<h5>QR core scaner</h5>}
-        centered
-        open={openScan}
-        onOk={handleCloseScan}
-        onCancel={handleCloseScan}
-        footer={[<Button onClick={handleCloseScan}>Cancel</Button>]}
-        width={500}
-      >
-        <QrReader
-          delay={300}
-          onError={handleError}
-          onScan={handleScan}
-          onResult={(result, error) => {
-            if (!!result) {
-              setQrData(result?.text);
-            }
-
-            if (!!error) {
-              console.info(error);
-            }
-          }}
-          style={{ width: "100%" }}
+      {showModal && (
+        <QRScannerModal
+          visible={showModal}
+          onCancel={handleModalClose}
+          onQRResult={handleQRResult}
         />
-      </Modal>
+      )}
 
       <ToastContainer
         position="top-right"
