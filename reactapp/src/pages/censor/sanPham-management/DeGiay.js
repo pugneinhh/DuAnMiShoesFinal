@@ -133,13 +133,21 @@ export default function DeGiay() {
   const validateDateDeGiay = (_, value) => {
     const { getFieldValue } = form;
     const tenDeGiay = getFieldValue("ten");
-  if (!tenDeGiay.trim()) {
-    return Promise.reject("Tên không được để trống");
-  }
-  const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
-  if (specialCharacterRegex.test(tenDeGiay)) {
-    return Promise.reject("Tên không được chứa ký tự đặc biệt");
-  }
+  
+    if (!tenDeGiay.trim()) {
+      return Promise.reject("Tên không được để trống");
+    }
+  
+    const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+    if (specialCharacterRegex.test(tenDeGiay)) {
+      return Promise.reject("Tên không được chứa ký tự đặc biệt");
+    }
+  
+    const deGiay = parseInt(value);
+    if (isNaN(deGiay) || deGiay < 34 || deGiay > 47) {
+      return Promise.reject("Đế giày phải là số nguyên từ 34 đến 47");
+    }
+  
     return Promise.resolve();
   };
 

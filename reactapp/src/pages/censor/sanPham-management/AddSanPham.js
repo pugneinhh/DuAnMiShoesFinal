@@ -343,7 +343,7 @@ export default function AddSanPham() {
         return (
           <>
             <InputNumber
-              min={1000000}
+              min={100000}
               formatter={(value) =>
                 `VND ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
               }
@@ -578,40 +578,73 @@ export default function AddSanPham() {
   };
   //Load Kích Thước
   const [openKT, setOpenKT] = useState(false);
-  const [openSelectKT, setSelectKT] = useState(false);
   const [ktData, setKTData] = useState([]);
-  const [optionsKT, setOptionsKT] = useState([]);
   useEffect(() => {
     loadKT();
   }, []);
+  const validateKichThuoc = (_, value) => {
+    const { getFieldValue } = form1;
+    const tenKichThuoc = getFieldValue("ten");
+
+    if (!tenKichThuoc.trim()) {
+      return Promise.reject("Tên không được để trống");
+    }
+
+    const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+    if (specialCharacterRegex.test(tenKichThuoc)) {
+      return Promise.reject("Tên không được chứa ký tự đặc biệt");
+    }
+
+    const kichThuoc = parseInt(value);
+    if (isNaN(kichThuoc) || kichThuoc < 34 || kichThuoc > 47) {
+      return Promise.reject("Đế giày phải là số nguyên từ 34 đến 47");
+    }
+
+    return Promise.resolve();
+  };
   const loadKT = async () => {
     ChiTietSanPhamAPI.getAllKichThuoc().then(response => {
-      setKTData(response.data);
-      const loadOKT = response.data.map((item) => ({
-        key: item.id,
-        value: item.id,
-        label: item.ten,
-      }));
-      setOptionsKT(loadOKT);
+      const data = response.data;
+      const reversedData = data.reverse();
+      setKTData(reversedData);
     })
   };
   const addKichThuoc = (value) => {
-    ChiTietSanPhamAPI.createKichThuoc(value)
-      .then((response) => {
-        toast("✔️ Thêm thành công!", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        loadKT();
-        form1.resetFields();
-      })
-      .catch((error) => console.error("Error adding item:", error));
+    const checkTrung = (code) => {
+      return ktData.some(
+        (x) => x.ten.trim().toLowerCase() === code.trim().toLowerCase()
+      );
+    };
+    if (!checkTrung(value.ten)) {
+      ChiTietSanPhamAPI.createKichThuoc(value)
+        .then((response) => {
+          form1.resetFields();
+          setOpenKT(false);
+          loadKT();
+        })
+        .catch((error) => console.error("Error adding item:", error));
+      toast("✔️ Thêm thành công!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } else {
+      toast.error("Kích thước đã tồn tại !", {
+        position: "top-right",
+        autoClose: 2500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
   };
   // Load Màu Sắc
   const [ten, setTenMaus] = useState("");
@@ -636,13 +669,9 @@ export default function AddSanPham() {
   }, []);
   const loadMS = async () => {
     ChiTietSanPhamAPI.getAllMauSac().then(response => {
-      setMSData(response.data);
-      const loadOMS = response.data.map((item) => ({
-        key: item.id,
-        value: item.id,
-        label: item.ten,
-      }));
-      setOptionsMS(loadOMS);
+      const data = response.data;
+      const reversedData = data.reverse();
+      setMSData(reversedData);
     })
   };
   const addMauSac = (value) => {
@@ -655,20 +684,20 @@ export default function AddSanPham() {
       const rgb = convert.hex.rgb(hexCode);
       const colorName = convert.rgb.keyword(rgb);
       value.ten = colorName;
-      MauSacAPI.create(value).then((res) => {
-        toast("✔️ Thêm thành công!", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+      MauSacAPI.create(value).then((res) => {  
         loadMS();
         setOpenMS(false);
         form1.resetFields();
+      });
+      toast("✔️ Thêm thành công!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
       });
     } else {
       toast.error("Mã màu đã tồn tại!", {
@@ -697,52 +726,111 @@ export default function AddSanPham() {
     })
   };
   const addChatLieu = (value) => {
-    ChiTietSanPhamAPI.createChatLieu(value)
-      .then((response) => {
-        form1.resetFields(); 
-        setOpenCL(false);
-        toast("✔️ Thêm thành công!", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        loadCL();          
-      })
-      .catch((error) => console.error("Error adding item:", error));
+    const checkTrung = (code) => {
+      return cl.some(
+        (x) => x.ten.trim().toLowerCase() === code.trim().toLowerCase()
+      );
+    };
+    if (!checkTrung(value.ten)) {
+      ChiTietSanPhamAPI.createChatLieu(value)
+        .then((response) => {
+          form1.resetFields();
+          setOpenCL(false);
+          loadCL();
+        })
+        .catch((error) => console.error("Error adding item:", error));
+      toast("✔️ Thêm thành công!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } else {
+      toast.error("Chất liệu đã tồn tại !", {
+        position: "top-right",
+        autoClose: 2500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
   };
   // Load Độ Cao
   const [openDC, setOpenDC] = useState(false);
   const [dc, setDC] = useState([]);
+  const validateDeGiay = (_, value) => {
+    const { getFieldValue } = form1;
+    const tenDeGiay = getFieldValue("ten");
+
+    if (!tenDeGiay.trim()) {
+      return Promise.reject("Tên không được để trống");
+    }
+
+    const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+    if (specialCharacterRegex.test(tenDeGiay)) {
+      return Promise.reject("Tên không được chứa ký tự đặc biệt");
+    }
+
+    const deGiay = parseInt(value);
+    if (isNaN(deGiay) || deGiay < 1 || deGiay > 10) {
+      return Promise.reject("Đế giày phải là số nguyên từ 1 đến 10");
+    }
+
+    return Promise.resolve();
+  };
   useEffect(() => {
     loadDC();
   }, []);
   const loadDC = async () => {
     ChiTietSanPhamAPI.getAllDeGiay().then(response => {
-      setDC(response.data);
+      const data = response.data;
+      const reversedData = data.reverse();
+      setDC(reversedData);
     })
   };
   const addDoCao = (value) => {
-    ChiTietSanPhamAPI.createDeGiay(value)
-      .then((response) => {
-        toast("✔️ Thêm thành công!", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        loadDC();
-        form1.resetFields();
-      })
-      .catch((error) => console.error("Error adding item:", error));
+    const checkTrung = (code) => {
+      return dc.some(
+        (x) => x.ten.trim().toLowerCase() === code.trim().toLowerCase()
+      );
+    };
+    if (!checkTrung(value.ten)) {
+      ChiTietSanPhamAPI.createDeGiay(value)
+        .then((response) => {
+          form1.resetFields();
+          setOpenDC(false);
+          loadDC();
+        })
+        .catch((error) => console.error("Error adding item:", error));
+      toast("✔️ Thêm thành công!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } else {
+      toast.error("Đế giày đã tồn tại !", {
+        position: "top-right",
+        autoClose: 2500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
   };
   // Load Danh Mục
   const [openDM, setOpenDM] = useState(false);
@@ -752,26 +840,47 @@ export default function AddSanPham() {
   }, []);
   const loadDM = async () => {
     ChiTietSanPhamAPI.getAllDanhMuc().then(response => {
-      setDM(response.data);
+      const data = response.data;
+      const reversedData = data.reverse();
+      setDM(reversedData);
     })
   };
   const addDanhMuc = (value) => {
-    ChiTietSanPhamAPI.createDanhMuc(value)
-      .then((response) => {
-        toast("✔️ Thêm thành công!", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        loadDM();
-        form1.resetFields();
-      })
-      .catch((error) => console.error("Error adding item:", error));
+    const checkTrung = (code) => {
+      return dm.some(
+        (x) => x.ten.trim().toLowerCase() === code.trim().toLowerCase()
+      );
+    };
+    if (!checkTrung(value.ten)) {
+      ChiTietSanPhamAPI.createDanhMuc(value)
+        .then((response) => {
+          form1.resetFields();
+          setOpenDM(false);
+          loadDM();
+        })
+        .catch((error) => console.error("Error adding item:", error));
+      toast("✔️ Thêm thành công!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } else {
+      toast.error("Danh mục đã tồn tại !", {
+        position: "top-right",
+        autoClose: 2500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
   };
   // Load Hãng
   const [openH, setOpenH] = useState(false);
@@ -781,28 +890,88 @@ export default function AddSanPham() {
   }, []);
   const loadH = async () => {
     ChiTietSanPhamAPI.getAllHang().then(response => {
-      setH(response.data);
+      const data = response.data;
+      const reversedData = data.reverse();
+      setH(reversedData);
     })
   };
   const addHang = (value) => {
-    ChiTietSanPhamAPI.createHang(value)
-      .then((response) => {
-        toast("✔️ Thêm thành công!", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        loadH();
-        form1.resetFields();
-        // setOpenH(false);
-      })
-      .catch((error) => console.error("Error adding item:", error));
+    const checkTrung = (code) => {
+      return h.some(
+        (x) => x.ten.trim().toLowerCase() === code.trim().toLowerCase()
+      );
+    };
+    if (!checkTrung(value.ten)) {
+      ChiTietSanPhamAPI.createHang(value)
+        .then((response) => {
+          form1.resetFields();
+          setOpenH(false);
+          loadH();
+        })
+        .catch((error) => console.error("Error adding item:", error));
+      toast("✔️ Thêm thành công!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } else {
+      toast.error("Hãng đã tồn tại !", {
+        position: "top-right",
+        autoClose: 2500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
   };
+
+  const validateSoLuong = (_, value) => {
+    const { getFieldValue } = form;
+    const soLuongBanDau = getFieldValue("soLuong");
+
+    if (!soLuongBanDau.trim()) {
+      return Promise.reject("Số lượng không được để trống");
+    }
+
+    const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+    if (specialCharacterRegex.test(soLuongBanDau)) {
+      return Promise.reject("Số lượng không được chứa ký tự đặc biệt");
+    }
+
+    const soLuong = parseInt(value);
+    if (isNaN(soLuong) || soLuong < 1) {
+      return Promise.reject("Số lượng phải là số nguyên lớn hơn 1");
+    }
+
+    return Promise.resolve();
+  };
+
+  const validateGiaBan = (_, value) => {
+    const { getFieldValue } = form;
+    const check = getFieldValue("giaBan");
+
+
+    const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+    if (specialCharacterRegex.test(check)) {
+      return Promise.reject("Giá bán không được chứa ký tự đặc biệt");
+    }
+
+    if (isNaN(value) || value < 100000) {
+      return Promise.reject("Giá bán phải là số nguyên lớn hơn 100.000");
+    }
+
+    return Promise.resolve();
+  };
+
+
   //Hiển Thị
   return (
     <div className="container-fluid" style={{ borderRadius: 20 }}>
@@ -975,20 +1144,20 @@ export default function AddSanPham() {
                       className="col-md-10"
                       style={{ paddingLeft: 87 }}
                       name="chatLieu"
-                      label={<b>Chất liệu </b>}
                       hasFeedback
                       rules={[
                         {
                           required: true,
-                          message: "Vui lòng không để trống chất liệu !",
+                          message:
+                            "Vui lòng không để trống chất liệu !",
                         },
                       ]}
+                      label={<b>Chất liệu </b>}
                     >
                       <Select
                         placeholder="Chọn một giá trị"
                         style={{ width: 307 }}
                         onChange={onChangeCL}
-                        defaultValue={cl.length > 0 ? cl[0].ten : undefined}
                       >
                         {cl.map((item) => (
                           <Select.Option key={item.id} value={item.ten}>
@@ -997,6 +1166,7 @@ export default function AddSanPham() {
                         ))}
                       </Select>
                     </Form.Item>
+
                     <Form.Item className="col-md-2">
                       <Button
                         className="bg-success text-white"
@@ -1237,12 +1407,7 @@ export default function AddSanPham() {
                                 label="Tên"
                                 name="ten"
                                 hasFeedback
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: "Vui lòng không để trống tên!",
-                                  },
-                                ]}
+                                rules={[{ validator: validateDeGiay }]}
                               >
                                 <Input className="border" />
                               </Form.Item>
@@ -1371,12 +1536,7 @@ export default function AddSanPham() {
                     name="soLuong"
                     style={{ paddingLeft: 45 }}
                     hasFeedback
-                    rules={[
-                      {
-                        required: true,
-                        message: "Vui lòng không để trống số lượng !",
-                      },
-                    ]}
+                    rules={[{ validator: validateSoLuong }]}
                   >
                     <Input
                       onChange={onChangeNhapSoLuong}
@@ -1394,16 +1554,11 @@ export default function AddSanPham() {
                     name="giaBan"
                     style={{ paddingRight: 60 }}
                     hasFeedback
-                    rules={[
-                      {
-                        required: true,
-                        message: "Vui lòng không để trống giá bán !",
-                      },
-                    ]}
+                    rules={[{ validator: validateGiaBan }]}
                   >
                     <InputNumber
                       className="border-warning"
-                      defaultValue={0}
+                      min={100000}
                       formatter={(value) =>
                         `VND ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                       }
@@ -1519,12 +1674,7 @@ export default function AddSanPham() {
                               label="Tên"
                               name="ten"
                               hasFeedback
-                              rules={[
-                                {
-                                  required: true,
-                                  message: "Vui lòng không để trống tên!",
-                                },
-                              ]}
+                              rules={[{ validator: validateKichThuoc }]}
                             >
                               <Input type="number" className="border" />
                             </Form.Item>
@@ -1621,52 +1771,60 @@ export default function AddSanPham() {
                       width={500}
                     >
                       <Form
+                        {...formItemLayout}
                         initialValues={{
                           size: componentSize,
                         }}
                         onValuesChange={onFormLayoutChange}
                         size={componentSize}
                         onFinish={addMauSac}
+                        layout="vertical"
                         form={form1}
                       >
-                        <Form.Item
-                          label="Màu"
-                          name="ma"
-                          hasFeedback
-                          rules={[
-                            { required: true, message: "Vui lòng chọn màu" },
-                          ]}
-                        >
-                          <Input
-                            className="border"
-                            type="color"
-                            onChange={doiMau}
-                          />
-                        </Form.Item>
-                        <Form.Item
-                          label=" Mã"
-                          name="ma"
-                          hasFeedback
-                          rules={[{ required: true, message: "" }]}
-                        >
-                          <Input
-                            readOnly="true"
-                            className="border"
-                            type="text"
-                          />
-                        </Form.Item>
-                        <Form.Item
-                          label="Tên"
-                          hasFeedback
-                          rules={[
-                            {
-                              required: true,
-                              message: "Vui lòng không để trống tên!",
-                            },
-                          ]}
-                        >
-                          <Input type="text" value={ten} />
-                        </Form.Item>
+                        <div className="row">
+                          <div className="col-md-6">
+                            <label>
+                              <b>Màu sắc :</b>
+                            </label>
+                            <Form.Item
+                              name="ma"
+                              hasFeedback
+                              rules={[{ required: true, message: "Vui lòng chọn màu" }]}
+                            >
+                              <Input
+                                className="card-mau"
+                                type="color"
+                                onChange={doiMau}
+                              />
+                            </Form.Item>
+                          </div>
+                          <div className="col-md-6 mt-5">
+                            <label>
+                              <b>Mã màu :</b>
+                            </label>
+                            <Form.Item
+                              name="ma"
+                              hasFeedback
+                              rules={[{ required: true, message: "" }]}
+                            >
+                              <Input readOnly="true" className="border" type="text" />
+                            </Form.Item>
+                            <label>
+                              <b>Tên màu :</b>
+                            </label>
+                            <Form.Item
+                              hasFeedback
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "Vui lòng không để trống tên!",
+                                },
+                              ]}
+                            >
+                              <Input type="text" value={ten} />
+                            </Form.Item>
+                          </div>
+                        </div>
                       </Form>
                     </Modal>
                   </Form.Item>
