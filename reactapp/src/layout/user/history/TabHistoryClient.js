@@ -56,6 +56,9 @@ const TabHistoryClient = ({ listBill }) => {
             style={{ backgroundColor: "#F3F2F2" }}
           >
             <div className="mb-5 pt-2">
+              <span className="fs-6 fw-bolder">
+                Mã hóa đơn : <b>{item.ma}</b>
+              </span>
               <Space className="float-end" size={[0, 8]} wrap>
                 <Tag color={item.trangThai == -1 ? "#cd201f" : "#108ee9"}>
                   <span className={`trangThai ${" status_" + item.trangThai} `}>
@@ -130,7 +133,7 @@ const TabHistoryClient = ({ listBill }) => {
 
                 {/* nút thanh toán */}
                 <div className=" mt-4 d-flex justify-content-end  ">
-                  {item.trangThai == 0 ||item.trangThai ==1  ? (
+                  {item.trangThai == 0 || item.trangThai == 1 ? (
                     <Button
                       style={{
                         backgroundColor: "orangered",
@@ -140,7 +143,6 @@ const TabHistoryClient = ({ listBill }) => {
                       }}
                       onClick={() => showModalHuyHoaDon(item.id)}
                     >
-                   
                       Hủy đơn
                     </Button>
                   ) : (

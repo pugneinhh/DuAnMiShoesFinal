@@ -34,7 +34,7 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
 
     // hóa đơn getALl client
     @Query(value = """
-           SELECT hd.id, hd.thanh_tien as thanhTien, hd.trang_thai as trangThaiHD, (select group_concat(hdct.id) from hoa_don_chi_tiet hdct where hdct.hoa_don_id=hd.id) as hoaDonDetail 
+           SELECT hd.id,hd.ma, hd.thanh_tien as thanhTien, hd.trang_thai as trangThaiHD, (select group_concat(hdct.id) from hoa_don_chi_tiet hdct where hdct.hoa_don_id=hd.id) as hoaDonDetail 
            FROM duanmishoes.hoa_don hd where khach_hang_id=:#{#req.id}  and loai_hoa_don=0 AND ( :#{#req.trangThai}  IS NULL
          OR :#{#req.trangThai} LIKE ''OR hd.trang_thai Like (:#{#req.trangThai}))  order by hd.ngay_mua desc;                                                                                              
                      """, nativeQuery = true)
