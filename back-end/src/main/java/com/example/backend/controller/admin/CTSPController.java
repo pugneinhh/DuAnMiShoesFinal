@@ -48,6 +48,10 @@ public class CTSPController {
     public ResponseEntity<?> getDetail(@PathVariable("idCT") String id) {
         return new ResponseEntity<>(ctspService.detailCTSP(id), HttpStatus.OK);
     }
+    @GetMapping("/QR/{idCT}")
+    public ResponseEntity<?> QRCtsp(@PathVariable("idCT") String id) {
+        return  ResponseEntity.ok(ctspService.detailCtspByQrRespon(id));
+    }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable("id") String id, @RequestBody UpdateCTSPRequest request){

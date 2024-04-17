@@ -10,6 +10,7 @@ import com.example.backend.dto.response.sanpham.CTSPSearchRespone;
 import com.example.backend.dto.response.sanpham.ChiTietSanPhamRespone;
 import com.example.backend.dto.response.sanpham.DetailCTSPRespone;
 import com.example.backend.dto.response.ChiTietSanPhamForBanHang;
+import com.example.backend.dto.response.sanpham.DetailCtspByQrRespon;
 import com.example.backend.entity.ChiTietSanPham;
 import com.example.backend.model.AdminCTSPForKhuyenMai;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -52,7 +53,21 @@ public interface CTSPRepository extends JpaRepository<ChiTietSanPham, String> {
             WHERE o.id=:idCT
                      """, nativeQuery = true)
     DetailCTSPRespone detailCTSP(@Param("idCT") String idCT);
-
+    @Query(value = """
+          SELECT o.ghi_chu as linkAnh,o.id AS id,o.mo_ta AS moTa ,sp.id AS sanPham,sp.ten AS tenSP ,kt.id AS kichThuoc,ms.id AS mauSac,cl.id AS chatLieu,dc.id AS deGiay,dm.id AS danhMuc
+                     ,h.id AS hang,o.so_luong AS soLuong,o.gia_ban AS giaBan,o.trang_thai AS trangThai,sp.ten as tenSP,ms.ma as maMS,kt.ten as tenKT,ms.ten as tenMS,km.loai as loaiKM,km.gia_tri_khuyen_mai as giaTriKhuyenMai,km.ten as tenKM
+                     FROM chi_tiet_san_pham o
+                     JOIN san_pham sp  on o.san_pham_id=sp.id
+                     JOIN kich_thuoc kt  on o.kich_thuoc_id=kt.id
+                     JOIN mau_sac ms  on o.mau_sac_id=ms.id
+                     JOIN chat_lieu cl  on o.chat_lieu_id=cl.id
+                     JOIN de_giay dc  on o.de_giay_id=dc.id
+                     JOIN danh_muc dm  on o.danh_muc_id=dm.id
+                     JOIN hang h  on o.hang_id=h.id
+                     join khuyen_mai km on km.id=o.khuyen_mai_id
+                       WHERE o.id=:idCT
+                     """, nativeQuery = true)
+    DetailCtspByQrRespon QRctsp(@Param("idCT") String idCT);
     @Query(value = """
             SELECT o.id AS id,o.mo_ta AS moTa ,o.ghi_chu as ghiChu,sp.id AS sanPham,sp.ten AS tenSP ,kt.id AS kichThuoc,ms.id AS mauSac,cl.id AS chatLieu,dc.id AS deGiay,dm.id AS danhMuc
             ,h.id AS hang,o.so_luong AS soLuong,o.gia_ban AS giaBan,o.trang_thai AS trangThai
