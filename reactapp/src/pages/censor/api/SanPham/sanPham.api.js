@@ -13,6 +13,30 @@ export class SanPhamAPI {
       //   params: filter,
     });
   };
+
+  static getAnhTheoMau = (ten) => {
+      const getToken = getHeader();
+      return requestAdmin({
+        method: "GET",
+        url: `/admin/hinhanh/${ten}`,
+        headers: {
+          Authorization: getToken,
+        },
+      });
+  };
+
+  static addAnhTheoMau = (data) => {
+    const getToken = getHeader();
+    return requestAdmin({
+      method: "POST",
+      data: data,
+      url: `/admin/hinhanh/add-anh`,
+      headers: {
+        Authorization: getToken,
+      },
+    });
+};
+
   static search = (data) => {
     const getToken = getHeader();
     return requestAdmin({

@@ -5,7 +5,6 @@ import { IoIosInformationCircle } from "react-icons/io";
 import { FaShoppingCart } from "react-icons/fa";
 import ModalDetailSP from "./shop/modalDetailSP";
 export const ProductCard = ({ product }) => {
-  console.log("sản phẩm chi tiết ",product);
   const [isHovered, setIsHovered] = useState(false);
   const [openModalDetailSP, setOpenModalDetailSP] = useState(false);
   const handleMouseEnter = () => {
