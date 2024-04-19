@@ -67,10 +67,10 @@ const TraHang = () => {
                   }
                   tooltip="Vui lòng nhập mã hóa đơn"
                 >
-                  <Input style={{ width: 400 }} />
+                  <Input style={{ width: 300 }} />
                 </Form.Item>
               </Col>
-              <Col className="d-flex align-items-center ms-2 mt-2">
+              <Col className="d-flex align-items-center ms-5 mt-2">
                 <Button
                   style={{
                     // width: "110px",
