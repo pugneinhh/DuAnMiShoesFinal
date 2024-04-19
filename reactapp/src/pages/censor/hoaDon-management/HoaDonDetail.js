@@ -91,7 +91,6 @@ export default function HoaDonDetail() {
   const [hoaDondetail, setHoaDondetail] = useState([]);
   const [maNV, setmaNV] = useState("");
     const [tenNV, settenNV] = useState("");
-  console.log("Hóa đơn detail", hoaDondetail);
   useEffect(() => {
     const storedData = get("userData");
     setmaNV(storedData.ma);
@@ -105,12 +104,12 @@ export default function HoaDonDetail() {
   // load hóa đơn
 
   const loadVoucherTotNhatVaVoucherTiepTheo = (idKH, money) => {
-    console.log("money", money);
+    // console.log("money", money);
     SellAPI.voucherTotNhat(idKH, money).then((res) =>
       setVoucherHienTai(res.data)
     );
     SellAPI.voucherSapDatDuoc(idKH, money).then((res) => {
-      console.log("res", res.data);
+      // console.log("res", res.data);
       setSoTienCanMuaThem(res.data[0]);
       setSoTienDuocGiam(res.data[1]);
     });
@@ -381,9 +380,7 @@ export default function HoaDonDetail() {
       return "Thành công";
     } else if (trangThai === "-1") {
       return "Hoàn tiền";
-    } else if (trangThai === "-2") {
-      return "Hoàn tiền";
-    }
+    } 
   };
   const showTitleButtonVanDonTraTruoc = (trangThai) => {
     if (trangThai === "0") {
@@ -398,9 +395,7 @@ export default function HoaDonDetail() {
       return "Thành công";
     } else if (trangThai === "-1") {
       return "Hoàn tiền";
-    } else if (trangThai === "-2") {
-      return "Hoàn tiền";
-    }
+    } 
   };
      console.log(hoaDondetail.phuongThucVNP, "thế");
   return (
@@ -661,7 +656,12 @@ export default function HoaDonDetail() {
                     },
                   ]}
                 >
-                  <TextArea defaultValue={'['+maNV+'-'+tenNV+']'+' đã xác nhận'} rows={4} />
+                  <TextArea
+                    defaultValue={
+                      "[" + maNV + "-" + tenNV + "]" + " đã xác nhận"
+                    }
+                    rows={4}
+                  />
                 </Form.Item>
                 <Button
                   style={{ marginLeft: 200 }}
@@ -718,7 +718,10 @@ export default function HoaDonDetail() {
                   },
                 ]}
               >
-                <TextArea rows={4} />
+                <TextArea
+                  defaultValue={"[" + maNV + "-" + tenNV + "]" + " đã xác nhận"}
+                  rows={4}
+                />
               </Form.Item>
               <Button
                 style={{ marginLeft: 200 }}
@@ -1149,6 +1152,14 @@ export default function HoaDonDetail() {
               <Tag color="cyan">Đang Vận chuyển</Tag>
             ) : trangThai == 4 ? (
               <Tag color="orange">Đã Thanh toán</Tag>
+            ) : trangThai == 5 ? (
+              <Tag color="succes">Thành công</Tag>
+            ) : trangThai == 10 ? (
+              <Tag color="orange">Trả hàng</Tag>
+            ) : trangThai == -1 ? (
+              <Tag color="red">Hủy</Tag>
+            ) : trangThai == -2 ? (
+              <Tag color="pink">Hoàn tiền</Tag>
             ) : (
               <Tag color="green">Thành công</Tag>
             )}
@@ -1231,7 +1242,6 @@ export default function HoaDonDetail() {
         <div>
           {listSanPhams.map(
             (listSanPham, index) => (
-              console.log(listSanPham),
               (
                 <tr className="pt-3 row">
                   <div className="col-md-3">
@@ -1312,13 +1322,17 @@ export default function HoaDonDetail() {
                       </IntlProvider>
                     </h6>
                   </div>
-                  {listSanPham.trangThai==2?(
-                  <div className="col-md-2  mt-5">
-                    <Button style={{ backgroundColor: "red", color: "white" }}>
-                      Trả hàng
-                    </Button>
-                  </div>
-                  ):<></>}
+                  {listSanPham.trangThai == 2 ? (
+                    <div className="col-md-2  mt-5">
+                      <Button
+                        style={{ backgroundColor: "red", color: "white" }}
+                      >
+                        Trả hàng
+                      </Button>
+                    </div>
+                  ) : (
+                    <></>
+                  )}
                   <hr className="mt-3"></hr>
                 </tr>
               )
@@ -1341,7 +1355,7 @@ export default function HoaDonDetail() {
             <div>
               {listSanPhamTra.map(
                 (listSanPham, index) => (
-                  console.log(listSanPham),
+                  
                   (
                     <tr className="pt-3 row">
                       <div className="col-md-3">

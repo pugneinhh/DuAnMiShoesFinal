@@ -40,7 +40,7 @@ const ModalSanPham = (props) => {
     setOpenSanPham(false);
 
   };
-  console.log("CTSP ", CTSP);
+
   const { Option } = Select;
 
   //Form
@@ -56,10 +56,10 @@ const ModalSanPham = (props) => {
 
   //Tìm kiếm
   const onChangeFilter = (changedValues, allValues) => {
-    console.log("All values : ", allValues)
+  
     if (!allValues.tenCT && !allValues.idKT && !allValues.idMS && !allValues.idDC && !allValues.idCL && !allValues.trangThaiCT && !allValues.giaBanCT && !allValues.idDM && !allValues.idH) {
       setCTSPs(chiTietSanPham);
-      console.log("Không có gì tìm kiếm")
+   
     } else {
       timKiemCT(allValues);
     }
@@ -156,7 +156,6 @@ const ModalSanPham = (props) => {
     const result = SellAPI.getAllProducts().then((item) => {
       item.data.map((i) => dispatch(AddProduct({ id: i.idCTSP, soLuong: i.soLuong, linkAnh: i.linkAnh, tenSP: i.tenSP, tenKT: i.tenKT, tenMS: i.tenMS, maMS: i.maMS, loaiKM: i.loaiKM, giaTriKhuyenMai: parseInt(i.giaTriKhuyenMai, 10), giaBan: i.giaBan, tenKM: i.tenKM })))
       setChiTietSanPham(item.data);
-      console.log(item.data)
       setCTSPs(item.data)
     });
 
@@ -164,13 +163,12 @@ const ModalSanPham = (props) => {
 
   const loadHDCTByHD = async () => {
     const result = await SellAPI.getAllHDCTByHD(activeKey);
-    console.log(result.data)
     setHDCT(result.data);
 
   }
-  console.log(HDCT);
+
   const handleClickAddProduct =  (record) => {
-    console.log(record.data);
+    
     const id = uuid();
     const hdct = [{ id: id, hoaDon: activeKey, chiTietSanPham: record.idCTSP, soLuong: 1, giaSauGiam: (parseFloat(record.giaBan) - parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100))), giaGiam: (parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100))) }]
     dispatch(AddInvoice({ id: id, chiTietSanPham: record.idCTSP, tenSP: record.tenSP, maMS: record.maMS, linkAnh: record.linkAnh, tenKT: record.tenKT, giaBan: record.giaBan, hoaDon: activeKey, tenMS: record.tenMS, giaGiam: (parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100))), giaSauGiam: (parseFloat(record.giaBan) - parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100))), nguoiTao: record.nguoiTao, giaBan: record.giaBan, tenKM: record.tenKM, loaiKM: record.loaiKM, giaTriKhuyenMai: record.giaTriKhuyenMai }));

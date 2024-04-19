@@ -54,7 +54,7 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
 
   useEffect(() => {
     if (hoaDon) {
-      console.log("res :" + hoaDon);
+  
       load();
     }
   }, [hoaDon]);
@@ -96,16 +96,15 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
     );
   };
 
-  console.log("NV", storedData);
-  console.log("Nhân viên", storedData);
+
   const handleClose = () => {
     setOpenThanhToan(false);
-    console.log("đóng");
+   
   };
   const [tongThanhToan, setTongThanhToan] = useState(0);
 
   const handleXoa = (record) => {
-    console.log(record);
+ 
     Modal.confirm({
       title: "Thông báo",
       zIndex: 20000000000000,
@@ -174,8 +173,7 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
         theme: "light",
       });
     } else {
-      console.log("Hóa đơn ck", hoaDon);
-      console.log("Tiền ck", money);
+  
       linkVNP();
       dispatch(AddPayDetail({ hoaDon: hoaDon, phuongThuc: 1, soTien: money }));
       setTongThanhToan(parseFloat(tongThanhToan) + parseFloat(money));
@@ -248,12 +246,6 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
       );
       SellAPI.thanhToanChuyenKhoan(value[0]);
       window.open(res.data.url, "_blank");
-      console.log(
-        "url",
-        res.data.url
-          .substring(res.data.url.indexOf("vnp_TxnRef") + 11)
-          .substring(0, 8)
-      ); // mã giao dịch
     });
   };
 
@@ -313,7 +305,7 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
   const [money, setMoney] = useState(0);
   const hanldeMoneyChange = (event) => {
     const value = event.target.value;
-    console.log(value);
+   
     setMoney(value);
   };
   return (
