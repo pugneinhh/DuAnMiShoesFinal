@@ -104,7 +104,7 @@ const BanHang = () => {
        setShowModal(false);
      }
      setQrResult(result);
-     console.log(qrResult);
+    //  console.log(qrResult);
        ChiTietSanPhamAPI.QRCtsp(result).then((res) =>{
            handleClickAddProduct(res.data);
          
@@ -113,7 +113,7 @@ const BanHang = () => {
        
       
   const handleClickAddProduct = (record) => {
-    console.log("22222222222222",record);
+
     if (record.soLuong < 1){
    return toast.error("Số lượng sản phẩm "+record.tenSP+"["+record.tenMS+record.tenKT+"]" +" hiện tại không hợp lệ!", {
      position: "top-right",
@@ -185,13 +185,8 @@ const BanHang = () => {
 
   }
 
-
-  
-  // console.log("voucher", voucherHienTai);
-  // console.log("hoaDon", activeKey);
-  // console.log("Hóa Đơn s", hoaDons);
     const hoaDonHienTai = hoaDons.filter((x) => x.key === activeKey);
-  // console.log("Hóa đơn hiện tại",hoaDonHienTai);
+ 
   lengthSP = ctspHD.filter((f) => f.hoaDon === activeKey)
                 .reduce(
                   (accumulator, object) =>
@@ -200,13 +195,13 @@ const BanHang = () => {
                 );
                 // console.log("Độ dài"+lengthSP);
   const loadVoucherTotNhatVaVoucherTiepTheo = () => {
-    console.log("money", money);
-    console.log("voucher hiện tại "+voucherHienTai);
+    // console.log("money", money);
+    // console.log("voucher hiện tại "+voucherHienTai);
     SellAPI.voucherTotNhat(idKH, money).then((res) =>
       setVoucherHienTai(res.data)
     );
     SellAPI.voucherSapDatDuoc(idKH ? idKH : null, money , voucherHienTai ? voucherHienTai.id : null).then((res) => {
-      console.log("res", res.data);
+      // console.log("res", res.data);
       setSoTienCanMuaThem(res.data[0]);
       setSoTienDuocGiam(res.data[1]);
     });
@@ -233,25 +228,15 @@ const BanHang = () => {
   };
 
   const getSoTien =  () => {
-    console.log("Hóa đơn", activeKey);
+  
      SellAPI.getThanhTienbyMaHD(activeKey).then(res =>
       setSoTienHoaDon(res.data ? res.data : 0)
     );
-    console.log(
-      "Số tiền",
-       SellAPI.getThanhTienbyMaHD(activeKey).then(result => result.data)
-      
-    );
+
   };
 
   useEffect(() => {
-    console.log("Vào useEffect soTienHoaDon");
-    // if (soTienHoaDon < (voucherHienTai ? voucherHienTai.dieuKien : 0)) {
-    //   console.log("Vào lỗi");
-    //   setVoucherHienTai(null);
-    // }
     if (activeKey !== "") {
-      console.log("Vào không lỗi");
       SellAPI.detailHoaDon(activeKey).then((res) => {
         setIDKH(
           res.data.nguoiDung
@@ -260,7 +245,7 @@ const BanHang = () => {
               : null
             : null
         );
-        console.log("Thanh tien: "+res.data.thanhTien);
+      
         setMoney(res.data.thanhTien ? res.data.thanhTien : 0);
         SellAPI.voucherTotNhat(res.data.nguoiDung
           ? res.data.nguoiDung.id
@@ -274,7 +259,7 @@ const BanHang = () => {
           ? res.data.nguoiDung.id
           : null
         : null, res.data.thanhTien ? res.data.thanhTien : 0 , voucherHienTai ? voucherHienTai.id : null).then((res) => {
-        console.log("res", res.data);
+
         setSoTienCanMuaThem(res.data[0]);
         setSoTienDuocGiam(res.data[1]);
       });
@@ -285,11 +270,6 @@ const BanHang = () => {
 
 
   useEffect(() => {
-    console.log("Hóa đơns", hoaDons);
-    console.log(
-      hoaDons.filter((item) => item.key === activeKey && item.tenNguoiNhan)
-        .length
-    );
     if (
       hoaDons.filter((item) => item.key === activeKey && item.tenNguoiNhan)
         .length === 0
@@ -310,11 +290,11 @@ const BanHang = () => {
 
   useEffect(() => {
     loadVoucherTotNhatVaVoucherTiepTheo();
-    console.log("soTienthayDoi");
+ 
   }, [idKH,money,activeKey]);
 
   useEffect(() => {
-    console.log("Length change");
+  
     if (activeKey){
     getSoTien();
     }
@@ -393,27 +373,11 @@ const BanHang = () => {
   };
 
   const onChangeVoucher =  (value, option) => {
-    console.log("option", option);
 
-    //await SellAPI.getThanhTienbyMaHD(activeKey).then((res) => {
-      // if ((money ? money : 0) < option.dieuKien) {
-      //   toast("Không đủ điều kiện!", {
-      //     position: "top-right",
-      //     autoClose: 1000,
-      //     hideProgressBar: false,
-      //     closeOnClick: true,
-      //     pauseOnHover: true,
-      //     draggable: true,
-      //     progress: undefined,
-      //     theme: "light",
-      //   });
-      //   return setVoucherHienTai(null);
-      // }
-      
       if (option.key !== voucherHienTai?.id) {
       setVoucherHienTai(option);
       SellAPI.voucherSapDatDuoc(idKH, money ,  option.key).then((res) => {
-        console.log("res", res.data);
+  
         setSoTienCanMuaThem(res.data[0]);
         setSoTienDuocGiam(res.data[1]);
       });
@@ -441,7 +405,6 @@ const BanHang = () => {
 
   const voucherNoIDKH = async () => {
     const result = await SellAPI.getVoucherNoLimited();
-    console.log("voucher no limited"+result.data);
     setVoucherNoLimited(result.data);
   };
 
@@ -490,7 +453,6 @@ const BanHang = () => {
 
   const load = async (ma) => {
     const result_hdct = await SellAPI.getAllHDCTByHD(ma);
-    console.log("HDCT", result_hdct.data);
     if (result_hdct.data.length > 0) {
       result_hdct.data.map((i) => {
         dispatch(
@@ -521,10 +483,9 @@ const BanHang = () => {
 
   const loadAllBill = async () => {
     const result = await SellAPI.getAllHoaDonCho();
-    console.log("TÉT", result.data);
     if (result.data.length > 0) {
       setActiveKey(result.data[0].ma);
-      console.log("test no id", result.data[0]);
+   
       SellAPI.detailHoaDon(result.data[0].ma).then((res) => {
         setIDKH(
           res.data.nguoiDung
@@ -651,28 +612,24 @@ const BanHang = () => {
           "-" +
           (!result.data ? 0 : parseFloat(result.data.length) + 1)
       );
-      console.log(value[0]);
+   
     }
   };
 
   const [openSanPham, setOpenSanPham] = useState(false);
 
   const onChangeSoLuong = async (value, record) => {
-    console.log("số lượng", value);
-    console.log("record", record);
+
     let SL = 0; // số lượng trước
     let SLT = 0; // số lượng tồn
     await SellAPI.getSLAndSLT(record.chiTietSanPham, activeKey).then((res) => {
       SL = res.data.soLuong;
       SLT = res.data.soLuongTon;
-      console.log(res.data);
-      console.log("Số lượng trước", SL);
-      console.log("Số lượng tồn", SLT);
+    
     });
     setShipMoney(0);
     setShipMoney1(0);
-    console.log("Số lượng trước", SL);
-    console.log("Số lượng tồn", SLT);
+
     if (value === 0) {
       Modal.confirm({
         title: "Thông báo",
@@ -821,7 +778,7 @@ const BanHang = () => {
     setOpenThanhToan(false);
   };
   const onChange =  (key) => {
-    console.log("key changed", key);
+  
     setActiveKey(key);
     let v = null;
      SellAPI.detailHoaDon(key).then((res) => {
@@ -892,7 +849,7 @@ const BanHang = () => {
       });
     }
     const result = await SellAPI.getAllHoaDonChoHomNay();
-    console.log("result", result);
+    
     const currentDate = new Date();
     const currentDateInMilliseconds = Date.UTC(
       currentDate.getFullYear(),
@@ -1238,9 +1195,6 @@ const BanHang = () => {
             (tab) => (
               (data = ctspHD.filter((f) => f.hoaDon === activeKey)),
               (hd = hoaDons.filter((f) => f.key === activeKey)),
-              console.log(hoaDons),
-              console.log("hóa đơn 0", hd[0]),
-              console.log("activekey", activeKey),
               // (KH = client.filter((k) => k.activeKey === activeKey)),
               (lengthSP = ctspHD
                 .filter((f) => f.hoaDon === tab.key)

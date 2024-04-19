@@ -1,4 +1,4 @@
-import {  Button, Form, Modal, Space, Tag } from "antd";
+import { Button, Form, Modal, Space, Tag } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
@@ -8,44 +8,55 @@ import { HoaDonClientAPI } from "../../../pages/censor/api/HoaDonClient/HoaDonCl
 import { get, set } from "local-storage";
 const TabHistoryClient = ({ listBill }) => {
   const nav = useNavigate();
-   const [modalReason, setModalReason] = useState(false);
-   const [reason, setReason] = useState("");
+  // const [modalReason, setModalReason] = useState(false);
+  // const [reason, setReason] = useState("");
 
-   const [id, setId] = useState("");
-     const storedData = get("userData");
-    const ten = storedData.ten;
-    const tenKH="Khách hàng "+ten; 
-      const [formHuyHoaDon] = Form.useForm();
-    const [isModalOpenHuyHoaDon, setIsModalHuyHoaDon] = useState(false);
-      const handleOk = () => {
-        setIsModalHuyHoaDon(false);
-      };
-      const handleCancel = () => {
-        setIsModalHuyHoaDon(false);
-      };
-    const showModalHuyHoaDon = (id) => {
-      setIsModalHuyHoaDon(true);
-       setId(id);
-    };
+  const [id, setId] = useState("");
+  const storedData = get("userData");
+  const ten = storedData.ten;
+  const tenKH = "Khách hàng " + ten;
+  const [formHuyHoaDon] = Form.useForm();
+  const [isModalOpenHuyHoaDon, setIsModalHuyHoaDon] = useState(false);
+  const handleOk = () => {
+    setIsModalHuyHoaDon(false);
+  };
+  const handleCancel = () => {
+    setIsModalHuyHoaDon(false);
+  };
 
-    const handleHuyHoaDon = (values) => {
+  
+  const showModalHuyHoaDon = (id) => {
+    setIsModalHuyHoaDon(true);
+    setId(id);
+    console.log("id hd ", id);
+  };
+  const handleHuyHoaDon = (values) => {
        KHGuiThongBaoDatHang();
-      HoaDonClientAPI.huyHoaDonQLHoaDon(id, tenKH, values).then((res) => {       
-        formHuyHoaDon.resetFields();
-        setIsModalHuyHoaDon(false);
-        toast("🦄 Thành công!", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-         nav(`/chi-tiet-don-hang/${id}`);
+      HoaDonClientAPI.detailSanPham(id).then((res) => {
+          res.data.map((listSanPham, index) =>
+            HoaDonClientAPI.deleteInvoiceAndRollBackProduct(
+              listSanPham.idctsp,
+              id
+            )
+          );
       });
-    };
+ 
+    HoaDonClientAPI.huyHoaDonQLHoaDon(id, tenKH, values).then((res) => {
+      formHuyHoaDon.resetFields();
+      setIsModalHuyHoaDon(false);
+      toast("🦄 Hủy hóa đơn thành công!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      nav(`/chi-tiet-don-hang/${id}`);
+    });
+  };
   return (
     <div className="container ">
       <div className="row pt-3 ">

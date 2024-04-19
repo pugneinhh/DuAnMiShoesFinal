@@ -25,32 +25,30 @@ export default function HoaDon() {
       setHoaDons(res.data);
     });
   };
-      var stomp = null;
-      const socket = new SockJS("http://localhost:8080/ws");
-      stomp = Stomp.over(socket);
+  var stomp = null;
+  const socket = new SockJS("http://localhost:8080/ws");
+  stomp = Stomp.over(socket);
 
-      useEffect(() => {
-        stomp.connect({}, () => {
-          console.log("connect websocket");
+  useEffect(() => {
+    stomp.connect({}, () => {
+      stomp.subscribe("/topic/admin/hoa-don", (mes) => {
+        try {
+          const pare = JSON.parse(mes.body);
+          console.log(pare);
+          // ví du: bạn muốn khi khách hàng bấm đặt hàng mà load lại hóa đơn màn admin thì hãy gọi hàm load all hóa đơn ở đây
+          // thí dụ: đây là hàm laod hóa đơn: loadHoaDon(); allThongBao(); CountThongBao();
+          loadHoaDon();
+          loadHoaDonCho();
+        } catch (e) {
+          console.log("lỗi mẹ ròi xem code di: ", e);
+        }
+      });
+    });
 
-          stomp.subscribe("/topic/admin/hoa-don", (mes) => {
-            try {
-              const pare = JSON.parse(mes.body);
-              console.log(pare);
-              // ví du: bạn muốn khi khách hàng bấm đặt hàng mà load lại hóa đơn màn admin thì hãy gọi hàm load all hóa đơn ở đây
-              // thí dụ: đây là hàm laod hóa đơn: loadHoaDon(); allThongBao(); CountThongBao();
-                loadHoaDon();
-                loadHoaDonCho();
-            } catch (e) {
-              console.log("lỗi mẹ ròi xem code di: ", e);
-            }
-          });
-        });
-
-        return () => {
-          stomp.disconnect();
-        };
-      }, []);
+    return () => {
+      stomp.disconnect();
+    };
+  }, []);
   useEffect(() => {
     loadHoaDon();
     loadHoaDonCho();
@@ -60,15 +58,13 @@ export default function HoaDon() {
     loadHoaDonVC();
     loadHoaDonXN();
     loadHoaDonHuy();
+   
   }, []);
   // load full hóa đơn
   const [hoaDon, setHoaDons] = useState([]);
-  const [hoaDonLength, sethoaDonLength] = useState();
   const loadHoaDon = () => {
     HoaDonAPI.getAll().then((res) => {
       setHoaDons(res.data);
-      const demHD = res.data.length;
-      sethoaDonLength(demHD);
     });
   };
   //load hoa don cho
@@ -124,24 +120,20 @@ export default function HoaDon() {
   };
   //load hóa đơn thành công
   const [hoaDonHT, setHoaDonHT] = useState([]);
-  const [tongHDThanhCong, settongHDThanhCong] = useState([]);
   const loadHoaDonHT = () => {
     HoaDonAPI.getAllbyTT(5).then((res) => {
       setHoaDonHT(res.data);
-      const demHD = res.data.length;
-      settongHDThanhCong(demHD);
+
     });
   };
   //load hóa đơn thành công
   const [hoaDonHuy, setHoaDonHuy] = useState([]);
-  const [tongHDHuy, settongHDHuy] = useState([]);
   const loadHoaDonHuy = () => {
     HoaDonAPI.getAllbyTT(-1).then((res) => {
       setHoaDonHuy(res.data);
-      const demHD = res.data.length;
-      settongHDHuy(demHD);
     });
   };
+
   const columns = [
     {
       title: "STT",
@@ -240,6 +232,8 @@ export default function HoaDon() {
             <Tag color="green">Hoàn thành</Tag>
           ) : trangThai == -1 ? (
             <Tag color="#cd201f">Hủy</Tag>
+          ) : trangThai == -2 ? (
+            <Tag color="#cd201f">Hoàn tiền</Tag>
           ) : (
             <Tag color="gold">Đã thanh toán</Tag>
           )}
@@ -276,9 +270,7 @@ export default function HoaDon() {
     },
   ];
 
-  const onChange = (key) => {
-
-  };
+  const onChange = (key) => {};
   const items = [
     {
       key: "1",
@@ -441,6 +433,7 @@ export default function HoaDon() {
         />
       ),
     },
+  
   ];
 
   const [componentSize, setComponentSize] = useState("default");

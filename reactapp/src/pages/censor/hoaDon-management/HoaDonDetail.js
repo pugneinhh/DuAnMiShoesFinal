@@ -4,7 +4,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import { RiTruckFill } from "react-icons/ri";
 import { SlNotebook } from "react-icons/sl";
 import { GiNotebook, GiPiggyBank, GiReturnArrow } from "react-icons/gi";
-import { FaTruckFast } from "react-icons/fa6";
+import { FaMoneyBillTrendUp, FaTruckFast } from "react-icons/fa6";
 import { ImCancelCircle } from "react-icons/im";
 import {
   Button,
@@ -47,12 +47,14 @@ export default function HoaDonDetail() {
   const [activeKey, setActiveKey] = useState(0);
   const [listHDTimeLine, setlistHDTimeLine] = useState([]);
   const [voucherHienTai, setVoucherHienTai] = useState(null);
+   const [SP, setSP] = useState([]);
   const [voucher, setVoucher] = useState([]);
   const [soTienCanMuaThem, setSoTienCanMuaThem] = useState(0);
   const [soTienDuocGiam, setSoTienDuocGiam] = useState(0);
   const [form] = Form.useForm();
   const [formRollBack] = Form.useForm();
    const [formHuyHoaDon] = Form.useForm();
+
   const handleOk = () => {
     setIsModalOpen(false);
     setOpenModalTimeLine(false);
@@ -88,10 +90,11 @@ export default function HoaDonDetail() {
   const { TextArea } = Input;
   const [hoaDondetail, setHoaDondetail] = useState([]);
   const [maNV, setmaNV] = useState("");
-  console.log("Hóa đơn detail", hoaDondetail);
+    const [tenNV, settenNV] = useState("");
   useEffect(() => {
     const storedData = get("userData");
     setmaNV(storedData.ma);
+      settenNV(storedData.ten);
     loadHoaDon();
     loadListSanPhams();
     loadListSanPhamTra();
@@ -101,12 +104,12 @@ export default function HoaDonDetail() {
   // load hóa đơn
 
   const loadVoucherTotNhatVaVoucherTiepTheo = (idKH, money) => {
-    console.log("money", money);
+    // console.log("money", money);
     SellAPI.voucherTotNhat(idKH, money).then((res) =>
       setVoucherHienTai(res.data)
     );
     SellAPI.voucherSapDatDuoc(idKH, money).then((res) => {
-      console.log("res", res.data);
+      // console.log("res", res.data);
       setSoTienCanMuaThem(res.data[0]);
       setSoTienDuocGiam(res.data[1]);
     });
@@ -186,7 +189,7 @@ export default function HoaDonDetail() {
     };
   const handleHuyHoaDon = (values) => {
      AdminGuiThongBaoXacNhanDatHang();
-    //  HoaDonAPI.deleteInvoiceAndRollBackProduct(listSanPhams.id, id);
+     listSanPhams.map((listSanPham, index) =>   HoaDonAPI.deleteInvoiceAndRollBackProduct(listSanPham.idctsp, id));
       HoaDonAPI.huyHoaDonQLHoaDon(id, maNV, values).then((res) => {
         loadHoaDon();
         loadTimeLineHoaDon();
@@ -214,6 +217,9 @@ export default function HoaDonDetail() {
       loadTimeLineHoaDon();
       form.resetFields();
       setIsModalOpen(false);
+         if (trangThai == 2) {
+           setOpenXuat(true);
+         }
       toast("🦄 Thành công!", {
         position: "top-right",
         autoClose: 3000,
@@ -225,6 +231,7 @@ export default function HoaDonDetail() {
         theme: "light",
       });
     });
+ 
   };
 
   const [LichSuThanhToan, setLichSuThanhToan] = useState([]);
@@ -297,13 +304,14 @@ export default function HoaDonDetail() {
   ];
 
   const [trangThai, setTrangThai] = useState([]);
-
+ const [listSanPhamTra, setlistSanPhamTra] = useState([]);
   const [listSanPhams, setlistSanPhams] = useState([]);
-  const [listSanPhamTra, setlistSanPhamTra] = useState([]);
+ 
   console.log("list sản phẩm", listSanPhams);
   const loadListSanPhams = () => {
     HoaDonAPI.detailSanPham(id).then((res) => {
       setlistSanPhams(res.data);
+     
     });
   };
   const loadListSanPhamTra = () => {
@@ -333,6 +341,8 @@ export default function HoaDonDetail() {
       return GiReturnArrow;
     } else if (trangThai === "-1") {
       return ImCancelCircle;
+    } else if (trangThai === "-2") {
+      return FaMoneyBillTrendUp;
     }
   };
   
@@ -353,6 +363,8 @@ export default function HoaDonDetail() {
       return "Trả hàng";
     } else if (trangThai === "-1") {
       return "Hủy";
+    } else if (trangThai === "-2") {
+      return "Hoàn tiền";
     }
   };
   const showTitleButtonVanDonTraSau = (trangThai) => {
@@ -367,8 +379,8 @@ export default function HoaDonDetail() {
     } else if (trangThai === "4") {
       return "Thành công";
     } else if (trangThai === "-1") {
-      return "Hủy";
-    }
+      return "Hoàn tiền";
+    } 
   };
   const showTitleButtonVanDonTraTruoc = (trangThai) => {
     if (trangThai === "0") {
@@ -382,9 +394,10 @@ export default function HoaDonDetail() {
     } else if (trangThai === "4") {
       return "Thành công";
     } else if (trangThai === "-1") {
-      return "Hủy";
-    }
+      return "Hoàn tiền";
+    } 
   };
+     console.log(hoaDondetail.phuongThucVNP, "thế");
   return (
     <div className="container-fuild mt-4 radius  ">
       <div className="container-fuild  row pt-3 pb-4 bg-light rounded border-danger ">
@@ -454,6 +467,14 @@ export default function HoaDonDetail() {
                         {showTitleButtonVanDonTraTruoc(trangThai)}
                       </Button>
                     ) : trangThai == 4 ? (
+                      <Button
+                        className="ms-5 "
+                        type="primary"
+                        onClick={showModal}
+                      >
+                        {showTitleButtonVanDonTraTruoc(trangThai)}
+                      </Button>
+                    ) : trangThai == -1 ? (
                       <Button
                         className="ms-5 "
                         type="primary"
@@ -635,7 +656,12 @@ export default function HoaDonDetail() {
                     },
                   ]}
                 >
-                  <TextArea rows={4} />
+                  <TextArea
+                    defaultValue={
+                      "[" + maNV + "-" + tenNV + "]" + " đã xác nhận"
+                    }
+                    rows={4}
+                  />
                 </Form.Item>
                 <Button
                   style={{ marginLeft: 200 }}
@@ -665,7 +691,8 @@ export default function HoaDonDetail() {
         <div className="col-md-2">
           {(hoaDondetail.loaiHD == 1 && trangThai == 4) ||
           trangThai == 0 ||
-          trangThai == 5||trangThai==-1 ? (
+          trangThai == 5 ||
+          trangThai == -1 ? (
             <></>
           ) : (
             <Button type="primary" onClick={showModalRollback}>
@@ -691,7 +718,10 @@ export default function HoaDonDetail() {
                   },
                 ]}
               >
-                <TextArea rows={4} />
+                <TextArea
+                  defaultValue={"[" + maNV + "-" + tenNV + "]" + " đã xác nhận"}
+                  rows={4}
+                />
               </Form.Item>
               <Button
                 style={{ marginLeft: 200 }}
@@ -1122,6 +1152,14 @@ export default function HoaDonDetail() {
               <Tag color="cyan">Đang Vận chuyển</Tag>
             ) : trangThai == 4 ? (
               <Tag color="orange">Đã Thanh toán</Tag>
+            ) : trangThai == 5 ? (
+              <Tag color="succes">Thành công</Tag>
+            ) : trangThai == 10 ? (
+              <Tag color="orange">Trả hàng</Tag>
+            ) : trangThai == -1 ? (
+              <Tag color="red">Hủy</Tag>
+            ) : trangThai == -2 ? (
+              <Tag color="pink">Hoàn tiền</Tag>
             ) : (
               <Tag color="green">Thành công</Tag>
             )}
@@ -1204,7 +1242,6 @@ export default function HoaDonDetail() {
         <div>
           {listSanPhams.map(
             (listSanPham, index) => (
-              console.log(listSanPham),
               (
                 <tr className="pt-3 row">
                   <div className="col-md-3">
@@ -1285,13 +1322,17 @@ export default function HoaDonDetail() {
                       </IntlProvider>
                     </h6>
                   </div>
-                  {listSanPham.trangThai==2?(
-                  <div className="col-md-2  mt-5">
-                    <Button style={{ backgroundColor: "red", color: "white" }}>
-                      Trả hàng
-                    </Button>
-                  </div>
-                  ):<></>}
+                  {listSanPham.trangThai == 2 ? (
+                    <div className="col-md-2  mt-5">
+                      <Button
+                        style={{ backgroundColor: "red", color: "white" }}
+                      >
+                        Trả hàng
+                      </Button>
+                    </div>
+                  ) : (
+                    <></>
+                  )}
                   <hr className="mt-3"></hr>
                 </tr>
               )
@@ -1300,110 +1341,113 @@ export default function HoaDonDetail() {
         </div>
 
         {/* thông tin trả hàng */}
-        {listSanPhamTra.length>0?(
+        {listSanPhamTra.length > 0 ? (
           <>
-        <div
-          className="d-flex bd-highlight"
-          style={{ marginTop: "20px", paddingTop: "20px" }}
-        >
-          <div className="flex-grow-1 bd-highlight">
-            <h5>Sản phẩm trả hàng</h5>
-          </div>
-        </div>
-        <hr></hr>
-        <div>
-          {listSanPhamTra.map(
-            (listSanPham, index) => (
-              console.log(listSanPham),
-              (
-                <tr className="pt-3 row">
-                  <div className="col-md-3">
-                    <Image
-                      cloudName="dtetgawxc"
-                      publicId={listSanPham.urlHA}
-                      width="100"
-                      crop="scale"
-                      href={listSanPham.urlHA}
-                      style={{ width: 150, height: 150, marginLeft: 15 }}
-                    />
-                  </div>
-                  <div className="col-md-5 ">
-                    <div className="mt-1">
-                      <h6>
-                        {listSanPham.tenHang} {listSanPham.tenSP}{" "}
-                      </h6>
-                    </div>
-                    {listSanPham.giaGiam > 0 ? (
-                      <div className="text-danger">
-                        <h6>
-                          <del>
+            <div
+              className="d-flex bd-highlight"
+              style={{ marginTop: "20px", paddingTop: "20px" }}
+            >
+              <div className="flex-grow-1 bd-highlight">
+                <h5>Sản phẩm trả hàng</h5>
+              </div>
+            </div>
+            <hr></hr>
+            <div>
+              {listSanPhamTra.map(
+                (listSanPham, index) => (
+                  
+                  (
+                    <tr className="pt-3 row">
+                      <div className="col-md-3">
+                        <Image
+                          cloudName="dtetgawxc"
+                          publicId={listSanPham.urlHA}
+                          width="100"
+                          crop="scale"
+                          href={listSanPham.urlHA}
+                          style={{ width: 150, height: 150, marginLeft: 15 }}
+                        />
+                      </div>
+                      <div className="col-md-5 ">
+                        <div className="mt-1">
+                          <h6>
+                            {listSanPham.tenHang} {listSanPham.tenSP}{" "}
+                          </h6>
+                        </div>
+                        {listSanPham.giaGiam > 0 ? (
+                          <div className="text-danger">
+                            <h6>
+                              <del>
+                                <IntlProvider locale="vi-VN">
+                                  <div>
+                                    <FormattedNumber
+                                      value={listSanPham.giaBanSP}
+                                      style="currency"
+                                      currency="VND"
+                                      minimumFractionDigits={0}
+                                    />
+                                  </div>
+                                </IntlProvider>
+                              </del>
+                            </h6>
+                          </div>
+                        ) : (
+                          ""
+                        )}
+                        <div className="text-danger">
+                          <h6>
                             <IntlProvider locale="vi-VN">
                               <div>
                                 <FormattedNumber
-                                  value={listSanPham.giaBanSP}
+                                  value={listSanPham.thanhTienSP}
                                   style="currency"
                                   currency="VND"
                                   minimumFractionDigits={0}
                                 />
                               </div>
                             </IntlProvider>
-                          </del>
+                          </h6>
+                        </div>
+                        <h6>Size:{listSanPham.tenKichThuoc}</h6>
+                        <div
+                          style={{
+                            backgroundColor: `${listSanPham.tenMauSac}`,
+                            borderRadius: 6,
+                            width: 60,
+                            height: 25,
+                          }}
+                        ></div>
+                        <h6>x{listSanPham.soLuongSP}</h6>
+                      </div>
+
+                      <div className="col-md-2 text-danger mt-5">
+                        <h6>
+                          <IntlProvider locale="vi-VN">
+                            <div>
+                              <FormattedNumber
+                                value={
+                                  listSanPham.thanhTienSP *
+                                  listSanPham.soLuongSP
+                                }
+                                style="currency"
+                                currency="VND"
+                                minimumFractionDigits={0}
+                              />
+                            </div>
+                          </IntlProvider>
                         </h6>
                       </div>
-                    ) : (
-                      ""
-                    )}
-                    <div className="text-danger">
-                      <h6>
-                        <IntlProvider locale="vi-VN">
-                          <div>
-                            <FormattedNumber
-                              value={listSanPham.thanhTienSP}
-                              style="currency"
-                              currency="VND"
-                              minimumFractionDigits={0}
-                            />
-                          </div>
-                        </IntlProvider>
-                      </h6>
-                    </div>
-                    <h6>Size:{listSanPham.tenKichThuoc}</h6>
-                    <div
-                      style={{
-                        backgroundColor: `${listSanPham.tenMauSac}`,
-                        borderRadius: 6,
-                        width: 60,
-                        height: 25,
-                      }}
-                    ></div>
-                    <h6>x{listSanPham.soLuongSP}</h6>
-                  </div>
 
-                  <div className="col-md-2 text-danger mt-5">
-                    <h6>
-                      <IntlProvider locale="vi-VN">
-                        <div>
-                          <FormattedNumber
-                            value={
-                              listSanPham.thanhTienSP * listSanPham.soLuongSP
-                            }
-                            style="currency"
-                            currency="VND"
-                            minimumFractionDigits={0}
-                          />
-                        </div>
-                      </IntlProvider>
-                    </h6>
-                  </div>
-        
-                  <hr className="mt-3"></hr>
-                </tr>
-              )
-            )
-          )}
-        </div>
-        </>
-        ):(<></>)}
+                      <hr className="mt-3"></hr>
+                    </tr>
+                  )
+                )
+              )}
+            </div>
+          </>
+        ) : (
+          <></>
+        )}
         <tr className="pt-3 row">
           <div className="col-md-6">
             <div className="row">

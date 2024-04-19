@@ -50,4 +50,23 @@ export class HoaDonClientAPI {
       },
     });
   };
+  static detailSanPham = (id) => {
+    return requestClient({
+      method: "GET",
+      url: `/client-hoa-don/hoa-don-san-pham/${id}`,
+      headers: {
+        Authorization: this.getToken,
+      },
+    });
+  };
+  static deleteInvoiceAndRollBackProduct = (idCTSP, id) => {
+
+    return requestClient({
+      method: "DELETE",
+      url: `/client-hoa-don/delete-hoa-don-chi-tiet/${idCTSP}/${id}`,
+      headers: {
+        Authorization: this.getToken,
+      },
+    });
+  };
 }

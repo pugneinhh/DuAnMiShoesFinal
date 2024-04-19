@@ -59,6 +59,8 @@ const ModalTimeLine = (props) => {
             <Tag color="green">Thành công</Tag>
           ) : trangThai == -1 ? (
             <Tag color="#cd201f">Hủy</Tag>
+          ) : trangThai == -2 ? (
+            <Tag color="#cd201f">Hoàn tiền</Tag>
           ) : (
             <Tag color="green">Không xác định</Tag>
           )}
