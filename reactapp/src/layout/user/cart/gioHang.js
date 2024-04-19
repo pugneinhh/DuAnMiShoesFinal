@@ -148,18 +148,7 @@ export const GioHang = ({ children }) => {
         )
       );
 
-      // console.log(
-      //   "Tiền vận chuyển",
-      //   await ShipAPI.fetchAllMoneyShip(idHuyen, idXa, soLuongSPGH).then(
-      //     (res) => res.data.data.total
-      //   )
-      // );
-      // console.log(
-      //   "Thời gian vận chuyển",
-      //   await ShipAPI.fetchAllDayShip(idHuyen, idXa).then(
-      //     (res) => res.data.data.leadtime * 1000
-      //   )
-      // );
+
     }
   };
 
@@ -175,7 +164,6 @@ export const GioHang = ({ children }) => {
         });
       });
     } else if (storedGioHang && storedGioHang != null) {
-      console.log(storedGioHang);
       setIDGH(storedGioHang.id);
       GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res) => {
         setGioHangCT(res.data);
@@ -243,7 +231,6 @@ export const GioHang = ({ children }) => {
         return;
       }
     const hdct = gioHangCT.map((ghct) => {
-      console.log("ctp", ghct);
       return {
         idCTSP: ghct.chiTietSanPham,
         donGia: ghct.thanhTien,
@@ -297,7 +284,7 @@ export const GioHang = ({ children }) => {
         }
       });
 
-      console.log(maGiaoDich);
+    
     } else {
       BanHangClientAPI.checkout(hoaDon).then((check) => {
         if (check.data) {
