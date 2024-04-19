@@ -215,7 +215,7 @@ public interface CTSPRepository extends JpaRepository<ChiTietSanPham, String> {
 
     @Query(value = """
              SELECT distinct o.id AS idCTSP,MIN(ha.url) AS linkAnh ,sp.ten AS tenSP ,kt.ten AS tenKT,ms.ten AS tenMS,ms.ma AS maMS,
-             o.so_luong AS soLuong,o.gia_ban AS giaBan,o.trang_thai AS trangThai, km.ten as tenKM , km.gia_tri_khuyen_mai as giaKhuyenMai , km.loai as loaiKM
+             o.so_luong AS soLuong,o.gia_ban AS giaBan,o.trang_thai AS trangThai, km.ten as tenKM , km.gia_tri_khuyen_mai as giaTriKhuyenMai , km.loai as loaiKM
              FROM duanmishoes.chi_tiet_san_pham o
              JOIN duanmishoes.san_pham sp  on o.san_pham_id=sp.id
              JOIN duanmishoes.kich_thuoc kt  on o.kich_thuoc_id=kt.id

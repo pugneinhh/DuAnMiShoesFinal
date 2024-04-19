@@ -155,7 +155,7 @@ export default function DanhMuc() {
   const loadDanhMuc = () => {
     DanhMucAPI.getAll()
       .then((res) => {
-        setDanhMucs(res.data);
+        setDanhMucs(res.data.reverse());
       })
   };
 
