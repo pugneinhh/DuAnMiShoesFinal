@@ -287,7 +287,7 @@ public class HoaDonControllerr {
     public ResponseEntity<?> SanPhamTheoMa(@PathVariable("ma") String ma){
         System.out.println("Mã HĐ "+ma);
         HoaDon hd = hoaDonService.getHDByMa(ma);
-        if (hd == null) return null;
+        if (hd == null) return ResponseEntity.ok(null);
         System.out.println("Hóa đơn được tìm thấy"+hd);
         return  ResponseEntity.ok(hoaDonService.detailHDSanPham1(hd.getId()));
     }

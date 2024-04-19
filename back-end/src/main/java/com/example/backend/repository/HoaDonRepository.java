@@ -110,7 +110,7 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
     @Query(value = """
             SELECT hdct.id as id ,hdct.chi_tiet_san_pham_id as idCTSP , hdct.so_luong AS soLuongSP, ctsp.gia_ban AS giaBanSP,CASE WHEN ha.url is  NULL   THEN N'khong co'
                                ELSE ha.url END as urlHA,sp.ten AS tenSP, kt.ten AS tenKichThuoc,ms.ten AS tenMauSac,
-                h.ten AS tenHang,hdct.gia_giam as giaGiam,hdct.gia_sau_giam as thanhTienSP FROM  duanmishoes.hoa_don_chi_tiet hdct
+                h.ten AS tenHang,hdct.gia_giam as giaGiam,hdct.gia_sau_giam as thanhTienSP , hdct.trang_thai as trangThao FROM  duanmishoes.hoa_don_chi_tiet hdct
                			LEFT JOIN  duanmishoes.chi_tiet_san_pham ctsp ON ctsp.id = hdct.chi_tiet_san_pham_id
                			LEFT JOIN duanmishoes.hinh_anh ha ON ha.chi_tiet_san_pham_id = ctsp.id
                			LEFT JOIN duanmishoes.san_pham sp ON sp.id = ctsp.san_pham_id

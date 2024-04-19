@@ -17,26 +17,29 @@ const ModalInHoaDon = (props) => {
   const [listSanPhams, setlistSanPhams] = useState([]);
   const id = props.id;
 
-  const loadHoaDon = async () => {
-
+  console.log("IDDDĐ ",id);
+  console.log("in hóa đơn "+props.openInHoaDon);
+  const loadHoaDon =  () => {
     HoaDonAPI.chiTietHoaDonTheoMa(id).then((res) => {
-    
+      console.log("DATA :"+id);
+      if (!res.data) return;
       setHoaDondetail(res.data);
       setTrangThai(res.data.trangThai);
-    
+      console.log("DATA IN BILL :",res);
     });
-  
-  };
+  }
+
 
   const handleCloseInHoaDon = () => {
     setOpenInHoaDon(false);
   };
 
-  const loadListSanPhams = async () => {
+  const loadListSanPhams =  () => {
     HoaDonAPI.hoaDonSanPhamTheoMa(id).then((res) => {
+      if (!res.data) return;
       setlistSanPhams(res.data);
-    
-
+      console.log("DATA :",res)
+  
     });
   };
   useEffect(() => {
@@ -44,12 +47,12 @@ const ModalInHoaDon = (props) => {
     loadHoaDon();
     loadListSanPhams();
     }
-  },[id,hoaDondetail]);
+  },[id]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       // Thực hiện công việc bạn muốn ở đây
-      if (id) {
+      if (id && !hoaDondetail ) {
         loadHoaDon();
         loadListSanPhams();
         }
