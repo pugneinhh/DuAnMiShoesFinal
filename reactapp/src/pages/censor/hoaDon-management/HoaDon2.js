@@ -31,8 +31,6 @@ export default function HoaDon() {
 
   useEffect(() => {
     stomp.connect({}, () => {
-      console.log("connect websocket");
-
       stomp.subscribe("/topic/admin/hoa-don", (mes) => {
         try {
           const pare = JSON.parse(mes.body);
@@ -60,16 +58,13 @@ export default function HoaDon() {
     loadHoaDonVC();
     loadHoaDonXN();
     loadHoaDonHuy();
-    loadHoaDonHoanTien();
+   
   }, []);
   // load full hóa đơn
   const [hoaDon, setHoaDons] = useState([]);
-  const [hoaDonLength, sethoaDonLength] = useState();
   const loadHoaDon = () => {
     HoaDonAPI.getAll().then((res) => {
       setHoaDons(res.data);
-      const demHD = res.data.length;
-      sethoaDonLength(demHD);
     });
   };
   //load hoa don cho
@@ -125,34 +120,20 @@ export default function HoaDon() {
   };
   //load hóa đơn thành công
   const [hoaDonHT, setHoaDonHT] = useState([]);
-  const [tongHDThanhCong, settongHDThanhCong] = useState([]);
   const loadHoaDonHT = () => {
     HoaDonAPI.getAllbyTT(5).then((res) => {
       setHoaDonHT(res.data);
-      const demHD = res.data.length;
-      settongHDThanhCong(demHD);
+
     });
   };
   //load hóa đơn thành công
   const [hoaDonHuy, setHoaDonHuy] = useState([]);
-  const [tongHDHuy, settongHDHuy] = useState([]);
   const loadHoaDonHuy = () => {
     HoaDonAPI.getAllbyTT(-1).then((res) => {
       setHoaDonHuy(res.data);
-      const demHD = res.data.length;
-      settongHDHuy(demHD);
     });
   };
-  //load hóa đơn hoàn tiền
-  const [hoaDonHoanTien, setHoaDonHoanTien] = useState([]);
-  const [tongHDHoanTien, settongHDHoanTien] = useState([]);
-  const loadHoaDonHoanTien = () => {
-    HoaDonAPI.getAllbyTT(-2).then((res) => {
-      setHoaDonHoanTien(res.data);
-      const demHD = res.data.length;
-      settongHDHoanTien(demHD);
-    });
-  };
+
   const columns = [
     {
       title: "STT",
@@ -452,27 +433,7 @@ export default function HoaDon() {
         />
       ),
     },
-    {
-      key: "9",
-      label: (
-        <Badge count={tongHDHoanTien} offset={[8, 1]}>
-          Hoàn Tiền
-        </Badge>
-      ),
-      children: (
-        <Table
-          dataSource={hoaDonHoanTien}
-          columns={columns}
-          pagination={{
-            showQuickJumper: true,
-            position: ["bottomCenter"],
-            defaultPageSize: 5,
-            defaultCurrent: 1,
-            total: 100,
-          }}
-        />
-      ),
-    },
+  
   ];
 
   const [componentSize, setComponentSize] = useState("default");

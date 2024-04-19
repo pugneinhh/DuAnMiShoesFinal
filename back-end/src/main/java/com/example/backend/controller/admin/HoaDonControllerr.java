@@ -159,7 +159,6 @@ public class HoaDonControllerr {
                }
                else if (hoaDon.getTrangThai() == -1) {
                    ls.setTrangThai(-2);
-                   hoaDon.setTrangThai(-2);
                    System.out.println("if 2");
                    lichSuHoaDonService.addLichSuHoaDon(ls);
                    return ResponseEntity.ok(
@@ -221,6 +220,15 @@ public class HoaDonControllerr {
                             hoaDonService.updateHD(hoaDon, id)
                     );
                 }
+                else if (hoaDon.getTrangThai() == -2 && thanhToan.getPhuongThucVnp() != null) {
+                    ls.setTrangThai(-1);
+                    hoaDon.setTrangThai(-1);
+                    System.out.println("if 2");
+                    lichSuHoaDonService.addLichSuHoaDon(ls);
+                    return ResponseEntity.ok(
+                            hoaDonService.updateHD(hoaDon, id)
+                    );
+                }
                 if (thanhToan.getPhuongThucVnp() == null) {
                     ls.setTrangThai(hoaDon.getTrangThai()  -1);
                     hoaDon.setTrangThai(hoaDon.getTrangThai() - 1);
@@ -259,9 +267,6 @@ public class HoaDonControllerr {
                 }
             }
         }
-
-
-
         lichSuHoaDonService.addLichSuHoaDon(ls);
         return ResponseEntity.ok(hoaDonService.updateHD(hoaDon,id));
     }
