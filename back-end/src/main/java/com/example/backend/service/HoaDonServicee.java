@@ -178,6 +178,9 @@ public class HoaDonServicee {
     public List<AdminHoaDonSanPham> detailHDSanPham(String  key){
         return  hoaDonRepository.detailHDSanPham(key);
     }
+    public List<AdminHoaDonSanPham> detailHDSanPham1(String  key){
+        return  hoaDonRepository.detailHDSanPham1(key);
+    }
     public List<AdminHoaDonSanPham> detailHDSanPhamTra(String  key){
         return  hoaDonRepository.detailHDSanPhamTra(key);
     }
@@ -187,8 +190,8 @@ public class HoaDonServicee {
 
     }
 
-    public HoaDon thanhToanHoaDon(String idHD) {
-            HoaDon hoaDonCT=hoaDonRepository.findById(idHD).get();
+    public HoaDon thanhToanHoaDon(String maHD) {
+        HoaDon hoaDonCT=hoaDonRepository.getHDByMa(maHD);
         hoaDonCT.setNgayMua(LocalDateTime.now());
       return  hoaDonRepository.save(hoaDonCT);
     }
@@ -239,5 +242,9 @@ public class HoaDonServicee {
 
     public HoaDon updateSample(HoaDon hd){
         return hoaDonRepository.save(hd);
+    }
+
+    public HoaDon getHDByMa(String ma){
+        return  hoaDonRepository.getHDByMa(ma);
     }
 }

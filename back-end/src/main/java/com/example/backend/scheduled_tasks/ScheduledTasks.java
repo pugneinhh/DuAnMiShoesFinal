@@ -24,12 +24,19 @@
 //    KhuyenMaiSanPhamService khuyenMaiSanPhamService;
 //    @Autowired
 //    CTSPService ctspService;
+//    @Autowired
+//    HoaDonChiTietService hoaDonChiTietService;
+//
 //    @Scheduled(cron = "0 0 3 * * *") // Lịch chạy vào 3 giờ sáng hàng ngày
 //    public void deleteBill3AM() {
 //        List<HoaDon> listHoaDon = hoaDonServicee.getAllBillToday();
 //        for (HoaDon x : listHoaDon){
 //            if (x.getTrangThai() == 0){
 //                hoaDonServicee.deleteHoaDon(x.getId());
+//                for (HoaDonChiTiet hdct : hoaDonChiTietService.getAllHDCTByIDHD(x.getId())) {
+//                    hoaDonChiTietService.deleteHDCTAndRollBackInSell(hdct.getId(), x.getMa());
+//                }
+//
 //            }
 //        }
 //    }

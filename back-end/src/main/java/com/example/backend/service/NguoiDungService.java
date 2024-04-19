@@ -30,8 +30,7 @@ public class NguoiDungService {
     }
 
     public NguoiDung findByID(String id) {
-        System.out.println("Người dùng"+nguoiDungRepository.findById(id).get());
-        return nguoiDungRepository.findById(id).get();
+        return nguoiDungRepository.getNDByID(id);
     }
 //    public List<NguoiDung> getAll(){
 //        return nguoiDungRepository.findAll();

@@ -22,4 +22,15 @@ export class ThanhToanAPI {
       },
     });
   };
+
+  static xoaTT = (maHD,phuongThuc) => {
+    const getToken = getHeader();
+    return requestAdmin({
+      method: "DELETE",
+      url: `/admin/thanh-toan/hoa-don/xoa/${maHD}/${phuongThuc}`,
+      headers: {
+        Authorization: getToken,
+      },
+    });
+  };
 }

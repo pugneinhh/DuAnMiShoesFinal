@@ -33,6 +33,15 @@ export class HoaDonAPI {
       },
     });
   };
+  static chiTietHoaDonTheoMa = (ma) => {
+    return requestAdmin({
+      method: "GET",
+      url: `/admin/hoa-don/detail-hoa-don-theo-ma/${ma}`,
+      headers: {
+        Authorization: this.getToken,
+      },
+    });
+  };
   static detailSanPham = (id) => {
     return requestAdmin({
       method: "GET",
@@ -42,6 +51,17 @@ export class HoaDonAPI {
       },
     });
   };
+
+  static hoaDonSanPhamTheoMa = (ma) => {
+    return requestAdmin({
+      method: "GET",
+      url: `/admin/hoa-don/san-pham-theo-ma/${ma}`,
+      headers: {
+        Authorization: this.getToken,
+      },
+    });
+  };
+
   static detailSanPhamTra = (id) => {
     return requestAdmin({
       method: "GET",
@@ -132,6 +152,16 @@ export class HoaDonAPI {
     return requestAdmin({
       method: "PUT",
       url: `/admin/hoa-don/them-san-pham/${idHD}/${idCTSP}/${maNV}`,
+      headers: {
+        Authorization: this.getToken,
+      },
+    });
+  };
+
+  static detailHDByMa = (id) => {
+    return requestAdmin({
+      method: "GET",
+      url: `/admin/hoa-don/detail-hoa-don/${id}`,
       headers: {
         Authorization: this.getToken,
       },

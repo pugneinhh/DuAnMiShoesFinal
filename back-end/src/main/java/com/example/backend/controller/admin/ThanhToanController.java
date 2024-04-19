@@ -65,6 +65,12 @@ public class ThanhToanController {
     @GetMapping("/hoa-don/{maHD}")
     public ResponseEntity<?> getTTByMa (@PathVariable("maHD") String maHD){
         HoaDon hd = hoaDonService.getHDByMa(maHD);
+        if (hd == null) return null;
         return ResponseEntity.ok(thanhToanService.getThanhToanByIdHD(hd.getId()));
+    }
+
+    @DeleteMapping("/hoa-don/xoa/{maHD}/{phuongThuc}")
+    public void xoaTT (@PathVariable("maHD") String maHD,@PathVariable("phuongThuc") int phuongThuc){
+       thanhToanService.xoaThanhToanAdmin(maHD,phuongThuc);
     }
 }

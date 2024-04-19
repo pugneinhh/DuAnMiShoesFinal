@@ -294,16 +294,30 @@ export class SellAPI {
 
 
   static thanhToanHoaDon = (ma,idNV,idVoucher) => {
-     const getToken = getHeader();
-    return requestAdmin({
-      method: "PUT",
-      url: `/admin/ban-hang/thanh-toan/hoa-don/${ma}/${idNV}/${idVoucher}`,
-      headers: {
-        Authorization: getToken,
-      },
-    });
-    
-  };
+    const getToken = getHeader();
+   return requestAdmin({
+     method: "PUT",
+     url: `/admin/ban-hang/thanh-toan/hoa-don/${ma}/${idNV}/${idVoucher}`,
+     headers: {
+       Authorization: getToken,
+     },
+   });
+   
+ };
+
+ static thanhToanHoaDonKhongVoucher = (ma,idNV) => {
+  const getToken = getHeader();
+ return requestAdmin({
+   method: "PUT",
+   url: `/admin/ban-hang/thanh-toan/hoa-don/${ma}/${idNV}`,
+   headers: {
+     Authorization: getToken,
+   },
+ });
+ 
+};
+
+
 
   static updateVanChuyen = (ma, data) => {
      const getToken = getHeader();

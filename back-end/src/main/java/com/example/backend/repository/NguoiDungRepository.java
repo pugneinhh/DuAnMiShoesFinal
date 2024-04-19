@@ -196,4 +196,7 @@ public interface NguoiDungRepository extends JpaRepository<NguoiDung, String> {
     NguoiDung findNguoiDungByEmail(String email);
 
     NguoiDung findAllById(String id);
+
+    @Query(value = "select * from nguoi_dung where id=:id",nativeQuery = true)
+    NguoiDung getNDByID(String id);
 }
