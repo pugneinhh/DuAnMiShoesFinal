@@ -31,6 +31,7 @@ export default function HoaDon() {
 
   useEffect(() => {
     stomp.connect({}, () => {
+
       stomp.subscribe("/topic/admin/hoa-don", (mes) => {
         try {
           const pare = JSON.parse(mes.body);
