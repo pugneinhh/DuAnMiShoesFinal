@@ -128,7 +128,7 @@ export default function MauSac() {
   const loadMauSac = () => {
     MauSacAPI.getAll()
       .then((res) => {
-        setMauSacs(res.data);
+        setMauSacs(res.data.reverse());
       })
   };
 

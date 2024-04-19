@@ -144,8 +144,8 @@ export default function DeGiay() {
     }
   
     const deGiay = parseInt(value);
-    if (isNaN(deGiay) || deGiay < 34 || deGiay > 47) {
-      return Promise.reject("Đế giày phải là số nguyên từ 34 đến 47");
+    if (isNaN(deGiay) || deGiay < 1 || deGiay > 10) {
+      return Promise.reject("Đế giày phải là số nguyên từ 1 đến 10");
     }
   
     return Promise.resolve();
@@ -161,7 +161,7 @@ export default function DeGiay() {
   const loadDeGiay = async () => {
     DeGiayAPI.getAll()
     .then((res)=>{
-      setDeGiays(res.data); 
+      setDeGiays(res.data.reverse()); 
     })
   };
 

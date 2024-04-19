@@ -158,7 +158,7 @@ export default function KichThuoc() {
   const loadKichThuoc = () => {
     KichThuocAPI.getAll()
     .then((res)=>{
-      setKichThuocs(res.data); 
+      setKichThuocs(res.data.reverse()); 
     })
   };
 

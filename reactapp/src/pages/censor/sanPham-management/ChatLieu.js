@@ -154,7 +154,7 @@ export default function ChatLieu() {
   const loadChatLieu = () => {
     ChatLieuAPI.getAll()
       .then((res) => {
-        setChatLieus(res.data);
+        setChatLieus(res.data.reverse());
       })
   };
 
