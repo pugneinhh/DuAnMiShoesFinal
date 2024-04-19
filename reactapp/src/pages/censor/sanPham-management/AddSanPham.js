@@ -26,6 +26,7 @@ import FormItem from "antd/es/form/FormItem";
 import {
   DeleteOutlined,
   EditOutlined,
+  FileImageOutlined,
   InfoCircleOutlined,
   PlusCircleFilled,
   PlusCircleOutlined,
@@ -39,6 +40,7 @@ import convert from "color-convert";
 import "./SanPham.css";
 import { MauSacAPI } from "../api/SanPham/mauSac.api";
 import { ChiTietSanPhamAPI } from "../api/SanPham/chi_tiet_san_pham.api";
+import CloudinaryUploader from "./ModalUploadAnh";
 
 export default function AddSanPham() {
   //Form
@@ -64,7 +66,7 @@ export default function AddSanPham() {
     setComponentSize(size);
   };
   const [openUpdateNhanh, setUpdateNhanhs] = useState(false);
-
+  const [openAddAnh, setAddAnhs] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [dataKichThuoc, setDataKichThuocs] = useState([]);
   const [dataSanPham, setDataSanPhams] = useState([]);
@@ -80,6 +82,10 @@ export default function AddSanPham() {
   const handleDelete = (key) => {
     const updatedData = tableData.filter((item) => item.key !== key);
     setTableData(updatedData);
+  };
+
+  const handleCancelAnh = () => {
+    setAddAnhs(false);
   };
 
   const handleLinkAnhChange = (linkAnh, index) => {
@@ -684,7 +690,7 @@ export default function AddSanPham() {
       const rgb = convert.hex.rgb(hexCode);
       const colorName = convert.rgb.keyword(rgb);
       value.ten = colorName;
-      MauSacAPI.create(value).then((res) => {  
+      MauSacAPI.create(value).then((res) => {
         loadMS();
         setOpenMS(false);
         form1.resetFields();
@@ -1846,6 +1852,16 @@ export default function AddSanPham() {
               </h5>
               <hr />
               <div className="text-end mb-3">
+                {/* <Button
+                  icon={<FileImageOutlined />}
+                  onClick={() => {
+                    setAddAnhs(true);
+                  }}
+                  style={{ backgroundColor: "#0A1172", color: "white" }}
+                >
+                  Upload Ảnh
+                </Button> */}
+                <CloudinaryUploader isOpenModal={openAddAnh} isCancelModal={handleCancelAnh}></CloudinaryUploader>
                 <Button
                   icon={<EditOutlined />}
                   onClick={() => {
