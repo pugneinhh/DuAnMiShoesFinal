@@ -110,4 +110,10 @@ private EmailSenderService emailSenderService;
         ThanhToan tt = request.map(new ThanhToan());
         return thanhToanRepository.save(tt);
     }
+
+    public void xoaThanhToanAdmin(String maHD,int phuongThuc){
+        HoaDon hd = hoaDonRepository.getHDByMa(maHD);
+        ThanhToan tt = thanhToanRepository.getTT(hd.getId(),phuongThuc);
+        thanhToanRepository.delete(tt);
+    }
 }

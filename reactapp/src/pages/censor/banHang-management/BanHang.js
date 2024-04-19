@@ -22,6 +22,7 @@ import {
 import { DeleteFilled } from "@ant-design/icons";
 import ModalSanPham from "./ModalSanPham";
 import ModalThanhToan from "./ModalThanhToan";
+import ModalInHoaDon from "./ModalInHoaDon";
 import ModalKhachHang from "./ModalKhachHang";
 import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuid } from "uuid";
@@ -79,7 +80,13 @@ const BanHang = () => {
   const [soTienDuocGiam, setSoTienDuocGiam] = useState(0);
   const [idKH, setIDKH] = useState(null);
   const [money, setMoney] = useState(0);
-
+  const handleOpenInHoaDon = (check) => {
+    //setOpenThanhToan(false);
+    setOpenInHoaDon(check);
+  };
+  const handleCloseInHoaDon = () => {
+    setOpenInHoaDon(false);
+  };
   //qr san pham
     const handleModalClose = () => {
       setShowModal(false);
@@ -725,6 +732,8 @@ const BanHang = () => {
     setOpenKhachHang(false);
   };
   const [openThanhToan, setOpenThanhToan] = useState(false);
+  const [openInHoaDon, setOpenInHoaDon] = useState(false);
+
   const handleCloseThanhToan = () => {
     setOpenThanhToan(false);
   };
@@ -1367,6 +1376,53 @@ const BanHang = () => {
                               <MdOutlinePayments
                                 size={25}
                                 onClick={() => {
+                                  if ((data.reduce((accumulator, currentProduct) => {
+                                    return accumulator + currentProduct.total;
+                                  }, 0) -
+                                  (voucherHienTai
+                                    ? voucherHienTai.loaiVoucher === "Tiền mặt"
+                                      ? parseFloat(voucherHienTai.mucDo) <
+                                        parseFloat(voucherHienTai.giamToiDa)
+                                        ? voucherHienTai.mucDo
+                                        : voucherHienTai.giamToiDa
+                                      : parseFloat(
+                                          (data.reduce(
+                                            (accumulator, currentProduct) => {
+                                              return (
+                                                accumulator + currentProduct.total
+                                              );
+                                            },
+                                            0
+                                          ) *
+                                            voucherHienTai.mucDo) /
+                                            100
+                                        ) < parseFloat(voucherHienTai.giamToiDa)
+                                      ? (parseFloat(
+                                          data.reduce(
+                                            (accumulator, currentProduct) => {
+                                              return (
+                                                accumulator + currentProduct.total
+                                              );
+                                            },
+                                            0
+                                          )
+                                        ) *
+                                          parseFloat(voucherHienTai.mucDo)) /
+                                        100
+                                      : voucherHienTai.giamToiDa
+                                    : 0) +
+                                  roundToThousands(
+                                    isSwitchOn
+                                      ? hd[0]?.tienVanChuyen &&
+                                        shipMoney === shipMoney1
+                                        ? hd[0]?.tienVanChuyen
+                                        : shipMoney1
+                                        ? shipMoney1
+                                        : shipMoney
+                                        ? shipMoney
+                                        : 0
+                                      : 0
+                                  )) < 1) return;
                                   SellAPI.getThanhTienbyMaHD(activeKey).then(
                                     (res) => {
                                       if (
@@ -1402,9 +1458,10 @@ const BanHang = () => {
                             style={{ marginLeft: 12 }}
                           ></Button>
                           <ModalThanhToan
+                            onInHoaDon = {handleOpenInHoaDon}
                             openThanhToan={openThanhToan}
                             setOpenThanhToan={setOpenThanhToan}
-                            onOk={handleCloseThanhToan}
+                            onOk={handleOpenInHoaDon}
                             onCancel={handleCloseThanhToan}
                             total={
                               data.reduce((accumulator, currentProduct) => {
@@ -1457,6 +1514,8 @@ const BanHang = () => {
                             }
                             hoaDon={activeKey}
                             voucher={voucherHienTai ? voucherHienTai : null}
+                            hoaDonDetails = {hd[0]}
+                            listSanPham = {data}
                           />
                         </div>
                         <div className="row">
@@ -1828,7 +1887,7 @@ const BanHang = () => {
                   <ModalThanhToan
                     openThanhToan={openThanhToan}
                     setOpenThanhToan={setOpenThanhToan}
-                    onOk={handleCloseThanhToan}
+                    onOk={handleOpenInHoaDon}
                     onCancel={handleCloseThanhToan}
                   />
                 </div>
@@ -1945,6 +2004,7 @@ const BanHang = () => {
         ) : (
           console.error()
         )}
+        <ModalInHoaDon id={activeKey} openInHoaDon={openInHoaDon} setOpenInHoaDon={setOpenInHoaDon}/>
       </div>
       {showModal && (
         <QRScannerModal

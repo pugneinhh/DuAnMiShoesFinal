@@ -201,8 +201,12 @@ public class BanHangController {
 
     @PutMapping("/thanh-toan/hoa-don/{ma}/{idNV}/{idVoucher}")
     public ResponseEntity<?> thanhToanHoaDon (@PathVariable("ma") String ma,@PathVariable("idNV") String idNV,@PathVariable("idVoucher")String idVoucher) {
+        System.out.println("Mã hóa đơn :"+ma);
+        System.out.println("ID nhân viên :"+idNV);
+        System.out.println("ID Voucher :"+idVoucher);
         HoaDon hoaDon=hoaDonServicee.findHoaDonByMa(ma);
-        if (idVoucher != null) {
+        System.out.println("MÃ hóa đơn :"+hoaDon.getId());
+        if (idVoucher != null || idVoucher != "null") {
             Voucher voucher = voucherService.detailVoucher(idVoucher);
             hoaDon.setVoucher(voucher);
             BigDecimal giamToiDa = voucher.getGiamToiDa();
@@ -243,10 +247,50 @@ public class BanHangController {
         lichSuHoaDon.setNgayTao(LocalDateTime.now());
         lichSuHoaDonService.save(lichSuHoaDon);
 
-        return ResponseEntity.ok(  hoaDonServicee.thanhToanHoaDon(hoaDon.getId()));
-       
+        return ResponseEntity.ok(hoaDonServicee.thanhToanHoaDon(ma));
+
     }
 
+
+    @PutMapping("/thanh-toan/hoa-don/{ma}/{idNV}")
+    public ResponseEntity<?> thanhToanHoaDonKhongVoucher (@PathVariable("ma") String ma,@PathVariable("idNV") String idNV) {
+        System.out.println("Mã hóa đơn :"+ma);
+        System.out.println("ID nhân viên :"+idNV);
+        HoaDon hoaDon=hoaDonServicee.findHoaDonByMa(ma);
+        System.out.println("MÃ hóa đơn :"+hoaDon.getId());
+        if(hoaDon.getTraSau() == 0) {
+            if (hoaDon.getDiaChi() != null){
+                hoaDon.setTrangThai(2);
+            } else {
+                hoaDon.setTrangThai(4);
+            }
+
+        }  else {
+            hoaDon.setTrangThai(2);
+        }
+        hoaDon.setNgaySua(LocalDateTime.now());
+        hoaDonServicee.updateTrangThaiHoaDon(hoaDon);
+        List<HoaDonChiTiet> listHDCT = hoaDonChiTietService.getAllHDCTByIDHD(hoaDon.getId());
+        for (HoaDonChiTiet h : listHDCT) {
+            h.setTrangThai(1);
+            hoaDonChiTietService.saveHDCT(h);
+        }
+        NguoiDung nguoiDung = nguoiDungService.findByID(idNV);
+        List<ThanhToan> listTT = thanhToanService.getThanhToanByIdHD(hoaDon.getId());
+        for (ThanhToan tt : listTT){
+            tt.setTrangThai(1);
+            thanhToanService.save(tt);
+        }
+        LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
+        lichSuHoaDon.setHoaDon(hoaDon);
+        lichSuHoaDon.setNguoiTao(nguoiDung.getMa());
+        lichSuHoaDon.setTrangThai(4);
+        lichSuHoaDon.setNgayTao(LocalDateTime.now());
+        lichSuHoaDonService.save(lichSuHoaDon);
+
+        return ResponseEntity.ok(hoaDonServicee.thanhToanHoaDon(ma));
+
+    }
 
     @PutMapping("/tra-sau/hoa-don/{ma}/{idNV}")
     public ResponseEntity<?> traSauHoaDon (@PathVariable("ma") String ma,@PathVariable("idNV") String idNV) {
@@ -309,7 +353,6 @@ public class BanHangController {
     public List<BigDecimal> khuyenMaiSapDatDuoc (@PathVariable("idKH")String idKH, @PathVariable("money")String money,@PathVariable("idV")String idV){
         BigDecimal soTienConThieu = new BigDecimal("0");
         BigDecimal soTienDuocGiam = new BigDecimal("0");
-        System.out.println("IDV "+idV);
         Voucher vc = new Voucher();
         if(idV != null) {
              vc = voucherService.getVoucherByID(idV);
@@ -322,7 +365,6 @@ public class BanHangController {
                     (new BigDecimal(String.valueOf(vc.getMucDo()* Float.valueOf(money) / 100)).compareTo(vc.getGiamToiDa()) < 0)
                     ? new BigDecimal(String.valueOf(vc.getMucDo()* Float.valueOf(money) / 100)) : vc.getGiamToiDa();
         }
-        System.out.println("Số tiền đang được giảm "+soTienDangDuocGiam);
         if (!idKH.equalsIgnoreCase("null")){
             List<VoucherRespone> listV = voucherService.getVoucherBanHang(idKH);
             for (VoucherRespone v : listV){
@@ -346,37 +388,23 @@ public class BanHangController {
             for (VoucherRespone v : list){
                 if (v.getDieuKien().compareTo(new BigDecimal(money)) <= 0) continue;  // loại bỏ những voucher đã hợp yêu cầu
                 // giả sử vừa đủ điều kiện => giá được giảm
-                System.out.println("Voucher chưa đủ đk");
-                System.out.println(v.getMa());
                 BigDecimal mucDoKM = v.getLoaiVoucher().equalsIgnoreCase("Tiền mặt") ? new BigDecimal(v.getMucDo()) : v.getDieuKien().multiply(new BigDecimal((v.getMucDo()))).divide(new BigDecimal("100"));
-                System.out.println("Mức độ x :"+(v.getLoaiVoucher().equalsIgnoreCase("Tiền mặt") ? new BigDecimal(v.getMucDo()) : v.getDieuKien().multiply(new BigDecimal((v.getMucDo()))).divide(new BigDecimal("100")))   );
                 if (mucDoKM.compareTo(v.getGiamToiDa()) > 0){
                     mucDoKM = v.getGiamToiDa(); // trường hợp lớn hơn giá giảm tối đa
-                    System.out.println("Mc độ"+mucDoKM);
                 }
-                System.out.println("Số tiền còn thiếu x:"+soTienConThieu);
-                System.out.println("Số tiền được giảm x:"+soTienDuocGiam);
-                System.out.println("Số tiền đang được giảm x:"+soTienDangDuocGiam);
-                System.out.println("SS thiếu:  "+(soTienConThieu.compareTo(new BigDecimal("0")) == 0));
-                System.out.println("SS giảm: " +(soTienDuocGiam.compareTo(new BigDecimal("0")) == 0));
-                System.out.println("SS mức độ: "+(mucDoKM.compareTo(soTienDuocGiam) > 0));
+
                 if ((soTienConThieu.compareTo(new BigDecimal("0")) == 0) && (soTienDuocGiam.compareTo(new BigDecimal("0")) ==0) && (mucDoKM.compareTo(soTienDuocGiam) > 0)) {
                     soTienConThieu = v.getDieuKien().subtract(new BigDecimal(money));
                     soTienDuocGiam = mucDoKM;
-                    System.out.println("TH1 Số tiền còn thiếu"+soTienConThieu);
-                    System.out.println("TH1 Số tiền được giảm"+soTienDuocGiam);
+
                 } else if (soTienConThieu.compareTo(v.getDieuKien().subtract(new BigDecimal(money))) >= 0 && soTienDuocGiam.compareTo(mucDoKM) <= 0 && mucDoKM.compareTo(soTienDangDuocGiam) > 0)  {
                     soTienConThieu = v.getDieuKien().subtract(new BigDecimal(money));
                     soTienDuocGiam = mucDoKM;
-                    System.out.println("TH2 Số tiền còn thiếu"+soTienConThieu);
-                    System.out.println("TH2 Số tiền được giảm"+soTienDuocGiam);
+
                  }
             }
         }
         List<BigDecimal> list = new ArrayList<>();
-        System.out.println("Money"+money);
-        System.out.println("Số tiền còn thiếu"+soTienConThieu);
-        System.out.println("Só tiền được giảm"+soTienDuocGiam);
         list.add(soTienConThieu);
         list.add(soTienDuocGiam);
         return list;

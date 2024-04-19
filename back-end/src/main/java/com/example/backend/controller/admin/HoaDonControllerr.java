@@ -56,6 +56,11 @@ public class HoaDonControllerr {
     public ResponseEntity<?> detailHD(@PathVariable("idHD") String id){
         return  ResponseEntity.ok(hoaDonService.getByID(id));
     }
+
+    @GetMapping("/detail-hoa-don-theo-ma/{ma}")
+    public ResponseEntity<?> detailHDByMa(@PathVariable("ma") String ma){
+        return  ResponseEntity.ok(hoaDonService.getHDByMa(ma));
+    }
     @PostMapping("/search")
     public ResponseEntity<?> timHoaDon(@RequestBody HoaDonSearch hoaDonSearch)  {
         System.out.println(hoaDonSearch.toString());
@@ -254,6 +259,15 @@ public class HoaDonControllerr {
     @GetMapping("/hoa-don-san-pham/{idHD}")
     public ResponseEntity<?> SanPhamHoaDon(@PathVariable("idHD") String id){
         return  ResponseEntity.ok(hoaDonService.detailHDSanPham(id));
+    }
+
+    @GetMapping("/san-pham-theo-ma/{ma}")
+    public ResponseEntity<?> SanPhamTheoMa(@PathVariable("ma") String ma){
+        System.out.println("Mã HĐ "+ma);
+        HoaDon hd = hoaDonService.getHDByMa(ma);
+        if (hd == null) return null;
+        System.out.println("Hóa đơn được tìm thấy"+hd);
+        return  ResponseEntity.ok(hoaDonService.detailHDSanPham1(hd.getId()));
     }
     @GetMapping("/hoa-don-san-pham-tra/{idHD}")
     public ResponseEntity<?> SanPhamHoaDonTra(@PathVariable("idHD") String id){
