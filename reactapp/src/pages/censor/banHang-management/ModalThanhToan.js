@@ -63,7 +63,9 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
     setTongThanhToan(0);
     dispatch(DeletePay());
     dispatch(DeletePayDetail());
+    if (hoaDon) {
     const tt = await ThanhToanAPI.getThanhToan(hoaDon).then((res) => res.data);
+    if (tt) {
     tt.map((res) =>
       res.phuongThuc === 0
         ? (dispatch(
@@ -94,6 +96,8 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
           ),
           setTongThanhToan(parseFloat(tongThanhToan) + res.tongTien))
     );
+  }
+}
   };
 
   console.log("NV", storedData);
