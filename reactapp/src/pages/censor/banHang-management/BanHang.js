@@ -47,6 +47,7 @@ import {
   RemoveInvoice,
   LoadInvoice,
   RemoveInvoiceByHoaDon,
+  AddInvoice,
 } from "../../../store/reducer/DetailInvoice.reducer";
 import { SellAPI } from "../api/sell/sell.api";
 import { VoucherAPI } from "../api/voucher/voucher.api";
@@ -55,6 +56,7 @@ import imgTicket from "../../../assets/images/discountTicket.png";
 import DiaChiGiaoHang from "./GiaoHang";
 import { NguoiDungAPI } from "../api/nguoiDung/nguoiDungAPI";
 import QRScannerModal from "../api/QR_Code/QrCode";
+import { ChiTietSanPhamAPI } from "../api/SanPham/chi_tiet_san_pham.api";
  
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -103,7 +105,88 @@ const BanHang = () => {
      }
      setQrResult(result);
      console.log(qrResult);
-   };
+       ChiTietSanPhamAPI.QRCtsp(result).then((res) =>{
+           handleClickAddProduct(res.data);
+         
+        });
+   
+       
+      
+  const handleClickAddProduct = (record) => {
+    console.log("22222222222222",record);
+    if (record.soLuong < 1){
+   return toast.error("Số lượng sản phẩm "+record.tenSP+"["+record.tenMS+record.tenKT+"]" +" hiện tại không hợp lệ!", {
+     position: "top-right",
+     autoClose: 5000,
+     hideProgressBar: false,
+     closeOnClick: true,
+     pauseOnHover: true,
+     draggable: true,
+     progress: undefined,
+     theme: "light",
+   });
+    }
+    const id = uuid();
+    const hdct = [
+      {
+        id: id,
+        hoaDon: activeKey,
+        chiTietSanPham: record.id,
+        soLuong: 1,
+        giaSauGiam:
+          parseFloat(record.giaBan) -
+          parseFloat(
+            record.loaiKM === "Tiền mặt"
+              ? record.giaTriKhuyenMai
+              : (record.giaBan * record.giaTriKhuyenMai) / 100
+          ),
+        giaGiam: parseFloat(
+          record.loaiKM === "Tiền mặt"
+            ? record.giaTriKhuyenMai
+            : (record.giaBan * record.giaTriKhuyenMai) / 100
+        ),
+      },
+    ];
+    dispatch(
+      AddInvoice({
+        id: id,
+        chiTietSanPham: record.id,
+        tenSP: record.tenSP,
+        maMS: record.maMS,
+        linkAnh: record.linkAnh,
+        tenKT: record.tenKT,
+        giaBan: record.giaBan,
+        hoaDon: activeKey,
+        tenMS: record.tenMS,
+        giaGiam: parseFloat(
+          record.loaiKM === "Tiền mặt"
+            ? record.giaTriKhuyenMai
+            : (record.giaBan * record.giaTriKhuyenMai) / 100
+        ),
+        giaSauGiam:
+          parseFloat(record.giaBan) -
+          parseFloat(
+            record.loaiKM === "Tiền mặt"
+              ? record.giaTriKhuyenMai
+              : (record.giaBan * record.giaTriKhuyenMai) / 100
+          ),
+        nguoiTao: record.nguoiTao,
+        giaBan: record.giaBan,
+        tenKM: record.tenKM,
+        loaiKM: record.loaiKM,
+        giaTriKhuyenMai: record.giaTriKhuyenMai,
+      })
+    );
+    dispatch(UpdateApartProduct({ id: record.idCTSP, soLuong: 1 }));
+    SellAPI.addInvoice(hdct[0]);
+      getSoTien();
+    // setOpenSanPham(false);
+  };
+
+  }
+
+
+  
   // console.log("voucher", voucherHienTai);
   // console.log("hoaDon", activeKey);
   // console.log("Hóa Đơn s", hoaDons);
@@ -1759,12 +1842,7 @@ const BanHang = () => {
                                   : 0
                               )}`}
                             </h6>
-                            <h6 className="mt-4">
-                              Điểm hiện tại:{" "}
-                              <>
-                                {tab.nguoiDung !== null ? tab.diemNguoiDung : 0}
-                              </>
-                            </h6>
+                        
                             <h6 className="mt-4">
                               Tổng tiền:{" "}
                               {`${Intl.NumberFormat("en-US").format(

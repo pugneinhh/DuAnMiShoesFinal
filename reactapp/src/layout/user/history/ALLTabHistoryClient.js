@@ -12,6 +12,7 @@ import { Stomp } from "@stomp/stompjs";
 const ALLTabHistoryClient = () => {
   
   const [listBill, setListBill] = useState([]);
+ 
   const storedData = get("userData");
   const [userName, setUserName] = useState("");
   const [AnhUser, setLinkAnhUser] = useState("");
@@ -34,10 +35,12 @@ const ALLTabHistoryClient = () => {
     const datatest = { id: id, trangThai };
     HoaDonClientAPI.getALLHoaDonOnlineByIdKH(datatest).then((res) => {
       const data = res.data;
+      console.log(data);
       const promises = data.map((item) => {
         return HoaDonClientAPI.getALLChiTietSanPhamClientOlByIdHD(item.id).then(
           (res) => ({
             id: item.id,
+            ma:item.ma,
             thanhTien: item.thanhTien,
             trangThai: item.trangThaiHD,
             hoaDonDetail: res.data,
@@ -47,9 +50,11 @@ const ALLTabHistoryClient = () => {
 
       Promise.all(promises).then((results) => {
         setListBill(results);
+      
       });
     });
   }, [key]);
+  
   useEffect(() => {
 
   }, [listBill]);
@@ -84,6 +89,7 @@ const ALLTabHistoryClient = () => {
                   item.id
                 ).then((res) => ({
                   id: item.id,
+                  ma: item.ma,
                   thanhTien: item.thanhTien,
                   trangThai: item.trangThaiHD,
                   hoaDonDetail: res.data,

@@ -26,6 +26,7 @@
 //    CTSPService ctspService;
 //    @Autowired
 //    HoaDonChiTietService hoaDonChiTietService;
+//
 //    @Scheduled(cron = "0 0 3 * * *") // Lịch chạy vào 3 giờ sáng hàng ngày
 //    public void deleteBill3AM() {
 //        List<HoaDon> listHoaDon = hoaDonServicee.getAllBillToday();

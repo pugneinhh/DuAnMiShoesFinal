@@ -29,4 +29,6 @@ public interface AdminHoaDonSanPham {
 
     @Value("#{target.id}")
     String getID();
+    @Value("#{target.trangThai}")
+    String getTrangThai();
 }

@@ -1285,12 +1285,13 @@ export default function HoaDonDetail() {
                       </IntlProvider>
                     </h6>
                   </div>
+                  {listSanPham.trangThai==2?(
                   <div className="col-md-2  mt-5">
                     <Button style={{ backgroundColor: "red", color: "white" }}>
                       Trả hàng
                     </Button>
                   </div>
-
+                  ):<></>}
                   <hr className="mt-3"></hr>
                 </tr>
               )

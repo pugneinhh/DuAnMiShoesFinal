@@ -25,7 +25,6 @@ const ModalDetailSP = (props) => {
       GioHangAPI.getByIDKH(storedData.userID).then((res) => {
         GioHangAPI.getAllGHCTByIDGH(res.data.id).then((res) => {
           updateTotalQuantity(res.data.length);
-      
         });
       });
     }else {
@@ -48,9 +47,9 @@ const ModalDetailSP = (props) => {
 
   const loadCTSP = () => {
     SanPhamClientAPI.getCTSP(idCt).then((res) => {
-      if (res.data === undefined || res.data === "") {
+      if (res.data === undefined || res.data === "") {   
         return;
-      }
+      }    
       setChiTietSanPham(res.data);
       setIDSanPham(res.data.sanPhamID);
       setSelectedMauSac(res.data.mauSacID);
@@ -63,15 +62,8 @@ const ModalDetailSP = (props) => {
         res.data.sanPhamID,
         res.data.mauSacID
       ).then((res) => {
+        console.log(res.data)
         setListSizeByMS(res.data);
-        const kichThuocExists = res.data.some(
-          (item) => item.kichThuocID === selectedSize
-        );
-        if (kichThuocExists) {
-          setSelectedSize(selectedSize);
-        } else {
-          setSelectedSize(res.data[0].kichThuocID);
-        }
       });
       setLargeImage(res.data.anh);
     });
