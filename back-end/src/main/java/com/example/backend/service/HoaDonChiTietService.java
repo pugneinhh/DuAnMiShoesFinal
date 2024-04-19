@@ -140,8 +140,8 @@ public class HoaDonChiTietService {
         hoaDonRepository.save(hoaDon);
         hoaDonChiTietRepository.delete(hdct);
     }
-    public void deleteHDCTAndRollBackInSellByIDHD(String idCTSP,String idHD){
-//        String idHD = hoaDonRepository.getHDByMa(ma).getId();
+
+    public void huyDonHang(String idCTSP,String idHD){
         HoaDonChiTiet hdct = hoaDonChiTietRepository.getHDCTByCTSPAndHD(idCTSP,idHD);
         System.out.println("Hóa đơn chi tiết"+hdct);
         ChiTietSanPham ctsp = ctspRepository.getReferenceById(idCTSP);
@@ -149,21 +149,6 @@ public class HoaDonChiTietService {
         int slh = hdct.getSoLuong();
         ctsp.setSoLuong(slt+slh);
         ctspRepository.save(ctsp);
-        BigDecimal tong = new BigDecimal("0");
-        HoaDon hoaDon = hoaDonRepository.getHoaDonByIDHD(idHD);
-        List<HoaDonChiTiet> list = hoaDonChiTietRepository.getAllHDCTByIDHD(idHD);
-        for (HoaDonChiTiet x : list) {
-            if (x.getChiTietSanPham().getId().equals(idCTSP)){
-                // tong = tong.add(x.getGiaSauGiam().multiply(BigDecimal.valueOf(soLuongCapNhat)));
-                continue;
-            }
-            tong = tong.add(x.getGiaSauGiam().multiply(BigDecimal.valueOf(x.getSoLuong())));
-        }
-        BigDecimal giaGiam = hoaDon.getGiaGiamGia() == null ? new BigDecimal("0") : hoaDon.getGiaGiamGia();
-        hoaDon.setGiaGoc(tong);
-        hoaDon.setThanhTien(tong.subtract(giaGiam));
-        hoaDonRepository.save(hoaDon);
-        hoaDonChiTietRepository.delete(hdct);
     }
     public void updateGia(String idCTSP, BigDecimal giaGiam , BigDecimal giaSauGiam){
         List<HoaDonChiTiet> list = hoaDonChiTietRepository.getAllHDCTByCTSP(idCTSP);

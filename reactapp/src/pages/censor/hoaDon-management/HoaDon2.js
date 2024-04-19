@@ -25,32 +25,32 @@ export default function HoaDon() {
       setHoaDons(res.data);
     });
   };
-      var stomp = null;
-      const socket = new SockJS("http://localhost:8080/ws");
-      stomp = Stomp.over(socket);
+  var stomp = null;
+  const socket = new SockJS("http://localhost:8080/ws");
+  stomp = Stomp.over(socket);
 
-      useEffect(() => {
-        stomp.connect({}, () => {
-          console.log("connect websocket");
+  useEffect(() => {
+    stomp.connect({}, () => {
+      console.log("connect websocket");
 
-          stomp.subscribe("/topic/admin/hoa-don", (mes) => {
-            try {
-              const pare = JSON.parse(mes.body);
-              console.log(pare);
-              // ví du: bạn muốn khi khách hàng bấm đặt hàng mà load lại hóa đơn màn admin thì hãy gọi hàm load all hóa đơn ở đây
-              // thí dụ: đây là hàm laod hóa đơn: loadHoaDon(); allThongBao(); CountThongBao();
-                loadHoaDon();
-                loadHoaDonCho();
-            } catch (e) {
-              console.log("lỗi mẹ ròi xem code di: ", e);
-            }
-          });
-        });
+      stomp.subscribe("/topic/admin/hoa-don", (mes) => {
+        try {
+          const pare = JSON.parse(mes.body);
+          console.log(pare);
+          // ví du: bạn muốn khi khách hàng bấm đặt hàng mà load lại hóa đơn màn admin thì hãy gọi hàm load all hóa đơn ở đây
+          // thí dụ: đây là hàm laod hóa đơn: loadHoaDon(); allThongBao(); CountThongBao();
+          loadHoaDon();
+          loadHoaDonCho();
+        } catch (e) {
+          console.log("lỗi mẹ ròi xem code di: ", e);
+        }
+      });
+    });
 
-        return () => {
-          stomp.disconnect();
-        };
-      }, []);
+    return () => {
+      stomp.disconnect();
+    };
+  }, []);
   useEffect(() => {
     loadHoaDon();
     loadHoaDonCho();
@@ -60,6 +60,7 @@ export default function HoaDon() {
     loadHoaDonVC();
     loadHoaDonXN();
     loadHoaDonHuy();
+    loadHoaDonHoanTien();
   }, []);
   // load full hóa đơn
   const [hoaDon, setHoaDons] = useState([]);
@@ -140,6 +141,16 @@ export default function HoaDon() {
       setHoaDonHuy(res.data);
       const demHD = res.data.length;
       settongHDHuy(demHD);
+    });
+  };
+  //load hóa đơn hoàn tiền
+  const [hoaDonHoanTien, setHoaDonHoanTien] = useState([]);
+  const [tongHDHoanTien, settongHDHoanTien] = useState([]);
+  const loadHoaDonHoanTien = () => {
+    HoaDonAPI.getAllbyTT(-2).then((res) => {
+      setHoaDonHoanTien(res.data);
+      const demHD = res.data.length;
+      settongHDHoanTien(demHD);
     });
   };
   const columns = [
@@ -240,6 +251,8 @@ export default function HoaDon() {
             <Tag color="green">Hoàn thành</Tag>
           ) : trangThai == -1 ? (
             <Tag color="#cd201f">Hủy</Tag>
+          ) : trangThai == -2 ? (
+            <Tag color="#cd201f">Hoàn tiền</Tag>
           ) : (
             <Tag color="gold">Đã thanh toán</Tag>
           )}
@@ -276,9 +289,7 @@ export default function HoaDon() {
     },
   ];
 
-  const onChange = (key) => {
-
-  };
+  const onChange = (key) => {};
   const items = [
     {
       key: "1",
@@ -430,6 +441,27 @@ export default function HoaDon() {
       children: (
         <Table
           dataSource={hoaDonHuy}
+          columns={columns}
+          pagination={{
+            showQuickJumper: true,
+            position: ["bottomCenter"],
+            defaultPageSize: 5,
+            defaultCurrent: 1,
+            total: 100,
+          }}
+        />
+      ),
+    },
+    {
+      key: "9",
+      label: (
+        <Badge count={tongHDHoanTien} offset={[8, 1]}>
+          Hoàn Tiền
+        </Badge>
+      ),
+      children: (
+        <Table
+          dataSource={hoaDonHoanTien}
           columns={columns}
           pagination={{
             showQuickJumper: true,

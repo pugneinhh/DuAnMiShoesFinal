@@ -107,6 +107,14 @@ public class HoaDonControllerr {
                     return ResponseEntity.ok(
                             hoaDonService.updateHD(hoaDon, id)
                     );
+                } else if (hoaDon.getTrangThai() == -1 && thanhToan.getPhuongThucVnp() != null) {
+                    ls.setTrangThai(-2);
+                    hoaDon.setTrangThai(-2);
+                    System.out.println("if 2");
+                    lichSuHoaDonService.addLichSuHoaDon(ls);
+                    return ResponseEntity.ok(
+                            hoaDonService.updateHD(hoaDon, id)
+                    );
                 }
                 if (thanhToan.getPhuongThucVnp() == null) {
                     ls.setTrangThai(hoaDon.getTrangThai() + 1);
@@ -142,6 +150,15 @@ public class HoaDonControllerr {
                    lichSuHoaDonService.addLichSuHoaDon(ls);
                    return ResponseEntity.ok(
                            hoaDonService.updateHD(hoaDon,id)
+                   );
+               }
+               else if (hoaDon.getTrangThai() == -1) {
+                   ls.setTrangThai(-2);
+                   hoaDon.setTrangThai(-2);
+                   System.out.println("if 2");
+                   lichSuHoaDonService.addLichSuHoaDon(ls);
+                   return ResponseEntity.ok(
+                           hoaDonService.updateHD(hoaDon, id)
                    );
                }
            }
@@ -275,7 +292,7 @@ public class HoaDonControllerr {
     // xóa hóa đơn và  roll back sản phẩm
     @DeleteMapping("/delete-hoa-don-chi-tiet/{idCTSP}/{id}")
     public void  deleteHoaDonChiTiet (@PathVariable("idCTSP") String idCTSP,@PathVariable("id")String id) {
-        hoaDonChiTietService.deleteHDCTAndRollBackInSellByIDHD(idCTSP,id); //  roll backed
+        hoaDonChiTietService.huyDonHang(idCTSP,id); //  roll backed
     }
     // xóa hóa đơn và  roll back sản phẩm
     @PutMapping("/xoa-hoa-don/{id}/{maNV}")
@@ -288,6 +305,7 @@ public class HoaDonControllerr {
         ls.setMoTaHoatDong(ls.getMoTaHoatDong());
         ls.setTrangThai(-1);
         lichSuHoaDonService.addLichSuHoaDon(ls);
+
         return  ResponseEntity.ok(hoaDonService.deleteHoaDon(id));
     }
 //    @PutMapping("/update/{ma}")
