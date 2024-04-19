@@ -113,7 +113,7 @@ const BanHang = () => {
        
       
   const handleClickAddProduct = (record) => {
-    console.log("22222222222222",record);
+
     if (record.soLuong < 1){
    return toast.error("Số lượng sản phẩm "+record.tenSP+"["+record.tenMS+record.tenKT+"]" +" hiện tại không hợp lệ!", {
      position: "top-right",

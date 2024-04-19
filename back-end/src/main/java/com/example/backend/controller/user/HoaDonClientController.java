@@ -6,6 +6,7 @@ import com.example.backend.dto.request.HoaDonCLient.TrangThaiRequest;
 import com.example.backend.dto.request.LichSuHoaDonRequest;
 import com.example.backend.entity.HoaDon;
 import com.example.backend.service.Client.HoaDonClientService;
+import com.example.backend.service.HoaDonChiTietService;
 import com.example.backend.service.HoaDonServicee;
 import com.example.backend.service.LichSuHoaDonService;
 import com.example.backend.service.ThongBaoService;
@@ -30,6 +31,8 @@ public class HoaDonClientController {
     LichSuHoaDonService lichSuHoaDonService;
     @Autowired
     ThongBaoService thongBaoService;
+    @Autowired
+    private HoaDonChiTietService hoaDonChiTietService;
     @PostMapping("")
     public ResponseEntity<?> getALLHoaDonOL(@RequestBody TrangThaiRequest request) {
         System.out.println("tttttttt" + request.getTrangThai());
@@ -65,5 +68,13 @@ public class HoaDonClientController {
     @GetMapping("/detail-lich-su-hoa-don/{idHD}")
     public ResponseEntity<?> detailLSHD(@PathVariable("idHD") String id){
         return  ResponseEntity.ok(lichSuHoaDonService.getLichHoaDon(id));
+    }
+    @GetMapping("/hoa-don-san-pham/{idHD}")
+    public ResponseEntity<?> SanPhamHoaDon(@PathVariable("idHD") String id){
+        return  ResponseEntity.ok(hoaDonService.detailHDSanPham(id));
+    }
+    @DeleteMapping("/delete-hoa-don-chi-tiet/{idCTSP}/{id}")
+    public void  deleteHoaDonChiTiet (@PathVariable("idCTSP") String idCTSP,@PathVariable("id")String id) {
+        hoaDonChiTietService.huyDonHang(idCTSP,id); //  roll backed
     }
 }
