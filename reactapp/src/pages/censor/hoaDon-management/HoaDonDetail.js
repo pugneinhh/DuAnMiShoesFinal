@@ -5,6 +5,7 @@ import { RiTruckFill } from "react-icons/ri";
 import { SlNotebook } from "react-icons/sl";
 import { GiNotebook, GiPiggyBank, GiReturnArrow } from "react-icons/gi";
 import { FaTruckFast } from "react-icons/fa6";
+import { ImCancelCircle } from "react-icons/im";
 import {
   Button,
   Modal,
@@ -40,6 +41,7 @@ export default function HoaDonDetail() {
   const [openModalTimeLine, setOpenModalTimeLine] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpenRollBack, setIsModalOpenRollBack] = useState(false);
+  const [isModalOpenHuyHoaDon, setIsModalHuyHoaDon] = useState(false);
   const [openSanPham, setOpenSanPham] = useState(false);
   const [openDiaChiUpdate, setOpenDiaChiUpdate] = useState(false);
   const [activeKey, setActiveKey] = useState(0);
@@ -50,10 +52,12 @@ export default function HoaDonDetail() {
   const [soTienDuocGiam, setSoTienDuocGiam] = useState(0);
   const [form] = Form.useForm();
   const [formRollBack] = Form.useForm();
+   const [formHuyHoaDon] = Form.useForm();
   const handleOk = () => {
     setIsModalOpen(false);
     setOpenModalTimeLine(false);
     setIsModalOpenRollBack(false);
+    setIsModalHuyHoaDon(false);
   };
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -61,6 +65,7 @@ export default function HoaDonDetail() {
     setOpenSanPham(false);
     setOpenDiaChiUpdate(false);
     setIsModalOpenRollBack(false);
+      setIsModalHuyHoaDon(false);
   };
   const [openXuat, setOpenXuat] = useState(false);
   const componnentRef = useRef();
@@ -89,6 +94,7 @@ export default function HoaDonDetail() {
     setmaNV(storedData.ma);
     loadHoaDon();
     loadListSanPhams();
+    loadListSanPhamTra();
     loadLichSuThanhToan();
     loadTimeLineHoaDon();
   }, []);
@@ -145,8 +151,7 @@ export default function HoaDonDetail() {
     HoaDonAPI.detailHD(id).then((res) => {
       setHoaDondetail(res.data);
       setTrangThai(res.data.trangThai);
-      console.log("->>>>>hd detail", res.data);
-      console.log(res.data.trangThai, "->>>>>>>>?");
+   
     });
   };
 
@@ -156,11 +161,10 @@ export default function HoaDonDetail() {
   const showModalRollback = () => {
     setIsModalOpenRollBack(true);
   };
+
   const rollbackHD = (values) => {
     AdminGuiThongBaoXacNhanDatHang();
     HoaDonAPI.rollbackHoaDon(id, maNV, values).then((res) => {
-      console.log("values", values);
-      console.log("trang thau", trangThai);
       loadHoaDon();
       loadTimeLineHoaDon();
       formRollBack.resetFields();
@@ -177,16 +181,20 @@ export default function HoaDonDetail() {
       });
     });
   };
-  const handleHuyHoaDon = () => {
-    Modal.confirm({
-      title: "Thông báo",
-      content: "Bạn có chắc chắn muốn xóa hóa đơn này không?",
-      onOk: () => {
-        HoaDonAPI.huyHoaDon(id);
-
-        toast("✔️ Xóa hóa đơn thành công!", {
+    const showModalHuyHoaDon = () => {
+      setIsModalHuyHoaDon(true);
+    };
+  const handleHuyHoaDon = (values) => {
+     AdminGuiThongBaoXacNhanDatHang();
+    //  HoaDonAPI.deleteInvoiceAndRollBackProduct(listSanPhams.id, id);
+      HoaDonAPI.huyHoaDonQLHoaDon(id, maNV, values).then((res) => {
+        loadHoaDon();
+        loadTimeLineHoaDon();
+        formHuyHoaDon.resetFields();
+        setIsModalHuyHoaDon(false);
+        toast("🦄 Thành công!", {
           position: "top-right",
-          autoClose: 5000,
+          autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -194,15 +202,7 @@ export default function HoaDonDetail() {
           progress: undefined,
           theme: "light",
         });
-      },
-      onCancel: () => {},
-      footer: (_, { OkBtn, CancelBtn }) => (
-        <>
-          <CancelBtn />
-          <OkBtn />
-        </>
-      ),
-    });
+      });
   };
   // update trạng thái hóa đơn
   const handleSubmit = (values) => {
@@ -299,20 +299,18 @@ export default function HoaDonDetail() {
   const [trangThai, setTrangThai] = useState([]);
 
   const [listSanPhams, setlistSanPhams] = useState([]);
+  const [listSanPhamTra, setlistSanPhamTra] = useState([]);
   console.log("list sản phẩm", listSanPhams);
   const loadListSanPhams = () => {
     HoaDonAPI.detailSanPham(id).then((res) => {
       setlistSanPhams(res.data);
     });
   };
-  const textButton = [
-    "Xác nhận",
-    "Chờ vận chuyển",
-    "Đang vận chuyển",
-    "Đã thanh toán",
-    "Thành công",
-  ];
-
+  const loadListSanPhamTra = () => {
+    HoaDonAPI.detailSanPhamTra(id).then((res) => {
+      setlistSanPhamTra(res.data);
+    });
+  };
   const loadTimeLineHoaDon = () => {
     HoaDonAPI.getAllLichSuHoaDon(id).then((res) => {
       setlistHDTimeLine(res.data);
@@ -331,10 +329,13 @@ export default function HoaDonDetail() {
       return GiPiggyBank;
     } else if (trangThai === "5") {
       return FaCheckCircle;
-    } else if (trangThai === "-1") {
+    } else if (trangThai === "10") {
       return GiReturnArrow;
+    } else if (trangThai === "-1") {
+      return ImCancelCircle;
     }
   };
+  
   const showTitle = (trangThai) => {
     if (trangThai === "0") {
       return "Chờ xác nhận";
@@ -348,6 +349,8 @@ export default function HoaDonDetail() {
       return "Đã thanh toán";
     } else if (trangThai === "5") {
       return "Thành công";
+    } else if (trangThai === "10") {
+      return "Trả hàng";
     } else if (trangThai === "-1") {
       return "Hủy";
     }
@@ -397,7 +400,7 @@ export default function HoaDonDetail() {
                 <TimelineEvent
                   minEvents={6}
                   key={index}
-                  color={"#3d874d"}
+                  color={item.trangThai == -1 ? "#520808" : "#3d874d"}
                   icon={showIcon(item.trangThai)}
                   values={showTitle(item.trangThai)}
                   isOpenEnding={true}
@@ -662,7 +665,7 @@ export default function HoaDonDetail() {
         <div className="col-md-2">
           {(hoaDondetail.loaiHD == 1 && trangThai == 4) ||
           trangThai == 0 ||
-          trangThai == 5 ? (
+          trangThai == 5||trangThai==-1 ? (
             <></>
           ) : (
             <Button type="primary" onClick={showModalRollback}>
@@ -671,7 +674,7 @@ export default function HoaDonDetail() {
           )}
 
           <Modal
-            title="Lùi hóa đơn hàng"
+            title="Hoàn tác hóa đơn"
             footer={[]}
             open={isModalOpenRollBack}
             onOk={handleOk}
@@ -721,7 +724,7 @@ export default function HoaDonDetail() {
             <Button
               style={{ backgroundColor: "red", color: "white" }}
               type="primary"
-              onClick={handleHuyHoaDon}
+              onClick={showModalHuyHoaDon}
             >
               Hủy
             </Button>
@@ -1282,12 +1285,13 @@ export default function HoaDonDetail() {
                       </IntlProvider>
                     </h6>
                   </div>
+                  {listSanPham.trangThai==2?(
                   <div className="col-md-2  mt-5">
                     <Button style={{ backgroundColor: "red", color: "white" }}>
                       Trả hàng
                     </Button>
                   </div>
-
+                  ):<></>}
                   <hr className="mt-3"></hr>
                 </tr>
               )
@@ -1296,6 +1300,8 @@ export default function HoaDonDetail() {
         </div>
 
         {/* thông tin trả hàng */}
+        {listSanPhamTra.length>0?(
+          <>
         <div
           className="d-flex bd-highlight"
           style={{ marginTop: "20px", paddingTop: "20px" }}
@@ -1306,7 +1312,7 @@ export default function HoaDonDetail() {
         </div>
         <hr></hr>
         <div>
-          {listSanPhams.map(
+          {listSanPhamTra.map(
             (listSanPham, index) => (
               console.log(listSanPham),
               (
@@ -1396,7 +1402,8 @@ export default function HoaDonDetail() {
             )
           )}
         </div>
-
+        </>
+        ):(<></>)}
         <tr className="pt-3 row">
           <div className="col-md-6">
             <div className="row">
@@ -1552,6 +1559,51 @@ export default function HoaDonDetail() {
         </tr>
       </div>
 
+      {/* modal hủy hóa đơn */}
+      <Modal
+        title="Nhập lý do hủy hóa đơn"
+        footer={[]}
+        open={isModalOpenHuyHoaDon}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <Form form={formHuyHoaDon} onFinish={handleHuyHoaDon}>
+          <Form.Item
+            name="moTaHoatDong"
+            hasFeedback
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng không để trống ghi chú!",
+              },
+            ]}
+          >
+            <TextArea rows={4} />
+          </Form.Item>
+          <Button
+            style={{ marginLeft: 200 }}
+            className="bg-success text-light"
+            onClick={() => {
+              Modal.confirm({
+                title: "Thông báo",
+                content: "Bạn có chắc chắn muốn tiếp tục?",
+                onOk: () => {
+                  formHuyHoaDon.submit();
+                },
+                footer: (_, { OkBtn, CancelBtn }) => (
+                  <>
+                    <CancelBtn />
+                    <OkBtn />
+                  </>
+                ),
+              });
+            }}
+          >
+            Xác nhận
+          </Button>
+        </Form>
+      </Modal>
+      {/* modal time line */}
       <ModalTimeLine
         openModalTimeLine={openModalTimeLine}
         setOpenModalTimeLine={setOpenModalTimeLine}

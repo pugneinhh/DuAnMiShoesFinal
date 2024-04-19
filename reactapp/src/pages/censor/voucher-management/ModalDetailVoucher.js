@@ -45,7 +45,7 @@ const ModalDetailVoucher=(props)=>{
           soLuong: response.data.soLuong,
         });
         setDataUpdate(response.data);
-
+        setSelectedValue(response.data.loaiVoucher);
       })
       .catch((error) => console.error("Error upfate item:", error));
   };

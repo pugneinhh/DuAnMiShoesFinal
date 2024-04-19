@@ -14,9 +14,7 @@ import {
 } from "antd";
 import React, { Children, useEffect, useRef, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
-import { BsQrCodeScan, BsRecordCircle } from "react-icons/bs";
 import { FaList } from "react-icons/fa";
-import { QrReader } from "react-qr-reader";
 import {
   MdOutlinePayments,
   MdOutlineShoppingCartCheckout,
@@ -48,6 +46,7 @@ import {
   RemoveInvoice,
   LoadInvoice,
   RemoveInvoiceByHoaDon,
+  AddInvoice,
 } from "../../../store/reducer/DetailInvoice.reducer";
 import { SellAPI } from "../api/sell/sell.api";
 import { VoucherAPI } from "../api/voucher/voucher.api";
@@ -55,7 +54,9 @@ import { HoaDonAPI } from "../api/hoaDon/hoaDon.api";
 import imgTicket from "../../../assets/images/discountTicket.png";
 import DiaChiGiaoHang from "./GiaoHang";
 import { NguoiDungAPI } from "../api/nguoiDung/nguoiDungAPI";
-
+import QRScannerModal from "../api/QR_Code/QrCode";
+import { ChiTietSanPhamAPI } from "../api/SanPham/chi_tiet_san_pham.api";
+ 
 const { Option } = Select;
 const { TabPane } = Tabs;
 const BanHang = () => {
@@ -80,18 +81,117 @@ const BanHang = () => {
   const [soTienDuocGiam, setSoTienDuocGiam] = useState(0);
   const [idKH, setIDKH] = useState(null);
   const [money, setMoney] = useState(0);
-  console.log("voucher", voucherHienTai);
-  console.log("hoaDon", activeKey);
-  console.log("Hóa Đơn s", hoaDons);
+
+  //qr san pham
+    const handleModalClose = () => {
+      setShowModal(false);
+    };
+  const [showModal, setShowModal] = useState(false);
+    const [qrResult, setQrResult] = useState("");
+ const handleScanButtonClick = () => {
+   setShowModal(true);
+ };
+
+   const handleQRResult = (result) => {
+     if (result != null) {
+       setShowModal(false);
+     }
+     setQrResult(result);
+     console.log(qrResult);
+       ChiTietSanPhamAPI.QRCtsp(result).then((res) =>{
+           handleClickAddProduct(res.data);
+         
+        });
+   
+       
+      
+  const handleClickAddProduct = (record) => {
+    console.log("22222222222222",record);
+    if (record.soLuong < 1){
+   return toast.error("Số lượng sản phẩm "+record.tenSP+"["+record.tenMS+record.tenKT+"]" +" hiện tại không hợp lệ!", {
+     position: "top-right",
+     autoClose: 5000,
+     hideProgressBar: false,
+     closeOnClick: true,
+     pauseOnHover: true,
+     draggable: true,
+     progress: undefined,
+     theme: "light",
+   });
+    }
+    const id = uuid();
+    const hdct = [
+      {
+        id: id,
+        hoaDon: activeKey,
+        chiTietSanPham: record.id,
+        soLuong: 1,
+        giaSauGiam:
+          parseFloat(record.giaBan) -
+          parseFloat(
+            record.loaiKM === "Tiền mặt"
+              ? record.giaTriKhuyenMai
+              : (record.giaBan * record.giaTriKhuyenMai) / 100
+          ),
+        giaGiam: parseFloat(
+          record.loaiKM === "Tiền mặt"
+            ? record.giaTriKhuyenMai
+            : (record.giaBan * record.giaTriKhuyenMai) / 100
+        ),
+      },
+    ];
+    dispatch(
+      AddInvoice({
+        id: id,
+        chiTietSanPham: record.id,
+        tenSP: record.tenSP,
+        maMS: record.maMS,
+        linkAnh: record.linkAnh,
+        tenKT: record.tenKT,
+        giaBan: record.giaBan,
+        hoaDon: activeKey,
+        tenMS: record.tenMS,
+        giaGiam: parseFloat(
+          record.loaiKM === "Tiền mặt"
+            ? record.giaTriKhuyenMai
+            : (record.giaBan * record.giaTriKhuyenMai) / 100
+        ),
+        giaSauGiam:
+          parseFloat(record.giaBan) -
+          parseFloat(
+            record.loaiKM === "Tiền mặt"
+              ? record.giaTriKhuyenMai
+              : (record.giaBan * record.giaTriKhuyenMai) / 100
+          ),
+        nguoiTao: record.nguoiTao,
+        giaBan: record.giaBan,
+        tenKM: record.tenKM,
+        loaiKM: record.loaiKM,
+        giaTriKhuyenMai: record.giaTriKhuyenMai,
+      })
+    );
+    dispatch(UpdateApartProduct({ id: record.idCTSP, soLuong: 1 }));
+    SellAPI.addInvoice(hdct[0]);
+      getSoTien();
+    // setOpenSanPham(false);
+  };
+
+  }
+
+
+  
+  // console.log("voucher", voucherHienTai);
+  // console.log("hoaDon", activeKey);
+  // console.log("Hóa Đơn s", hoaDons);
     const hoaDonHienTai = hoaDons.filter((x) => x.key === activeKey);
-  console.log("Hóa đơn hiện tại",hoaDonHienTai);
+  // console.log("Hóa đơn hiện tại",hoaDonHienTai);
   lengthSP = ctspHD.filter((f) => f.hoaDon === activeKey)
                 .reduce(
                   (accumulator, object) =>
                     parseFloat(accumulator) + parseFloat(object.soLuong),
                   0
                 );
-                console.log("Độ dài"+lengthSP);
+                // console.log("Độ dài"+lengthSP);
   const loadVoucherTotNhatVaVoucherTiepTheo = () => {
     console.log("money", money);
     console.log("voucher hiện tại "+voucherHienTai);
@@ -139,10 +239,10 @@ const BanHang = () => {
 
   useEffect(() => {
     console.log("Vào useEffect soTienHoaDon");
-    if (soTienHoaDon < (voucherHienTai ? voucherHienTai.dieuKien : 0)) {
-      console.log("Vào lỗi");
-      setVoucherHienTai(null);
-    }
+    // if (soTienHoaDon < (voucherHienTai ? voucherHienTai.dieuKien : 0)) {
+    //   console.log("Vào lỗi");
+    //   setVoucherHienTai(null);
+    // }
     if (activeKey !== "") {
       console.log("Vào không lỗi");
       SellAPI.detailHoaDon(activeKey).then((res) => {
@@ -153,6 +253,7 @@ const BanHang = () => {
               : null
             : null
         );
+        console.log("Thanh tien: "+res.data.thanhTien);
         setMoney(res.data.thanhTien ? res.data.thanhTien : 0);
         SellAPI.voucherTotNhat(res.data.nguoiDung
           ? res.data.nguoiDung.id
@@ -333,7 +434,7 @@ const BanHang = () => {
 
   const voucherNoIDKH = async () => {
     const result = await SellAPI.getVoucherNoLimited();
-    console.log(result.data);
+    console.log("voucher no limited"+result.data);
     setVoucherNoLimited(result.data);
   };
 
@@ -1104,24 +1205,7 @@ const BanHang = () => {
     },
   ];
 
-  ////quét QR sản phẩm
-  const totalPrice = 0;
-  const [openScan, setOpenScan] = useState(false);
-  const [qrData, setQrData] = useState("");
-  const handleCloseScan = () => {
-    setOpenScan(false);
-  };
-  const handleScan = (data) => {
-    if (data) {
-      setQrData(data);
-      // Gửi dữ liệu mã QR lên server ở đây
-    }
-  };
-
-  const handleError = (err) => {
-    console.error(err);
-  };
-
+ 
   return (
     <div className="container border-1">
       <div className="text-end mt-3 me-4 mb-3">
@@ -1180,11 +1264,13 @@ const BanHang = () => {
                         </div>
                         <div className="text-end">
                           <Button
+                            onClick={handleScanButtonClick}
                             type="primary"
-                            icon={<BsQrCodeScan />}
-                            onClick={() => setOpenScan(true)}
                           >
-                            Quét QR sản phẩm
+                            {/* <FontAwesomeIcon icon={FaQrcode} /> */}
+                            <span style={{ marginLeft: "10px" }}>
+                              QR- Sản phẩm
+                            </span>
                           </Button>
                           <Button
                             type="primary"
@@ -1407,38 +1493,50 @@ const BanHang = () => {
                               data.reduce((accumulator, currentProduct) => {
                                 return accumulator + currentProduct.total;
                               }, 0) -
-                                (voucherHienTai 
-                                  ? voucherHienTai.loaiVoucher === "Tiền mặt"
-                                    ? parseFloat(voucherHienTai.mucDo) <
-                                      parseFloat(voucherHienTai.giamToiDa)
-                                      ? voucherHienTai.mucDo
-                                      : voucherHienTai.giamToiDa
-                                    : parseFloat(
-                                        ( data.reduce((accumulator, currentProduct) => {
-                                          return accumulator + currentProduct.total;
-                                        }, 0) * voucherHienTai.mucDo) /
-                                          100
-                                      ) < parseFloat(voucherHienTai.giamToiDa)
-                                    ? (parseFloat( data.reduce((accumulator, currentProduct) => {
-                                      return accumulator + currentProduct.total;
-                                    }, 0)) *
-                                        parseFloat(voucherHienTai.mucDo)) /
-                                      100
+                              (voucherHienTai
+                                ? voucherHienTai.loaiVoucher === "Tiền mặt"
+                                  ? parseFloat(voucherHienTai.mucDo) <
+                                    parseFloat(voucherHienTai.giamToiDa)
+                                    ? voucherHienTai.mucDo
                                     : voucherHienTai.giamToiDa
-                                  : 0) +
-                                roundToThousands(
-                                  isSwitchOn
-                                    ?
-                                      hd[0]?.tienVanChuyen &&
-                                      shipMoney === shipMoney1
-                                      ? hd[0]?.tienVanChuyen
-                                      : shipMoney1
-                                      ? shipMoney1
-                                      : shipMoney
-                                      ? shipMoney
-                                      : 0
+                                  : parseFloat(
+                                      (data.reduce(
+                                        (accumulator, currentProduct) => {
+                                          return (
+                                            accumulator + currentProduct.total
+                                          );
+                                        },
+                                        0
+                                      ) *
+                                        voucherHienTai.mucDo) /
+                                        100
+                                    ) < parseFloat(voucherHienTai.giamToiDa)
+                                  ? (parseFloat(
+                                      data.reduce(
+                                        (accumulator, currentProduct) => {
+                                          return (
+                                            accumulator + currentProduct.total
+                                          );
+                                        },
+                                        0
+                                      )
+                                    ) *
+                                      parseFloat(voucherHienTai.mucDo)) /
+                                    100
+                                  : voucherHienTai.giamToiDa
+                                : 0) +
+                              roundToThousands(
+                                isSwitchOn
+                                  ? hd[0]?.tienVanChuyen &&
+                                    shipMoney === shipMoney1
+                                    ? hd[0]?.tienVanChuyen
+                                    : shipMoney1
+                                    ? shipMoney1
+                                    : shipMoney
+                                    ? shipMoney
                                     : 0
-                                )
+                                  : 0
+                              )
                             }
                             hoaDon={activeKey}
                             voucher={voucherHienTai ? voucherHienTai : null}
@@ -1597,16 +1695,7 @@ const BanHang = () => {
                           </Space.Compact>
                         </div>
                         <h6 className="mt-4">
-                          Trả sau:
-                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                          <Switch
-                            disabled={isSwitchOn ? false : true}
-                            onChange={handleSwitchTraSau}
-                            checked={isSwitchTraSau}
-                          />
-                        </h6>
-                        <h6 className="mt-4">
-                          Giao hàng: &nbsp;&nbsp;&nbsp;
+                        Giao hàng: &nbsp;&nbsp;&nbsp;
                           <Switch
                             disabled={false}
                             onChange={handleSwitchToggle}
@@ -1618,6 +1707,16 @@ const BanHang = () => {
                               //   : false
                               isSwitchOn
                             }
+                          />
+      
+                        </h6>
+                        <h6 className="mt-4">
+                        Trả sau:
+                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          <Switch
+                            disabled={isSwitchOn ? false : true}
+                            onChange={handleSwitchTraSau}
+                            checked={isSwitchTraSau}
                           />
                         </h6>
                         <div className="row">
@@ -1657,47 +1756,70 @@ const BanHang = () => {
                                       ? voucherHienTai.mucDo
                                       : voucherHienTai.giamToiDa
                                     : parseFloat(
-                                        ( data.reduce((accumulator, currentProduct) => {
-                                          return accumulator + currentProduct.total;
-                                        }, 0) * voucherHienTai.mucDo) /
+                                        (data.reduce(
+                                          (accumulator, currentProduct) => {
+                                            return (
+                                              accumulator + currentProduct.total
+                                            );
+                                          },
+                                          0
+                                        ) *
+                                          voucherHienTai.mucDo) /
                                           100
                                       ) < parseFloat(voucherHienTai.giamToiDa)
-                                    ? (parseFloat( data.reduce((accumulator, currentProduct) => {
-                                      return accumulator + currentProduct.total;
-                                    }, 0)) *
+                                    ? (parseFloat(
+                                        data.reduce(
+                                          (accumulator, currentProduct) => {
+                                            return (
+                                              accumulator + currentProduct.total
+                                            );
+                                          },
+                                          0
+                                        )
+                                      ) *
                                         parseFloat(voucherHienTai.mucDo)) /
                                       100
                                     : voucherHienTai.giamToiDa
                                   : 0
                               )}`}
                             </h6>
-                            <h6 className="mt-4">
-                              Điểm hiện tại:{" "}
-                              <>
-                                {tab.nguoiDung !== null ? tab.diemNguoiDung : 0}
-                              </>
-                            </h6>
+                        
                             <h6 className="mt-4">
                               Tổng tiền:{" "}
                               {`${Intl.NumberFormat("en-US").format(
                                 data.reduce((accumulator, currentProduct) => {
                                   return accumulator + currentProduct.total;
                                 }, 0) -
-                                  (voucherHienTai 
+                                  (voucherHienTai
                                     ? voucherHienTai.loaiVoucher === "Tiền mặt"
                                       ? parseFloat(voucherHienTai.mucDo) <
                                         parseFloat(voucherHienTai.giamToiDa)
                                         ? voucherHienTai.mucDo
                                         : voucherHienTai.giamToiDa
                                       : parseFloat(
-                                          ( data.reduce((accumulator, currentProduct) => {
-                                            return accumulator + currentProduct.total;
-                                          }, 0) * voucherHienTai.mucDo) /
+                                          (data.reduce(
+                                            (accumulator, currentProduct) => {
+                                              return (
+                                                accumulator +
+                                                currentProduct.total
+                                              );
+                                            },
+                                            0
+                                          ) *
+                                            voucherHienTai.mucDo) /
                                             100
                                         ) < parseFloat(voucherHienTai.giamToiDa)
-                                      ? (parseFloat( data.reduce((accumulator, currentProduct) => {
-                                        return accumulator + currentProduct.total;
-                                      }, 0)) *
+                                      ? (parseFloat(
+                                          data.reduce(
+                                            (accumulator, currentProduct) => {
+                                              return (
+                                                accumulator +
+                                                currentProduct.total
+                                              );
+                                            },
+                                            0
+                                          )
+                                        ) *
                                           parseFloat(voucherHienTai.mucDo)) /
                                         100
                                       : voucherHienTai.giamToiDa
@@ -1807,14 +1929,14 @@ const BanHang = () => {
                       {voucherNoLimited ? (
                         voucherNoLimited.map((option) => (
                           <Option
-                          key={option.id}
-                          value={option.id}
-                          label={option.ma}
-                          imgTicket={imgTicket}
-                          dieuKien={option.dieuKien}
-                          giamToiDa={option.giamToiDa}
-                          loai={option.loaiVoucher}
-                          mucDo={option.mucDo}
+                            key={option.id}
+                            value={option.id}
+                            label={option.ma}
+                            imgTicket={imgTicket}
+                            dieuKien={option.dieuKien}
+                            giamToiDa={option.giamToiDa}
+                            loai={option.loaiVoucher}
+                            mucDo={option.mucDo}
                             style={{ width: "100%", height: 80 }}
                             // filterOption={filterOptionVoucher}
                           >
@@ -1902,32 +2024,13 @@ const BanHang = () => {
           console.error()
         )}
       </div>
-
-      <Modal
-        title={<h5>QR core scaner</h5>}
-        centered
-        open={openScan}
-        onOk={handleCloseScan}
-        onCancel={handleCloseScan}
-        footer={[<Button onClick={handleCloseScan}>Cancel</Button>]}
-        width={500}
-      >
-        <QrReader
-          delay={300}
-          onError={handleError}
-          onScan={handleScan}
-          onResult={(result, error) => {
-            if (!!result) {
-              setQrData(result?.text);
-            }
-
-            if (!!error) {
-              console.info(error);
-            }
-          }}
-          style={{ width: "100%" }}
+      {showModal && (
+        <QRScannerModal
+          visible={showModal}
+          onCancel={handleModalClose}
+          onQRResult={handleQRResult}
         />
-      </Modal>
+      )}
 
       <ToastContainer
         position="top-right"

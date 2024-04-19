@@ -1,8 +1,6 @@
 import { getHeader, requestAdmin } from "../request";
 
 export class ChiTietSanPhamAPI {
- 
-
   static showCTSP = (data) => {
     const getToken = getHeader();
     return requestAdmin({
@@ -57,6 +55,16 @@ export class ChiTietSanPhamAPI {
       },
     });
   };
+  static QRCtsp = (id) => {
+    const getToken = getHeader();
+    return requestAdmin({
+      method: "GET",
+      url: `/admin/ctsp/QR/${id}`,
+      headers: {
+        Authorization: getToken,
+      },
+    });
+  };
 
   static createCTSP = (data) => {
     const getToken = getHeader();
@@ -70,7 +78,7 @@ export class ChiTietSanPhamAPI {
     });
   };
 
-  static updateCTSP = (id,data) => {
+  static updateCTSP = (id, data) => {
     const getToken = getHeader();
     return requestAdmin({
       method: "PUT",
@@ -82,7 +90,7 @@ export class ChiTietSanPhamAPI {
     });
   };
 
-  static searchCTSP = (id,data) => {
+  static searchCTSP = (id, data) => {
     const getToken = getHeader();
     return requestAdmin({
       method: "POST",
@@ -226,7 +234,7 @@ export class ChiTietSanPhamAPI {
     });
   };
 
-  static getAllDanhMuc= () => {
+  static getAllDanhMuc = () => {
     const getToken = getHeader();
     return requestAdmin({
       method: "GET",
@@ -250,7 +258,7 @@ export class ChiTietSanPhamAPI {
     });
   };
 
-  static getAllHang= () => {
+  static getAllHang = () => {
     const getToken = getHeader();
     return requestAdmin({
       method: "GET",

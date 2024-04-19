@@ -7,6 +7,7 @@ import com.example.backend.dto.response.SoLuongVaSoLuongTon;
 import com.example.backend.dto.response.sanpham.CTSPSearchRespone;
 import com.example.backend.dto.response.sanpham.ChiTietSanPhamRespone;
 import com.example.backend.dto.response.sanpham.DetailCTSPRespone;
+import com.example.backend.dto.response.sanpham.DetailCtspByQrRespon;
 import com.example.backend.entity.ChiTietSanPham;
 import com.example.backend.entity.HoaDon;
 import com.example.backend.entity.KhuyenMai;
@@ -33,6 +34,8 @@ public class CTSPService {
         return ctspRepository.getALLCTSP(id);
     }
     public DetailCTSPRespone detailCTSP(String id){return ctspRepository.detailCTSP(id);}
+
+    public DetailCtspByQrRespon detailCtspByQrRespon(String id){return ctspRepository.QRctsp(id);}
     public DetailCTSPRespone detailCTSPGioHang(String id){return ctspRepository.detailCTSPGioHang(id);}
 
     public List<DetailCTSPRespone> detail(){return ctspRepository.detail();}

@@ -34,16 +34,16 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
 
     // hóa đơn getALl client
     @Query(value = """
-           SELECT hd.id, hd.thanh_tien as thanhTien, hd.trang_thai as trangThaiHD, (select group_concat(hdct.id) from hoa_don_chi_tiet hdct where hdct.hoa_don_id=hd.id) as hoaDonDetail 
+           SELECT hd.id,hd.ma, hd.thanh_tien as thanhTien, hd.trang_thai as trangThaiHD, (select group_concat(hdct.id) from hoa_don_chi_tiet hdct where hdct.hoa_don_id=hd.id) as hoaDonDetail 
            FROM duanmishoes.hoa_don hd where khach_hang_id=:#{#req.id}  and loai_hoa_don=0 AND ( :#{#req.trangThai}  IS NULL
          OR :#{#req.trangThai} LIKE ''OR hd.trang_thai Like (:#{#req.trangThai}))  order by hd.ngay_mua desc;                                                                                              
                      """, nativeQuery = true)
     List<HoaDonClientHistory> getALLHDClientByIDKH(TrangThaiRequest req);
     //get hóa đơn by id client
     @Query(value = """
-     select id,dia_chi as diaChiShip,email,gia_giam_gia as giaGiamGia, gia_goc as giaGoc,loai_hoa_don as loaiHoaDon,ma,
-     ngay_du_kien_nhan as ngayDuKienNhan,so_dien_thoai as sdt, trang_thai as trangThai, tien_van_chuyen as tienVanChuyen,ten_nguoi_nhan as tenNguoiNhan
-   ,thanh_tien as thanhTien   from hoa_don where id=:idHD                                                                                             
+    select hd.id ,dia_chi as diaChiShip,email,gia_giam_gia as giaGiamGia, gia_goc as giaGoc,loai_hoa_don as loaiHoaDon,ma,
+      ngay_du_kien_nhan as ngayDuKienNhan,so_dien_thoai as sdt, hd.trang_thai as trangThai, tien_van_chuyen as tienVanChuyen,ten_nguoi_nhan as tenNguoiNhan
+    ,thanh_tien as thanhTien, tt.phuong_thuc_vnp as vnp   from  thanh_toan tt  join hoa_don hd on tt.hoa_don_id=hd.id where hd.id=:idHD                                                                                             
                      """, nativeQuery = true)
     DetailHoaDonClientByIdHDRespon detailHoaDonClienByIdHD(String idHD);
     @Query(value = """
@@ -94,17 +94,29 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
     @Query(value = """
             SELECT hdct.id as id ,hdct.chi_tiet_san_pham_id as idCTSP , hdct.so_luong AS soLuongSP, ctsp.gia_ban AS giaBanSP,CASE WHEN ha.url is  NULL   THEN N'khong co'
                                ELSE ha.url END as urlHA,sp.ten AS tenSP, kt.ten AS tenKichThuoc,ms.ten AS tenMauSac,
-                h.ten AS tenHang,hdct.gia_giam as giaGiam,hdct.gia_sau_giam as thanhTienSP FROM  duanmishoes.hoa_don_chi_tiet hdct
+                h.ten AS tenHang,hdct.gia_giam as giaGiam,hdct.gia_sau_giam as thanhTienSP,hdct.trang_thai as trangThai FROM  duanmishoes.hoa_don_chi_tiet hdct
                			LEFT JOIN  duanmishoes.chi_tiet_san_pham ctsp ON ctsp.id = hdct.chi_tiet_san_pham_id
                			LEFT JOIN duanmishoes.hinh_anh ha ON ha.chi_tiet_san_pham_id = ctsp.id
                			LEFT JOIN duanmishoes.san_pham sp ON sp.id = ctsp.san_pham_id
                			LEFT JOIN duanmishoes.kich_thuoc kt ON kt.id = ctsp.kich_thuoc_id
                			LEFT JOIN duanmishoes.mau_sac ms ON ms.id = ctsp.mau_sac_id
-               			LEFT JOIN duanmishoes.hang h ON h.id = ctsp.hang_id WHERE hdct.hoa_don_id=:key
+               			LEFT JOIN duanmishoes.hang h ON h.id = ctsp.hang_id WHERE hdct.hoa_don_id=:key and (hdct.trang_thai=0 or hdct.trang_thai=1 or hdct.trang_thai=2)
                            	    """,
             nativeQuery = true)
     List<AdminHoaDonSanPham> detailHDSanPham(String key);
-
+    @Query(value = """
+            SELECT hdct.id as id ,hdct.chi_tiet_san_pham_id as idCTSP , hdct.so_luong AS soLuongSP, ctsp.gia_ban AS giaBanSP,CASE WHEN ha.url is  NULL   THEN N'khong co'
+                               ELSE ha.url END as urlHA,sp.ten AS tenSP, kt.ten AS tenKichThuoc,ms.ten AS tenMauSac,
+                h.ten AS tenHang,hdct.gia_giam as giaGiam,hdct.gia_sau_giam as thanhTienSP,hdct.trang_thai as trangThai FROM  duanmishoes.hoa_don_chi_tiet hdct
+               			LEFT JOIN  duanmishoes.chi_tiet_san_pham ctsp ON ctsp.id = hdct.chi_tiet_san_pham_id
+               			LEFT JOIN duanmishoes.hinh_anh ha ON ha.chi_tiet_san_pham_id = ctsp.id
+               			LEFT JOIN duanmishoes.san_pham sp ON sp.id = ctsp.san_pham_id
+               			LEFT JOIN duanmishoes.kich_thuoc kt ON kt.id = ctsp.kich_thuoc_id
+               			LEFT JOIN duanmishoes.mau_sac ms ON ms.id = ctsp.mau_sac_id
+               			LEFT JOIN duanmishoes.hang h ON h.id = ctsp.hang_id WHERE hdct.hoa_don_id=:key and hdct.trang_thai=3
+                           	    """,
+            nativeQuery = true)
+    List<AdminHoaDonSanPham> detailHDSanPhamTra(String key);
     @Query(value = """
             select
             	hd.id as idHD,

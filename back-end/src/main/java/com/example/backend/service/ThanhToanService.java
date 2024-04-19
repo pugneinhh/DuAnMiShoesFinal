@@ -57,11 +57,10 @@ private EmailSenderService emailSenderService;
 //                }
 //            }
 //        }
+        sendMailOnline(tt.getHoaDon().getId());
         return thanhToanRepository.save(tt);
-
-
  //      ThanhToan thanhToan =  thanhToanRepository.save(tt);
- //      sendMailOnline(thanhToan.getHoaDon().getId());
+
  //       return thanhToan;
     }
 
@@ -104,5 +103,11 @@ private EmailSenderService emailSenderService;
         String subject = "Biên lai ";
         emailSenderService.sendSimpleEmail(email, subject, finalHtmlSendMail);
 
+    }
+
+
+    public ThanhToan thanhToanAdmin(ThanhToanRequest request) {
+        ThanhToan tt = request.map(new ThanhToan());
+        return thanhToanRepository.save(tt);
     }
 }

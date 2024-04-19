@@ -30,9 +30,12 @@ const payDetailSlice = createSlice({
         },
         RemovePayDetail:(state,action) => {
             return state.filter((item) => (item.hoaDon === action.payload.hoaDon && item.phuongThuc !== action.payload.phuongThuc) || (item.hoaDon === action.payload.hoaDon && item.hoaDon !== action.payload.hoaDon));
+        },
+        DeletePayDetail: (state,action) => {
+            return initialState;
         }
     }
 })
-export const {AddPayDetail,RemovePayDetail} = payDetailSlice.actions;
+export const {AddPayDetail,RemovePayDetail,DeletePayDetail} = payDetailSlice.actions;
 export default payDetailSlice.reducer;
 export const GetPayDetail = (state) => state.payDetail;

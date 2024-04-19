@@ -1,11 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./gioHang.css";
 import { Button, Switch, Tag, Modal } from "antd";
-import { FaRegTrashAlt, FaMapMarkerAlt } from "react-icons/fa";
+import {  FaMapMarkerAlt } from "react-icons/fa";
 import { BiSolidDiscount } from "react-icons/bi";
 import ModalDiaChi from "./modalDiaChi";
 import ModalVoucher from "./modalVoucher";
-import { Link } from "react-router-dom";
 import ProductRow from "./gioHangrow";
 import { GioHangAPI } from "../../../pages/censor/api/gioHang/gioHang.api";
 import { get, set } from "local-storage";
@@ -20,12 +19,9 @@ import logoBanner from "../../../assets/images/page-header-bg.jpg";
 import { useNavigate } from "react-router-dom";
 import Moment from "moment";
 import {
-  AdThongBaoDatHang,
   KHGuiThongBaoDatHang,
 } from "../../../utils/socket/socket";
-import HoaDon from "../../../pages/censor/hoaDon-management/HoaDon2";
 import { useCart } from "./CartContext";
-import CheckoutButton from "../thongBaoThanhToan/button";
 
 export const GioHang = ({ children }) => {
   const [openModalDiaChi, setOpenModalDiaChi] = useState(false);
@@ -74,7 +70,7 @@ export const GioHang = ({ children }) => {
         });
       });
     } else {
-      console.log("giỏ hàng", storedGioHang);
+      
       GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res) => {
         updateTotalQuantity(res.data.length);
       });
@@ -125,6 +121,8 @@ export const GioHang = ({ children }) => {
       } else {
         setDiscount(Math.min(total * (voucher.mucDo / 100), voucher.giamToiDa));
       }
+    }else{
+      setDiscount(0);
     }
   };
   const loadDiaChiMacDinh = async () => {
@@ -133,7 +131,7 @@ export const GioHang = ({ children }) => {
     if (storedData?.userID) {
       await BanHangClientAPI.getDiaChiMacDinh(storedData.userID).then((res) => {
         setDiaChi(res.data);
-        console.log(res);
+       
         idHuyen = res.data.idHuyen;
         idXa = res.data.idXa;
       });
@@ -150,18 +148,18 @@ export const GioHang = ({ children }) => {
         )
       );
 
-      console.log(
-        "Tiền vận chuyển",
-        await ShipAPI.fetchAllMoneyShip(idHuyen, idXa, soLuongSPGH).then(
-          (res) => res.data.data.total
-        )
-      );
-      console.log(
-        "Thời gian vận chuyển",
-        await ShipAPI.fetchAllDayShip(idHuyen, idXa).then(
-          (res) => res.data.data.leadtime * 1000
-        )
-      );
+      // console.log(
+      //   "Tiền vận chuyển",
+      //   await ShipAPI.fetchAllMoneyShip(idHuyen, idXa, soLuongSPGH).then(
+      //     (res) => res.data.data.total
+      //   )
+      // );
+      // console.log(
+      //   "Thời gian vận chuyển",
+      //   await ShipAPI.fetchAllDayShip(idHuyen, idXa).then(
+      //     (res) => res.data.data.leadtime * 1000
+      //   )
+      // );
     }
   };
 
@@ -260,9 +258,9 @@ export const GioHang = ({ children }) => {
       maGiaoDich: "",
       // ma: "HD" + currentDateInMilliseconds,
       idUser: userID,
-      tongTien: total + (moneyShip ? moneyShip : 0),
+      tongTien: total,
       giaGiamGia: discount,
-      tienSauGiam: total + (moneyShip ? moneyShip : 0) - discount,
+      tienSauGiam: total - (discount?discount:0),
       diaChi: diaChi
         ? diaChi.diaChi +
           "/" +
@@ -280,9 +278,9 @@ export const GioHang = ({ children }) => {
       listHDCT: hdct,
     };
     
-    if (phuongThuc == 1) {
+    if (phuongThuc === 1) {
       BanHangClientAPI.getLinkVnpay(
-        total + (moneyShip ? moneyShip : 0) - discount
+        total + (moneyShip ? moneyShip : 0) - (discount?discount:0)
       ).then((res) => {
         if (res.data) {
           const maGiaoDichs = Object.keys(res.data)[0];
@@ -505,7 +503,7 @@ export const GioHang = ({ children }) => {
             <div className="col-md-5">
               <span>
                 <span style={{ color: "blue" }}>
-                  {Intl.NumberFormat("en-US").format(discount)}
+                  {discount?Intl.NumberFormat("en-US").format(discount):0}
                 </span>
                 <span> VND</span>
               </span>
@@ -520,7 +518,7 @@ export const GioHang = ({ children }) => {
             </h5>
             <h5 className="col-md-5">
               <span style={{ color: "blue" }}>
-                {Intl.NumberFormat("en-US").format(total - discount)} VND
+                {Intl.NumberFormat("en-US").format(total - (discount?discount:0))} VND
               </span>
             </h5>
           </div>

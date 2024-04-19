@@ -31,4 +31,23 @@ export class HoaDonClientAPI {
       data: data,
     });
   };
+  static huyHoaDonQLHoaDon = (id, maNV, data) => {
+    return requestClient({
+      method: "PUT",
+      url: `/client-hoa-don/xoa-hoa-don/${id}/${maNV}`,
+      data: data,
+      headers: {
+        Authorization: this.getToken,
+      },
+    });
+  };
+  static getAllLichSuHoaDon = (id) => {
+    return requestClient({
+      method: "GET",
+      url: `/client-hoa-don/detail-lich-su-hoa-don/${id}`,
+      headers: {
+        Authorization: this.getToken,
+      },
+    });
+  };
 }

@@ -42,6 +42,15 @@ export class HoaDonAPI {
       },
     });
   };
+  static detailSanPhamTra = (id) => {
+    return requestAdmin({
+      method: "GET",
+      url: `/admin/hoa-don/hoa-don-san-pham-tra/${id}`,
+      headers: {
+        Authorization: this.getToken,
+      },
+    });
+  };
   static getAllLichSuHoaDon = (id) => {
     return requestAdmin({
       method: "GET",
@@ -99,7 +108,26 @@ export class HoaDonAPI {
       },
     });
   };
-
+  static huyHoaDonQLHoaDon = (id, maNV, data) => {
+    return requestAdmin({
+      method: "PUT",
+      url: `/admin/hoa-don/xoa-hoa-don/${id}/${maNV}`,
+      data: data,
+      headers: {
+        Authorization: this.getToken,
+      },
+    });
+  };
+  static deleteInvoiceAndRollBackProduct = (idCTSP, id) => {
+    const getToken = getHeader();
+    return requestAdmin({
+      method: "DELETE",
+      url: `/admin/hoa-don/delete-hoa-don-chi-tiet/${idCTSP}/${id}`,
+      headers: {
+        Authorization: getToken,
+      },
+    });
+  };
   static themSanPham = (idHD, maNV, idCTSP) => {
     return requestAdmin({
       method: "PUT",

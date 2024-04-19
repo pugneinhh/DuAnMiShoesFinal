@@ -255,6 +255,10 @@ public class HoaDonControllerr {
     public ResponseEntity<?> SanPhamHoaDon(@PathVariable("idHD") String id){
         return  ResponseEntity.ok(hoaDonService.detailHDSanPham(id));
     }
+    @GetMapping("/hoa-don-san-pham-tra/{idHD}")
+    public ResponseEntity<?> SanPhamHoaDonTra(@PathVariable("idHD") String id){
+        return  ResponseEntity.ok(hoaDonService.detailHDSanPhamTra(id));
+    }
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody HoaDonRequest hoaDonRequest){
         hoaDonRequest.setNgayMua(LocalDateTime.now());
@@ -266,6 +270,25 @@ public class HoaDonControllerr {
     public ResponseEntity<?> HuyHoaDon(@PathVariable("ma") String ma) {
         String idHD = hoaDonService.findHoaDonByMa(ma).getId();
         return  ResponseEntity.ok(hoaDonService.deleteHoaDon(idHD));
+    }
+
+    // xóa hóa đơn và  roll back sản phẩm
+    @DeleteMapping("/delete-hoa-don-chi-tiet/{idCTSP}/{id}")
+    public void  deleteHoaDonChiTiet (@PathVariable("idCTSP") String idCTSP,@PathVariable("id")String id) {
+        hoaDonChiTietService.deleteHDCTAndRollBackInSellByIDHD(idCTSP,id); //  roll backed
+    }
+    // xóa hóa đơn và  roll back sản phẩm
+    @PutMapping("/xoa-hoa-don/{id}/{maNV}")
+    public ResponseEntity<?> HuyHoaDonQuanLyHoaDon(@PathVariable("id") String id,@RequestBody LichSuHoaDonRequest ls, @PathVariable("maNV") String maNV) {
+        HoaDon hoaDon=hoaDonService.findHoaDonbyID(id);
+        hoaDon.setNgaySua(LocalDateTime.now());
+        ls.setNgayTao(LocalDateTime.now());
+        ls.setIdHD(id);
+        ls.setNguoiTao(maNV);
+        ls.setMoTaHoatDong(ls.getMoTaHoatDong());
+        ls.setTrangThai(-1);
+        lichSuHoaDonService.addLichSuHoaDon(ls);
+        return  ResponseEntity.ok(hoaDonService.deleteHoaDon(id));
     }
 //    @PutMapping("/update/{ma}")
 //    public ResponseEntity<?> update(@PathVariable String ma,@RequestBody LichSuHoaDon khachHang){

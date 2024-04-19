@@ -29,10 +29,10 @@ const ModalDetailSP = (props) => {
       });
     }else {
       if(storedGioHang!=null){
-      console.log("giỏ hàng", storedGioHang);
+
       GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res) => {
         updateTotalQuantity(res.data.length);
-        console.log("count", res.data);
+        
       });
     }
     }

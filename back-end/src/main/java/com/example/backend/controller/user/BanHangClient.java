@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -183,6 +184,14 @@ public class BanHangClient {
     @GetMapping("/khach-hang/dia-chi-mac-dinh/{idKH}")
     public  ResponseEntity<?> getDiaChiMacDinh(@PathVariable("idKH") String idKH){
         return ResponseEntity.ok(khachHangService.findDiaChiMacDinh(idKH));
+    }
+    @PostMapping("/chuyen-khoan/{money}")
+    public  Map<String, String>  createPayment(@PathVariable("money")String money) throws UnsupportedEncodingException {
+        try {
+            return payService.payWithVNPAY(money);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
