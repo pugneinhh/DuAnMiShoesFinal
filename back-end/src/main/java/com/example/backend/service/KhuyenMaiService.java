@@ -1,4 +1,9 @@
 package com.example.backend.service;
+import com.example.backend.dto.request.KhuyenMaiSearch;
+import com.example.backend.dto.request.VoucherSearch;
+import com.example.backend.dto.response.AdminKhuyenMai;
+import com.example.backend.dto.response.AdminVoucher;
+import com.example.backend.repository.KhuyenMaiRepository;
 import com.example.backend.entity.KhuyenMai;
 import com.example.backend.repository.KhuyenMaiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +17,16 @@ import java.util.List;
 @Service
 public class KhuyenMaiService {
     @Autowired
-    KhuyenMaiRepository khuyenMaiRepository;
+    KhuyenMaiRepository khuyenMaiRespone;
 
     public List<KhuyenMai> getAllKhuyenMai(){
-        return khuyenMaiRepository.findAll();
+        return khuyenMaiRespone.findAll();
     }
 
     public KhuyenMai addKhuyenMai(KhuyenMai km){
-        return khuyenMaiRepository.save(km);
+        return khuyenMaiRespone.save(km);
     }
-    public KhuyenMai detailKhuyenMai(String id){return  khuyenMaiRepository.findById(id).get();}
+    public KhuyenMai detailKhuyenMai(String id){return  khuyenMaiRespone.findById(id).get();}
 
 
     public LocalDateTime convertTime(LocalDateTime ldt0){
@@ -32,4 +37,21 @@ public class KhuyenMaiService {
         LocalDateTime plus7DateTime = plus7ZonedDateTime.toLocalDateTime();
         return plus7DateTime;
     }
+
+    public LocalDateTime convertTimeForUpdate(LocalDateTime ldt0){
+        ZoneId utc = ZoneId.of("UTC");
+        ZoneId apart7Zone = ZoneId.of("America/New_York");
+        ZonedDateTime utcZonedDateTime = ZonedDateTime.of(ldt0, utc);
+        ZonedDateTime apart7ZonedDateTime = utcZonedDateTime.withZoneSameInstant(apart7Zone);
+        LocalDateTime apart7DateTime = apart7ZonedDateTime.toLocalDateTime();
+        return apart7DateTime;
+    }
+
+    public List<AdminKhuyenMai> getSearch(KhuyenMaiSearch khuyenMaiSearch) {
+        if (khuyenMaiSearch.getNgay_bat_dau() != null)khuyenMaiSearch.setNgay_bat_dau(convertTime(khuyenMaiSearch.getNgay_bat_dau()));
+        if (khuyenMaiSearch.getNgay_ket_thuc() != null)khuyenMaiSearch.setNgay_ket_thuc(convertTime(khuyenMaiSearch.getNgay_ket_thuc()));
+        System.out.println(khuyenMaiSearch);
+        return khuyenMaiRespone.searchKhuyenMai(khuyenMaiSearch);
+    }
+
 }

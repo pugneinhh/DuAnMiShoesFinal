@@ -9,8 +9,8 @@ public interface AdminHoaDonSanPham {
     @Value("#{target.giaBanSP}")
     String getGiaBanSP();
 
-    @Value("#{target.tenHA}")
-    String getTenHA();
+    @Value("#{target.urlHA}")
+    String getUrlHA();
 
     @Value("#{target.TenSP}")
     String getTenSP();
@@ -22,5 +22,13 @@ public interface AdminHoaDonSanPham {
     String getTenHang();
     @Value("#{target.thanhTienSP}")
     String getThanhTienSP();
+    @Value("#{target.idCTSP}")
+    String getIDCTSP();
+    @Value("#{target.giaGiam}")
+    String getGiaGiam();
 
+    @Value("#{target.id}")
+    String getID();
+    @Value("#{target.trangThai}")
+    String getTrangThai();
 }

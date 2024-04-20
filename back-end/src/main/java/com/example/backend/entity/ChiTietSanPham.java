@@ -1,10 +1,7 @@
 package com.example.backend.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -15,6 +12,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
+@ToString
+
 public class ChiTietSanPham {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -43,6 +43,8 @@ public class ChiTietSanPham {
     @ManyToOne
     @JoinColumn(name = "hang_id")
     private Hang hang;
+    private String tenCt;
+    private String ghiChu;
     private boolean gioiTinh;
     private BigDecimal giaBan;
     private BigDecimal giaNhap;

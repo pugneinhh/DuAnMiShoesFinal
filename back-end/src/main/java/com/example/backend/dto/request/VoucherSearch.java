@@ -1,5 +1,8 @@
 package com.example.backend.dto.request;
 
+import com.example.backend.util.Status;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,10 +15,11 @@ import java.sql.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class VoucherSearch {
-    String tenVoucher;
-    String trangThaiVoucher;
+    String ten;
+//    @Enumerated(EnumType.STRING)
+    String trangThai;
     String loaiVoucher;
-    Date ngayBDVoucher;
-    Date ngayKTVoucher;
+    Date ngayBatDau;
+    Date ngayKetThuc;
 
 }

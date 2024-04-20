@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public interface HoaDonChiTietRespone {
+    public String getIdHD();
+    public String getIdCTSP();
     public int getSoLuong();
     public BigDecimal getGiaSauGiam();
     public BigDecimal getGiaGiam();

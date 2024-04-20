@@ -31,4 +31,21 @@ public interface AdminHoaDonDetailRespon {
     String getDiaChi();
     @Value("#{target.ghiChuHD}")
     String getGhiChuHD();
+    @Value("#{target.tienVanChuyen}")
+    String getTienVanChuyen();
+    @Value("#{target.TraSau}")
+    String getTraSau();
+    @Value("#{target.voucher}")
+    String getVoucher();
+    @Value("#{target.giaGiam}")
+    String getGiaGiam();
+    @Value("#{target.nguoiDung}")
+    String getNguoiDung();
+
+    @Value("#{target.giaGoc}")
+    String getGiaGoc();
+
+    String getPhuongThucVNP();
+    @Value("#{target.tenNguoiNhan}")
+    String getTenNguoiNhan();
 }

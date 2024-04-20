@@ -1,12 +1,18 @@
 package com.example.backend.entity;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "danh_muc")
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+
 public class DanhMuc {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -16,9 +22,9 @@ public class DanhMuc {
 
     private String ten;
 
-    private Date ngayTao;
+    private LocalDateTime ngayTao;
 
-    private Date ngaySua;
+    private LocalDateTime ngaySua;
 
     private String nguoiTao;
 

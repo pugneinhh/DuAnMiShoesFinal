@@ -1,4 +1,5 @@
 package com.example.backend.entity;
+import com.example.backend.util.Status;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,7 +11,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 public class NguoiDungVoucher {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -25,5 +25,6 @@ public class NguoiDungVoucher {
     private String nguoiSua;
     private LocalDateTime ngayTao;
     private LocalDateTime ngaySua;
-    private int trangThai;
+    @Enumerated(EnumType.STRING)
+    private Status trangThai;
 }

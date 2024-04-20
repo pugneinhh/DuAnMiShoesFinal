@@ -11,6 +11,9 @@ public interface AdminCTSPRespon {
     @Value("#{target.tenSP}")
     String getTenSP();
 
+    @Value("#{target.link}")
+    String getLink();
+
     @Value("#{target.tenKM}")
     String getTenKM();
 

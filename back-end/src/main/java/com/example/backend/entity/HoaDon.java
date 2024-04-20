@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Builder
 public class HoaDon {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.UUID )
     private String id;
     private String ma;
     @Column(name = "nhan_vien_id")
@@ -48,4 +48,15 @@ public class HoaDon {
     private LocalDateTime ngayTao;
     private LocalDateTime ngaySua;
     private int trangThai;
+    private BigDecimal tienVanChuyen;
+    private int traSau;
+
+
+//    @PrePersist
+//    public void ensureId() {
+//        System.out.println("ID chưa thêm"+id);
+//        if (id == null) {
+//            id = java.util.UUID.randomUUID().toString();
+//        }
+//    }
 }

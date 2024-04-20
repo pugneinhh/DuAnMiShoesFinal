@@ -1,5 +1,8 @@
 package com.example.backend.dto.response;
 
+import com.example.backend.util.Status;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
@@ -11,8 +14,6 @@ public interface AdminVoucher {
     String getMa();
     @Value("#{target.ten}")
     String getTen();
-    @Value("#{target.phuongThuc}")
-    String getPhuongThuc();
     @Value("#{target.mucDo}")
     int getMucDo();
     @Value("#{target.giamToiDa}")
@@ -28,5 +29,6 @@ public interface AdminVoucher {
     @Value("#{target.ngayKetThuc}")
     String getNgayKetThuc();
     @Value("#{target.trangThai}")
-    int getTrangThai();
+    @Enumerated(EnumType.STRING)
+    Status getTrangThai();
 }

@@ -6,5 +6,7 @@ public enum Status {
     KHONG_SU_DUNG,
     SAP_DIEN_RA,
     DANG_HOAT_DONG,
-    NGUNG_HOAT_DONG
+    NGUNG_HOAT_DONG,
+    TAM_DUNG,
+    DA_DUNG_HET
 }
