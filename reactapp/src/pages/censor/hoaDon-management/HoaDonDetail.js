@@ -46,14 +46,17 @@ export default function HoaDonDetail() {
   const [activeKey, setActiveKey] = useState(0);
   const [listHDTimeLine, setlistHDTimeLine] = useState([]);
   const [voucherHienTai, setVoucherHienTai] = useState(null);
-   const [SP, setSP] = useState([]);
+   const [maHD, setMaHD] = useState([]);
   const [voucher, setVoucher] = useState([]);
   const [soTienCanMuaThem, setSoTienCanMuaThem] = useState(0);
   const [soTienDuocGiam, setSoTienDuocGiam] = useState(0);
   const [form] = Form.useForm();
   const [formRollBack] = Form.useForm();
    const [formHuyHoaDon] = Form.useForm();
-
+  const [trangThai, setTrangThai] = useState([]);
+  const [listSanPhamTra, setlistSanPhamTra] = useState([]);
+  const [listSanPhams, setlistSanPhams] = useState([]);
+ 
   const handleOk = () => {
     setIsModalOpen(false);
     setOpenModalTimeLine(false);
@@ -135,10 +138,11 @@ export default function HoaDonDetail() {
     });
   };
 
-  const loadHoaDon = async () => {
+  const loadHoaDon =  () => {
     HoaDonAPI.detailHD(id).then((res) => {
       setHoaDondetail(res.data);
       setTrangThai(res.data.trangThai);
+      setMaHD(res.data.ma);
    
     });
   };
@@ -204,6 +208,7 @@ export default function HoaDonDetail() {
       setIsModalOpen(false);
          if (trangThai == 2) {
           //  setOpenXuat(true);
+            handlePrint();
             <div ref={componnentRef} className="row">
               <div className="col-md-2">
                 <img
@@ -216,7 +221,7 @@ export default function HoaDonDetail() {
                 className=" my-5  py-2 col-md-10 "
                 style={{ paddingLeft: 250 }}
               >
-                {" "}
+               
                 MI SHOES
               </h2>
               <div className="col-md-3">
@@ -477,7 +482,7 @@ export default function HoaDonDetail() {
                 </tr>
               </div>
             </div>;
-          handlePrint();
+        
          }
       toast("🦄 Thành công!", {
         position: "top-right",
@@ -494,7 +499,7 @@ export default function HoaDonDetail() {
   };
 const handlePrint = useReactToPrint({
   content: () => componnentRef.current, // Assuming componnentRef is a ref to the component you want to print
-  documentTitle: "hoaDon",
+  documentTitle: maHD,
 });
   const [LichSuThanhToan, setLichSuThanhToan] = useState([]);
   const loadLichSuThanhToan = () => {
@@ -565,11 +570,8 @@ const handlePrint = useReactToPrint({
     },
   ];
 
-  const [trangThai, setTrangThai] = useState([]);
- const [listSanPhamTra, setlistSanPhamTra] = useState([]);
-  const [listSanPhams, setlistSanPhams] = useState([]);
- 
-  console.log("list sản phẩm", listSanPhams);
+
+  // console.log("list sản phẩm", listSanPhams);
   const loadListSanPhams = () => {
     HoaDonAPI.detailSanPham(id).then((res) => {
       setlistSanPhams(res.data);
@@ -659,7 +661,7 @@ const handlePrint = useReactToPrint({
       return "Hoàn tiền";
     } 
   };
-     console.log(hoaDondetail.phuongThucVNP, "thế");
+   
   return (
     <div className="container-fuild mt-4 radius  ">
       <div className="container-fuild  row pt-3 pb-4 bg-light rounded border-danger ">
