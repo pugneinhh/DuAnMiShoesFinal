@@ -11,7 +11,7 @@ import { useParams } from "react-router-dom";
 
 const ModalInHoaDon = (props) => {
   const componnentRef = useRef();
-  const {openInHoaDon, setOpenInHoaDon} = props;
+  const {openInHoaDon, setOpenInHoaDon , openThanhToan} = props;
   const [hoaDondetail, setHoaDondetail] = useState([]);
   const [trangThai, setTrangThai] = useState([]);
   const [listSanPhams, setlistSanPhams] = useState([]);
@@ -47,20 +47,20 @@ const ModalInHoaDon = (props) => {
     loadHoaDon();
     loadListSanPhams();
     }
-  },[id]);
+  },[id,openThanhToan]);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      // Thực hiện công việc bạn muốn ở đây
-      if (id && !hoaDondetail ) {
-        loadHoaDon();
-        loadListSanPhams();
-        }
-    }, 1000);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     // Thực hiện công việc bạn muốn ở đây
+  //     if (id && !hoaDondetail ) {
+  //       loadHoaDon();
+  //       loadListSanPhams();
+  //       }
+  //   }, 1000);
 
-    // Đảm bảo dọn dẹp interval khi component unmount hoặc khi useEffect chạy lại
-    return () => clearInterval(interval);
-  }, []);
+  //   // Đảm bảo dọn dẹp interval khi component unmount hoặc khi useEffect chạy lại
+  //   return () => clearInterval(interval);
+  // }, []);
 
   const handlePrint = useReactToPrint({
     content: () => componnentRef.current,
