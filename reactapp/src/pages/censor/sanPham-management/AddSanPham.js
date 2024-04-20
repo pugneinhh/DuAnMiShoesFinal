@@ -260,7 +260,7 @@ export default function AddSanPham() {
 
   useEffect(() => {
     loadDuLieuThem();
-  }, [dataKichThuoc, dataMauSac, dataSoLuong, dataGiaBan]);
+  }, [dataKichThuoc, dataMauSac, dataSoLuong, dataGiaBan,dataSanPham,dataMoTa,dataChatLieu,dataHang,dataDeGiay,dataDanhMuc]);
 
   //Update nhanh
   const updateNhanh = (newValues) => {

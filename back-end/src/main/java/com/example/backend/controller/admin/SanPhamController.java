@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @CrossOrigin("http://localhost:3000/")
@@ -48,6 +49,7 @@ public class SanPhamController {
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody SanPham v){
         int spThem = sanPhamService.getALL().size();
+        v.setNgayTao(LocalDateTime.now());
         v.setMa("SP" + "-" + (spThem + 1));
         v.setTrangThai(0);
         return  ResponseEntity.ok(sanPhamService.addSP(v));

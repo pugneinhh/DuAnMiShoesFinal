@@ -4,6 +4,7 @@ import com.example.backend.dto.response.sanpham.SanPhamRespone;
 import com.example.backend.entity.SanPham;
 import com.example.backend.repository.SanPhamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,7 +14,8 @@ public class SanPhamService {
     @Autowired
     SanPhamRepository sanPhamRepository;
     public List<SanPham> getALL(){
-        return sanPhamRepository.findAll();
+        Sort sortByNgayTao = Sort.by(Sort.Direction.DESC, "ngayTao");
+        return sanPhamRepository.findAll(sortByNgayTao);
     }
     public List<SanPhamRespone> getALLSP(){
         return sanPhamRepository.getALLSP();
