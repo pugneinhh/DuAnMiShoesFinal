@@ -2036,7 +2036,7 @@ const BanHang = () => {
         ) : (
           console.error()
         )}
-        <ModalInHoaDon id={activeKey} openInHoaDon={openInHoaDon} setOpenInHoaDon={setOpenInHoaDon}/>
+        <ModalInHoaDon id={activeKey} openInHoaDon={openInHoaDon} setOpenInHoaDon={setOpenInHoaDon} openThanhToan={openThanhToan}/>
       </div>
       {showModal && (
         <QRScannerModal
