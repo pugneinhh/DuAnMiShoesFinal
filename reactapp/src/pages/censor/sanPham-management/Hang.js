@@ -157,7 +157,7 @@ export default function Hang() {
   const loadHang = async () => {
     HangAPI.getAll()
     .then((res)=>{
-      setHangs(res.data); 
+      setHangs(res.data.reverse()); 
     })
   };
 

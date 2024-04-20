@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Divider, Modal, QRCode, Form, Input, InputNumber, Select, Slider, Space, Table, Tag, } from 'antd';
+import { Button, Divider, Modal, QRCode, Form, Input, InputNumber, Select, Slider, Space, Table, Tag, Popover, } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import { HighlightOutlined, InfoCircleFilled, InfoCircleOutlined, PlusCircleOutlined, RetweetOutlined } from "@ant-design/icons";
+import { HighlightOutlined, InfoCircleFilled, InfoCircleOutlined, PlusCircleOutlined, QrcodeOutlined, RetweetOutlined } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
 import { EyeOutlined } from "@ant-design/icons";
@@ -18,10 +18,10 @@ import { ChiTietSanPhamAPI } from '../api/SanPham/chi_tiet_san_pham.api';
 export default function CTSP() {
   //Mở detail ctsp
   const { id } = useParams();
-  console.log(id)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [ktCheck, setKtCheck] = useState('');
   const [msCheck, setMsCheck] = useState('');
+  const [hoverQR, setHoverQR] = useState(false);
 
   const handleOk = () => {
     setIsModalOpen(false);
@@ -369,7 +369,7 @@ export default function CTSP() {
     })
   };
   const addDanhMuc = (value) => {
-   ChiTietSanPhamAPI.createDanhMuc(value)
+    ChiTietSanPhamAPI.createDanhMuc(value)
       .then(response => {
         console.log(response.data);
         toast('✔️ Thêm thành công!', {
@@ -570,6 +570,7 @@ export default function CTSP() {
           <a>
             <Button type="primary" shape='round' className='bg-success text-white' icon={<EyeOutlined />} onClick={() => showModal(`${title}`)} />
             <Modal
+              centered={true}
               open={isModalOpen}
               onOk={handleOk}
               onCancel={handleCancel}
@@ -701,7 +702,15 @@ export default function CTSP() {
                     </Form.Item>
                   </div>
                   <label className='mb-2'><b>QR Code :</b></label>
-                  <QRCode size={100} type="canvas" value={ctData.id} />
+                  {/* <div><QRCode size={150} type="canvas" value={ctData.id} /></div> */}
+                  <Popover
+                    overlayInnerStyle={{ padding: 0 }}
+                    content={<QRCode value={ctData.id} bordered={false} size={250}/>}
+                  >
+                    <Button icon={<QrcodeOutlined/>} className='mb-2 ms-3' style={{ border: '1px solid #C6C5C5', borderRadius: '10px', objectFit: 'cover', width: 150 }}>
+                       View QR
+                    </Button>
+                  </Popover>
                   <label className='mb-2'><b>Hình ảnh :</b></label>
                   <SuaAnhCTSP hinhAnh={ctData.ghiChu}></SuaAnhCTSP>
                 </div>

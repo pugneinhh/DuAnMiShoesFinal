@@ -16,7 +16,7 @@ public interface MauSacRespository extends JpaRepository<MauSac, String> {
     o.ma as ma ,
          o.ten as ten,
          o.trang_thai as trangThai
-      FROM mau_sac o ORDER BY o.ma ASC
+      FROM mau_sac o ORDER BY o.ngay_tao DESC 
             """, nativeQuery = true)
     List<MauSacRespone> getALLMS();
 
