@@ -90,7 +90,6 @@ private EmailSenderService emailSenderService;
     }else{
             sendMail(invoice,  hoaDon.getEmail(),BASE_FRONTEND_ENDPOINT + "/hd/"+hoaDon.getId());
         }
-
 //        sendMail(invoice, user.getEmail());
         //}
     }
@@ -102,7 +101,6 @@ private EmailSenderService emailSenderService;
         finalHtmlSendMail = springTemplateEngine.process("BillMail", dataContextSendMail);
         String subject = "Biên lai ";
         emailSenderService.sendSimpleEmail(email, subject, finalHtmlSendMail);
-
     }
 
 
