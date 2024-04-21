@@ -41,7 +41,17 @@ public class ExportFilePdfFormHtml {
         data.put("invoice", invoice);
         data.put("url", url);
         context.setVariables(data);
+        return context;
+    }
+    public Context setVoucherSendMail(Voucher voucher, String url) {
 
+        Context context = new Context();
+
+        Map<String, Object> data = new HashMap<>();
+
+        data.put("voucher", voucher);
+        data.put("url", url);
+        context.setVariables(data);
         return context;
     }
 
@@ -75,7 +85,8 @@ public class ExportFilePdfFormHtml {
                 if(giaGiam.compareTo(hoaDon.getVoucher().getGiamToiDa()) > 0){
                     giaGiam = hoaDon.getVoucher().getGiamToiDa();
                 }
-                giamGiaText = formatter.format(giaGiam) + " - " + giaTriGiam + "%";
+//                giamGiaText = formatter.format(giaGiam) + " - " + giaTriGiam + "%";
+             giamGiaText = formatter.format(giaGiam);
             } else {
 
                 giamGiaText = "Không có giảm giá";
@@ -106,7 +117,7 @@ public class ExportFilePdfFormHtml {
 
             invoice.setTongThanhToan(formatter.format(hoaDon.getGiaGoc().add(hoaDon.getTienVanChuyen())));
         }else{
-            invoice.setTongThanhToan(formatter.format(hoaDon.getThanhTien()));
+            invoice.setTongThanhToan(formatter.format(hoaDon.getThanhTien().add(hoaDon.getTienVanChuyen())));
         }
         List<HoaDonChiTietSendMailRequest> items = billDetailResponses.stream()
                 .map(billDetailRequest -> {
