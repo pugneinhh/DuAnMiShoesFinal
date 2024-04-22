@@ -78,7 +78,7 @@ const BanHang = () => {
   const [voucherNoLimited, setVoucherNoLimited] = useState([""]);
   const [diaChiKhachHang, setDiaChiKhachHang] = useState("");
   const [soTienHoaDon, setSoTienHoaDon] = useState(0);
-  const [voucherHienTai, setVoucherHienTai] = useState();
+  const [voucherHienTai, setVoucherHienTai] = useState(null);
   const [soTienCanMuaThem, setSoTienCanMuaThem] = useState(0);
   const [soTienDuocGiam, setSoTienDuocGiam] = useState(0);
   const [idKH, setIDKH] = useState(null);
@@ -236,6 +236,8 @@ const BanHang = () => {
     }
   };
 
+
+
   const getSoTien = () => {
     SellAPI.getThanhTienbyMaHD(activeKey).then((res) =>
       setSoTienHoaDon(res.data ? res.data : 0)
@@ -305,7 +307,7 @@ const BanHang = () => {
     if (activeKey) {
       getSoTien();
     }
-  }, [lengthSP]);
+  }, [lengthSP,money]);
 
   //đang fixx
   const handleSwitchTraSau = () => {
@@ -1566,7 +1568,7 @@ const BanHang = () => {
                               )
                             }
                             hoaDon={activeKey}
-                            voucher={voucherHienTai ? voucherHienTai : null}
+                            voucher={voucherHienTai ? voucherHienTai.id : null}
                             hoaDonDetails={hd[0]}
                             listSanPham={data}
                           />
@@ -1603,8 +1605,8 @@ const BanHang = () => {
                               style={{ width: 800, height: 120 }}
                               placeholder="Lựa chọn voucher"
                               onChange={onChangeVoucher}
-                              value={voucherHienTai?.id}
-                              defaultValue={null}
+                              value={voucherHienTai ? voucherHienTai?.id : null} 
+                              defaultValue={voucherHienTai ? voucherHienTai?.id : null}
                               optionFilterProp="label"
                             >
 
@@ -1748,6 +1750,7 @@ const BanHang = () => {
                         <h6 className="mt-4">
                           Trả sau:
                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          
                           <Switch
                             disabled={isSwitchOn ? false : true}
                             onChange={handleSwitchTraSau}
@@ -1758,16 +1761,21 @@ const BanHang = () => {
                           <div className="col-md-8">
                             <h6 className="mt-4">
                               Tiền hàng:{" "}
-                              {`${Intl.NumberFormat("en-US").format(
+                              {`${Intl.NumberFormat("en-US").format(roundToThousands(
                                 data.reduce((accumulator, currentProduct) => {
                                   return accumulator + currentProduct.total;
-                                }, 0)
+                                }, 0))
                               )}`}
                             </h6>
                             <h6 className="mt-4">
                               Phí vận chuyển:{" "}
+                              <>{
+                                    ((hd[0]?.tienVanChuyen || shipMoney || shipMoney1) && isSwitchOn) ? 
+                                    <Button style={{width:130}}>Thay đổi tiền ship</Button> : "" 
+}
+                                </>
                               {isSwitchOn
-                                ? `${Intl.NumberFormat("en-US").format(
+                                ? `${Intl.NumberFormat("en-US").format(roundToThousands(
                                     roundToThousands(
                                       hd[0]?.tienVanChuyen &&
                                         shipMoney === shipMoney1
@@ -1777,13 +1785,14 @@ const BanHang = () => {
                                         : shipMoney
                                         ? shipMoney
                                         : 0
-                                    )
+                                    ))
                                   )}`
                                 : 0}
+
                             </h6>
-                            <h6 className="mt-4">
+                            <h6 className="mt-4 text-danger">
                               Giảm giá:{" "}
-                              {`${Intl.NumberFormat("en-US").format(
+                              {`${Intl.NumberFormat("en-US").format(roundToThousands(
                                 voucherHienTai
                                   ? voucherHienTai.loaiVoucher === "Tiền mặt"
                                     ? parseFloat(voucherHienTai.mucDo) <
@@ -1815,13 +1824,14 @@ const BanHang = () => {
                                         parseFloat(voucherHienTai.mucDo)) /
                                       100
                                     : voucherHienTai.giamToiDa
-                                  : 0
+                                  : 0)
                               )}`}
+      
                             </h6>
 
-                            <h6 className="mt-4">
+                            <h6 className="mt-4" >
                               Tổng tiền:{" "}
-                              {`${Intl.NumberFormat("en-US").format(
+                              {`${Intl.NumberFormat("en-US").format(roundToThousands(
                                 data.reduce((accumulator, currentProduct) => {
                                   return accumulator + currentProduct.total;
                                 }, 0) -
@@ -1877,15 +1887,15 @@ const BanHang = () => {
                                         ? shipMoney
                                         : 0
                                       : 0
-                                  )
-                              )} VND`}
+                                  ))
+                              )}`}
                             </h6>
                           </div>
                           <div className="col-md-4">
                             <h6 className="mt-4">VND</h6>
-
                             <h6 className="mt-4">VND</h6>
                             <h6 className="mt-4 text-danger">VND</h6>
+                            <h6 className="mt-4">VND</h6>
                           </div>
                         </div>
                       </div>

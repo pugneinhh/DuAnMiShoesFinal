@@ -208,6 +208,7 @@ public class BanHangController {
         System.out.println("MÃ hóa đơn :"+hoaDon.getId());
         if (idVoucher != null || idVoucher != "null") {
             Voucher voucher = voucherService.detailVoucher(idVoucher);
+            System.out.println("Voucher thanh toán có hóa đơn "+voucher);
             hoaDon.setVoucher(voucher);
             BigDecimal giamToiDa = voucher.getGiamToiDa();
             BigDecimal giam = voucher.getLoaiVoucher().equals("Tiền mặt") ?
@@ -221,7 +222,7 @@ public class BanHangController {
             if (hoaDon.getDiaChi() != null){
                 hoaDon.setTrangThai(2);
             } else {
-                hoaDon.setTrangThai(4);
+                hoaDon.setTrangThai(5);
             }
 
         }  else {
@@ -243,7 +244,7 @@ public class BanHangController {
         LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
         lichSuHoaDon.setHoaDon(hoaDon);
         lichSuHoaDon.setNguoiTao(nguoiDung.getMa());
-        lichSuHoaDon.setTrangThai(4);
+        lichSuHoaDon.setTrangThai(5);
         lichSuHoaDon.setNgayTao(LocalDateTime.now());
         lichSuHoaDonService.save(lichSuHoaDon);
 
@@ -257,12 +258,13 @@ public class BanHangController {
         System.out.println("Mã hóa đơn :"+ma);
         System.out.println("ID nhân viên :"+idNV);
         HoaDon hoaDon=hoaDonServicee.findHoaDonByMa(ma);
+        if (hoaDon == null) return null;
         System.out.println("MÃ hóa đơn :"+hoaDon.getId());
         if(hoaDon.getTraSau() == 0) {
             if (hoaDon.getDiaChi() != null){
                 hoaDon.setTrangThai(2);
             } else {
-                hoaDon.setTrangThai(4);
+                hoaDon.setTrangThai(5);
             }
 
         }  else {
@@ -284,7 +286,7 @@ public class BanHangController {
         LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
         lichSuHoaDon.setHoaDon(hoaDon);
         lichSuHoaDon.setNguoiTao(nguoiDung.getMa());
-        lichSuHoaDon.setTrangThai(4);
+        lichSuHoaDon.setTrangThai(5);
         lichSuHoaDon.setNgayTao(LocalDateTime.now());
         lichSuHoaDonService.save(lichSuHoaDon);
 
@@ -305,12 +307,14 @@ public class BanHangController {
     @PutMapping("/hoa-don/update-tien-van-chuyen/{ma}/{tien}")
     public ResponseEntity<?> updateTienVanChuyen(@PathVariable("ma") String ma,@PathVariable("tien")String tien){
         HoaDon hd = hoaDonServicee.findHoaDonByMa(ma);
+        if (hd == null) return null;
         hd.setTienVanChuyen(new BigDecimal(tien));
         return ResponseEntity.ok(hoaDonServicee.updateTrangThaiHoaDon(hd));
     }
 
     @GetMapping("/hoa-don/so-tien/{ma}")
     public ResponseEntity<?> getThanhTienByIDHD(@PathVariable("ma") String ma){
+        if (hoaDonServicee.findHoaDonByMa(ma) == null) return null;
         return ResponseEntity.ok(hoaDonServicee.findHoaDonByMa(ma).getThanhTien());
     }
 

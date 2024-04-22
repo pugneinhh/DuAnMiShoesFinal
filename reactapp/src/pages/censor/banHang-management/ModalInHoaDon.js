@@ -19,6 +19,7 @@ const ModalInHoaDon = (props) => {
 
   console.log("IDDDĐ ",id);
   console.log("in hóa đơn "+props.openInHoaDon);
+  console.log("Hóa đơn detail ",hoaDondetail);
   const loadHoaDon =  () => {
     HoaDonAPI.chiTietHoaDonTheoMa(id).then((res) => {
       console.log("DATA :"+id);
@@ -243,7 +244,7 @@ const ModalInHoaDon = (props) => {
                   <div className="row">
                     <h6 className="col-md-3 mt-2">Mã giảm giá:</h6>
                     <p className="col-md-6">
-                      {hoaDondetail?.voucher == null ? "Không có voucher" : hoaDondetail?.voucher}
+                      {hoaDondetail?.voucher == null ? "Không có voucher" : hoaDondetail?.voucher.ma}
                 </p>
                   </div>
                 </div>
