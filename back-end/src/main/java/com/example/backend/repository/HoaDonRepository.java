@@ -6,6 +6,7 @@ import com.example.backend.dto.request.HoaDonCLient.TrangThaiRequest;
 import com.example.backend.dto.request.hoadonsearch.HoaDonSearch;
 import com.example.backend.dto.response.AdminHoaDonDetailRespon;
 import com.example.backend.dto.response.AdminHoaDonResponn;
+import com.example.backend.dto.response.DetailUpdateDiaChiHoaDonRespon;
 import com.example.backend.dto.response.HoaDonCLient.DetailHoaDonClientByIdHDRespon;
 import com.example.backend.dto.response.HoaDonCLient.HoaDonClientHistory;
 import com.example.backend.entity.HoaDon;
@@ -77,17 +78,16 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
 
     @Query(value = """
 
-   SELECT hd.ghi_chu AS ghiChuHD, hd.id AS idHD,hd.ma AS ma, hd.nhan_vien_id AS maNV, CASE
-      WHEN hd.khach_hang_id IS NULL  THEN N'Khách lẻ' ELSE kh.ten END  as tenKH ,CASE WHEN hd.so_dien_thoai
-      is  NULL THEN N''ELSE hd.so_dien_thoai END  as sdt,CASE WHEN hd.dia_chi IS  NULL THEN N''else hd.dia_chi
-      end as diaChi,ngay_mua as ngayMua,hd.thanh_tien as thanhTien,hd.trang_thai as trangThai,hd.loai_hoa_don
-      AS loaiHD, hd.tien_van_chuyen as tienVanChuyen,hd.tra_sau as traSau,
-      hd.voucher_id as voucher,hd.gia_giam_gia as giaGiam, hd.khach_hang_id as nguoiDung,
-      hd.gia_goc as giaGoc , hd.ten_nguoi_nhan as tenNguoiNhan, tt.phuong_thuc_vnp as phuongThucVNP
-      FROM  duanmishoes.hoa_don hd\s
-      LEFT JOIN duanmishoes.nguoi_dung kh ON kh.id = hd.khach_hang_id\s
-      join thanh_toan tt on tt.hoa_don_id = hd.id
-      where hd.id=:key
+      SELECT hd.ghi_chu AS ghiChuHD, hd.id AS idHD,hd.ma AS ma, hd.nhan_vien_id AS maNV, CASE
+       WHEN hd.khach_hang_id IS NULL  THEN N'Khách lẻ' ELSE kh.ten END  as tenKH ,CASE WHEN hd.so_dien_thoai
+       is  NULL THEN N''ELSE hd.so_dien_thoai END  as sdt,CASE WHEN hd.dia_chi IS  NULL THEN N''else hd.dia_chi
+       end as diaChi,ngay_mua as ngayMua,hd.thanh_tien as thanhTien,hd.trang_thai as trangThai,hd.loai_hoa_don
+       AS loaiHD, hd.tien_van_chuyen as tienVanChuyen,hd.tra_sau as traSau,
+       hd.voucher_id as voucher,hd.gia_giam_gia as giaGiam, hd.khach_hang_id as nguoiDung,
+       hd.gia_goc as giaGoc , hd.ten_nguoi_nhan as tenNguoiNhan
+       FROM  duanmishoes.hoa_don hd
+       LEFT JOIN duanmishoes.nguoi_dung kh ON kh.id = hd.khach_hang_id
+       where hd.id=:key
             	    """,
             nativeQuery = true)
     AdminHoaDonDetailRespon detailHD(String key);
@@ -110,7 +110,7 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
     @Query(value = """
             SELECT hdct.id as id ,hdct.chi_tiet_san_pham_id as idCTSP , hdct.so_luong AS soLuongSP, ctsp.gia_ban AS giaBanSP,CASE WHEN ha.url is  NULL   THEN N'khong co'
                                ELSE ha.url END as urlHA,sp.ten AS tenSP, kt.ten AS tenKichThuoc,ms.ten AS tenMauSac,
-                h.ten AS tenHang,hdct.gia_giam as giaGiam,hdct.gia_sau_giam as thanhTienSP FROM  duanmishoes.hoa_don_chi_tiet hdct
+                h.ten AS tenHang,hdct.gia_giam as giaGiam,hdct.gia_sau_giam as thanhTienSP , hdct.trang_thai as trangThai FROM  duanmishoes.hoa_don_chi_tiet hdct
                			LEFT JOIN  duanmishoes.chi_tiet_san_pham ctsp ON ctsp.id = hdct.chi_tiet_san_pham_id
                			LEFT JOIN duanmishoes.hinh_anh ha ON ha.chi_tiet_san_pham_id = ctsp.id
                			LEFT JOIN duanmishoes.san_pham sp ON sp.id = ctsp.san_pham_id
@@ -196,5 +196,6 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
     HoaDon findAllById(String id);
     @Query(value = "SELECT * FROM hoa_don WHERE ma = :ma AND ngay_sua IS NOT NULL AND ngay_sua >= DATE_SUB(NOW(), INTERVAL 7 DAY);",nativeQuery = true)
     HoaDon getHDByMaTraHang(String ma);
-
+    @Query(value = "select id, ten_nguoi_nhan as tenNguoiNhan,so_dien_thoai as sdt, ghi_chu as ghiChu, dia_chi as diaChi from hoa_don where id=:idHD",nativeQuery = true)
+    DetailUpdateDiaChiHoaDonRespon detailUpdateDiaChiHoaDon(String idHD);
 }

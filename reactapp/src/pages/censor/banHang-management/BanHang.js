@@ -12,6 +12,7 @@ import {
   Badge,
   Select,
 } from "antd";
+import { CloseCircleOutlined } from "@ant-design/icons";
 import React, { Children, useEffect, useRef, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { FaList } from "react-icons/fa";
@@ -57,7 +58,7 @@ import DiaChiGiaoHang from "./GiaoHang";
 import { NguoiDungAPI } from "../api/nguoiDung/nguoiDungAPI";
 import QRScannerModal from "../api/QR_Code/QrCode";
 import { ChiTietSanPhamAPI } from "../api/SanPham/chi_tiet_san_pham.api";
- 
+
 const { Option } = Select;
 const { TabPane } = Tabs;
 const BanHang = () => {
@@ -82,125 +83,133 @@ const BanHang = () => {
   const [soTienDuocGiam, setSoTienDuocGiam] = useState(0);
   const [idKH, setIDKH] = useState(null);
   const [money, setMoney] = useState(0);
+
+  const handleRemoveOption = () => {
+    setVoucherHienTai(null); // Xóa lựa chọn hiện tại
+  };
+
   const handleOpenInHoaDon = (check) => {
     //setOpenThanhToan(false);
     setOpenInHoaDon(check);
   };
-  const handleCloseInHoaDon = () => {
-    setOpenInHoaDon(false);
-  };
+  console.log("Voucher hiện tại :", voucherHienTai);
   //qr san pham
-    const handleModalClose = () => {
-      setShowModal(false);
-    };
+  const handleModalClose = () => {
+    setShowModal(false);
+  };
   const [showModal, setShowModal] = useState(false);
-    const [qrResult, setQrResult] = useState("");
- const handleScanButtonClick = () => {
-   setShowModal(true);
- };
-
-   const handleQRResult = (result) => {
-     if (result != null) {
-       setShowModal(false);
-     }
-     setQrResult(result);
-    //  console.log(qrResult);
-       ChiTietSanPhamAPI.QRCtsp(result).then((res) =>{
-           handleClickAddProduct(res.data);
-         
-        });
-   
-       
-      
-  const handleClickAddProduct = (record) => {
-
-    if (record.soLuong < 1){
-   return toast.error("Số lượng sản phẩm "+record.tenSP+"["+record.tenMS+record.tenKT+"]" +" hiện tại không hợp lệ!", {
-     position: "top-right",
-     autoClose: 5000,
-     hideProgressBar: false,
-     closeOnClick: true,
-     pauseOnHover: true,
-     draggable: true,
-     progress: undefined,
-     theme: "light",
-   });
-    }
-    const id = uuid();
-    const hdct = [
-      {
-        id: id,
-        hoaDon: activeKey,
-        chiTietSanPham: record.id,
-        soLuong: 1,
-        giaSauGiam:
-          parseFloat(record.giaBan) -
-          parseFloat(
-            record.loaiKM === "Tiền mặt"
-              ? record.giaTriKhuyenMai
-              : (record.giaBan * record.giaTriKhuyenMai) / 100
-          ),
-        giaGiam: parseFloat(
-          record.loaiKM === "Tiền mặt"
-            ? record.giaTriKhuyenMai
-            : (record.giaBan * record.giaTriKhuyenMai) / 100
-        ),
-      },
-    ];
-    dispatch(
-      AddInvoice({
-        id: id,
-        chiTietSanPham: record.id,
-        tenSP: record.tenSP,
-        maMS: record.maMS,
-        linkAnh: record.linkAnh,
-        tenKT: record.tenKT,
-        giaBan: record.giaBan,
-        hoaDon: activeKey,
-        tenMS: record.tenMS,
-        giaGiam: parseFloat(
-          record.loaiKM === "Tiền mặt"
-            ? record.giaTriKhuyenMai
-            : (record.giaBan * record.giaTriKhuyenMai) / 100
-        ),
-        giaSauGiam:
-          parseFloat(record.giaBan) -
-          parseFloat(
-            record.loaiKM === "Tiền mặt"
-              ? record.giaTriKhuyenMai
-              : (record.giaBan * record.giaTriKhuyenMai) / 100
-          ),
-        nguoiTao: record.nguoiTao,
-        giaBan: record.giaBan,
-        tenKM: record.tenKM,
-        loaiKM: record.loaiKM,
-        giaTriKhuyenMai: record.giaTriKhuyenMai,
-      })
-    );
-    dispatch(UpdateApartProduct({ id: record.idCTSP, soLuong: 1 }));
-    SellAPI.addInvoice(hdct[0]);
-      getSoTien();
-    // setOpenSanPham(false);
+  const [qrResult, setQrResult] = useState("");
+  const handleScanButtonClick = () => {
+    setShowModal(true);
   };
 
-  }
+  const handleQRResult = (result) => {
+    if (result != null) {
+      setShowModal(false);
+    }
+    setQrResult(result);
+    //  console.log(qrResult);
+    ChiTietSanPhamAPI.QRCtsp(result).then((res) => {
+      handleClickAddProduct(res.data);
+    });
 
-    const hoaDonHienTai = hoaDons.filter((x) => x.key === activeKey);
- 
-  lengthSP = ctspHD.filter((f) => f.hoaDon === activeKey)
-                .reduce(
-                  (accumulator, object) =>
-                    parseFloat(accumulator) + parseFloat(object.soLuong),
-                  0
-                );
-                // console.log("Độ dài"+lengthSP);
+    const handleClickAddProduct = (record) => {
+      if (record.soLuong < 1) {
+        return toast.error(
+          "Số lượng sản phẩm " +
+            record.tenSP +
+            "[" +
+            record.tenMS +
+            record.tenKT +
+            "]" +
+            " hiện tại không hợp lệ!",
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          }
+        );
+      }
+      const id = uuid();
+      const hdct = [
+        {
+          id: id,
+          hoaDon: activeKey,
+          chiTietSanPham: record.id,
+          soLuong: 1,
+          giaSauGiam:
+            parseFloat(record.giaBan) -
+            parseFloat(
+              record.loaiKM === "Tiền mặt"
+                ? record.giaTriKhuyenMai
+                : (record.giaBan * record.giaTriKhuyenMai) / 100
+            ),
+          giaGiam: parseFloat(
+            record.loaiKM === "Tiền mặt"
+              ? record.giaTriKhuyenMai
+              : (record.giaBan * record.giaTriKhuyenMai) / 100
+          ),
+        },
+      ];
+      dispatch(
+        AddInvoice({
+          id: id,
+          chiTietSanPham: record.id,
+          tenSP: record.tenSP,
+          maMS: record.maMS,
+          linkAnh: record.linkAnh,
+          tenKT: record.tenKT,
+          giaBan: record.giaBan,
+          hoaDon: activeKey,
+          tenMS: record.tenMS,
+          giaGiam: parseFloat(
+            record.loaiKM === "Tiền mặt"
+              ? record.giaTriKhuyenMai
+              : (record.giaBan * record.giaTriKhuyenMai) / 100
+          ),
+          giaSauGiam:
+            parseFloat(record.giaBan) -
+            parseFloat(
+              record.loaiKM === "Tiền mặt"
+                ? record.giaTriKhuyenMai
+                : (record.giaBan * record.giaTriKhuyenMai) / 100
+            ),
+          nguoiTao: record.nguoiTao,
+          giaBan: record.giaBan,
+          tenKM: record.tenKM,
+          loaiKM: record.loaiKM,
+          giaTriKhuyenMai: record.giaTriKhuyenMai,
+        })
+      );
+      dispatch(UpdateApartProduct({ id: record.idCTSP, soLuong: 1 }));
+      SellAPI.addInvoice(hdct[0]);
+      getSoTien();
+      // setOpenSanPham(false);
+    };
+  };
+
+
+  lengthSP = ctspHD
+    .filter((f) => f.hoaDon === activeKey)
+    .reduce(
+      (accumulator, object) =>
+        parseFloat(accumulator) + parseFloat(object.soLuong),
+      0
+    );
   const loadVoucherTotNhatVaVoucherTiepTheo = () => {
-    // console.log("money", money);
-    // console.log("voucher hiện tại "+voucherHienTai);
     SellAPI.voucherTotNhat(idKH, money).then((res) =>
       setVoucherHienTai(res.data)
     );
-    SellAPI.voucherSapDatDuoc(idKH ? idKH : null, money , voucherHienTai ? voucherHienTai.id : null).then((res) => {
+    SellAPI.voucherSapDatDuoc(
+      idKH ? idKH : null,
+      money,
+      voucherHienTai ? voucherHienTai.id : null
+    ).then((res) => {
       // console.log("res", res.data);
       setSoTienCanMuaThem(res.data[0]);
       setSoTienDuocGiam(res.data[1]);
@@ -227,12 +236,12 @@ const BanHang = () => {
     }
   };
 
-  const getSoTien =  () => {
-  
-     SellAPI.getThanhTienbyMaHD(activeKey).then(res =>
+
+
+  const getSoTien = () => {
+    SellAPI.getThanhTienbyMaHD(activeKey).then((res) =>
       setSoTienHoaDon(res.data ? res.data : 0)
     );
-
   };
 
   useEffect(() => {
@@ -245,29 +254,31 @@ const BanHang = () => {
               : null
             : null
         );
-      
-        setMoney(res.data.thanhTien ? res.data.thanhTien : 0);
-        SellAPI.voucherTotNhat(res.data.nguoiDung
-          ? res.data.nguoiDung.id
-            ? res.data.nguoiDung.id
-            : null
-          : null, res.data.thanhTien ? res.data.thanhTien : 0).then((res) =>
-        setVoucherHienTai(res.data)
-      );
-      SellAPI.voucherSapDatDuoc(res.data.nguoiDung
-        ? res.data.nguoiDung.id
-          ? res.data.nguoiDung.id
-          : null
-        : null, res.data.thanhTien ? res.data.thanhTien : 0 , voucherHienTai ? voucherHienTai.id : null).then((res) => {
 
-        setSoTienCanMuaThem(res.data[0]);
-        setSoTienDuocGiam(res.data[1]);
-      });
+        setMoney(res.data.thanhTien ? res.data.thanhTien : 0);
+        SellAPI.voucherTotNhat(
+          res.data.nguoiDung
+            ? res.data.nguoiDung.id
+              ? res.data.nguoiDung.id
+              : null
+            : null,
+          res.data.thanhTien ? res.data.thanhTien : 0
+        ).then((res) => setVoucherHienTai(res.data));
+        SellAPI.voucherSapDatDuoc(
+          res.data.nguoiDung
+            ? res.data.nguoiDung.id
+              ? res.data.nguoiDung.id
+              : null
+            : null,
+          res.data.thanhTien ? res.data.thanhTien : 0,
+          voucherHienTai ? voucherHienTai.id : null
+        ).then((res) => {
+          setSoTienCanMuaThem(res.data[0]);
+          setSoTienDuocGiam(res.data[1]);
+        });
       });
     }
-  }, [lengthSP,soTienHoaDon]);
-
-
+  }, [lengthSP, soTienHoaDon]);
 
   useEffect(() => {
     if (
@@ -290,15 +301,13 @@ const BanHang = () => {
 
   useEffect(() => {
     loadVoucherTotNhatVaVoucherTiepTheo();
- 
-  }, [idKH,money,activeKey]);
+  }, [idKH, money, activeKey]);
 
   useEffect(() => {
-  
-    if (activeKey){
-    getSoTien();
+    if (activeKey) {
+      getSoTien();
     }
-  }, [lengthSP]);
+  }, [lengthSP,money]);
 
   //đang fixx
   const handleSwitchTraSau = () => {
@@ -371,20 +380,41 @@ const BanHang = () => {
       });
     }
   };
-
-  const onChangeVoucher =  (value, option) => {
-
-      if (option.key !== voucherHienTai?.id) {
+  const handleClearVoucher = () => {
+    setVoucherHienTai(null);
+  }
+  const onChangeVoucher =  (value,option) => {
+    console.log("Voucher ", option);
+    if (option.dieuKien > money) {
+      setVoucherHienTai(null);
+      toast.error(
+        "Đơn hàng " +
+          activeKey +
+          " chưa đạt được điều kiện thỏa mãn " +
+          option.label,
+        {
+          position: "top-right",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        }
+      );
+    }
+   // if (option.key !== voucherHienTai?.id)
+    else {
       setVoucherHienTai(option);
-      SellAPI.voucherSapDatDuoc(idKH, money ,  option.key).then((res) => {
-  
+      SellAPI.voucherSapDatDuoc(idKH, money, option.key).then((res) => {
         setSoTienCanMuaThem(res.data[0]);
         setSoTienDuocGiam(res.data[1]);
       });
-      dispatch(UpdateVoucherToBill({ voucher: value, key: activeKey }));
+      dispatch(UpdateVoucherToBill({ voucher: option.key, key: activeKey }));
     }
-   // );
-  }
+    
+  };
   // Lấy thông tin nhân viên
   const [storedData, setStoredData] = useState(null);
 
@@ -485,7 +515,7 @@ const BanHang = () => {
     const result = await SellAPI.getAllHoaDonCho();
     if (result.data.length > 0) {
       setActiveKey(result.data[0].ma);
-   
+
       SellAPI.detailHoaDon(result.data[0].ma).then((res) => {
         setIDKH(
           res.data.nguoiDung
@@ -495,11 +525,6 @@ const BanHang = () => {
             : null
         );
         setMoney(res.data.thanhTien ? res.data.thanhTien : 0);
-        // SellAPI.voucherTotNhat(res.data.nguoiDung.id ? res.data.nguoiDung.id : null,res.data.thanhTien ? res.data.thanhTien : 0).then((res) => setVoucherHienTai(res.data));
-        // SellAPI.voucherSapDatDuoc(res.data.nguoiDung.id ? res.data.nguoiDung.id : null,res.data.thanhTien ? res.data.thanhTien : 0).then((res) => {
-        //    setSoTienCanMuaThem(res.data[0]);
-        //    setSoTienDuocGiam(res.data[1]);
-        //  })
       });
       if (result.data[0].nguoiDung) {
         SellAPI.getVoucherWithIDKH(result.data[0].nguoiDung).then((res) =>
@@ -612,20 +637,17 @@ const BanHang = () => {
           "-" +
           (!result.data ? 0 : parseFloat(result.data.length) + 1)
       );
-   
     }
   };
 
   const [openSanPham, setOpenSanPham] = useState(false);
 
   const onChangeSoLuong = async (value, record) => {
-
     let SL = 0; // số lượng trước
     let SLT = 0; // số lượng tồn
     await SellAPI.getSLAndSLT(record.chiTietSanPham, activeKey).then((res) => {
       SL = res.data.soLuong;
       SLT = res.data.soLuongTon;
-    
     });
     setShipMoney(0);
     setShipMoney1(0);
@@ -777,11 +799,10 @@ const BanHang = () => {
   const handleCloseThanhToan = () => {
     setOpenThanhToan(false);
   };
-  const onChange =  (key) => {
-  
+  const onChange = (key) => {
     setActiveKey(key);
     let v = null;
-     SellAPI.detailHoaDon(key).then((res) => {
+    SellAPI.detailHoaDon(key).then((res) => {
       setIDKH(
         res.data.nguoiDung
           ? res.data.nguoiDung.id
@@ -790,7 +811,7 @@ const BanHang = () => {
           : null
       );
       setMoney(res.data.thanhTien ? res.data.thanhTien : 0);
-       const v = SellAPI.voucherTotNhat(
+      const v = SellAPI.voucherTotNhat(
         res.data.nguoiDung
           ? res.data.nguoiDung.id
             ? res.data.nguoiDung.id
@@ -798,35 +819,12 @@ const BanHang = () => {
           : null,
         res.data.thanhTien ? res.data.thanhTien : 0
       );
-      setVoucherHienTai(v.data) ;
-      // SellAPI.voucherSapDatDuoc(
-      //   res.data.nguoiDung
-      //     ? res.data.nguoiDung.id
-      //       ? res.data.nguoiDung.id
-      //       : null
-      //     : null,
-      //   res.data.thanhTien ? res.data.thanhTien : 0 ,  res1.data.id
-      // ).then((res2) => {
-      //   console.log("onchange res", res2.data);
-      //   setSoTienCanMuaThem(res2.data[0]);
-      //   setSoTienDuocGiam(res2.data[1]);
-      // });
-
+      setVoucherHienTai(v.data);
     });
-    // });
-    // if (!hoaDons.filter((item) => item.key === key)[0].voucher) {
-    //   console.log("Voucher null");
-    //   setVoucherHienTai(null);
-    // } else {
-    //   VoucherAPI.detail(
-    //     hoaDons.filter((item) => item.key === key)[0].voucher
-    //   ).then((res) => setVoucherHienTai(res.data));
-    // }
 
     SellAPI.getVoucherWithIDKH(
       hoaDons.filter((item) => item.key === key && item.nguoiDung)[0]?.nguoiDung
     ).then((res) => setVoucherByIDKH(res));
-    //voucherKH(nguoiDung);
     setShipMoney(0);
     setShipMoney1(0);
   };
@@ -849,7 +847,7 @@ const BanHang = () => {
       });
     }
     const result = await SellAPI.getAllHoaDonChoHomNay();
-    
+
     const currentDate = new Date();
     const currentDateInMilliseconds = Date.UTC(
       currentDate.getFullYear(),
@@ -1171,7 +1169,6 @@ const BanHang = () => {
     },
   ];
 
- 
   return (
     <div className="container border-1">
       <div className="text-end mt-3 me-4 mb-3">
@@ -1413,53 +1410,74 @@ const BanHang = () => {
                               <MdOutlinePayments
                                 size={25}
                                 onClick={() => {
-                                  if ((data.reduce((accumulator, currentProduct) => {
-                                    return accumulator + currentProduct.total;
-                                  }, 0) -
-                                  (voucherHienTai
-                                    ? voucherHienTai.loaiVoucher === "Tiền mặt"
-                                      ? parseFloat(voucherHienTai.mucDo) <
-                                        parseFloat(voucherHienTai.giamToiDa)
-                                        ? voucherHienTai.mucDo
-                                        : voucherHienTai.giamToiDa
-                                      : parseFloat(
-                                          (data.reduce(
-                                            (accumulator, currentProduct) => {
-                                              return (
-                                                accumulator + currentProduct.total
-                                              );
-                                            },
-                                            0
-                                          ) *
-                                            voucherHienTai.mucDo) /
+                                  if (
+                                    data.reduce(
+                                      (accumulator, currentProduct) => {
+                                        return (
+                                          accumulator + currentProduct.total
+                                        );
+                                      },
+                                      0
+                                    ) -
+                                      (voucherHienTai
+                                        ? voucherHienTai.loaiVoucher ===
+                                          "Tiền mặt"
+                                          ? parseFloat(voucherHienTai.mucDo) <
+                                            parseFloat(voucherHienTai.giamToiDa)
+                                            ? voucherHienTai.mucDo
+                                            : voucherHienTai.giamToiDa
+                                          : parseFloat(
+                                              (data.reduce(
+                                                (
+                                                  accumulator,
+                                                  currentProduct
+                                                ) => {
+                                                  return (
+                                                    accumulator +
+                                                    currentProduct.total
+                                                  );
+                                                },
+                                                0
+                                              ) *
+                                                voucherHienTai.mucDo) /
+                                                100
+                                            ) <
+                                            parseFloat(voucherHienTai.giamToiDa)
+                                          ? (parseFloat(
+                                              data.reduce(
+                                                (
+                                                  accumulator,
+                                                  currentProduct
+                                                ) => {
+                                                  return (
+                                                    accumulator +
+                                                    currentProduct.total
+                                                  );
+                                                },
+                                                0
+                                              )
+                                            ) *
+                                              parseFloat(
+                                                voucherHienTai.mucDo
+                                              )) /
                                             100
-                                        ) < parseFloat(voucherHienTai.giamToiDa)
-                                      ? (parseFloat(
-                                          data.reduce(
-                                            (accumulator, currentProduct) => {
-                                              return (
-                                                accumulator + currentProduct.total
-                                              );
-                                            },
-                                            0
-                                          )
-                                        ) *
-                                          parseFloat(voucherHienTai.mucDo)) /
-                                        100
-                                      : voucherHienTai.giamToiDa
-                                    : 0) +
-                                  roundToThousands(
-                                    isSwitchOn
-                                      ? hd[0]?.tienVanChuyen &&
-                                        shipMoney === shipMoney1
-                                        ? hd[0]?.tienVanChuyen
-                                        : shipMoney1
-                                        ? shipMoney1
-                                        : shipMoney
-                                        ? shipMoney
-                                        : 0
-                                      : 0
-                                  )) < 1) return;
+                                          : voucherHienTai.giamToiDa
+                                        : 0) +
+                                      roundToThousands(
+                                        isSwitchOn
+                                          ? hd[0]?.tienVanChuyen &&
+                                            shipMoney === shipMoney1
+                                            ? hd[0]?.tienVanChuyen
+                                            : shipMoney1
+                                            ? shipMoney1
+                                            : shipMoney
+                                            ? shipMoney
+                                            : 0
+                                          : 0
+                                      ) <
+                                    1
+                                  )
+                                    return;
                                   SellAPI.getThanhTienbyMaHD(activeKey).then(
                                     (res) => {
                                       if (
@@ -1495,7 +1513,7 @@ const BanHang = () => {
                             style={{ marginLeft: 12 }}
                           ></Button>
                           <ModalThanhToan
-                            onInHoaDon = {handleOpenInHoaDon}
+                            onInHoaDon={handleOpenInHoaDon}
                             openThanhToan={openThanhToan}
                             setOpenThanhToan={setOpenThanhToan}
                             onOk={handleOpenInHoaDon}
@@ -1550,9 +1568,9 @@ const BanHang = () => {
                               )
                             }
                             hoaDon={activeKey}
-                            voucher={voucherHienTai ? voucherHienTai : null}
-                            hoaDonDetails = {hd[0]}
-                            listSanPham = {data}
+                            voucher={voucherHienTai ? voucherHienTai.id : null}
+                            hoaDonDetails={hd[0]}
+                            listSanPham={data}
                           />
                         </div>
                         <div className="row">
@@ -1576,22 +1594,27 @@ const BanHang = () => {
                         </div>
                         <div className="row">
                           <h6 className="col-md-3 mt-2">Mã giảm giá:</h6>
-
+                          <>{
+                            voucherHienTai ? 
+                            <Button type="dashed" danger style={{width:200}} onClick={handleClearVoucher}>Bỏ chọn mã giảm giá</Button> : ""
+                            }
+                          </>
                           <Space.Compact className="col-md-10">
                             <Select
                               showSearch
                               style={{ width: 800, height: 120 }}
                               placeholder="Lựa chọn voucher"
                               onChange={onChangeVoucher}
-                              //onSearch={onSearchVoucher}
-                              //value={voucherHienTai}
-                              value={voucherHienTai?.id}
-                              defaultValue={null}
+                              value={voucherHienTai ? voucherHienTai?.id : null} 
+                              defaultValue={voucherHienTai ? voucherHienTai?.id : null}
                               optionFilterProp="label"
                             >
+
                               {voucherByIDKH.data ? (
                                 voucherByIDKH.data.map((option) => (
                                   <Option
+                                    removeIcon={<CloseCircleOutlined />}
+                                    onClick={handleRemoveOption}
                                     key={option.id}
                                     value={option.id}
                                     label={option.ma}
@@ -1649,6 +1672,8 @@ const BanHang = () => {
                               ) : voucherNoLimited ? (
                                 voucherNoLimited.map((option) => (
                                   <Option
+                                    removeIcon={<CloseCircleOutlined />}
+                                    onClick={handleRemoveOption}
                                     key={option.id}
                                     value={option.id}
                                     label={option.ma}
@@ -1708,7 +1733,7 @@ const BanHang = () => {
                           </Space.Compact>
                         </div>
                         <h6 className="mt-4">
-                        Giao hàng: &nbsp;&nbsp;&nbsp;
+                          Giao hàng: &nbsp;&nbsp;&nbsp;
                           <Switch
                             disabled={false}
                             onChange={handleSwitchToggle}
@@ -1721,11 +1746,11 @@ const BanHang = () => {
                               isSwitchOn
                             }
                           />
-      
                         </h6>
                         <h6 className="mt-4">
-                        Trả sau:
+                          Trả sau:
                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          
                           <Switch
                             disabled={isSwitchOn ? false : true}
                             onChange={handleSwitchTraSau}
@@ -1736,16 +1761,21 @@ const BanHang = () => {
                           <div className="col-md-8">
                             <h6 className="mt-4">
                               Tiền hàng:{" "}
-                              {`${Intl.NumberFormat("en-US").format(
+                              {`${Intl.NumberFormat("en-US").format(roundToThousands(
                                 data.reduce((accumulator, currentProduct) => {
                                   return accumulator + currentProduct.total;
-                                }, 0)
+                                }, 0))
                               )}`}
                             </h6>
                             <h6 className="mt-4">
                               Phí vận chuyển:{" "}
+                              <>{
+                                    ((hd[0]?.tienVanChuyen || shipMoney || shipMoney1) && isSwitchOn) ? 
+                                    <Button style={{width:130}}>Thay đổi tiền ship</Button> : "" 
+}
+                                </>
                               {isSwitchOn
-                                ? `${Intl.NumberFormat("en-US").format(
+                                ? `${Intl.NumberFormat("en-US").format(roundToThousands(
                                     roundToThousands(
                                       hd[0]?.tienVanChuyen &&
                                         shipMoney === shipMoney1
@@ -1755,13 +1785,14 @@ const BanHang = () => {
                                         : shipMoney
                                         ? shipMoney
                                         : 0
-                                    )
+                                    ))
                                   )}`
                                 : 0}
+
                             </h6>
-                            <h6 className="mt-4">
+                            <h6 className="mt-4 text-danger">
                               Giảm giá:{" "}
-                              {`${Intl.NumberFormat("en-US").format(
+                              {`${Intl.NumberFormat("en-US").format(roundToThousands(
                                 voucherHienTai
                                   ? voucherHienTai.loaiVoucher === "Tiền mặt"
                                     ? parseFloat(voucherHienTai.mucDo) <
@@ -1793,13 +1824,14 @@ const BanHang = () => {
                                         parseFloat(voucherHienTai.mucDo)) /
                                       100
                                     : voucherHienTai.giamToiDa
-                                  : 0
+                                  : 0)
                               )}`}
+      
                             </h6>
-                        
-                            <h6 className="mt-4">
+
+                            <h6 className="mt-4" >
                               Tổng tiền:{" "}
-                              {`${Intl.NumberFormat("en-US").format(
+                              {`${Intl.NumberFormat("en-US").format(roundToThousands(
                                 data.reduce((accumulator, currentProduct) => {
                                   return accumulator + currentProduct.total;
                                 }, 0) -
@@ -1855,15 +1887,15 @@ const BanHang = () => {
                                         ? shipMoney
                                         : 0
                                       : 0
-                                  )
-                              )} VND`}
+                                  ))
+                              )}`}
                             </h6>
                           </div>
                           <div className="col-md-4">
                             <h6 className="mt-4">VND</h6>
-
                             <h6 className="mt-4">VND</h6>
                             <h6 className="mt-4 text-danger">VND</h6>
+                            <h6 className="mt-4">VND</h6>
                           </div>
                         </div>
                       </div>
@@ -2036,7 +2068,12 @@ const BanHang = () => {
         ) : (
           console.error()
         )}
-        <ModalInHoaDon id={activeKey} openInHoaDon={openInHoaDon} setOpenInHoaDon={setOpenInHoaDon}/>
+        <ModalInHoaDon
+          id={activeKey}
+          openInHoaDon={openInHoaDon}
+          setOpenInHoaDon={setOpenInHoaDon}
+          openThanhToan={openThanhToan}
+        />
       </div>
       {showModal && (
         <QRScannerModal

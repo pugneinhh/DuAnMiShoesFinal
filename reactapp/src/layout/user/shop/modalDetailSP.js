@@ -462,21 +462,21 @@ const ModalDetailSP = (props) => {
             {ChiTietSanPham.loaiKM ? (
               <span>
                 <del style={{ color: "black" }}>
-                  {Intl.NumberFormat("en-US").format(ChiTietSanPham.giaBan)} VNĐ{" "}
+                  {Intl.NumberFormat("en-US").format(roundToThousands(ChiTietSanPham.giaBan))} VNĐ{" "}
                 </del>
-                {Intl.NumberFormat("en-US").format(
+                {Intl.NumberFormat("en-US").format(roundToThousands(
                   ChiTietSanPham.loaiKM === "Tiền mặt"
                     ? ChiTietSanPham.giaBan - ChiTietSanPham.giaTriKhuyenMai
                     : ChiTietSanPham.giaBan -
                         (ChiTietSanPham.giaBan *
                           ChiTietSanPham.giaTriKhuyenMai) /
                           100
-                )}{" "}
+                ))}{" "}
                 VNĐ
               </span>
             ) : (
               <span style={{ color: "black" }}>
-                {Intl.NumberFormat("en-US").format(ChiTietSanPham.giaBan)} VNĐ
+                {Intl.NumberFormat("en-US").format(roundToThousands(ChiTietSanPham.giaBan))} VNĐ
               </span>
             )}
           </h5>
@@ -593,3 +593,6 @@ const ModalDetailSP = (props) => {
   );
 };
 export default ModalDetailSP;
+function roundToThousands(amount) {
+  return Math.round(amount / 100) * 100;
+}

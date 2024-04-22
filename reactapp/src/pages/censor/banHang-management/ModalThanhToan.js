@@ -29,7 +29,7 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
   const data = payDetail.filter((item) => item.hoaDon === hoaDon);
   const [storedData, setStoredData] = useState(null);
 
-
+  console.log("Voucher tại thanh toán :",voucher);
 
 
   useEffect(() => {
@@ -63,7 +63,9 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
     setTongThanhToan(0);
     dispatch(DeletePay());
     dispatch(DeletePayDetail());
+    if (hoaDon) {
     const tt = await ThanhToanAPI.getThanhToan(hoaDon).then((res) => res.data);
+    if (tt) {
     tt.map((res) =>
       res.phuongThuc === 0
         ? (dispatch(
@@ -94,6 +96,8 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
           ),
           setTongThanhToan(parseFloat(tongThanhToan) + res.tongTien))
     );
+  }
+}
   };
 
 
@@ -173,7 +177,6 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
         theme: "light",
       });
     } else {
-  
       linkVNP();
       dispatch(AddPayDetail({ hoaDon: hoaDon, phuongThuc: 1, soTien: money }));
       setTongThanhToan(parseFloat(tongThanhToan) + parseFloat(money));
@@ -181,16 +184,38 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
     }
   };
 
-  const handleThanhToan = async () => {
+  const loadHoaDon =  () => {
+    HoaDonAPI.chiTietHoaDonTheoMa(hoaDon).then((res) => {
+      console.log("DATA :"+hoaDon);
+      if (!res.data) return;
+     // setHoaDondetail(res.data);
+      //setTrangThai(res.data.trangThai);
+      console.log("DATA IN BILL :",res);
+    });
+  }
+
+
+
+
+  const loadListSanPhams =  () => {
+    HoaDonAPI.hoaDonSanPhamTheoMa(hoaDon).then((res) => {
+      if (!res.data) return;
+      //setlistSanPhams(res.data);
+      console.log("DATA :",res)
+  
+    });
+  };
+
+  const handleThanhToan =  () => {
     if (parseFloat(total) <= parseFloat(!tongThanhToan ? 0 : tongThanhToan)) {
       if (voucher) {
-        await SellAPI.thanhToanHoaDon(
+         SellAPI.thanhToanHoaDon(
           hoaDon,
           storedData,
-          voucher ? voucher.id : null
+          voucher
         );
       }
-      await SellAPI.thanhToanHoaDonKhongVoucher(hoaDon, storedData);
+       SellAPI.thanhToanHoaDonKhongVoucher(hoaDon, storedData);
       toast("Thanh toán thành công!", {
         position: "top-right",
         autoClose: 1000,
@@ -208,6 +233,8 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
       dispatch(RemoveBill({ key: hoaDon }));
       setTongThanhToan(0);
       onInHoaDon(true);
+      loadHoaDon();
+      loadListSanPhams();
        setOpenThanhToan(false);
 
     } else {
@@ -316,6 +343,8 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
       open={openThanhToan}
       onOk={handleThanhToan}
       onCancel={handleClose}
+      okText="Thanh toán"
+      cancelText="Hủy bỏ"
       height={300}
       width={700}
       zIndex={10000}
@@ -344,7 +373,7 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
         <Button
           className="col-md-6 rounded-pill"
           type="primary"
-          onClick={() => handleChuyenKhoan}
+          onClick={handleChuyenKhoan}
         >
           {" "}
           Chuyển khoản

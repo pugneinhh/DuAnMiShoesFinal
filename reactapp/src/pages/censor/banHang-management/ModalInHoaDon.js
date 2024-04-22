@@ -11,32 +11,36 @@ import { useParams } from "react-router-dom";
 
 const ModalInHoaDon = (props) => {
   const componnentRef = useRef();
-  const {openInHoaDon, setOpenInHoaDon} = props;
+  const {openInHoaDon, setOpenInHoaDon , openThanhToan} = props;
   const [hoaDondetail, setHoaDondetail] = useState([]);
   const [trangThai, setTrangThai] = useState([]);
   const [listSanPhams, setlistSanPhams] = useState([]);
   const id = props.id;
 
-  const loadHoaDon = async () => {
-
+  console.log("IDDDĐ ",id);
+  console.log("in hóa đơn "+props.openInHoaDon);
+  console.log("Hóa đơn detail ",hoaDondetail);
+  const loadHoaDon =  () => {
     HoaDonAPI.chiTietHoaDonTheoMa(id).then((res) => {
-    
+      console.log("DATA :"+id);
+      if (!res.data) return;
       setHoaDondetail(res.data);
       setTrangThai(res.data.trangThai);
-    
+      console.log("DATA IN BILL :",res);
     });
-  
-  };
+  }
+
 
   const handleCloseInHoaDon = () => {
     setOpenInHoaDon(false);
   };
 
-  const loadListSanPhams = async () => {
+  const loadListSanPhams =  () => {
     HoaDonAPI.hoaDonSanPhamTheoMa(id).then((res) => {
+      if (!res.data) return;
       setlistSanPhams(res.data);
-    
-
+      console.log("DATA :",res)
+  
     });
   };
   useEffect(() => {
@@ -44,20 +48,20 @@ const ModalInHoaDon = (props) => {
     loadHoaDon();
     loadListSanPhams();
     }
-  },[id,hoaDondetail]);
+  },[id,openThanhToan]);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      // Thực hiện công việc bạn muốn ở đây
-      if (id) {
-        loadHoaDon();
-        loadListSanPhams();
-        }
-    }, 1000);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     // Thực hiện công việc bạn muốn ở đây
+  //     if (id && !hoaDondetail ) {
+  //       loadHoaDon();
+  //       loadListSanPhams();
+  //       }
+  //   }, 1000);
 
-    // Đảm bảo dọn dẹp interval khi component unmount hoặc khi useEffect chạy lại
-    return () => clearInterval(interval);
-  }, []);
+  //   // Đảm bảo dọn dẹp interval khi component unmount hoặc khi useEffect chạy lại
+  //   return () => clearInterval(interval);
+  // }, []);
 
   const handlePrint = useReactToPrint({
     content: () => componnentRef.current,
@@ -240,7 +244,7 @@ const ModalInHoaDon = (props) => {
                   <div className="row">
                     <h6 className="col-md-3 mt-2">Mã giảm giá:</h6>
                     <p className="col-md-6">
-                      {hoaDondetail?.voucher == null ? "Không có voucher" : hoaDondetail?.voucher}
+                      {hoaDondetail?.voucher == null ? "Không có voucher" : hoaDondetail?.voucher.ma}
                 </p>
                   </div>
                 </div>

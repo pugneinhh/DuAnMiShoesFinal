@@ -202,8 +202,21 @@ export const GioHang = ({ children }) => {
     userID,
     voucher,
     diaChi,
-    phuongThuc
+    phuongThuc,
+    dataVanChuyen
   ) => {
+    if (!diaChi && !dataVanChuyen){
+      return toast.error("Đơn hàng chưa có địa chỉ!", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
     // KHGuiThongBaoDatHang();
     const currentDate = new Date();
     const currentDateInMilliseconds = Date.UTC(
@@ -505,7 +518,7 @@ export const GioHang = ({ children }) => {
             </h5>
             <h5 className="col-md-5">
               <span style={{ color: "blue" }}>
-                {Intl.NumberFormat("en-US").format(total - (discount?discount:0))} VND
+                {Intl.NumberFormat("en-US").format(roundToThousands(total - (discount?discount:0)))} VND
               </span>
             </h5>
           </div>
@@ -576,7 +589,7 @@ export const GioHang = ({ children }) => {
           <div className="row">
             <h5 className="col">Tổng tiền</h5>
             <h5 className="col">
-              : {Intl.NumberFormat("en-US").format(total)} VND
+              : {Intl.NumberFormat("en-US").format(roundToThousands(total))} VND
             </h5>
           </div>
           <div className="row mt-3">
@@ -661,7 +674,8 @@ export const GioHang = ({ children }) => {
                       userID,
                       voucher,
                       diaChi,
-                      phuongThuc
+                      phuongThuc,
+                      dataVanChuyen,
                     );
                   },
                   onCancel: () => {

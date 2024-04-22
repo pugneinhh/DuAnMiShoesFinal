@@ -5,6 +5,7 @@ import com.example.backend.dto.request.hoadonsearch.HoaDonSearch;
 import com.example.backend.dto.request.sanphamsearch.BangConSearch;
 import com.example.backend.dto.response.AdminHoaDonDetailRespon;
 import com.example.backend.dto.response.AdminHoaDonResponn;
+import com.example.backend.dto.response.DetailUpdateDiaChiHoaDonRespon;
 import com.example.backend.dto.response.sanpham.DanhMucRespone;
 import com.example.backend.entity.HoaDon;
 import com.example.backend.entity.HoaDonChiTiet;
@@ -67,6 +68,9 @@ public class HoaDonServicee {
 
     public AdminHoaDonDetailRespon getByID(String id){
         return hoaDonRepository.detailHD(id);
+    }
+    public DetailUpdateDiaChiHoaDonRespon detailUpdateDiaChiHoaDonRespon(String id){
+        return hoaDonRepository.detailUpdateDiaChiHoaDon(id);
     }
 
     public HoaDon updateKH(String ma,String idKH){

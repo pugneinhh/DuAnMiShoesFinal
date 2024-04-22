@@ -42,6 +42,7 @@ public class ThanhToanService {
 private EmailSenderService emailSenderService;
     public ThanhToan thanhToan(ThanhToanRequest request) {
         ThanhToan tt = request.map(new ThanhToan());
+        System.out.println("TT :"+tt);
 //        List<ThanhToan> listTT = thanhToanRepository.getThanhToanByIdHD(tt.getHoaDon().getId());
 //
 //        if (listTT!= null && listTT.size() > 0) {
@@ -58,6 +59,7 @@ private EmailSenderService emailSenderService;
 //            }
 //        }
         sendMailOnline(tt.getHoaDon().getId());
+        System.out.println("Send mail done!");
         return thanhToanRepository.save(tt);
  //      ThanhToan thanhToan =  thanhToanRepository.save(tt);
 
@@ -83,14 +85,16 @@ private EmailSenderService emailSenderService;
     public void sendMailOnline(String idHoaDon) {
         String finalHtml = null;
         HoaDon hoaDon = hoaDonRepository.findAllById(idHoaDon);
+        System.out.println("Hóa đơn trong send mail :"+hoaDon);
         BienLaiHoaDon invoice = exportFilePdfFormHtml.getInvoiceResponse(hoaDon);
+        System.out.println("invoice :"+invoice);
         if(hoaDon.getNguoiDung()!=null){
        NguoiDung user = nguoiDungRepository.findAllById(hoaDon.getNguoiDung().getId());
+            System.out.println("Người dùng :"+user);
             sendMail(invoice,  user.getEmail(),BASE_FRONTEND_ENDPOINT + "/hd/"+hoaDon.getId());
     }else{
             sendMail(invoice,  hoaDon.getEmail(),BASE_FRONTEND_ENDPOINT + "/hd/"+hoaDon.getId());
         }
-
 //        sendMail(invoice, user.getEmail());
         //}
     }
@@ -102,7 +106,6 @@ private EmailSenderService emailSenderService;
         finalHtmlSendMail = springTemplateEngine.process("BillMail", dataContextSendMail);
         String subject = "Biên lai ";
         emailSenderService.sendSimpleEmail(email, subject, finalHtmlSendMail);
-
     }
 
 

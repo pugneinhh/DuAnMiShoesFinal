@@ -75,6 +75,7 @@ public class BanHangClient {
 
     @PostMapping("/check-out")
     public  Boolean create(@RequestBody HoaDonClientRequest hoaDonClientRequest){
+        System.out.println("Hóa đơn client request :"+hoaDonClientRequest);
         return banHangService.createHoaDon(hoaDonClientRequest);
     }
     @GetMapping("/voucher-tot-nhat/{idKH}/{money}")

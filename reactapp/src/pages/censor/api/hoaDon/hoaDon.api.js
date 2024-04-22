@@ -33,6 +33,15 @@ export class HoaDonAPI {
       },
     });
   };
+  static detailUpdateHoaDon = (id) => {
+    return requestAdmin({
+      method: "GET",
+      url: `/admin/hoa-don/detail-update-dia-chi-hoa-don/${id}`,
+      headers: {
+        Authorization: this.getToken,
+      },
+    });
+  };
   static chiTietHoaDonTheoMa = (ma) => {
     return requestAdmin({
       method: "GET",

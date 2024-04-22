@@ -96,7 +96,7 @@ public class BanHangService {
                 .trangThai(0)
                 .build();
 
-
+        System.out.println("Hóa đơn sau builder :"+hoaDon);
         if (hoaDonRequest.getIdVoucher() != null) {
             Voucher voucher = voucherRepository.findAllById(hoaDonRequest.getIdVoucher()).get();
             hoaDon.setVoucher(voucher);
@@ -139,9 +139,8 @@ public class BanHangService {
                     .hoaDon(hoaDon)
                     .ngayTao(LocalDateTime.now())
                     .build();
-
+            System.out.println("Hóa đơn chi tiết :"+hdct);
             hoaDonChiTietRepository.save(hdct);
-
             spct.setSoLuong(spct.getSoLuong() - request.getSoLuong());
 
             if (spct.getSoLuong() == 0) {
@@ -176,10 +175,13 @@ public class BanHangService {
         thanhToanRequest.setHoaDon(saveHoaDon.getId());
         thanhToanRequest.setNgayTao(LocalDateTime.now());
         thanhToanRequest.setTongTien(saveHoaDon.getThanhTien());
+        System.out.println("Thanh toán requesst "+thanhToanRequest);
         if (hoaDonRequest.getIdPayMethod() == 0) {
+            System.out.println("Vào 0");
             thanhToanRequest.setTienMat(saveHoaDon.getThanhTien());
             thanhToanRequest.setPhuongThuc(0);
         } else {
+            System.out.println("Vào 1");
             thanhToanRequest.setChuyenKhoan(saveHoaDon.getThanhTien());
             thanhToanRequest.setPhuongThuc(1);
             thanhToanRequest.setPhuongThucVnp(hoaDonRequest.getMaGiaoDich());
@@ -192,8 +194,11 @@ public class BanHangService {
             lichSuHoaDonTT.setNgayTao(LocalDateTime.now());
             lichSuHoaDonService.save(lichSuHoaDonTT);
         }
+        System.out.println("Save xong lịch sử");
         thanhToanService.thanhToan(thanhToanRequest);
+        System.out.println("thanh toán xong thanh toán service");
         this.thongBaoService.thanhToan(saveHoaDon.getId());
+        System.out.println("Chạy qua thanh toán");
         LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
 //        lichSuHoaDon.setId(saveHoaDon.getId());
         lichSuHoaDon.setHoaDon(saveHoaDon);
@@ -201,6 +206,7 @@ public class BanHangService {
         lichSuHoaDon.setTrangThai(0);
         lichSuHoaDon.setNgayTao(LocalDateTime.now());
         lichSuHoaDonService.save(lichSuHoaDon);
+        System.out.println("Hoàn thành");
 //          sendMailOnline(hoaDon.getId());
         return true;
     }

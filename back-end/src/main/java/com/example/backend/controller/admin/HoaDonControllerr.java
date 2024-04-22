@@ -56,7 +56,10 @@ public class HoaDonControllerr {
     public ResponseEntity<?> detailHD(@PathVariable("idHD") String id){
         return  ResponseEntity.ok(hoaDonService.getByID(id));
     }
-
+    @GetMapping("/detail-update-dia-chi-hoa-don/{idHD}")
+    public ResponseEntity<?> detailUpdateDiaChiHoaDon(@PathVariable("idHD") String id){
+        return  ResponseEntity.ok(hoaDonService.detailUpdateDiaChiHoaDonRespon(id));
+    }
     @GetMapping("/detail-hoa-don-theo-ma/{ma}")
     public ResponseEntity<?> detailHDByMa(@PathVariable("ma") String ma){
         return  ResponseEntity.ok(hoaDonService.getHDByMa(ma));
@@ -287,7 +290,7 @@ public class HoaDonControllerr {
     public ResponseEntity<?> SanPhamTheoMa(@PathVariable("ma") String ma){
         System.out.println("Mã HĐ "+ma);
         HoaDon hd = hoaDonService.getHDByMa(ma);
-        if (hd == null) return null;
+        if (hd == null) return ResponseEntity.ok(null);
         System.out.println("Hóa đơn được tìm thấy"+hd);
         return  ResponseEntity.ok(hoaDonService.detailHDSanPham1(hd.getId()));
     }

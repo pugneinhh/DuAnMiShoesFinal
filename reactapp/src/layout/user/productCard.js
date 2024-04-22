@@ -57,22 +57,22 @@ export const ProductCard = ({ product }) => {
               <span>
                 <span className="text-gia-tien ">
                   <del style={{ color: "red" }}>
-                    {Intl.NumberFormat("en-US").format(product.price)} VNĐ
+                    {Intl.NumberFormat("en-US").format(roundToThousands(product.price))} VNĐ
                   </del>
                 </span>
                 <span className="text-gia-tien ">
-                  {Intl.NumberFormat("en-US").format(
+                  {Intl.NumberFormat("en-US").format(roundToThousands(
                     product.loaiKM === "Tiền mặt"
                       ? product.price - product.giaTriKhuyenMai
                       : product.price -
                           (product.price * product.giaTriKhuyenMai) / 100
-                  )}{" "}
+                  ))}{" "}
                   VNĐ
                 </span>
               </span>
             ) : (
               <span className="text-gia-tien">
-                {Intl.NumberFormat("en-US").format(product.price)} VNĐ
+                {Intl.NumberFormat("en-US").format(roundToThousands(product.price))} VNĐ
               </span>
             )}
           </div>
@@ -128,3 +128,6 @@ export const ProductCard = ({ product }) => {
     </div>
   );
 };
+function roundToThousands(amount) {
+  return Math.round(amount / 100) * 100;
+}
