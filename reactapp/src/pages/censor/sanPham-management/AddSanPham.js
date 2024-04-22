@@ -531,7 +531,7 @@ export default function AddSanPham() {
       progress: undefined,
       theme: "light",
     });
-    // nav("/admin-san-pham");
+    nav("/admin-san-pham");
   };
 
   //Load san pham
