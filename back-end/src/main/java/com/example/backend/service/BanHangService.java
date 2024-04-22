@@ -140,7 +140,7 @@ public class BanHangService {
                     .ngayTao(LocalDateTime.now())
                     .build();
             System.out.println("Hóa đơn chi tiết :"+hdct);
-
+            hoaDonChiTietRepository.save(hdct);
             spct.setSoLuong(spct.getSoLuong() - request.getSoLuong());
 
             if (spct.getSoLuong() == 0) {

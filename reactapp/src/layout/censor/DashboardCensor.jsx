@@ -158,7 +158,7 @@ const DashboardCensor = ({ children }) => {
           </SidebarHeader>
           <Menu iconShape="circle">
             <MenuItem icon={<RxDashboard color="#f7faf9" size={20} />}>
-              Quản lý Thu Chi
+              Quản lý Thống Kê
               <Link to="/admin-thong-ke"></Link>
             </MenuItem>
           </Menu>
