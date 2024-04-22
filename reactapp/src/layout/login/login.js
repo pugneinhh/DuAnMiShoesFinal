@@ -83,7 +83,7 @@ export const Login = () => {
     <MDBContainer className="my-5 mb-5 ">
       <MDBCard
         className="container-login form-login"
-        style={{ width: 1000, margin: "190px 150px" }}
+        style={{ width: 1000, margin: "100px 150px" }}
       >
         <MDBRow style={{ height: 522 }}>
           <MDBCol md="5" style={{ height: 500 }}>

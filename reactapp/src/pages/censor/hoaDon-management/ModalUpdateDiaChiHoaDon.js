@@ -1,26 +1,38 @@
 import {
-  Button,
-  Divider,
+
   Form,
   Input,
   Modal,
   Select,
-  Slider,
-  Table,
-  Space,
-  Tag,
-  Badge,
 } from "antd";
 import ModalDiaChi from "../khachHang-management/ModalDiaChi";
 import { AddressApi } from "../api/address/AddressApi";
 import { useEffect, useState } from "react";
+import { HoaDonAPI } from "../api/hoaDon/hoaDon.api";
 const ModalDiaChiUpdate = (props) => {
   const [form] = Form.useForm();
   const { openDiaChiUpdate, setOpenDiaChiUpdate } = props;
-    const idKH = props.idKH;
+    const idHD = props.idHD;
       const [listProvince, setListProvince] = useState([]);
       const [listDistricts, setListDistricts] = useState([]);
       const [listWard, setListWard] = useState([]);
+       const [diaChiHoaDon, setdiaChiHoaDon] = useState([]);
+
+
+       
+    useEffect(() => {
+      // form.setFieldsValue({ idNguoiDung: idKH });
+      loadUpdateHoaDon();
+      loadDataProvince();
+    }, []);
+      console.log('idhD',idHD);
+            console.log("idhD", diaChiHoaDon);
+         const loadUpdateHoaDon= () => {
+           HoaDonAPI.detailUpdateHoaDon(idHD).then((res) => {
+             setdiaChiHoaDon(res.data);
+          
+           });
+         };
   const handleClose = () => {
     setOpenDiaChiUpdate(false);
   };
@@ -62,10 +74,6 @@ const ModalDiaChiUpdate = (props) => {
       setWard(valueWard);
     };
 
-    useEffect(() => {
-      // form.setFieldsValue({ idNguoiDung: idKH });
-      loadDataProvince();
-    }, []);
   return (
     <Modal
       title="Update địa chỉ"
@@ -78,7 +86,12 @@ const ModalDiaChiUpdate = (props) => {
       zIndex={2}
       style={{ top: -200 }}
     >
-      <Form form={form} onFinish={handleSubmit} layout="vertical">
+      <Form
+        form={form}
+        initialValues={diaChiHoaDon}
+        onFinish={handleSubmit}
+        layout="vertical"
+      >
         <div className="row">
           <div className="col">
             <Form.Item
@@ -111,7 +124,7 @@ const ModalDiaChiUpdate = (props) => {
           </div>
           <div className="col">
             <Form.Item
-              name="soDienThoai"
+              name="sdt"
               label="Số điện thoại"
               tooltip="Số điện thoại của bạn là gì?"
               rules={[

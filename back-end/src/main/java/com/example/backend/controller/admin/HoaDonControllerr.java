@@ -56,7 +56,10 @@ public class HoaDonControllerr {
     public ResponseEntity<?> detailHD(@PathVariable("idHD") String id){
         return  ResponseEntity.ok(hoaDonService.getByID(id));
     }
-
+    @GetMapping("/detail-update-dia-chi-hoa-don/{idHD}")
+    public ResponseEntity<?> detailUpdateDiaChiHoaDon(@PathVariable("idHD") String id){
+        return  ResponseEntity.ok(hoaDonService.detailUpdateDiaChiHoaDonRespon(id));
+    }
     @GetMapping("/detail-hoa-don-theo-ma/{ma}")
     public ResponseEntity<?> detailHDByMa(@PathVariable("ma") String ma){
         return  ResponseEntity.ok(hoaDonService.getHDByMa(ma));
