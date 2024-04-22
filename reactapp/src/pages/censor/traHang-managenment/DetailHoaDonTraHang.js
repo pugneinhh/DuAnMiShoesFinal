@@ -1,17 +1,8 @@
 import {
-  Button,
-  Divider,
   Form,
-  Input,
   Modal,
-  Select,
-  Slider,
-  Table,
-  Space,
-  Tag,
-  Badge,
-  Col,
-  Row,
+
+
 } from "antd";
 import { useEffect, useState } from "react";
 import { LuMousePointerClick } from "react-icons/lu";
@@ -29,6 +20,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { VoucherAPI } from "../api/voucher/voucher.api";
 
 const DetailHoaDonTraHang = () => {
+  
   const [form] = Form.useForm();
     const [selectedIDSP, setSelectedIDSP] = useState([]);
     const [sanPhamHDCT,setSanPhamHDCT]=useState([]);
@@ -36,6 +28,7 @@ const DetailHoaDonTraHang = () => {
     const [tienGiamHDMoi,setTienGiamHDMoi]=useState(0);
     const [tienTra,setTienTra]=useState(0);
     const { id } = useParams("");
+    console.log(id);
     let newBill = useSelector(GetNewBill);
 
   let totalNewBill = newBill.reduce((accumulator, currentItem) => {

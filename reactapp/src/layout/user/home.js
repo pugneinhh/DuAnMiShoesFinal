@@ -7,6 +7,8 @@ import { IoIosInformationCircleOutline } from "react-icons/io";
 import { MdOutlineSupport } from "react-icons/md";
 import { ProductCard } from "./productCard";
 import { HomeAPI } from "../../pages/censor/api/home/homeApi";
+import SockJS from "sockjs-client";
+import { Stomp } from "@stomp/stompjs";
 const contentStyle = {
   height: "450px",
   color: "#fff",
@@ -38,7 +40,30 @@ export const Home = ({ children }) => {
         setHotProducts(res.data);
       })
   }
+      var stomp = null;
+      const socket = new SockJS("http://localhost:8080/ws");
+      stomp = Stomp.over(socket);
+  useEffect(() => {
+    stomp.connect({}, () => {
+      stomp.subscribe("/topic/KH/hoa-don", (mes) => {
+        try {
+          const pare = JSON.parse(mes.body);
+          console.log(pare);
+          // ví du: bạn muốn khi khách hàng bấm đặt hàng mà load lại hóa đơn màn admin thì hãy gọi hàm load all hóa đơn ở đây
+          // thí dụ: đây là hàm laod hóa đơn: loadHoaDon(); allThongBao(); CountThongBao();
+          getAll();
+          getHot();
+          getNew();
+        } catch (e) {
+          console.log("lỗi mẹ ròi xem code di: ", e);
+        }
+      });
+    });
 
+    return () => {
+      stomp.disconnect();
+    };
+  }, []);
   useEffect(() => {
     getHot();
     getAll();

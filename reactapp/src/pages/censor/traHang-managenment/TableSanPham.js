@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Table, Form, InputNumber, Button } from "antd";
-import { KhachHangAPI } from "../api/user/khachHang.api";
 import { useDispatch, useSelector } from "react-redux";
 import {
   DeleteAll,

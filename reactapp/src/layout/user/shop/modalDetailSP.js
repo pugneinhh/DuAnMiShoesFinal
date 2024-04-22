@@ -5,6 +5,7 @@ import { SanPhamClientAPI } from "../../../pages/censor/api/home/sanPham/sanPham
 import { GioHangAPI } from "../../../pages/censor/api/gioHang/gioHang.api";
 import { get, set } from "local-storage";
 import { useCart } from "../cart/CartContext";
+
 const ModalDetailSP = (props) => {
   const { openModalDetailSP, setOpenModalDetailSP, idCt, setidCTSP } = props;
   const { updateTotalQuantity } = useCart();
@@ -37,6 +38,7 @@ const ModalDetailSP = (props) => {
     }
     }
   };
+
   useEffect(() => {
     loadCTSP();
     loadCountGioHang();
@@ -44,6 +46,7 @@ const ModalDetailSP = (props) => {
       setKhachHang(storedData.userID);
     }
   }, []);
+
 
   const loadCTSP = () => {
     SanPhamClientAPI.getCTSP(idCt).then((res) => {
@@ -490,12 +493,12 @@ const ModalDetailSP = (props) => {
                   className={`mt-1 `}
                   style={{
                     backgroundColor: listMauSacBySP.maMau, //`${listSanPham.tenMauSac}`
-                    borderRadius: 20,
+                    borderRadius: 40,
                     width: 30,
                     height: 30,
                     border:
                       selectedMauSac === listMauSacBySP.mauSacID
-                        ? "1px solid #4096ff"
+                        ? "2px solid #4096ff"
                         : "none",
                   }}
                   onClick={() => handleMauSacClick(listMauSacBySP.mauSacID)}
