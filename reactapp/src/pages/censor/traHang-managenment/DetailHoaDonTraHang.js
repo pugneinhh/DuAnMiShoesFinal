@@ -266,7 +266,6 @@ const DetailHoaDonTraHang = () => {
                 <span className="fw-bolder me-3">
                   <strong>Khách hàng :</strong>
                 </span>
-                <br/>
                 <span>{thongTin.nguoiDung!=null?thongTin.nguoiDung.ten:"Khách lẻ"}</span>
               </span>
             </div>

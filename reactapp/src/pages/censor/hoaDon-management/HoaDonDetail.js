@@ -143,7 +143,7 @@ export default function HoaDonDetail() {
       setHoaDondetail(res.data);
       setTrangThai(res.data.trangThai);
       setMaHD(res.data.ma);
-   
+      console.log("hd",res.data)
     });
   };
 
@@ -206,283 +206,9 @@ export default function HoaDonDetail() {
       loadTimeLineHoaDon();
       form.resetFields();
       setIsModalOpen(false);
-         if (trangThai == 2) {
-          //  setOpenXuat(true);
-            handlePrint();
-            <div ref={componnentRef} className="row">
-              <div className="col-md-2">
-                <img
-                  src={logo}
-                  style={{ width: 150, height: 150, marginLeft: 30 }}
-                />
-              </div>
-
-              <h2
-                className=" my-5  py-2 col-md-10 "
-                style={{ paddingLeft: 250 }}
-              >
-               
-                MI SHOES
-              </h2>
-              <div className="col-md-3">
-                <div style={{ marginLeft: 30 }}>
-                  <h6>Tên khách hàng:</h6>
-                </div>
-                <div className="mt-4" style={{ marginLeft: 30 }}>
-                  <h6>Số điện thoại:</h6>
-                </div>
-                <div className="mt-4" style={{ marginLeft: 30 }}>
-                  <h6>Địa chỉ:</h6>
-                </div>
-              </div>
-              <div className="col-md-3">
-                <div>
-                  <p>{hoaDondetail.tenKH}</p>
-                </div>
-                <div className="mt-4">
-                  <p>{hoaDondetail.sdt}</p>
-                </div>
-                <div className="mt-4">
-                  <p>{hoaDondetail.diaChi}</p>
-                </div>
-              </div>
-              <div className="col-md-3">
-                <div className="ps-4">
-                  <h6>Trạng thái:</h6>
-                </div>
-                <div className="mt-4 ps-4">
-                  <h6>Loại:</h6>
-                </div>
-                <div className="mt-4 ps-4">
-                  <h6>Thành tiền:</h6>
-                </div>
-              </div>
-              <div className="col-md-3">
-                <div>
-                  {trangThai == 0 ? (
-                    <Tag color="purple">Chờ xác nhận</Tag>
-                  ) : trangThai == 1 ? (
-                    <Tag color="red">Xác nhận</Tag>
-                  ) : trangThai == 2 ? (
-                    <Tag color="blue">Chờ vận chuyển</Tag>
-                  ) : trangThai == 3 ? (
-                    <Tag color="cyan">Đang Vận chuyển</Tag>
-                  ) : trangThai == 4 ? (
-                    <Tag color="orange">Đã Thanh toán</Tag>
-                  ) : (
-                    <Tag color="green">Thành công</Tag>
-                  )}
-                </div>
-                <div className="mt-4">
-                  {hoaDondetail.loaiHD == 0 ? (
-                    <Tag color="orange">Online</Tag>
-                  ) : (
-                    <Tag color="red">Tại quầy</Tag>
-                  )}
-                </div>
-                <div className="mt-4">
-                  <p>
-                    {" "}
-                    <IntlProvider locale="vi-VN">
-                      <div>
-                        <FormattedNumber
-                          value={hoaDondetail.thanhTienHD}
-                          style="currency"
-                          currency="VND"
-                          minimumFractionDigits={0}
-                        />
-                      </div>
-                    </IntlProvider>
-                  </p>
-                </div>
-              </div>
-              <div className="container-fuild mt-3 row  radius">
-                <div>
-                  {listSanPhams.map((listSanPham, index) => (
-                    <tr className="pt-3 row">
-                      <div className="col-md-4">
-                        <Image
-                          cloudName="dtetgawxc"
-                          publicId={listSanPham.urlHA}
-                          width="100"
-                          crop="scale"
-                          href={listSanPham.urlHA}
-                          style={{
-                            width: 100,
-                            height: 100,
-                            marginLeft: 40,
-                          }}
-                        />
-                        {/* <img src={listSanPham.tenHA} style={{ width: 100, height: 100, marginLeft: 40 }} />  */}
-                      </div>
-                      <div className="col-md-6 ">
-                        <div className="mt-4">
-                          <h6>
-                            {listSanPham.tenHang} {listSanPham.tenSP}{" "}
-                            {listSanPham.tenMauSac}
-                          </h6>
-                        </div>
-                        <div className="text-danger">
-                          <h6>
-                            <IntlProvider locale="vi-VN">
-                              <div>
-                                <FormattedNumber
-                                  value={listSanPham.giaBanSP}
-                                  style="currency"
-                                  currency="VND"
-                                  minimumFractionDigits={0}
-                                />
-                              </div>
-                            </IntlProvider>
-                          </h6>
-                        </div>
-                        <div>Size:{listSanPham.tenKichThuoc}</div>
-                        <div>x{listSanPham.soLuongSP}</div>
-                      </div>
-
-                      <div className="col-md-2 text-danger mt-5">
-                        <h6>
-                          <IntlProvider locale="vi-VN">
-                            <div>
-                              <FormattedNumber
-                                value={listSanPham.gia * listSanPham.soLuongSP}
-                                style="currency"
-                                currency="VND"
-                                minimumFractionDigits={0}
-                              />
-                            </div>
-                          </IntlProvider>
-                        </h6>
-                      </div>
-                    </tr>
-                  ))}
-                </div>
-                <hr></hr>
-                <tr className="pt-3 row">
-                  <div className="col-md-6">
-                    <div className="row">
-                      <h6 className="col-md-3 mt-2">Mã giảm giá:</h6>
-
-                      <Space.Compact className="col-md-10">
-                        <Select
-                          showSearch
-                          style={{ width: 800, height: 120 }}
-                          placeholder="Lựa chọn voucher"
-                          onChange={onChangeVoucher}
-                          value={voucherHienTai ? voucherHienTai.ma : null}
-                          defaultValue={null}
-                          optionFilterProp="label"
-                        >
-                          {voucher.data ? (
-                            voucher.data.map((option) => (
-                              <Option
-                                key={option.id}
-                                value={option.id}
-                                label={option.ma}
-                                imgTicket={imgTicket}
-                                dieuKien={option.dieuKien}
-                                giamToiDa={option.giamToiDa}
-                                loai={option.loaiVoucher}
-                                mucDo={option.mucDo}
-                                style={{ width: "100%", height: "100%" }}
-                                // filterOption={filterOptionVoucher}
-                              >
-                                <div className="row">
-                                  <div
-                                    className="col-md-2"
-                                    //style={{ marginRight: 50 }}
-                                  >
-                                    <img
-                                      src={imgTicket}
-                                      style={{
-                                        width: 100,
-                                        marginRight: "8px",
-                                        heitgh: 80,
-                                        marginTop: "15px",
-                                      }}
-                                    />
-                                  </div>
-                                  <div
-                                    className="col"
-                                    style={{ marginLeft: "50px" }}
-                                  >
-                                    Mã giảm giá: {option.ma}
-                                    <br></br>
-                                    Điều kiện:
-                                    {Intl.NumberFormat("en-US").format(
-                                      option.dieuKien
-                                    )}{" "}
-                                    VNĐ
-                                    <br></br>
-                                    Giảm:
-                                    {option.loaiVoucher === "Phần trăm"
-                                      ? option.mucDo + "% "
-                                      : `${Intl.NumberFormat("en-US").format(
-                                          option.mucDo
-                                        )} VNĐ `}
-                                    <br></br>
-                                    Tối đa:
-                                    {Intl.NumberFormat("en-US").format(
-                                      option.giamToiDa
-                                    )}
-                                    VNĐ
-                                  </div>
-                                </div>
-                              </Option>
-                            ))
-                          ) : (
-                            <p>Không có voucher hợp lệ</p>
-                          )}
-                        </Select>
-                        {/* <Button className="ms-5">Áp mã</Button> */}
-                      </Space.Compact>
-                    </div>
-                  </div>
-                  <div className="col-md-3"></div>
-                  <div className="col-md-3">
-                    <div className="d-flex">
-                      <h6 className="col-md-6">Tiền hàng:</h6>{" "}
-                      <p className="col-md-6">
-                        <IntlProvider locale="vi-VN">
-                          <div>
-                            <FormattedNumber
-                              value={hoaDondetail.thanhTienHD}
-                              style="currency"
-                              currency="VND"
-                              minimumFractionDigits={0}
-                            />
-                          </div>
-                        </IntlProvider>
-                      </p>{" "}
-                    </div>
-                    <div className="d-flex">
-                      <h6 className="col-md-6">Phí vận chuyển:</h6>{" "}
-                      <p className="col-md-6">0 VND</p>{" "}
-                    </div>
-                    <div className="d-flex">
-                      <h6 className="col-md-6">Tổng tiền giảm:</h6>{" "}
-                      <p className="col-md-6">0 VND</p>{" "}
-                    </div>
-                    <div className="d-flex">
-                      <h6 className="col-md-6">Tổng giảm:</h6>{" "}
-                      <p className="col-md-6">
-                        <IntlProvider locale="vi-VN">
-                          <div>
-                            <FormattedNumber
-                              value={hoaDondetail.thanhTien}
-                              style="currency"
-                              currency="VND"
-                              minimumFractionDigits={0}
-                            />
-                          </div>
-                        </IntlProvider>
-                      </p>
-                    </div>
-                  </div>
-                </tr>
-              </div>
-            </div>;
-        
+         if (trangThai == 0) {
+           setOpenXuat(true);
+            handlePrint();     
          }
       toast("🦄 Thành công!", {
         position: "top-right",
@@ -953,7 +679,7 @@ const handlePrint = useReactToPrint({
           </>
         </div>
         <div className="col-md-2">
-          {(hoaDondetail.loaiHD == 1 && trangThai == 4) ||
+          {(hoaDondetail.loaiHD == 1 && trangThai == 5) ||
           trangThai == 0 ||
           trangThai == 5 ||
           trangThai == -1 ? (
@@ -1088,6 +814,7 @@ const handlePrint = useReactToPrint({
 
             <ModalDiaChiUpdate
               idKH={hoaDondetail.nguoiDung}
+              idHD={id}
               maNV={maNV}
               activeKey={id}
               openDiaChiUpdate={openDiaChiUpdate}
@@ -1486,8 +1213,10 @@ const handlePrint = useReactToPrint({
                   <div>
                     <FormattedNumber
                       value={
-                        parseFloat(hoaDondetail.thanhTien) +
-                        parseFloat(hoaDondetail.giaGiam)
+                        hoaDondetail.giaGiam == null
+                          ? parseFloat(hoaDondetail.thanhTien)
+                          : parseFloat(hoaDondetail.thanhTien) +
+                            parseFloat(hoaDondetail.giaGiam)
                       }
                       style="currency"
                       currency="VND"
@@ -1800,7 +1529,7 @@ const handlePrint = useReactToPrint({
                   </tr>
                 ))}
               </div>
-      
+
               <tr className="pt-3 row">
                 <div className="col-md-6">
                   <div className="row">
@@ -1889,7 +1618,12 @@ const handlePrint = useReactToPrint({
                       <IntlProvider locale="vi-VN">
                         <div>
                           <FormattedNumber
-                            value={hoaDondetail.thanhTienHD}
+                            value={
+                              hoaDondetail.giaGiam == null
+                                ? parseFloat(hoaDondetail.thanhTien)
+                                : parseFloat(hoaDondetail.thanhTien) +
+                                  parseFloat(hoaDondetail.giaGiam)
+                            }
                             style="currency"
                             currency="VND"
                             minimumFractionDigits={0}

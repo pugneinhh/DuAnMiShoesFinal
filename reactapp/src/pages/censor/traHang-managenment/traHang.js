@@ -43,7 +43,7 @@ const TraHang = () => {
           boxShadow: "0 3px 8px rgba(0, 0, 0, 0.1)", // Box shadow
           borderRadius: "8px",
           maxWidth: "100%", // Đảm bảo div không vượt quá kích thước màn hình
-          height: "800px",
+          height: "600px",
         }}
       >
         <GiReturnArrow size={30} />{" "}
@@ -57,7 +57,7 @@ const TraHang = () => {
             onFinish={handleSubmit}
           >
             <Row>
-              <Col span={11} style={{ marginTop: "32px" }}>
+              <Col span={13} style={{ marginTop: "25px" }}>
                 <Form.Item
                   name="ma"
                   label={
@@ -70,7 +70,10 @@ const TraHang = () => {
                   <Input style={{ width: 300 }} />
                 </Form.Item>
               </Col>
-              <Col className="d-flex align-items-center ms-5 mt-2">
+              <Col
+                className="d-flex align-items-center ms-2"
+                style={{ marginTop: "-2px" }}
+              >
                 <Button
                   style={{
                     // width: "110px",
@@ -79,34 +82,35 @@ const TraHang = () => {
                     backgroundColor: "#3366CC",
                     color: "white",
                   }}
-                  onClick={()=>{form.submit();}}
+                  onClick={() => {
+                    form.submit();
+                  }}
                 >
                   Tìm kiếm
                 </Button>
               </Col>
- 
             </Row>
           </Form>
         </div>
-        <div className="text-center mt-4">
+        <div className="text-center">
           <img
             src="https://cdn.ntlogistics.vn/images/NTX/new_images/shipper-giao-hang-nhanh-can-chu-dong-trong-qua-trinh-gui-hang.jpg"
-            style={{ width: 1000, height: 550 }}
+            style={{ width: 800, height: 400 }}
           ></img>
           <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-        />
-        {/* Same as */}
-        <ToastContainer />
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
+          {/* Same as */}
+          <ToastContainer />
         </div>
       </div>
     </div>

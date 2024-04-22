@@ -6,6 +6,7 @@ import com.example.backend.dto.request.HoaDonCLient.TrangThaiRequest;
 import com.example.backend.dto.request.hoadonsearch.HoaDonSearch;
 import com.example.backend.dto.response.AdminHoaDonDetailRespon;
 import com.example.backend.dto.response.AdminHoaDonResponn;
+import com.example.backend.dto.response.DetailUpdateDiaChiHoaDonRespon;
 import com.example.backend.dto.response.HoaDonCLient.DetailHoaDonClientByIdHDRespon;
 import com.example.backend.dto.response.HoaDonCLient.HoaDonClientHistory;
 import com.example.backend.entity.HoaDon;
@@ -86,7 +87,7 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
       hd.gia_goc as giaGoc , hd.ten_nguoi_nhan as tenNguoiNhan, tt.phuong_thuc_vnp as phuongThucVNP
       FROM  duanmishoes.hoa_don hd\s
       LEFT JOIN duanmishoes.nguoi_dung kh ON kh.id = hd.khach_hang_id\s
-      join thanh_toan tt on tt.hoa_don_id = hd.id
+      left join  thanh_toan tt on tt.hoa_don_id = hd.id
       where hd.id=:key
             	    """,
             nativeQuery = true)
@@ -196,5 +197,6 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
     HoaDon findAllById(String id);
     @Query(value = "SELECT * FROM hoa_don WHERE ma = :ma AND ngay_sua IS NOT NULL AND ngay_sua >= DATE_SUB(NOW(), INTERVAL 7 DAY);",nativeQuery = true)
     HoaDon getHDByMaTraHang(String ma);
-
+    @Query(value = "select id, ten_nguoi_nhan as tenNguoiNhan,so_dien_thoai as sdt, ghi_chu as ghiChu, dia_chi as diaChi from hoa_don where id=:idHD",nativeQuery = true)
+    DetailUpdateDiaChiHoaDonRespon detailUpdateDiaChiHoaDon(String idHD);
 }
