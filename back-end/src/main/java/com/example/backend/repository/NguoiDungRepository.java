@@ -139,7 +139,7 @@ public interface NguoiDungRepository extends JpaRepository<NguoiDung, String> {
             	nd.so_dien_thoai like (%:#{#nguoiDungSeacrh.ten}%) ) AND
                 (:#{#nguoiDungSeacrh.trangThai} IS NULL OR
                 nd.trang_thai =:#{#nguoiDungSeacrh.trangThai}) AND
-            	nd.chuc_vu = 'NHANVIEN'
+            	nd.chuc_vu = 'KHACHHANG'
             order by
             	maND desc
                          """, nativeQuery = true)

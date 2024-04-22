@@ -849,7 +849,7 @@ const handlePrint = useReactToPrint({
             ) : trangThai == 4 ? (
               <Tag color="orange">Đã Thanh toán</Tag>
             ) : trangThai == 5 ? (
-              <Tag color="succes">Thành công</Tag>
+              <Tag color="success">Thành công</Tag>
             ) : trangThai == 10 ? (
               <Tag color="orange">Trả hàng</Tag>
             ) : trangThai == -1 ? (
@@ -1388,7 +1388,7 @@ const handlePrint = useReactToPrint({
                 ) : trangThai == 4 ? (
                   <Tag color="orange">Đã Thanh toán</Tag>
                 ) : trangThai == 5 ? (
-                  <Tag color="succes">Thành công</Tag>
+                  <Tag color="success">Thành công</Tag>
                 ) : trangThai == 10 ? (
                   <Tag color="orange">Trả hàng</Tag>
                 ) : trangThai == -1 ? (

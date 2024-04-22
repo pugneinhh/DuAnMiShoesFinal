@@ -490,12 +490,12 @@ const ModalDetailSP = (props) => {
                   className={`mt-1 `}
                   style={{
                     backgroundColor: listMauSacBySP.maMau, //`${listSanPham.tenMauSac}`
-                    borderRadius: 20,
+                    borderRadius: 40,
                     width: 30,
                     height: 30,
                     border:
                       selectedMauSac === listMauSacBySP.mauSacID
-                        ? "1px solid #4096ff"
+                        ? "2px solid #4096ff"
                         : "none",
                   }}
                   onClick={() => handleMauSacClick(listMauSacBySP.mauSacID)}
