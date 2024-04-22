@@ -5,6 +5,7 @@ import { SanPhamClientAPI } from "../../../pages/censor/api/home/sanPham/sanPham
 import { GioHangAPI } from "../../../pages/censor/api/gioHang/gioHang.api";
 import { get, set } from "local-storage";
 import { useCart } from "../cart/CartContext";
+
 const ModalDetailSP = (props) => {
   const { openModalDetailSP, setOpenModalDetailSP, idCt, setidCTSP } = props;
   const { updateTotalQuantity } = useCart();
@@ -37,6 +38,7 @@ const ModalDetailSP = (props) => {
     }
     }
   };
+
   useEffect(() => {
     loadCTSP();
     loadCountGioHang();
@@ -44,6 +46,7 @@ const ModalDetailSP = (props) => {
       setKhachHang(storedData.userID);
     }
   }, []);
+
 
   const loadCTSP = () => {
     SanPhamClientAPI.getCTSP(idCt).then((res) => {

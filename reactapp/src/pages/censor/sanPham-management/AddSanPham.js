@@ -42,6 +42,7 @@ import { MauSacAPI } from "../api/SanPham/mauSac.api";
 import { ChiTietSanPhamAPI } from "../api/SanPham/chi_tiet_san_pham.api";
 import CloudinaryUploader from "./ModalUploadAnh";
 import SanPham from "./SanPham";
+import { AdminGuiThongBaoXacNhanDatHang } from "../../../utils/socket/socket";
 export default function AddSanPham() {
   //Form
   const nav = useNavigate();
@@ -325,21 +326,24 @@ export default function AddSanPham() {
       title: "STT",
       dataIndex: "stt",
       key: "key",
+      width: 10,
     },
     {
       title: "Tên",
       dataIndex: "tenCt",
       center: "true",
+      width: 250,
     },
     {
       title: "Số lượng",
       dataIndex: "soLuong",
+      width: 10,
       render: (_, record) => (
         <Input
           type="number"
           rules={[{ required: true, alert: "Không để trống số lượng" }]}
           min={1}
-          style={{ width: 100 }}
+          style={{ width: 70 }}
           value={record.soLuong}
           onChange={(e) => onChangeSL(record, e.target.value)}
         />
@@ -348,6 +352,7 @@ export default function AddSanPham() {
     {
       title: "Giá bán",
       dataIndex: "giaBan",
+      width: 10,
       render: (_, record) => {
         return (
           <>
@@ -368,6 +373,7 @@ export default function AddSanPham() {
     {
       title: "Màu",
       dataIndex: "maMau",
+      width: 10,
       render: (_, record) => {
         return (
           <>
@@ -387,6 +393,7 @@ export default function AddSanPham() {
     {
       title: "Hành động",
       dataIndex: "ghiChu",
+      width: 100,
       render: (_, record) => {
         return (
           <>
@@ -406,10 +413,9 @@ export default function AddSanPham() {
       },
     },
     {
-
-      title: 'Upload ảnh',
-      dataIndex: 'tenMau',
-      width: 50,
+      title: "Upload ảnh",
+      dataIndex: "tenMau",
+      width: 450,
       render: (_, record) => {
         return {
           children: (
@@ -424,8 +430,8 @@ export default function AddSanPham() {
           props: {
             rowSpan: record.rowSpan,
             style: {
-              justifyContent: 'center',
-              alignItems: 'center',
+              justifyContent: "center",
+              alignItems: "center",
             },
           },
         };
@@ -526,7 +532,8 @@ export default function AddSanPham() {
         .catch((error) => console.error("Error adding item:", error));
     }
     // nav("/admin-san-pham");
-
+    AdminGuiThongBaoXacNhanDatHang();
+    nav("/admin-san-pham");
     toast("✔️ Thêm thành công!", {
       position: "top-right",
       autoClose: 5000,

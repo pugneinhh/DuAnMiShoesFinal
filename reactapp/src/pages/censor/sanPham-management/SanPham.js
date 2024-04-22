@@ -60,12 +60,15 @@ export default function SanPham() {
   useEffect(() => {
     loadSanPham();
   }, []);
-
+  // useEffect(() => {
+  //   loadSanPham();
+  // }, [sanPham]);
   const loadSanPham = () => {
     SanPhamAPI.getAll().then((res) => {
       setSanPhams(res.data);
     });
   };
+
   const columns = [
     {
       title: "STT",

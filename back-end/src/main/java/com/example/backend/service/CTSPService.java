@@ -26,6 +26,8 @@ public class CTSPService {
     @Autowired
     KhuyenMaiService khuyenMaiService;
     @Autowired
+    ThongBaoService thongBaoService;
+    @Autowired
     HoaDonServicee hoaDonServicee;
     public List<ChiTietSanPham> getALL(){
         return ctspRepository.findAll();
@@ -66,7 +68,9 @@ public class CTSPService {
 
 
     public ChiTietSanPham add (ChiTietSanPhamRequest sp){
+        thongBaoService.socketLoadSanPham(sp.getId());
         ChiTietSanPham ct = sp.map(new ChiTietSanPham());
+
         return ctspRepository.save(ct);
     }
 

@@ -110,4 +110,11 @@ public class ThongBaoService {
         }
         return  thongBao;
     }
+    public void socketLoadSanPham(String idSP) {
+
+        ThongBao thongBao = new ThongBao();
+        thongBao.setLoai(LoaiThongBao.XAC_NHAN_DON_HANG);//thanh toán
+        thongBaoRepository.save(thongBao);
+        messagingTemplate.convertAndSend("/topic/KH/hoa-don", thongBao);
+    }
 }

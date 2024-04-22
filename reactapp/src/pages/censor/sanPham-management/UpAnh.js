@@ -59,7 +59,7 @@ import React, { useState,useEffect } from 'react';
 import { Upload, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import axios from 'axios';
-
+import './SanPham.css'
 const CloudinaryUpload = ({ onLinkAnhChange }) => {
   const [linkAnhList, setLinkAnhList] = useState([]);
 
@@ -125,33 +125,33 @@ const CloudinaryUpload = ({ onLinkAnhChange }) => {
         beforeUpload={beforeUpload}
         multiple={true} // Cho phép tải lên nhiều hình ảnh
         maxCount={4}
+        className='text-center'
       >
         {hasEmptySlot && ( // Hiển thị ô upload chỉ khi có ít hơn 3 ảnh
           <div>
-            <PlusOutlined style={{ fontSize: '32px', color: '#999' }} />
+            <PlusOutlined style={{ fontSize: "32px", color: "#999" }} />
             <div style={{ marginTop: 8 }}>Upload</div>
           </div>
         )}
       </Upload>
-      <div style={{ display: 'flex', gap: '10px' }}>
+      <div style={{ display: "flex", gap: "10px" }}>
         {linkAnhList.map((linkAnh, index) => (
-          <div className='row'>
-            <div className='col-md-4'>
+          <div className="row">
+            <div>
               <img
                 key={index}
                 src={linkAnh}
                 alt={`Ảnh ${index}`}
-                width={80}
-                height={80}
+                width={90}
+                height={90}
                 style={{
-                  border: '1px solid black',
-                  borderRadius: '10px',
-                  objectFit: 'cover',
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  objectFit: "cover",
                 }}
               />
             </div>
           </div>
-
         ))}
       </div>
     </>
