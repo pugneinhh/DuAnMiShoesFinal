@@ -385,3 +385,6 @@ export const Shop = ({ children }) => {
     </div>
   );
 };
+function roundToThousands(amount) {
+  return Math.round(amount / 100) * 100;
+}
