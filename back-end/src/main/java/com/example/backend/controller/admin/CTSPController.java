@@ -11,6 +11,7 @@ import com.example.backend.entity.KhuyenMai;
 import com.example.backend.service.CTSPService;
 import com.example.backend.service.HinhAnhService;
 import com.example.backend.service.HoaDonChiTietService;
+import com.example.backend.service.ThongBaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,8 @@ public class CTSPController {
     private CTSPService ctspService;
     @Autowired
     private HinhAnhService hinhAnhService;
+    @Autowired
+    ThongBaoService thongBaoService;
     @Autowired
     private HoaDonChiTietService hoaDonChiTietService;
     @GetMapping("/show")
@@ -116,6 +119,7 @@ public class CTSPController {
 
     @PostMapping("/add")
     public ResponseEntity<String> add(@RequestBody ChiTietSanPhamRequest request, HinhAnhRequest ha) {
+
         request.setTrangThai(0);
         request.setNgayTao(LocalDateTime.now());
         request.setGioiTinh(true);

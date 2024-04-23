@@ -29,7 +29,7 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
   const data = payDetail.filter((item) => item.hoaDon === hoaDon);
   const [storedData, setStoredData] = useState(null);
 
-
+  console.log("Voucher tại thanh toán :",voucher);
 
 
   useEffect(() => {
@@ -177,7 +177,6 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
         theme: "light",
       });
     } else {
-  
       linkVNP();
       dispatch(AddPayDetail({ hoaDon: hoaDon, phuongThuc: 1, soTien: money }));
       setTongThanhToan(parseFloat(tongThanhToan) + parseFloat(money));
@@ -213,7 +212,7 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
          SellAPI.thanhToanHoaDon(
           hoaDon,
           storedData,
-          voucher ? voucher.id : null
+          voucher
         );
       }
        SellAPI.thanhToanHoaDonKhongVoucher(hoaDon, storedData);
@@ -344,6 +343,8 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
       open={openThanhToan}
       onOk={handleThanhToan}
       onCancel={handleClose}
+      okText="Thanh toán"
+      cancelText="Hủy bỏ"
       height={300}
       width={700}
       zIndex={10000}
@@ -372,7 +373,7 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
         <Button
           className="col-md-6 rounded-pill"
           type="primary"
-          onClick={() => handleChuyenKhoan}
+          onClick={handleChuyenKhoan}
         >
           {" "}
           Chuyển khoản

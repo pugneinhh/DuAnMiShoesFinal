@@ -93,7 +93,7 @@ const ModelUpdateVoucher = (props) => {
     setSelectedIDKH(selectedRowKeys);
   };
   const handleUpdateVoucher = (value) => {
-  
+    value.id=id;
 
     allKhachHang.map((kh) =>
       selectedIDKH.includes(kh.idND)
@@ -118,7 +118,7 @@ const ModelUpdateVoucher = (props) => {
           progress: undefined,
           theme: "light",
         });
-        props.loadVoucher();
+        // props.loadVoucher();
         form2.resetFields();
        // handleClose();
       })

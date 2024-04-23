@@ -41,7 +41,8 @@ import "./SanPham.css";
 import { MauSacAPI } from "../api/SanPham/mauSac.api";
 import { ChiTietSanPhamAPI } from "../api/SanPham/chi_tiet_san_pham.api";
 import CloudinaryUploader from "./ModalUploadAnh";
-
+import SanPham from "./SanPham";
+import { AdminGuiThongBaoXacNhanDatHang } from "../../../utils/socket/socket";
 export default function AddSanPham() {
   //Form
   const nav = useNavigate();
@@ -84,21 +85,17 @@ export default function AddSanPham() {
     setTableData(updatedData);
   };
 
-  const handleCancelAnh = () => {
-    setAddAnhs(false);
-  };
-
-  const handleLinkAnhChange = (linkAnh, index) => {
-    // Tìm dòng tương ứng trong dataSource
-    const updatedDataSource = tableData.map((item) => {
-      if (item.mauSac === index || item.ghiChu == "") {
-        // Cập nhật giá trị ghiChu cho dòng đó
-        return { ...item, ghiChu: linkAnh };
-      }
-      return item;
-    });
-    // Cập nhật state với dataSource mới
-    setTableData(updatedDataSource);
+  const handleLinkAnhChange = (linkAnhList, index) => {
+    if (linkAnhList && linkAnhList.length > 0) {
+      const updatedDataSource = tableData.map((item) => {
+        if (item.tenMau === index || item.ghiChu === "") {
+          // Cập nhật giá trị ghiChu với một mảng các liên kết
+          return { ...item, ghiChu: linkAnhList[0] };
+        }
+        return item;
+      });
+      setTableData(updatedDataSource);
+    }
   };
 
   const onChangeKT = (selectedOption) => {
@@ -254,13 +251,20 @@ export default function AddSanPham() {
     setColorGroups(Object.entries(groupedCTSP));
   };
 
+  const [selectedColor, setSelectedColor] = useState(null);
+  const handleUploadAnh = (tenMau) => {
+    console.log("Upload ảnh cho màu:", tenMau);
+    setSelectedColor(tenMau);
+    setAddAnhs(true);
+  };
+
   useEffect(() => {
     filterProducts();
   }, [tableData]);
 
   useEffect(() => {
     loadDuLieuThem();
-  }, [dataKichThuoc, dataMauSac, dataSoLuong, dataGiaBan,dataSanPham,dataMoTa,dataChatLieu,dataHang,dataDeGiay,dataDanhMuc]);
+  }, [dataKichThuoc, dataMauSac, dataSoLuong, dataGiaBan, dataSanPham, dataMoTa, dataChatLieu, dataHang, dataDeGiay, dataDanhMuc]);
 
   //Update nhanh
   const updateNhanh = (newValues) => {
@@ -322,21 +326,24 @@ export default function AddSanPham() {
       title: "STT",
       dataIndex: "stt",
       key: "key",
+      width: 10,
     },
     {
       title: "Tên",
       dataIndex: "tenCt",
       center: "true",
+      width: 250,
     },
     {
       title: "Số lượng",
       dataIndex: "soLuong",
+      width: 10,
       render: (_, record) => (
         <Input
           type="number"
           rules={[{ required: true, alert: "Không để trống số lượng" }]}
           min={1}
-          style={{ width: 100 }}
+          style={{ width: 70 }}
           value={record.soLuong}
           onChange={(e) => onChangeSL(record, e.target.value)}
         />
@@ -345,6 +352,7 @@ export default function AddSanPham() {
     {
       title: "Giá bán",
       dataIndex: "giaBan",
+      width: 10,
       render: (_, record) => {
         return (
           <>
@@ -365,6 +373,7 @@ export default function AddSanPham() {
     {
       title: "Màu",
       dataIndex: "maMau",
+      width: 10,
       render: (_, record) => {
         return (
           <>
@@ -384,6 +393,7 @@ export default function AddSanPham() {
     {
       title: "Hành động",
       dataIndex: "ghiChu",
+      width: 100,
       render: (_, record) => {
         return (
           <>
@@ -404,16 +414,17 @@ export default function AddSanPham() {
     },
     {
       title: "Upload ảnh",
-      dataIndex: "ghiChu",
-      render: (_, record, index) => {
+      dataIndex: "tenMau",
+      width: 450,
+      render: (_, record) => {
         return {
           children: (
             <>
               <CloudinaryUpload
-                onLinkAnhChange={(imageUrl) =>
-                  handleLinkAnhChange(imageUrl, record.mauSac)
+                onLinkAnhChange={(linkAnhList) =>
+                  handleLinkAnhChange(linkAnhList, record.tenMau)
                 }
-              ></CloudinaryUpload>
+              />
             </>
           ),
           props: {
@@ -520,7 +531,9 @@ export default function AddSanPham() {
         })
         .catch((error) => console.error("Error adding item:", error));
     }
-
+    // nav("/admin-san-pham");
+    AdminGuiThongBaoXacNhanDatHang();
+    nav("/admin-san-pham");
     toast("✔️ Thêm thành công!", {
       position: "top-right",
       autoClose: 5000,
@@ -531,7 +544,6 @@ export default function AddSanPham() {
       progress: undefined,
       theme: "light",
     });
-    // nav("/admin-san-pham");
   };
 
   //Load san pham
@@ -1861,7 +1873,7 @@ export default function AddSanPham() {
                 >
                   Upload Ảnh
                 </Button> */}
-                <CloudinaryUploader isOpenModal={openAddAnh} isCancelModal={handleCancelAnh}></CloudinaryUploader>
+
                 <Button
                   icon={<EditOutlined />}
                   onClick={() => {
