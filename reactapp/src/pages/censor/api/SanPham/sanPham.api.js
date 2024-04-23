@@ -1,7 +1,7 @@
 import { getHeader, requestAdmin } from "../request";
 
 export class SanPhamAPI {
-  
+
   static getAll = () => {
     const getToken = getHeader();
     return requestAdmin({
@@ -15,14 +15,36 @@ export class SanPhamAPI {
   };
 
   static getAnhTheoMau = (ten) => {
-      const getToken = getHeader();
-      return requestAdmin({
-        method: "GET",
-        url: `/admin/hinhanh/${ten}`,
-        headers: {
-          Authorization: getToken,
-        },
-      });
+    const getToken = getHeader();
+    return requestAdmin({
+      method: "GET",
+      url: `/admin/hinhanh/${ten}`,
+      headers: {
+        Authorization: getToken,
+      },
+    });
+  };
+
+  static getAnhCTSP = (ten, idSP) => {
+    const getToken = getHeader();
+    return requestAdmin({
+      method: "GET",
+      url: `/admin/hinhanh/${ten}/${idSP}`,
+      headers: {
+        Authorization: getToken,
+      },
+    });
+  };
+
+  static getAnhCTSPClient = (ten, idSP) => {
+    const getToken = getHeader();
+    return requestAdmin({
+      method: "GET",
+      url: `/hinhanh/${ten}/${idSP}`,
+      headers: {
+        Authorization: getToken,
+      },
+    });
   };
 
   static addAnhTheoMau = (data) => {
@@ -35,7 +57,7 @@ export class SanPhamAPI {
         Authorization: getToken,
       },
     });
-};
+  };
 
   static search = (data) => {
     const getToken = getHeader();

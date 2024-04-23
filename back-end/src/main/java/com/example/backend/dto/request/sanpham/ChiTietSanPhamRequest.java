@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 @Getter
 @Setter
@@ -34,6 +35,7 @@ public class ChiTietSanPhamRequest {
     public String nguoiTao;
     public String nguoiSua;
     public int trangThai;
+    public ArrayList<String> linkAnh;
 
     public ChiTietSanPham map(ChiTietSanPham ctsp){
         ctsp.setId(this.id);
