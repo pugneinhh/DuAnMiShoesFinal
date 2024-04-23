@@ -56,8 +56,9 @@ import { HoaDonAPI } from "../api/hoaDon/hoaDon.api";
 import imgTicket from "../../../assets/images/discountTicket.png";
 import DiaChiGiaoHang from "./GiaoHang";
 import { NguoiDungAPI } from "../api/nguoiDung/nguoiDungAPI";
-import QRScannerModal from "../api/QR_Code/QrCode";
+// import QRScannerModal from "../api/QR_Code/QrCode";
 import { ChiTietSanPhamAPI } from "../api/SanPham/chi_tiet_san_pham.api";
+import QRScannerModal from "./QrModalSanPham";
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -98,7 +99,6 @@ const BanHang = () => {
     setShowModal(false);
   };
   const [showModal, setShowModal] = useState(false);
-  const [qrResult, setQrResult] = useState("");
   const handleScanButtonClick = () => {
     setShowModal(true);
   };
@@ -107,8 +107,7 @@ const BanHang = () => {
     if (result != null) {
       setShowModal(false);
     }
-    setQrResult(result);
-    //  console.log(qrResult);
+    
     ChiTietSanPhamAPI.QRCtsp(result).then((res) => {
       handleClickAddProduct(res.data);
     });
@@ -1594,10 +1593,19 @@ const BanHang = () => {
                         </div>
                         <div className="row">
                           <h6 className="col-md-3 mt-2">Mã giảm giá:</h6>
-                          <>{
-                            voucherHienTai ? 
-                            <Button type="dashed" danger style={{width:200}} onClick={handleClearVoucher}>Bỏ chọn mã giảm giá</Button> : ""
-                            }
+                          <>
+                            {voucherHienTai ? (
+                              <Button
+                                type="dashed"
+                                danger
+                                style={{ width: 200 }}
+                                onClick={handleClearVoucher}
+                              >
+                                Bỏ chọn mã giảm giá
+                              </Button>
+                            ) : (
+                              ""
+                            )}
                           </>
                           <Space.Compact className="col-md-10">
                             <Select
@@ -1605,11 +1613,12 @@ const BanHang = () => {
                               style={{ width: 800, height: 120 }}
                               placeholder="Lựa chọn voucher"
                               onChange={onChangeVoucher}
-                              value={voucherHienTai ? voucherHienTai?.id : null} 
-                              defaultValue={voucherHienTai ? voucherHienTai?.id : null}
+                              value={voucherHienTai ? voucherHienTai?.id : null}
+                              defaultValue={
+                                voucherHienTai ? voucherHienTai?.id : null
+                              }
                               optionFilterProp="label"
                             >
-
                               {voucherByIDKH.data ? (
                                 voucherByIDKH.data.map((option) => (
                                   <Option
@@ -1750,7 +1759,6 @@ const BanHang = () => {
                         <h6 className="mt-4">
                           Trả sau:
                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                          
                           <Switch
                             disabled={isSwitchOn ? false : true}
                             onChange={handleSwitchTraSau}
@@ -1761,81 +1769,50 @@ const BanHang = () => {
                           <div className="col-md-8">
                             <h6 className="mt-4">
                               Tiền hàng:{" "}
-                              {`${Intl.NumberFormat("en-US").format(roundToThousands(
-                                data.reduce((accumulator, currentProduct) => {
-                                  return accumulator + currentProduct.total;
-                                }, 0))
+                              {`${Intl.NumberFormat("en-US").format(
+                                roundToThousands(
+                                  data.reduce((accumulator, currentProduct) => {
+                                    return accumulator + currentProduct.total;
+                                  }, 0)
+                                )
                               )}`}
                             </h6>
                             <h6 className="mt-4">
                               Phí vận chuyển:{" "}
-                              <>{
-                                    ((hd[0]?.tienVanChuyen || shipMoney || shipMoney1) && isSwitchOn) ? 
-                                    <Button style={{width:130}}>Thay đổi tiền ship</Button> : "" 
-}
-                                </>
+                              <>
+                                {(hd[0]?.tienVanChuyen ||
+                                  shipMoney ||
+                                  shipMoney1) &&
+                                isSwitchOn ? (
+                                  <Button style={{ width: 130 }}>
+                                    Thay đổi tiền ship
+                                  </Button>
+                                ) : (
+                                  ""
+                                )}
+                              </>
                               {isSwitchOn
-                                ? `${Intl.NumberFormat("en-US").format(roundToThousands(
+                                ? `${Intl.NumberFormat("en-US").format(
                                     roundToThousands(
-                                      hd[0]?.tienVanChuyen &&
-                                        shipMoney === shipMoney1
-                                        ? hd[0]?.tienVanChuyen
-                                        : shipMoney1
-                                        ? shipMoney1
-                                        : shipMoney
-                                        ? shipMoney
-                                        : 0
-                                    ))
+                                      roundToThousands(
+                                        hd[0]?.tienVanChuyen &&
+                                          shipMoney === shipMoney1
+                                          ? hd[0]?.tienVanChuyen
+                                          : shipMoney1
+                                          ? shipMoney1
+                                          : shipMoney
+                                          ? shipMoney
+                                          : 0
+                                      )
+                                    )
                                   )}`
                                 : 0}
-
                             </h6>
                             <h6 className="mt-4 text-danger">
                               Giảm giá:{" "}
-                              {`${Intl.NumberFormat("en-US").format(roundToThousands(
-                                voucherHienTai
-                                  ? voucherHienTai.loaiVoucher === "Tiền mặt"
-                                    ? parseFloat(voucherHienTai.mucDo) <
-                                      parseFloat(voucherHienTai.giamToiDa)
-                                      ? voucherHienTai.mucDo
-                                      : voucherHienTai.giamToiDa
-                                    : parseFloat(
-                                        (data.reduce(
-                                          (accumulator, currentProduct) => {
-                                            return (
-                                              accumulator + currentProduct.total
-                                            );
-                                          },
-                                          0
-                                        ) *
-                                          voucherHienTai.mucDo) /
-                                          100
-                                      ) < parseFloat(voucherHienTai.giamToiDa)
-                                    ? (parseFloat(
-                                        data.reduce(
-                                          (accumulator, currentProduct) => {
-                                            return (
-                                              accumulator + currentProduct.total
-                                            );
-                                          },
-                                          0
-                                        )
-                                      ) *
-                                        parseFloat(voucherHienTai.mucDo)) /
-                                      100
-                                    : voucherHienTai.giamToiDa
-                                  : 0)
-                              )}`}
-      
-                            </h6>
-
-                            <h6 className="mt-4" >
-                              Tổng tiền:{" "}
-                              {`${Intl.NumberFormat("en-US").format(roundToThousands(
-                                data.reduce((accumulator, currentProduct) => {
-                                  return accumulator + currentProduct.total;
-                                }, 0) -
-                                  (voucherHienTai
+                              {`${Intl.NumberFormat("en-US").format(
+                                roundToThousands(
+                                  voucherHienTai
                                     ? voucherHienTai.loaiVoucher === "Tiền mặt"
                                       ? parseFloat(voucherHienTai.mucDo) <
                                         parseFloat(voucherHienTai.giamToiDa)
@@ -1868,26 +1845,74 @@ const BanHang = () => {
                                           parseFloat(voucherHienTai.mucDo)) /
                                         100
                                       : voucherHienTai.giamToiDa
-                                    : 0) +
-                                  roundToThousands(
-                                    isSwitchOn
-                                      ? // ? hd[0]?.tienVanChuyen && !shipMoney
-                                        //   ? hd[0]?.tienVanChuyen
-                                        //   : hd[0]?.tienVanChuyen &&
-                                        //     hd[0]?.tienVanChuyen !== shipMoney
-                                        //   ? shipMoney
-                                        //   : shipMoney
-                                        // : 0
-                                        hd[0]?.tienVanChuyen &&
-                                        shipMoney === shipMoney1
-                                        ? hd[0]?.tienVanChuyen
-                                        : shipMoney1
-                                        ? shipMoney1
-                                        : shipMoney
-                                        ? shipMoney
+                                    : 0
+                                )
+                              )}`}
+                            </h6>
+
+                            <h6 className="mt-4">
+                              Tổng tiền:{" "}
+                              {`${Intl.NumberFormat("en-US").format(
+                                roundToThousands(
+                                  data.reduce((accumulator, currentProduct) => {
+                                    return accumulator + currentProduct.total;
+                                  }, 0) -
+                                    (voucherHienTai
+                                      ? voucherHienTai.loaiVoucher ===
+                                        "Tiền mặt"
+                                        ? parseFloat(voucherHienTai.mucDo) <
+                                          parseFloat(voucherHienTai.giamToiDa)
+                                          ? voucherHienTai.mucDo
+                                          : voucherHienTai.giamToiDa
+                                        : parseFloat(
+                                            (data.reduce(
+                                              (accumulator, currentProduct) => {
+                                                return (
+                                                  accumulator +
+                                                  currentProduct.total
+                                                );
+                                              },
+                                              0
+                                            ) *
+                                              voucherHienTai.mucDo) /
+                                              100
+                                          ) <
+                                          parseFloat(voucherHienTai.giamToiDa)
+                                        ? (parseFloat(
+                                            data.reduce(
+                                              (accumulator, currentProduct) => {
+                                                return (
+                                                  accumulator +
+                                                  currentProduct.total
+                                                );
+                                              },
+                                              0
+                                            )
+                                          ) *
+                                            parseFloat(voucherHienTai.mucDo)) /
+                                          100
+                                        : voucherHienTai.giamToiDa
+                                      : 0) +
+                                    roundToThousands(
+                                      isSwitchOn
+                                        ? // ? hd[0]?.tienVanChuyen && !shipMoney
+                                          //   ? hd[0]?.tienVanChuyen
+                                          //   : hd[0]?.tienVanChuyen &&
+                                          //     hd[0]?.tienVanChuyen !== shipMoney
+                                          //   ? shipMoney
+                                          //   : shipMoney
+                                          // : 0
+                                          hd[0]?.tienVanChuyen &&
+                                          shipMoney === shipMoney1
+                                          ? hd[0]?.tienVanChuyen
+                                          : shipMoney1
+                                          ? shipMoney1
+                                          : shipMoney
+                                          ? shipMoney
+                                          : 0
                                         : 0
-                                      : 0
-                                  ))
+                                    )
+                                )
                               )}`}
                             </h6>
                           </div>
@@ -2079,7 +2104,7 @@ const BanHang = () => {
         <QRScannerModal
           visible={showModal}
           onCancel={handleModalClose}
-          onQRResult={handleQRResult}
+          onQRCodeScanned={handleQRResult}
         />
       )}
 
