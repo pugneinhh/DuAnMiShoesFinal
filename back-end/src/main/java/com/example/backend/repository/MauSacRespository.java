@@ -20,6 +20,7 @@ public interface MauSacRespository extends JpaRepository<MauSac, String> {
             """, nativeQuery = true)
     List<MauSacRespone> getALLMS();
 
+
     @Query(value = """
     SELECT o.id as id,o.ma as ma ,o.ten as ten, o.trang_thai as trangThai FROM mau_sac o WHERE 
      (:#{#bangConSearch.ten} IS NULL OR o.ma LIKE (%:#{#bangConSearch.ten}%) OR o.ten LIKE (%:#{#bangConSearch.ten}%) ) AND

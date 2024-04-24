@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+
 import { Button, Modal } from "antd";
 import { useZxing } from "react-zxing";
-
+import React, { useState, useEffect } from "react";
 export default function QRScannerModal({
     visible,
     onCancel,
@@ -25,6 +25,7 @@ export default function QRScannerModal({
             />
         );
     };
+
 
     return (
         <Modal

@@ -66,6 +66,7 @@ export default function SanPham() {
   const loadSanPham = () => {
     SanPhamAPI.getAll().then((res) => {
       setSanPhams(res.data);
+      console.log("22222",res.data);
     });
   };
 
