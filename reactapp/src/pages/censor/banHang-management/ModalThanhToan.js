@@ -209,6 +209,7 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
   const handleThanhToan =  () => {
     if (parseFloat(total) <= parseFloat(!tongThanhToan ? 0 : tongThanhToan)) {
       if (voucher) {
+         console.log("Vào thanh toán có voucher");
          SellAPI.thanhToanHoaDon(
           hoaDon,
           storedData,
