@@ -85,6 +85,7 @@ const BanHang = () => {
   const [soTienDuocGiam, setSoTienDuocGiam] = useState(0);
   const [idKH, setIDKH] = useState(null);
   const [money, setMoney] = useState(0);
+  const [processing, setProcessing] = useState(false);
 
   const [storedData, setStoredData] = useState(null);
 
@@ -258,6 +259,7 @@ const BanHang = () => {
 
 
   const getSoTien = () => {
+    console.log("Vào getSoTien");
     SellAPI.getThanhTienbyMaHD(activeKey).then((res) => {
       setSoTienHoaDon(res.data ? res.data : 0)
       SellAPI.voucherTotNhat(idKH, res.data ? res.data : 0).then((res) =>
@@ -293,7 +295,7 @@ const BanHang = () => {
     if (activeKey) {
       getSoTien();
     }
-  }, [money,openSanPham]);
+  }, [money , openSanPham, activeKey]);
 
   useEffect(() => {
     if (activeKey !== "") {
@@ -609,7 +611,10 @@ const BanHang = () => {
       const currentDateInMilliseconds = Date.UTC(
         currentDate.getFullYear(),
         currentDate.getMonth(),
-        currentDate.getDate()
+        currentDate.getDate(),
+        currentDate.getHours(),
+        currentDate.getMinutes(),
+        currentDate.getSeconds()
       );
       const value = [
         {
@@ -637,9 +642,9 @@ const BanHang = () => {
           nguoiDung: null,
           voucher: null,
           ngayMua: null,
-          giaGoc: null,
-          giaGiamGia: null,
-          thanhTien: null,
+          giaGoc: 0,
+          giaGiamGia: 0,
+          thanhTien: 0,
           diemSuDung: null,
           giaTriDiem: null,
           tenNguoiNhan: null,
@@ -833,6 +838,7 @@ const BanHang = () => {
   const onChange = (key) => {
     setActiveKey(key);
     let v = null;
+    if (key) {
     SellAPI.detailHoaDon(key).then((res) => {
       setIDKH(
         res.data.nguoiDung
@@ -858,6 +864,7 @@ const BanHang = () => {
     ).then((res) => setVoucherByIDKH(res));
     setShipMoney(0);
     setShipMoney1(0);
+  }
   };
 
   ////tạo hóa đơn bằng redux
@@ -865,7 +872,11 @@ const BanHang = () => {
   const dispatch = useDispatch();
   const handleClickAddHD = async () => {
     // const maxKey = Math.max(...hoaDons.map((hd) => hd.key));
-    if (hoaDons.length >= 5) {
+    if (processing) {
+      return;
+    }
+    if (hoaDons.length === 5) {
+      setProcessing(false);
       return toast.error("Không được vượt quá 5 hóa đơn!", {
         position: "top-right",
         autoClose: 5000,
@@ -876,14 +887,18 @@ const BanHang = () => {
         progress: undefined,
         theme: "light",
       });
-    }
-    const result = await SellAPI.getAllHoaDonChoHomNay();
+    } else {
 
+      setProcessing(true);
+      const result = await SellAPI.getAllHoaDonChoHomNay();
     const currentDate = new Date();
     const currentDateInMilliseconds = Date.UTC(
       currentDate.getFullYear(),
       currentDate.getMonth(),
-      currentDate.getDate()
+      currentDate.getDate(),
+      currentDate.getHours(),
+      currentDate.getMinutes(),
+      currentDate.getSeconds()
     );
     const value = [
       {
@@ -946,6 +961,8 @@ const BanHang = () => {
     setMoney(0);
     setIDKH(null);
     setShipMoney(0);
+    setProcessing(false);
+  }
   };
   // ///remove hóa đơn bằng redux
   const handleClickRemoveHD = (targetKey) => {
