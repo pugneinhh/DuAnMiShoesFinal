@@ -69,6 +69,8 @@ const BanHang = () => {
   const client = useSelector(GetClient);
   const [shipMoney, setShipMoney] = useState("");
   const [shipMoney1, setShipMoney1] = useState("");
+  const [openSanPham, setOpenSanPham] = useState(false);
+
   let lengthSP = 0;
   let data = [""];
   let hd = [""];
@@ -245,6 +247,24 @@ const BanHang = () => {
   };
 
   useEffect(() => {
+    loadCTSP();
+    voucherNoIDKH();
+    loadKhachHang();
+    loadAllBill();
+    loadVoucherTotNhatVaVoucherTiepTheo();
+  }, []);
+
+  useEffect(() => {
+    loadVoucherTotNhatVaVoucherTiepTheo();
+  }, [idKH, money, activeKey,openSanPham]);
+
+  useEffect(() => {
+    if (activeKey) {
+      getSoTien();
+    }
+  }, [lengthSP,money,openSanPham]);
+
+  useEffect(() => {
     if (activeKey !== "") {
       SellAPI.detailHoaDon(activeKey).then((res) => {
         setIDKH(
@@ -278,7 +298,7 @@ const BanHang = () => {
         });
       });
     }
-  }, [lengthSP, soTienHoaDon]);
+  }, [lengthSP, soTienHoaDon,openSanPham]);
 
   useEffect(() => {
     if (
@@ -291,23 +311,9 @@ const BanHang = () => {
     }
   }, [activeKey, hoaDons.tenNguoiNhan, hoaDons.ngayDuKienNhan]);
 
-  useEffect(() => {
-    loadCTSP();
-    voucherNoIDKH();
-    loadKhachHang();
-    loadAllBill();
-    loadVoucherTotNhatVaVoucherTiepTheo();
-  }, []);
 
-  useEffect(() => {
-    loadVoucherTotNhatVaVoucherTiepTheo();
-  }, [idKH, money, activeKey]);
 
-  useEffect(() => {
-    if (activeKey) {
-      getSoTien();
-    }
-  }, [lengthSP,money]);
+
 
   //đang fixx
   const handleSwitchTraSau = () => {
@@ -640,7 +646,6 @@ const BanHang = () => {
     }
   };
 
-  const [openSanPham, setOpenSanPham] = useState(false);
 
   const onChangeSoLuong = async (value, record) => {
     let SL = 0; // số lượng trước
@@ -1518,7 +1523,7 @@ const BanHang = () => {
                             setOpenThanhToan={setOpenThanhToan}
                             onOk={handleOpenInHoaDon}
                             onCancel={handleCloseThanhToan}
-                            total={
+                            total={roundToThousands(
                               data.reduce((accumulator, currentProduct) => {
                                 return accumulator + currentProduct.total;
                               }, 0) -
@@ -1565,10 +1570,10 @@ const BanHang = () => {
                                     ? shipMoney
                                     : 0
                                   : 0
-                              )
+                              ))
                             }
                             hoaDon={activeKey}
-                            voucher={voucherHienTai ? voucherHienTai.id : null}
+                            voucher={voucherHienTai ? voucherHienTai.id ? voucherHienTai.id : voucherHienTai.key : null}
                             hoaDonDetails={hd[0]}
                             listSanPham={data}
                           />
@@ -1605,8 +1610,8 @@ const BanHang = () => {
                               style={{ width: 800, height: 120 }}
                               placeholder="Lựa chọn voucher"
                               onChange={onChangeVoucher}
-                              value={voucherHienTai ? voucherHienTai?.id : null} 
-                              defaultValue={voucherHienTai ? voucherHienTai?.id : null}
+                              value={voucherHienTai ? voucherHienTai.id ? voucherHienTai.id : voucherHienTai.key: null} 
+                              defaultValue={voucherHienTai ? voucherHienTai.id ? voucherHienTai.id : voucherHienTai.key: null} 
                               optionFilterProp="label"
                             >
 
