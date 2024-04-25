@@ -101,7 +101,7 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
                			LEFT JOIN duanmishoes.san_pham sp ON sp.id = ctsp.san_pham_id
                			LEFT JOIN duanmishoes.kich_thuoc kt ON kt.id = ctsp.kich_thuoc_id
                			LEFT JOIN duanmishoes.mau_sac ms ON ms.id = ctsp.mau_sac_id
-               			LEFT JOIN duanmishoes.hang h ON h.id = ctsp.hang_id WHERE hdct.hoa_don_id=:key and (hdct.trang_thai=0 or hdct.trang_thai=1 or hdct.trang_thai=2)
+               			LEFT JOIN duanmishoes.hang h ON h.id = ctsp.hang_id WHERE hdct.hoa_don_id=:key and (hdct.trang_thai=0 or hdct.trang_thai=1 )
                            	    """,
             nativeQuery = true)
     List<AdminHoaDonSanPham> detailHDSanPham(String key);
@@ -130,7 +130,7 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
                			LEFT JOIN duanmishoes.san_pham sp ON sp.id = ctsp.san_pham_id
                			LEFT JOIN duanmishoes.kich_thuoc kt ON kt.id = ctsp.kich_thuoc_id
                			LEFT JOIN duanmishoes.mau_sac ms ON ms.id = ctsp.mau_sac_id
-               			LEFT JOIN duanmishoes.hang h ON h.id = ctsp.hang_id WHERE hdct.hoa_don_id=:key and hdct.trang_thai=3
+               			LEFT JOIN duanmishoes.hang h ON h.id = ctsp.hang_id WHERE hdct.hoa_don_id=:key and hdct.trang_thai=2
                            	    """,
             nativeQuery = true)
     List<AdminHoaDonSanPham> detailHDSanPhamTra(String key);

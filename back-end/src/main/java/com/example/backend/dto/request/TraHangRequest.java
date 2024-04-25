@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 @Builder
 public class TraHangRequest {
     private String id;
+    private String idHD;
+    private String tienGiam;
     private String idHDCT;
     private String idCTSP;
     private int soLuong;
