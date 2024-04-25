@@ -700,7 +700,7 @@ export const GioHang = ({ children }) => {
               </figure>
               <div className="thank-you">Cảm ơn</div>
               <div className="other-day">Bạn đã đặt hàng</div>
-              <div className="click-run">Click run text</div>
+              {/* <div className="click-run">Click run text</div> */}
             </a>
           </div>
         </div>
