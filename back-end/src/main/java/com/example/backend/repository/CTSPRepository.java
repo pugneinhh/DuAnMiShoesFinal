@@ -25,7 +25,7 @@ import java.util.List;
 public interface CTSPRepository extends JpaRepository<ChiTietSanPham, String> {
     @Query(value = """
             SELECT o.id AS idCTSP
-            ,CASE WHEN MIN(ha.url) IS NULL THEN N'Chưa có ảnh' ELSE MIN(ha.url) END AS linkAnh 
+            ,CASE WHEN MIN(o.ghi_chu) IS NULL THEN N'Chưa có ảnh' ELSE MIN(o.ghi_chu) END AS linkAnh 
             ,sp.ten AS tenSP ,kt.ten AS tenKT,ms.ten AS tenMS,ms.ma AS maMS
             ,CASE WHEN o.so_luong IS NULL THEN N'0' ELSE o.so_luong END AS soLuong
             ,o.gia_ban AS giaBan,o.trang_thai AS trangThai
