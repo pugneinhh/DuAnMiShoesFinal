@@ -56,7 +56,6 @@ import { HoaDonAPI } from "../api/hoaDon/hoaDon.api";
 import imgTicket from "../../../assets/images/discountTicket.png";
 import DiaChiGiaoHang from "./GiaoHang";
 import { NguoiDungAPI } from "../api/nguoiDung/nguoiDungAPI";
-import QRScannerModal from "../api/QR_Code/QrCode";
 import { ChiTietSanPhamAPI } from "../api/SanPham/chi_tiet_san_pham.api";
 import QRScannerModal from "./QrModalSanPham";
 import imgNoItem from "../../../assets/images/cart.png";
