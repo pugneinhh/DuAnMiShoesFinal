@@ -17,16 +17,12 @@ const ModalInHoaDon = (props) => {
   const [listSanPhams, setlistSanPhams] = useState([]);
   const id = props.id;
 
-  console.log("IDDDĐ ",id);
-  console.log("in hóa đơn "+props.openInHoaDon);
-  console.log("Hóa đơn detail ",hoaDondetail);
+
   const loadHoaDon =  () => {
     HoaDonAPI.chiTietHoaDonTheoMa(id).then((res) => {
-      console.log("DATA :"+id);
       if (!res.data) return;
       setHoaDondetail(res.data);
       setTrangThai(res.data.trangThai);
-      console.log("DATA IN BILL :",res);
     });
   }
 
@@ -39,16 +35,16 @@ const ModalInHoaDon = (props) => {
     HoaDonAPI.hoaDonSanPhamTheoMa(id).then((res) => {
       if (!res.data) return;
       setlistSanPhams(res.data);
-      console.log("DATA :",res)
   
     });
   };
   useEffect(() => {
-    if (id) {
+    if (id && openInHoaDon) {
+     //if (hoaDondetail && listSanPhams) return;
     loadHoaDon();
     loadListSanPhams();
     }
-  },[id,openThanhToan]);
+  },[id,openThanhToan,hoaDondetail,trangThai,listSanPhams]);
 
   // useEffect(() => {
   //   const interval = setInterval(() => {

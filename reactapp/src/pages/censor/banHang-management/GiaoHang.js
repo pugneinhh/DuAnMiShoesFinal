@@ -19,6 +19,7 @@ const DiaChiGiaoHang = ({
   hoaDon,
   thongTinVanChuyen,
   thongTinKhachHang,
+  tien
 }) => {
   const [listProvince, setListProvince] = useState([]);
   const [listDistricts, setListDistricts] = useState([]);
@@ -226,7 +227,7 @@ const DiaChiGiaoHang = ({
         money(0);
       }
     }
-  }, [thongTinKhachHang, thongTinVanChuyen, hoaDon, quantity]);
+  }, [thongTinKhachHang, thongTinVanChuyen, quantity]);
 
   const loadDataProvince = () => {
     AddressApi.fetchAllProvince().then((res) => {
@@ -309,7 +310,7 @@ const DiaChiGiaoHang = ({
           value.tenThanhPho,
         ngayDuKienNhan:
           timeShip !== timeShip1 && !timeShip1 ? timeShip : timeShip1,
-        tienVanChuyen: roundToThousands(
+        tienVanChuyen: tien !== 0 ? tien : roundToThousands(
           moneyShip !== moneyShip1 && !moneyShip1 ? moneyShip : moneyShip1
         ),
         ghiChu: wardCode+"/"+districtID+"/"+proID,

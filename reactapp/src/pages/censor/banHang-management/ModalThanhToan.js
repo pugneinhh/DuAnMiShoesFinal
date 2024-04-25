@@ -10,7 +10,7 @@ import {
 } from "../../../store/reducer/PayDetail.reducer";
 import { AddPay, DeletePay } from "../../../store/reducer/Pay.reducer";
 import { SellAPI } from "../../censor/api/sell/sell.api";
-import { RemoveBill } from "../../../store/reducer/Bill.reducer";
+import { RemoveBill,GetBill } from "../../../store/reducer/Bill.reducer";
 import { RemoveInvoiceByHoaDon } from "../../../../src/store/reducer/DetailInvoice.reducer";
 import { ThanhToanAPI } from "../api/thanhToan/thanhToan.api";
 import ModalInHoaDon from "./ModalInHoaDon";
@@ -20,16 +20,13 @@ import logo from "../../../assets/images/logo.png";
 import { useReactToPrint } from "react-to-print";
 
 const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onInHoaDon}) => {
-  // const { openThanhToan, setOpenThanhToan } = props;
-  // const total = props.total;
-  // const hoaDon = props.hoaDon;
-  // const voucher = props.voucher;
+
   const dispatch = useDispatch();
   const payDetail = useSelector(GetPayDetail);
   const data = payDetail.filter((item) => item.hoaDon === hoaDon);
   const [storedData, setStoredData] = useState(null);
+  const hoaDons = useSelector(GetBill);
 
-  console.log("Voucher tại thanh toán :",voucher);
 
 
   useEffect(() => {
@@ -184,27 +181,6 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
     }
   };
 
-  const loadHoaDon =  () => {
-    HoaDonAPI.chiTietHoaDonTheoMa(hoaDon).then((res) => {
-      console.log("DATA :"+hoaDon);
-      if (!res.data) return;
-     // setHoaDondetail(res.data);
-      //setTrangThai(res.data.trangThai);
-      console.log("DATA IN BILL :",res);
-    });
-  }
-
-
-
-
-  const loadListSanPhams =  () => {
-    HoaDonAPI.hoaDonSanPhamTheoMa(hoaDon).then((res) => {
-      if (!res.data) return;
-      //setlistSanPhams(res.data);
-      console.log("DATA :",res)
-  
-    });
-  };
 
   const handleThanhToan =  () => {
     if (parseFloat(total) <= parseFloat(!tongThanhToan ? 0 : tongThanhToan)) {
@@ -215,10 +191,9 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
           storedData,
           voucher
         );
-      }else{
-               SellAPI.thanhToanHoaDonKhongVoucher(hoaDon, storedData);
+      } else {
+        SellAPI.thanhToanHoaDonKhongVoucher(hoaDon, storedData);
       }
-
       toast("Thanh toán thành công!", {
         position: "top-right",
         autoClose: 1000,
@@ -229,17 +204,12 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
         progress: undefined,
         theme: "light",
       });
-
+    dispatch(RemoveInvoiceByHoaDon({ hoaDon: hoaDon }));
+    dispatch(RemoveBill({ key: hoaDon }));
+    setTongThanhToan(0);
+    onInHoaDon(true);
+    setOpenThanhToan(false);
       // Xóa dữ liệu lưu trong reducer
-
-      dispatch(RemoveInvoiceByHoaDon({ hoaDon: hoaDon }));
-      dispatch(RemoveBill({ key: hoaDon }));
-      setTongThanhToan(0);
-      onInHoaDon(true);
-      loadHoaDon();
-      loadListSanPhams();
-       setOpenThanhToan(false);
-
     } else {
       toast("Chưa đủ điều kiện thanh toán!", {
         position: "top-right",
@@ -252,6 +222,7 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
         theme: "light",
       });
     }
+
   };
 
   const linkVNP = () => {
