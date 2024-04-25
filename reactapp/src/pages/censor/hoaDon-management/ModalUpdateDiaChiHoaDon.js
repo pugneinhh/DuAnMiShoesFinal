@@ -30,8 +30,7 @@ const ModalDiaChiUpdate = (props) => {
            HoaDonAPI.detailUpdateHoaDon(idHD).then((res) => {
              setdiaChiHoaDon(res.data);
              
-             
-             console.log("Địa chỉ",res.data);
+             if(res.data.diaChi&&res.data.diaChi!=null){
              const firstIndex = res.data.diaChi.indexOf("/");
              const secondIndex = res.data.diaChi.indexOf("/", firstIndex + 1);
              const thirdIndex = res.data.diaChi.indexOf("/", secondIndex + 1);
@@ -95,6 +94,7 @@ const ModalDiaChiUpdate = (props) => {
                 tenXa:xa,
                 diaChi:diaChi
                });
+              }
            });
 
          };

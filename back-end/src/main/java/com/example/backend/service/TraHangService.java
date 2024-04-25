@@ -52,7 +52,7 @@ public class TraHangService {
             hoaDonChiTiet.setChiTietSanPham(ChiTietSanPham.builder().id(request.getIdCTSP()).build());
             hoaDonChiTiet.setSoLuong(request.getSoLuong());
             hoaDonChiTiet.setGiaSauGiam((hdct.getGiaSauGiam().divide(BigDecimal.valueOf(hdct.getSoLuong()))).multiply(BigDecimal.valueOf(request.getSoLuong())));
-            hoaDonChiTiet.setTrangThai(3);
+            hoaDonChiTiet.setTrangThai(2);
             hoaDonChiTietRepository.save(hoaDonChiTiet);
         }
 
