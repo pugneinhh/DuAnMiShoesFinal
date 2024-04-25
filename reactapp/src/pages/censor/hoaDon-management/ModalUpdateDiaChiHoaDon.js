@@ -22,16 +22,81 @@ const ModalDiaChiUpdate = (props) => {
        
     useEffect(() => {
       // form.setFieldsValue({ idNguoiDung: idKH });
-      loadUpdateHoaDon();
+      loadDiaChiHoaDon();
       loadDataProvince();
     }, []);
-      console.log('idhD',idHD);
-            console.log("idhD", diaChiHoaDon);
-         const loadUpdateHoaDon= () => {
+    
+         const loadDiaChiHoaDon= () => {
            HoaDonAPI.detailUpdateHoaDon(idHD).then((res) => {
              setdiaChiHoaDon(res.data);
+             
+             if(res.data.diaChi&&res.data.diaChi!=null){
+             const firstIndex = res.data.diaChi.indexOf("/");
+             const secondIndex = res.data.diaChi.indexOf("/", firstIndex + 1);
+             const thirdIndex = res.data.diaChi.indexOf("/", secondIndex + 1);
+            
+            const diaChi=res.data.diaChi
+            .substring(0, firstIndex);
+            const xa=res.data.diaChi
+            .substring(firstIndex +1, secondIndex);
+            const huyen=res.data.diaChi
+            .substring(secondIndex +1, thirdIndex);
+            const tp=res.data.diaChi
+            .substring(thirdIndex +1);
           
+             setProvince(
+              listProvince.filter(
+                (item) =>
+                  item.ProvinceName.toLowerCase().replace(/\s/g, "") === tp.toLowerCase()
+                  .replace(/\s/g, "")
+              )[0]
+            );
+              if(province){
+                AddressApi.fetchAllProvinceDistricts(
+              listProvince.filter(
+                (item) =>
+                  item.ProvinceName.toLowerCase().replace(/\s/g, "") ===tp.toLowerCase()
+                  .replace(/\s/g, "")
+              )[0].ProvinceID
+            ).then((res) => {
+              setListDistricts(res.data.data);
+              setDistrict(
+                res.data.data.filter(
+                  (item) =>
+                    item.NameExtension[0].toLowerCase().replace(/\s/g, "") ===huyen.toLowerCase()
+                    .replace(/\s/g, "")
+                )[0]
+              );
+              AddressApi.fetchAllProvinceWard(
+                res.data.data.filter(
+                  (item) =>
+                    item.NameExtension[0].toLowerCase().replace(/\s/g, "") ===huyen.toLowerCase()
+                    .replace(/\s/g, "")
+                )[0].DistrictID
+              ).then((res) => {
+                setListWard(res.data.data);
+                setWard(
+                  res.data.data.filter(
+                    (item) =>
+                      item.NameExtension[0].toLowerCase().replace(/\s/g, "") ===xa.toLowerCase()
+                      .replace(/\s/g, "")
+                  )[0]
+                );
+              });
+            });
+              }
+              form.setFieldsValue({
+                tenNguoiNhan:res.data.tenNguoiNhan,
+                sdt:res.data.sdt,
+                ghiChu:res.data.ghiChu,
+                tenThanhPho:tp,
+                tenHuyen:huyen,
+                tenXa:xa,
+                diaChi:diaChi
+               });
+              }
            });
+
          };
   const handleClose = () => {
     setOpenDiaChiUpdate(false);

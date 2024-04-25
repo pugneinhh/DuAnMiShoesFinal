@@ -25,7 +25,7 @@ import java.util.List;
 public interface CTSPRepository extends JpaRepository<ChiTietSanPham, String> {
     @Query(value = """
             SELECT o.id AS idCTSP
-            ,CASE WHEN MIN(ha.url) IS NULL THEN N'Chưa có ảnh' ELSE MIN(ha.url) END AS linkAnh 
+            ,CASE WHEN MIN(o.ghi_chu) IS NULL THEN N'Chưa có ảnh' ELSE MIN(o.ghi_chu) END AS linkAnh 
             ,sp.ten AS tenSP ,kt.ten AS tenKT,ms.ten AS tenMS,ms.ma AS maMS
             ,CASE WHEN o.so_luong IS NULL THEN N'0' ELSE o.so_luong END AS soLuong
             ,o.gia_ban AS giaBan,o.trang_thai AS trangThai
@@ -83,7 +83,7 @@ public interface CTSPRepository extends JpaRepository<ChiTietSanPham, String> {
     List<DetailCTSPRespone> detail();
 
     @Query(value = """
-            SELECT distinct o.id AS idCTSP,MIN(ha.url) AS linkAnh ,sp.ten AS tenSP ,kt.ten AS tenKT,ms.ten AS tenMS,ms.ma AS maMS,
+            SELECT distinct o.id AS idCTSP,MIN(o.ghi_chu) AS linkAnh ,sp.ten AS tenSP ,kt.ten AS tenKT,ms.ten AS tenMS,ms.ma AS maMS,
              o.so_luong AS soLuong,o.gia_ban AS giaBan,o.trang_thai AS trangThai, km.ten as tenKM , km.gia_tri_khuyen_mai as giaTriKhuyenMai , km.loai as loaiKM
              FROM duanmishoes.chi_tiet_san_pham o
              JOIN duanmishoes.san_pham sp  on o.san_pham_id=sp.id
@@ -125,7 +125,7 @@ public interface CTSPRepository extends JpaRepository<ChiTietSanPham, String> {
     List<String> getCTSPByKM(String idKM);
 
     @Query(value = """
-            SELECT o.id AS idCTSP,ha.url AS linkAnh,o.mo_ta AS moTa ,sp.ten AS tenSP ,kt.ten AS tenKT,ms.ma AS maMS,ms.ten AS tenMS,cl.ten AS tenCL,dc.ten AS tenDC,dm.ten AS tenDM
+            SELECT o.id AS idCTSP,o.ghi_chu AS linkAnh,o.mo_ta AS moTa ,sp.ten AS tenSP ,kt.ten AS tenKT,ms.ma AS maMS,ms.ten AS tenMS,cl.ten AS tenCL,dc.ten AS tenDC,dm.ten AS tenDM
             ,h.ten AS tenH,o.so_luong AS soLuong,o.gia_ban AS giaBan,o.trang_thai AS trangThai
             FROM chi_tiet_san_pham o
             JOIN san_pham sp  on o.san_pham_id=sp.id
@@ -214,7 +214,7 @@ public interface CTSPRepository extends JpaRepository<ChiTietSanPham, String> {
     DetailCTSPClientRespon detailCTSPClientByIdSPbyIdSizebyIdMs(@Param("idSP") String idSP, @Param("idMS") String idMS, @Param("idKT") String idKT);
 
     @Query(value = """
-             SELECT distinct o.id AS idCTSP,MIN(ha.url) AS linkAnh ,sp.ten AS tenSP ,kt.ten AS tenKT,ms.ten AS tenMS,ms.ma AS maMS,
+             SELECT distinct o.id AS idCTSP,MIN(o.ghi_chu) AS linkAnh ,sp.ten AS tenSP ,kt.ten AS tenKT,ms.ten AS tenMS,ms.ma AS maMS,
              o.so_luong AS soLuong,o.gia_ban AS giaBan,o.trang_thai AS trangThai, km.ten as tenKM , km.gia_tri_khuyen_mai as giaTriKhuyenMai , km.loai as loaiKM
              FROM duanmishoes.chi_tiet_san_pham o
              JOIN duanmishoes.san_pham sp  on o.san_pham_id=sp.id

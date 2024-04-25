@@ -46,6 +46,7 @@ $click-run-delay-time: $other-day-animation-time + $other-day-delay-time + 128ms
 
 // Button styles
 .checkout-button {
+    margin-right: 50px;
     color: #ffffff;
     font-size: 24px;
     text-decoration: none;

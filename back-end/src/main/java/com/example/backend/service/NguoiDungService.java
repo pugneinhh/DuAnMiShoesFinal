@@ -3,20 +3,26 @@ package com.example.backend.service;
 import com.example.backend.dto.impldto.NhanVienResponseImplDTO;
 
 import com.example.backend.dto.login.TokenService;
+import com.example.backend.dto.request.DoiMatKhauRequest;
+import com.example.backend.dto.request.loginReqest.SignUpRequest;
 import com.example.backend.dto.response.KhachHangRespon;
+import com.example.backend.dto.response.MatKhauRespon;
 import com.example.backend.entity.NguoiDung;
 import com.example.backend.model.AdminKhachHangRepon;
 import com.example.backend.repository.NguoiDungRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class NguoiDungService {
     @Autowired
     NguoiDungRepository nguoiDungRepository;
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Autowired
     TokenService tokenService;
     public List<AdminKhachHangRepon> getKhach() {return nguoiDungRepository.getAllKhachHang();}
@@ -44,5 +50,13 @@ public class NguoiDungService {
         return nguoiDungRepository.findAll();
     }
 
-
+    public NguoiDung doiMatKhau(String id, DoiMatKhauRequest doiMatKhauRequest) {
+        NguoiDung nguoiDung = findByID(id);
+        nguoiDung.setMatKhau(passwordEncoder.encode(doiMatKhauRequest.getMatKhau()));
+        nguoiDung.setNgaySua(LocalDateTime.now());
+        return nguoiDungRepository.save(nguoiDung);
+    }
+    public MatKhauRespon layMK(String id) {
+        return nguoiDungRepository.soSanhMK(id);
+    }
 }

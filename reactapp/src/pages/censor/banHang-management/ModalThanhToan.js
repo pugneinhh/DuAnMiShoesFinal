@@ -192,7 +192,8 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
           voucher
         );
       } else {
-       SellAPI.thanhToanHoaDonKhongVoucher(hoaDon, storedData);
+        SellAPI.thanhToanHoaDonKhongVoucher(hoaDon, storedData);
+      }
       toast("Thanh toán thành công!", {
         position: "top-right",
         autoClose: 1000,
@@ -203,7 +204,6 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
         progress: undefined,
         theme: "light",
       });
-    }
     dispatch(RemoveInvoiceByHoaDon({ hoaDon: hoaDon }));
     dispatch(RemoveBill({ key: hoaDon }));
     setTongThanhToan(0);

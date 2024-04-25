@@ -4,6 +4,7 @@ import com.example.backend.entity.ChiTietSanPham;
 import com.example.backend.entity.TraHang;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 @Getter
 @Setter
@@ -12,6 +13,8 @@ import java.time.LocalDateTime;
 @Builder
 public class TraHangRequest {
     private String id;
+    private String idHD;
+    private BigDecimal tienMoi;
     private String idHDCT;
     private String idCTSP;
     private int soLuong;
