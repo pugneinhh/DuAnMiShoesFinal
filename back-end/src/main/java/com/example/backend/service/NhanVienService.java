@@ -58,7 +58,7 @@ public class NhanVienService {
         add.setTrangThai(0);
         add.setNgaySinh(request.getNgaySinh());
         if(file==null){
-            add.setAnh("https://res-console.cloudinary.com/dm0w2qws8/media_explorer_thumbnails/be19b81150473723fdb75be9bf327062/detailed");
+            add.setAnh("https://res.cloudinary.com/dm0w2qws8/image/upload/v1711447014/xdzgurnhwowonhpkpa9b.jpg");
         }else{
             String url = uploadImageToCloudinary.uploadImage(file);
             add.setAnh(url);
