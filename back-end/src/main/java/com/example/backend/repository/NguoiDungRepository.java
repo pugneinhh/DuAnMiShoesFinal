@@ -2,6 +2,7 @@ package com.example.backend.repository;
 
 import com.example.backend.dto.request.NguoiDungSeacrh;
 import com.example.backend.dto.response.KhachHangRespon;
+import com.example.backend.dto.response.MatKhauRespon;
 import com.example.backend.dto.response.NhanVienRespon;
 import com.example.backend.entity.NguoiDung;
 import com.example.backend.model.AdminKhachHangRepon;
@@ -199,4 +200,8 @@ public interface NguoiDungRepository extends JpaRepository<NguoiDung, String> {
 
     @Query(value = "select * from nguoi_dung where id=:id",nativeQuery = true)
     NguoiDung getNDByID(String id);
+
+    //dđổi mật khẩu
+    @Query(value = "select mat_khau as matKhau from nguoi_dung where id=:id",nativeQuery = true)
+    MatKhauRespon soSanhMK(String id);
 }
