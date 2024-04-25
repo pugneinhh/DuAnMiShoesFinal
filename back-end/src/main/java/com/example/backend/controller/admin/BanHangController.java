@@ -206,6 +206,7 @@ public class BanHangController {
         System.out.println("ID Voucher :"+idVoucher);
         HoaDon hoaDon=hoaDonServicee.findHoaDonByMa(ma);
         System.out.println("MÃ hóa đơn :"+hoaDon.getId());
+        NguoiDung nguoiDung = nguoiDungService.findByID(idNV);
         if (idVoucher != null || idVoucher != "null") {
             Voucher voucher = voucherService.detailVoucher(idVoucher);
             System.out.println("Voucher thanh toán có hóa đơn "+voucher);
@@ -221,12 +222,42 @@ public class BanHangController {
         if(hoaDon.getTraSau() == 0) {
             if (hoaDon.getDiaChi() != null){
                 hoaDon.setTrangThai(2);
+                LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
+                lichSuHoaDon.setHoaDon(hoaDon);
+                lichSuHoaDon.setNguoiTao(nguoiDung.getMa());
+                lichSuHoaDon.setTrangThai(4);
+                lichSuHoaDon.setNgayTao(LocalDateTime.now());
+                lichSuHoaDonService.save(lichSuHoaDon);
+                LichSuHoaDon lichSuHoaDon1= new LichSuHoaDon();
+                lichSuHoaDon1.setHoaDon(hoaDon);
+                lichSuHoaDon1.setNguoiTao(nguoiDung.getMa());
+                lichSuHoaDon1.setTrangThai(2);
+                lichSuHoaDon1.setNgayTao(LocalDateTime.now());
+                lichSuHoaDonService.save(lichSuHoaDon1);
             } else {
                 hoaDon.setTrangThai(5);
+                LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
+                lichSuHoaDon.setHoaDon(hoaDon);
+                lichSuHoaDon.setNguoiTao(nguoiDung.getMa());
+                lichSuHoaDon.setTrangThai(5);
+                lichSuHoaDon.setNgayTao(LocalDateTime.now());
+                lichSuHoaDonService.save(lichSuHoaDon);
             }
 
         }  else {
             hoaDon.setTrangThai(2);
+            LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
+            lichSuHoaDon.setHoaDon(hoaDon);
+            lichSuHoaDon.setNguoiTao(nguoiDung.getMa());
+            lichSuHoaDon.setTrangThai(5);
+            lichSuHoaDon.setNgayTao(LocalDateTime.now());
+            lichSuHoaDonService.save(lichSuHoaDon);
+            LichSuHoaDon lichSuHoaDon1= new LichSuHoaDon();
+            lichSuHoaDon1.setHoaDon(hoaDon);
+            lichSuHoaDon1.setNguoiTao(nguoiDung.getMa());
+            lichSuHoaDon1.setTrangThai(2);
+            lichSuHoaDon1.setNgayTao(LocalDateTime.now());
+            lichSuHoaDonService.save(lichSuHoaDon1);
         }
         hoaDon.setNgaySua(LocalDateTime.now());
         hoaDonServicee.updateTrangThaiHoaDon(hoaDon);
@@ -235,18 +266,13 @@ public class BanHangController {
             h.setTrangThai(1);
             hoaDonChiTietService.saveHDCT(h);
         }
-        NguoiDung nguoiDung = nguoiDungService.findByID(idNV);
+
         List<ThanhToan> listTT = thanhToanService.getThanhToanByIdHD(hoaDon.getId());
         for (ThanhToan tt : listTT){
             tt.setTrangThai(1);
             thanhToanService.save(tt);
         }
-        LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
-        lichSuHoaDon.setHoaDon(hoaDon);
-        lichSuHoaDon.setNguoiTao(nguoiDung.getMa());
-        lichSuHoaDon.setTrangThai(5);
-        lichSuHoaDon.setNgayTao(LocalDateTime.now());
-        lichSuHoaDonService.save(lichSuHoaDon);
+
 
         return ResponseEntity.ok(hoaDonServicee.thanhToanHoaDon(ma));
 
@@ -258,17 +284,48 @@ public class BanHangController {
         System.out.println("Mã hóa đơn :"+ma);
         System.out.println("ID nhân viên :"+idNV);
         HoaDon hoaDon=hoaDonServicee.findHoaDonByMa(ma);
+        NguoiDung nguoiDung = nguoiDungService.findByID(idNV);
         if (hoaDon == null) return null;
         System.out.println("MÃ hóa đơn :"+hoaDon.getId());
         if(hoaDon.getTraSau() == 0) {
             if (hoaDon.getDiaChi() != null){
                 hoaDon.setTrangThai(2);
+                LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
+                lichSuHoaDon.setHoaDon(hoaDon);
+                lichSuHoaDon.setNguoiTao(nguoiDung.getMa());
+                lichSuHoaDon.setTrangThai(4);
+                lichSuHoaDon.setNgayTao(LocalDateTime.now());
+                lichSuHoaDonService.save(lichSuHoaDon);
+                LichSuHoaDon lichSuHoaDon1= new LichSuHoaDon();
+                lichSuHoaDon1.setHoaDon(hoaDon);
+                lichSuHoaDon1.setNguoiTao(nguoiDung.getMa());
+                lichSuHoaDon1.setTrangThai(2);
+                lichSuHoaDon1.setNgayTao(LocalDateTime.now());
+                lichSuHoaDonService.save(lichSuHoaDon1);
             } else {
                 hoaDon.setTrangThai(5);
+                LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
+                lichSuHoaDon.setHoaDon(hoaDon);
+                lichSuHoaDon.setNguoiTao(nguoiDung.getMa());
+                lichSuHoaDon.setTrangThai(5);
+                lichSuHoaDon.setNgayTao(LocalDateTime.now());
+                lichSuHoaDonService.save(lichSuHoaDon);
             }
 
         }  else {
             hoaDon.setTrangThai(2);
+            LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
+            lichSuHoaDon.setHoaDon(hoaDon);
+            lichSuHoaDon.setNguoiTao(nguoiDung.getMa());
+            lichSuHoaDon.setTrangThai(5);
+            lichSuHoaDon.setNgayTao(LocalDateTime.now());
+            lichSuHoaDonService.save(lichSuHoaDon);
+            LichSuHoaDon lichSuHoaDon1= new LichSuHoaDon();
+            lichSuHoaDon1.setHoaDon(hoaDon);
+            lichSuHoaDon1.setNguoiTao(nguoiDung.getMa());
+            lichSuHoaDon1.setTrangThai(2);
+            lichSuHoaDon1.setNgayTao(LocalDateTime.now());
+            lichSuHoaDonService.save(lichSuHoaDon1);
         }
         hoaDon.setNgaySua(LocalDateTime.now());
         hoaDonServicee.updateTrangThaiHoaDon(hoaDon);
@@ -277,18 +334,13 @@ public class BanHangController {
             h.setTrangThai(1);
             hoaDonChiTietService.saveHDCT(h);
         }
-        NguoiDung nguoiDung = nguoiDungService.findByID(idNV);
+
         List<ThanhToan> listTT = thanhToanService.getThanhToanByIdHD(hoaDon.getId());
         for (ThanhToan tt : listTT){
             tt.setTrangThai(1);
             thanhToanService.save(tt);
         }
-        LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
-        lichSuHoaDon.setHoaDon(hoaDon);
-        lichSuHoaDon.setNguoiTao(nguoiDung.getMa());
-        lichSuHoaDon.setTrangThai(5);
-        lichSuHoaDon.setNgayTao(LocalDateTime.now());
-        lichSuHoaDonService.save(lichSuHoaDon);
+
 
         return ResponseEntity.ok(hoaDonServicee.thanhToanHoaDon(ma));
 

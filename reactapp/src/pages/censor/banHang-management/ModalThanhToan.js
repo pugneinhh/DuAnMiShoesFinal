@@ -215,8 +215,10 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
           storedData,
           voucher
         );
+      }else{
+               SellAPI.thanhToanHoaDonKhongVoucher(hoaDon, storedData);
       }
-       SellAPI.thanhToanHoaDonKhongVoucher(hoaDon, storedData);
+
       toast("Thanh toán thành công!", {
         position: "top-right",
         autoClose: 1000,
