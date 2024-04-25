@@ -1,7 +1,6 @@
-package com.example.backend.controller.admin;
+package com.example.backend.controller.user;
 
 import com.example.backend.dto.request.sanpham.AddAnhRequest;
-import com.example.backend.dto.request.sanpham.HinhAnhRequest;
 import com.example.backend.repository.HinhAnhRepository;
 import com.example.backend.service.HinhAnhService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,17 +8,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-
 @CrossOrigin("http://localhost:3000/")
 @RestController
-@RequestMapping("/admin/hinhanh")
-public class HinhAnhController {
+@RequestMapping("/hinhanh")
+public class HinhAnhClientController {
     @Autowired
     HinhAnhRepository hinhAnhRepository;
     @Autowired
     HinhAnhService hinhAnhService;
     @GetMapping("/{ten}/{idSP}")
-    public ResponseEntity<?> detail(@PathVariable("ten") String ten,@PathVariable("idSP") String idSP){
+    public ResponseEntity<?> detail(@PathVariable("ten") String ten, @PathVariable("idSP") String idSP){
         System.out.println(idSP);
         System.out.println(ten);
         return ResponseEntity.ok(hinhAnhRepository.getAnhCTSP(ten,idSP));

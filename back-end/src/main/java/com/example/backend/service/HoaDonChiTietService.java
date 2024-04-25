@@ -136,6 +136,7 @@ public class HoaDonChiTietService {
         }
         BigDecimal giaGiam = hoaDon.getGiaGiamGia() == null ? new BigDecimal("0") : hoaDon.getGiaGiamGia();
         hoaDon.setGiaGoc(tong);
+        hoaDon.setTrangThai(-1);
         hoaDon.setThanhTien(tong.subtract(giaGiam));
         hoaDonRepository.save(hoaDon);
         hoaDonChiTietRepository.delete(hdct);

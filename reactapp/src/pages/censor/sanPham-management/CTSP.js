@@ -712,7 +712,7 @@ export default function CTSP() {
                     </Button>
                   </Popover>
                   <label className='mb-2'><b>Hình ảnh :</b></label>
-                  <SuaAnhCTSP hinhAnh={ctData.ghiChu}></SuaAnhCTSP>
+                  <SuaAnhCTSP ten={ctData.mauSac} idSP={ctData.id}></SuaAnhCTSP>
                 </div>
                 <div className='row'>
                   <div className='container text-center'>

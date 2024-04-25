@@ -90,7 +90,7 @@ export default function AddSanPham() {
       const updatedDataSource = tableData.map((item) => {
         if (item.tenMau === index || item.ghiChu === "") {
           // Cập nhật giá trị ghiChu với một mảng các liên kết
-          return { ...item, ghiChu: linkAnhList[0] };
+          return { ...item, ghiChu: linkAnhList[0] ,linkAnh :linkAnhList};
         }
         return item;
       });
@@ -200,6 +200,7 @@ export default function AddSanPham() {
             danhMuc: newDataDM[0].id,
             mauSac: newDataMS[j].id,
             kichThuoc: newDataKT[i].id,
+            linkAnh: null,
             ghiChu: null,
             soLuong: dataSoLuong,
             giaBan: dataGiaBan,

@@ -169,12 +169,22 @@ const billSlice = createSlice({
       state[index].tienVanChuyen = updatedBill.tienVanChuyen;;
 
     }
+  },
+
+  UpdateTienHang : (state,action) => {
+    const updatedBill = action.payload; // backend
+    const index = state.findIndex((period) => period.key === updatedBill.key);
+    if (index !== -1) {
+      state[index].thanhTien += updatedBill.thanhTien;
+
+    }
   }
 },
 },
 );
 
 export const {
+  UpdateTienHang,
   SetBill,
   CreateBill,
   UpdateBill,
