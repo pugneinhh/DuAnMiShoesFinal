@@ -77,6 +77,10 @@ const DashboardCensor = ({ children }) => {
     nav("/login");
     localStorage.clear();
   };
+   const DoiMatKhau = () => {
+     nav("/admin-doi-mat-khau");
+
+   };
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
@@ -84,7 +88,11 @@ const DashboardCensor = ({ children }) => {
   const items = [
     {
       key: "1",
-      label: "Đổi mật khẩu",
+      label: (
+        <a target="_blank" rel="noopener noreferrer" onClick={DoiMatKhau}>
+          Đổi mật khẩu
+        </a>
+      ),
     },
     {
       key: "2",

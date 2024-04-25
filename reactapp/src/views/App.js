@@ -68,6 +68,7 @@ import { CartProvider } from "../layout/user/cart/CartContext";
 import TraHang from "../pages/censor/traHang-managenment/traHang";
 import DetailHoaDonTraHang from "../pages/censor/traHang-managenment/DetailHoaDonTraHang";
 import PhieuGiamGiaCLient from "../layout/user/phieugiamgia/PhieuGiamGiaClient";
+import DoiMatKhauAdmin from "../pages/censor/profile-management/DoiMatKhau";
 
 function App() {
   const isLoading = useAppSelector(GetLoading);
@@ -403,6 +404,17 @@ function App() {
                 </AuthGuard>
               }
             />
+
+            <Route
+              path="/admin-doi-mat-khau"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <DoiMatKhauAdmin/>
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
             {/* Màn client */}
             <Route
               path="/home"
@@ -506,7 +518,7 @@ function App() {
                 <GuestGuard>
                   <CartProvider>
                     <DashboardClient>
-                      <PhieuGiamGiaCLient/>
+                      <PhieuGiamGiaCLient />
                     </DashboardClient>
                   </CartProvider>
                 </GuestGuard>
