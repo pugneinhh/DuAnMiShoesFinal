@@ -40,15 +40,13 @@ import convert from "color-convert";
 import "./SanPham.css";
 import { MauSacAPI } from "../api/SanPham/mauSac.api";
 import { ChiTietSanPhamAPI } from "../api/SanPham/chi_tiet_san_pham.api";
-import CloudinaryUploader from "./ModalUploadAnh";
-import SanPham from "./SanPham";
-import { AdminGuiThongBaoXacNhanDatHang } from "../../../utils/socket/socket";
 export default function AddSanPham() {
   //Form
   const nav = useNavigate();
   const [form] = Form.useForm();
   const [form1] = Form.useForm();
   const [form2] = Form.useForm();
+  const [form3] = Form.useForm();
   const [selectedValue, setSelectedValue] = useState("1");
   const handleChange = (value) => {
     setSelectedValue(value);
@@ -90,7 +88,7 @@ export default function AddSanPham() {
       const updatedDataSource = tableData.map((item) => {
         if (item.tenMau === index || item.ghiChu === "") {
           // Cập nhật giá trị ghiChu với một mảng các liên kết
-          return { ...item, ghiChu: linkAnhList[0] ,linkAnh :linkAnhList};
+          return { ...item, ghiChu: linkAnhList[0], linkAnh: linkAnhList };
         }
         return item;
       });
@@ -445,11 +443,10 @@ export default function AddSanPham() {
   useEffect(() => {
     loadCTSP();
   }, []);
-  const loadCTSP = async () => {
+  const loadCTSP = () => {
     ChiTietSanPhamAPI.showCTSP().then(response => {
       setOptionsCTSP(response.data);
     })
-
   };
 
   const addCTSanPham = () => {
@@ -521,30 +518,31 @@ export default function AddSanPham() {
       }
     }
 
+    const promises = [];
     for (let i = 0; i < tableData.length; i++) {
-      ChiTietSanPhamAPI.createCTSP(tableData[i])
-        .then((response) => {
-          loadCTSP();
-          loadSP();
-          form1.resetFields();
-          form.resetFields();
-          setTableData([]);
-        })
-        .catch((error) => console.error("Error adding item:", error));
+      promises.push(ChiTietSanPhamAPI.createCTSP(tableData[i]));
     }
-    // nav("/admin-san-pham");
-    AdminGuiThongBaoXacNhanDatHang();
-    nav("/admin-san-pham");
-    toast("✔️ Thêm thành công!", {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
+    Promise.all(promises)
+      .then(() => {
+        loadCTSP();
+        form1.resetFields();
+        form.resetFields();
+        setTableData([]);
+        nav("/admin-san-pham");
+        toast("✔️ Thêm thành công!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   //Load san pham
@@ -1773,7 +1771,7 @@ export default function AddSanPham() {
                               title: "Thông báo",
                               content: "Bạn có chắc chắn muốn thêm không?",
                               onOk: () => {
-                                form1.submit();
+                                form3.submit();
                               },
                               footer: (_, { OkBtn, CancelBtn }) => (
                                 <>
@@ -1798,7 +1796,7 @@ export default function AddSanPham() {
                         size={componentSize}
                         onFinish={addMauSac}
                         layout="vertical"
-                        form={form1}
+                        form={form3}
                       >
                         <div className="row">
                           <div className="col-md-6">

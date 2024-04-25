@@ -20,6 +20,7 @@ import { FaTshirt } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./SanPham.css";
+import { ChiTietSanPhamAPI } from "../api/SanPham/chi_tiet_san_pham.api";
 import { SanPhamAPI } from "../api/SanPham/sanPham.api";
 
 export default function SanPham() {
@@ -56,19 +57,25 @@ export default function SanPham() {
   };
   //Table
   const [sanPham, setSanPhams] = useState([]);
+  const [ctspThem, setCtspThems] = useState([]);
 
-  useEffect(() => {
-    loadSanPham();
-  }, []);
-  // useEffect(() => {
-  //   loadSanPham();
-  // }, [sanPham]);
+  const loadCTSP=() => {
+    ChiTietSanPhamAPI.showCTSP().then(response => {
+      setCtspThems(response.data);
+    })
+  };
+
   const loadSanPham = () => {
     SanPhamAPI.getAll().then((res) => {
       setSanPhams(res.data);
       console.log("22222",res.data);
     });
-  };
+  }; 
+  
+  useEffect(() => {
+    loadCTSP();
+    loadSanPham();
+  }, []);
 
   const columns = [
     {

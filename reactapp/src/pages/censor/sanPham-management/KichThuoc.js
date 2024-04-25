@@ -138,13 +138,21 @@ export default function KichThuoc() {
     const validateDateKichThuoc = (_, value) => {
       const { getFieldValue } = form;
       const tenKichThuoc = getFieldValue("ten");
-    if (!tenKichThuoc.trim()) {
-      return Promise.reject("Tên không được để trống");
-    }
-    const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
-    if (specialCharacterRegex.test(tenKichThuoc)) {
-      return Promise.reject("Tên không được chứa ký tự đặc biệt");
-    }
+    
+      if (!tenKichThuoc.trim()) {
+        return Promise.reject("Tên không được để trống");
+      }
+    
+      const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+      if (specialCharacterRegex.test(tenKichThuoc)) {
+        return Promise.reject("Tên không được chứa ký tự đặc biệt");
+      }
+    
+      const kichThuoc = parseInt(value);
+      if (isNaN(kichThuoc) || kichThuoc < 34 || kichThuoc > 47) {
+        return Promise.reject("Kích thước phải là số nguyên từ 34 đến 47");
+      }
+    
       return Promise.resolve();
     };
 
