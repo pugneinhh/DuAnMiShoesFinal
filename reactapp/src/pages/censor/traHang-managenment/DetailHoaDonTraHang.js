@@ -41,7 +41,9 @@ const DetailHoaDonTraHang = () => {
 
   const loadVoucherTotNhatVaVoucherTiepTheo = (total) => {
     console.log("Totalll "+total);
+    if(total&&total>0){
     SellAPI.voucherTotNhat(thongTin.nguoiDung!=null?thongTin.nguoiDung.id : null,total ).then((res) => { loadGiamGia(res.data);});
+  }
   };
 
   const loadGiamGia = (voucher) => {
@@ -112,6 +114,7 @@ const DetailHoaDonTraHang = () => {
   const loadAllHDCT=()=>{
     TraHangAPI.getThongTinHoaDon(id).then((res)=>{
       setThongTin(res.data);
+      console.log("hóa đơn",res.data);
     })
     TraHangAPI.getHoaDonByMa(id).then((res)=>{
       setSanPhamHDCT(res.data);
@@ -122,6 +125,7 @@ const DetailHoaDonTraHang = () => {
     if(newBill.length>0){
     newBill.map((spt)=>{
       const data={
+        idHD:thongTin.id,
         idHDCT:spt.idHDCT,
         idCTSP:spt.idCTSP,
         soLuong:spt.soLuong,

@@ -2,12 +2,10 @@ package com.example.backend.service;
 
 import com.example.backend.dto.request.TraHangRequest;
 import com.example.backend.dto.response.HoaDonChiTietBanHangRespone;
-import com.example.backend.entity.ChiTietSanPham;
-import com.example.backend.entity.HoaDon;
-import com.example.backend.entity.HoaDonChiTiet;
-import com.example.backend.entity.TraHang;
+import com.example.backend.entity.*;
 import com.example.backend.repository.HoaDonChiTietRepository;
 import com.example.backend.repository.HoaDonRepository;
+import com.example.backend.repository.LichSuHoaDonRepository;
 import com.example.backend.repository.TraHangRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +22,8 @@ public class TraHangService {
     HoaDonChiTietRepository hoaDonChiTietRepository;
     @Autowired
     TraHangRepository traHangRepository;
+    @Autowired
+    LichSuHoaDonRepository lichSuHoaDonRepository;
 
     public List<HoaDonChiTietBanHangRespone> getAllHDCTByHoaDon(String ma){
         HoaDon hoaDon=hoaDonRepository.getHDByMaTraHang(ma);
@@ -55,7 +55,14 @@ public class TraHangService {
             hoaDonChiTiet.setTrangThai(2);
             hoaDonChiTietRepository.save(hoaDonChiTiet);
         }
-
+        HoaDon hoaDon=hoaDonRepository.getHoaDonByIDHD(request.getIdHD());
+        hoaDon.setTrangThai(10);
+        hoaDonRepository.save(hoaDon);
+        LichSuHoaDon lichSuHoaDon=new LichSuHoaDon();
+        lichSuHoaDon.setHoaDon(hoaDon);
+        lichSuHoaDon.setTrangThai(10);
+        lichSuHoaDon.setNgayTao(LocalDateTime.now());
+        lichSuHoaDonRepository.save(lichSuHoaDon);
         return traHangRepository.save(traHang);
     }
 }
