@@ -176,7 +176,14 @@ const billSlice = createSlice({
     const index = state.findIndex((period) => period.key === updatedBill.key);
     if (index !== -1) {
       state[index].thanhTien += updatedBill.thanhTien;
+    }
+  },
 
+  UpdateTienHangGiam : (state,action) => {
+    const updatedBill = action.payload; // backend
+    const index = state.findIndex((period) => period.key === updatedBill.key);
+    if (index !== -1) {
+      state[index].thanhTien -= updatedBill.thanhTien;
     }
   }
 },
@@ -185,6 +192,7 @@ const billSlice = createSlice({
 
 export const {
   UpdateTienHang,
+  UpdateTienHangGiam,
   SetBill,
   CreateBill,
   UpdateBill,

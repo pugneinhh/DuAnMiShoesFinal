@@ -40,6 +40,7 @@ public class HoaDonChiTietService {
         System.out.println("Hóa đơn chi tiết request"+request);
         String idCTSP= request.getChiTietSanPham();
         HoaDon hoaDon = hoaDonRepository.getHDByMa(request.getHoaDon());
+        if (hoaDon == null) return null;
         request.setHoaDon(hoaDon.getId());
         HoaDonChiTiet hdct=request.map(new HoaDonChiTiet());
         BigDecimal giaHienTai = hoaDon.getGiaGoc() == null ? new BigDecimal("0") : hoaDon.getGiaGoc();
