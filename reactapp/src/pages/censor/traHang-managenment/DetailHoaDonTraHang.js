@@ -43,6 +43,9 @@ const DetailHoaDonTraHang = () => {
     console.log("Totalll "+total);
     if(total&&total>0){
     SellAPI.voucherTotNhat(thongTin.nguoiDung!=null?thongTin.nguoiDung.id : null,total ).then((res) => { loadGiamGia(res.data);});
+  }else{
+    setTienGiamHDMoi(0)
+    setTienTra(thongTin.thanhTien);
   }
   };
 
@@ -130,6 +133,7 @@ const DetailHoaDonTraHang = () => {
         idCTSP:spt.idCTSP,
         soLuong:spt.soLuong,
         ghiChu:spt.ghiChu,
+        tienMoi:thongTin.thanhTien-tienTra?tienTra:0,
       };
       console.log("sanPhamTra",data);
       if(data.ghiChu!=null&&data.ghiChu.trim()!==''){
