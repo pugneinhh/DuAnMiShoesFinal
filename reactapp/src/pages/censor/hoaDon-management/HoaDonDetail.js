@@ -6,16 +6,7 @@ import { SlNotebook } from "react-icons/sl";
 import { GiNotebook, GiPiggyBank, GiReturnArrow } from "react-icons/gi";
 import { FaMoneyBillTrendUp, FaTruckFast } from "react-icons/fa6";
 import { ImCancelCircle } from "react-icons/im";
-import {
-  Button,
-  Modal,
-  Table,
-  Tag,
-  Input,
-  Form,
-  Select,
-  Space,
-} from "antd";
+import { Button, Modal, Table, Tag, Input, Form, Select, Space } from "antd";
 import { useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -46,17 +37,17 @@ export default function HoaDonDetail() {
   const [activeKey, setActiveKey] = useState(0);
   const [listHDTimeLine, setlistHDTimeLine] = useState([]);
   const [voucherHienTai, setVoucherHienTai] = useState(null);
-   const [maHD, setMaHD] = useState([]);
+  const [maHD, setMaHD] = useState([]);
   const [voucher, setVoucher] = useState([]);
   const [soTienCanMuaThem, setSoTienCanMuaThem] = useState(0);
   const [soTienDuocGiam, setSoTienDuocGiam] = useState(0);
   const [form] = Form.useForm();
   const [formRollBack] = Form.useForm();
-   const [formHuyHoaDon] = Form.useForm();
+  const [formHuyHoaDon] = Form.useForm();
   const [trangThai, setTrangThai] = useState([]);
   const [listSanPhamTra, setlistSanPhamTra] = useState([]);
   const [listSanPhams, setlistSanPhams] = useState([]);
- 
+
   const handleOk = () => {
     setIsModalOpen(false);
     setOpenModalTimeLine(false);
@@ -69,20 +60,19 @@ export default function HoaDonDetail() {
     setOpenSanPham(false);
     setOpenDiaChiUpdate(false);
     setIsModalOpenRollBack(false);
-      setIsModalHuyHoaDon(false);
+    setIsModalHuyHoaDon(false);
   };
   const [openXuat, setOpenXuat] = useState(false);
   const componnentRef = useRef();
 
-
   const { TextArea } = Input;
   const [hoaDondetail, setHoaDondetail] = useState([]);
   const [maNV, setmaNV] = useState("");
-    const [tenNV, settenNV] = useState("");
+  const [tenNV, settenNV] = useState("");
   useEffect(() => {
     const storedData = get("userData");
     setmaNV(storedData.ma);
-      settenNV(storedData.ten);
+    settenNV(storedData.ten);
     loadHoaDon();
     loadListSanPhams();
     loadListSanPhamTra();
@@ -138,12 +128,12 @@ export default function HoaDonDetail() {
     });
   };
 
-  const loadHoaDon =  () => {
+  const loadHoaDon = () => {
     HoaDonAPI.detailHD(id).then((res) => {
       setHoaDondetail(res.data);
       setTrangThai(res.data.trangThai);
       setMaHD(res.data.ma);
-      console.log("hd",res.data)
+      console.log("hd", res.data);
     });
   };
 
@@ -173,43 +163,19 @@ export default function HoaDonDetail() {
       });
     });
   };
-    const showModalHuyHoaDon = () => {
-      setIsModalHuyHoaDon(true);
-    };
-  const handleHuyHoaDon = (values) => {
-     AdminGuiThongBaoXacNhanDatHang();
-     listSanPhams.map((listSanPham, index) =>   HoaDonAPI.deleteInvoiceAndRollBackProduct(listSanPham.idctsp, id));
-      HoaDonAPI.huyHoaDonQLHoaDon(id, maNV, values).then((res) => {
-        loadHoaDon();
-        loadTimeLineHoaDon();
-        formHuyHoaDon.resetFields();
-        setIsModalHuyHoaDon(false);
-        toast("🦄 Thành công!", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-      });
+  const showModalHuyHoaDon = () => {
+    setIsModalHuyHoaDon(true);
   };
-  // update trạng thái hóa đơn
-  const handleSubmit = (values) => {
+  const handleHuyHoaDon = (values) => {
     AdminGuiThongBaoXacNhanDatHang();
-    HoaDonAPI.updateTTHoaDon(id, maNV, values).then((res) => {
-      console.log("values", values);
-      console.log("trang thau", trangThai);
+    listSanPhams.map((listSanPham, index) =>
+      HoaDonAPI.deleteInvoiceAndRollBackProduct(listSanPham.idctsp, id)
+    );
+    HoaDonAPI.huyHoaDonQLHoaDon(id, maNV, values).then((res) => {
       loadHoaDon();
       loadTimeLineHoaDon();
-      form.resetFields();
-      setIsModalOpen(false);
-         if (trangThai == 0) {
-           setOpenXuat(true);
-            handlePrint();     
-         }
+      formHuyHoaDon.resetFields();
+      setIsModalHuyHoaDon(false);
       toast("🦄 Thành công!", {
         position: "top-right",
         autoClose: 3000,
@@ -221,12 +187,37 @@ export default function HoaDonDetail() {
         theme: "light",
       });
     });
-
   };
-const handlePrint = useReactToPrint({
-  content: () => componnentRef.current, // Assuming componnentRef is a ref to the component you want to print
-  documentTitle: maHD,
-});
+  // update trạng thái hóa đơn
+  const handleSubmit = (values) => {
+    AdminGuiThongBaoXacNhanDatHang();
+    HoaDonAPI.updateTTHoaDon(id, maNV, values).then((res) => {
+      console.log("values", values);
+      console.log("trang thau", trangThai);
+      loadHoaDon();
+      loadTimeLineHoaDon();
+      form.resetFields();
+      setIsModalOpen(false);
+      if (trangThai == 0) {
+        setOpenXuat(true);
+        handlePrint();
+      }
+      toast("🦄 Thành công!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    });
+  };
+  const handlePrint = useReactToPrint({
+    content: () => componnentRef.current, // Assuming componnentRef is a ref to the component you want to print
+    documentTitle: maHD,
+  });
   const [LichSuThanhToan, setLichSuThanhToan] = useState([]);
   const loadLichSuThanhToan = () => {
     ThanhToanAPI.LichSuThanhToanByIdHD(id).then((res) => {
@@ -296,12 +287,10 @@ const handlePrint = useReactToPrint({
     },
   ];
 
-
   // console.log("list sản phẩm", listSanPhams);
   const loadListSanPhams = () => {
     HoaDonAPI.detailSanPham(id).then((res) => {
       setlistSanPhams(res.data);
-     
     });
   };
   const loadListSanPhamTra = () => {
@@ -335,7 +324,7 @@ const handlePrint = useReactToPrint({
       return FaMoneyBillTrendUp;
     }
   };
-  
+
   const showTitle = (trangThai) => {
     if (trangThai === "0") {
       return "Chờ xác nhận";
@@ -370,7 +359,7 @@ const handlePrint = useReactToPrint({
       return "Thành công";
     } else if (trangThai === "-1") {
       return "Hoàn tiền";
-    } 
+    }
   };
   const showTitleButtonVanDonTraTruoc = (trangThai) => {
     if (trangThai === "0") {
@@ -385,9 +374,9 @@ const handlePrint = useReactToPrint({
       return "Thành công";
     } else if (trangThai === "-1") {
       return "Hoàn tiền";
-    } 
+    }
   };
-   
+
   return (
     <div className="container-fuild mt-4 radius  ">
       <div className="container-fuild  row pt-3 pb-4 bg-light rounded border-danger ">
@@ -403,7 +392,11 @@ const handlePrint = useReactToPrint({
                 <TimelineEvent
                   minEvents={6}
                   key={index}
-                  color={item.trangThai == -1 ? "#520808" : "#3d874d"}
+                  color={
+                    item.trangThai == -1 || item.trangThai == 10
+                      ? "#520808"
+                      : "#3d874d"
+                  }
                   icon={showIcon(item.trangThai)}
                   values={showTitle(item.trangThai)}
                   isOpenEnding={true}
@@ -899,9 +892,14 @@ const handlePrint = useReactToPrint({
         className="d-flex bd-highlight"
         style={{ marginTop: "20px", paddingTop: "20px" }}
       >
-        <div className="flex-grow-1 bd-highlight">
-          <h5>Thông tin sản phẩm</h5>
-        </div>
+        {listSanPhams.length > 0 ? (
+          <div className="flex-grow-1 bd-highlight">
+            <h5>Thông tin sản phẩm</h5>
+          </div>
+        ) : (
+          <></>
+        )}
+
         {/* chỉnh sửa sản phẩm */}
 
         <>
@@ -929,9 +927,8 @@ const handlePrint = useReactToPrint({
             <></>
           )}
         </>
+        {listSanPhams.length > 0 ? <hr></hr> : <></>}
       </div>
-
-      <hr></hr>
 
       {/* detail hóa đơn */}
       <div className="container-fuild mt-3 row bg-light radius">
@@ -1014,15 +1011,7 @@ const handlePrint = useReactToPrint({
                   </IntlProvider>
                 </h6>
               </div>
-              {listSanPham.trangThai == 2 ? (
-                <div className="col-md-2  mt-5">
-                  <Button style={{ backgroundColor: "red", color: "white" }}>
-                    Trả hàng
-                  </Button>
-                </div>
-              ) : (
-                <></>
-              )}
+
               <hr className="mt-3"></hr>
             </tr>
           ))}
@@ -1121,7 +1110,11 @@ const handlePrint = useReactToPrint({
                       </IntlProvider>
                     </h6>
                   </div>
-
+                  <div className="col-md-2  mt-5">
+                    <Button style={{ backgroundColor: "red", color: "white" }}>
+                      Trả hàng
+                    </Button>
+                  </div>
                   <hr className="mt-3"></hr>
                 </tr>
               ))}
