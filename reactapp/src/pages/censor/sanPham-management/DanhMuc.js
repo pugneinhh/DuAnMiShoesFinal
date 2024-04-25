@@ -139,7 +139,7 @@ export default function DanhMuc() {
   if (!tenDanhMuc.trim()) {
     return Promise.reject("Tên không được để trống");
   }
-  const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+  const specialCharacterRegex = /[!@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]/;
   if (specialCharacterRegex.test(tenDanhMuc)) {
     return Promise.reject("Tên không được chứa ký tự đặc biệt");
   }
