@@ -99,12 +99,14 @@ const BanHang = () => {
       const parsedData = JSON.parse(dataFromLocalStorage);
       const nameFromData = parsedData.ma;
       if (nameFromData) {
-        // console.log("Nhân viên firrst :",nameFromData);
+        console.log("Nhân viên firrst :",nameFromData);
         setStoredData(nameFromData);
       }
     }
   }, []);
 
+
+  console.log("Hóa đơn : ",hoaDons);
   //Hết
   // useEffect(() => {
   //   if (openInHoaDon === false) {
@@ -283,15 +285,19 @@ const BanHang = () => {
   // }
   //   );
   if (activeKey) {
-    // console.log("result :",activeKey);
-    // console.log("result :", hoaDons.filter(e => e.key === activeKey));
-  SellAPI.voucherTotNhat(idKH ? idKH : null, hoaDons.filter(e => e.key === activeKey).length > 0  ?
-   hoaDons.filter(e => e.key === activeKey)[0].thanhTien ? hoaDons.filter(e => e.key === activeKey)[0].thanhTien : 0 : 0).then((res) =>
+    console.log("result :",activeKey);
+    console.log("result :", hoaDons.filter(e => e.key === activeKey));
+    let tien = hoaDons.filter(e => e.key === activeKey).length > 0  ?
+    hoaDons.filter(e => e.key === activeKey)[0].thanhTien ? hoaDons.filter(e => e.key === activeKey)[0].thanhTien : 0 : 0;
+    if (voucherHienTai && voucherHienTai.dieuKien > tien ) {
+      setVoucherHienTai(null);
+    }
+  SellAPI.voucherTotNhat(idKH ? idKH : null, tien).then((res) =>
   setVoucherHienTai(res.data)
 );
 SellAPI.voucherSapDatDuoc(
   idKH ? idKH : null,
-  hoaDons.filter(e => e.key === activeKey)[0].thanhTien ? hoaDons.filter(e => e.key === activeKey)[0].thanhTien : 0 ,
+  tien ,
   voucherHienTai ? voucherHienTai.id : null
 ).then((res) => {
   // console.log("res", res.data);
@@ -318,7 +324,7 @@ SellAPI.voucherSapDatDuoc(
     if (activeKey) {
       getSoTien();
     }
-  }, [activeKey,hoaDons.thanhTien,openSanPham]);
+  }, [activeKey,hoaDons.thanhTien,ctspHD,openSanPham]);
 
   useEffect(() => {
     if (activeKey !== "") {
@@ -446,7 +452,7 @@ SellAPI.voucherSapDatDuoc(
     setVoucherHienTai(null);
   }
   const onChangeVoucher =  (value,option) => {
-    // console.log("Voucher ", option);
+    console.log("Voucher ", option);
     if (option.dieuKien > money) {
       setVoucherHienTai(null);
       toast.error(
@@ -564,9 +570,9 @@ SellAPI.voucherSapDatDuoc(
     const result = await SellAPI.getAllHoaDonCho();
     if (result.data.length > 0) {
       setActiveKey(result.data[0].ma);
-      // console.log("Result :",result.data[0]);
+      console.log("Result :",result.data[0]);
       SellAPI.detailHoaDon(result.data[0].ma).then((res) => {
-        // console.log("Result :",res.data);
+        console.log("Result :",res.data);
         setIDKH(
           res.data.nguoiDung
             ? res.data.nguoiDung.id
@@ -786,6 +792,7 @@ SellAPI.voucherSapDatDuoc(
             soLuong: value - record.soLuong,
           })
         );
+        dispatch(UpdateTienHang({key:record.hoaDon,thanhTien : parseFloat(value - record.soLuong)*parseFloat(record.giaSauGiam)}));
         SellAPI.updateSL(record.chiTietSanPham, activeKey, value);
         //getSoTien();
         //SellAPI.updateThanhTien(activeKey);
@@ -804,12 +811,15 @@ SellAPI.voucherSapDatDuoc(
           })
         );
         dispatch(UpdateTienHang({key:record.hoaDon,thanhTien : parseFloat(value - record.soLuong)*parseFloat(record.giaSauGiam)}));
-
+        console.log("value :",value);
+        console.log("recorrd :",record.soLuong);
+        console.log("Tiền hàng :", parseFloat(value - record.soLuong)*parseFloat(record.giaSauGiam));
         SellAPI.updateSL(record.chiTietSanPham, activeKey, value);
        // getSoTien();
         // SellAPI.updateThanhTien(activeKey);
       }
     }
+    getSoTien();
   };
 
   const handleAddBill = () => {
