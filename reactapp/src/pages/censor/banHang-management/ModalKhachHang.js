@@ -40,12 +40,12 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
     ? bill.filter((item) => item.key === activeKey)[0]?.nguoiDung
     : "";
   const handleClickAddClient = async (record) => {
-    console.log("recorrd id",record);
+    // console.log("recorrd id",record);
 
     NguoiDungAPI.getDiaChiByIDND(record.idND).then((res) => {
-      console.log("res",res.data);
-      console.log("huyen id",res.data.idHuyen);
-      console.log("xa id",res.data.idXa);
+      // console.log("res",res.data);
+      // console.log("huyen id",res.data.idHuyen);
+      // console.log("xa id",res.data.idXa);
       dispatch(
         UpdateKHToBill({
           key: activeKey,
@@ -70,13 +70,13 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
   const [form] = Form.useForm();
     const [componentSize, setComponentSize] = useState("default");
   const onChangeFilter = (changedValues, allValues) => {
-    console.log("All values : ", allValues);
+    // console.log("All values : ", allValues);
     timKiemKH(allValues);
   };
   const timKiemKH = (dataSearch) => {
     KhachHangAPI.timKiem(dataSearch).then((res) => {
        setListKH(res.data);
-      console.log(res.data,"2222222222222");
+      // console.log(res.data,"2222222222222");
     });
   };
 

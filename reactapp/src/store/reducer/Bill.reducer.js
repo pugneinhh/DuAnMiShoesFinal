@@ -10,7 +10,7 @@ const billSlice = createSlice({
       return action.payload;
     },
     CreateBill: (state, action) => {
-      console.log("Dài", state.length);
+      // console.log("Dài", state.length);
       const data = action.payload;
       const index = state.findIndex((period) => period.key === data.key);
       if (index !== -1) return;
@@ -59,7 +59,7 @@ const billSlice = createSlice({
     UpdateBill: (state, action) => {
       const updatedBill = action.payload; // backend
       const index = state.findIndex((period) => period.key === updatedBill.key);
-      console.log(updatedBill.giaGoc);
+      // console.log(updatedBill.giaGoc);
       if (index !== -1) {
         state[index].ngaySua = updatedBill.ngaySua;
         state[index].ngayThanhToan = updatedBill.ngayThanhToan;
@@ -81,14 +81,14 @@ const billSlice = createSlice({
       const data = action.payload;
       const index = state.findIndex((period) => period.key === data.activeKey);
 
-      console.log("Bill", state[index]);
+      // console.log("Bill", state[index]);
       return state[index];
     },
     UpdateKHToBill: (state, action) => {
       const updatedBill = action.payload; // backend
       const index = state.findIndex((period) => period.key === updatedBill.key);
-      console.log(index);
-      console.log(updatedBill);
+      // console.log(index);
+      // console.log(updatedBill);
       if (index !== -1) {
         state[index].nguoiDung = updatedBill.nguoiDung;
         state[index].tenNguoiDung = updatedBill.tenNguoiDung;
@@ -103,8 +103,8 @@ const billSlice = createSlice({
     UpdateVoucherToBill: (state, action) => {
       const updatedBill = action.payload; // backend
       const index = state.findIndex((period) => period.key === updatedBill.key);
-      console.log(index);
-      console.log(updatedBill);
+      // console.log(index);
+      // console.log(updatedBill);
       if (index !== -1) {
         state[index].voucher = updatedBill.voucher;
       }
@@ -129,8 +129,8 @@ const billSlice = createSlice({
     UpdateVanChuyenToBill: (state, action) => {
       const updatedBill = action.payload; // backend
       const index = state.findIndex((period) => period.key === updatedBill.key);
-      console.log(index);
-      console.log(updatedBill);
+      // console.log(index);
+      // console.log(updatedBill);
       if (index !== -1) {
         state[index].tenNguoiNhan = updatedBill.tenNguoiNhan;
         state[index].email = updatedBill.email;
@@ -147,8 +147,8 @@ const billSlice = createSlice({
   DeleteVanChuyenFromBill: (state, action) => {
     const updatedBill = action.payload; // backend
     const index = state.findIndex((period) => period.key === updatedBill.key);
-    console.log(index);
-    console.log(updatedBill);
+    // console.log(index);
+    // console.log(updatedBill);
     if (index !== -1) {
       state[index].tenNguoiNhan = "";
       state[index].email = "";
