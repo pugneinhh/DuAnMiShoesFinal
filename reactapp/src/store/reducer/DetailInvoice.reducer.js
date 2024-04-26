@@ -11,13 +11,13 @@ const detailInvoiceSlice = createSlice({
     AddInvoice: (state, action) => {
 
       const data = action.payload;
-      console.log(data);
+      // console.log(data);
       const exitsItem = state.findIndex(
         (item) =>
           item.chiTietSanPham === data.chiTietSanPham &&
           item.hoaDon === data.hoaDon
       );
-      console.log(exitsItem);
+      // console.log(exitsItem);
       if (exitsItem !== -1) {
         state[exitsItem].soLuong++;
         state[exitsItem].total += data.giaSauGiam;
@@ -73,14 +73,14 @@ const detailInvoiceSlice = createSlice({
     },
     GetInvoiceByHoaDon: (state, action) => {
       const data = action.payload;
-      console.log("data", data.activeKey);
+      // console.log("data", data.activeKey);
       const index = state.findIndex((period) => period.hoaDon === data.hoaDon);
       console.log("index", index);
 
       return state[index];
     },
     RemoveInvoiceByHoaDon: (state, action) => {
-      console.log("reduxx",action.payload);
+      // console.log("reduxx",action.payload);
       return state.filter((item) => item.hoaDon !== action.payload.hoaDon);
     },
     GetLengthListByBill: (state, action) => {
@@ -89,13 +89,13 @@ const detailInvoiceSlice = createSlice({
     },
     LoadInvoice: (state, action) => {
       const data = action.payload;
-      console.log(data);
+      // console.log(data);
       const exitsItem = state.findIndex(
         (item) =>
           item.chiTietSanPham === data.chiTietSanPham &&
           item.hoaDon === data.hoaDon
       );
-      console.log(exitsItem);
+      // console.log(exitsItem);
       if (exitsItem !== -1) {
         state[exitsItem].giaBan = data.giaBan;
         state[exitsItem].giaGiam = data.giaGiam;
