@@ -105,6 +105,8 @@ const BanHang = () => {
     }
   }, []);
 
+
+  console.log("Hóa đơn : ",hoaDons);
   //Hết
   // useEffect(() => {
   //   if (openInHoaDon === false) {
@@ -285,13 +287,17 @@ const BanHang = () => {
   if (activeKey) {
     console.log("result :",activeKey);
     console.log("result :", hoaDons.filter(e => e.key === activeKey));
-  SellAPI.voucherTotNhat(idKH ? idKH : null, hoaDons.filter(e => e.key === activeKey).length > 0  ?
-   hoaDons.filter(e => e.key === activeKey)[0].thanhTien ? hoaDons.filter(e => e.key === activeKey)[0].thanhTien : 0 : 0).then((res) =>
+    let tien = hoaDons.filter(e => e.key === activeKey).length > 0  ?
+    hoaDons.filter(e => e.key === activeKey)[0].thanhTien ? hoaDons.filter(e => e.key === activeKey)[0].thanhTien : 0 : 0;
+    if (voucherHienTai && voucherHienTai.dieuKien > tien ) {
+      setVoucherHienTai(null);
+    }
+  SellAPI.voucherTotNhat(idKH ? idKH : null, tien).then((res) =>
   setVoucherHienTai(res.data)
 );
 SellAPI.voucherSapDatDuoc(
   idKH ? idKH : null,
-  hoaDons.filter(e => e.key === activeKey)[0].thanhTien ? hoaDons.filter(e => e.key === activeKey)[0].thanhTien : 0 ,
+  tien ,
   voucherHienTai ? voucherHienTai.id : null
 ).then((res) => {
   // console.log("res", res.data);
@@ -318,7 +324,7 @@ SellAPI.voucherSapDatDuoc(
     if (activeKey) {
       getSoTien();
     }
-  }, [activeKey,hoaDons.thanhTien,openSanPham]);
+  }, [activeKey,hoaDons.thanhTien,ctspHD,openSanPham]);
 
   useEffect(() => {
     if (activeKey !== "") {
@@ -786,6 +792,7 @@ SellAPI.voucherSapDatDuoc(
             soLuong: value - record.soLuong,
           })
         );
+        dispatch(UpdateTienHang({key:record.hoaDon,thanhTien : parseFloat(value - record.soLuong)*parseFloat(record.giaSauGiam)}));
         SellAPI.updateSL(record.chiTietSanPham, activeKey, value);
         //getSoTien();
         //SellAPI.updateThanhTien(activeKey);
@@ -804,12 +811,15 @@ SellAPI.voucherSapDatDuoc(
           })
         );
         dispatch(UpdateTienHang({key:record.hoaDon,thanhTien : parseFloat(value - record.soLuong)*parseFloat(record.giaSauGiam)}));
-
+        console.log("value :",value);
+        console.log("recorrd :",record.soLuong);
+        console.log("Tiền hàng :", parseFloat(value - record.soLuong)*parseFloat(record.giaSauGiam));
         SellAPI.updateSL(record.chiTietSanPham, activeKey, value);
        // getSoTien();
         // SellAPI.updateThanhTien(activeKey);
       }
     }
+    getSoTien();
   };
 
   const handleAddBill = () => {
