@@ -211,7 +211,7 @@ export default function AddSanPham() {
       setTableData([]);
     }
   };
-  console.log(tableData);
+  // console.log(tableData);
   const processColorGroups = () => {
     const colorGroups = {};
     tableData.forEach((item) => {
@@ -252,7 +252,7 @@ export default function AddSanPham() {
 
   const [selectedColor, setSelectedColor] = useState(null);
   const handleUploadAnh = (tenMau) => {
-    console.log("Upload ảnh cho màu:", tenMau);
+    // console.log("Upload ảnh cho màu:", tenMau);
     setSelectedColor(tenMau);
     setAddAnhs(true);
   };
@@ -267,7 +267,7 @@ export default function AddSanPham() {
 
   //Update nhanh
   const updateNhanh = (newValues) => {
-    console.log("Vão đà", newValues);
+    // console.log("Vão đà", newValues);
 
     if (selectedRowKeys.length <= 0) {
       toast.error("Chưa chọn dòng để sửa !", {
@@ -282,7 +282,7 @@ export default function AddSanPham() {
       });
       return;
     } else {
-      console.log("Đã vào");
+      // console.log("Đã vào");
       const updatedData = tableData.map((record) => {
         if (selectedRowKeys.includes(record.key)) {
           return {
@@ -313,7 +313,7 @@ export default function AddSanPham() {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
-    console.log(newSelectedRowKeys);
+    // console.log(newSelectedRowKeys);
   };
   const rowSelection = {
     selectedRowKeys,
@@ -414,7 +414,7 @@ export default function AddSanPham() {
     {
       title: "Upload ảnh",
       dataIndex: "tenMau",
-      width: 450,
+      width: 400,
       render: (_, record) => {
         return {
           children: (
@@ -671,9 +671,9 @@ export default function AddSanPham() {
     const rgb = convert.hex.rgb(hexCode);
     const colorName = convert.rgb.keyword(rgb);
     if (colorName === null) {
-      console.log("hehe");
+      // console.log("hehe");
     } else {
-      console.log(colorName);
+      // console.log(colorName);
       setTenMaus(colorName);
     }
   };
@@ -696,7 +696,7 @@ export default function AddSanPham() {
       return msData.some((color) => color.ma === code);
     };
     if (!chekTrung(value.ma)) {
-      console.log(value.ma);
+      // console.log(value.ma);
       const hexCode = value.ma.replace("#", "").toUpperCase();
       const rgb = convert.hex.rgb(hexCode);
       const colorName = convert.rgb.keyword(rgb);

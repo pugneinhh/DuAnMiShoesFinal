@@ -60,73 +60,78 @@ FROM duanmishoes.hoa_don where year(ngay_tao)=year(curdate()- INTERVAL 1 DAY)  a
                         """, nativeQuery = true)
     ThongKeRespon doanhThuNamTruoc();
 
-    @Query(value = " select sum(hoa_don_chi_tiet.so_luong) as soLuong,hoa_don_chi_tiet.chi_tiet_san_pham_id as idSP, chi_tiet_san_pham.gia_ban as giaBan,min(hinh_anh.url) as linkAnh,\n" +
-            "san_pham.ten as tenSp,mau_sac.ten as mauSac,kich_thuoc.ten as kichThuoc,hang.ten as hang\n" +
-            " from hoa_don_chi_tiet join hoa_don on hoa_don.id=hoa_don_chi_tiet.hoa_don_id\n" +
-            " join chi_tiet_san_pham on chi_tiet_san_pham.id =hoa_don_chi_tiet.chi_tiet_san_pham_id\n" +
-            "join hinh_anh on hinh_anh.chi_tiet_san_pham_id=chi_tiet_san_pham.id\n" +
-            "join san_pham on san_pham.id=chi_tiet_san_pham.san_pham_id\n" +
-            "join mau_sac on mau_sac.id=chi_tiet_san_pham.mau_sac_id\n" +
-            "join kich_thuoc on kich_thuoc.id=chi_tiet_san_pham.kich_thuoc_id\n" +
-            "join hang on hang.id=chi_tiet_san_pham.hang_id\n" +
-            "WHERE \n" +
-            "    YEAR(hoa_don_chi_tiet.ngay_tao) = YEAR(CURDATE())\n" +
-            "    AND MONTH(hoa_don_chi_tiet.ngay_tao) = MONTH(CURDATE()) and (hoa_don.trang_thai=4 or hoa_don.trang_thai=5)\n" +
-            "group by hoa_don_chi_tiet.chi_tiet_san_pham_id,chi_tiet_san_pham.gia_ban,hinh_anh.url,mau_sac.ten,san_pham.ten,kich_thuoc.ten,\n" +
-            "hang.ten\n" +
-            "order by sum(hoa_don_chi_tiet.so_luong) desc limit 5", nativeQuery = true)
+    @Query(value = """
+            select sum(hoa_don_chi_tiet.so_luong) as soLuong,hoa_don_chi_tiet.chi_tiet_san_pham_id as idSP, chi_tiet_san_pham.gia_ban as giaBan,chi_tiet_san_pham.ghi_chu as linkAnh,
+            san_pham.ten as tenSp,mau_sac.ten as mauSac,kich_thuoc.ten as kichThuoc,hang.ten as hang
+             from hoa_don_chi_tiet join hoa_don on hoa_don.id=hoa_don_chi_tiet.hoa_don_id
+             join chi_tiet_san_pham on chi_tiet_san_pham.id =hoa_don_chi_tiet.chi_tiet_san_pham_id
+            join san_pham on san_pham.id=chi_tiet_san_pham.san_pham_id
+            join mau_sac on mau_sac.id=chi_tiet_san_pham.mau_sac_id
+            join kich_thuoc on kich_thuoc.id=chi_tiet_san_pham.kich_thuoc_id
+            join hang on hang.id=chi_tiet_san_pham.hang_id
+            WHERE YEAR(hoa_don_chi_tiet.ngay_tao) = YEAR(CURDATE())
+                AND MONTH(hoa_don_chi_tiet.ngay_tao) = MONTH(CURDATE()) and (hoa_don.trang_thai=4 or hoa_don.trang_thai=5)
+            group by hoa_don_chi_tiet.chi_tiet_san_pham_id,chi_tiet_san_pham.gia_ban,chi_tiet_san_pham.ghi_chu,mau_sac.ten,san_pham.ten,kich_thuoc.ten,
+            hang.ten order by sum(hoa_don_chi_tiet.so_luong) desc limit 5
+""", nativeQuery = true)
     List<SanPhamBanChayRespon> getSPBanChayThang();
 
-    @Query(value = "select sum(hoa_don_chi_tiet.so_luong) as soLuong,hoa_don_chi_tiet.chi_tiet_san_pham_id as idSP, chi_tiet_san_pham.gia_ban as giaBan,min(hinh_anh.url) as linkAnh,san_pham.ten as tenSp,mau_sac.ten as mauSac,kich_thuoc.ten as kichThuoc,hang.ten as hang\n" +
-            "from hoa_don_chi_tiet join hoa_don on hoa_don.id=hoa_don_chi_tiet.hoa_don_id\n" +
-            "join chi_tiet_san_pham on chi_tiet_san_pham.id =hoa_don_chi_tiet.chi_tiet_san_pham_id\n" +
-            "join hinh_anh on hinh_anh.chi_tiet_san_pham_id=chi_tiet_san_pham.id\n" +
-            "join san_pham on san_pham.id=chi_tiet_san_pham.san_pham_id\n" +
-            "join mau_sac on mau_sac.id=chi_tiet_san_pham.mau_sac_id\n" +
-            "join kich_thuoc on kich_thuoc.id=chi_tiet_san_pham.kich_thuoc_id\n" +
-            "join hang on hang.id=chi_tiet_san_pham.hang_id\n" +
-            "WHERE YEAR(hoa_don_chi_tiet.ngay_tao) = YEAR(CURDATE())\n" +
-            "and (hoa_don.trang_thai=4 or hoa_don.trang_thai=5)\n" +
-            "group by hoa_don_chi_tiet.chi_tiet_san_pham_id,chi_tiet_san_pham.gia_ban,hinh_anh.url,mau_sac.ten,san_pham.ten,kich_thuoc.ten,hang.ten\n" +
-            "order by sum(hoa_don_chi_tiet.so_luong) desc limit 5", nativeQuery = true)
+    @Query(value = """
+select sum(hoa_don_chi_tiet.so_luong) as soLuong,hoa_don_chi_tiet.chi_tiet_san_pham_id as idSP, chi_tiet_san_pham.gia_ban as giaBan,chi_tiet_san_pham.ghi_chu as linkAnh,san_pham.ten as tenSp,mau_sac.ten as mauSac,kich_thuoc.ten as kichThuoc,hang.ten as hang
+            from hoa_don_chi_tiet join hoa_don on hoa_don.id=hoa_don_chi_tiet.hoa_don_id
+            join chi_tiet_san_pham on chi_tiet_san_pham.id =hoa_don_chi_tiet.chi_tiet_san_pham_id
+            join hinh_anh on hinh_anh.chi_tiet_san_pham_id=chi_tiet_san_pham.id
+            join san_pham on san_pham.id=chi_tiet_san_pham.san_pham_id
+            join mau_sac on mau_sac.id=chi_tiet_san_pham.mau_sac_id
+            join kich_thuoc on kich_thuoc.id=chi_tiet_san_pham.kich_thuoc_id
+            join hang on hang.id=chi_tiet_san_pham.hang_id
+            WHERE YEAR(hoa_don_chi_tiet.ngay_tao) = YEAR(CURDATE())
+            and (hoa_don.trang_thai=4 or hoa_don.trang_thai=5)
+            group by hoa_don_chi_tiet.chi_tiet_san_pham_id,chi_tiet_san_pham.gia_ban,chi_tiet_san_pham.ghi_chu,mau_sac.ten,san_pham.ten,kich_thuoc.ten,hang.ten
+            order by sum(hoa_don_chi_tiet.so_luong) desc limit 5
+""", nativeQuery = true)
     List<SanPhamBanChayRespon> getSPBanChayNam();
-    @Query(value = "select sum(hoa_don_chi_tiet.so_luong) as soLuong,hoa_don_chi_tiet.chi_tiet_san_pham_id as idSP, chi_tiet_san_pham.gia_ban as giaBan,min(hinh_anh.url) as linkAnh,san_pham.ten as tenSp,mau_sac.ten as mauSac,kich_thuoc.ten as kichThuoc,hang.ten as hang\n" +
-            "from hoa_don_chi_tiet join hoa_don on hoa_don.id=hoa_don_chi_tiet.hoa_don_id\n" +
-            "join chi_tiet_san_pham on chi_tiet_san_pham.id =hoa_don_chi_tiet.chi_tiet_san_pham_id\n" +
-            "join hinh_anh on hinh_anh.chi_tiet_san_pham_id=chi_tiet_san_pham.id\n" +
-            "join san_pham on san_pham.id=chi_tiet_san_pham.san_pham_id\n" +
-            "join mau_sac on mau_sac.id=chi_tiet_san_pham.mau_sac_id\n" +
-            "join kich_thuoc on kich_thuoc.id=chi_tiet_san_pham.kich_thuoc_id\n" +
-            "join hang on hang.id=chi_tiet_san_pham.hang_id\n" +
-            "WHERE YEARWEEK(hoa_don_chi_tiet.ngay_tao) = YEARWEEK(CURDATE())\n" +
-            "and (hoa_don.trang_thai=4 or hoa_don.trang_thai=5)\n" +
-            "group by hoa_don_chi_tiet.chi_tiet_san_pham_id,chi_tiet_san_pham.gia_ban,hinh_anh.url,mau_sac.ten,san_pham.ten,kich_thuoc.ten,hang.ten\n" +
-            "order by sum(hoa_don_chi_tiet.so_luong) desc limit 5", nativeQuery = true)
+    @Query(value = """
+select sum(hoa_don_chi_tiet.so_luong) as soLuong,hoa_don_chi_tiet.chi_tiet_san_pham_id as idSP, chi_tiet_san_pham.gia_ban as giaBan,chi_tiet_san_pham.ghi_chu as linkAnh,san_pham.ten as tenSp,mau_sac.ten as mauSac,kich_thuoc.ten as kichThuoc,hang.ten as hang
+            from hoa_don_chi_tiet join hoa_don on hoa_don.id=hoa_don_chi_tiet.hoa_don_id
+            join chi_tiet_san_pham on chi_tiet_san_pham.id =hoa_don_chi_tiet.chi_tiet_san_pham_id
+            join hinh_anh on hinh_anh.chi_tiet_san_pham_id=chi_tiet_san_pham.id
+            join san_pham on san_pham.id=chi_tiet_san_pham.san_pham_id
+            join mau_sac on mau_sac.id=chi_tiet_san_pham.mau_sac_id
+            join kich_thuoc on kich_thuoc.id=chi_tiet_san_pham.kich_thuoc_id
+            join hang on hang.id=chi_tiet_san_pham.hang_id
+            WHERE YEARWEEK(hoa_don_chi_tiet.ngay_tao) = YEARWEEK(CURDATE())
+            and (hoa_don.trang_thai=4 or hoa_don.trang_thai=5)
+            group by hoa_don_chi_tiet.chi_tiet_san_pham_id,chi_tiet_san_pham.gia_ban,chi_tiet_san_pham.ghi_chu,mau_sac.ten,san_pham.ten,kich_thuoc.ten,hang.ten
+            order by sum(hoa_don_chi_tiet.so_luong) desc limit 5
+""", nativeQuery = true)
     List<SanPhamBanChayRespon> getSPBanChayTuan();
 
-    @Query(value = "select sum(hoa_don_chi_tiet.so_luong) as soLuong,hoa_don_chi_tiet.chi_tiet_san_pham_id as idSP, chi_tiet_san_pham.gia_ban as giaBan,min(hinh_anh.url) as linkAnh,san_pham.ten as tenSp,mau_sac.ten as mauSac,kich_thuoc.ten as kichThuoc,hang.ten as hang\n" +
-            "from hoa_don_chi_tiet join hoa_don on hoa_don.id=hoa_don_chi_tiet.hoa_don_id\n" +
-            "join chi_tiet_san_pham on chi_tiet_san_pham.id =hoa_don_chi_tiet.chi_tiet_san_pham_id\n" +
-            "join hinh_anh on hinh_anh.chi_tiet_san_pham_id=chi_tiet_san_pham.id\n" +
-            "join san_pham on san_pham.id=chi_tiet_san_pham.san_pham_id\n" +
-            "join mau_sac on mau_sac.id=chi_tiet_san_pham.mau_sac_id\n" +
-            "join kich_thuoc on kich_thuoc.id=chi_tiet_san_pham.kich_thuoc_id\n" +
-            "join hang on hang.id=chi_tiet_san_pham.hang_id\n" +
-            "WHERE date(hoa_don_chi_tiet.ngay_tao) = CURDATE()\n" +
-            "and (hoa_don.trang_thai=4 or hoa_don.trang_thai=5)\n" +
-            "group by hoa_don_chi_tiet.chi_tiet_san_pham_id,chi_tiet_san_pham.gia_ban,hinh_anh.url,mau_sac.ten,san_pham.ten,kich_thuoc.ten,hang.ten\n" +
-            "order by sum(hoa_don_chi_tiet.so_luong) desc limit 5", nativeQuery = true)
+    @Query(value = """
+select sum(hoa_don_chi_tiet.so_luong) as soLuong,hoa_don_chi_tiet.chi_tiet_san_pham_id as idSP, chi_tiet_san_pham.gia_ban as giaBan,chi_tiet_san_pham.ghi_chu as linkAnh,san_pham.ten as tenSp,mau_sac.ten as mauSac,kich_thuoc.ten as kichThuoc,hang.ten as hang
+            from hoa_don_chi_tiet join hoa_don on hoa_don.id=hoa_don_chi_tiet.hoa_don_id
+            join chi_tiet_san_pham on chi_tiet_san_pham.id =hoa_don_chi_tiet.chi_tiet_san_pham_id
+            join hinh_anh on hinh_anh.chi_tiet_san_pham_id=chi_tiet_san_pham.id
+            join san_pham on san_pham.id=chi_tiet_san_pham.san_pham_id
+            join mau_sac on mau_sac.id=chi_tiet_san_pham.mau_sac_id
+            join kich_thuoc on kich_thuoc.id=chi_tiet_san_pham.kich_thuoc_id
+            join hang on hang.id=chi_tiet_san_pham.hang_id
+            WHERE date(hoa_don_chi_tiet.ngay_tao) = CURDATE()
+            and (hoa_don.trang_thai=4 or hoa_don.trang_thai=5)
+            group by hoa_don_chi_tiet.chi_tiet_san_pham_id,chi_tiet_san_pham.gia_ban,chi_tiet_san_pham.ghi_chu,mau_sac.ten,san_pham.ten,kich_thuoc.ten,hang.ten
+            order by sum(hoa_don_chi_tiet.so_luong) desc limit 5
+""", nativeQuery = true)
     List<SanPhamBanChayRespon> getSPBanChayNgay();
     @Query(value = """
-            select chi_tiet_san_pham.so_luong as soLuong,chi_tiet_san_pham.id as idSP, chi_tiet_san_pham.gia_ban as giaBan,min(hinh_anh.url) as linkAnh,san_pham.ten as tenSp,mau_sac.ten as mauSac,kich_thuoc.ten as kichThuoc,hang.ten as hang
-            from chi_tiet_san_pham\s
+            select chi_tiet_san_pham.so_luong as soLuong,chi_tiet_san_pham.id as idSP, chi_tiet_san_pham.gia_ban as giaBan,chi_tiet_san_pham.ghi_chu as linkAnh,san_pham.ten as tenSp,mau_sac.ten as mauSac,kich_thuoc.ten as kichThuoc,hang.ten as hang
+            from chi_tiet_san_pham
             join hinh_anh on hinh_anh.chi_tiet_san_pham_id=chi_tiet_san_pham.id
-join san_pham on san_pham.id=chi_tiet_san_pham.san_pham_id
+			join san_pham on san_pham.id=chi_tiet_san_pham.san_pham_id
             join mau_sac on mau_sac.id=chi_tiet_san_pham.mau_sac_id
             join kich_thuoc on kich_thuoc.id=chi_tiet_san_pham.kich_thuoc_id
             join hang on hang.id=chi_tiet_san_pham.hang_id
             WHERE chi_tiet_san_pham.so_luong<5
-            group by chi_tiet_san_pham.id,chi_tiet_san_pham.gia_ban,hinh_anh.url,mau_sac.ten,san_pham.ten,kich_thuoc.ten,hang.ten
+            group by chi_tiet_san_pham.id,chi_tiet_san_pham.gia_ban,chi_tiet_san_pham.ghi_chu,mau_sac.ten,san_pham.ten,kich_thuoc.ten,hang.ten
             """,nativeQuery = true)
     List<SanPhamBanChayRespon> getSPSapHet();
     @Query(value = """

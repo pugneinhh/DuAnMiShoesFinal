@@ -102,8 +102,8 @@ const CloudinaryUploader = ({ isOpenModal, isCancelModal, tenMau }) => {
                   <Image
                     cloudName="dtetgawxc"
                     publicId={item.url}
-                    width="200"
-                    height="200"
+                    width="50"
+                    height="50"
                     crop="fill"
                     style={{
                       border: selectedAnhs.some((selected) => selected.id === item.id) ? '2px solid black' : '2px solid gold',
