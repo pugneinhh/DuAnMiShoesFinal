@@ -12,7 +12,6 @@ export default function ChatLieu() {
   //Form
   const [selectedValue, setSelectedValue] = useState('1');
   const handleChange = (value) => {
-    console.log(`Selected value: ${value}`);
     setSelectedValue(value);
   };
   const [componentSize, setComponentSize] = useState('default');
@@ -80,9 +79,7 @@ export default function ChatLieu() {
        })
        setOpenUpdate(true)
    };
-   console.log(clUpdate)
    const updateChatLieu = () => {
- 
      if (clUpdate.ten != tenCheck) {
        const checkTrung = (ten) => {
          return chatLieu.some(x =>

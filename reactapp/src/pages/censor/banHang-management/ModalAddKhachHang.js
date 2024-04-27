@@ -262,7 +262,7 @@ const ModalAddKhachHang = (props) => {
                 });
               })
               .catch((error) => {
-                console.log(error);
+              
               });
       })
       .catch(() => {

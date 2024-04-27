@@ -3,7 +3,6 @@ import { Button, Divider, Form, Input, Select, Space, Table, Tag, Modal } from '
 import { PlusCircleOutlined, RetweetOutlined } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
-import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { BsFillEyeFill } from 'react-icons/bs';
@@ -15,7 +14,6 @@ export default function MauSac() {
   //Form
   const [selectedValue, setSelectedValue] = useState('1');
   const handleChange = (value) => {
-    console.log(`Selected value: ${value}`);
     setSelectedValue(value);
   };
   const formItemLayout = {
@@ -34,13 +32,10 @@ export default function MauSac() {
     const rgb = convert.hex.rgb(hexCode);
     const colorName = convert.rgb.keyword(rgb);
     if (colorName === null) {
-      console.log("hehe")
     } else {
-      console.log(colorName);
       setTenMaus(colorName)
     }
   };
-  console.log('Tên màu : ' + ten);
   const [componentSize, setComponentSize] = useState('default');
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
@@ -48,7 +43,6 @@ export default function MauSac() {
   const [form] = Form.useForm();
   //Tìm kiếm
   const onChangeFilter = (changedValues, allValues) => {
-    console.log("All values : ", allValues)
     timKiemCT(allValues);
   }
   const timKiemCT = (dataSearch) => {
@@ -66,7 +60,6 @@ export default function MauSac() {
       return mauSac.some(color => color.ma === code);
     };
     if (!chekTrung(value.ma)) {
-      console.log(value.ma);
       const hexCode = value.ma.replace("#", "").toUpperCase();
       const rgb = convert.hex.rgb(hexCode);
       const colorName = convert.rgb.keyword(rgb);
@@ -88,7 +81,6 @@ export default function MauSac() {
           form.resetFields();
         })
     } else {
-      console.log('hehe');
       toast.error('Mã màu đã tồn tại!', {
         position: "top-right",
         autoClose: 5000,

@@ -1,41 +1,19 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { useNavigate, useParams } from "react-router";
-import { BsShop } from "react-icons/bs";
-import { FaUser } from "react-icons/fa";
-import { TfiPencil } from "react-icons/tfi";
-import {
-  Avatar,
-  Button,
-  Card,
-  Col,
-  Divider,
-  Form,
-  Input,
-  message,
-  Row,
-  Space,
-  Select,
-} from "antd";
-import { ToastContainer } from "react-toastify";
-import { get, set } from "local-storage";
-import UpLoadImage from "../../../pages/censor/nhanVien-management/UploadAnh";
+import { useNavigate } from "react-router";
+import { get } from "local-storage";
 import ProfileMenu from "../profile/ProfileMenu";
 import { SellAPI } from "../../../pages/censor/api/sell/sell.api";
 import "./phieugiamgia.css"
 const PhieuGiamGiaCLient = (props) => {
-  const idHD = useParams();
-  const [form] = Form.useForm();
   const storedData = get("userData");
   const [userName, setUserName] = useState("");
   const [AnhUser, setLinkAnhUser] = useState("");
   const nav = useNavigate();
-  const [fileImage, setFileIamge] = useState(null);
   const [datas, setData] = useState([]);
   const loadVoucher = () => {
     SellAPI.getVoucherWithIDKH(storedData.userID)
       .then((result) => {
-        console.log(result.data);
         setData(result.data);
       })
       .catch((error) => {
@@ -50,9 +28,6 @@ const PhieuGiamGiaCLient = (props) => {
 
   const muaNgay = () => {
     nav("/san-pham");
-  };
-  const handleFileUpload = (fileData) => {
-    setFileIamge(fileData);
   };
   return (
     <div className="row" style={{height:705}}>
@@ -124,23 +99,6 @@ const PhieuGiamGiaCLient = (props) => {
                 </div>
               </div>
             </div>
-            // <Space direction="vertical" size={16} className="col-md-3">
-            //   <Card
-            //     size="small"
-            //     title={item.ma}
-            //     extra={item.soLuong}
-            //     style={{ width: 300 }}
-            //   >
-            // <p>
-            //   {item.mucDo}
-            //   <span>{item.loaiVoucher === "Tiền mặt" ? "VND" : "%"}</span>
-            // </p>
-            // <p>Điều kiện : {item.dieuKien}</p>
-            // <p>Giảm tối đa: {item.giamToiDa}</p>
-            // <p>Số ngày còn lại: {item.ngayConLai}</p>
-            // <button className="text-end" onClick={muaNgay}>Sử dụng</button>
-            //   </Card>
-            // </Space>
           ))}
         </div>
       </div>

@@ -32,8 +32,6 @@ const KhuyenMai = () => {
   const currentTime = moment(); // thời gian hiện tại
    const nav = useNavigate();
    const themKM = (res) => {
-     console.log(res);
-
      nav("/admin-them-khuyen-mai");
    };
   const onChange = (value) => {};
@@ -49,7 +47,6 @@ const KhuyenMai = () => {
 
 
   const [khuyenMai, setKhuyenMais] = useState([]);
-  console.log("Khuyến mại",khuyenMai);
 
   const loadKhuyenMai =  () => {
      PromotionAPI.getAll()
@@ -75,8 +72,6 @@ const KhuyenMai = () => {
   const [dataSearch, setDataSearch] = useState({});
 
   const onChangeFilter = (changedValues, allValues) => {
-    console.log(changedValues);
-    console.log(allValues);
     timKiemKhuyenMai(allValues);
     setDataSearch(allValues);
   };

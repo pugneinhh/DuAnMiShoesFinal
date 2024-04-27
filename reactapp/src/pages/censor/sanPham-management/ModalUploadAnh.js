@@ -73,7 +73,6 @@ const CloudinaryUploader = ({ isOpenModal, isCancelModal, tenMau }) => {
   const customRequest = async ({ file }) => {
     await handleUpload(file);
   };
-  console.log(selectedAnhs)
   return (
     <>
       <Modal

@@ -35,7 +35,6 @@ const ALLTabHistoryClient = () => {
     const datatest = { id: id, trangThai };
     HoaDonClientAPI.getALLHoaDonOnlineByIdKH(datatest).then((res) => {
       const data = res.data;
-      console.log(data);
       const promises = data.map((item) => {
         return HoaDonClientAPI.getALLChiTietSanPhamClientOlByIdHD(item.id).then(
           (res) => ({
@@ -61,7 +60,6 @@ const ALLTabHistoryClient = () => {
   //   item tab
   const onChange = (key) => {
     setKey(key);
-    console.log(key);
   };
      var stomp = null;
      const socket = new SockJS("http://localhost:8080/ws");
@@ -69,12 +67,10 @@ const ALLTabHistoryClient = () => {
 
      useEffect(() => {
        stomp.connect({}, () => {
-         console.log("connect websocket");
-
          stomp.subscribe("/topic/KH/hoa-don", (mes) => {
            try {
              const pare = JSON.parse(mes.body);
-             console.log(pare);
+            //  console.log(pare);
              // ví du: bạn muốn khi khách hàng bấm đặt hàng mà load lại hóa đơn màn admin thì hãy gọi hàm load all hóa đơn ở đây
              // thí dụ: đây là hàm laod hóa đơn: loadHoaDon(); allThongBao(); CountThongBao();
             const trangThai = keyToStatusMapping[key]

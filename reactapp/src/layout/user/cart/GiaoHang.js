@@ -42,8 +42,6 @@ const DiaChiGiaoHang = ({
   const closeModal = () => {
     setIsOpen(false);
   };
-  console.log("data",data);
-  console.log("Dữ liệu",duLieu);
   useEffect(() => {
     loadDataProvince();
   //  setHoaDon1(hoaDon);
@@ -110,7 +108,6 @@ const DiaChiGiaoHang = ({
         (res) => res.data.data.leadtime * 1000
       )
     };
-    console.log("Dâta",data);
     thongTinVanChuyen(data);
     setDuLieu(data);
   };
@@ -119,7 +116,6 @@ const DiaChiGiaoHang = ({
     form.setFieldsValue({ provinceId: valueProvince.valueProvince });
     setProID(valueProvince.valueProvince);
     setTenThanhPho(valueProvince.value);
-    console.log("Tên thành phố",valueProvince.value);
     AddressApi.fetchAllProvinceDistricts(valueProvince.valueProvince).then(
       (res) => {
         setListDistricts(res.data.data);
@@ -131,7 +127,6 @@ const DiaChiGiaoHang = ({
     form.setFieldsValue({ toDistrictId: valueDistrict.valueDistrict });
     setDistrictID(valueDistrict.valueDistrict);
     setTenHuyen(valueDistrict.value);
-    console.log("Tên Huyện",valueDistrict.value);
     AddressApi.fetchAllProvinceWard(valueDistrict.valueDistrict).then((res) => {
       setListWard(res.data.data);
     });
@@ -140,7 +135,6 @@ const DiaChiGiaoHang = ({
   const handleWardChange = async (value, valueWard) => {
     form.setFieldsValue({ wardCode: valueWard.valueWard });
     setWardCode(valueWard.valueWard);
-    console.log("Tên Xã",valueWard.value);
     if (districtID && valueWard) {
       setTimeShip(
         await ShipAPI.fetchAllDayShip(districtID, valueWard.valueWard).then(
@@ -154,11 +148,7 @@ const DiaChiGiaoHang = ({
           quantity
         ).then((res) => res.data.data.total)
       );
-      console.log(
-        await ShipAPI.fetchAllDayShip(districtID, valueWard.valueWard).then(
-          (res) => res.data.data.leadtime * 1000
-        )
-      );
+   
       setMoneyShip(
         await ShipAPI.fetchAllMoneyShip(
           districtID,

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import "./shop.css";
-import { Button, Slider, Checkbox, Card, Col, Collapse, Dropdown, Input, Popover, Row, Space, Form, Pagination, Flex } from "antd";
+import { Button, Slider, Checkbox, Card, Col, Collapse, Dropdown, Input, Row, Space} from "antd";
 import { ProductCard } from "../productCard";
 import ModalDetailSP from "./modalDetailSP";
 import { HomeAPI } from "../../../pages/censor/api/home/homeApi";
@@ -24,16 +23,8 @@ export const Shop = ({ children }) => {
   const { Search } = Input;
 
   const onChangeComplete = (value) => {
-    // console.log('onChangeComplete: ', value);
+
   };
-
-  // const handleMouseEnter = (cardId) => {
-  //   setHoveredCard(cardId);
-  // };
-
-  // const handleMouseLeave = () => {
-  //   setHoveredCard(null);
-  // };
 
 
   const getAll = () => {
@@ -74,7 +65,7 @@ export const Shop = ({ children }) => {
      stomp.subscribe("/topic/KH/hoa-don", (mes) => {
        try {
          const pare = JSON.parse(mes.body);
-         console.log(pare);
+ 
          // ví du: bạn muốn khi khách hàng bấm đặt hàng mà load lại hóa đơn màn admin thì hãy gọi hàm load all hóa đơn ở đây
          // thí dụ: đây là hàm laod hóa đơn: loadHoaDon(); allThongBao(); CountThongBao();
       getAll();
@@ -82,7 +73,7 @@ export const Shop = ({ children }) => {
       getAllMauSac();
       getAllKichThuoc();
        } catch (e) {
-         console.log("lỗi mẹ ròi xem code di: ", e);
+
        }
      });
    });

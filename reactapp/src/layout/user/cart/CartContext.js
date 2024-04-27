@@ -16,10 +16,8 @@ export function CartProvider({ children }) {
     });
     } else {
       if (storedGioHang !== null) {
-        console.log("giỏ hàng", storedGioHang);
         GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res) => {
           setTotalQuantity(res.data.length);
-          console.log("count", res.data);
         });
       }
     }

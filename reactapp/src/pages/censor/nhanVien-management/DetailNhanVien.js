@@ -27,7 +27,7 @@ export default function DetailNhanVien() {
                 setOneEmployee(modifiedEmployee);
             })
             .catch((err) => {
-                console.log(err);
+            
             });
 
     };

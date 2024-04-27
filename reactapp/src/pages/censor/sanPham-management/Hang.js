@@ -3,7 +3,6 @@ import {Button,Divider,Form,Radio,Input,Select,Space,Table,Tag,Modal} from 'antd
 import {  PlusCircleOutlined, RetweetOutlined } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
-import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { BsFillEyeFill } from 'react-icons/bs';
@@ -14,7 +13,6 @@ export default function Hang() {
   //Form
   const [selectedValue, setSelectedValue] = useState('1');
   const handleChange = (value) => {
-    console.log(`Selected value: ${value}`);
     setSelectedValue(value);
   };
   const [componentSize, setComponentSize] = useState('default');
@@ -81,7 +79,6 @@ export default function Hang() {
        })
        setOpenUpdate(true)
    };
-   console.log(hangUpdate)
    const updateHang = () => {
  
      if (hangUpdate.ten != tenCheck) {

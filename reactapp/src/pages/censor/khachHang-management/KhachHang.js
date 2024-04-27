@@ -15,8 +15,6 @@ export default function KhachHang() {
   const [componentSize, setComponentSize] = useState("default");
      const nav = useNavigate();
      const themKH = (res) => {
-       console.log(res);
-
        nav("/admin-them-khach-hang");
      };
   const onFormLayoutChange = ({ size }) => {

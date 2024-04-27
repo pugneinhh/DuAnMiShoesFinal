@@ -149,7 +149,7 @@ const ModalSanPham = (props) => {
         giaTriKhuyenMai: record.giaTriKhuyenMai,
       })
     );
-      console.log("Record",record);
+      
     dispatch(UpdateApartProduct({ id: record.id, soLuong: 1 }));
     await HoaDonAPI.themSanPham(activeKey,maNV,record.id);
     props.loadHoaDon();

@@ -53,7 +53,13 @@ export default function SanPham() {
   //Tìm kiếm
   const onChangeFilter = (changedValues, allValues) => {
     console.log("All values : ", allValues);
-    timKiemCT(allValues);
+    const dataTim = {
+      soLuongBatDau: allValues.soLuong[0],
+      soLuongKetThuc: allValues.soLuong[1],
+      ten: allValues.ten,
+      trangThai: allValues.trangThai,
+    };
+    timKiemCT(dataTim);
   };
   const timKiemCT = (dataSearch) => {
     SanPhamAPI.search(dataSearch)
@@ -79,7 +85,7 @@ export default function SanPham() {
       });
     }
   };
-  
+
   const loadListKichThuoc = (id) => {
     if (!listKT[id]) {
       SanPhamAPI.getListKichThuocBySanPhamId(id).then((res) => {
@@ -136,18 +142,21 @@ export default function SanPham() {
       render: (record) => {
         const mauSacList = listMS[record.idSP] || [];
         return (
-          <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+          <div
+            style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
+          >
             {mauSacList.map((mau, index) => (
-              <div key={index} style={{ width: '50%', padding: '0.5rem' }}>
-              <Tag 
-              style={{
-                width: 40,
-                height:20,
-                border: '1px solid #C6C5C5',
-                borderColor: '#C6C5C5',  }} 
-                color={mau}>
-              </Tag>
-             </div>
+              <div key={index} style={{ width: "50%", padding: "0.5rem" }}>
+                <Tag
+                  style={{
+                    width: 40,
+                    height: 20,
+                    border: "1px solid #C6C5C5",
+                    borderColor: "#C6C5C5",
+                  }}
+                  color={mau}
+                ></Tag>
+              </div>
             ))}
           </div>
         );
@@ -161,21 +170,24 @@ export default function SanPham() {
       render: (record) => {
         const kichThuocList = listKT[record.idSP] || [];
         return (
-          <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+          <div
+            style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
+          >
             {kichThuocList.map((kt, index) => (
-               <div key={index} style={{ width: '50%', padding: '0.5rem' }}>
-              <Tag
-              style={{
-                textAlign: "center",
-                width: 40,
-                height:20,
-                backgroundColor: "white",
-                border: '1px solid #C6C5C5',
-                borderColor: '#C6C5C5',  }} 
+              <div key={index} style={{ width: "50%", padding: "0.5rem" }}>
+                <Tag
+                  style={{
+                    textAlign: "center",
+                    width: 40,
+                    height: 20,
+                    backgroundColor: "white",
+                    border: "1px solid #C6C5C5",
+                    borderColor: "#C6C5C5",
+                  }}
                 >
                   {kt}
-              </Tag>
-             </div>
+                </Tag>
+              </div>
             ))}
           </div>
         );
@@ -184,7 +196,7 @@ export default function SanPham() {
     {
       title: "Số Lượng",
       dataIndex: "soLuong",
-      align: "center"
+      align: "center",
     },
     {
       title: "Trạng thái",
@@ -280,14 +292,14 @@ export default function SanPham() {
             </div>
             <div className="col-md-4">
               <Form.Item label="Số lượng" name="soLuong">
-              <Slider
-                    range
-                    step={100}
-                    defaultValue={[100, 1000]}
-                    min={100}
-                    max={1000}
-                    onChange={onChange}
-                  />
+                <Slider
+                  range
+                  step={100}
+                  defaultValue={[1, 1000]}
+                  min={1}
+                  max={1000}
+                  onChange={onChange}
+                />
               </Form.Item>
             </div>
             <Form.Item className="text-center" style={{ paddingLeft: 200 }}>
