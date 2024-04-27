@@ -1,4 +1,4 @@
-import { Modal, Table, Tag } from "antd";
+import { Modal } from "antd";
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 
@@ -6,17 +6,14 @@ import {
   Button,
   Card,
   Col,
-  Divider,
   Form,
   Input,
-  message,
   Row,
   Select,
 } from "antd";
-import { FaMoneyBills } from "react-icons/fa6";
 import UpLoadImage from "../nhanVien-management/UploadAnh";
 import { AddressApi } from "../api/address/AddressApi";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { KhachHangAPI } from "../api/user/khachHang.api";
 import { ToastContainer, toast } from "react-toastify";
 import QRScannerModal from "../api/QR_Code/QrCode";
@@ -24,7 +21,6 @@ import QRScannerModal from "../api/QR_Code/QrCode";
 import { NguoiDungAPI } from "../api/nguoiDung/nguoiDungAPI";
 const ModalAddKhachHang = (props) => {
     const { openModalAddKhachHang, setopenModalAddKhachHang, loadKhachHang } =props;
-//   const [openModalAddKhachHang, setopenModalAddKhachHang] = useState(false);
   const handleCancel = () => {
     setopenModalAddKhachHang(false);
   };
@@ -62,7 +58,6 @@ const ModalAddKhachHang = (props) => {
   const [ward, setWard] = useState(null);
 
   const handleProvinceChange = (value, valueProvince) => {
-    console.log("fdfdf", valueProvince);
     form.setFieldsValue({ provinceId: valueProvince.valueProvince });
     AddressApi.fetchAllProvinceDistricts(valueProvince.valueProvince).then(
       (res) => {
@@ -156,7 +151,6 @@ const ModalAddKhachHang = (props) => {
         )[0].DistrictID
       ).then((res) => {
         setListWard(res.data.data);
-        console.log("xã", res.data.data);
         setWard(
           res.data.data.filter(
             (item) =>
@@ -294,7 +288,6 @@ const ModalAddKhachHang = (props) => {
       onCancel={handleCancel}
       width={1000}
       footer={null}
-      //   zIndex={20000}
     >
       <Form form={form} layout="vertical">
         <Row gutter={16} style={{ marginTop: "30px" }}>
