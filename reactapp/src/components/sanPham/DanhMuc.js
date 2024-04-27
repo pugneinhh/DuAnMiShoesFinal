@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import {
   Button,
-  DatePicker,
   Divider,
   Form,
   Input,
-  InputNumber,
   Select,
   Space,
   Table,
@@ -13,24 +11,18 @@ import {
   Modal
 } from 'antd';
 import { PlusCircleOutlined, RetweetOutlined } from "@ant-design/icons";
-import { DeleteFilled } from "@ant-design/icons";
-import { InfoCircleFilled } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
-import { MdSearch } from 'react-icons/md';
 import axios from 'axios';
 import { BiSolidCategory } from 'react-icons/bi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Swal from "sweetalert2";
-import FormItem from 'antd/es/form/FormItem';
 import { BsFillEyeFill } from 'react-icons/bs';
 
 export default function DanhMuc() {
   //Form
   const [selectedValue, setSelectedValue] = useState('1');
   const handleChange = (value) => {
-    console.log(`Selected value: ${value}`);
     setSelectedValue(value);
   };
   const [componentSize, setComponentSize] = useState('default');
@@ -47,7 +39,6 @@ export default function DanhMuc() {
     if(!(checkTrung(value.ten))){
       axios.post('http://localhost:8080/admin/danh-muc/add', value)
       .then(response => {
-        console.log(response.data);
         toast('✔️ Thêm thành công!', {
           position: "top-right",
           autoClose: 5000,
@@ -92,7 +83,6 @@ export default function DanhMuc() {
     setDmUpdate(result.data)
     setOpenUpdate(true);
   };
-  console.log(dmUpdate)
   const updateDanhMuc = () => {
 
       if(dmUpdate.ten != tenCheck){
@@ -119,7 +109,6 @@ export default function DanhMuc() {
       
     axios.put(`http://localhost:8080/admin/danh-muc/update/${dmUpdate.id}`, dmUpdate)
       .then(response => {
-        console.log(response.data);
         toast('✔️ Sửa thành công!', {
           position: "top-right",
           autoClose: 5000,
@@ -136,7 +125,6 @@ export default function DanhMuc() {
   }
   //Tìm kiếm
   const onChangeFilter = (changedValues, allValues) => {
-    console.log("All values : ", allValues)
     timKiemCT(allValues);
   }
   const timKiemCT = (dataSearch) => {

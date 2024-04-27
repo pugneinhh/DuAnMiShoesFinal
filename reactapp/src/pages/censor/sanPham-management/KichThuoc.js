@@ -3,7 +3,6 @@ import {Button,Divider,Radio,Form,Input,Select,Space,Table,Tag,Modal} from 'antd
 import { PlusCircleOutlined, RetweetOutlined } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
-import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { BsFillEyeFill } from 'react-icons/bs';
@@ -14,7 +13,6 @@ export default function KichThuoc() {
   //Form
   const [selectedValue, setSelectedValue] = useState('1');
   const handleChange = (value) => {
-    console.log(`Selected value: ${value}`);
     setSelectedValue(value);
   };
   const [componentSize, setComponentSize] = useState('default');
@@ -82,7 +80,6 @@ export default function KichThuoc() {
         })
         setOpenUpdate(true)
     };
-    console.log(ktUpdate)
     const updateKichThuoc = () => {
   
       if (ktUpdate.ten != tenCheck) {

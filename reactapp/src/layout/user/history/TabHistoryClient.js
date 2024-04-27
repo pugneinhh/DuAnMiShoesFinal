@@ -28,7 +28,6 @@ const TabHistoryClient = ({ listBill }) => {
   const showModalHuyHoaDon = (id) => {
     setIsModalHuyHoaDon(true);
     setId(id);
-    console.log("id hd ", id);
   };
   const handleHuyHoaDon = (values) => {
        KHGuiThongBaoDatHang();

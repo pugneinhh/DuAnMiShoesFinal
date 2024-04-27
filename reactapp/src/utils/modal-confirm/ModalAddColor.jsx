@@ -40,7 +40,6 @@ export default function ShowModalAddColor({ visible, onCancel }) {
           status: "DANG_SU_DUNG",
         };
         ColorAPI.create(category).then((res) => {
-          console.log(res.data.data);
           dispatch(CreateColor(res.data.data));
           message.success("Thêm thành công");
           form.resetFields();

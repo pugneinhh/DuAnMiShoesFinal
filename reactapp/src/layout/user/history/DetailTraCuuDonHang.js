@@ -20,7 +20,6 @@ import SockJS from "sockjs-client";
 import { Stomp } from "@stomp/stompjs";
 const DetailTraCuuDonHang = ({ listBill }) => {
   const idHD = useParams();
-  console.log(idHD);
   const nav = useNavigate();
   const [listTimeLine, setlistTimeLine] = useState([]);
   const [bill, setBill] = useState({});
@@ -31,52 +30,42 @@ const DetailTraCuuDonHang = ({ listBill }) => {
     });
     loadDetailHoaDonClient();
     loadTimeLine();
-    // HoaDonAPI.getAllLichSuHoaDon(idHD.idHD).then((res) => {
-    //   setlistTimeLine(res.data);
-    //   console.log(res);
-    // });
   }, [listSanPhams.trangThai]);
-      var stomp = null;
-      const socket = new SockJS("http://localhost:8080/ws");
-      stomp = Stomp.over(socket);
+  var stomp = null;
+  const socket = new SockJS("http://localhost:8080/ws");
+  stomp = Stomp.over(socket);
+  useEffect(() => {
+    stomp.connect({}, () => {
+      stomp.subscribe("/topic/KH/hoa-don", (mes) => {
+        try {
+          const pare = JSON.parse(mes.body);
 
-      useEffect(() => {
-        stomp.connect({}, () => {
-          console.log("connect websocket");
+          // ví du: bạn muốn khi khách hàng bấm đặt hàng mà load lại hóa đơn màn admin thì hãy gọi hàm load all hóa đơn ở đây
+          // thí dụ: đây là hàm laod hóa đơn: loadHoaDon(); allThongBao(); CountThongBao();
+          loadTimeLine();
+          loadDetailHoaDonClient();
+        } catch (e) {
+          console.log("lỗi mẹ ròi xem code di: ", e);
+        }
+      });
+    });
 
-          stomp.subscribe("/topic/KH/hoa-don", (mes) => {
-            try {
-              const pare = JSON.parse(mes.body);
-              console.log(pare);
-              // ví du: bạn muốn khi khách hàng bấm đặt hàng mà load lại hóa đơn màn admin thì hãy gọi hàm load all hóa đơn ở đây
-              // thí dụ: đây là hàm laod hóa đơn: loadHoaDon(); allThongBao(); CountThongBao();
-           loadTimeLine();
-           loadDetailHoaDonClient();
-            } catch (e) {
-              console.log("lỗi mẹ ròi xem code di: ", e);
-            }
-          });
-        });
-
-        return () => {
-          stomp.disconnect();
-        };
-      }, []);
+    return () => {
+      stomp.disconnect();
+    };
+  }, []);
 
   const loadTimeLine = () => {
     HoaDonAPI.getAllLichSuHoaDon(idHD.idHD).then((res) => {
       setlistTimeLine(res.data);
-      console.log("abc", res.data);
     });
   };
-    const loadDetailHoaDonClient = () => {
+  const loadDetailHoaDonClient = () => {
     HoaDonClientAPI.DetailHoaDonClient(idHD.idHD).then((res) => {
       setBill(res.data);
     });
-    };
+  };
 
-
-  console.log(listSanPhams);
   const showIcon = (trangThai) => {
     if (trangThai === "0") {
       return GiNotebook;
@@ -109,14 +98,6 @@ const DetailTraCuuDonHang = ({ listBill }) => {
       return "Hủy";
     }
   };
-  const icon = [
-    GiNotebook,
-    SlNotebook,
-    RiTruckFill,
-    FaTruckFast,
-    GiPiggyBank,
-    FaCheckCircle,
-  ];
 
   return (
     <>

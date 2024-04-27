@@ -12,7 +12,6 @@ export default function DeGiay() {
   //Form
   const [selectedValue, setSelectedValue] = useState('1');
   const handleChange = (value) => {
-    console.log(`Selected value: ${value}`);
     setSelectedValue(value);
   };
   const [componentSize, setComponentSize] = useState('default');
@@ -78,7 +77,6 @@ export default function DeGiay() {
         })
         setOpenUpdate(true)
     };
-    console.log(dgUpdate)
     const updateDeGiay = () => {
   
       if (dgUpdate.ten != tenCheck) {

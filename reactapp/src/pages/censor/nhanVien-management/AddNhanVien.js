@@ -1,14 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Button,
-  Card,
-  Col,
-  Divider,
-  Form,
-  Input,
-  Row,
-  Select,
-} from "antd";
+import { Button, Card, Col, Divider, Form, Input, Row, Select } from "antd";
 import { FaMoneyBills } from "react-icons/fa6";
 import UpLoadImage from "./UploadAnh";
 import { AddressApi } from "../api/address/AddressApi";
@@ -143,7 +134,7 @@ export default function AddNhanVien() {
         )[0].DistrictID
       ).then((res) => {
         setListWard(res.data.data);
-       
+
         setWard(
           res.data.data.filter(
             (item) =>
@@ -168,20 +159,6 @@ export default function AddNhanVien() {
       tenThanhPho: result.substring(indexHuyen + 1, sixIndex),
     });
   };
-  // const defaultImage =
-  //   "https://res.cloudinary.com/dm0w2qws8/image/upload/v1706933984/user-128_vsllkw.png";
-  // const fetchImage = async () => {
-  //   try {
-  //     const response = await fetch(defaultImage);
-  //     const blob = await response.blob();
-  //     const file = new File([blob], "cloudinary_image.jpg", {
-  //       type: "image/jpeg",
-  //     });
-  //     setFileIamge(file);
-  //   } catch (error) {
-  //     console.error("Error fetching image:", error);
-  //   }
-  // };
 
   const [ListNguoiDung, setListNguoiDung] = useState([]);
   const loadNguoiDung = () => {
@@ -249,14 +226,12 @@ export default function AddNhanVien() {
           idXa: ward.key == null ? ward.WardCode : ward.key,
         };
         const formData = new FormData();
-        console.log(fileImage, "->>>>>>>>>>>>>>");
 
         formData.append("file", fileImage);
 
         formData.append("request", JSON.stringify(data));
 
-        NhanVienAPI.create(formData)
-        .then((result) => {
+        NhanVienAPI.create(formData).then((result) => {
           nav("/admin-nhan-vien");
           toast("🦄 Thêm Thành công!", {
             position: "top-right",

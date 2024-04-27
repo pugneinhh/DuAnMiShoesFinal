@@ -15,8 +15,6 @@ export default function NhanVien() {
   };
    const nav = useNavigate();
    const themNV = (res) => {
-     console.log(res);
-
      nav("/admin-them-nhan-vien");
    };
   const [form] = Form.useForm();

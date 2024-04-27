@@ -37,8 +37,6 @@ const Voucher = () => {
 
      const nav = useNavigate();
      const themVoucher = (res) => {
-       console.log(res);
-
        nav("/admin-add-voucher");
      };
   //call api tìm kiếm

@@ -20,9 +20,6 @@ function AdThongBaoDatHang(){ //đây là chạy websocket và đồng thời c�
 
 useEffect(() => {
     stomp.connect({},()=>{
-      
-        // console.log("connect websocket");
-
         stomp.subscribe('/topic/admin/hoa-don',(mes)=>{
                 try{
                     const pare = JSON.parse(mes.body);

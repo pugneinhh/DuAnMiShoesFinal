@@ -29,10 +29,7 @@ const ModalVoucher = (props) => {
   };
 
   useEffect(() => {
-    // if (userID != null && userID != undefined) {
       loadVoucher();
-      // console.log("hóa đơn",hoaDonID)
-    // }
   }, [userID]);
 
   const handleChonVoucher = (record) => {

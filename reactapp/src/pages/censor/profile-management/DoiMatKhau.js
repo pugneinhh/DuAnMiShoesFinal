@@ -24,9 +24,7 @@ export default function DoiMatKhauAdmin() {
         setIDNV(storedData.userID);
     }, []);
     const handleSubmit = (values) => {
-        console.log("idnv",IDNV);
         NguoiDungAPI.soSanhMk(IDNV).then((res) => {
-         console.log(values.matKhauCu,"222")
          if(values.matKhauCu){
             
          }

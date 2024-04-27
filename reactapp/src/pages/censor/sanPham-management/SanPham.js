@@ -14,7 +14,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { PlusCircleOutlined, RetweetOutlined } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
-import axios from "axios";
 import { BsFillEyeFill } from "react-icons/bs";
 import { FaTshirt } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
@@ -27,13 +26,10 @@ export default function SanPham() {
   //Form
    const nav = useNavigate();
     const themSP = (res) => {
-      console.log(res);
-    
       nav("/admin-them-san-pham");
     };
   const [selectedValue, setSelectedValue] = useState("1");
   const handleChange = (value) => {
-    console.log(`Selected value: ${value}`);
     setSelectedValue(value);
   };
 
@@ -43,15 +39,12 @@ export default function SanPham() {
   };
   //Tìm kiếm
   const onChangeFilter = (changedValues, allValues) => {
-    console.log("All values : ", allValues);
     timKiemCT(allValues);
   };
   const timKiemCT = (dataSearch) => {
     SanPhamAPI.search(dataSearch)
       .then((response) => {
         setSanPhams(response.data);
-        console.log(response.data);
-        console.log(response.data.lenght);
       })
       .catch((error) => console.error("Error adding item:", error));
   };
@@ -68,7 +61,6 @@ export default function SanPham() {
   const loadSanPham = () => {
     SanPhamAPI.getAll().then((res) => {
       setSanPhams(res.data);
-      console.log("22222",res.data);
     });
   }; 
   

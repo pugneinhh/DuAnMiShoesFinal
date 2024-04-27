@@ -23,7 +23,7 @@ export default function ModalPriceAndQuantity({ open, onCancel, onUpdate }) {
         form.resetFields();
       })
       .catch((errorInfo) => {
-        console.log("Validation failed:", errorInfo);
+  
       });
   };
 

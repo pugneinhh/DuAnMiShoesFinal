@@ -77,7 +77,6 @@ const ModalDetailSP = (props) => {
       if (res.data === undefined || res.data === "") {
         return;
       }
-      console.log(res.data)
       setChiTietSanPham(res.data);
       setIDSanPham(res.data.sanPhamID);
       setSelectedMauSac(res.data.mauSacID);
@@ -90,7 +89,6 @@ const ModalDetailSP = (props) => {
         res.data.sanPhamID,
         res.data.mauSacID
       ).then((res) => {
-        console.log(res.data)
         setListSizeByMS(res.data);
       });
       setLargeImage(res.data.anh);
@@ -141,10 +139,8 @@ const ModalDetailSP = (props) => {
     
     setIDMauSac(mauSacId);
     setSelectedMauSac(mauSacId);
-    // window.location.href = `/client/sanpham/kich-thuoc-sp/${IDSanPham}/${mauSacId}`;
     SanPhamClientAPI.changeListSizeBySPandMS(IDSanPham, mauSacId).then(
       (res) => {
-        console.log(res.data)
         setListSizeByMS(res.data);
         const kichThuocExists = res.data.some(
           (item) => item.kichThuocID === selectedSize
