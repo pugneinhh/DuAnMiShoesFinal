@@ -103,6 +103,8 @@ const ChiTietDonHang = (props) => {
       return "Trả hàng";
     } else if (trangThai === "-1") {
       return "Hủy";
+    } else if (trangThai === "-2") {
+      return "Hoàn tiền";
     }
   };
   return (
@@ -130,10 +132,12 @@ const ChiTietDonHang = (props) => {
                 ? "Đã thanh toán"
                 : bill.trangThai === "5"
                 ? "Thành công"
-                : bill.trangThai === "6"
-                ? "Trả hàng"
                 : bill.trangThai === "-1"
                 ? "Đã hủy"
+                : bill.trangThai === "-2"
+                ? "Hoàn Tiền"
+                : bill.trangThai === "10"
+                ? "Trả hàng"
                 : "Đã"}
             </span>
           </div>
@@ -152,7 +156,11 @@ const ChiTietDonHang = (props) => {
                 <TimelineEvent
                   minEvents={6}
                   key={index}
-                  color={item.trangThai == -1 ? "#520808" : "#3d874d"}
+                  color={
+                    item.trangThai == -1 || item.trangThai == 10
+                      ? "#520808"
+                      : "#3d874d"
+                  }
                   icon={showIcon(item.trangThai)}
                   values={showTitle(item.trangThai)}
                   isOpenEnding={true}

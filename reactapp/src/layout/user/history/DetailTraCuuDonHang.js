@@ -6,10 +6,10 @@ import { FaCheckCircle } from "react-icons/fa";
 import { Image } from "cloudinary-react";
 import "./history.css";
 import { Timeline, TimelineEvent } from "@mailtop/horizontal-timeline";
-import { GiNotebook, GiPiggyBank } from "react-icons/gi";
+import { GiNotebook, GiPiggyBank, GiReturnArrow } from "react-icons/gi";
 import { SlNotebook } from "react-icons/sl";
 import { RiTruckFill } from "react-icons/ri";
-import { FaTruckFast } from "react-icons/fa6";
+import { FaMoneyBillTrendUp, FaTruckFast } from "react-icons/fa6";
 import LogoGHN from "../../../assets/images/LogoGHN.png";
 import { HoaDonClientAPI } from "../../../pages/censor/api/HoaDonClient/HoaDonClientAPI";
 import { HoaDonAPI } from "../../../pages/censor/api/hoaDon/hoaDon.api";
@@ -18,6 +18,7 @@ import { ToastContainer } from "react-toastify";
 import { FormattedNumber, IntlProvider } from "react-intl";
 import SockJS from "sockjs-client";
 import { Stomp } from "@stomp/stompjs";
+import { ImCancelCircle } from "react-icons/im";
 const DetailTraCuuDonHang = ({ listBill }) => {
   const idHD = useParams();
   const nav = useNavigate();
@@ -66,26 +67,33 @@ const DetailTraCuuDonHang = ({ listBill }) => {
     });
   };
 
-  const showIcon = (trangThai) => {
-    if (trangThai === "0") {
-      return GiNotebook;
-    } else if (trangThai === "1") {
-      return SlNotebook;
-    } else if (trangThai === "2") {
-      return RiTruckFill;
-    } else if (trangThai === "3") {
-      return FaTruckFast;
-    } else if (trangThai === "4") {
-      return GiPiggyBank;
-    } else if (trangThai === "5") {
-      return FaCheckCircle;
-    }
-  };
+const showIcon = (trangThai) => {
+  if (trangThai === "0") {
+    return GiNotebook;
+  } else if (trangThai === "1") {
+    return SlNotebook;
+  } else if (trangThai === "2") {
+    return RiTruckFill;
+  } else if (trangThai === "3") {
+    return FaTruckFast;
+  } else if (trangThai === "4") {
+    return GiPiggyBank;
+  } else if (trangThai === "5") {
+    return FaCheckCircle;
+  } else if (trangThai === "10") {
+    return GiReturnArrow;
+  } else if (trangThai === "-1") {
+    return ImCancelCircle;
+  } else if (trangThai === "-2") {
+    return FaMoneyBillTrendUp;
+  }
+};
+
   const showTitle = (trangThai) => {
     if (trangThai === "0") {
       return "Chờ xác nhận";
     } else if (trangThai === "1") {
-      return "Xác Nhận";
+      return "Đã xác Nhận";
     } else if (trangThai === "2") {
       return "Chờ vận chuyển";
     } else if (trangThai === "3") {
@@ -94,11 +102,15 @@ const DetailTraCuuDonHang = ({ listBill }) => {
       return "Đã thanh toán";
     } else if (trangThai === "5") {
       return "Thành công";
+    } else if (trangThai === "10") {
+      return "Trả hàng";
     } else if (trangThai === "-1") {
       return "Hủy";
+    } else if (trangThai === "-2") {
+      return "Hoàn tiền";
     }
   };
-
+  console.log(bill)
   return (
     <>
       <div className="container d-flex justify-content-center">
@@ -126,6 +138,10 @@ const DetailTraCuuDonHang = ({ listBill }) => {
                 ? "Trả hàng"
                 : bill.trangThai === "-1"
                 ? "Đã hủy"
+                : bill.trangThai === "-2"
+                ? "Hoàn Tiền"
+                : bill.trangThai === "10"
+                ? "Trả hàng"
                 : "Đã"}
             </span>
           </div>
@@ -143,7 +159,11 @@ const DetailTraCuuDonHang = ({ listBill }) => {
                   <TimelineEvent
                     minEvents={6}
                     key={index}
-                    color={"#3d874d"}
+                    color={
+                      item.trangThai == -1 || item.trangThai == 10
+                        ? "#520808"
+                        : "#3d874d"
+                    }
                     icon={showIcon(item.trangThai)}
                     values={showTitle(item.trangThai)}
                     isOpenEnding={true}
@@ -308,7 +328,9 @@ const DetailTraCuuDonHang = ({ listBill }) => {
           <div className="ms-4 d-flex justify-content-start">
             <h5 className=" mt-1">Phương thức thanh toán :</h5>
             <p className="ms-5 mt-1">
-              <b>Thanh toán khi nhận hàng</b>
+              {bill.vnp === null
+                ? "Thanh toán khi nhận hàng"
+                : "Thanh toán VNP"}
             </p>
           </div>
         </div>

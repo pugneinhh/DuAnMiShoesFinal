@@ -18,9 +18,7 @@ export const Shop = ({ children }) => {
   const [mauSac, setMauSacs] = useState([]);
   const [kichThuoc, setKichThuocs] = useState([]);
   const [openModalDetailSP, setOpenModalDetailSP] = useState(false);
-  const [hoveredCard, setHoveredCard] = useState(null);
   const [sortType, setSortType] = useState('');
-  const { Search } = Input;
 
   const onChangeComplete = (value) => {
 
