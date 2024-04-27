@@ -53,7 +53,13 @@ export default function SanPham() {
   //Tìm kiếm
   const onChangeFilter = (changedValues, allValues) => {
     console.log("All values : ", allValues);
-    timKiemCT(allValues);
+    const dataTim = {
+      soLuongBatDau: allValues.soLuong[0],
+      soLuongKetThuc: allValues.soLuong[1],
+      ten: allValues.ten,
+      trangThai: allValues.trangThai
+    }
+    timKiemCT(dataTim);
   };
   const timKiemCT = (dataSearch) => {
     SanPhamAPI.search(dataSearch)
@@ -283,8 +289,8 @@ export default function SanPham() {
               <Slider
                     range
                     step={100}
-                    defaultValue={[100, 1000]}
-                    min={100}
+                    defaultValue={[1, 1000]}
+                    min={1}
                     max={1000}
                     onChange={onChange}
                   />

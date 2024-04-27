@@ -222,8 +222,28 @@ export default function CTSP() {
   }
   //Tìm kiếm
   const onChangeFilter = (changedValues, allValues) => {
-    console.log("All values : ", allValues)
-    timKiemCT(allValues);
+    const updatedValues = { ...allValues };
+    if (updatedValues.soLuongCT && updatedValues.soLuongCT.length > 0) {
+      updatedValues.soLuongBatDau = updatedValues.soLuongCT[0] !== undefined ? updatedValues.soLuongCT[0] : 1;
+    } else {
+      updatedValues.soLuongBatDau = 1;
+    }
+    if (updatedValues.soLuongCT && updatedValues.soLuongCT.length > 0) {
+      updatedValues.soLuongKetThuc = updatedValues.soLuongCT[1] !== undefined ? updatedValues.soLuongCT[1] : 1000;
+    } else {
+      updatedValues.soLuongKetThuc = 1000;
+    }
+    if (updatedValues.giaBanCT && updatedValues.giaBanCT.length > 0) {
+      updatedValues.giaBanBatDau = updatedValues.giaBanCT[0] !== undefined ? updatedValues.giaBanCT[0] : 100000;
+    } else {
+      updatedValues.giaBanBatDau = 100000;
+    }
+    if (updatedValues.giaBanCT && updatedValues.giaBanCT.length > 0) {
+      updatedValues.giaBanKetThuc = updatedValues.giaBanCT[1] !== undefined ? updatedValues.giaBanCT[1] : 50000000;
+    } else {
+      updatedValues.giaBanKetThuc = 50000000;
+    }
+    timKiemCT(updatedValues)
   }
   const timKiemCT = (dataSearch) => {
     ChiTietSanPhamAPI.searchCTSP(id, dataSearch)
@@ -705,10 +725,10 @@ export default function CTSP() {
                   {/* <div><QRCode size={150} type="canvas" value={ctData.id} /></div> */}
                   <Popover
                     overlayInnerStyle={{ padding: 0 }}
-                    content={<QRCode value={ctData.id} bordered={false} size={250}/>}
+                    content={<QRCode value={ctData.id} bordered={false} size={250} />}
                   >
-                    <Button icon={<QrcodeOutlined/>} className='mb-2 ms-3' style={{ border: '1px solid #C6C5C5', borderRadius: '10px', objectFit: 'cover', width: 150 }}>
-                       View QR
+                    <Button icon={<QrcodeOutlined />} className='mb-2 ms-3' style={{ border: '1px solid #C6C5C5', borderRadius: '10px', objectFit: 'cover', width: 150 }}>
+                      View QR
                     </Button>
                   </Popover>
                   <label className='mb-2'><b>Hình ảnh :</b></label>
@@ -888,11 +908,11 @@ export default function CTSP() {
               <div className="col-md-4">
                 <Form.Item label="Số lượng" name="soLuongCT">
                   <Slider
-                    style={{ width: "200px" }}
-                    min={1}
-                    max={2000}
+                    range
                     step={100}
-                    defaultValue={2000}
+                    defaultValue={[1, 1000]}
+                    min={1}
+                    max={1000}
                   />
                 </Form.Item>
               </div>
@@ -904,11 +924,11 @@ export default function CTSP() {
                 name="giaBanCT"
               >
                 <Slider
-                  style={{ width: "430px" }}
-                  min={1000000}
-                  max={40000000}
-                  step={1000000}
-                  defaultValue={40000000}
+                  range
+                  step={100000}
+                  defaultValue={[100000, 50000000]}
+                  min={100000}
+                  max={50000000}
                 />
               </Form.Item>
             </div>

@@ -5,10 +5,7 @@ import { Button, Slider, Checkbox, Card, Col, Collapse, Dropdown, Input, Popover
 import { ProductCard } from "../productCard";
 import ModalDetailSP from "./modalDetailSP";
 import { HomeAPI } from "../../../pages/censor/api/home/homeApi";
-import { HangAPI } from "../../../pages/censor/api/SanPham/hang.api";
-import { MauSacAPI } from "../../../pages/censor/api/SanPham/mauSac.api";
-import { KichThuocAPI } from "../../../pages/censor/api/SanPham/kichThuoc.api";
-import {  LeftOutlined, RightOutlined, SortDescendingOutlined } from "@ant-design/icons";
+import { LeftOutlined, RightOutlined, SortDescendingOutlined } from "@ant-design/icons";
 import ReactPaginate from 'react-paginate';
 import logoBanner from '../../../assets/images/page-header-bg.jpg';
 import SockJS from "sockjs-client";
@@ -27,70 +24,61 @@ export const Shop = ({ children }) => {
     // console.log('onChangeComplete: ', value);
   };
 
-  // const handleMouseEnter = (cardId) => {
-  //   setHoveredCard(cardId);
-  // };
-
-  // const handleMouseLeave = () => {
-  //   setHoveredCard(null);
-  // };
-
-
   const getAll = () => {
     HomeAPI.getAllSanPham()
       .then((res) => {
         setProducts(res.data);
-     
+
       })
   }
 
   const getAllHang = () => {
-    HangAPI.getAll()
+    HomeAPI.getAllHang()
       .then((res) => {
         setHangs(res.data);
       })
   }
 
   const getAllMauSac = () => {
-    MauSacAPI.getAll()
+    HomeAPI.getAllMauSac()
       .then((res) => {
         setMauSacs(res.data);
-   
+
       })
   }
 
   const getAllKichThuoc = () => {
-    KichThuocAPI.getAll()
+    HomeAPI.getAllKichThuoc()
       .then((res) => {
         setKichThuocs(res.data);
       })
   }
 
- var stomp = null;
- const socket = new SockJS("http://localhost:8080/ws");
- stomp = Stomp.over(socket);
- useEffect(() => {
-   stomp.connect({}, () => {
-     stomp.subscribe("/topic/KH/hoa-don", (mes) => {
-       try {
-         const pare = JSON.parse(mes.body);
-         console.log(pare);
-         // ví du: bạn muốn khi khách hàng bấm đặt hàng mà load lại hóa đơn màn admin thì hãy gọi hàm load all hóa đơn ở đây
-         // thí dụ: đây là hàm laod hóa đơn: loadHoaDon(); allThongBao(); CountThongBao();
-      getAll();
-      getAllHang();
-      getAllMauSac();
-      getAllKichThuoc();
-       } catch (e) {
-         console.log("lỗi mẹ ròi xem code di: ", e);
-       }
-     });
-   });
+  var stomp = null;
+  const socket = new SockJS("http://localhost:8080/ws");
+  stomp = Stomp.over(socket);
+  useEffect(() => {
+    stomp.connect({}, () => {
+      stomp.subscribe("/topic/KH/hoa-don", (mes) => {
+        try {
+          const pare = JSON.parse(mes.body);
+          console.log(pare);
+          // ví du: bạn muốn khi khách hàng bấm đặt hàng mà load lại hóa đơn màn admin thì hãy gọi hàm load all hóa đơn ở đây
+          // thí dụ: đây là hàm laod hóa đơn: loadHoaDon(); allThongBao(); CountThongBao();
+          getAll();
+          getAllHang();
+          getAllMauSac();
+          getAllKichThuoc();
+        } catch (e) {
+          console.log("lỗi mẹ ròi xem code di: ", e);
+        }
+      });
+    });
 
-   return () => {
-     stomp.disconnect();
-   };
- }, []);
+    return () => {
+      stomp.disconnect();
+    };
+  }, []);
   useEffect(() => {
     getAll();
     getAllHang();
@@ -208,7 +196,7 @@ export const Shop = ({ children }) => {
 
     HomeAPI.timMang(data)
       .then((res) => {
-       
+
         setProducts(res.data)
       })
   }
@@ -225,7 +213,7 @@ export const Shop = ({ children }) => {
   };
 
   const pageCount = Math.ceil(products.length / productsPerPage);
-  
+
   const offset = currentPage * productsPerPage;
   const currentPageData = products.slice(offset, offset + productsPerPage);
 
@@ -307,7 +295,7 @@ export const Shop = ({ children }) => {
                         {mauSac.map((mau, index) => {
                           return (
                             <Checkbox
-                         
+
                               key={mau.id}
                               value={mau.id}
                               onChange={(e) =>
@@ -318,7 +306,7 @@ export const Shop = ({ children }) => {
                                 {mau.ten.charAt(0).toUpperCase() +
                                   mau.ten.slice(1)}
                               </b>
-                       
+
                             </Checkbox>
                           );
                         })}

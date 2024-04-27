@@ -125,7 +125,7 @@ public interface CTSPRepository extends JpaRepository<ChiTietSanPham, String> {
     List<String> getCTSPByKM(String idKM);
 
     @Query(value = """
-            SELECT o.id AS idCTSP,o.ghi_chu AS linkAnh,o.mo_ta AS moTa ,sp.ten AS tenSP ,kt.ten AS tenKT,ms.ma AS maMS,ms.ten AS tenMS,cl.ten AS tenCL,dc.ten AS tenDC,dm.ten AS tenDM
+            SELECT o.id AS idCTSP,MIN(o.ghi_chu) AS linkAnh,o.mo_ta AS moTa ,sp.ten AS tenSP ,kt.ten AS tenKT,ms.ma AS maMS,ms.ten AS tenMS,cl.ten AS tenCL,dc.ten AS tenDC,dm.ten AS tenDM
             ,h.ten AS tenH,o.so_luong AS soLuong,o.gia_ban AS giaBan,o.trang_thai AS trangThai
             FROM chi_tiet_san_pham o
             JOIN san_pham sp  on o.san_pham_id=sp.id
@@ -136,7 +136,10 @@ public interface CTSPRepository extends JpaRepository<ChiTietSanPham, String> {
             JOIN danh_muc dm  on o.danh_muc_id=dm.id
             JOIN hang h  on o.hang_id=h.id
             JOIN hinh_anh ha on o.id=ha.chi_tiet_san_pham_id    
-            WHERE                                                                 
+            GROUP BY 
+            sp.ten,o.kich_thuoc_id,o.mau_sac_id,o.chat_lieu_id,o.de_giay_id,o.danh_muc_id,o.hang_id,o.trang_thai,o.so_luong,o.gia_ban,o.san_pham_id,
+            o.id,o.ghi_chu,o.mo_ta,o.id, o.mo_ta, sp.ten, kt.ten, ms.ma, ms.ten, cl.ten, dc.ten, dm.ten, h.ten, o.so_luong, o.gia_ban, o.trang_thai
+            HAVING                                                                
             ((:#{#ctspSearch.tenCT} IS NULL OR sp.ten LIKE (%:#{#ctspSearch.tenCT}%) ) AND
             (:#{#ctspSearch.idKT} IS NULL OR o.kich_thuoc_id =:#{#ctspSearch.idKT} ) AND
             (:#{#ctspSearch.idMS} IS NULL OR o.mau_sac_id =:#{#ctspSearch.idMS} ) AND
@@ -145,9 +148,9 @@ public interface CTSPRepository extends JpaRepository<ChiTietSanPham, String> {
             (:#{#ctspSearch.idDM} IS NULL OR o.danh_muc_id =:#{#ctspSearch.idDM} ) AND
             (:#{#ctspSearch.idH} IS NULL OR o.hang_id =:#{#ctspSearch.idH} ) AND
             (:#{#ctspSearch.trangThaiCT} IS NULL OR o.trang_thai =:#{#ctspSearch.trangThaiCT}) AND
-            (:#{#ctspSearch.soLuongCT} IS NULL OR o.so_luong <= :#{#ctspSearch.soLuongCT}) AND
-            (:#{#ctspSearch.giaBanCT} IS NULL OR o.gia_ban <= :#{#ctspSearch.giaBanCT})) 
-            AND o.san_pham_id = :idSP
+            (o.so_luong BETWEEN :#{#ctspSearch.soLuongBatDau} AND :#{#ctspSearch.soLuongKetThuc} ) AND
+            (o.gia_ban BETWEEN :#{#ctspSearch.giaBanBatDau} AND :#{#ctspSearch.giaBanKetThuc} )
+            AND o.san_pham_id =:idSP)
                      """, nativeQuery = true)
     List<CTSPSearchRespone> getTim(@Param("idSP") String idSP, CTSPSearch ctspSearch);
 

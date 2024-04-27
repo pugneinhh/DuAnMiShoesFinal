@@ -47,7 +47,7 @@ public interface SanPhamRepository extends JpaRepository<SanPham, String> {
             FROM san_pham a LEFT JOIN chi_tiet_san_pham o  on o.san_pham_id= a.id GROUP BY ma,ten,a.trang_thai,a.id HAVING 
              (:#{#sanPhamSearch.ten} IS NULL OR a.ma LIKE (%:#{#sanPhamSearch.ten}%) OR a.ten LIKE (%:#{#sanPhamSearch.ten}%) ) AND
              ( :#{#sanPhamSearch.trangThai} IS NULL OR a.trang_thai=:#{#sanPhamSearch.trangThai})AND
-             (:#{#sanPhamSearch.soLuong} IS NULL OR SUM(coalesce(o.so_luong,0)) BETWEEN :#{#sanPhamSearch.soLuongBatDau} 
+             ( SUM(coalesce(o.so_luong,0)) BETWEEN :#{#sanPhamSearch.soLuongBatDau} 
              AND :#{#sanPhamSearch.soLuongKetThuc} ) 
              ORDER BY a.ma DESC
                     """, nativeQuery = true)
