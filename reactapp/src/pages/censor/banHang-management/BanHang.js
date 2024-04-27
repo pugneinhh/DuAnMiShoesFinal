@@ -1468,7 +1468,7 @@ SellAPI.voucherSapDatDuoc(
                             quantity={lengthSP}
                             hoaDon={activeKey}
                             thongTinVanChuyen={hd[0]}
-                            tien = {soTienVanChuyen}
+                            tien={soTienVanChuyen}
                             //thongTinKhachHang={diaChiKhachHang[0]}
                           />
                         ) : (
@@ -1479,8 +1479,7 @@ SellAPI.voucherSapDatDuoc(
                               quantity={lengthSP}
                               hoaDon={activeKey}
                               thongTinKhachHang={diaChiKhachHang}
-                              tien = {soTienVanChuyen}
-
+                              tien={soTienVanChuyen}
                             />
                           )
                         )}
@@ -1611,57 +1610,63 @@ SellAPI.voucherSapDatDuoc(
                               data.reduce((accumulator, currentProduct) => {
                                 return accumulator + currentProduct.total;
                               }, 0) -
-                              (voucherHienTai
-                                ? voucherHienTai.loaiVoucher === "Tiền mặt"
-                                  ? parseFloat(voucherHienTai.mucDo) <
-                                    parseFloat(voucherHienTai.giamToiDa)
-                                    ? voucherHienTai.mucDo
-                                    : voucherHienTai.giamToiDa
-                                  : parseFloat(
-                                      (data.reduce(
-                                        (accumulator, currentProduct) => {
-                                          return (
-                                            accumulator + currentProduct.total
-                                          );
-                                        },
-                                        0
+                                (voucherHienTai
+                                  ? voucherHienTai.loaiVoucher === "Tiền mặt"
+                                    ? parseFloat(voucherHienTai.mucDo) <
+                                      parseFloat(voucherHienTai.giamToiDa)
+                                      ? voucherHienTai.mucDo
+                                      : voucherHienTai.giamToiDa
+                                    : parseFloat(
+                                        (data.reduce(
+                                          (accumulator, currentProduct) => {
+                                            return (
+                                              accumulator + currentProduct.total
+                                            );
+                                          },
+                                          0
+                                        ) *
+                                          voucherHienTai.mucDo) /
+                                          100
+                                      ) < parseFloat(voucherHienTai.giamToiDa)
+                                    ? (parseFloat(
+                                        data.reduce(
+                                          (accumulator, currentProduct) => {
+                                            return (
+                                              accumulator + currentProduct.total
+                                            );
+                                          },
+                                          0
+                                        )
                                       ) *
-                                        voucherHienTai.mucDo) /
-                                        100
-                                    ) < parseFloat(voucherHienTai.giamToiDa)
-                                  ? (parseFloat(
-                                      data.reduce(
-                                        (accumulator, currentProduct) => {
-                                          return (
-                                            accumulator + currentProduct.total
-                                          );
-                                        },
-                                        0
-                                      )
-                                    ) *
-                                      parseFloat(voucherHienTai.mucDo)) /
-                                    100
-                                  : voucherHienTai.giamToiDa
-                                : 0) +
-                              roundToThousands(
-                                isSwitchOn
-                                  ? hd[0]?.tienVanChuyen &&
-                                    shipMoney === shipMoney1
-                                    ? hd[0]?.tienVanChuyen
-                                    : shipMoney1
-                                    ? shipMoney1
-                                    : shipMoney
-                                    ? shipMoney
+                                        parseFloat(voucherHienTai.mucDo)) /
+                                      100
+                                    : voucherHienTai.giamToiDa
+                                  : 0) +
+                                roundToThousands(
+                                  isSwitchOn
+                                    ? hd[0]?.tienVanChuyen &&
+                                      shipMoney === shipMoney1
+                                      ? hd[0]?.tienVanChuyen
+                                      : shipMoney1
+                                      ? shipMoney1
+                                      : shipMoney
+                                      ? shipMoney
+                                      : 0
                                     : 0
-                                  : 0
-                              ))
-                            }
+                                )
+                            )}
                             hoaDon={activeKey}
-                            voucher={voucherHienTai ? voucherHienTai.id ? voucherHienTai.id : voucherHienTai.key : null}
+                            voucher={
+                              voucherHienTai
+                                ? voucherHienTai.id
+                                  ? voucherHienTai.id
+                                  : voucherHienTai.key
+                                : null
+                            }
                             hoaDonDetails={hd[0]}
                             listSanPham={data}
-                            loadAllBill = {loadAllBill}
-                            setActiveKey = {setActiveKey}
+                            loadAllBill={loadAllBill}
+                            setActiveKey={setActiveKey}
                           />
                         </div>
                         <div className="row">
@@ -1685,10 +1690,19 @@ SellAPI.voucherSapDatDuoc(
                         </div>
                         <div className="row">
                           <h6 className="col-md-3 mt-2">Mã giảm giá:</h6>
-                          <>{
-                            voucherHienTai ? 
-                            <Button type="dashed" danger style={{width:200}} onClick={handleClearVoucher}>Bỏ chọn mã giảm giá</Button> : ""
-                            }
+                          <>
+                            {voucherHienTai ? (
+                              <Button
+                                type="dashed"
+                                danger
+                                style={{ width: 200 }}
+                                onClick={handleClearVoucher}
+                              >
+                                Bỏ chọn mã giảm giá
+                              </Button>
+                            ) : (
+                              ""
+                            )}
                           </>
                           <Space.Compact className="col-md-10">
                             <Select
@@ -1696,11 +1710,22 @@ SellAPI.voucherSapDatDuoc(
                               style={{ width: 800, height: 120 }}
                               placeholder="Lựa chọn voucher"
                               onChange={onChangeVoucher}
-                              value={voucherHienTai ? voucherHienTai.id ? voucherHienTai.id : voucherHienTai.key: null} 
-                              defaultValue={voucherHienTai ? voucherHienTai.id ? voucherHienTai.id : voucherHienTai.key: null} 
+                              value={
+                                voucherHienTai
+                                  ? voucherHienTai.id
+                                    ? voucherHienTai.id
+                                    : voucherHienTai.key
+                                  : null
+                              }
+                              defaultValue={
+                                voucherHienTai
+                                  ? voucherHienTai.id
+                                    ? voucherHienTai.id
+                                    : voucherHienTai.key
+                                  : null
+                              }
                               optionFilterProp="label"
                             >
-
                               {voucherByIDKH.data ? (
                                 voucherByIDKH.data.map((option) => (
                                   <Option
@@ -1841,7 +1866,6 @@ SellAPI.voucherSapDatDuoc(
                         <h6 className="mt-4">
                           Trả sau:
                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                          
                           <Switch
                             disabled={isSwitchOn ? false : true}
                             onChange={handleSwitchTraSau}
@@ -1852,75 +1876,47 @@ SellAPI.voucherSapDatDuoc(
                           <div className="col-md-8">
                             <h6 className="mt-4">
                               Tiền hàng:{" "}
-                              {`${Intl.NumberFormat("en-US").format(roundToThousands(
-                                data.reduce((accumulator, currentProduct) => {
-                                  return accumulator + currentProduct.total;
-                                }, 0))
+                              {`${Intl.NumberFormat("en-US").format(
+                                roundToThousands(
+                                  data.reduce((accumulator, currentProduct) => {
+                                    return accumulator + currentProduct.total;
+                                  }, 0)
+                                )
                               )}`}
                             </h6>
                             <h6 className="mt-4">
-                              Phí vận chuyển:{" "}                  
-                                <InputNumber value={soTienVanChuyen === 0 ? (isSwitchOn
-                                ? `${Intl.NumberFormat("en-US").format(roundToThousands(
-                                    roundToThousands(
-                                      hd[0]?.tienVanChuyen &&
-                                        shipMoney === shipMoney1
-                                        ? hd[0]?.tienVanChuyen
-                                        : shipMoney1
-                                        ? shipMoney1
-                                        : shipMoney
-                                        ? shipMoney
-                                        : 0
-                                    ))
-                                  )}`
-                                : 0) : Intl.NumberFormat("en-US").format(soTienVanChuyen)} onChange={(value) => setSoTienVanChuyen(value)}/>
+                              Phí vận chuyển:{" "}
+                              <InputNumber
+                                value={
+                                  soTienVanChuyen === 0
+                                    ? isSwitchOn
+                                      ? `${Intl.NumberFormat("en-US").format(
+                                          roundToThousands(
+                                            roundToThousands(
+                                              hd[0]?.tienVanChuyen &&
+                                                shipMoney === shipMoney1
+                                                ? hd[0]?.tienVanChuyen
+                                                : shipMoney1
+                                                ? shipMoney1
+                                                : shipMoney
+                                                ? shipMoney
+                                                : 0
+                                            )
+                                          )
+                                        )}`
+                                      : 0
+                                    : Intl.NumberFormat("en-US").format(
+                                        soTienVanChuyen
+                                      )
+                                }
+                                onChange={(value) => setSoTienVanChuyen(value)}
+                              />
                             </h6>
                             <h6 className="mt-4 text-danger">
                               Giảm giá:{" "}
-                              {`${Intl.NumberFormat("en-US").format(roundToThousands(
-                                voucherHienTai
-                                  ? voucherHienTai.loaiVoucher === "Tiền mặt"
-                                    ? parseFloat(voucherHienTai.mucDo) <
-                                      parseFloat(voucherHienTai.giamToiDa)
-                                      ? voucherHienTai.mucDo
-                                      : voucherHienTai.giamToiDa
-                                    : parseFloat(
-                                        (data.reduce(
-                                          (accumulator, currentProduct) => {
-                                            return (
-                                              accumulator + currentProduct.total
-                                            );
-                                          },
-                                          0
-                                        ) *
-                                          voucherHienTai.mucDo) /
-                                          100
-                                      ) < parseFloat(voucherHienTai.giamToiDa)
-                                    ? (parseFloat(
-                                        data.reduce(
-                                          (accumulator, currentProduct) => {
-                                            return (
-                                              accumulator + currentProduct.total
-                                            );
-                                          },
-                                          0
-                                        )
-                                      ) *
-                                        parseFloat(voucherHienTai.mucDo)) /
-                                      100
-                                    : voucherHienTai.giamToiDa
-                                  : 0)
-                              )}`}
-      
-                            </h6>
-
-                            <h6 className="mt-4" >
-                              Tổng tiền:{" "}
-                              {`${Intl.NumberFormat("en-US").format(roundToThousands(
-                                data.reduce((accumulator, currentProduct) => {
-                                  return accumulator + currentProduct.total;
-                                }, 0) -
-                                  (voucherHienTai
+                              {`${Intl.NumberFormat("en-US").format(
+                                roundToThousands(
+                                  voucherHienTai
                                     ? voucherHienTai.loaiVoucher === "Tiền mặt"
                                       ? parseFloat(voucherHienTai.mucDo) <
                                         parseFloat(voucherHienTai.giamToiDa)
@@ -1953,26 +1949,74 @@ SellAPI.voucherSapDatDuoc(
                                           parseFloat(voucherHienTai.mucDo)) /
                                         100
                                       : voucherHienTai.giamToiDa
-                                    : 0) +
-                                  roundToThousands(
-                                    isSwitchOn
-                                      ? // ? hd[0]?.tienVanChuyen && !shipMoney
-                                        //   ? hd[0]?.tienVanChuyen
-                                        //   : hd[0]?.tienVanChuyen &&
-                                        //     hd[0]?.tienVanChuyen !== shipMoney
-                                        //   ? shipMoney
-                                        //   : shipMoney
-                                        // : 0
-                                        hd[0]?.tienVanChuyen &&
-                                        shipMoney === shipMoney1
-                                        ? hd[0]?.tienVanChuyen
-                                        : shipMoney1
-                                        ? shipMoney1
-                                        : shipMoney
-                                        ? shipMoney
+                                    : 0
+                                )
+                              )}`}
+                            </h6>
+
+                            <h6 className="mt-4">
+                              Tổng tiền:{" "}
+                              {`${Intl.NumberFormat("en-US").format(
+                                roundToThousands(
+                                  data.reduce((accumulator, currentProduct) => {
+                                    return accumulator + currentProduct.total;
+                                  }, 0) -
+                                    (voucherHienTai
+                                      ? voucherHienTai.loaiVoucher ===
+                                        "Tiền mặt"
+                                        ? parseFloat(voucherHienTai.mucDo) <
+                                          parseFloat(voucherHienTai.giamToiDa)
+                                          ? voucherHienTai.mucDo
+                                          : voucherHienTai.giamToiDa
+                                        : parseFloat(
+                                            (data.reduce(
+                                              (accumulator, currentProduct) => {
+                                                return (
+                                                  accumulator +
+                                                  currentProduct.total
+                                                );
+                                              },
+                                              0
+                                            ) *
+                                              voucherHienTai.mucDo) /
+                                              100
+                                          ) <
+                                          parseFloat(voucherHienTai.giamToiDa)
+                                        ? (parseFloat(
+                                            data.reduce(
+                                              (accumulator, currentProduct) => {
+                                                return (
+                                                  accumulator +
+                                                  currentProduct.total
+                                                );
+                                              },
+                                              0
+                                            )
+                                          ) *
+                                            parseFloat(voucherHienTai.mucDo)) /
+                                          100
+                                        : voucherHienTai.giamToiDa
+                                      : 0) +
+                                    roundToThousands(
+                                      isSwitchOn
+                                        ? // ? hd[0]?.tienVanChuyen && !shipMoney
+                                          //   ? hd[0]?.tienVanChuyen
+                                          //   : hd[0]?.tienVanChuyen &&
+                                          //     hd[0]?.tienVanChuyen !== shipMoney
+                                          //   ? shipMoney
+                                          //   : shipMoney
+                                          // : 0
+                                          hd[0]?.tienVanChuyen &&
+                                          shipMoney === shipMoney1
+                                          ? hd[0]?.tienVanChuyen
+                                          : shipMoney1
+                                          ? shipMoney1
+                                          : shipMoney
+                                          ? shipMoney
+                                          : 0
                                         : 0
-                                      : 0
-                                  ))
+                                    )
+                                )
                               )}`}
                             </h6>
                           </div>
@@ -1992,8 +2036,6 @@ SellAPI.voucherSapDatDuoc(
           )}
         </Tabs>
 
-
-        
         <ModalInHoaDon
           id={activeKey}
           openInHoaDon={openInHoaDon}
@@ -2005,7 +2047,7 @@ SellAPI.voucherSapDatDuoc(
         <QRScannerModal
           visible={showModal}
           onCancel={handleModalClose}
-          onQRResult={handleQRResult}
+          onQRCodeScanned={handleQRResult}
         />
       )}
 
