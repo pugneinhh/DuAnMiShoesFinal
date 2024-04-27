@@ -9,6 +9,7 @@ import { Stomp } from "@stomp/stompjs";
 import { GoDotFill } from "react-icons/go";
 import "./home.css";
 export default function Notification() {
+
   useEffect(() => {
     loadAll();
     count();
@@ -17,6 +18,7 @@ export default function Notification() {
   const navigate = useNavigate(); // dùng để chuyển trang
   const [notifications, setNotification] = useState([]);
   const [NotificationLength, setNotificationLength] = useState();
+
   const loadAll = () => {
     ThongBaoAPI.getALlThongBaoAdmin().then((res) => {
       setNotification(res.data);
