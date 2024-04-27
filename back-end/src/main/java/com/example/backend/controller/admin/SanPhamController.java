@@ -56,6 +56,16 @@ public class SanPhamController {
 
     }
 
+    @GetMapping("/listMS/{id}")
+    public ResponseEntity<?> getListMauSacBySanPhamId(@PathVariable("id") String id){
+        return ResponseEntity.ok(sanPhamService.getListMauSacBySanPhamID(id));
+    }
+
+    @GetMapping("/listKT/{id}")
+    public ResponseEntity<?> getListKichThuocBySanPhamId(@PathVariable("id") String id){
+        return ResponseEntity.ok(sanPhamService.getListKichThuocBySanPhamID(id));
+    }
+
     @GetMapping("/showSP/{idCTSP}")
     public ResponseEntity<?> getSPByCTSP(@PathVariable("idCTSP") String id){
         return ResponseEntity.ok(sanPhamService.getSPByCTSP(id));
