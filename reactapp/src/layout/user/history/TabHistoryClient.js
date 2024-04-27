@@ -1,6 +1,6 @@
 import { Button, Form, Modal, Space, Tag } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { ToastContainer, toast } from "react-toastify";
 import { KHGuiThongBaoDatHang } from "../../../utils/socket/socket";
@@ -86,6 +86,10 @@ const TabHistoryClient = ({ listBill }) => {
                       ? "Thành công"
                       : item.trangThai === "-1"
                       ? "Đã hủy"
+                      : item.trangThai === "-2"
+                      ? "Hoàn tiền"
+                      : item.trangThai === "10"
+                      ? "Trả hàng"
                       : "Chưa rõ"}
                   </span>
                 </Tag>
