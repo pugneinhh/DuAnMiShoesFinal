@@ -40,12 +40,8 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
     ? bill.filter((item) => item.key === activeKey)[0]?.nguoiDung
     : "";
   const handleClickAddClient = async (record) => {
-    // console.log("recorrd id",record);
 
     NguoiDungAPI.getDiaChiByIDND(record.idND).then((res) => {
-      // console.log("res",res.data);
-      // console.log("huyen id",res.data.idHuyen);
-      // console.log("xa id",res.data.idXa);
       dispatch(
         UpdateKHToBill({
           key: activeKey,
