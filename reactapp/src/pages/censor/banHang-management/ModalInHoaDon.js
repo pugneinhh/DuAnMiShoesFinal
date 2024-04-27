@@ -46,8 +46,8 @@ const ModalInHoaDon = (props) => {
 
 
   useEffect(() => {
-    if (id && openInHoaDon) {
-    //if (hoaDondetail && listSanPhams) return;
+    if (id && openInHoaDon)  {
+    if (listSanPhams.length > 0) return;
     loadHoaDon();
     loadListSanPhams();
     }
