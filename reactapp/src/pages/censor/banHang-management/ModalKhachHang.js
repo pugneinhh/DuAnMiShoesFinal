@@ -1,11 +1,4 @@
-import {
-  Button,
-  Modal,
-  Space,
-  Table,
-  Input,
-  Form
-} from "antd";
+import { Button, Modal, Space, Table, Input, Form } from "antd";
 import { useEffect, useState } from "react";
 import { Image } from "cloudinary-react";
 import { EyeOutlined } from "@ant-design/icons";
@@ -16,13 +9,18 @@ import {
   UpdateKHToBill,
   UpdateNullClient,
 } from "../../../store/reducer/Bill.reducer";
-import {SellAPI} from "../../censor/api/sell/sell.api";
+import { SellAPI } from "../../censor/api/sell/sell.api";
 import ModalAddKhachHang from "./ModalAddKhachHang";
 import { KhachHangAPI } from "../api/user/khachHang.api";
 import { NguoiDungAPI } from "../api/nguoiDung/nguoiDungAPI";
 // import { KhachHangAPI } from "../api/user/khachHang.api";
 
-const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) => {
+const ModalKhachHang = ({
+  setOpenKhachHang,
+  openKhachHang,
+  activeKey,
+  onVoucher,
+}) => {
   // const { openKhachHang, setOpenKhachHang } = props;
   // const activeKey = props.activeKey;
   const [openModalAddKhachHang, setopenModalAddKhachHang] = useState(false);
@@ -40,7 +38,6 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
     ? bill.filter((item) => item.key === activeKey)[0]?.nguoiDung
     : "";
   const handleClickAddClient = async (record) => {
-
     NguoiDungAPI.getDiaChiByIDND(record.idND).then((res) => {
       dispatch(
         UpdateKHToBill({
@@ -53,26 +50,26 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
           idXa: res.data.idXa,
         })
       );
-    })
+    });
 
     await SellAPI.getVoucherWithIDKH(record.idND).then((res) => onVoucher(res));
-   await NguoiDungAPI.getDiaChiByIDND(record.idND).then((resData) => console.log(resData.data));
-   SellAPI.updateKH(activeKey, record.idND);
+    await NguoiDungAPI.getDiaChiByIDND(record.idND).then((resData) =>
+      console.log(resData.data)
+    );
+    SellAPI.updateKH(activeKey, record.idND);
     setOpenKhachHang(false);
   };
 
   //Tìm khách hàng
   const [listKH, setListKH] = useState([]);
   const [form] = Form.useForm();
-    const [componentSize, setComponentSize] = useState("default");
+  const [componentSize, setComponentSize] = useState("default");
   const onChangeFilter = (changedValues, allValues) => {
-    // console.log("All values : ", allValues);
     timKiemKH(allValues);
   };
   const timKiemKH = (dataSearch) => {
     KhachHangAPI.timKiem(dataSearch).then((res) => {
-       setListKH(res.data);
-      // console.log(res.data,"2222222222222");
+      setListKH(res.data);
     });
   };
 

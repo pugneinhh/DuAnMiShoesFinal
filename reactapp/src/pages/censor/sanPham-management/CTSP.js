@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Divider, Modal, QRCode, Form, Input, InputNumber, Select, Slider, Space, Table, Tag, Popover, } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import { HighlightOutlined, InfoCircleFilled, InfoCircleOutlined, PlusCircleOutlined, QrcodeOutlined, RetweetOutlined } from "@ant-design/icons";
+import { HighlightOutlined, InfoCircleFilled,  QrcodeOutlined, RetweetOutlined } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
 import { EyeOutlined } from "@ant-design/icons";
 import { useParams } from 'react-router-dom';
 import { GrUpdate } from "react-icons/gr";
 import { Image } from 'cloudinary-react';
-import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './SanPham.css'
@@ -21,7 +20,6 @@ export default function CTSP() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [ktCheck, setKtCheck] = useState('');
   const [msCheck, setMsCheck] = useState('');
-  const [hoverQR, setHoverQR] = useState(false);
 
   const handleOk = () => {
     setIsModalOpen(false);
@@ -33,11 +31,9 @@ export default function CTSP() {
   //Form
   const onChange = (selectedOption) => {
     // In ra giá trị của key khi có sự thay đổi
-    console.log('Selected key:', selectedOption);
   };
   const [selectedValue, setSelectedValue] = useState('');
   const handleChange = (value) => {
-    console.log(`Selected value: ${value}`);
     setSelectedValue(value);
   };
   const [componentSize, setComponentSize] = useState('default');
@@ -62,14 +58,12 @@ export default function CTSP() {
   // Custom table  
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const onSelectChange = (newSelectedRowKeys) => {
-    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
   const loadUpdateNhanh = async () => {
     setUpdateNhanh([]);
     if (selectedRowKeys) {
-      console.log(selectedRowKeys);
       for (let i = 0; i < selectedRowKeys.length; i++) {
         ChiTietSanPhamAPI.showDetailCTSP(selectedRowKeys[i]).then((res) => {
           setUpdateNhanh((prevData) => [...prevData, res.data]);
@@ -82,7 +76,6 @@ export default function CTSP() {
     loadUpdateNhanh();
   }, [selectedRowKeys]);
 
-  console.log(updateNhanh)
 
   const rowSelection = {
     selectedRowKeys,
@@ -109,11 +102,8 @@ export default function CTSP() {
   const UpdateGiaVaSL = () => {
     for (let i = 0; i < updateNhanh.length; i++) {
       let idSP = updateNhanh[i].id
-      console.log(updateNhanh[i].id)
       ChiTietSanPhamAPI.updateCTSP(idSP, updateNhanh[i])
         .then(response => {
-          console.log(response.data);
-
           loadCTSP();
         })
         .catch(error => console.error('Error adding item:', error));
@@ -160,7 +150,6 @@ export default function CTSP() {
   //Update
   const showModal = async (idCT) => {
     ChiTietSanPhamAPI.showDetailCTSP(idCT).then((result) => {
-      console.log(result.data)
       setMsCheck(result.data.mauSac)
       setKtCheck(result.data.kichThuoc)
       setCTDatas(result.data);
@@ -205,7 +194,6 @@ export default function CTSP() {
 
     ChiTietSanPhamAPI.updateCTSP(ctData.id, ctData)
       .then(response => {
-        console.log(response.data);
         toast('✔️ Sửa thành công!', {
           position: "top-right",
           autoClose: 5000,
@@ -250,7 +238,6 @@ export default function CTSP() {
       .then(response => {
         // Update the list of items
         setCTSPs(response.data);
-        console.log("tìm kím:", response.data);
       })
       .catch(error => console.error('Error adding item:', error));
   }
@@ -267,7 +254,6 @@ export default function CTSP() {
   const addKichThuoc = (value) => {
     ChiTietSanPhamAPI.createKichThuoc(value)
       .then(response => {
-        console.log(response.data);
         toast('✔️ Thêm thành công!', {
           position: "top-right",
           autoClose: 5000,
@@ -298,7 +284,6 @@ export default function CTSP() {
   const addMauSac = (value) => {
     ChiTietSanPhamAPI.createMauSac(value)
       .then(response => {
-        console.log(response.data);
         toast('✔️ Thêm thành công!', {
           position: "top-right",
           autoClose: 5000,
@@ -329,7 +314,6 @@ export default function CTSP() {
   const addChatLieu = (value) => {
     ChiTietSanPhamAPI.createChatLieu(value)
       .then(response => {
-        console.log(response.data);
         toast('✔️ Thêm thành công!', {
           position: "top-right",
           autoClose: 5000,
@@ -360,7 +344,6 @@ export default function CTSP() {
   const addDoCao = (value) => {
     ChiTietSanPhamAPI.createDeGiay(value)
       .then(response => {
-        console.log(response.data);
         toast('✔️ Thêm thành công!', {
           position: "top-right",
           autoClose: 5000,
@@ -391,7 +374,6 @@ export default function CTSP() {
   const addDanhMuc = (value) => {
     ChiTietSanPhamAPI.createDanhMuc(value)
       .then(response => {
-        console.log(response.data);
         toast('✔️ Thêm thành công!', {
           position: "top-right",
           autoClose: 5000,
@@ -422,7 +404,6 @@ export default function CTSP() {
   const addHang = (value) => {
     ChiTietSanPhamAPI.createHang(value)
       .then(response => {
-        console.log(response.data);
         toast('✔️ Thêm thành công!', {
           position: "top-right",
           autoClose: 5000,
@@ -465,10 +446,6 @@ export default function CTSP() {
     maMS: item.maMS,
     trangThai: item.trangThai
   }));
-
-
-
-  // console.log(dataSource)
   const loadCTKT = async () => {
     ChiTietSanPhamAPI.showCTSPKT(id).then((result) => {
       setCTSPs(result.data);

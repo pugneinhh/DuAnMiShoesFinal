@@ -82,12 +82,11 @@ export default function HoaDonDetail() {
   // load hóa đơn
 
   const loadVoucherTotNhatVaVoucherTiepTheo = (idKH, money) => {
-    // console.log("money", money);
     SellAPI.voucherTotNhat(idKH, money).then((res) =>
       setVoucherHienTai(res.data)
     );
     SellAPI.voucherSapDatDuoc(idKH, money).then((res) => {
-      // console.log("res", res.data);
+
       setSoTienCanMuaThem(res.data[0]);
       setSoTienDuocGiam(res.data[1]);
     });
@@ -133,7 +132,7 @@ export default function HoaDonDetail() {
       setHoaDondetail(res.data);
       setTrangThai(res.data.trangThai);
       setMaHD(res.data.ma);
-      console.log("hd", res.data);
+
     });
   };
 
@@ -192,8 +191,6 @@ export default function HoaDonDetail() {
   const handleSubmit = (values) => {
     AdminGuiThongBaoXacNhanDatHang();
     HoaDonAPI.updateTTHoaDon(id, maNV, values).then((res) => {
-      console.log("values", values);
-      console.log("trang thau", trangThai);
       loadHoaDon();
       loadTimeLineHoaDon();
       form.resetFields();
@@ -286,8 +283,6 @@ export default function HoaDonDetail() {
       center: "true",
     },
   ];
-
-  // console.log("list sản phẩm", listSanPhams);
   const loadListSanPhams = () => {
     HoaDonAPI.detailSanPham(id).then((res) => {
       setlistSanPhams(res.data);

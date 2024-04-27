@@ -89,7 +89,7 @@ export const SignUp = () => {
                      nav("/login");
             })
             .catch((error) => {
-              console.log(error);
+              
             });
         })
         .catch(() => {

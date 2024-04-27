@@ -1,10 +1,7 @@
-import { Avatar, Flex, Button, Space, Tabs, Tag } from "antd";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
-import { BsShop } from "react-icons/bs";
-import { FaCheckCircle, FaUser } from "react-icons/fa";
-import { TfiPencil } from "react-icons/tfi";
+import { FaCheckCircle } from "react-icons/fa";
 import "./history.css";
 import { Timeline, TimelineEvent } from "@mailtop/horizontal-timeline";
 import { GiNotebook, GiPiggyBank, GiReturnArrow } from "react-icons/gi";
@@ -13,7 +10,6 @@ import { RiTruckFill } from "react-icons/ri";
 import { FaTruckFast } from "react-icons/fa6";
 import LogoGHN from "../../../assets/images/LogoGHN.png";
 import { HoaDonClientAPI } from "../../../pages/censor/api/HoaDonClient/HoaDonClientAPI";
-import { HoaDonAPI } from "../../../pages/censor/api/hoaDon/hoaDon.api";
 import moment from "moment";
 import { ToastContainer } from "react-toastify";
 import { MdArrowBackIos } from "react-icons/md";
@@ -24,61 +20,51 @@ import { ImCancelCircle } from "react-icons/im";
 import ProfileMenu from "../profile/ProfileMenu";
 const ChiTietDonHang = (props) => {
   const idHD = useParams();
-    const storedData = get("userData");
-      const [userName, setUserName] = useState("");
-      const [AnhUser, setLinkAnhUser] = useState("");
+  const storedData = get("userData");
+  const [userName, setUserName] = useState("");
+  const [AnhUser, setLinkAnhUser] = useState("");
   const nav = useNavigate();
-  const [listBillHistory, setListBillHistory] = useState([]);
   const [listTimeLine, setlistTimeLine] = useState([]);
-  const [statusPresent, setStatusPresent] = useState([]);
   const [bill, setBill] = useState({});
-  console.log("bill",bill);
-  const [paymentMethod, setPaymentMethod] = useState({});
-       var stomp = null;
-       const socket = new SockJS("http://localhost:8080/ws");
-       stomp = Stomp.over(socket);
+  var stomp = null;
+  const socket = new SockJS("http://localhost:8080/ws");
+  stomp = Stomp.over(socket);
 
-       useEffect(() => {
-         stomp.connect({}, () => {
-           console.log("connect websocket");
-
-           stomp.subscribe("/topic/KH/hoa-don", (mes) => {
-             try {
-               const pare = JSON.parse(mes.body);
-               console.log(pare);
-               // ví du: bạn muốn khi khách hàng bấm đặt hàng mà load lại hóa đơn màn admin thì hãy gọi hàm load all hóa đơn ở đây
-               // thí dụ: đây là hàm laod hóa đơn: loadHoaDon(); allThongBao(); CountThongBao();
-               loadTimeLine();
-         
-             } catch (e) {
-               console.log("lỗi mẹ ròi xem code di: ", e);
-             }
-           });
-         });
-
-         return () => {
-           stomp.disconnect();
-         };
-       }, []);
-       
   useEffect(() => {
-       setUserName(storedData.ten);
-       setLinkAnhUser(storedData.anh);
+    stomp.connect({}, () => {
+      stomp.subscribe("/topic/KH/hoa-don", (mes) => {
+        try {
+          const pare = JSON.parse(mes.body);
+          // ví du: bạn muốn khi khách hàng bấm đặt hàng mà load lại hóa đơn màn admin thì hãy gọi hàm load all hóa đơn ở đây
+          // thí dụ: đây là hàm laod hóa đơn: loadHoaDon(); allThongBao(); CountThongBao();
+          loadTimeLine();
+        } catch (e) {
+          console.log("lỗi mẹ ròi xem code di: ", e);
+        }
+      });
+    });
+
+    return () => {
+      stomp.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    setUserName(storedData.ten);
+    setLinkAnhUser(storedData.anh);
     HoaDonClientAPI.DetailHoaDonClient(idHD.idHD).then((res) => {
       setBill(res.data);
     });
-loadTimeLine();
-
+    loadTimeLine();
   }, []);
   const loadTimeLine = () => {
     HoaDonClientAPI.getAllLichSuHoaDon(idHD.idHD).then((res) => {
       setlistTimeLine(res.data);
-      console.log(res);
     });
   };
-    const goBack = () => {
-      window.history.back(); // Quay lại trang trước đó trong lịch sử duyệt
-    };
+  const goBack = () => {
+    window.history.back(); // Quay lại trang trước đó trong lịch sử duyệt
+  };
 
   const showIcon = (trangThai) => {
     if (trangThai === "0") {
@@ -117,6 +103,8 @@ loadTimeLine();
       return "Trả hàng";
     } else if (trangThai === "-1") {
       return "Hủy";
+    } else if (trangThai === "-2") {
+      return "Hoàn tiền";
     }
   };
   return (
@@ -144,10 +132,12 @@ loadTimeLine();
                 ? "Đã thanh toán"
                 : bill.trangThai === "5"
                 ? "Thành công"
-                : bill.trangThai === "6"
-                ? "Trả hàng"
                 : bill.trangThai === "-1"
                 ? "Đã hủy"
+                : bill.trangThai === "-2"
+                ? "Hoàn Tiền"
+                : bill.trangThai === "10"
+                ? "Trả hàng"
                 : "Đã"}
             </span>
           </div>
@@ -166,7 +156,11 @@ loadTimeLine();
                 <TimelineEvent
                   minEvents={6}
                   key={index}
-                  color={item.trangThai == -1 ? "#520808" : "#3d874d"}
+                  color={
+                    item.trangThai == -1 || item.trangThai == 10
+                      ? "#520808"
+                      : "#3d874d"
+                  }
                   icon={showIcon(item.trangThai)}
                   values={showTitle(item.trangThai)}
                   isOpenEnding={true}

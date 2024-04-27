@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import "./shop.css";
-import { Button, Slider, Checkbox, Card, Col, Collapse, Dropdown, Input, Popover, Row, Space, Form, Pagination, Flex } from "antd";
+import { Button, Slider, Checkbox, Card, Col, Collapse, Dropdown, Input, Row, Space} from "antd";
 import { ProductCard } from "../productCard";
 import ModalDetailSP from "./modalDetailSP";
 import { HomeAPI } from "../../../pages/censor/api/home/homeApi";
@@ -16,14 +15,11 @@ export const Shop = ({ children }) => {
   const [mauSac, setMauSacs] = useState([]);
   const [kichThuoc, setKichThuocs] = useState([]);
   const [openModalDetailSP, setOpenModalDetailSP] = useState(false);
-  const [hoveredCard, setHoveredCard] = useState(null);
   const [sortType, setSortType] = useState('');
-  const { Search } = Input;
 
   const onChangeComplete = (value) => {
     // console.log('onChangeComplete: ', value);
   };
-
   const getAll = () => {
     HomeAPI.getAllSanPham()
       .then((res) => {
@@ -54,27 +50,25 @@ export const Shop = ({ children }) => {
       })
   }
 
-  var stomp = null;
-  const socket = new SockJS("http://localhost:8080/ws");
-  stomp = Stomp.over(socket);
-  useEffect(() => {
-    stomp.connect({}, () => {
-      stomp.subscribe("/topic/KH/hoa-don", (mes) => {
-        try {
-          const pare = JSON.parse(mes.body);
-          console.log(pare);
-          // ví du: bạn muốn khi khách hàng bấm đặt hàng mà load lại hóa đơn màn admin thì hãy gọi hàm load all hóa đơn ở đây
-          // thí dụ: đây là hàm laod hóa đơn: loadHoaDon(); allThongBao(); CountThongBao();
-          getAll();
-          getAllHang();
-          getAllMauSac();
-          getAllKichThuoc();
-        } catch (e) {
-          console.log("lỗi mẹ ròi xem code di: ", e);
-        }
-      });
-    });
-
+ var stomp = null;
+ const socket = new SockJS("http://localhost:8080/ws");
+ stomp = Stomp.over(socket);
+ useEffect(() => {
+   stomp.connect({}, () => {
+     stomp.subscribe("/topic/KH/hoa-don", (mes) => {
+       try {
+         const pare = JSON.parse(mes.body);
+ 
+         // ví du: bạn muốn khi khách hàng bấm đặt hàng mà load lại hóa đơn màn admin thì hãy gọi hàm load all hóa đơn ở đây
+         // thí dụ: đây là hàm laod hóa đơn: loadHoaDon(); allThongBao(); CountThongBao();
+      getAll();
+      getAllHang();
+      getAllMauSac();
+      getAllKichThuoc();
+       } catch (e) {
+       }
+     });
+   });
     return () => {
       stomp.disconnect();
     };

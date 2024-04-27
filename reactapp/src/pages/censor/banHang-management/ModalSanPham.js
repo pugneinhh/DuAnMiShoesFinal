@@ -20,9 +20,7 @@ import { Image } from "cloudinary-react";
 import { AddProduct, GetProduct, UpdateApartProduct } from "../../../store/reducer/Product.reducer";
 import { AddInvoice, GetInvoice } from "../../../store/reducer/DetailInvoice.reducer";
 import { SellAPI } from "../../censor/api/sell/sell.api"
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import axios from "axios";
 import { ChiTietSanPhamAPI } from "../api/SanPham/chi_tiet_san_pham.api";
 import { v4 as uuid } from "uuid";
 import { UpdateTienHang } from "../../../store/reducer/Bill.reducer";
@@ -44,12 +42,6 @@ const ModalSanPham = (props) => {
 
   const { Option } = Select;
 
-  //Form
-  // const [selectedValue, setSelectedValue] = useState("");
-  // const handleChange = (value) => {
-  //   console.log(`Selected value: ${value}`);
-  //   setSelectedValue(value);
-  // };
   const [componentSize, setComponentSize] = useState("default");
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);

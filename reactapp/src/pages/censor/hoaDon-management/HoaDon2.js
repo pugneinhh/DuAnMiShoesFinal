@@ -35,7 +35,7 @@ export default function HoaDon() {
       stomp.subscribe("/topic/admin/hoa-don", (mes) => {
         try {
           const pare = JSON.parse(mes.body);
-          console.log(pare);
+    
           // ví du: bạn muốn khi khách hàng bấm đặt hàng mà load lại hóa đơn màn admin thì hãy gọi hàm load all hóa đơn ở đây
           // thí dụ: đây là hàm laod hóa đơn: loadHoaDon(); allThongBao(); CountThongBao();
    

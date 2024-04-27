@@ -4,11 +4,8 @@ import AddModalDiaChi from "../../../pages/censor/khachHang-management/AddModalD
 import { ToastContainer, toast } from "react-toastify";
 import ModalUpdateDiaChi from "../../../pages/censor/khachHang-management/ModalUpdateDiaChi";
 import { KhachHangAPI } from "../../../pages/censor/api/user/khachHang.api";
-import { get, set } from "local-storage";
 const ModalDiaChi = (props) => {
   const { openModalDiaChi, setOpenModalDiaChi, loadDiaChiMacDinh, userID } = props;
-  const [top, setTop] = useState("none");
-  const [bottom, setBottom] = useState("bottomRight");
   const [nowAddress, setNowAddress] = useState("");
 
   const handleClose = () => {
@@ -16,7 +13,6 @@ const ModalDiaChi = (props) => {
   };
   // cập nhật địa chỉ mặc định
   const handleUpdateTT = () => {
-    console.log("diachimacdinhmoi", nowAddress);
     KhachHangAPI.updateDiaChiMacDinhKHClient(nowAddress)
       .then((result) => {
         toast("✔️ Cập nhật dịa chỉ mặc định thành công!", {
@@ -41,18 +37,13 @@ const ModalDiaChi = (props) => {
     setOpenModalAddDiaChi(false);
   };
 
-  const handleCloseModalDiaChi = () => {
-    setOpenModalDiaChi(false);
-  };
   const handleOpenADDModalDiaChi = () => {
     setOpenModalAddDiaChi(true);
-    // setOpenModalDiaChi(false);
   };
   const [openModalUpdateDiaChi, setOpenModalUpdateDiaChi] = useState(false);
   const [diaChiUpdate, setDiaChiUpdate] = useState({});
   const handleOpenUpdateDiaChi = (value) => {
     setDiaChiUpdate(value);
-    //  setOpenModalDiaChi(false);
     setOpenModalUpdateDiaChi(true);
   };
 

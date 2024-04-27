@@ -85,7 +85,7 @@ export default function SanPham() {
       });
     }
   };
-  
+
   const loadListKichThuoc = (id) => {
     if (!listKT[id]) {
       SanPhamAPI.getListKichThuocBySanPhamId(id).then((res) => {
@@ -142,18 +142,21 @@ export default function SanPham() {
       render: (record) => {
         const mauSacList = listMS[record.idSP] || [];
         return (
-          <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+          <div
+            style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
+          >
             {mauSacList.map((mau, index) => (
-              <div key={index} style={{ width: '50%', padding: '0.5rem' }}>
-              <Tag 
-              style={{
-                width: 40,
-                height:20,
-                border: '1px solid #C6C5C5',
-                borderColor: '#C6C5C5',  }} 
-                color={mau}>
-              </Tag>
-             </div>
+              <div key={index} style={{ width: "50%", padding: "0.5rem" }}>
+                <Tag
+                  style={{
+                    width: 40,
+                    height: 20,
+                    border: "1px solid #C6C5C5",
+                    borderColor: "#C6C5C5",
+                  }}
+                  color={mau}
+                ></Tag>
+              </div>
             ))}
           </div>
         );
@@ -167,21 +170,24 @@ export default function SanPham() {
       render: (record) => {
         const kichThuocList = listKT[record.idSP] || [];
         return (
-          <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+          <div
+            style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
+          >
             {kichThuocList.map((kt, index) => (
-               <div key={index} style={{ width: '50%', padding: '0.5rem' }}>
-              <Tag
-              style={{
-                textAlign: "center",
-                width: 40,
-                height:20,
-                backgroundColor: "white",
-                border: '1px solid #C6C5C5',
-                borderColor: '#C6C5C5',  }} 
+              <div key={index} style={{ width: "50%", padding: "0.5rem" }}>
+                <Tag
+                  style={{
+                    textAlign: "center",
+                    width: 40,
+                    height: 20,
+                    backgroundColor: "white",
+                    border: "1px solid #C6C5C5",
+                    borderColor: "#C6C5C5",
+                  }}
                 >
                   {kt}
-              </Tag>
-             </div>
+                </Tag>
+              </div>
             ))}
           </div>
         );
@@ -190,7 +196,7 @@ export default function SanPham() {
     {
       title: "Số Lượng",
       dataIndex: "soLuong",
-      align: "center"
+      align: "center",
     },
     {
       title: "Trạng thái",

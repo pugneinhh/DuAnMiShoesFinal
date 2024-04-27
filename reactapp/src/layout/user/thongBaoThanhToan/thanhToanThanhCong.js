@@ -16,7 +16,7 @@ export default function ThanhToanThanhCong() {
       BanHangClientAPI.checkout(storedForm);
       localStorage.removeItem('formData');
     }
-    console.log(storedForm);
+   
   };
     const backHome = (res) => {
       nav("/home");

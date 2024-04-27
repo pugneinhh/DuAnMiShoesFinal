@@ -13,7 +13,6 @@ export default function DanhMuc() {
   //Form
   const [selectedValue, setSelectedValue] = useState('1');
   const handleChange = (value) => {
-    console.log(`Selected value: ${value}`);
     setSelectedValue(value);
   };
   const [componentSize, setComponentSize] = useState('default');
@@ -79,7 +78,6 @@ export default function DanhMuc() {
       })
       setOpenUpdate(true)
   };
-  console.log(dmUpdate)
   const updateDanhMuc = () => {
 
     if (dmUpdate.ten != tenCheck) {
@@ -123,7 +121,6 @@ export default function DanhMuc() {
   }
   //Tìm kiếm
   const onChangeFilter = (changedValues, allValues) => {
-    console.log("All values : ", allValues)
     timKiemCT(allValues);
   }
   const timKiemCT = (dataSearch) => {
