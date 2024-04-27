@@ -37,7 +37,7 @@ const ModalDetailSP = (props) => {
           }));
           setFileList(newFileList);
         } else {
-          console.log("No data or empty array received from the server.");
+      
         }
       })
   };
