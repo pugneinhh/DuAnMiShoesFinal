@@ -10,5 +10,6 @@ import lombok.*;
 public class SanPhamSearch {
     String ten;
     String trangThai;
-    int soLuong;
+    int soLuongBatDau;
+    int soLuongKetThuc;
 }

@@ -10,9 +10,31 @@ export class SanPhamAPI {
       headers: {
         Authorization: getToken,
       },
-      //   params: filter,
     });
   };
+
+  static getListMauSacBySanPhamId = (id) => {
+    const getToken = getHeader();
+    return requestAdmin({
+      method: "GET",
+      url: `/admin/san-pham/listMS/${id}`,
+      headers: {
+        Authorization: getToken,
+      },
+    });
+  };
+
+  static getListKichThuocBySanPhamId = (id) => {
+    const getToken = getHeader();
+    return requestAdmin({
+      method: "GET",
+      url: `/admin/san-pham/listKT/${id}`,
+      headers: {
+        Authorization: getToken,
+      },
+    });
+  };
+
 
   static getAnhTheoMau = (ten) => {
     const getToken = getHeader();
