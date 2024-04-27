@@ -1,6 +1,5 @@
-import { Col, Form, Input, Select, Button, Modal } from "antd";
+import {  Form, Input, Select, Button, Modal } from "antd";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { AddressApi } from "../api/address/AddressApi";
 import { ShipAPI } from "../api/ship/ship.api";
 import LogoGHN from "../../../assets/images/LogoGHN.png";
@@ -9,7 +8,7 @@ import { toast } from "react-toastify";
 import { UpdateVanChuyenToBill , UpdateTienVanChuyen} from "../../../store/reducer/Bill.reducer";
 import { DeleteVanChuyenFromBill } from "../../../store/reducer/Bill.reducer";
 import { dispatch } from "../../../store/redux/store";
-import { useSelector } from "react-redux";
+
 import Moment from "moment";
 
 const DiaChiGiaoHang = ({
@@ -102,8 +101,6 @@ const DiaChiGiaoHang = ({
 
   useEffect(() => {
     if (thongTinVanChuyen) {
-      console.log("Thông tin vận chuyển",thongTinVanChuyen)
-
       // lấy ra tên xã , huyện , thành phố trong địa chỉ
       indexThanhPhoDaCo = thongTinVanChuyen.diaChi.lastIndexOf("/");
       thanhPhoDaCo = thongTinVanChuyen.diaChi.substring(
@@ -144,8 +141,6 @@ const DiaChiGiaoHang = ({
         tenXa: phuongDaCo,
         soNha: soNhaDaCo,
       });
-      console.log("Thông tin vận chuyển idHuyen", thongTinVanChuyen.idHuyen);
-      console.log("Thông tin vận chuyển idXa", thongTinVanChuyen.idXa);
       if (thongTinVanChuyen.idHuyen && thongTinVanChuyen.idXa) {
         setTimeShip(thongTinVanChuyen.ngayDuKienNhan);
         money1(thongTinVanChuyen.tienVanChuyen);
@@ -186,7 +181,7 @@ const DiaChiGiaoHang = ({
           setWardCode(idPhuongDaCo);
   
         } else {
-          console.log("Tiền vận chuyển",thongTinVanChuyen.tienVanChuyen);
+   
           money1(0);
         }
       
@@ -268,9 +263,6 @@ const DiaChiGiaoHang = ({
   };
 
   const handleSubmit = (value) => {
-    console.log("Thành phố hiện tại",proID);
-    console.log("Quận hiện tại",districtID);
-    console.log("Phường hiện tại",wardCode);
     dispatch(
       UpdateVanChuyenToBill({
         key: hoaDon,
@@ -359,11 +351,6 @@ const DiaChiGiaoHang = ({
           quantity
         ).then((res) => res.data.data.total)
       );
-      console.log(
-        await ShipAPI.fetchAllDayShip(districtID, valueWard.valueWard).then(
-          (res) => res.data.data.leadtime * 1000
-        )
-      );
       setMoneyShip1(
         await ShipAPI.fetchAllMoneyShip(
           districtID,
@@ -373,9 +360,6 @@ const DiaChiGiaoHang = ({
       );
     }
   };
-
-  const changeQuantity = async () => {};
-
   return (
     <>
       <Form
