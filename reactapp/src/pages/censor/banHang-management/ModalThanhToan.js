@@ -207,7 +207,6 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
     dispatch(RemoveBill({ key: hoaDon }));
     setTongThanhToan(0);
     onInHoaDon(true);
-    //setActiveKey(hoaDons.filter((h) => h.key !== hoaDon)[0] ? hoaDons.filter((h) => h.key !== hoaDon)[0].key : null);
     setOpenThanhToan(false);
     
       // Xóa dữ liệu lưu trong reducer
