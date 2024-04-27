@@ -99,7 +99,8 @@ const TableChiTietSanPham = ({selectedIDSPs,onSelectedCTSanPham,suaIDCTSP}) => {
             <Tag
               color= {tenMS}              
               className="rounded-circle"
-              style={{ height: 25, width: 25 }}
+              style={{ height: 25, width: 25,border: '1px solid black',
+              borderColor: 'black', }}
             ></Tag>
         </>
       ),

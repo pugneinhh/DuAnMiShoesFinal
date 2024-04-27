@@ -4,10 +4,7 @@ import { Button, Slider, Checkbox, Card, Col, Collapse, Dropdown, Input, Row, Sp
 import { ProductCard } from "../productCard";
 import ModalDetailSP from "./modalDetailSP";
 import { HomeAPI } from "../../../pages/censor/api/home/homeApi";
-import { HangAPI } from "../../../pages/censor/api/SanPham/hang.api";
-import { MauSacAPI } from "../../../pages/censor/api/SanPham/mauSac.api";
-import { KichThuocAPI } from "../../../pages/censor/api/SanPham/kichThuoc.api";
-import {  LeftOutlined, RightOutlined, SortDescendingOutlined } from "@ant-design/icons";
+import { LeftOutlined, RightOutlined, SortDescendingOutlined } from "@ant-design/icons";
 import ReactPaginate from 'react-paginate';
 import logoBanner from '../../../assets/images/page-header-bg.jpg';
 import SockJS from "sockjs-client";
@@ -21,35 +18,33 @@ export const Shop = ({ children }) => {
   const [sortType, setSortType] = useState('');
 
   const onChangeComplete = (value) => {
-
+    // console.log('onChangeComplete: ', value);
   };
-
-
   const getAll = () => {
     HomeAPI.getAllSanPham()
       .then((res) => {
         setProducts(res.data);
-     
+
       })
   }
 
   const getAllHang = () => {
-    HangAPI.getAll()
+    HomeAPI.getAllHang()
       .then((res) => {
         setHangs(res.data);
       })
   }
 
   const getAllMauSac = () => {
-    MauSacAPI.getAll()
+    HomeAPI.getAllMauSac()
       .then((res) => {
         setMauSacs(res.data);
-   
+
       })
   }
 
   const getAllKichThuoc = () => {
-    KichThuocAPI.getAll()
+    HomeAPI.getAllKichThuoc()
       .then((res) => {
         setKichThuocs(res.data);
       })
@@ -71,15 +66,13 @@ export const Shop = ({ children }) => {
       getAllMauSac();
       getAllKichThuoc();
        } catch (e) {
-
        }
      });
    });
-
-   return () => {
-     stomp.disconnect();
-   };
- }, []);
+    return () => {
+      stomp.disconnect();
+    };
+  }, []);
   useEffect(() => {
     getAll();
     getAllHang();
@@ -197,7 +190,7 @@ export const Shop = ({ children }) => {
 
     HomeAPI.timMang(data)
       .then((res) => {
-       
+
         setProducts(res.data)
       })
   }
@@ -214,7 +207,7 @@ export const Shop = ({ children }) => {
   };
 
   const pageCount = Math.ceil(products.length / productsPerPage);
-  
+
   const offset = currentPage * productsPerPage;
   const currentPageData = products.slice(offset, offset + productsPerPage);
 
@@ -296,7 +289,7 @@ export const Shop = ({ children }) => {
                         {mauSac.map((mau, index) => {
                           return (
                             <Checkbox
-                         
+
                               key={mau.id}
                               value={mau.id}
                               onChange={(e) =>
@@ -307,7 +300,7 @@ export const Shop = ({ children }) => {
                                 {mau.ten.charAt(0).toUpperCase() +
                                   mau.ten.slice(1)}
                               </b>
-                       
+
                             </Checkbox>
                           );
                         })}

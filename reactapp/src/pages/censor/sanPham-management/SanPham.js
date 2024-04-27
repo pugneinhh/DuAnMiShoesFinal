@@ -57,8 +57,8 @@ export default function SanPham() {
       soLuongBatDau: allValues.soLuong[0],
       soLuongKetThuc: allValues.soLuong[1],
       ten: allValues.ten,
-      trangThai: allValues.trangThai,
-    };
+      trangThai: allValues.trangThai
+    }
     timKiemCT(dataTim);
   };
   const timKiemCT = (dataSearch) => {
@@ -292,14 +292,14 @@ export default function SanPham() {
             </div>
             <div className="col-md-4">
               <Form.Item label="Số lượng" name="soLuong">
-                <Slider
-                  range
-                  step={100}
-                  defaultValue={[1, 1000]}
-                  min={1}
-                  max={1000}
-                  onChange={onChange}
-                />
+              <Slider
+                    range
+                    step={100}
+                    defaultValue={[1, 1000]}
+                    min={1}
+                    max={1000}
+                    onChange={onChange}
+                  />
               </Form.Item>
             </div>
             <Form.Item className="text-center" style={{ paddingLeft: 200 }}>
