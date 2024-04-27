@@ -50,7 +50,8 @@ const DetailHoaDonTraHang = () => {
   };
 
   const loadGiamGia = (voucher) => {
-    if (voucher !== null) {
+    if (voucher) {
+      console.log("Vào trường hợp có voucher giảm giá")
       if (voucher.loaiVoucher === "Tiền mặt") {
         setTienGiamHDMoi(voucher.giamToiDa);
         setTienTra(thongTin.thanhTien-(thongTin.giaGoc-totalNewBill-voucher.giamToiDa));
@@ -60,6 +61,10 @@ const DetailHoaDonTraHang = () => {
           -((parseFloat(thongTin.giaGoc) === parseFloat(totalNewBill) ) ? 0 : (Math.min((thongTin.giaGoc-totalNewBill) * (voucher.mucDo / 100), voucher.giamToiDa)))
           ));
       }
+    } else {
+      console.log("Vào trường hợp không có voucher giảm giá")
+      setTienGiamHDMoi(0);
+      setTienTra(thongTin.thanhTien - (thongTin.giaGoc - totalNewBill));
     }
   };
 
@@ -69,9 +74,10 @@ const DetailHoaDonTraHang = () => {
   if(newBill.length>0){
     if(thongTin&&thongTin.voucher!=null){
       console.log("thông tin",thongTin);
+      console.log("thông tin",totalNewBill);
       VoucherAPI.detail(thongTin.voucher.id).then((res)=>{
         console.log("thông tin voucher",res.data);
-        if((thongTin.giaGoc-totalNewBill)>=res.data.dieuKien){
+        if((thongTin.giaGoc-totalNewBill)>=res.data.dieuKien){  // đủ điều kiện voucher cũ
           if (res.data.loaiVoucher === "Tiền mặt") {
                   console.log("vào đây.......................");
             console.log(
@@ -88,17 +94,17 @@ const DetailHoaDonTraHang = () => {
                   parseFloat(totalNewBill) -
                   parseFloat(res.data.giamToiDa))
             );
-          } else {
+          } else { // phần trăm
             setTienGiamHDMoi(Math.min((thongTin.giaGoc-totalNewBill) * (res.data.mucDo / 100), res.data.giamToiDa));
-            setTienTra(thongTin.thanhTien-(thongTin.giaGoc-totalNewBill-((parseFloat(thongTin.giaGoc) === (parseFloat(totalNewBill))) ? 0 : (Math.min((thongTin.giaGoc-totalNewBill) * (res.data.mucDo / 100), res.data.giamToiDa)))));
+             setTienTra(thongTin.thanhTien-(thongTin.giaGoc-totalNewBill-((parseFloat(thongTin.giaGoc) === (parseFloat(totalNewBill))) ? 0 : (Math.min((thongTin.giaGoc-totalNewBill) * (res.data.mucDo / 100), res.data.giamToiDa)))));
           }
-        }else{
+        }else{ // không đủ điều kiện voucher cũ
           //trường hợp trả tất
 
           loadVoucherTotNhatVaVoucherTiepTheo(parseFloat(thongTin.giaGoc) - parseFloat(totalNewBill));
         }
       })
-    }else{
+    }else{ // không có voucher
       loadVoucherTotNhatVaVoucherTiepTheo(thongTin.giaGoc - totalNewBill);
     }
    
