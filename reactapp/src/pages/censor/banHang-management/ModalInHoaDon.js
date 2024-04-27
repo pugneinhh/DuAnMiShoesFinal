@@ -7,16 +7,18 @@ import { ToastContainer, toast } from "react-toastify";
 import { useReactToPrint } from "react-to-print";
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
+import { RemoveBill,GetBill } from "../../../store/reducer/Bill.reducer";
+import { useDispatch, useSelector } from "react-redux";
 
 
 const ModalInHoaDon = (props) => {
   const componnentRef = useRef();
-  const {openInHoaDon, setOpenInHoaDon , openThanhToan} = props;
+  const {openInHoaDon, setOpenInHoaDon , openThanhToan , setActiveKey} = props;
   const [hoaDondetail, setHoaDondetail] = useState([]);
   const [trangThai, setTrangThai] = useState([]);
   const [listSanPhams, setlistSanPhams] = useState([]);
   const id = props.id;
-
+  const hoaDons = useSelector(GetBill);
 
   const loadHoaDon =  () => {
     HoaDonAPI.chiTietHoaDonTheoMa(id).then((res) => {
@@ -28,6 +30,7 @@ const ModalInHoaDon = (props) => {
 
 
   const handleCloseInHoaDon = () => {
+    setActiveKey(hoaDons.filter((h) => h.key !== id)[0] ? hoaDons.filter((h) => h.key !== id)[0].key : null);
     setOpenInHoaDon(false);
   };
 
@@ -35,12 +38,16 @@ const ModalInHoaDon = (props) => {
     HoaDonAPI.hoaDonSanPhamTheoMa(id).then((res) => {
       if (!res.data) return;
       setlistSanPhams(res.data);
-  
+      
     });
   };
+
+
+
+
   useEffect(() => {
     if (id && openInHoaDon) {
-     //if (hoaDondetail && listSanPhams) return;
+    //if (hoaDondetail && listSanPhams) return;
     loadHoaDon();
     loadListSanPhams();
     }

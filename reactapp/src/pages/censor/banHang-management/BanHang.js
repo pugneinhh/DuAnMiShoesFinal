@@ -1027,7 +1027,7 @@ SellAPI.voucherSapDatDuoc(
           list.map((i) =>
             SellAPI.deleteInvoiceAndRollBackProduct(i.chiTietSanPham, targetKey)
           );
-          setActiveKey(hoaDons[0].hoaDon);
+          setActiveKey(hoaDons.filter((h) => h.key !== targetKey)[0].key ? hoaDons.filter((h) => h.key !== targetKey)[0].key : null);
           initState.current--;
           toast("✔️ Xóa hóa đơn thành công!", {
             position: "top-right",
@@ -2041,6 +2041,7 @@ SellAPI.voucherSapDatDuoc(
           openInHoaDon={openInHoaDon}
           setOpenInHoaDon={setOpenInHoaDon}
           openThanhToan={openThanhToan}
+          setActiveKey={setActiveKey}
         />
       </div>
       {showModal && (

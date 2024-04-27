@@ -25,7 +25,6 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
   const payDetail = useSelector(GetPayDetail);
   const data = payDetail.filter((item) => item.hoaDon === hoaDon);
   const [storedData, setStoredData] = useState(null);
-  const hoaDons = useSelector(GetBill);
 
 
 
@@ -208,7 +207,9 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
     dispatch(RemoveBill({ key: hoaDon }));
     setTongThanhToan(0);
     onInHoaDon(true);
+    //setActiveKey(hoaDons.filter((h) => h.key !== hoaDon)[0] ? hoaDons.filter((h) => h.key !== hoaDon)[0].key : null);
     setOpenThanhToan(false);
+    
       // Xóa dữ liệu lưu trong reducer
     } else {
       toast("Chưa đủ điều kiện thanh toán!", {
