@@ -22,22 +22,23 @@ export class NguoiDungAPI {
       },
     });
   };
-  static doiMatKhau = (id, data) => {
+  static doiMatKhau = (idNV, data) => {
     const getToken = getHeader();
     return requestAdmin({
       method: "PUT",
-      url: `/admin/nguoi-dung/doi-mat-khau//${id}`,
+      url: `/admin/nguoi-dung/doi-mat-khau/${idNV}`,
       data: data,
       headers: {
         Authorization: getToken,
       },
     });
   };
-  static soSanhMk = (id) => {
+  static doiMatKhauClient = (idNV, data) => {
     const getToken = getHeader();
     return requestAdmin({
-      method: "GET",
-      url: `/admin/nguoi-dung/MK/${id}`,
+      method: "PUT",
+      url: `/khach-hang/doi-mat-khau/${idNV}`,
+      data: data,
       headers: {
         Authorization: getToken,
       },

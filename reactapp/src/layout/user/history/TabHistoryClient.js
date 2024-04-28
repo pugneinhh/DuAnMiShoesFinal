@@ -6,6 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { KHGuiThongBaoDatHang } from "../../../utils/socket/socket";
 import { HoaDonClientAPI } from "../../../pages/censor/api/HoaDonClient/HoaDonClientAPI";
 import { get, set } from "local-storage";
+import { FormattedNumber, IntlProvider } from "react-intl";
 const TabHistoryClient = ({ listBill }) => {
   const nav = useNavigate();
   // const [modalReason, setModalReason] = useState(false);
@@ -101,6 +102,7 @@ const TabHistoryClient = ({ listBill }) => {
 
               <div>
                 {item.hoaDonDetail.map((item, index) => (
+        
                   <div
                     key={index}
                     className="row mt-3 "
@@ -116,7 +118,7 @@ const TabHistoryClient = ({ listBill }) => {
                     <div className="col-md-6 ms-5 mt-3">
                       <h5>{item.tenSP} </h5>
                       <h6 className="text-danger">
-                        {item.giam > 0 ? (
+                        {item.giaGiam > 0 ? (
                           <del>
                             {Intl.NumberFormat("en-US").format(item.giaBanSP)}
                             VND
@@ -126,18 +128,25 @@ const TabHistoryClient = ({ listBill }) => {
                         )}
                       </h6>
                       <h6 className="text-danger">
-                        {Intl.NumberFormat("en-US").format(item.thanhTienSP)}{" "}
-                        VND
+                        {Intl.NumberFormat("en-US").format(item.thanhTienSP)}
                       </h6>
                       <h6>
                         {item.tenKichThuoc}-[{item.tenMauSac}]
                       </h6>
                       <h6>x{item.soLuongSP}</h6>
                     </div>
-                    <div className="col-md-3  mt-5">
+                    <div className="col-md-3" style={{marginTop:65}}>
                       <h6 className="text-danger">
-                        {Intl.NumberFormat("en-US").format(item.thanhTienSP)}
-                        VND
+                        <IntlProvider locale="vi-VN">
+                          <div>
+                            <FormattedNumber
+                              value={item.thanhTienSP * item.soLuongSP}
+                              style="currency"
+                              currency="VND"
+                              minimumFractionDigits={0}
+                            />
+                          </div>
+                        </IntlProvider>
                       </h6>
                     </div>
                   </div>
@@ -149,7 +158,16 @@ const TabHistoryClient = ({ listBill }) => {
                 >
                   <h5 className="mt-4">Thành tiền :</h5>
                   <h5 className="mt-4 ms-3 text-danger">
-                    {Intl.NumberFormat("en-US").format(item.thanhTien)} VND
+                    <IntlProvider locale="vi-VN">
+                      <div>
+                        <FormattedNumber
+                          value={item.thanhTien}
+                          style="currency"
+                          currency="VND"
+                          minimumFractionDigits={0}
+                        />
+                      </div>
+                    </IntlProvider>
                   </h5>
                 </div>
 

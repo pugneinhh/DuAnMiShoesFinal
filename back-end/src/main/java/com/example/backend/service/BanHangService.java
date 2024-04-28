@@ -96,7 +96,7 @@ public class BanHangService {
                 .trangThai(0)
                 .build();
 
-        System.out.println("Hóa đơn sau builder :"+hoaDon);
+
         if (hoaDonRequest.getIdVoucher() != null) {
             Voucher voucher = voucherRepository.findAllById(hoaDonRequest.getIdVoucher()).get();
             hoaDon.setVoucher(voucher);
@@ -130,17 +130,17 @@ public class BanHangService {
         for (KHHoaDonChiTietRequest request : hoaDonRequest.getListHDCT()) {
 
             ChiTietSanPham spct = ctspRepository.findById(request.getIdCTSP()).get();
-            BigDecimal giaGoc= spct.getGiaBan().multiply(BigDecimal.valueOf(request.getSoLuong()));
+            BigDecimal giaGoc= spct.getGiaBan();
             HoaDonChiTiet hdct = HoaDonChiTiet.builder()
                     .chiTietSanPham(spct)
                     .soLuong(request.getSoLuong())
-                    .giaGiam(giaGoc.subtract(request.getDonGia()))
-                    .giaSauGiam(request.getDonGia())
+                    .giaGiam(giaGoc.subtract(request.getDonGia().divide(BigDecimal.valueOf(request.getSoLuong()))))
+                    .giaSauGiam(request.getDonGia().divide(BigDecimal.valueOf(request.getSoLuong())))
                     .trangThai(0)
                     .hoaDon(hoaDon)
                     .ngayTao(LocalDateTime.now())
                     .build();
-            System.out.println("Hóa đơn chi tiết :"+hdct);
+
             hoaDonChiTietRepository.save(hdct);
             spct.setSoLuong(spct.getSoLuong() - request.getSoLuong());
 

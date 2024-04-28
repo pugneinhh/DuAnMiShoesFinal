@@ -3,8 +3,8 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { get } from "local-storage";
 import ProfileMenu from "../profile/ProfileMenu";
-import { SellAPI } from "../../../pages/censor/api/sell/sell.api";
 import "./phieugiamgia.css"
+import { BanHangClientAPI } from "../../../pages/censor/api/banHangClient/banHangClient.api";
 const PhieuGiamGiaCLient = (props) => {
   const storedData = get("userData");
   const [userName, setUserName] = useState("");
@@ -12,7 +12,7 @@ const PhieuGiamGiaCLient = (props) => {
   const nav = useNavigate();
   const [datas, setData] = useState([]);
   const loadVoucher = () => {
-    SellAPI.getVoucherWithIDKH(storedData.userID)
+    BanHangClientAPI.getVoucherWithIDKH(storedData.userID)
       .then((result) => {
         setData(result.data);
       })
@@ -30,7 +30,7 @@ const PhieuGiamGiaCLient = (props) => {
     nav("/san-pham");
   };
   return (
-    <div className="row" style={{height:705}}>
+    <div className="row" style={{ height: 705 }}>
       <ProfileMenu></ProfileMenu>
       <div
         className="col-md-10 "
@@ -58,13 +58,17 @@ const PhieuGiamGiaCLient = (props) => {
           {datas.map((item, index) => (
             <div className="col-md-4">
               <div class="cardPhieuGiamGia">
-                <div class="cardribbon">
+                <div
+                  class={
+                    item.loaiVoucher === "Tiền mặt" ? "ribbon2" : "ribbon"
+                  }
+                >
                   {item.mucDo.toLocaleString("vi-VN", {
                     style: "currency",
                     currency: "VND",
                   })}
 
-                  <span>{item.loaiVoucher === "Tiền mặt" ? "VND" : "%"}</span>
+                  <span>{item.loaiVoucher === "Tiền mặt" ? " VND" : "%"}</span>
                 </div>
                 <h3>{item.ma}</h3>
 

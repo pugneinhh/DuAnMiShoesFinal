@@ -27,8 +27,4 @@ public class NguoiDungController {
     public ResponseEntity<?> detailMK(@PathVariable("idNV") String idNV){
         return ResponseEntity.ok(nguoiDungService.findByID(idNV));
     }
-    @GetMapping("/MK/{idNV}")
-    public ResponseEntity<?> mk(@PathVariable("idNV") String idNV){
-        return ResponseEntity.ok(nguoiDungService.layMK(idNV));
-    }
 }

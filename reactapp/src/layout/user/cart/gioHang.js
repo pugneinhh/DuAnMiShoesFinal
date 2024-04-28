@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import "./gioHang.css";
 import { Button, Switch, Tag, Modal } from "antd";
 import {  FaMapMarkerAlt } from "react-icons/fa";
@@ -11,8 +11,6 @@ import { get, set } from "local-storage";
 import DiaChiGiaoHang from "./GiaoHang";
 import LogoVNP from "../../../assets/images/vnp.png";
 import { BanHangClientAPI } from "../../../pages/censor/api/banHangClient/banHangClient.api";
-import { v4 as uuid } from "uuid";
-import { KhachHangAPI } from "../../../pages/censor/api/user/khachHang.api";
 import { ShipAPI } from "../../../pages/censor/api/ship/ship.api";
 import { toast, ToastContainer } from "react-toastify";
 import logoBanner from "../../../assets/images/page-header-bg.jpg";
@@ -22,8 +20,11 @@ import {
   KHGuiThongBaoDatHang,
 } from "../../../utils/socket/socket";
 import { useCart } from "./CartContext";
-
+import { useAppSelector } from "../../../store/redux/hook";
+import { GetLoading } from "../../../store/reducer/Loading.reducer";
+import loading from "../../../assets/images/logo.png";
 export const GioHang = ({ children }) => {
+      const isLoading = useAppSelector(GetLoading);
   const [openModalDiaChi, setOpenModalDiaChi] = useState(false);
   const [openModalVoucher, setOpenModalVoucher] = useState(false);
   const [khachHang, setKhachHang] = useState(null);
@@ -329,6 +330,13 @@ export const GioHang = ({ children }) => {
 
   return (
     <div>
+      {isLoading && (
+        <div className="loading-overlay">
+          <div className="loading-logo">
+            <img src={loading} alt="Logo" />
+          </div>
+        </div>
+      )}
       <div className="banner-san-pham-shop">
         <img src={logoBanner} alt="Logo Banner"></img>
         <h1 className="banner-title-logo">Giỏ hàng</h1>
@@ -503,7 +511,7 @@ export const GioHang = ({ children }) => {
             <div className="col-md-5">
               <span>
                 <span style={{ color: "blue" }}>
-                  {discount?Intl.NumberFormat("en-US").format(discount):0}
+                  {discount ? Intl.NumberFormat("en-US").format(discount) : 0}
                 </span>
                 <span> VND</span>
               </span>
@@ -518,7 +526,10 @@ export const GioHang = ({ children }) => {
             </h5>
             <h5 className="col-md-5">
               <span style={{ color: "blue" }}>
-                {Intl.NumberFormat("en-US").format(roundToThousands(total - (discount?discount:0)))} VND
+                {Intl.NumberFormat("en-US").format(
+                  roundToThousands(total - (discount ? discount : 0))
+                )}{" "}
+                VND
               </span>
             </h5>
           </div>
@@ -607,7 +618,7 @@ export const GioHang = ({ children }) => {
             <h5 className="col">Giảm giá</h5>
 
             <h5 className="col">
-              : {discount?Intl.NumberFormat("en-US").format(discount):0} VND
+              : {discount ? Intl.NumberFormat("en-US").format(discount) : 0} VND
             </h5>
           </div>
           <div className="row mt-3" style={{ color: "red" }}>
@@ -615,7 +626,11 @@ export const GioHang = ({ children }) => {
             <h5 className="col">
               :{" "}
               {Intl.NumberFormat("en-US").format(
-                roundToThousands(total + (moneyShip ? moneyShip : 0) - (discount?discount:0))
+                roundToThousands(
+                  total +
+                    (moneyShip ? moneyShip : 0) -
+                    (discount ? discount : 0)
+                )
               )}{" "}
               VND
             </h5>
@@ -675,7 +690,7 @@ export const GioHang = ({ children }) => {
                       voucher,
                       diaChi,
                       phuongThuc,
-                      dataVanChuyen,
+                      dataVanChuyen
                     );
                   },
                   onCancel: () => {
