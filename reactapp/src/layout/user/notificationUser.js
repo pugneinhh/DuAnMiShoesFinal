@@ -1,5 +1,4 @@
 import { Dropdown, Avatar, Menu, Badge } from "antd";
-import { BellOutlined } from "@ant-design/icons";
 import { IoNotifications } from "react-icons/io5";
 import React, { useEffect, useState } from "react";
 import { ThongBaoAPI } from "../../pages/censor/api/thongBaoAPI.js/thongBaoAPI";
