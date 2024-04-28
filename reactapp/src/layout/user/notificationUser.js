@@ -88,8 +88,8 @@ export default function Notification() {
             shape="circle"
             className="align-content-center"
             size="default"
-            icon={<IoNotifications size={20} color="#9e9e9e" />}
-            style={{ backgroundColor: "#f7faf9" }}
+            icon={<IoNotifications size={30} color="black" />}
+            style={{ backgroundColor: "#FFFFFF", }}
           />
         </Badge>
       </div>
