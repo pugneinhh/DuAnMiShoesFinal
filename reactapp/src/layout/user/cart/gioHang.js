@@ -23,8 +23,10 @@ import { useCart } from "./CartContext";
 import { useAppSelector } from "../../../store/redux/hook";
 import { GetLoading } from "../../../store/reducer/Loading.reducer";
 import loading from "../../../assets/images/logo.png";
+import { faLessThanEqual } from "@fortawesome/free-solid-svg-icons";
 export const GioHang = ({ children }) => {
       const isLoading = useAppSelector(GetLoading);
+      const [checkLoading,setCheckLoading] = useState(false);
         const [loaddingLogo, setLoaddingLogo] = useState(null);
   const [openModalDiaChi, setOpenModalDiaChi] = useState(false);
   const [openModalVoucher, setOpenModalVoucher] = useState(false);
@@ -52,7 +54,7 @@ export const GioHang = ({ children }) => {
   const { updateTotalQuantity } = useCart();
   const storedData = get("userData");
   const storedGioHang = get("GioHang");
-
+  console.log("Loading ",checkLoading);
   const loadVoucherTotNhatVaVoucherTiepTheo = (total) => {
     BanHangClientAPI.voucherTotNhat(storedData?.userID ? storedData?.userID : null, total).then((res) => {setVoucher(res.data); loadGiamGia(res.data);});
     
@@ -207,6 +209,9 @@ export const GioHang = ({ children }) => {
     phuongThuc,
     dataVanChuyen
   ) => {
+    if (checkLoading === false) {
+      setCheckLoading(true);
+    }
     if (!diaChi && !dataVanChuyen){
       return toast.error("Đơn hàng chưa có địa chỉ!", {
         position: "top-right",
@@ -326,19 +331,24 @@ export const GioHang = ({ children }) => {
       });
     }
 
+
     //   setGioHangCT([]);
   };
 
   return (
     <div>
- 
-      {isLoading && (
+      
+      {checkLoading ? 
+       isLoading && (
         <div className="loading-overlay">
           <div className="loading-logo">
             <img src={loading} alt="Logo" />
           </div>
         </div>
-      )}
+      ) : ""
+      }
+      
+
       <div className="banner-san-pham-shop">
         <img src={logoBanner} alt="Logo Banner"></img>
         <h1 className="banner-title-logo">Giỏ hàng</h1>
