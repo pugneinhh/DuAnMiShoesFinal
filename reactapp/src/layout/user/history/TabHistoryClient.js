@@ -24,22 +24,18 @@ const TabHistoryClient = ({ listBill }) => {
     setIsModalHuyHoaDon(false);
   };
 
-  
   const showModalHuyHoaDon = (id) => {
     setIsModalHuyHoaDon(true);
     setId(id);
   };
   const handleHuyHoaDon = (values) => {
-       KHGuiThongBaoDatHang();
-      HoaDonClientAPI.detailSanPham(id).then((res) => {
-          res.data.map((listSanPham, index) =>
-            HoaDonClientAPI.deleteInvoiceAndRollBackProduct(
-              listSanPham.idctsp,
-              id
-            )
-          );
-      });
- 
+    KHGuiThongBaoDatHang();
+    HoaDonClientAPI.detailSanPham(id).then((res) => {
+      res.data.map((listSanPham, index) =>
+        HoaDonClientAPI.deleteInvoiceAndRollBackProduct(listSanPham.idctsp, id)
+      );
+    });
+
     HoaDonClientAPI.huyHoaDonQLHoaDon(id, tenKH, values).then((res) => {
       formHuyHoaDon.resetFields();
       setIsModalHuyHoaDon(false);
@@ -56,6 +52,7 @@ const TabHistoryClient = ({ listBill }) => {
       nav(`/chi-tiet-don-hang/${id}`);
     });
   };
+
   return (
     <div className="container ">
       <div className="row pt-3 ">
@@ -70,7 +67,13 @@ const TabHistoryClient = ({ listBill }) => {
                 Mã hóa đơn : <b>{item.ma}</b>
               </span>
               <Space className="float-end" size={[0, 8]} wrap>
-                <Tag color={item.trangThai == -1 ? "#cd201f" : "#108ee9"}>
+                <Tag
+                  color={
+                    item.trangThai == -1 || item.trangThai == 10
+                      ? "#cd201f"
+                      : "#108ee9"
+                  }
+                >
                   <span className={`trangThai ${" status_" + item.trangThai} `}>
                     {item.trangThai === "0"
                       ? "Chờ xác nhận"
@@ -113,13 +116,18 @@ const TabHistoryClient = ({ listBill }) => {
                     <div className="col-md-6 ms-5 mt-3">
                       <h5>{item.tenSP} </h5>
                       <h6 className="text-danger">
-                        <del>
-                          {Intl.NumberFormat("en-US").format(item.giaBanSP)}
-                          VND
-                        </del>
+                        {item.giam > 0 ? (
+                          <del>
+                            {Intl.NumberFormat("en-US").format(item.giaBanSP)}
+                            VND
+                          </del>
+                        ) : (
+                          <></>
+                        )}
                       </h6>
                       <h6 className="text-danger">
-                        {Intl.NumberFormat("en-US").format(item.giaBanSP)} VND
+                        {Intl.NumberFormat("en-US").format(item.thanhTienSP)}{" "}
+                        VND
                       </h6>
                       <h6>
                         {item.tenKichThuoc}-[{item.tenMauSac}]

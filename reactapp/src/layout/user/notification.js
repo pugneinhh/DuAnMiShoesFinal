@@ -64,8 +64,6 @@ export default function Notification() {
         loadAll();
         count();
               navigate(`/admin-detail-hoa-don/${res.data.hoaDon.id}`); // dùng để chuyển trang
-      
-
     });
   }
 
