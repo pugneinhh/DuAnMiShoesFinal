@@ -44,7 +44,6 @@ export const Shop = ({ children }) => {
     MauSacAPI.getAll()
       .then((res) => {
         setMauSacs(res.data);
-   
       })
   }
 

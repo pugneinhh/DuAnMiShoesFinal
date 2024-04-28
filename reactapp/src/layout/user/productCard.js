@@ -18,16 +18,16 @@ export const ProductCard = ({ product }) => {
     setidCTSP(row);
     setOpenModalDetailSP(true);
   };
+
   return (
-  
     <div class="container-card-sanpham">
       <div class="card">
         {product.loaiKM && (
-          <div class="ribbon ">
-            Big sale off
-            {/* {product.loaiKM === "Tiền mặt"
-              ? product.giaTriKhuyenMai
-              : product.giaTriKhuyenMai + "%"} */}
+          <div class={product.loaiKM === "Phần trăm" ? "ribbon" : "ribbon2"}>
+            {/* Big sale off */}
+            {product.loaiKM === "Phần trăm"
+              ? +" " + product.giaTriKhuyenMai + "%"
+              : product.giaTriKhuyenMai + " VND"}
           </div>
         )}
         <div class="imgBx">
@@ -57,22 +57,30 @@ export const ProductCard = ({ product }) => {
               <span>
                 <span className="text-gia-tien ">
                   <del style={{ color: "red" }}>
-                    {Intl.NumberFormat("en-US").format(roundToThousands(product.price))} VNĐ
+                    {Intl.NumberFormat("en-US").format(
+                      roundToThousands(product.price)
+                    )}{" "}
+                    VNĐ
                   </del>
                 </span>
                 <span className="text-gia-tien ">
-                  {Intl.NumberFormat("en-US").format(roundToThousands(
-                    product.loaiKM === "Tiền mặt"
-                      ? product.price - product.giaTriKhuyenMai
-                      : product.price -
-                          (product.price * product.giaTriKhuyenMai) / 100
-                  ))}{" "}
+                  {Intl.NumberFormat("en-US").format(
+                    roundToThousands(
+                      product.loaiKM === "Tiền mặt"
+                        ? product.price - product.giaTriKhuyenMai
+                        : product.price -
+                            (product.price * product.giaTriKhuyenMai) / 100
+                    )
+                  )}{" "}
                   VNĐ
                 </span>
               </span>
             ) : (
               <span className="text-gia-tien">
-                {Intl.NumberFormat("en-US").format(roundToThousands(product.price))} VNĐ
+                {Intl.NumberFormat("en-US").format(
+                  roundToThousands(product.price)
+                )}{" "}
+                VNĐ
               </span>
             )}
           </div>
