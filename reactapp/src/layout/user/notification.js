@@ -28,8 +28,11 @@ export default function Notification() {
 
       useEffect(() => {
         const connectWebSocket = () => {
-          const socket = new SockJS("http://localhost:8080/ws");
-          stomp = Stomp.over(socket);
+          // const socket = new SockJS("http://localhost:8080/ws");
+          // stomp = Stomp.over(socket);
+          stomp = Stomp.over(function(){
+            return new SockJS("http://localhost:8080/ws");
+          });
         stomp.connect({}, () => {
           console.log("connect websocket");
 

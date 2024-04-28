@@ -35,7 +35,7 @@ const AddVoucher = () => {
       const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     for (let i = 0; i < 6; i++) {
       const randomIndex = Math.floor(Math.random() * characters.length);
-      value.ma = characters.charAt(randomIndex);
+      value.ma += characters.charAt(randomIndex);
     }
     }
    
