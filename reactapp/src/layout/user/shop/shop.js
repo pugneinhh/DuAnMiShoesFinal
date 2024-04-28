@@ -39,7 +39,6 @@ export const Shop = ({ children }) => {
     HomeAPI.getAllMauSac()
       .then((res) => {
         setMauSacs(res.data);
-
       })
   }
 
