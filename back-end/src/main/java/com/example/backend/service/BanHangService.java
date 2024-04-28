@@ -130,10 +130,11 @@ public class BanHangService {
         for (KHHoaDonChiTietRequest request : hoaDonRequest.getListHDCT()) {
 
             ChiTietSanPham spct = ctspRepository.findById(request.getIdCTSP()).get();
-
+            BigDecimal giaGoc= spct.getGiaBan().multiply(BigDecimal.valueOf(request.getSoLuong()));
             HoaDonChiTiet hdct = HoaDonChiTiet.builder()
                     .chiTietSanPham(spct)
                     .soLuong(request.getSoLuong())
+                    .giaGiam(giaGoc.subtract(request.getDonGia()))
                     .giaSauGiam(request.getDonGia())
                     .trangThai(0)
                     .hoaDon(hoaDon)
