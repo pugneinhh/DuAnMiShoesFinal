@@ -6,20 +6,23 @@ import {
   Divider,
   Form,
   Input,
-  message,
   Row,
   Select,
 } from "antd";
 import { FaMoneyBills } from "react-icons/fa6";
 import UpLoadImage from "../nhanVien-management/UploadAnh";
 import { AddressApi } from "../api/address/AddressApi";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { KhachHangAPI } from "../api/user/khachHang.api";
 import { ToastContainer, toast } from "react-toastify";
 import QRScannerModal from "../api/QR_Code/QrCode";
 import moment from "moment";
 import { NguoiDungAPI } from "../api/nguoiDung/nguoiDungAPI";
+import { useAppSelector } from "../../../store/redux/hook";
+import { GetLoading } from "../../../store/reducer/Loading.reducer";
+import loading from "../../../assets/images/logo.png";
 export default function AddKhachHang() {
+     const isLoading = useAppSelector(GetLoading);
   const [form] = Form.useForm();
   const [fileImage, setFileIamge] = useState(null);
   const [listProvince, setListProvince] = useState([]);
@@ -269,6 +272,13 @@ export default function AddKhachHang() {
 
   return (
     <>
+      {isLoading && (
+        <div className="loading-overlay">
+          <div className="loading-logo">
+            <img src={loading} alt="Logo" />
+          </div>
+        </div>
+      )}
       <h1>
         <Divider orientation="center" color="none">
           <h3 className="text-first  fw-bold">
@@ -583,7 +593,6 @@ export default function AddKhachHang() {
                 </Col>
                 <Button
                   to={"/nhan-vien"}
-               
                   style={{
                     width: "110px",
                     height: "40px",

@@ -128,6 +128,7 @@ public class HoaDonServicee {
         hoaDon.setTenNguoiNhan(hd.getTenNguoiNhan());
         hoaDon.setSoDienThoai(hd.getSoDienThoai());
         hoaDon.setEmail(hd.getEmail());
+        hoaDon.setGhiChu(hd.getGhiChu());
         hoaDon.setTienVanChuyen(hd.getTienVanChuyen());
         return hoaDonRepository.save(hoaDon);
     }

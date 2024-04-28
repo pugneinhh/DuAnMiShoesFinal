@@ -63,7 +63,10 @@ const TraCuuDonHangClient = () => {
 
   return (
     <>
-      <div className="row d-flex justify-content-center">
+      <div
+        className="row d-flex justify-content-center"
+        style={{ height: 565 }}
+      >
         <Form
           form={form}
           layout="vertical "
@@ -113,10 +116,11 @@ const TraCuuDonHangClient = () => {
             </Col>
           </Row>
         </Form>
+        <div className="text-center">
+          <img src={LogoGHN} style={{ width: 750, height: 420 }}></img>
+        </div>
       </div>
-      <div className="text-center">
-        <img src={LogoGHN} style={{ width: 700, height: 403 }}></img>
-      </div>
+
       <ToastContainer
         position="top-right"
         autoClose={5000}

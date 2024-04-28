@@ -9,6 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class DoiMatKhauRequest {
+    private String matKhauCu;
     private String matKhau;
 
 

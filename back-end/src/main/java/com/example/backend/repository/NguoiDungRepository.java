@@ -201,7 +201,4 @@ public interface NguoiDungRepository extends JpaRepository<NguoiDung, String> {
     @Query(value = "select * from nguoi_dung where id=:id",nativeQuery = true)
     NguoiDung getNDByID(String id);
 
-    //dđổi mật khẩu
-    @Query(value = "select mat_khau as matKhau from nguoi_dung where id=:id",nativeQuery = true)
-    MatKhauRespon soSanhMK(String id);
 }

@@ -132,8 +132,9 @@ export default function HoaDonDetail() {
       setHoaDondetail(res.data);
       setTrangThai(res.data.trangThai);
       setMaHD(res.data.ma);
-
+        console.log(res.data);
     });
+  
   };
 
   const showModal = () => {
@@ -802,6 +803,7 @@ export default function HoaDonDetail() {
 
             <ModalDiaChiUpdate
               idKH={hoaDondetail.nguoiDung}
+              loadHoaDon={loadHoaDon}
               idHD={id}
               maNV={maNV}
               activeKey={id}
@@ -971,7 +973,9 @@ export default function HoaDonDetail() {
                     <IntlProvider locale="vi-VN">
                       <div>
                         <FormattedNumber
-                          value={listSanPham.thanhTienSP}
+                          value={
+                            listSanPham.thanhTienSP
+                          }
                           style="currency"
                           currency="VND"
                           minimumFractionDigits={0}
@@ -998,7 +1002,7 @@ export default function HoaDonDetail() {
                   <IntlProvider locale="vi-VN">
                     <div>
                       <FormattedNumber
-                        value={listSanPham.thanhTienSP * listSanPham.soLuongSP}
+                        value={listSanPham.thanhTienSP*listSanPham.soLuongSP}
                         style="currency"
                         currency="VND"
                         minimumFractionDigits={0}
@@ -1069,7 +1073,9 @@ export default function HoaDonDetail() {
                         <IntlProvider locale="vi-VN">
                           <div>
                             <FormattedNumber
-                              value={listSanPham.thanhTienSP}
+                              value={
+                                listSanPham.thanhTienSP
+                              }
                               style="currency"
                               currency="VND"
                               minimumFractionDigits={0}
@@ -1096,9 +1102,7 @@ export default function HoaDonDetail() {
                       <IntlProvider locale="vi-VN">
                         <div>
                           <FormattedNumber
-                            value={
-                              listSanPham.thanhTienSP * listSanPham.soLuongSP
-                            }
+                            value={listSanPham.thanhTienSP*listSanPham.soLuongSP}
                             style="currency"
                             currency="VND"
                             minimumFractionDigits={0}
@@ -1467,7 +1471,9 @@ export default function HoaDonDetail() {
                           <IntlProvider locale="vi-VN">
                             <div>
                               <FormattedNumber
-                                value={listSanPham.thanhTienSP}
+                                value={
+                                  listSanPham.thanhTienSP 
+                                }
                                 style="currency"
                                 currency="VND"
                                 minimumFractionDigits={0}
@@ -1483,6 +1489,7 @@ export default function HoaDonDetail() {
                           borderRadius: 6,
                           width: 60,
                           height: 25,
+                          border: "1px solid black", // Thêm viền đen với độ dày 1px
                         }}
                       ></div>
                       <h6>x{listSanPham.soLuongSP}</h6>
@@ -1620,18 +1627,44 @@ export default function HoaDonDetail() {
                           />
                         </div>
                       </IntlProvider>
+                    </p>
+                  </div>
+                  <div className="d-flex">
+                    <h6 className="col-md-6">Phí vận chuyển:</h6>
+                    <p className="col-md-6">
+                      <IntlProvider locale="vi-VN">
+                        <div>
+                          <FormattedNumber
+                            value={hoaDondetail.tienVanChuyen}
+                            style="currency"
+                            currency="VND"
+                            minimumFractionDigits={0}
+                          />
+                        </div>
+                      </IntlProvider>
+                    </p>
+                  </div>
+                  <div className="d-flex">
+                    <h6 className="col-md-6">Tổng tiền giảm:</h6>
+                    <p className="col-md-6">
+                      <IntlProvider locale="vi-VN">
+                        <div>
+                          <FormattedNumber
+                            value={
+                              hoaDondetail.giaGiam
+                                ? "-" + hoaDondetail.giaGiam
+                                : 0
+                            }
+                            style="currency"
+                            currency="VND"
+                            minimumFractionDigits={0}
+                          />
+                        </div>
+                      </IntlProvider>
                     </p>{" "}
                   </div>
                   <div className="d-flex">
-                    <h6 className="col-md-6">Phí vận chuyển:</h6>{" "}
-                    <p className="col-md-6">0 VND</p>{" "}
-                  </div>
-                  <div className="d-flex">
-                    <h6 className="col-md-6">Tổng tiền giảm:</h6>{" "}
-                    <p className="col-md-6">0 VND</p>{" "}
-                  </div>
-                  <div className="d-flex">
-                    <h6 className="col-md-6">Tổng giảm:</h6>{" "}
+                    <h6 className="col-md-6">Tổng giảm:</h6>
                     <p className="col-md-6">
                       <IntlProvider locale="vi-VN">
                         <div>

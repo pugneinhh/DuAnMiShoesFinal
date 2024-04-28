@@ -1,17 +1,16 @@
 import { Form, Input, InputNumber, Modal, Select } from "antd";
-import ModalDiaChi from "../khachHang-management/ModalDiaChi";
 import { AddressApi } from "../api/address/AddressApi";
 import { useEffect, useState } from "react";
 import { HoaDonAPI } from "../api/hoaDon/hoaDon.api";
 import { SellAPI } from "../api/sell/sell.api";
 import { ShipAPI } from "../api/ship/ship.api";
 import Moment from "moment";
-import { faCommentsDollar } from "@fortawesome/free-solid-svg-icons";
+
 import { toast } from "react-toastify";
 
 const ModalDiaChiUpdate = (props) => {
   const [form] = Form.useForm();
-  const { openDiaChiUpdate, setOpenDiaChiUpdate } = props;
+  const { openDiaChiUpdate, setOpenDiaChiUpdate, loadHoaDon } = props;
   const idHD = props.idHD;
   const [listProvince, setListProvince] = useState([]);
   const [listDistricts, setListDistricts] = useState([]);
@@ -27,6 +26,7 @@ const ModalDiaChiUpdate = (props) => {
     // form.setFieldsValue({ idNguoiDung: idKH });
     loadDiaChiHoaDon();
     loadDataProvince();
+    loadHoaDon();
   }, []);
 
   const loadDiaChiHoaDon = () => {
@@ -104,6 +104,7 @@ const ModalDiaChiUpdate = (props) => {
 
   const handleClose = () => {
     setOpenDiaChiUpdate(false);
+        loadHoaDon();
   };
   const loadTimeAndMoney = async (districtID, valueWard, quantity) => {
     setTimeShip(
@@ -144,6 +145,8 @@ const ModalDiaChiUpdate = (props) => {
       };
    
     SellAPI.updateVanChuyen(diaChiHoaDon.ma, data);
+        loadHoaDon();
+    
   };
 
   const loadDataProvince = () => {

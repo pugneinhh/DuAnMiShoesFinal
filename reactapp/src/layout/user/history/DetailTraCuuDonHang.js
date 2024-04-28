@@ -232,6 +232,7 @@ const DetailTraCuuDonHang = ({ listBill }) => {
                       borderRadius: 6,
                       width: 60,
                       height: 25,
+                      border: "1px solid black", // Thêm viền đen với độ dày 1px
                     }}
                   ></div>
                   <h6>x{listSanPham.soLuongSP}</h6>

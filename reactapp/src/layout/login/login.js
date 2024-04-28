@@ -49,6 +49,7 @@ export const Login = () => {
           progress: undefined,
           theme: "light",
         });
+        return
       });
   };
   const onSuccess = (res) => {
