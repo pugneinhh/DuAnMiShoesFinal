@@ -267,6 +267,8 @@ const ModalSanPham = (props) => {
             <div
               style={{
                 backgroundColor: `${record.maMS}`,
+                border: '1px solid black',
+                borderColor: 'black',
                 borderRadius: 30,
                 width: 25,
                 height: 25,

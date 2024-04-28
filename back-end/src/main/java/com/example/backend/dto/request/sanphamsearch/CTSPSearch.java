@@ -17,6 +17,8 @@ public class CTSPSearch {
     String idCL;
     String idH;
     int trangThaiCT;
-    int soLuongCT;
-    int giaBanCT;
+    int soLuongBatDau;
+    int soLuongKetThuc;
+    int giaBanBatDau;
+    int giaBanKetThuc;
 }

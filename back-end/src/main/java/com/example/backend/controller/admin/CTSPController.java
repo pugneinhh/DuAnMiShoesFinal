@@ -72,8 +72,6 @@ public class CTSPController {
 
     @PostMapping("/search-ctsp/{idSP}")
     public ResponseEntity<?> search(@PathVariable("idSP") String id, @RequestBody CTSPSearch ctspSearch) {
-        System.out.println(id);
-        System.out.println(ctspSearch.toString());
         return ResponseEntity.ok(ctspService.getSearch(id, ctspSearch));
     }
 

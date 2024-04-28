@@ -7,8 +7,8 @@ export class HomeAPI {
             method: "GET",
             url: `/home/new`,
         });
-    };   
-     //Get sản phẩm hot
+    };
+    //Get sản phẩm hot
     static getHotSale = () => {
         return requestClient({
             method: "GET",
@@ -35,6 +35,27 @@ export class HomeAPI {
             method: "POST",
             url: `/home/searchMang`,
             data: data
+        });
+    };
+    //Get hãng
+    static getAllHang = () => {
+        return requestClient({
+            method: "GET",
+            url: `/home/hang`,
+        });
+    };
+    //Get màu sắc
+    static getAllMauSac = () => {
+        return requestClient({
+            method: "GET",
+            url: `/home/mau-sac`,
+        });
+    };
+    //Get kích thước
+    static getAllKichThuoc = () => {
+        return requestClient({
+            method: "GET",
+            url: `/home/kich-thuoc`,
         });
     };
 }
