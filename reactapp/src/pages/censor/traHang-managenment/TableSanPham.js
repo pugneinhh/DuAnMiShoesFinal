@@ -87,7 +87,7 @@ const TableSanPham = ({ onSelectedSP, sanPhamHDCT }) => {
                 
               }
             }
-              disabled={record.soLuongHienTai === 0}
+              disabled={record.soLuongHienTai === 1}
             >
               -
             </Button>
