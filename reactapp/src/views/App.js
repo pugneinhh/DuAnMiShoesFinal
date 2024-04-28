@@ -52,6 +52,7 @@ import ThongKe from "../pages/censor/thongKe-management/ThongKe";
 import BanHang from "../pages/censor/banHang-management/BanHang";
 import GuestGuard from "../guard/GuestGuard";
 import { Home } from "../layout/user/home";
+import { NoiQuyTraHang } from "../layout/user/NoiQuyTraHang";
 import { Login } from "../layout/login/login";
 import { GioHang } from "../layout/user/cart/gioHang";
 import { Shop } from "../layout/user/shop/shop";
@@ -410,7 +411,7 @@ function App() {
               element={
                 <AuthGuard>
                   <DashboardCensor>
-                    <DoiMatKhauAdmin/>
+                    <DoiMatKhauAdmin />
                   </DashboardCensor>
                 </AuthGuard>
               }
@@ -423,6 +424,18 @@ function App() {
                   <CartProvider>
                     <DashboardClient>
                       <Home />
+                    </DashboardClient>
+                  </CartProvider>
+                </GuestGuard>
+              }
+            />
+            <Route
+              path="/chinh-sach"
+              element={
+                <GuestGuard>
+                  <CartProvider>
+                    <DashboardClient>
+                      <NoiQuyTraHang/>
                     </DashboardClient>
                   </CartProvider>
                 </GuestGuard>

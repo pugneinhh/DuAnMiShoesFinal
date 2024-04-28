@@ -37,7 +37,6 @@ const ModalSanPham = (props) => {
   const [HDCT, setHDCT] = useState([]);
   const handleClose = () => {
     setOpenSanPham(false);
-
   };
 
   const { Option } = Select;
@@ -319,7 +318,7 @@ const ModalSanPham = (props) => {
   return (
     <Modal
       title="Sản phẩm"
-      centered
+      centered={true}
       open={openSanPham}
       onCancel={handleClose}
       footer={
@@ -333,178 +332,207 @@ const ModalSanPham = (props) => {
       zIndex={10000}
       style={{ top: -200 }}
     >
-      <div className="container-fluid" style={{ borderRadius: 20 }}>
-        <div className="container-fluid">
-          <Divider orientation="center" color="#d0aa73">
-            <h4 className="text-first pt-1 fw-bold">
-              {" "}
-              <InfoCircleFilled size={35} /> Quản lý chi tiết sản phẩm
-            </h4>
-          </Divider>
-          <div
-            className=" bg-light m-2 p-3 pt-2"
+    <div className="container-fluid" style={{ borderRadius: 20 }}>
+      <div className="container-fluid">
+        <Divider orientation="center" color="#d0aa73">
+          <h4 className="text-first pt-1 fw-bold">
+            {" "}
+            <InfoCircleFilled size={35} /> Quản lý chi tiết sản phẩm
+          </h4>
+        </Divider>
+        <div
+          className=" bg-light m-2 p-3 pt-2"
+          style={{
+            border: "1px solid #ddd", // Border color
+            boxShadow: "0 3px 8px rgba(0, 0, 0, 0.1)", // Box shadow
+            borderRadius: "8px",
+          }}
+        >
+          <h5>
+            <FilterFilled size={30} /> Bộ lọc
+          </h5>
+          <hr />
+          <Form
+            labelCol={{
+              span: 6,
+            }}
+            wrapperCol={{
+              span: 14,
+            }}
+            layout="horizontal"
+            initialValues={{
+              size: componentSize,
+            }}
+            onValuesChange={onChangeFilter}
+            size={componentSize}
             style={{
-              border: "1px solid #ddd", // Border color
-              boxShadow: "0 3px 8px rgba(0, 0, 0, 0.1)", // Box shadow
-              borderRadius: "8px",
+              maxWidth: 1600,
             }}
           >
-            <h5><FilterFilled size={30} /> Bộ lọc</h5>
-            <hr />
-            <Form
-              labelCol={{
-                span: 6,
-              }}
-              wrapperCol={{
-                span: 14,
-              }}
-              layout="horizontal"
-              initialValues={{
-                size: componentSize,
-              }}
-              onValuesChange={onChangeFilter}
-              size={componentSize}
-              style={{
-                maxWidth: 1600,
-              }}
-            >
-
-              {/* Form tìm kiếm */}
-              {/* Các Thuộc Tính Dòng 1 */}
-              <div className='row mt-3'>
-                {/* Tên & Mã */}
-                <div className="col-md-4">
-                  <Form.Item label="Tên & Mã" name="tenCT">
-                    <Input className="border" />
-                  </Form.Item>
-                </div>
-                {/* Kích Thước */}
-                <div className='col-md-4' >
-                  <Form.Item label="Kích Thước" name="idKT">
-                    <Select placeholder="Chọn một giá trị" >
-                      {kt.map(item => (
-                        <Option key={item.id} value={item.id}>
-                          {item.ten}
-                        </Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                </div>
-                {/* Màu Sắc */}
-                <div className='col-md-4'>
-                  <Form.Item label="Màu Sắc" name="idMS">
-                    <Select placeholder="Chọn một giá trị">
-                      {ms.map(item => (
-                        <Option key={item.id} value={item.id}>
-                          <div style={{
+            {/* Form tìm kiếm */}
+            {/* Các Thuộc Tính Dòng 1 */}
+            <div className="row mt-3">
+              {/* Tên & Mã */}
+              <div className="col-md-4">
+                <Form.Item label="Tên & Mã" name="tenCT">
+                  <Input className="border" />
+                </Form.Item>
+              </div>
+              {/* Kích Thước */}
+              <div className="col-md-4">
+                <Form.Item label="Kích Thước" name="idKT">
+                  <Select placeholder="Chọn một giá trị">
+                    {kt.map((item) => (
+                      <Option key={item.id} value={item.id}>
+                        {item.ten}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </div>
+              {/* Màu Sắc */}
+              <div className="col-md-4">
+                <Form.Item label="Màu Sắc" name="idMS">
+                  <Select placeholder="Chọn một giá trị">
+                    {ms.map((item) => (
+                      <Option key={item.id} value={item.id}>
+                        <div
+                          style={{
                             backgroundColor: `${item.ma}`,
                             borderRadius: 6,
                             width: 170,
                             height: 25,
-                          }}></div >
-                        </Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                </div>
-              </div>
-
-
-              {/* Các Thuộc Tính Dòng 2 */}
-              <div className='row'>
-                {/* Chất Liệu */}
-                <div className='col-md-4' >
-                  <Form.Item label="Chất Liệu" name="idCL">
-                    <Select placeholder="Chọn một giá trị">
-                      {cl.map(item => (
-                        <Option key={item.id} value={item.id}>
-                          {item.ten}
-                        </Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                </div>
-                {/* Độ Cao */}
-                <div className='col-md-4'>
-                  <Form.Item label="Đế giày" name="idDC">
-                    <Select placeholder="Chọn một giá trị">
-                      {dc.map(item => (
-                        <Option key={item.ma} value={item.id}>
-                          {item.ten}
-                        </Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                </div>
-                {/* Danh Mục */}
-                <div className='col-md-4'>
-                  <Form.Item label="Danh Mục" name="idDM">
-                    <Select placeholder="Chọn một giá trị">
-                      {dm.map(item => (
-                        <Option key={item.id} value={item.id}>
-                          {item.ten}
-                        </Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                </div>
-              </div>
-
-              {/* Các Thuộc Tính Dòng 3 */}
-              <div className='row'>
-                {/* Hãng */}
-                <div className='col-md-4'>
-                  <Form.Item label="Hãng" name="idH">
-                    <Select placeholder="Chọn một giá trị">
-                      {h.map(item => (
-                        <Option key={item.id} value={item.id}>
-                          {item.ten}
-                        </Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                </div>
-                {/* Trạng Thái */}
-                <div className='col-md-4'>
-                  <Form.Item label="Trạng thái" name="trangThaiCT">
-                    <Select placeholder="Chọn một giá trị" defaultValue="0">
-                      <Select.Option value='0'>Còn Bán</Select.Option>
-                      <Select.Option value='1'>Dừng Bán</Select.Option>
-                    </Select>
-                  </Form.Item>
-                </div>
-                <div className='col-md-4'>
-                  <Form.Item label="Số lượng" name="soLuongCT">
-                    <Slider style={{ width: '200px' }} min={1} />
-                  </Form.Item>
-                </div>
-              </div>
-              <div className='col'>
-                <Form.Item style={{ marginLeft: 100 }} label="Giá bán" name="giaBanCT">
-                  <Slider style={{ width: '430px' }} min={1000000} max={10000000} step={1000000} />
+                          }}
+                        ></div>
+                      </Option>
+                    ))}
+                  </Select>
                 </Form.Item>
               </div>
+            </div>
 
-
-              <div className='container-fluid'>
-                <Form.Item className='text-center' style={{ paddingLeft: 360 }}>
-                  <Button type="primary" htmlType='reset' onClick={loadCTSP} icon={<RetweetOutlined />}>Làm mới</Button>
+            {/* Các Thuộc Tính Dòng 2 */}
+            <div className="row">
+              {/* Chất Liệu */}
+              <div className="col-md-4">
+                <Form.Item label="Chất Liệu" name="idCL">
+                  <Select placeholder="Chọn một giá trị">
+                    {cl.map((item) => (
+                      <Option key={item.id} value={item.id}>
+                        {item.ten}
+                      </Option>
+                    ))}
+                  </Select>
                 </Form.Item>
               </div>
+              {/* Độ Cao */}
+              <div className="col-md-4">
+                <Form.Item label="Đế giày" name="idDC">
+                  <Select placeholder="Chọn một giá trị">
+                    {dc.map((item) => (
+                      <Option key={item.ma} value={item.id}>
+                        {item.ten}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </div>
+              {/* Danh Mục */}
+              <div className="col-md-4">
+                <Form.Item label="Danh Mục" name="idDM">
+                  <Select placeholder="Chọn một giá trị">
+                    {dm.map((item) => (
+                      <Option key={item.id} value={item.id}>
+                        {item.ten}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </div>
+            </div>
 
-            </Form>
-          </div>
-          <div
-            className=" bg-light m-2 p-3 pt-2"
-            style={{
-              border: "1px solid #ddd", // Border color
-              boxShadow: "0 3px 8px rgba(0, 0, 0, 0.1)", // Box shadow
-              borderRadius: "8px",
-            }}
-          >
-            <h5>
-              <BookFilled size={30} /> Danh sách chi tiết sản phẩm
-            </h5>
+            {/* Các Thuộc Tính Dòng 3 */}
+            <div className="row">
+              {/* Hãng */}
+              <div className="col-md-4">
+                <Form.Item label="Hãng" name="idH">
+                  <Select placeholder="Chọn một giá trị">
+                    {h.map((item) => (
+                      <Option key={item.id} value={item.id}>
+                        {item.ten}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </div>
+              {/* Trạng Thái */}
+              <div className="col-md-4">
+                <Form.Item label="Trạng thái" name="trangThaiCT">
+                  <Select placeholder="Chọn một giá trị" defaultValue="0">
+                    <Select.Option value="0">Còn Bán</Select.Option>
+                    <Select.Option value="1">Dừng Bán</Select.Option>
+                  </Select>
+                </Form.Item>
+              </div>
+              <div className="col-md-4">
+                <Form.Item label="Số lượng" name="soLuongCT">
+                  <Slider
+                    range
+                    step={100}
+                    defaultValue={[1, 1000]}
+                    min={1}
+                    max={1000}
+                  />
+                </Form.Item>
+              </div>
+            </div>
+            <div className="col">
+              <Form.Item
+                style={{ marginLeft: 100 }}
+                label="Giá bán"
+                name="giaBanCT"
+              >
+                <Slider
+                  range
+                  step={100000}
+                  defaultValue={[100000, 50000000]}
+                  min={100000}
+                  max={50000000}
+                />
+              </Form.Item>
+            </div>
+
+            <div className="row">
+            {h.map((item) => (
+                      <span>{item.ten}</span>
+                    ))}
+            </div>
+
+            <div className="container-fluid">
+              <Form.Item className="text-center" style={{ paddingLeft: 360 }}>
+                <Button
+                  type="primary"
+                  htmlType="reset"
+                  onClick={loadCTSP}
+                  icon={<RetweetOutlined />}
+                >
+                  Làm mới
+                </Button>
+              </Form.Item>
+            </div>
+          </Form>
+        </div>
+        <div
+          className=" bg-light m-2 p-3 pt-2"
+          style={{
+            border: "1px solid #ddd", // Border color
+            boxShadow: "0 3px 8px rgba(0, 0, 0, 0.1)", // Box shadow
+            borderRadius: "8px",
+          }}
+        >
+          <h5>
+            <BookFilled size={30} /> Danh sách chi tiết sản phẩm
+          </h5>
             <hr />
             <div className="container-fluid mt-4">
               <div>
