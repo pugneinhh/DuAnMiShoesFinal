@@ -25,6 +25,7 @@ import { GetLoading } from "../../../store/reducer/Loading.reducer";
 import loading from "../../../assets/images/logo.png";
 export const GioHang = ({ children }) => {
       const isLoading = useAppSelector(GetLoading);
+        const [loaddingLogo, setLoaddingLogo] = useState(null);
   const [openModalDiaChi, setOpenModalDiaChi] = useState(false);
   const [openModalVoucher, setOpenModalVoucher] = useState(false);
   const [khachHang, setKhachHang] = useState(null);
@@ -330,6 +331,7 @@ export const GioHang = ({ children }) => {
 
   return (
     <div>
+ 
       {isLoading && (
         <div className="loading-overlay">
           <div className="loading-logo">
