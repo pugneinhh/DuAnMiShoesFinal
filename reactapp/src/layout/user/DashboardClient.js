@@ -39,8 +39,8 @@ export const DashboardClient = ({ children }) => {
   const [valueSearch, setValueSearchs] = useState('');
 
   const onSearch = (value) => {
-      nav(`/tim-kiem/${value.trim()}`);
-      setValueSearchs('')
+    nav(`/tim-kiem/${value.trim()}`);
+    setValueSearchs('')
   };
 
   useEffect(() => {
@@ -254,6 +254,19 @@ export const DashboardClient = ({ children }) => {
           </div>
         </Col>
       </Header>
+      <marquee
+        style={{
+          // backgroundColor:"#1F282D",
+          fontStyle:"italic",
+          color: "Black",
+          fontSize: 16,
+          fontWeight: "Bolder"
+        }}
+        direction="left"
+        scrollamount="5"
+      >
+        🔥🔥 Hè rực rỡ ưu đãi khủng cho hóa đơn từ 10.000.000 VND ! Mua ngay 🔥🔥{" "}
+      </marquee>
       <Content
 
         style={{
