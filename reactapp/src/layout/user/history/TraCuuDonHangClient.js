@@ -65,7 +65,7 @@ const TraCuuDonHangClient = () => {
 
   return (
     <>
-      <Breadcrumb style={{ marginBottom: 10 }}>
+       <Breadcrumb style={{ marginBottom: 10 , borderBottom: "1px solid #E2E1E4",paddingBottom: 5}}>
         <Breadcrumb.Item>
           <Link to="/home" className="no-underline text-dark">Trang chủ</Link>
         </Breadcrumb.Item>
