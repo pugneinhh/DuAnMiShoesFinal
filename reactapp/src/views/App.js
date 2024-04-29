@@ -461,7 +461,19 @@ function App() {
                 <GuestGuard>
                   <CartProvider>
                     <DashboardClient>
-                      <TimKiem/>
+                      <TimKiem />
+                    </DashboardClient>
+                  </CartProvider>
+                </GuestGuard>
+              }
+            />
+            <Route
+              path="/tim-kiem"
+              element={
+                <GuestGuard>
+                  <CartProvider>
+                    <DashboardClient>
+                      <TimKiem />
                     </DashboardClient>
                   </CartProvider>
                 </GuestGuard>

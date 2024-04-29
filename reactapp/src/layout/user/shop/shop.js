@@ -216,10 +216,10 @@ export const Shop = ({ children }) => {
     <div >
       <Breadcrumb style={{ marginBottom: 10 }}>
       <Breadcrumb.Item>
-        <Link to="/home" className="no-underline">Trang chủ</Link>
+        <Link to="/home" className="no-underline text-dark">Trang chủ</Link>
       </Breadcrumb.Item>
       <Breadcrumb.Item>
-        <Link to="/san-pham" className="no-underline"><b>Sản phẩm</b></Link>
+        <Link to="/san-pham" className="no-underline text-dark"><b>Sản phẩm</b></Link>
       </Breadcrumb.Item>
     </Breadcrumb>
       <div className="banner-san-pham-shop">

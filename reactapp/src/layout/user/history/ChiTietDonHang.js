@@ -113,16 +113,16 @@ const ChiTietDonHang = (props) => {
     <>
       <Breadcrumb style={{ marginBottom: 10 }}>
         <Breadcrumb.Item>
-          <Link to="/home" className="no-underline">Trang chủ</Link>
+          <Link to="/home" className="no-underline text-dark">Trang chủ</Link>
         </Breadcrumb.Item>
         <Breadcrumb.Item>
-          <Link to="/tai-khoan-cua-toi" className="no-underline">Thông tin tài khoản</Link>
+          <Link to="/tai-khoan-cua-toi" className="no-underline text-dark">Thông tin tài khoản</Link>
         </Breadcrumb.Item>
         <Breadcrumb.Item>
-          <Link to="/history" className="no-underline">Đơn mua</Link>
+          <Link to="/history" className="no-underline text-dark">Đơn mua</Link>
         </Breadcrumb.Item>
         <Breadcrumb.Item>
-          <Link to={`/chi-tiet-don-hang/${bill.id}`} className="no-underline"><b>{bill.ma}</b></Link>
+          <Link to={`/chi-tiet-don-hang/${bill.id}`} className="no-underline text-dark"><b>{bill.ma}</b></Link>
         </Breadcrumb.Item>
       </Breadcrumb>
       <div className="row pt-3 mt-4 mb-5">

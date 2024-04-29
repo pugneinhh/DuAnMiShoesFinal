@@ -108,13 +108,13 @@ const ALLTabHistoryClient = () => {
     <>
       <Breadcrumb style={{ marginBottom: 10 }}>
         <Breadcrumb.Item>
-          <Link to="/home" className="no-underline">Trang chủ</Link>
+          <Link to="/home" className="no-underline text-dark">Trang chủ</Link>
         </Breadcrumb.Item>
         <Breadcrumb.Item>
-          <Link to="/tai-khoan-cua-toi" className="no-underline">Thông tin tài khoản</Link>
+          <Link to="/tai-khoan-cua-toi" className="no-underline text-dark">Thông tin tài khoản</Link>
         </Breadcrumb.Item>
         <Breadcrumb.Item>
-          <Link to="/history" className="no-underline"><b>Đơn mua</b></Link>
+          <Link to="/history" className="no-underline text-dark"><b>Đơn mua</b></Link>
         </Breadcrumb.Item>
       </Breadcrumb>
       <div className="row mt-4 mb-5">

@@ -35,13 +35,13 @@ const PhieuGiamGiaCLient = (props) => {
     <>
       <Breadcrumb style={{ marginBottom: 10 }}>
         <Breadcrumb.Item>
-          <Link to="/home" className="no-underline">Trang chủ</Link>
+          <Link to="/home" className="no-underline text-dark">Trang chủ</Link>
         </Breadcrumb.Item>
         <Breadcrumb.Item>
-          <Link to="/tai-khoan-cua-toi" className="no-underline">Thông tin tài khoản</Link>
+          <Link to="/tai-khoan-cua-toi" className="no-underline text-dark">Thông tin tài khoản</Link>
         </Breadcrumb.Item>
         <Breadcrumb.Item>
-          <Link to="/phieu-giam-gia-cua-toi" className="no-underline"><b>Phiếu giảm giá</b></Link>
+          <Link to="/phieu-giam-gia-cua-toi" className="no-underline text-dark"><b>Phiếu giảm giá</b></Link>
         </Breadcrumb.Item>
       </Breadcrumb>
       <div className="row mb-5 mt-4" style={{ height: 705 }}>

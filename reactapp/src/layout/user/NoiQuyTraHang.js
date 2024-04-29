@@ -10,10 +10,10 @@ export const NoiQuyTraHang = ({ children }) => {
     <>
       <Breadcrumb style={{ marginBottom: 10 }}>
         <Breadcrumb.Item>
-          <Link to="/home" className="no-underline">Trang chủ</Link>
+          <Link to="/home" className="no-underline text-dark">Trang chủ</Link>
         </Breadcrumb.Item>
         <Breadcrumb.Item>
-          <Link to="/chinh-sach" className="no-underline"><b>Chính sách</b></Link>
+          <Link to="/chinh-sach" className="no-underline text-dark"><b>Chính sách</b></Link>
         </Breadcrumb.Item>
       </Breadcrumb>
       <div className="container" style={{ textAlign: "center" }}>
