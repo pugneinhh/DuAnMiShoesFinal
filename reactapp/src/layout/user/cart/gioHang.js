@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./gioHang.css";
-import { Button, Switch, Tag, Modal } from "antd";
-import {  FaMapMarkerAlt } from "react-icons/fa";
+import { Button, Switch, Tag, Modal, Breadcrumb } from "antd";
+import { FaMapMarkerAlt } from "react-icons/fa";
 import { BiSolidDiscount } from "react-icons/bi";
 import ModalDiaChi from "./modalDiaChi";
 import ModalVoucher from "./modalVoucher";
@@ -16,7 +16,7 @@ import { KhachHangAPI } from "../../../pages/censor/api/user/khachHang.api";
 import { ShipAPI } from "../../../pages/censor/api/ship/ship.api";
 import { toast, ToastContainer } from "react-toastify";
 import logoBanner from "../../../assets/images/page-header-bg.jpg";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Moment from "moment";
 import {
   KHGuiThongBaoDatHang,
@@ -52,8 +52,8 @@ export const GioHang = ({ children }) => {
   const storedGioHang = get("GioHang");
 
   const loadVoucherTotNhatVaVoucherTiepTheo = (total) => {
-    BanHangClientAPI.voucherTotNhat(storedData?.userID ? storedData?.userID : null, total).then((res) => {setVoucher(res.data); loadGiamGia(res.data);});
-    
+    BanHangClientAPI.voucherTotNhat(storedData?.userID ? storedData?.userID : null, total).then((res) => { setVoucher(res.data); loadGiamGia(res.data); });
+
     BanHangClientAPI.voucherSapDatDuoc(storedData?.userID ? storedData?.userID : null, total, voucher ? voucher.id : null).then(
       (res) => {
         setSoTienCanMuaThem(res.data[0]);
@@ -70,7 +70,7 @@ export const GioHang = ({ children }) => {
         });
       });
     } else {
-      
+
       GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res) => {
         updateTotalQuantity(res.data.length);
       });
@@ -103,7 +103,7 @@ export const GioHang = ({ children }) => {
       loadDiaChiMacDinh();
     }
     loadGHCT();
-   // loadVoucherTotNhatVaVoucherTiepTheo();
+    // loadVoucherTotNhatVaVoucherTiepTheo();
   }, []);
 
   // useEffect(() => {
@@ -121,7 +121,7 @@ export const GioHang = ({ children }) => {
       } else {
         setDiscount(Math.min(total * (voucher.mucDo / 100), voucher.giamToiDa));
       }
-    }else{
+    } else {
       setDiscount(0);
     }
   };
@@ -131,7 +131,7 @@ export const GioHang = ({ children }) => {
     if (storedData?.userID) {
       await BanHangClientAPI.getDiaChiMacDinh(storedData.userID).then((res) => {
         setDiaChi(res.data);
-       
+
         idHuyen = res.data.idHuyen;
         idXa = res.data.idXa;
       });
@@ -158,16 +158,16 @@ export const GioHang = ({ children }) => {
         setIDGH(response.data.id);
         GioHangAPI.getAllGHCTByIDGH(response.data.id).then((res) => {
           setGioHangCT(res.data);
-          let tongTien = (res.data.map(i => i.thanhTien).reduce((total,currenMoney) => total+currenMoney,0));
+          let tongTien = (res.data.map(i => i.thanhTien).reduce((total, currenMoney) => total + currenMoney, 0));
           loadVoucherTotNhatVaVoucherTiepTheo(tongTien);
-      
+
         });
       });
     } else if (storedGioHang && storedGioHang != null) {
       setIDGH(storedGioHang.id);
       GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res) => {
         setGioHangCT(res.data);
-        let tongTien = (res.data.map(i => i.thanhTien).reduce((total,currenMoney) => total+currenMoney,0));
+        let tongTien = (res.data.map(i => i.thanhTien).reduce((total, currenMoney) => total + currenMoney, 0));
         loadVoucherTotNhatVaVoucherTiepTheo(tongTien);
       });
     }
@@ -205,7 +205,7 @@ export const GioHang = ({ children }) => {
     phuongThuc,
     dataVanChuyen
   ) => {
-    if (!diaChi && !dataVanChuyen){
+    if (!diaChi && !dataVanChuyen) {
       return toast.error("Đơn hàng chưa có địa chỉ!", {
         position: "top-right",
         autoClose: 1000,
@@ -230,19 +230,19 @@ export const GioHang = ({ children }) => {
     );
     // const idHD = uuid();
     // let hoaDonID;
-      if(gioHangCT.length<=0){
-        toast.error("Giỏ hàng trống!", {
-          position: "top-right",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        return;
-      }
+    if (gioHangCT.length <= 0) {
+      toast.error("Giỏ hàng trống!", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
     const hdct = gioHangCT.map((ghct) => {
       return {
         idCTSP: ghct.chiTietSanPham,
@@ -260,15 +260,15 @@ export const GioHang = ({ children }) => {
       idUser: userID,
       tongTien: total,
       giaGiamGia: discount,
-      tienSauGiam: total - (discount?discount:0),
+      tienSauGiam: total - (discount ? discount : 0),
       diaChi: diaChi
         ? diaChi.diaChi +
-          "/" +
-          diaChi.tenXa +
-          "/" +
-          diaChi.tenHuyen +
-          "/" +
-          diaChi.tenThanhPho
+        "/" +
+        diaChi.tenXa +
+        "/" +
+        diaChi.tenHuyen +
+        "/" +
+        diaChi.tenThanhPho
         : dataVanChuyen.diaChi,
       email: email ? email : dataVanChuyen.email,
       tenNguoiNhan: diaChi ? diaChi.tenNguoiNhan : dataVanChuyen.tenNguoiNhan,
@@ -277,10 +277,10 @@ export const GioHang = ({ children }) => {
       sdt: diaChi ? diaChi.soDienThoai : dataVanChuyen.soDienThoai,
       listHDCT: hdct,
     };
-    
+
     if (phuongThuc === 1) {
       BanHangClientAPI.getLinkVnpay(
-        total + (moneyShip ? moneyShip : 0) - (discount?discount:0)
+        total + (moneyShip ? moneyShip : 0) - (discount ? discount : 0)
       ).then((res) => {
         if (res.data) {
           const maGiaoDichs = Object.keys(res.data)[0];
@@ -297,7 +297,7 @@ export const GioHang = ({ children }) => {
         }
       });
 
-    
+
     } else {
       BanHangClientAPI.checkout(hoaDon).then((check) => {
         if (check.data) {
@@ -329,7 +329,15 @@ export const GioHang = ({ children }) => {
 
   return (
     <div>
-      <div className="banner-san-pham-shop">
+      <Breadcrumb style={{ marginBottom: 10 }}>
+        <Breadcrumb.Item>
+          <Link to="/home" className="no-underline">Trang chủ</Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>
+          <Link to="/gio-hang" className="no-underline"><b>Giỏ hàng</b></Link>
+        </Breadcrumb.Item>
+      </Breadcrumb>
+      <div className="banner-san-pham-shop mt-4">
         <img src={logoBanner} alt="Logo Banner"></img>
         <h1 className="banner-title-logo">Giỏ hàng</h1>
       </div>
@@ -413,7 +421,7 @@ export const GioHang = ({ children }) => {
                       // key={index}
                       product={ghct}
                       loadghct={loadGHCT}
-                      // oadSoLuongSPTrongGH={loadSoLuongSPTrongGH}
+                    // oadSoLuongSPTrongGH={loadSoLuongSPTrongGH}
                     />
                   );
                 })
@@ -436,10 +444,10 @@ export const GioHang = ({ children }) => {
                 {soTienCanMuaThem === 0 && soTienDuocGiam === 0
                   ? ""
                   : "Còn thiếu " +
-                    Intl.NumberFormat("en-US").format(soTienCanMuaThem) +
-                    "VNĐ để được giảm " +
-                    Intl.NumberFormat("en-US").format(soTienDuocGiam) +
-                    "VNĐ"}
+                  Intl.NumberFormat("en-US").format(soTienCanMuaThem) +
+                  "VNĐ để được giảm " +
+                  Intl.NumberFormat("en-US").format(soTienDuocGiam) +
+                  "VNĐ"}
               </>
             </b>
           </p>
@@ -474,7 +482,7 @@ export const GioHang = ({ children }) => {
           </div>
           <div
             className="row ps-2 pb-2 mt-3"
-            // style={{ borderBottom: "1px dashed black"}}
+          // style={{ borderBottom: "1px dashed black"}}
           >
             <div className="col-md-6" style={{ marginLeft: 30 }}>
               <span>Đơn hàng </span>
@@ -503,7 +511,7 @@ export const GioHang = ({ children }) => {
             <div className="col-md-5">
               <span>
                 <span style={{ color: "blue" }}>
-                  {discount?Intl.NumberFormat("en-US").format(discount):0}
+                  {discount ? Intl.NumberFormat("en-US").format(discount) : 0}
                 </span>
                 <span> VND</span>
               </span>
@@ -511,14 +519,14 @@ export const GioHang = ({ children }) => {
           </div>
           <div
             className="row ps-2 pb-2 mt-3"
-            // style={{ borderBottom: "1px dashed black" }}
+          // style={{ borderBottom: "1px dashed black" }}
           >
             <h5 className="col-md-6" style={{ marginLeft: 30 }}>
               <span>Tổng tiền </span>
             </h5>
             <h5 className="col-md-5">
               <span style={{ color: "blue" }}>
-                {Intl.NumberFormat("en-US").format(roundToThousands(total - (discount?discount:0)))} VND
+                {Intl.NumberFormat("en-US").format(roundToThousands(total - (discount ? discount : 0)))} VND
               </span>
             </h5>
           </div>
@@ -607,7 +615,7 @@ export const GioHang = ({ children }) => {
             <h5 className="col">Giảm giá</h5>
 
             <h5 className="col">
-              : {discount?Intl.NumberFormat("en-US").format(discount):0} VND
+              : {discount ? Intl.NumberFormat("en-US").format(discount) : 0} VND
             </h5>
           </div>
           <div className="row mt-3" style={{ color: "red" }}>
@@ -615,13 +623,13 @@ export const GioHang = ({ children }) => {
             <h5 className="col">
               :{" "}
               {Intl.NumberFormat("en-US").format(
-                roundToThousands(total + (moneyShip ? moneyShip : 0) - (discount?discount:0))
+                roundToThousands(total + (moneyShip ? moneyShip : 0) - (discount ? discount : 0))
               )}{" "}
               VND
             </h5>
           </div>
           <hr className="mt-5 mb-5"></hr>
-          <div className="d-flex flex-row-reverse bd-highlight">
+          <div className="d-flex flex-row-reverse bd-highlight mb-5">
             {/* <Button
               className="p-2 bd-highlight"
               style={{

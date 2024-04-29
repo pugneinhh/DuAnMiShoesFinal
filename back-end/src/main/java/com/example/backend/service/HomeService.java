@@ -48,4 +48,8 @@ public class HomeService {
         }
         return homeRepository.getLocSanPhamNoData(sp);
     }
+
+    public List<HomeRespone> getTim(String ten) {
+        return homeRepository.getTimSanPham(ten);
+    }
 }

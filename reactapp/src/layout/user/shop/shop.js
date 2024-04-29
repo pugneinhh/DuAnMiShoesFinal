@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./shop.css";
-import { Button, Slider, Checkbox, Card, Col, Collapse, Dropdown, Input, Row, Space} from "antd";
+import { Button, Slider, Checkbox, Card, Col, Collapse, Dropdown, Input, Row, Space, Breadcrumb } from "antd";
 import { ProductCard } from "../productCard";
 import ModalDetailSP from "./modalDetailSP";
 import { HomeAPI } from "../../../pages/censor/api/home/homeApi";
@@ -8,6 +8,7 @@ import { LeftOutlined, RightOutlined, SortDescendingOutlined } from "@ant-design
 import ReactPaginate from 'react-paginate';
 import logoBanner from '../../../assets/images/page-header-bg.jpg';
 import SockJS from "sockjs-client";
+import { Link } from 'react-router-dom';
 import { Stomp } from "@stomp/stompjs";
 export const Shop = ({ children }) => {
   const [products, setProducts] = useState([]);
@@ -50,25 +51,25 @@ export const Shop = ({ children }) => {
       })
   }
 
- var stomp = null;
- const socket = new SockJS("http://localhost:8080/ws");
- stomp = Stomp.over(socket);
- useEffect(() => {
-   stomp.connect({}, () => {
-     stomp.subscribe("/topic/KH/hoa-don", (mes) => {
-       try {
-         const pare = JSON.parse(mes.body);
- 
-         // ví du: bạn muốn khi khách hàng bấm đặt hàng mà load lại hóa đơn màn admin thì hãy gọi hàm load all hóa đơn ở đây
-         // thí dụ: đây là hàm laod hóa đơn: loadHoaDon(); allThongBao(); CountThongBao();
-      getAll();
-      getAllHang();
-      getAllMauSac();
-      getAllKichThuoc();
-       } catch (e) {
-       }
-     });
-   });
+  var stomp = null;
+  const socket = new SockJS("http://localhost:8080/ws");
+  stomp = Stomp.over(socket);
+  useEffect(() => {
+    stomp.connect({}, () => {
+      stomp.subscribe("/topic/KH/hoa-don", (mes) => {
+        try {
+          const pare = JSON.parse(mes.body);
+
+          // ví du: bạn muốn khi khách hàng bấm đặt hàng mà load lại hóa đơn màn admin thì hãy gọi hàm load all hóa đơn ở đây
+          // thí dụ: đây là hàm laod hóa đơn: loadHoaDon(); allThongBao(); CountThongBao();
+          getAll();
+          getAllHang();
+          getAllMauSac();
+          getAllKichThuoc();
+        } catch (e) {
+        }
+      });
+    });
     return () => {
       stomp.disconnect();
     };
@@ -213,7 +214,15 @@ export const Shop = ({ children }) => {
 
 
   return (
-    <div>
+    <div >
+      <Breadcrumb style={{ marginBottom: 10 }}>
+      <Breadcrumb.Item>
+        <Link to="/home" className="no-underline">Trang chủ</Link>
+      </Breadcrumb.Item>
+      <Breadcrumb.Item>
+        <Link to="/san-pham" className="no-underline"><b>Sản phẩm</b></Link>
+      </Breadcrumb.Item>
+    </Breadcrumb>
       <div className="banner-san-pham-shop">
         <img src={logoBanner} alt="Logo Banner"></img>
         <h1 className="banner-title-logo">Sản phẩm</h1>

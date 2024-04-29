@@ -10,6 +10,7 @@ import {
   Space,
   Col,
   Typography,
+  message,
 } from "antd";
 
 import { Link, useNavigate } from "react-router-dom";
@@ -22,6 +23,8 @@ import Notification from "./notificationUser";
 import { useCart } from "./cart/CartContext";
 import { FaFacebook, FaInstagram, FaTwitch, FaTwitter } from "react-icons/fa";
 import { BiLogoGmail } from "react-icons/bi";
+import { toast, ToastContainer } from "react-toastify";
+import Search from "antd/es/input/Search";
 
 const { Header, Content, Footer } = Layout;
 
@@ -33,7 +36,25 @@ export const DashboardClient = ({ children }) => {
   const storedDataGoogle = get("userGoogle");
   const storedDataFaceBook = get("userFacebook");
   const { totalQuantity } = useCart();
+  const [valueSearch, setValueSearchs] = useState('');
 
+  const onSearch = (value) => {
+    if (value.trim() === '') {
+      toast.warning("Bạn chưa nhập gì để tìm kiếm !", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } else {
+      nav(`/tim-kiem/${value.trim()}`);
+      setValueSearchs('')
+    }
+  };
 
   useEffect(() => {
     if (storedData !== null) {
@@ -159,7 +180,20 @@ export const DashboardClient = ({ children }) => {
             </h6>
           </Link>
         </Col>
-        <Col span={6} className="float-end"></Col>
+        <Col span={1} className="float-end"></Col>
+        <Col
+          span={3}
+          className="d-flex align-items-center justify-content-center"
+        >
+          <Search
+            placeholder="Tìm kiếm ..."
+            onSearch={onSearch}
+            value={valueSearch}
+            onChange={(e) => setValueSearchs(e.target.value)}
+          >
+          </Search>
+        </Col>
+        <Col span={1} className="float-end"></Col>
         <Col span={1} className="float-end">
           <Notification />
         </Col>
@@ -225,20 +259,12 @@ export const DashboardClient = ({ children }) => {
         </Col>
       </Header>
       <Content
-        
+
         style={{
           padding: "0 48px",
         }}
       >
-        <Breadcrumb
-          style={{
-            margin: "16px 0",
-          }}
-        >
-          <Breadcrumb.Item>Home</Breadcrumb.Item>
-          <Breadcrumb.Item>List</Breadcrumb.Item>
-          <Breadcrumb.Item>App</Breadcrumb.Item>
-        </Breadcrumb>
+        <div className="mt-3 mb-3"></div>
         <div
           style={{
             background: colorBgContainer,
@@ -252,12 +278,10 @@ export const DashboardClient = ({ children }) => {
       </Content>
       <Footer
         style={{
-          marginLeft:49,
-          width:1422,
           textAlign: "center",
           backgroundImage: "url('https://cdn.shopify.com/s/files/1/2495/5044/products/salvas-white-leather-sneaker.slideshow5_eb2d8421-fc8f-4759-97e9-3f8f679f44a4.png?v=1676536621')",
           backgroundSize: 'cover',
-          backgroundPosition: 'center', 
+          backgroundPosition: 'center',
         }}
       >
         <div className="row">
@@ -288,16 +312,16 @@ export const DashboardClient = ({ children }) => {
                   Chính sách trả hàng
                 </span>
               </Link>
-              <br/><br/>
+              <br /><br />
               <div>
                 MiShoes-Created by SD-26
-              </div>            
+              </div>
             </div>
           </div>
-          <div className="col-md-8 mt-5">         
+          <div className="col-md-8 mt-5">
           </div>
           <div className="col-md-2 mt-5">
-          <h5>SNEAKER MISHOES</h5>
+            <h5>SNEAKER MISHOES</h5>
             <div>
               <a>Địa chỉ: Nam Từ Liêm – Hà Nội</a><br />
               <Link to={"tel:0988353709"} className="text-decoration-none">
@@ -325,7 +349,20 @@ export const DashboardClient = ({ children }) => {
           </div>
         </div>
       </Footer>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      {/* Same as */}
+      <ToastContainer />
     </Layout>
-
   );
 };

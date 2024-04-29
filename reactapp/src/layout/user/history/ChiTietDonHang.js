@@ -18,6 +18,8 @@ import SockJS from "sockjs-client";
 import { Stomp } from "@stomp/stompjs";
 import { ImCancelCircle } from "react-icons/im";
 import ProfileMenu from "../profile/ProfileMenu";
+import { Breadcrumb } from "antd";
+import { Link } from "react-router-dom";
 const ChiTietDonHang = (props) => {
   const idHD = useParams();
   const storedData = get("userData");
@@ -108,158 +110,174 @@ const ChiTietDonHang = (props) => {
     }
   };
   return (
-    <div className="row pt-3 ">
-      <ProfileMenu></ProfileMenu>
+    <>
+      <Breadcrumb style={{ marginBottom: 10 }}>
+        <Breadcrumb.Item>
+          <Link to="/home" className="no-underline">Trang chủ</Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>
+          <Link to="/tai-khoan-cua-toi" className="no-underline">Thông tin tài khoản</Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>
+          <Link to="/history" className="no-underline">Đơn mua</Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>
+          <Link to={`/chi-tiet-don-hang/${bill.id}`} className="no-underline"><b>{bill.ma}</b></Link>
+        </Breadcrumb.Item>
+      </Breadcrumb>
+      <div className="row pt-3 mt-4 mb-5">
+        <ProfileMenu></ProfileMenu>
 
-      {/* Tab */}
-      <div className="col-md-10 ">
-        <div className="row" style={{ borderBottom: "1px solid #000" }}>
-          <div onClick={goBack} className="col button-back">
-            <MdArrowBackIos /> <span className="fs-6">Trở lại</span>
+        {/* Tab */}
+        <div className="col-md-10 ">
+          <div className="row" style={{ borderBottom: "1px solid #000" }}>
+            <div onClick={goBack} className="col button-back">
+              <MdArrowBackIos /> <span className="fs-6">Trở lại</span>
+            </div>
+            <div className="col d-flex justify-content-end">
+              <p className="me-4">Mã đơn hàng : {bill.ma}</p> |
+              <span className="text-danger ms-4">
+                {bill.trangThai === "0"
+                  ? "Chờ xác nhận"
+                  : bill.trangThai === "1"
+                    ? "Xác nhận"
+                    : bill.trangThai === "2"
+                      ? "Chờ vận chuyển"
+                      : bill.trangThai === "3"
+                        ? "Đang vận chuyển"
+                        : bill.trangThai === "4"
+                          ? "Đã thanh toán"
+                          : bill.trangThai === "5"
+                            ? "Thành công"
+                            : bill.trangThai === "-1"
+                              ? "Đã hủy"
+                              : bill.trangThai === "-2"
+                                ? "Hoàn Tiền"
+                                : bill.trangThai === "10"
+                                  ? "Trả hàng"
+                                  : "Đã"}
+              </span>
+            </div>
           </div>
-          <div className="col d-flex justify-content-end">
-            <p className="me-4">Mã đơn hàng : {bill.ma}</p> |
-            <span className="text-danger ms-4">
-              {bill.trangThai === "0"
-                ? "Chờ xác nhận"
-                : bill.trangThai === "1"
-                ? "Xác nhận"
-                : bill.trangThai === "2"
-                ? "Chờ vận chuyển"
-                : bill.trangThai === "3"
-                ? "Đang vận chuyển"
-                : bill.trangThai === "4"
-                ? "Đã thanh toán"
-                : bill.trangThai === "5"
-                ? "Thành công"
-                : bill.trangThai === "-1"
-                ? "Đã hủy"
-                : bill.trangThai === "-2"
-                ? "Hoàn Tiền"
-                : bill.trangThai === "10"
-                ? "Trả hàng"
-                : "Đã"}
-            </span>
-          </div>
-        </div>
 
-        {/* hóa đơn time line */}
-        <div className="scroll-hoa-don mt-5 mb-4">
-          <div className="hoa-don-cuon-ngang">
-            <Timeline
-              minEvents={6}
-              // maxEvents={10}
-              style={{ borderBottom: "1px solid rgb(224, 224, 224)" }}
-              placeholder
-            >
-              {listTimeLine.map((item, index) => (
-                <TimelineEvent
-                  minEvents={6}
-                  key={index}
-                  color={
-                    item.trangThai == -1 || item.trangThai == 10
-                      ? "#520808"
-                      : "#3d874d"
-                  }
-                  icon={showIcon(item.trangThai)}
-                  values={showTitle(item.trangThai)}
-                  isOpenEnding={true}
-                  title={showTitle(item.trangThai)}
-                  subtitle={moment(item.ngayTao).format("hh:mm:ss DD/MM/YYYY")}
-                />
-              ))}
-            </Timeline>
-          </div>
-        </div>
-
-        <hr className="mt-5 mb-3"></hr>
-
-        {/* địa chỉ giao hàng */}
-        <div className="ms-4">
-          <h4>Địa chỉ nhận hàng</h4>
-          <p>{bill.tenNguoiNhan}</p>
-          <p>{bill.sdt}</p>
-          <p>{bill.diaChiShip}</p>
-        </div>
-
-        <hr className="mt-5 mb-3"></hr>
-        {/* thanh toán */}
-        <div className="ms-4">
-          <h4>Thanh toán</h4>
-          <div className="row">
-            <div className="col-md-6"></div>
-            <div className="col-md-6 fs-6">
-              <div className="row">
-                <div className="col ">Tổng tiền hàng:</div>
-                <div className="col">
-                  {Intl.NumberFormat("en-US").format(bill.giaGoc)} VND
-                </div>
-              </div>
-              <div className="row mt-3">
-                <div className="col">Phí vận chuyển:</div>
-                <div className="col">
-                  {Intl.NumberFormat("en-US").format(bill.tienVanChuyen)}
-                  VND
-                </div>
-              </div>
-              <div
-                className="row mt-3"
-                style={{ borderBottom: "1px solid #000" }}
+          {/* hóa đơn time line */}
+          <div className="scroll-hoa-don mt-5 mb-4">
+            <div className="hoa-don-cuon-ngang">
+              <Timeline
+                minEvents={6}
+                // maxEvents={10}
+                style={{ borderBottom: "1px solid rgb(224, 224, 224)" }}
+                placeholder
               >
-                <div className="col">Voucher cửa hàng:</div>
-                <div className="col">
-                  {Intl.NumberFormat("en-US").format(bill.giaGiamGia)} VND
+                {listTimeLine.map((item, index) => (
+                  <TimelineEvent
+                    minEvents={6}
+                    key={index}
+                    color={
+                      item.trangThai == -1 || item.trangThai == 10
+                        ? "#520808"
+                        : "#3d874d"
+                    }
+                    icon={showIcon(item.trangThai)}
+                    values={showTitle(item.trangThai)}
+                    isOpenEnding={true}
+                    title={showTitle(item.trangThai)}
+                    subtitle={moment(item.ngayTao).format("hh:mm:ss DD/MM/YYYY")}
+                  />
+                ))}
+              </Timeline>
+            </div>
+          </div>
+
+          <hr className="mt-5 mb-3"></hr>
+
+          {/* địa chỉ giao hàng */}
+          <div className="ms-4">
+            <h4>Địa chỉ nhận hàng</h4>
+            <p>{bill.tenNguoiNhan}</p>
+            <p>{bill.sdt}</p>
+            <p>{bill.diaChiShip}</p>
+          </div>
+
+          <hr className="mt-5 mb-3"></hr>
+          {/* thanh toán */}
+          <div className="ms-4">
+            <h4>Thanh toán</h4>
+            <div className="row">
+              <div className="col-md-6"></div>
+              <div className="col-md-6 fs-6">
+                <div className="row">
+                  <div className="col ">Tổng tiền hàng:</div>
+                  <div className="col">
+                    {Intl.NumberFormat("en-US").format(bill.giaGoc)} VND
+                  </div>
                 </div>
-              </div>
-              <div className="row mt-3">
-                <div className="col">
-                  <b>Thành tiền</b>
+                <div className="row mt-3">
+                  <div className="col">Phí vận chuyển:</div>
+                  <div className="col">
+                    {Intl.NumberFormat("en-US").format(bill.tienVanChuyen)}
+                    VND
+                  </div>
                 </div>
-                <div className="col text-danger fs-5">
-                  <b>{Intl.NumberFormat("en-US").format(bill.thanhTien)} VND</b>
+                <div
+                  className="row mt-3"
+                  style={{ borderBottom: "1px solid #000" }}
+                >
+                  <div className="col">Voucher cửa hàng:</div>
+                  <div className="col">
+                    {Intl.NumberFormat("en-US").format(bill.giaGiamGia)} VND
+                  </div>
+                </div>
+                <div className="row mt-3">
+                  <div className="col">
+                    <b>Thành tiền</b>
+                  </div>
+                  <div className="col text-danger fs-5">
+                    <b>{Intl.NumberFormat("en-US").format(bill.thanhTien)} VND</b>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <hr className="mt-5 mb-3"></hr>
-        {/* phương thức thanh toán */}
-        <div className="ms-4 d-flex justify-content-start">
-          <h5 className=" mt-4">Ngày dự kiến:</h5>
-          <p className="ms-5 mt-1">
-            <img src={LogoGHN} style={{ width: 200, height: 70 }}></img>
-          </p>
+          <hr className="mt-5 mb-3"></hr>
+          {/* phương thức thanh toán */}
+          <div className="ms-4 d-flex justify-content-start">
+            <h5 className=" mt-4">Ngày dự kiến:</h5>
+            <p className="ms-5 mt-1">
+              <img src={LogoGHN} style={{ width: 200, height: 70 }}></img>
+            </p>
 
-          <p className="mt-4 ms-5 fs-5 text-danger ">
-            <b> {bill.ngayDuKienNhan}</b>
-          </p>
+            <p className="mt-4 ms-5 fs-5 text-danger ">
+              <b> {bill.ngayDuKienNhan}</b>
+            </p>
+          </div>
+          <hr className="mt-5 mb-3"></hr>
+          {/* phương thức thanh toán */}
+          <div className="ms-4 d-flex justify-content-start">
+            <h5 className=" mt-1">Phương thức thanh toán :</h5>
+            <p className="ms-5 mt-2">
+              <b>
+                {bill.vnp === null
+                  ? "Thanh toán khi nhận hàng"
+                  : "Thanh toán VNP"}
+              </b>
+            </p>
+          </div>
         </div>
-        <hr className="mt-5 mb-3"></hr>
-        {/* phương thức thanh toán */}
-        <div className="ms-4 d-flex justify-content-start">
-          <h5 className=" mt-1">Phương thức thanh toán :</h5>
-          <p className="ms-5 mt-2">
-            <b>
-              {bill.vnp === null
-                ? "Thanh toán khi nhận hàng"
-                : "Thanh toán VNP"}
-            </b>
-          </p>
-        </div>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
       </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
-    </div>
+    </>
   );
 };
 export default ChiTietDonHang;
