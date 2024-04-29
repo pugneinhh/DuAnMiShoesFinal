@@ -58,4 +58,11 @@ export class HomeAPI {
             url: `/home/kich-thuoc`,
         });
     };
+    //Tìm kiếm theo tên
+    static timKiem = (tenTim) => {
+        return requestClient({
+            method: "GET",
+            url: `/home/tim-kiem/${tenTim}`,
+        });
+    };
 }

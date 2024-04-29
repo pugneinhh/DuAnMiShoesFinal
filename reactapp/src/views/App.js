@@ -53,6 +53,7 @@ import BanHang from "../pages/censor/banHang-management/BanHang";
 import GuestGuard from "../guard/GuestGuard";
 import { Home } from "../layout/user/home";
 import { NoiQuyTraHang } from "../layout/user/NoiQuyTraHang";
+import { TimKiem } from "../layout/user/TimKiem";
 import { Login } from "../layout/login/login";
 import { GioHang } from "../layout/user/cart/gioHang";
 import { Shop } from "../layout/user/shop/shop";
@@ -449,6 +450,18 @@ function App() {
                   <CartProvider>
                     <DashboardClient>
                       <GioHang />
+                    </DashboardClient>
+                  </CartProvider>
+                </GuestGuard>
+              }
+            />
+            <Route
+              path="/tim-kiem/:ten"
+              element={
+                <GuestGuard>
+                  <CartProvider>
+                    <DashboardClient>
+                      <TimKiem/>
                     </DashboardClient>
                   </CartProvider>
                 </GuestGuard>

@@ -58,4 +58,9 @@ public class HomeController {
     public ResponseEntity<?> getKichThuoc() {
         return ResponseEntity.ok(kichThuocService.getALL());
     }
+
+    @GetMapping("/tim-kiem/{tenTim}")
+    public ResponseEntity<?> getTimSanPham(@PathVariable("tenTim") String tenTim) {
+        return ResponseEntity.ok(homeService.getTim(tenTim));
+    }
 }

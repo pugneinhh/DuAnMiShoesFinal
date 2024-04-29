@@ -1,6 +1,6 @@
 import "./home.css";
 import React, { useState, useEffect } from "react";
-import { Carousel, Tabs } from "antd";
+import { Breadcrumb, Carousel, Tabs } from "antd";
 import { FaShippingFast } from "react-icons/fa";
 import { TfiReload } from "react-icons/tfi";
 import { IoIosInformationCircleOutline } from "react-icons/io";
@@ -73,7 +73,6 @@ export const Home = ({ children }) => {
               }
             );
           };
-
           connectWebSocket();
           return () => {
             stomp.disconnect();
@@ -275,7 +274,7 @@ export const Home = ({ children }) => {
       <div className="container mt-5">
         <h3 className="text-center">Sản phẩm</h3>
         <Tabs defaultActiveKey="1" centered>
-      <TabPane tab="Sản phẩm bán chạy" key="1">
+          <TabPane tab="Sản phẩm bán chạy" key="1">
             <div class="container">
               <div className="row">
                 {hotProducts.map((product, index) => {
@@ -306,7 +305,7 @@ export const Home = ({ children }) => {
           <TabPane tab="Tất cả" key="3">
             <div class="container">
               <div className="row">
-              {products.map((product, index) => {
+                {products.map((product, index) => {
                   return (
                     <div className="col-md-3" >
                       <ProductCard key={index} product={product} />
