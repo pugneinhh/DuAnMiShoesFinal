@@ -3,10 +3,10 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { get } from "local-storage";
 import ProfileMenu from "../profile/ProfileMenu";
-import { SellAPI } from "../../../pages/censor/api/sell/sell.api";
 import "./phieugiamgia.css"
 import { Breadcrumb } from "antd";
 import { Link } from "react-router-dom";
+import { BanHangClientAPI } from "../../../pages/censor/api/banHangClient/banHangClient.api";
 const PhieuGiamGiaCLient = (props) => {
   const storedData = get("userData");
   const [userName, setUserName] = useState("");
@@ -14,7 +14,7 @@ const PhieuGiamGiaCLient = (props) => {
   const nav = useNavigate();
   const [datas, setData] = useState([]);
   const loadVoucher = () => {
-    SellAPI.getVoucherWithIDKH(storedData.userID)
+    BanHangClientAPI.getVoucherWithIDKH(storedData.userID)
       .then((result) => {
         setData(result.data);
       })
@@ -54,26 +54,36 @@ const PhieuGiamGiaCLient = (props) => {
             padding: "10px",
           }}
         >
-          <div
-            style={{
-              padding: "0 10px",
-              borderBottom: "1px solid #ccc",
-            }}
-          >
-            <h5>Phiếu giảm giá</h5>
-            <p>Các voucher bạn có thể sử dụng</p>
-          </div>
-          <div
-            className="row mt-5"
-            style={{
-              padding: "0 30px",
-            }}
-          >
-            {datas.map((item, index) => (
-              <div className="col-md-4">
-                <div class="cardPhieuGiamGia">
-                  <div class="cardribbon">
-                    {item.mucDo.toLocaleString("vi-VN", {
+          <h5>Phiếu giảm giá</h5>
+          <p>Các voucher bạn có thể sử dụng</p>
+        </div>
+        <div
+          className="row mt-5"
+          style={{
+            padding: "0 30px",
+          }}
+        >
+          {datas.map((item, index) => (
+            <div className="col-md-4">
+              <div class="cardPhieuGiamGia">
+                <div
+                  class={
+                    item.loaiVoucher === "Tiền mặt" ? "ribbon2" : "ribbon"
+                  }
+                >
+                  {item.mucDo.toLocaleString("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                  })}
+
+                  <span>{item.loaiVoucher === "Tiền mặt" ? " VND" : "%"}</span>
+                </div>
+                <h3>{item.ma}</h3>
+
+                <h6>
+                  Điều kiện:
+                  <span className="text-danger ms-2">
+                    {item.dieuKien.toLocaleString("vi-VN", {
                       style: "currency",
                       currency: "VND",
                     })}

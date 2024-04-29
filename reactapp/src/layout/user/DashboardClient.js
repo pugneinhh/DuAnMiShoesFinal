@@ -81,7 +81,9 @@ export const DashboardClient = ({ children }) => {
   const thongTinTaiKhoan = () => {
     nav("/tai-khoan-cua-toi");
   };
-
+  const doiMatKhau = () => {
+    nav("/doi-mat-khau");
+  };
   const dangXuat = () => {
     localStorage.clear();
     //  window.location.reload();
@@ -103,15 +105,22 @@ export const DashboardClient = ({ children }) => {
     {
       key: "2",
       label: (
-        <a target="_blank" rel="noopener noreferrer" onClick={openHistory}>
-          Đơn mua
+        <a target="_blank" rel="noopener noreferrer" onClick={doiMatKhau}>
+          Đổi mật khẩu
         </a>
       ),
     },
     {
       key: "3",
       label: (
-
+        <a target="_blank" rel="noopener noreferrer" onClick={openHistory}>
+          Đơn mua
+        </a>
+      ),
+    },
+    {
+      key: "4",
+      label: (
         <a target="_blank" rel="noopener noreferrer" onClick={dangXuat}>
           Đăng xuất
         </a>

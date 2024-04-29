@@ -19,8 +19,8 @@ public class HoaDonClientService {
     public List<HoaDonClientHistory> getALLHDClientByIDKH(TrangThaiRequest req){
         return hoaDonRepository.getALLHDClientByIDKH( req);
     }
-    public List<AdminHoaDonSanPham> detailHDSanPham(String key){
-        return  hoaDonRepository.detailHDSanPham(key);
+    public List<AdminHoaDonSanPham> detailHDSanPhamClient(String key){
+        return  hoaDonRepository.detailHDSanPhamClient(key);
     }
     public DetailHoaDonClientByIdHDRespon detailHoaDonClienByIdHD(String idHD){
         return hoaDonRepository.detailHoaDonClienByIdHD(idHD);

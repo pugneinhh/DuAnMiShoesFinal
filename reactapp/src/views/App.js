@@ -71,6 +71,7 @@ import TraHang from "../pages/censor/traHang-managenment/traHang";
 import DetailHoaDonTraHang from "../pages/censor/traHang-managenment/DetailHoaDonTraHang";
 import PhieuGiamGiaCLient from "../layout/user/phieugiamgia/PhieuGiamGiaClient";
 import DoiMatKhauAdmin from "../pages/censor/profile-management/DoiMatKhau";
+import DoiMatKhauClient from "../layout/user/profile/DoiMatKhauClient";
 
 function App() {
   const isLoading = useAppSelector(GetLoading);
@@ -436,7 +437,7 @@ function App() {
                 <GuestGuard>
                   <CartProvider>
                     <DashboardClient>
-                      <NoiQuyTraHang/>
+                      <NoiQuyTraHang />
                     </DashboardClient>
                   </CartProvider>
                 </GuestGuard>
@@ -569,6 +570,18 @@ function App() {
                   <CartProvider>
                     <DashboardClient>
                       <ThanhToanThatBai />
+                    </DashboardClient>
+                  </CartProvider>
+                </GuestGuard>
+              }
+            />
+            <Route
+              path="/doi-mat-khau"
+              element={
+                <GuestGuard>
+                  <CartProvider>
+                    <DashboardClient>
+                      <DoiMatKhauClient />
                     </DashboardClient>
                   </CartProvider>
                 </GuestGuard>

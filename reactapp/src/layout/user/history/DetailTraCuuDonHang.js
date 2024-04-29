@@ -12,7 +12,6 @@ import { RiTruckFill } from "react-icons/ri";
 import { FaMoneyBillTrendUp, FaTruckFast } from "react-icons/fa6";
 import LogoGHN from "../../../assets/images/LogoGHN.png";
 import { HoaDonClientAPI } from "../../../pages/censor/api/HoaDonClient/HoaDonClientAPI";
-import { HoaDonAPI } from "../../../pages/censor/api/hoaDon/hoaDon.api";
 import moment from "moment";
 import { ToastContainer } from "react-toastify";
 import { FormattedNumber, IntlProvider } from "react-intl";
@@ -26,7 +25,7 @@ const DetailTraCuuDonHang = ({ listBill }) => {
   const [bill, setBill] = useState({});
   const [listSanPhams, setlistSanPhams] = useState([]);
   useEffect(() => {
-    HoaDonAPI.detailSanPham(idHD.idHD).then((res) => {
+    HoaDonClientAPI.detailSanPham(idHD.idHD).then((res) => {
       setlistSanPhams(res.data);
     });
     loadDetailHoaDonClient();
@@ -57,8 +56,9 @@ const DetailTraCuuDonHang = ({ listBill }) => {
   }, []);
 
   const loadTimeLine = () => {
-    HoaDonAPI.getAllLichSuHoaDon(idHD.idHD).then((res) => {
+    HoaDonClientAPI.getAllLichSuHoaDon(idHD.idHD).then((res) => {
       setlistTimeLine(res.data);
+      console.log(res.data);
     });
   };
   const loadDetailHoaDonClient = () => {
@@ -67,27 +67,27 @@ const DetailTraCuuDonHang = ({ listBill }) => {
     });
   };
 
-const showIcon = (trangThai) => {
-  if (trangThai === "0") {
-    return GiNotebook;
-  } else if (trangThai === "1") {
-    return SlNotebook;
-  } else if (trangThai === "2") {
-    return RiTruckFill;
-  } else if (trangThai === "3") {
-    return FaTruckFast;
-  } else if (trangThai === "4") {
-    return GiPiggyBank;
-  } else if (trangThai === "5") {
-    return FaCheckCircle;
-  } else if (trangThai === "10") {
-    return GiReturnArrow;
-  } else if (trangThai === "-1") {
-    return ImCancelCircle;
-  } else if (trangThai === "-2") {
-    return FaMoneyBillTrendUp;
-  }
-};
+  const showIcon = (trangThai) => {
+    if (trangThai === "0") {
+      return GiNotebook;
+    } else if (trangThai === "1") {
+      return SlNotebook;
+    } else if (trangThai === "2") {
+      return RiTruckFill;
+    } else if (trangThai === "3") {
+      return FaTruckFast;
+    } else if (trangThai === "4") {
+      return GiPiggyBank;
+    } else if (trangThai === "5") {
+      return FaCheckCircle;
+    } else if (trangThai === "10") {
+      return GiReturnArrow;
+    } else if (trangThai === "-1") {
+      return ImCancelCircle;
+    } else if (trangThai === "-2") {
+      return FaMoneyBillTrendUp;
+    }
+  };
 
   const showTitle = (trangThai) => {
     if (trangThai === "0") {
@@ -110,7 +110,7 @@ const showIcon = (trangThai) => {
       return "Hoàn tiền";
     }
   };
-  console.log(bill)
+
   return (
     <>
       <div className="container d-flex justify-content-center">
@@ -232,6 +232,7 @@ const showIcon = (trangThai) => {
                       borderRadius: 6,
                       width: 60,
                       height: 25,
+                      border: "1px solid black", // Thêm viền đen với độ dày 1px
                     }}
                   ></div>
                   <h6>x{listSanPham.soLuongSP}</h6>
@@ -253,9 +254,9 @@ const showIcon = (trangThai) => {
                     </IntlProvider>
                   </h6>
                 </div>
-                <div className="col-md-2  mt-5">
+                {/* <div className="col-md-2  mt-5">
                   <Button className=" btn btn-danger">Trả hàng</Button>
-                </div>
+                </div> */}
               </tr>
             ))}
           </div>

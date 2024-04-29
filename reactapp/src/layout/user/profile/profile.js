@@ -2,19 +2,14 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
-import { BsShop } from "react-icons/bs";
-import { FaUser } from "react-icons/fa";
-import { TfiPencil } from "react-icons/tfi";
 import {
   Avatar,
   Breadcrumb,
   Button,
   Card,
   Col,
-  Divider,
   Form,
   Input,
-  message,
   Row,
   Select,
 } from "antd";
@@ -30,11 +25,6 @@ const AccountProfile = (props) => {
   const [userName, setUserName] = useState("");
   const [AnhUser, setLinkAnhUser] = useState("");
   const nav = useNavigate();
-  const [listBillHistory, setListBillHistory] = useState([]);
-  const [listTimeLine, setlistTimeLine] = useState([]);
-  const [statusPresent, setStatusPresent] = useState([]);
-  const [bill, setBill] = useState({});
-  const [paymentMethod, setPaymentMethod] = useState({});
   const [fileImage, setFileIamge] = useState(null);
   useEffect(() => {
     setUserName(storedData.ten);
@@ -93,7 +83,6 @@ const AccountProfile = (props) => {
                       style={{ marginBottom: "15px", marginTop: "10px" }}
                     >
                       <Col span={11}>
-
                         <Button
                           // onClick={handleSuccess}
                           style={{

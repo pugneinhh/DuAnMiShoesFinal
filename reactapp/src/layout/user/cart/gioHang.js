@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import "./gioHang.css";
 import { Button, Switch, Tag, Modal, Breadcrumb } from "antd";
 import { FaMapMarkerAlt } from "react-icons/fa";
@@ -11,8 +11,6 @@ import { get, set } from "local-storage";
 import DiaChiGiaoHang from "./GiaoHang";
 import LogoVNP from "../../../assets/images/vnp.png";
 import { BanHangClientAPI } from "../../../pages/censor/api/banHangClient/banHangClient.api";
-import { v4 as uuid } from "uuid";
-import { KhachHangAPI } from "../../../pages/censor/api/user/khachHang.api";
 import { ShipAPI } from "../../../pages/censor/api/ship/ship.api";
 import { toast, ToastContainer } from "react-toastify";
 import logoBanner from "../../../assets/images/page-header-bg.jpg";
@@ -22,8 +20,14 @@ import {
   KHGuiThongBaoDatHang,
 } from "../../../utils/socket/socket";
 import { useCart } from "./CartContext";
-
+import { useAppSelector } from "../../../store/redux/hook";
+import { GetLoading } from "../../../store/reducer/Loading.reducer";
+import loading from "../../../assets/images/logo.png";
+import { faLessThanEqual } from "@fortawesome/free-solid-svg-icons";
 export const GioHang = ({ children }) => {
+      const isLoading = useAppSelector(GetLoading);
+      const [checkLoading,setCheckLoading] = useState(false);
+        const [loaddingLogo, setLoaddingLogo] = useState(null);
   const [openModalDiaChi, setOpenModalDiaChi] = useState(false);
   const [openModalVoucher, setOpenModalVoucher] = useState(false);
   const [khachHang, setKhachHang] = useState(null);
@@ -50,7 +54,7 @@ export const GioHang = ({ children }) => {
   const { updateTotalQuantity } = useCart();
   const storedData = get("userData");
   const storedGioHang = get("GioHang");
-
+  console.log("Loading ",checkLoading);
   const loadVoucherTotNhatVaVoucherTiepTheo = (total) => {
     BanHangClientAPI.voucherTotNhat(storedData?.userID ? storedData?.userID : null, total).then((res) => { setVoucher(res.data); loadGiamGia(res.data); });
 
@@ -173,7 +177,7 @@ export const GioHang = ({ children }) => {
     }
 
   };
-
+  
   useEffect(() => {
     loadDiaChiMacDinh();
     loadSoLuongSPTrongGH();
@@ -205,7 +209,10 @@ export const GioHang = ({ children }) => {
     phuongThuc,
     dataVanChuyen
   ) => {
-    if (!diaChi && !dataVanChuyen) {
+    if (checkLoading === false) {
+      setCheckLoading(true);
+    }
+    if (!diaChi && !dataVanChuyen){
       return toast.error("Đơn hàng chưa có địa chỉ!", {
         position: "top-right",
         autoClose: 1000,
@@ -324,11 +331,21 @@ export const GioHang = ({ children }) => {
       });
     }
 
+
     //   setGioHangCT([]);
   };
 
   return (
     <div>
+      {checkLoading ? 
+       isLoading && (
+        <div className="loading-overlay">
+          <div className="loading-logo">
+            <img src={loading} alt="Logo" />
+          </div>
+        </div>
+      ) : ""
+      }
       <Breadcrumb style={{ marginBottom: 10 }}>
         <Breadcrumb.Item>
           <Link to="/home" className="no-underline">Trang chủ</Link>
@@ -526,7 +543,10 @@ export const GioHang = ({ children }) => {
             </h5>
             <h5 className="col-md-5">
               <span style={{ color: "blue" }}>
-                {Intl.NumberFormat("en-US").format(roundToThousands(total - (discount ? discount : 0)))} VND
+                {Intl.NumberFormat("en-US").format(
+                  roundToThousands(total - (discount ? discount : 0))
+                )}{" "}
+                VND
               </span>
             </h5>
           </div>
@@ -623,7 +643,11 @@ export const GioHang = ({ children }) => {
             <h5 className="col">
               :{" "}
               {Intl.NumberFormat("en-US").format(
-                roundToThousands(total + (moneyShip ? moneyShip : 0) - (discount ? discount : 0))
+                roundToThousands(
+                  total +
+                    (moneyShip ? moneyShip : 0) -
+                    (discount ? discount : 0)
+                )
               )}{" "}
               VND
             </h5>
@@ -683,7 +707,7 @@ export const GioHang = ({ children }) => {
                       voucher,
                       diaChi,
                       phuongThuc,
-                      dataVanChuyen,
+                      dataVanChuyen
                     );
                   },
                   onCancel: () => {

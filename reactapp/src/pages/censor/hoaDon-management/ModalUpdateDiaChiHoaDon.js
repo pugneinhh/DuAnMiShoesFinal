@@ -1,143 +1,187 @@
-import {
-
-  Form,
-  Input,
-  Modal,
-  Select,
-} from "antd";
-import ModalDiaChi from "../khachHang-management/ModalDiaChi";
+import { Form, Input, InputNumber, Modal, Select } from "antd";
 import { AddressApi } from "../api/address/AddressApi";
 import { useEffect, useState } from "react";
 import { HoaDonAPI } from "../api/hoaDon/hoaDon.api";
+import { SellAPI } from "../api/sell/sell.api";
+import { ShipAPI } from "../api/ship/ship.api";
+import Moment from "moment";
+
+import { toast } from "react-toastify";
+
 const ModalDiaChiUpdate = (props) => {
   const [form] = Form.useForm();
-  const { openDiaChiUpdate, setOpenDiaChiUpdate } = props;
-    const idHD = props.idHD;
-      const [listProvince, setListProvince] = useState([]);
-      const [listDistricts, setListDistricts] = useState([]);
-      const [listWard, setListWard] = useState([]);
-       const [diaChiHoaDon, setdiaChiHoaDon] = useState([]);
+  const { openDiaChiUpdate, setOpenDiaChiUpdate, loadHoaDon } = props;
+  const idHD = props.idHD;
+  const [listProvince, setListProvince] = useState([]);
+  const [listDistricts, setListDistricts] = useState([]);
+  const [listWard, setListWard] = useState([]);
+  const [diaChiHoaDon, setdiaChiHoaDon] = useState([]);
+  const [quantity, setQuantity] = useState(0);
+  const [timeShip, setTimeShip] = useState(0);
+  const [money, setMoney] = useState(0);
+  const [moneyShip, setMoneyShip] = useState(0);
+  const [soTienVanChuyen, setSoTienVanChuyen] = useState(0);
 
+  useEffect(() => {
+    // form.setFieldsValue({ idNguoiDung: idKH });
+    loadDiaChiHoaDon();
+    loadDataProvince();
+    loadHoaDon();
+  }, []);
 
-       
-    useEffect(() => {
-      // form.setFieldsValue({ idNguoiDung: idKH });
-      loadDiaChiHoaDon();
-      loadDataProvince();
-    }, []);
-    
-         const loadDiaChiHoaDon= () => {
-           HoaDonAPI.detailUpdateHoaDon(idHD).then((res) => {
-             setdiaChiHoaDon(res.data);
-             
-             if(res.data.diaChi&&res.data.diaChi!=null){
-             const firstIndex = res.data.diaChi.indexOf("/");
-             const secondIndex = res.data.diaChi.indexOf("/", firstIndex + 1);
-             const thirdIndex = res.data.diaChi.indexOf("/", secondIndex + 1);
-            
-            const diaChi=res.data.diaChi
-            .substring(0, firstIndex);
-            const xa=res.data.diaChi
-            .substring(firstIndex +1, secondIndex);
-            const huyen=res.data.diaChi
-            .substring(secondIndex +1, thirdIndex);
-            const tp=res.data.diaChi
-            .substring(thirdIndex +1);
-          
-             setProvince(
-              listProvince.filter(
+  const loadDiaChiHoaDon = () => {
+    HoaDonAPI.detailUpdateHoaDon(idHD).then((res) => {
+      setdiaChiHoaDon(res.data);
+      SellAPI.getAllHDCTByHD(res.data.ma).then((res) => {
+        let totalQuantity = 0;
+        res.data.forEach((hdct) => {
+          totalQuantity += hdct.soLuong;
+        });
+        setQuantity(totalQuantity);
+      });
+
+      if (res.data.diaChi && res.data.diaChi != null) {
+        const firstIndex = res.data.diaChi.indexOf("/");
+        const secondIndex = res.data.diaChi.indexOf("/", firstIndex + 1);
+        const thirdIndex = res.data.diaChi.indexOf("/", secondIndex + 1);
+
+        const diaChi = res.data.diaChi.substring(0, firstIndex);
+        const xa = res.data.diaChi.substring(firstIndex + 1, secondIndex);
+        const huyen = res.data.diaChi.substring(secondIndex + 1, thirdIndex);
+        const tp = res.data.diaChi.substring(thirdIndex + 1);
+        
+        setProvinceID(
+          listProvince.filter(
+            (item) =>
+              item.ProvinceName.toLowerCase().replace(/\s/g, "") ===tp.toLowerCase().replace(/\s/g, "")
+          )[0]
+        );
+      
+        if (ProvinceID) {
+          AddressApi.fetchAllProvinceDistricts(
+            listProvince.filter(
+              (item) =>
+                item.ProvinceName.toLowerCase().replace(/\s/g, "") ===tp.toLowerCase().replace(/\s/g, "")
+            )[0].ProvinceID
+          ).then((res) => {
+            setListDistricts(res.data.data);
+            setDistrictID(
+              res.data.data.filter(
                 (item) =>
-                  item.ProvinceName.toLowerCase().replace(/\s/g, "") === tp.toLowerCase()
-                  .replace(/\s/g, "")
-              )[0]
+                  item.NameExtension[0].toLowerCase().replace(/\s/g, "") ===huyen.toLowerCase().replace(/\s/g, "")
+              )[0].DistrictID
             );
-              if(province){
-                AddressApi.fetchAllProvinceDistricts(
-              listProvince.filter(
+            AddressApi.fetchAllProvinceWard(
+              res.data.data.filter(
                 (item) =>
-                  item.ProvinceName.toLowerCase().replace(/\s/g, "") ===tp.toLowerCase()
-                  .replace(/\s/g, "")
-              )[0].ProvinceID
+                  item.NameExtension[0].toLowerCase().replace(/\s/g, "") ===huyen.toLowerCase().replace(/\s/g, "")
+              )[0].DistrictID
             ).then((res) => {
-              setListDistricts(res.data.data);
-              setDistrict(
+              setListWard(res.data.data);
+              setWardCode(
                 res.data.data.filter(
                   (item) =>
-                    item.NameExtension[0].toLowerCase().replace(/\s/g, "") ===huyen.toLowerCase()
-                    .replace(/\s/g, "")
-                )[0]
+                    item.NameExtension[0].toLowerCase().replace(/\s/g, "") ===xa.toLowerCase().replace(/\s/g, "")
+                )[0].WardCode
               );
-              AddressApi.fetchAllProvinceWard(
-                res.data.data.filter(
-                  (item) =>
-                    item.NameExtension[0].toLowerCase().replace(/\s/g, "") ===huyen.toLowerCase()
-                    .replace(/\s/g, "")
-                )[0].DistrictID
-              ).then((res) => {
-                setListWard(res.data.data);
-                setWard(
-                  res.data.data.filter(
-                    (item) =>
-                      item.NameExtension[0].toLowerCase().replace(/\s/g, "") ===xa.toLowerCase()
-                      .replace(/\s/g, "")
-                  )[0]
-                );
-              });
+             
             });
-              }
-              form.setFieldsValue({
-                tenNguoiNhan:res.data.tenNguoiNhan,
-                sdt:res.data.sdt,
-                ghiChu:res.data.ghiChu,
-                tenThanhPho:tp,
-                tenHuyen:huyen,
-                tenXa:xa,
-                diaChi:diaChi
-               });
-              }
-           });
+          });
+        }
+        form.setFieldsValue({
+          tenNguoiNhan: res.data.tenNguoiNhan,
+          sdt: res.data.sdt,
+          ghiChu: res.data.ghiChu,
+          tenThanhPho: tp,
+          tenHuyen: huyen,
+          tenXa: xa,
+          diaChi: diaChi,
+        });
+        
+      }
+    });
+  };
 
-         };
   const handleClose = () => {
     setOpenDiaChiUpdate(false);
+        loadHoaDon();
+  };
+  const loadTimeAndMoney = async (districtID, valueWard, quantity) => {
+    setTimeShip(
+      await ShipAPI.fetchAllDayShip(districtID, valueWard).then(
+        (res) => res.data.data.leadtime * 1000
+      )
+    );
+
+    setMoney(
+      await ShipAPI.fetchAllMoneyShip(districtID, valueWard, quantity).then(
+        (res) => res.data.data.total
+      )
+    );
+    setMoneyShip(
+      await ShipAPI.fetchAllMoneyShip(districtID, valueWard, quantity).then(
+        (res) => res.data.data.total
+      )
+    );
   };
   const handleSubmit = (value) => {
+    const data =  {
+        tenNguoiNhan: value.tenNguoiNhan,
+        soDienThoai: value.sdt,
+        diaChi:
+          value.diaChi +
+          "/" +
+          value.tenXa +
+          "/" +
+          value.tenHuyen +
+          "/" +
+          value.tenThanhPho,
+        ngayDuKienNhan:
+          timeShip ? timeShip : diaChiHoaDon.ngayDuKienNhan,
+        tienVanChuyen: moneyShip ?  roundToThousands(
+          moneyShip
+        ):diaChiHoaDon.tienVanChuyen,
+        ghiChu: value.ghiChu
+      };
+   
+    SellAPI.updateVanChuyen(diaChiHoaDon.ma, data);
+        loadHoaDon();
     
   };
-    const loadDataProvince = () => {
-      AddressApi.fetchAllProvince().then((res) => {
-        setListProvince(res.data.data);
-      });
-    };
 
-    const [province, setProvince] = useState(null);
-    const [district, setDistrict] = useState(null);
-    const [ward, setWard] = useState(null);
+  const loadDataProvince = () => {
+    AddressApi.fetchAllProvince().then((res) => {
+      setListProvince(res.data.data);
+    });
+  };
 
-    const handleProvinceChange = (value, valueProvince) => {
-      form.setFieldsValue({ provinceId: valueProvince.valueProvince });
-      AddressApi.fetchAllProvinceDistricts(valueProvince.valueProvince).then(
-        (res) => {
-          setListDistricts(res.data.data);
-        }
-      );
-      setProvince(valueProvince);
-    };
+  const [ProvinceID, setProvinceID] = useState(null);
+  const [DistrictID, setDistrictID] = useState(null);
+  const [WardCode, setWardCode] = useState(null);
 
-    const handleDistrictChange = (value, valueDistrict) => {
-      form.setFieldsValue({ toDistrictId: valueDistrict.valueDistrict });
-      AddressApi.fetchAllProvinceWard(valueDistrict.valueDistrict).then(
-        (res) => {
-          setListWard(res.data.data);
-        }
-      );
-      setDistrict(valueDistrict);
-    };
+  const handleProvinceChange = (value, valueProvince) => {
+    form.setFieldsValue({ provinceId: valueProvince.valueProvince });
+    AddressApi.fetchAllProvinceDistricts(valueProvince.valueProvince).then(
+      (res) => {
+        setListDistricts(res.data.data);
+      }
+    );
+    setProvinceID(valueProvince.valueProvince);
+  };
 
-    const handleWardChange = (value, valueWard) => {
-      form.setFieldsValue({ wardCode: valueWard.valueWard });
-      setWard(valueWard);
-    };
+  const handleDistrictChange = (value, valueDistrict) => {
+    form.setFieldsValue({ toDistrictId: valueDistrict.valueDistrict });
+    AddressApi.fetchAllProvinceWard(valueDistrict.valueDistrict).then((res) => {
+      setListWard(res.data.data);
+    });
+    setDistrictID(valueDistrict.valueDistrict);
+  };
+
+  const handleWardChange = (value, valueWard) => {
+    form.setFieldsValue({ wardCode: valueWard.valueWard });
+    setWardCode(valueWard.valueWard);
+    loadTimeAndMoney(DistrictID,valueWard.valueWard,quantity);
+  };
 
   return (
     <Modal
@@ -145,7 +189,33 @@ const ModalDiaChiUpdate = (props) => {
       centered
       open={openDiaChiUpdate}
       onCancel={handleClose}
-      // onOk={}
+      onOk={() => {
+        Modal.confirm({
+          title: "Thông báo",
+          content:
+            "Bạn có chắc chắn muốn sửa thông tin đặt hàng không?",
+          onOk: () => {
+            form.submit();
+            toast("✔️ Cập nhật hóa đơn thành công!", {
+              position: "top-right",
+              autoClose: 1000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+            // form.finish();
+          },
+          footer: (_, { OkBtn, CancelBtn }) => (
+            <>
+              <CancelBtn />
+              <OkBtn />
+            </>
+          ),
+        });
+      }}
       height={300}
       width={1000}
       zIndex={2}
@@ -350,10 +420,29 @@ const ModalDiaChiUpdate = (props) => {
       </Form>
 
       <div>
-        <p>Thời gian dự kiến giao hàng là : 23-12-2024</p>
-        <p> Phí giao hàng là 34.000 đ</p>
+        <p>Thời gian dự kiến giao hàng là : {timeShip
+                  ?Moment(timeShip).format("DD/MM/yyyy")
+                  : Moment(diaChiHoaDon.ngayDuKienNhan).format(
+                      "DD/MM/yyyy"
+                    )}
+              </p>
+        <p> Phí giao hàng là: {" "}
+                              <InputNumber
+                                value={
+                                  soTienVanChuyen === 0 ? `${Intl.NumberFormat("en-US").format(                
+                                    moneyShip? moneyShip:diaChiHoaDon.tienVanChuyen                  
+                                        )}`                     
+                                    : Intl.NumberFormat("en-US").format(
+                                        soTienVanChuyen
+                                      )
+                                }
+                                onChange={(value) => setMoneyShip(value)}
+                              />đ</p>
       </div>
     </Modal>
   );
 };
 export default ModalDiaChiUpdate;
+function roundToThousands(amount) {
+  return Math.round(amount / 100) * 100;
+}

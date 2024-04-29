@@ -124,9 +124,9 @@ const TraCuuDonHangClient = () => {
             </Col>
           </Row>
         </Form>
-      </div>
       <div className="text-center mb-5">
         <img src={LogoGHN} style={{ width: 700, height: 403 }}></img>
+      </div>
       </div>
       <ToastContainer
         position="top-right"
