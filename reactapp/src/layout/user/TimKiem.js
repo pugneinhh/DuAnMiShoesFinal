@@ -7,6 +7,7 @@ import ReactPaginate from "react-paginate";
 import { Breadcrumb } from "antd";
 export const TimKiem = ({ children }) => {
     const { ten } = useParams();
+    console.log(ten)
     //Load product
     const [products, setProducts] = useState([]);
     const [countProducts, setCountProducts] = useState([]);
@@ -17,8 +18,19 @@ export const TimKiem = ({ children }) => {
                 setCountProducts(res.data.length);
             })
     }
+    const getAllSanPham = () => {
+        HomeAPI.getAllSanPham()
+            .then((res) => {
+                setProducts(res.data);
+                setCountProducts(res.data.length);
+            })
+    }
     useEffect(() => {
-        getAll();
+        if (ten == undefined) {
+            getAllSanPham()
+        } else {
+            getAll();
+        }
     }, [ten])
     //Phân trang
     const [currentPage, setCurrentPage] = useState(0);
@@ -43,8 +55,8 @@ export const TimKiem = ({ children }) => {
                 </Breadcrumb.Item>
             </Breadcrumb>
             <div className="container">
-                <div className="mt-4 mb-4" 
-                style={{ display: "flex", alignItems: "center", height: 50, backgroundColor: "#DFF0D8", color: "#5B5B5B" }}>
+                <div className="mt-4 mb-4"
+                    style={{ display: "flex", alignItems: "center", height: 50, backgroundColor: "#DFF0D8", color: "#5B5B5B" }}>
                     <h5 className="ms-2"><FileSearchOutlined /> Có {countProducts} kết quả tìm kiếm phù hợp </h5>
                 </div>
                 <div className="container">

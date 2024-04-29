@@ -39,21 +39,8 @@ export const DashboardClient = ({ children }) => {
   const [valueSearch, setValueSearchs] = useState('');
 
   const onSearch = (value) => {
-    if (value.trim() === '') {
-      toast.warning("Bạn chưa nhập gì để tìm kiếm !", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-    } else {
       nav(`/tim-kiem/${value.trim()}`);
       setValueSearchs('')
-    }
   };
 
   useEffect(() => {
@@ -271,6 +258,7 @@ export const DashboardClient = ({ children }) => {
 
         style={{
           padding: "0 48px",
+          backgroundColor: "white"
         }}
       >
         <div className="mt-3 mb-3"></div>

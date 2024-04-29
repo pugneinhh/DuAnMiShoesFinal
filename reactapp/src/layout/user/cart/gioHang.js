@@ -346,12 +346,12 @@ export const GioHang = ({ children }) => {
         </div>
       ) : ""
       }
-      <Breadcrumb style={{ marginBottom: 10 }}>
+      <Breadcrumb style={{ marginBottom: 10}}>
         <Breadcrumb.Item>
-          <Link to="/home" className="no-underline">Trang chủ</Link>
+          <Link to="/home" className="no-underline text-dark">Trang chủ</Link>
         </Breadcrumb.Item>
         <Breadcrumb.Item>
-          <Link to="/gio-hang" className="no-underline"><b>Giỏ hàng</b></Link>
+          <Link to="/gio-hang" className="no-underline text-dark"><b>Giỏ hàng</b></Link>
         </Breadcrumb.Item>
       </Breadcrumb>
       <div className="banner-san-pham-shop mt-4">

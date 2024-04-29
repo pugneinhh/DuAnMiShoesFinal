@@ -67,10 +67,10 @@ const TraCuuDonHangClient = () => {
     <>
       <Breadcrumb style={{ marginBottom: 10 }}>
         <Breadcrumb.Item>
-          <Link to="/home" className="no-underline">Trang chủ</Link>
+          <Link to="/home" className="no-underline text-dark">Trang chủ</Link>
         </Breadcrumb.Item>
         <Breadcrumb.Item>
-          <Link to="/tra-cuu-don-hang" className="no-underline"><b>Tra cứu đơn hàng</b></Link>
+          <Link to="/tra-cuu-don-hang" className="no-underline text-dark"><b>Tra cứu đơn hàng</b></Link>
         </Breadcrumb.Item>
       </Breadcrumb>
       <div className="row d-flex justify-content-center">
