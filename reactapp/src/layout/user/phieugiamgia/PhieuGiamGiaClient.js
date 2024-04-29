@@ -47,11 +47,17 @@ const PhieuGiamGiaCLient = (props) => {
       <div className="row mb-5 mt-4" style={{ height: 705 }}>
         <ProfileMenu></ProfileMenu>
         <div
-          className="col-md-10"
+        className="col-md-10 "
+        style={{
+          border: "1px solid #ccc",
+          borderRadius: "5px",
+          padding: "10px",
+        }}
+      >
+        <div
           style={{
-            border: "1px solid #ccc",
-            borderRadius: "5px",
-            padding: "10px",
+            padding: "0 10px",
+            borderBottom: "1px solid #ccc",
           }}
         >
           <h5>Phiếu giảm giá</h5>
@@ -63,10 +69,10 @@ const PhieuGiamGiaCLient = (props) => {
             padding: "0 30px",
           }}
         >
-          {datas.map((item, index) => (
+            {datas.map((item, index) => (
             <div className="col-md-4">
               <div class="cardPhieuGiamGia">
-                <div
+              <div
                   class={
                     item.loaiVoucher === "Tiền mặt" ? "ribbon2" : "ribbon"
                   }
@@ -75,8 +81,7 @@ const PhieuGiamGiaCLient = (props) => {
                     style: "currency",
                     currency: "VND",
                   })}
-
-                  <span>{item.loaiVoucher === "Tiền mặt" ? " VND" : "%"}</span>
+ <span>{item.loaiVoucher === "Tiền mặt" ? " VND" : "%"}</span>
                 </div>
                 <h3>{item.ma}</h3>
 
@@ -87,47 +92,33 @@ const PhieuGiamGiaCLient = (props) => {
                       style: "currency",
                       currency: "VND",
                     })}
-
-                    <span>{item.loaiVoucher === "Tiền mặt" ? "VND" : "%"}</span>
-                  </div>
-                  <h3>{item.ma}</h3>
-
-                  <h6>
-                    Điều kiện:
-                    <span className="text-danger ms-2">
-                      {item.dieuKien.toLocaleString("vi-VN", {
-                        style: "currency",
-                        currency: "VND",
-                      })}
-                    </span>
-                  </h6>
-
-                  <h6>
-                    Giảm tối đa:
-                    <span className="text-danger ms-2">
-                      {item.giamToiDa.toLocaleString("vi-VN", {
-                        style: "currency",
-                        currency: "VND",
-                      })}
-                    </span>
-                  </h6>
-
-                  <h6>
-                    Số ngày còn lại:
-                    <span className="text-danger ms-2">{item.ngayConLai}</span>
-                  </h6>
-                  <div className="text-end">
-                    <button className=" btn btn-danger" onClick={muaNgay}>
-                      Sử dụng
-                    </button>
-                  </div>
+                  </span>
+                </h6>
+                <h6>
+                  Giảm tối đa:
+                  <span className="text-danger ms-2">
+                    {item.giamToiDa.toLocaleString("vi-VN", {
+                      style: "currency",
+                      currency: "VND",
+                    })}
+                  </span>
+                </h6>
+                <h6>
+                  Số ngày còn lại:
+                  <span className="text-danger ms-2">{item.ngayConLai}</span>
+                </h6>
+                <div className="text-end">
+                  <button className=" btn btn-danger" onClick={muaNgay}>
+                    Sử dụng
+                  </button>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
-        {/* tab */}
       </div>
+      {/* tab */}
+    </div>
     </>
   );
 };
