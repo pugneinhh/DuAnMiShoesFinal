@@ -355,10 +355,18 @@ const DetailHoaDonTraHang = () => {
               }}
             >
               <h5 className="col" style={{ color: "#736f6f" }}>
-                <strong>Tổng tiền</strong>
+                <strong>Tổng tiền hóa đơn ban đầu :</strong>
                 <span className="float-end" style={{ color: "red" }}>
                   <strong>
                     {Number(thongTin.giaGoc).toLocaleString("vi-VN")} VND
+                  </strong>
+                </span>
+              </h5>
+              <h5 className="col mt-3" style={{ color: "#736f6f" }}>
+                <strong>Tổng tiền hóa đơn hiện tại :</strong>
+                <span className="float-end" style={{ color: "red" }}>
+                  <strong>
+                    0 VND
                   </strong>
                 </span>
               </h5>
