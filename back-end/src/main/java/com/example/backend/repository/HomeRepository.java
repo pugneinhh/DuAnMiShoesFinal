@@ -50,40 +50,26 @@ public interface HomeRepository extends JpaRepository<ChiTietSanPham, String> {
     List<HomeRespone> getALLSanPham();
 
     @Query(value = """
-            select
-                ctsp.san_pham_id as idSanPham,
-                ctsp.id as idCt,
-            	sp.ten as name,
-            	kt.ten as size,
-            	ms.ten as color,
-            	km.gia_tri_khuyen_mai as giaTriKhuyenMai,
-            	km.loai as loaiKM,
-            	ms.ma as colorCode,
-            	ctsp.gia_ban as price,
-            	ctsp.ghi_chu as image,
-            	ctsp.ghi_chu as hoverImage
-            from
-            	chi_tiet_san_pham ctsp
-            join san_pham sp on
-            	ctsp.san_pham_id = sp.id
-            join mau_sac ms on
-            	ctsp.mau_sac_id = ms.id
-            join kich_thuoc kt on
-            	ctsp.kich_thuoc_id = kt.id
-            join khuyen_mai km on
-               ctsp.khuyen_mai_id = km.id
-               where
-               	ctsp.so_luong > 0
-            group by
-            	ctsp.gia_ban,
-            	ms.ten,
-            	sp.ten,
-            	km.ten,
-            	kt.ten,
-            	ctsp.ghi_chu,
-            	ctsp.id,
-            	ms.ma
-            order by ctsp.ngay_tao desc
+                   SELECT 
+                ctsp.san_pham_id AS idSanPham,
+                ctsp.id AS idCt,
+                sp.ten AS name,
+                kt.ten AS size,
+                ms.ten AS color,
+                COALESCE(km.gia_tri_khuyen_mai, 0) AS giaTriKhuyenMai,
+                km.loai AS loaiKM,
+                ms.ma AS colorCode,
+                ctsp.gia_ban AS price,
+                ctsp.ghi_chu AS image,
+                ctsp.ghi_chu AS hoverImage
+            FROM chi_tiet_san_pham ctsp
+            JOIN san_pham sp ON ctsp.san_pham_id = sp.id
+            JOIN mau_sac ms ON ctsp.mau_sac_id = ms.id
+            JOIN kich_thuoc kt ON ctsp.kich_thuoc_id = kt.id
+            LEFT JOIN khuyen_mai km ON ctsp.khuyen_mai_id = km.id
+            WHERE ctsp.so_luong > 0
+            GROUP BY ctsp.gia_ban, ms.ten, sp.ten, kt.ten, ms.ma, km.gia_tri_khuyen_mai, km.loai, ctsp.ghi_chu, ctsp.id
+            ORDER BY ctsp.ngay_tao DESC
             limit 8
             """, nativeQuery = true)
     List<HomeRespone> getALLSanPhamNew();
@@ -96,8 +82,8 @@ public interface HomeRepository extends JpaRepository<ChiTietSanPham, String> {
             	kt.ten as size,
             	ms.ten as color,
             	ms.ma as colorCode,
-            	km.loai as loaiKM,
-            	km.gia_tri_khuyen_mai as giaTriKhuyenMai,
+                COALESCE(km.gia_tri_khuyen_mai, 0) AS giaTriKhuyenMai,
+                km.loai AS loaiKM,
             	ctsp.gia_ban as price,
             	ctsp.ghi_chu as image,
             	ctsp.ghi_chu as hoverImage
@@ -112,7 +98,7 @@ public interface HomeRepository extends JpaRepository<ChiTietSanPham, String> {
             	ctsp.mau_sac_id = ms.id
             join kich_thuoc kt on
             	ctsp.kich_thuoc_id = kt.id
-            join khuyen_mai km on
+            LEFT JOIN khuyen_mai km ON 
                 ctsp.khuyen_mai_id = km.id
             where
             	year(hdct.ngay_tao) = year(CURDATE())

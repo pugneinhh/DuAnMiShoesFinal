@@ -214,7 +214,7 @@ export const Shop = ({ children }) => {
 
   return (
     <div >
-      <Breadcrumb style={{ marginBottom: 10 }}>
+      <Breadcrumb style={{ marginBottom: 10 , borderBottom: "1px solid #E2E1E4",paddingBottom: 5}}>
       <Breadcrumb.Item>
         <Link to="/home" className="no-underline text-dark">Trang chủ</Link>
       </Breadcrumb.Item>
@@ -222,12 +222,12 @@ export const Shop = ({ children }) => {
         <Link to="/san-pham" className="no-underline text-dark"><b>Sản phẩm</b></Link>
       </Breadcrumb.Item>
     </Breadcrumb>
-      <div className="banner-san-pham-shop">
+      <div className="banner-san-pham-shop mt-5">
         <img src={logoBanner} alt="Logo Banner"></img>
         <h1 className="banner-title-logo">Sản phẩm</h1>
       </div>
       <br></br> <br></br>
-      <div className="row mt-5">
+      <div className="row">
         {/* lọc filter */}
         <Space direction="vertical" className="col-md-2">
           <Collapse
