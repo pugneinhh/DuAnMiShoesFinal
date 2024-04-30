@@ -48,4 +48,5 @@ public class KhachHangClientController {
     public ResponseEntity<?> doiMatKhau(@RequestBody DoiMatKhauRequest doiMatKhauRequest, @PathVariable("idNV") String idNV){
         return ResponseEntity.ok(nguoiDungService.doiMatKhau(idNV,doiMatKhauRequest));
     }
+
 }
