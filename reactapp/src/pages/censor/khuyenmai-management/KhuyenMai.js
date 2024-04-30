@@ -48,6 +48,7 @@ const KhuyenMai = () => {
 
   const [khuyenMai, setKhuyenMais] = useState([]);
 
+
   const loadKhuyenMai =  () => {
      PromotionAPI.getAll()
       .then((response) => {
@@ -62,10 +63,14 @@ const KhuyenMai = () => {
   }, []);
 
   useEffect(() => {
-    if (!dataSearch.ma && !dataSearch.ten && !dataSearch.gia_tri_khuyen_mai && !dataSearch.loai && !dataSearch.ngay_bat_dau && !dataSearch.ngay_ket_thuc){
-      loadKhuyenMai();
-    }
-  }, [khuyenMai]);
+    const intervalId = setInterval(() => {
+      if (!dataSearch.ma && !dataSearch.ten && !dataSearch.gia_tri_khuyen_mai && !dataSearch.loai && !dataSearch.ngay_bat_dau && !dataSearch.ngay_ket_thuc ) {
+        loadKhuyenMai();
+      }
+    }, 60000); // 60000 milliseconds = 1 phút
+    return () => clearInterval(intervalId);
+
+  }, []);
 
   // tìm kiếm
 

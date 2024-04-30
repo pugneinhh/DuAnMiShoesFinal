@@ -48,6 +48,7 @@ const Voucher = () => {
   };
 
   const loadVoucher = async () => {
+
     await VoucherAPI.getAll()
       .then((response) => {
         // Update the list of items
@@ -61,10 +62,14 @@ const Voucher = () => {
   }, []);
 
   useEffect(() => {
+    const intervalId = setInterval(() => {
+
     if (!dataSearch.ten && !dataSearch.loaivoucher && !dataSearch.trangThai && !dataSearch.ngayBatDau && !dataSearch.ngayKetThuc){
       loadVoucher();
     }
-  }, [voucher]);
+  }, 60000); // 60000 milliseconds = 1 phút
+  return () => clearInterval(intervalId);
+  }, []);
 
   const [componentSize, setComponentSize] = useState("default");
 
