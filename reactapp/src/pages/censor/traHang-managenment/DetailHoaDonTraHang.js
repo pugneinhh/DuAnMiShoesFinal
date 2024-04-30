@@ -28,13 +28,11 @@ const DetailHoaDonTraHang = () => {
   let totalNewBill = newBill.reduce((accumulator, currentItem) => {
     return accumulator + currentItem.tongTien;
   }, 0);
-  console.log("newBill", newBill);
-  console.log("Tổng tiền bill", totalNewBill);
-  const sanPhamMua = []; //sản phẩm không trả
+ 
   let check = 0;
 
   const loadVoucherTotNhatVaVoucherTiepTheo = (total) => {
-    console.log("Totalll " + total);
+    
     if (total && total > 0) {
       SellAPI.voucherTotNhat(
         thongTin.nguoiDung != null ? thongTin.nguoiDung.id : null,
@@ -50,12 +48,11 @@ const DetailHoaDonTraHang = () => {
 
   const loadGiamGia = (voucher) => {
     if (voucher) {
-      console.log("Vào trường hợp có voucher giảm giá");
+      
       if (voucher.loaiVoucher === "Tiền mặt") {
         setTienGiamHDMoi(voucher.giamToiDa);
         setTienTra(
-          thongTin.thanhTien -
-            (thongTin.giaGoc - totalNewBill - voucher.giamToiDa)
+           totalNewBill -thongTin.giaGiamGia + voucher.giamToiDa
         );
       } else {
         setTienGiamHDMoi(
@@ -65,48 +62,36 @@ const DetailHoaDonTraHang = () => {
           )
         );
         setTienTra(
-          thongTin.thanhTien -
-            (thongTin.giaGoc -
-              totalNewBill -
+              totalNewBill - thongTin.giaGiamGia +
               (parseFloat(thongTin.giaGoc) === parseFloat(totalNewBill)
                 ? 0
                 : Math.min(
                     (thongTin.giaGoc - totalNewBill) * (voucher.mucDo / 100),
                     voucher.giamToiDa
-                  )))
+                  ))
         );
       }
     } else {
-      console.log("Vào trường hợp không có voucher giảm giá");
+     
       setTienGiamHDMoi(0);
-      setTienTra(thongTin.thanhTien - (thongTin.giaGoc - totalNewBill));
+      // setTienTra(thongTin.thanhTien - (thongTin.giaGoc - totalNewBill));
+      setTienTra( totalNewBill);
     }
   };
 
   useEffect(() => {
     if (newBill.length > 0) {
       if (thongTin && thongTin.voucher != null) {
-        console.log("thông tin", thongTin);
-        console.log("thông tin", totalNewBill);
+       
         VoucherAPI.detail(thongTin.voucher.id).then((res) => {
-          console.log("thông tin voucher", res.data);
+          
           if (thongTin.giaGoc - totalNewBill >= res.data.dieuKien) {
             // đủ điều kiện voucher cũ
             if (res.data.loaiVoucher === "Tiền mặt") {
-              console.log("vào đây.......................");
-              console.log(
-                "vào đây " +
-                  (parseFloat(thongTin.giaGoc) -
-                    parseFloat(totalNewBill) -
-                    parseFloat(res.data.giamToiDa))
-              );
-              console.log("vào đây " + thongTin.thanhTien);
+              
               setTienGiamHDMoi(res.data.giamToiDa);
               setTienTra(
-                parseFloat(thongTin.thanhTien) -
-                  (parseFloat(thongTin.giaGoc) -
-                    parseFloat(totalNewBill) -
-                    parseFloat(res.data.giamToiDa))
+                parseFloat(totalNewBill)-parseFloat(thongTin.giaGiamGia) + parseFloat(res.data.giamToiDa)
               );
             } else {
               // phần trăm
@@ -117,16 +102,14 @@ const DetailHoaDonTraHang = () => {
                 )
               );
               setTienTra(
-                thongTin.thanhTien -
-                  (thongTin.giaGoc -
-                    totalNewBill -
+                totalNewBill - thongTin.giaGiamGia +
                     (parseFloat(thongTin.giaGoc) === parseFloat(totalNewBill)
                       ? 0
                       : Math.min(
                           (thongTin.giaGoc - totalNewBill) *
                             (res.data.mucDo / 100),
                           res.data.giamToiDa
-                        )))
+                        ))
               );
             }
           } else {
@@ -157,7 +140,7 @@ const DetailHoaDonTraHang = () => {
   const loadAllHDCT = () => {
     TraHangAPI.getThongTinHoaDon(id).then((res) => {
       setThongTin(res.data);
-      console.log("hóa đơn", res.data);
+      
     });
     TraHangAPI.getHoaDonByMa(id).then((res) => {
       setSanPhamHDCT(res.data);
@@ -358,7 +341,7 @@ const DetailHoaDonTraHang = () => {
                 <strong>Tổng tiền hóa đơn ban đầu :</strong>
                 <span className="float-end" style={{ color: "red" }}>
                   <strong>
-                    {Number(thongTin.giaGoc).toLocaleString("vi-VN")} VND
+                    {thongTin?Number(thongTin.thanhTien).toLocaleString("vi-VN"):0} VND
                   </strong>
                 </span>
               </h5>
@@ -366,7 +349,7 @@ const DetailHoaDonTraHang = () => {
                 <strong>Tổng tiền hóa đơn hiện tại :</strong>
                 <span className="float-end" style={{ color: "red" }}>
                   <strong>
-                    0 VND
+                    {totalNewBill?totalNewBill.toLocaleString("vi-VN"):0} VND
                   </strong>
                 </span>
               </h5>
