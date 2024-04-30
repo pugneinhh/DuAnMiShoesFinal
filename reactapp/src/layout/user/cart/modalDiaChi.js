@@ -1,9 +1,9 @@
 import { Button, Modal, Table, Tag, Radio } from "antd";
 import React, { useState, useEffect } from "react";
-import AddModalDiaChi from "../../../pages/censor/khachHang-management/AddModalDiaChi";
 import { ToastContainer, toast } from "react-toastify";
-import ModalUpdateDiaChi from "../../../pages/censor/khachHang-management/ModalUpdateDiaChi";
 import { KhachHangAPI } from "../../../pages/censor/api/user/khachHang.api";
+import ModalUpdateDiaChiClient from "./modalupdateDiaChiClient";
+import AddModalDiaChiClient from "./addNewDiaChiClient";
 const ModalDiaChi = (props) => {
   const { openModalDiaChi, setOpenModalDiaChi, loadDiaChiMacDinh, userID } = props;
   const [nowAddress, setNowAddress] = useState("");
@@ -190,7 +190,7 @@ const ModalDiaChi = (props) => {
         {/* Same as */}
         <ToastContainer />
       </div>
-      <AddModalDiaChi
+      <AddModalDiaChiClient
         openModalAddDiaChi={openModalAddDiaChi}
         setOpenModalAddDiaChi={setOpenModalAddDiaChi}
         idKH={userID}
@@ -198,7 +198,7 @@ const ModalDiaChi = (props) => {
         onOk={handleCloseAddMoDalDiaChi}
         onCancel={handleCloseAddMoDalDiaChi}
       />
-      <ModalUpdateDiaChi
+      <ModalUpdateDiaChiClient
         openModalUpdateDiaChi={openModalUpdateDiaChi}
         setOpenModalUpdateDiaChi={setOpenModalUpdateDiaChi}
         diaChiUpdate={diaChiUpdate}

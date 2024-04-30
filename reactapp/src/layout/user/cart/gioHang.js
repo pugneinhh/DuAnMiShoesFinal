@@ -16,18 +16,16 @@ import { toast, ToastContainer } from "react-toastify";
 import logoBanner from "../../../assets/images/page-header-bg.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import Moment from "moment";
-import {
-  KHGuiThongBaoDatHang,
-} from "../../../utils/socket/socket";
+import { KHGuiThongBaoDatHang } from "../../../utils/socket/socket";
 import { useCart } from "./CartContext";
 import { useAppSelector } from "../../../store/redux/hook";
 import { GetLoading } from "../../../store/reducer/Loading.reducer";
 import loading from "../../../assets/images/logo.png";
 import { faLessThanEqual } from "@fortawesome/free-solid-svg-icons";
 export const GioHang = ({ children }) => {
-      const isLoading = useAppSelector(GetLoading);
-      const [checkLoading,setCheckLoading] = useState(false);
-        const [loaddingLogo, setLoaddingLogo] = useState(null);
+  const isLoading = useAppSelector(GetLoading);
+  const [checkLoading, setCheckLoading] = useState(false);
+  const [loaddingLogo, setLoaddingLogo] = useState(null);
   const [openModalDiaChi, setOpenModalDiaChi] = useState(false);
   const [openModalVoucher, setOpenModalVoucher] = useState(false);
   const [khachHang, setKhachHang] = useState(null);
@@ -54,16 +52,24 @@ export const GioHang = ({ children }) => {
   const { updateTotalQuantity } = useCart();
   const storedData = get("userData");
   const storedGioHang = get("GioHang");
-  console.log("Loading ",checkLoading);
+  console.log("Loading ", checkLoading);
   const loadVoucherTotNhatVaVoucherTiepTheo = (total) => {
-    BanHangClientAPI.voucherTotNhat(storedData?.userID ? storedData?.userID : null, total).then((res) => { setVoucher(res.data); loadGiamGia(res.data); });
+    BanHangClientAPI.voucherTotNhat(
+      storedData?.userID ? storedData?.userID : null,
+      total
+    ).then((res) => {
+      setVoucher(res.data);
+      loadGiamGia(res.data);
+    });
 
-    BanHangClientAPI.voucherSapDatDuoc(storedData?.userID ? storedData?.userID : null, total, voucher ? voucher.id : null).then(
-      (res) => {
-        setSoTienCanMuaThem(res.data[0]);
-        setSoTienDuocGiam(res.data[1]);
-      }
-    );
+    BanHangClientAPI.voucherSapDatDuoc(
+      storedData?.userID ? storedData?.userID : null,
+      total,
+      voucher ? voucher.id : null
+    ).then((res) => {
+      setSoTienCanMuaThem(res.data[0]);
+      setSoTienDuocGiam(res.data[1]);
+    });
   };
 
   const loadCountGioHang = () => {
@@ -74,7 +80,6 @@ export const GioHang = ({ children }) => {
         });
       });
     } else {
-
       GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res) => {
         updateTotalQuantity(res.data.length);
       });
@@ -151,8 +156,6 @@ export const GioHang = ({ children }) => {
           (res) => res.data.data.total
         )
       );
-
-
     }
   };
 
@@ -162,22 +165,24 @@ export const GioHang = ({ children }) => {
         setIDGH(response.data.id);
         GioHangAPI.getAllGHCTByIDGH(response.data.id).then((res) => {
           setGioHangCT(res.data);
-          let tongTien = (res.data.map(i => i.thanhTien).reduce((total, currenMoney) => total + currenMoney, 0));
+          let tongTien = res.data
+            .map((i) => i.thanhTien)
+            .reduce((total, currenMoney) => total + currenMoney, 0);
           loadVoucherTotNhatVaVoucherTiepTheo(tongTien);
-
         });
       });
     } else if (storedGioHang && storedGioHang != null) {
       setIDGH(storedGioHang.id);
       GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res) => {
         setGioHangCT(res.data);
-        let tongTien = (res.data.map(i => i.thanhTien).reduce((total, currenMoney) => total + currenMoney, 0));
+        let tongTien = res.data
+          .map((i) => i.thanhTien)
+          .reduce((total, currenMoney) => total + currenMoney, 0);
         loadVoucherTotNhatVaVoucherTiepTheo(tongTien);
       });
     }
-
   };
-  
+
   useEffect(() => {
     loadDiaChiMacDinh();
     loadSoLuongSPTrongGH();
@@ -212,7 +217,7 @@ export const GioHang = ({ children }) => {
     if (checkLoading === false) {
       setCheckLoading(true);
     }
-    if (!diaChi && !dataVanChuyen){
+    if (!diaChi && !dataVanChuyen) {
       return toast.error("Đơn hàng chưa có địa chỉ!", {
         position: "top-right",
         autoClose: 1000,
@@ -270,12 +275,12 @@ export const GioHang = ({ children }) => {
       tienSauGiam: total - (discount ? discount : 0),
       diaChi: diaChi
         ? diaChi.diaChi +
-        "/" +
-        diaChi.tenXa +
-        "/" +
-        diaChi.tenHuyen +
-        "/" +
-        diaChi.tenThanhPho
+          "/" +
+          diaChi.tenXa +
+          "/" +
+          diaChi.tenHuyen +
+          "/" +
+          diaChi.tenThanhPho
         : dataVanChuyen.diaChi,
       email: email ? email : dataVanChuyen.email,
       tenNguoiNhan: diaChi ? diaChi.tenNguoiNhan : dataVanChuyen.tenNguoiNhan,
@@ -303,8 +308,6 @@ export const GioHang = ({ children }) => {
           console.log("lỗi ");
         }
       });
-
-
     } else {
       BanHangClientAPI.checkout(hoaDon).then((check) => {
         if (check.data) {
@@ -331,27 +334,36 @@ export const GioHang = ({ children }) => {
       });
     }
 
-
     //   setGioHangCT([]);
   };
 
   return (
     <div>
-      {checkLoading ? 
-       isLoading && (
-        <div className="loading-overlay">
-          <div className="loading-logo">
-            <img src={loading} alt="Logo" />
-          </div>
-        </div>
-      ) : ""
-      }
-       <Breadcrumb style={{ marginBottom: 10 , borderBottom: "1px solid #E2E1E4",paddingBottom: 5}}>
+      {checkLoading
+        ? isLoading && (
+            <div className="loading-overlay">
+              <div className="loading-logo">
+                <img src={loading} alt="Logo" />
+              </div>
+            </div>
+          )
+        : ""}
+      <Breadcrumb
+        style={{
+          marginBottom: 10,
+          borderBottom: "1px solid #E2E1E4",
+          paddingBottom: 5,
+        }}
+      >
         <Breadcrumb.Item>
-          <Link to="/home" className="no-underline text-dark">Trang chủ</Link>
+          <Link to="/home" className="no-underline text-dark">
+            Trang chủ
+          </Link>
         </Breadcrumb.Item>
         <Breadcrumb.Item>
-          <Link to="/gio-hang" className="no-underline text-dark"><b>Giỏ hàng</b></Link>
+          <Link to="/gio-hang" className="no-underline text-dark">
+            <b>Giỏ hàng</b>
+          </Link>
         </Breadcrumb.Item>
       </Breadcrumb>
       <div className="banner-san-pham-shop mt-4">
@@ -438,7 +450,7 @@ export const GioHang = ({ children }) => {
                       // key={index}
                       product={ghct}
                       loadghct={loadGHCT}
-                    // oadSoLuongSPTrongGH={loadSoLuongSPTrongGH}
+                      // oadSoLuongSPTrongGH={loadSoLuongSPTrongGH}
                     />
                   );
                 })
@@ -461,10 +473,10 @@ export const GioHang = ({ children }) => {
                 {soTienCanMuaThem === 0 && soTienDuocGiam === 0
                   ? ""
                   : "Còn thiếu " +
-                  Intl.NumberFormat("en-US").format(soTienCanMuaThem) +
-                  "VNĐ để được giảm " +
-                  Intl.NumberFormat("en-US").format(soTienDuocGiam) +
-                  "VNĐ"}
+                    Intl.NumberFormat("en-US").format(soTienCanMuaThem) +
+                    "VNĐ để được giảm " +
+                    Intl.NumberFormat("en-US").format(soTienDuocGiam) +
+                    "VNĐ"}
               </>
             </b>
           </p>
@@ -499,7 +511,7 @@ export const GioHang = ({ children }) => {
           </div>
           <div
             className="row ps-2 pb-2 mt-3"
-          // style={{ borderBottom: "1px dashed black"}}
+            // style={{ borderBottom: "1px dashed black"}}
           >
             <div className="col-md-6" style={{ marginLeft: 30 }}>
               <span>Đơn hàng </span>
@@ -536,7 +548,7 @@ export const GioHang = ({ children }) => {
           </div>
           <div
             className="row ps-2 pb-2 mt-3"
-          // style={{ borderBottom: "1px dashed black" }}
+            // style={{ borderBottom: "1px dashed black" }}
           >
             <h5 className="col-md-6" style={{ marginLeft: 30 }}>
               <span>Tổng tiền </span>
