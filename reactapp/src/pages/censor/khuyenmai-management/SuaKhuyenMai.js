@@ -122,29 +122,27 @@ const SuaKhuyenMai = () => {
       .then((response) => {
         setIDKM(response.data);
         if (new Date() > new Date(value.ngay_ket_thuc)){
-          Promise.all(
+          console.log("Trường hợp khuyến mại quá hạn")
             dataCTSP.map((data) => PromotionAPI.deletePromotion(data.idCTSP))
-          )
         } else {
-        if (selectedIDCTSP.length > 0) {
-        
-          Promise.all(
+        if (selectedIDCTSP.length > 0 && selectedIDSP.length > 0) {
+          console.log("Trường hợp có ctsp km");
+         // Promise.all(
             dataCTSP.map((data) => selectedIDCTSP.filter(item => item===data.idCTSP).length > 0 ? 
-            PromotionAPI.updateProductByPromotion(data.idCTSP, response.data) :  dataCTSP.map((data) => PromotionAPI.deletePromotion(data.idCTSP))
-            )
+            PromotionAPI.updateProductByPromotion(data.idCTSP, response.data) :  PromotionAPI.deletePromotion(data.idCTSP)
+            //)
             // selectedIDCTSP.map((id) =>
             //   PromotionAPI.updateProductByPromotion(id, response.data)
             // )
           );
         } else {
-          Promise.all(
+          console.log("Trường hợp không có km");
             dataCTSP.map((data) => PromotionAPI.deletePromotion(data.idCTSP))
-          );
+          
         }
       }
         loadKhuyenMai();
         navigate("/admin-khuyen-mai");
-
         toast("✔️ Sửa thành công!", {
           position: "top-right",
           autoClose: 5000,

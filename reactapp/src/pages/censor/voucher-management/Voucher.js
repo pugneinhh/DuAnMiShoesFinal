@@ -63,11 +63,10 @@ const Voucher = () => {
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-
     if (!dataSearch.ten && !dataSearch.loaivoucher && !dataSearch.trangThai && !dataSearch.ngayBatDau && !dataSearch.ngayKetThuc){
       loadVoucher();
     }
-  }, 60000); // 60000 milliseconds = 1 phút
+  }, 60000); // 60000 milliseconds = 1 phút 
   return () => clearInterval(intervalId);
   }, []);
 
