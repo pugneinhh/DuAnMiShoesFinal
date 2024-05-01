@@ -107,26 +107,47 @@ const ModalSanPham = (props) => {
     loadCTSP();
   }, []);
 
-  const loadCTSP = async () => {
-    const result = await SellAPI.getAllProducts();
-    result.data.map((i) =>
-      dispatch(
-        AddProduct({
-          id: i.idCTSP,
-          soLuong: i.soLuong,
-          linkAnh: i.linkAnh,
-          tenSP: i.tenSP,
-          tenKT: i.tenKT,
-          tenMS: i.tenMS,
-          maMS: i.maMS,
-          loaiKM: i.loaiKM,
-          giaTriKhuyenMai: parseInt(i.giaKhuyenMai, 10),
-          giaBan: i.giaBan,
-          tenKM: i.tenKM,
-        })
-      )
-    );
-  };
+  // const loadCTSP = async () => {
+  //   const result = await SellAPI.getAllProducts();
+  //   result.data.map((i) =>
+  //     dispatch(
+  //       AddProduct({
+  //         id: i.idCTSP,
+  //         soLuong: i.soLuong,
+  //         linkAnh: i.linkAnh,
+  //         tenSP: i.tenSP,
+  //         tenKT: i.tenKT,
+  //         tenMS: i.tenMS,
+  //         maMS: i.maMS,
+  //         loaiKM: i.loaiKM,
+  //         giaTriKhuyenMai: parseInt(i.giaKhuyenMai, 10),
+  //         giaBan: i.giaBan,
+  //         tenKM: i.tenKM,
+  //       })
+  //     )
+  //   );
+  // };
+    const loadCTSP = () => {
+      const result = SellAPI.getAllProducts().then((item) => {
+        item.data.map((i) =>
+          dispatch(
+            AddProduct({
+              id: i.idCTSP,
+              soLuong: i.soLuong,
+              linkAnh: i.linkAnh,
+              tenSP: i.tenSP,
+              tenKT: i.tenKT,
+              tenMS: i.tenMS,
+              maMS: i.maMS,
+              loaiKM: i.loaiKM,
+              giaTriKhuyenMai: parseInt(i.giaTriKhuyenMai, 10),
+              giaBan: i.giaBan,
+              tenKM: i.tenKM,
+            })
+          )
+        );
+      });
+    };
   const dispatch = useDispatch();
 
   const handleClickAddProduct = async (record) => {
@@ -141,12 +162,12 @@ const ModalSanPham = (props) => {
         hoaDon: activeKey,
         tenMS: record.tenMS,
         giaGiam: record.giaGiam,
-        giaSauGiam: record.giaSauGiam,
+        giaSauGiam: (parseFloat(record.giaBan) - parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100))), giaGiam: (parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100))),
         nguoiTao: record.nguoiTao,
-        giaBan: record.giaBan,
         tenKM: record.tenKM,
         loaiKM: record.loaiKM,
         giaTriKhuyenMai: record.giaTriKhuyenMai,
+    
       })
     );
       
@@ -174,42 +195,42 @@ const ModalSanPham = (props) => {
       key: "link",
       center: "true",
       render: (link, record) => {
-        return (
-          <>
-            {!record.tenKM ? (
-              <Image
-                cloudName="dtetgawxc"
-                publicId={link}
-                width="100"
-                borderRadius="10"
-                crop="scale"
-                href={link}
-              />
-            ) : (
-              <Badge.Ribbon
-                text={
-                  record.loaiKM === "Tiền mặt"
-                    ? "-" +
-                      `${Intl.NumberFormat("en-US").format(
-                        record.giaTriKhuyenMai
-                      )} VNĐ`
-                    : "-" + record.giaTriKhuyenMai + "%"
-                }
-                color="red"
-                size="small"
-              >
-                <Image
-                  cloudName="dtetgawxc"
-                  publicId={link}
-                  width="100"
-                  borderRadius="10"
-                  crop="scale"
-                  href={link}
-                />
-              </Badge.Ribbon>
-            )}
-          </>
-        );
+       return (
+         <>
+           {!record.tenKM ? (
+             <Image
+               cloudName="dtetgawxc"
+               publicId={link}
+               width="100"
+               borderRadius="10"
+               crop="scale"
+               href={link}
+             />
+           ) : (
+             <Badge.Ribbon
+               text={
+                 record.loaiKM === "Tiền mặt"
+                   ? "-" +
+                     `${Intl.NumberFormat("en-US").format(
+                       parseInt(record.giaTriKhuyenMai, 10)
+                     )} VNĐ`
+                   : "-" + parseInt(record.giaTriKhuyenMai, 10) + "%"
+               }
+               color="red"
+               size="small"
+             >
+               <Image
+                 cloudName="dtetgawxc"
+                 publicId={link}
+                 width="100"
+                 borderRadius="10"
+                 crop="scale"
+                 href={link}
+               />
+             </Badge.Ribbon>
+           )}
+         </>
+       );
       },
     },
     {
@@ -226,25 +247,30 @@ const ModalSanPham = (props) => {
       dataIndex: "giaSauGiam",
       width: 150,
       render: (text, record) => {
-        return (
-          <>
-            {!record.tenKM ? (
-              <span>{`${Intl.NumberFormat("en-US").format(
-                record.giaBan
-              )} VNĐ`}</span>
-            ) : (
-              <span style={{ color: "red" }}>
-                <del style={{ color: "black" }}>{`${Intl.NumberFormat(
-                  "en-US"
-                ).format(record.giaBan)} VNĐ`}</del>
-                <br></br>
-                {`${Intl.NumberFormat("en-US").format(
-                  record.giaBan - record.giaGiam
-                )} VNĐ`}
-              </span>
-            )}
-          </>
-        );
+         return (
+           <>
+             {!record.tenKM ? (
+               <span>{`${Intl.NumberFormat("en-US").format(
+                 record.giaBan
+               )} VNĐ`}</span>
+             ) : (
+               <span style={{ color: "red" }}>
+                 <del style={{ color: "black" }}>{`${Intl.NumberFormat(
+                   "en-US"
+                 ).format(record.giaBan)} VNĐ`}</del>
+                 <br></br>
+                 {`${Intl.NumberFormat("en-US").format(
+                   parseFloat(record.giaBan) -
+                     parseFloat(
+                       record.loaiKM === "Tiền mặt"
+                         ? record.giaTriKhuyenMai
+                         : (record.giaBan * record.giaTriKhuyenMai) / 100
+                     )
+                 )} VNĐ`}
+               </span>
+             )}
+           </>
+         );
       },
     },
     {
