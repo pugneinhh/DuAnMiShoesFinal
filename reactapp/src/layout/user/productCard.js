@@ -27,7 +27,9 @@ export const ProductCard = ({ product }) => {
             {/* Big sale off */}
             {product.loaiKM === "Phần trăm"
               ? +" " + product.giaTriKhuyenMai + "%"
-              : product.giaTriKhuyenMai + " VND"}
+              : Intl.NumberFormat("en-US").format(
+                  roundToThousands(product.giaTriKhuyenMai)
+                ) + " VND"}
           </div>
         )}
         <div class="imgBx">
@@ -60,7 +62,7 @@ export const ProductCard = ({ product }) => {
                     {Intl.NumberFormat("en-US").format(
                       roundToThousands(product.price)
                     )}{" "}
-                    VNĐ
+                    VND
                   </del>
                 </span>
                 <span className="text-gia-tien ">
@@ -72,7 +74,7 @@ export const ProductCard = ({ product }) => {
                             (product.price * product.giaTriKhuyenMai) / 100
                     )
                   )}{" "}
-                  VNĐ
+                  VND
                 </span>
               </span>
             ) : (
@@ -80,7 +82,7 @@ export const ProductCard = ({ product }) => {
                 {Intl.NumberFormat("en-US").format(
                   roundToThousands(product.price)
                 )}{" "}
-                VNĐ
+                VND
               </span>
             )}
           </div>

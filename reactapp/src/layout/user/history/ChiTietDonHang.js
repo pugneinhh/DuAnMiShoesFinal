@@ -111,18 +111,35 @@ const ChiTietDonHang = (props) => {
   };
   return (
     <>
-       <Breadcrumb style={{ marginBottom: 10 , borderBottom: "1px solid #E2E1E4",paddingBottom: 5}}>
+      <Breadcrumb
+        style={{
+          marginBottom: 10,
+          borderBottom: "1px solid #E2E1E4",
+          paddingBottom: 5,
+        }}
+      >
         <Breadcrumb.Item>
-          <Link to="/home" className="no-underline text-dark">Trang chủ</Link>
+          <Link to="/home" className="no-underline text-dark">
+            Trang chủ
+          </Link>
         </Breadcrumb.Item>
         <Breadcrumb.Item>
-          <Link to="/tai-khoan-cua-toi" className="no-underline text-dark">Thông tin tài khoản</Link>
+          <Link to="/tai-khoan-cua-toi" className="no-underline text-dark">
+            Thông tin tài khoản
+          </Link>
         </Breadcrumb.Item>
         <Breadcrumb.Item>
-          <Link to="/history" className="no-underline text-dark">Đơn mua</Link>
+          <Link to="/history" className="no-underline text-dark">
+            Đơn mua
+          </Link>
         </Breadcrumb.Item>
         <Breadcrumb.Item>
-          <Link to={`/chi-tiet-don-hang/${bill.id}`} className="no-underline text-dark"><b>{bill.ma}</b></Link>
+          <Link
+            to={`/chi-tiet-don-hang/${bill.id}`}
+            className="no-underline text-dark"
+          >
+            <b>{bill.ma}</b>
+          </Link>
         </Breadcrumb.Item>
       </Breadcrumb>
       <div className="row pt-3 mt-4 mb-5">
@@ -140,22 +157,22 @@ const ChiTietDonHang = (props) => {
                 {bill.trangThai === "0"
                   ? "Chờ xác nhận"
                   : bill.trangThai === "1"
-                    ? "Xác nhận"
-                    : bill.trangThai === "2"
-                      ? "Chờ vận chuyển"
-                      : bill.trangThai === "3"
-                        ? "Đang vận chuyển"
-                        : bill.trangThai === "4"
-                          ? "Đã thanh toán"
-                          : bill.trangThai === "5"
-                            ? "Thành công"
-                            : bill.trangThai === "-1"
-                              ? "Đã hủy"
-                              : bill.trangThai === "-2"
-                                ? "Hoàn Tiền"
-                                : bill.trangThai === "10"
-                                  ? "Trả hàng"
-                                  : "Đã"}
+                  ? "Xác nhận"
+                  : bill.trangThai === "2"
+                  ? "Chờ vận chuyển"
+                  : bill.trangThai === "3"
+                  ? "Đang vận chuyển"
+                  : bill.trangThai === "4"
+                  ? "Đã thanh toán"
+                  : bill.trangThai === "5"
+                  ? "Thành công"
+                  : bill.trangThai === "-1"
+                  ? "Đã hủy"
+                  : bill.trangThai === "-2"
+                  ? "Hoàn Tiền"
+                  : bill.trangThai === "10"
+                  ? "Trả hàng"
+                  : "Đã"}
               </span>
             </div>
           </div>
@@ -182,7 +199,9 @@ const ChiTietDonHang = (props) => {
                     values={showTitle(item.trangThai)}
                     isOpenEnding={true}
                     title={showTitle(item.trangThai)}
-                    subtitle={moment(item.ngayTao).format("hh:mm:ss DD/MM/YYYY")}
+                    subtitle={moment(item.ngayTao).format(
+                      "hh:mm:ss DD/MM/YYYY"
+                    )}
                   />
                 ))}
               </Timeline>
@@ -209,14 +228,15 @@ const ChiTietDonHang = (props) => {
                 <div className="row">
                   <div className="col ">Tổng tiền hàng:</div>
                   <div className="col">
-                    {Intl.NumberFormat("en-US").format(bill.giaGoc)} VND
+                    {Intl.NumberFormat("en-US").format(bill.giaGoc)}
+                    {" VND"}
                   </div>
                 </div>
                 <div className="row mt-3">
                   <div className="col">Phí vận chuyển:</div>
                   <div className="col">
                     {Intl.NumberFormat("en-US").format(bill.tienVanChuyen)}
-                    VND
+                    {" VND"}
                   </div>
                 </div>
                 <div
@@ -233,7 +253,9 @@ const ChiTietDonHang = (props) => {
                     <b>Thành tiền</b>
                   </div>
                   <div className="col text-danger fs-5">
-                    <b>{Intl.NumberFormat("en-US").format(bill.thanhTien)} VND</b>
+                    <b>
+                      {Intl.NumberFormat("en-US").format(bill.thanhTien)} VND
+                    </b>
                   </div>
                 </div>
               </div>
@@ -255,7 +277,7 @@ const ChiTietDonHang = (props) => {
           {/* phương thức thanh toán */}
           <div className="ms-4 d-flex justify-content-start">
             <h5 className=" mt-1">Phương thức thanh toán :</h5>
-            <p className="ms-5 mt-2">
+            <p className="ms-5 fs-5 mt-1 text-danger">
               <b>
                 {bill.vnp === null
                   ? "Thanh toán khi nhận hàng"

@@ -49,7 +49,7 @@
   /* Dark color for text */
   font-family: 'Arial', sans-serif;
   /* Choosing a font-family */
-  font-size: 20px;
+  font-size: 19px;
   /* Adjusting the size */
   font-weight: bold;
   /* Making the text bold */
@@ -155,7 +155,7 @@
     }
   
     .container-card-sanpham .card:hover .contentBx {
-      height: 210px;
+      height: 230px;
     }
   
     .container-card-sanpham .card .contentBx h2 {

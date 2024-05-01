@@ -64,6 +64,7 @@ const DetailTraCuuDonHang = ({ listBill }) => {
   const loadDetailHoaDonClient = () => {
     HoaDonClientAPI.DetailHoaDonClient(idHD.idHD).then((res) => {
       setBill(res.data);
+        console.log(res.data);
     });
   };
 
@@ -195,32 +196,39 @@ const DetailTraCuuDonHang = ({ listBill }) => {
                       {listSanPham.tenHang} {listSanPham.tenSP}{" "}
                     </h6>
                   </div>
-                  <div className="text-danger">
-                    <h6>
-                      <del>
-                        <IntlProvider locale="vi-VN">
-                          <div>
-                            <FormattedNumber
-                              value={listSanPham.giaBanSP}
-                              style="currency"
-                              currency="VND"
-                              minimumFractionDigits={0}
-                            />
-                          </div>
-                        </IntlProvider>
-                      </del>
-                    </h6>
-                  </div>
+                  {listSanPham.giaGiam > 0 ? (
+                    <div className="text-danger">
+                      <h6>
+                        <del>
+                          <IntlProvider locale="vi-VN">
+                            <div>
+                              <FormattedNumber
+                                value={
+                                  parseInt(listSanPham.thanhTienSP) +
+                                  parseInt(listSanPham.giaGiam)
+                                }
+                                currency="VND"
+                                minimumFractionDigits={0}
+                              />
+                              {" VND"}
+                            </div>
+                          </IntlProvider>
+                        </del>
+                      </h6>
+                    </div>
+                  ) : (
+                    ""
+                  )}
                   <div className="text-danger">
                     <h6>
                       <IntlProvider locale="vi-VN">
                         <div>
                           <FormattedNumber
                             value={listSanPham.thanhTienSP}
-                            style="currency"
                             currency="VND"
                             minimumFractionDigits={0}
-                          />
+                          />{" "}
+                          {" VND"}
                         </div>
                       </IntlProvider>
                     </h6>
@@ -246,10 +254,10 @@ const DetailTraCuuDonHang = ({ listBill }) => {
                           value={
                             listSanPham.thanhTienSP * listSanPham.soLuongSP
                           }
-                          style="currency"
                           currency="VND"
                           minimumFractionDigits={0}
                         />
+                        {" VND"}
                       </div>
                     </IntlProvider>
                   </h6>
@@ -287,7 +295,7 @@ const DetailTraCuuDonHang = ({ listBill }) => {
                   <div className="col">Phí vận chuyển:</div>
                   <div className="col">
                     {Intl.NumberFormat("en-US").format(bill.tienVanChuyen)}
-                    VND
+                    {" VND"}
                   </div>
                 </div>
                 <div
@@ -296,7 +304,8 @@ const DetailTraCuuDonHang = ({ listBill }) => {
                 >
                   <div className="col">Voucher cửa hàng:</div>
                   <div className="col">
-                    {Intl.NumberFormat("en-US").format(bill.giaGiamGia)} VND
+                    {Intl.NumberFormat("en-US").format(bill.giaGiamGia)}{" "}
+                    {" VND"}
                   </div>
                 </div>
                 <div className="row mt-3">
@@ -305,7 +314,8 @@ const DetailTraCuuDonHang = ({ listBill }) => {
                   </div>
                   <div className="col text-danger fs-5">
                     <b>
-                      {Intl.NumberFormat("en-US").format(bill.thanhTien)} VND
+                      {Intl.NumberFormat("en-US").format(bill.thanhTien)}
+                      {" VND"}
                     </b>
                   </div>
                 </div>
@@ -328,10 +338,12 @@ const DetailTraCuuDonHang = ({ listBill }) => {
           {/* phương thức thanh toán */}
           <div className="ms-4 d-flex justify-content-start">
             <h5 className=" mt-1">Phương thức thanh toán :</h5>
-            <p className="ms-5 mt-1">
-              {bill.vnp === null
-                ? "Thanh toán khi nhận hàng"
-                : "Thanh toán VNP"}
+            <p className="ms-5 fs-5 mt-1 text-danger">
+              <b>
+                {bill.vnp === null
+                  ? "Thanh toán khi nhận hàng"
+                  : "Thanh toán VNP"}
+              </b>
             </p>
           </div>
         </div>

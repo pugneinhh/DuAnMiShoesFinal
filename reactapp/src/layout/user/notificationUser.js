@@ -18,6 +18,10 @@ export default function Notification() {
 
   const storedItem = localStorage.getItem("userData");
   const parsedItem = JSON.parse(storedItem);
+    useEffect(() => {
+      loadAll();
+      count();
+    }, []);
   const loadAll = () => {
     if(parsedItem!=null){
     ThongBaoAPI.getALlThongBaoKH(parsedItem.accessToken).then((res) => {
@@ -28,29 +32,48 @@ export default function Notification() {
     return null;
   }
   };
- var stomp = null;
- const socket = new SockJS("http://localhost:8080/ws");
- stomp = Stomp.over(socket);
+//  var stomp = null;
+//  const socket = new SockJS("http://localhost:8080/ws");
+//  stomp = Stomp.over(socket);
 
- useEffect(() => {
-   stomp.connect({}, () => {
-     stomp.subscribe("/topic/KH/hoa-don", (mes) => {
-       try {
-         const pare = JSON.parse(mes.body);
-         // ví du: bạn muốn khi khách hàng bấm đặt hàng mà load lại hóa đơn màn admin thì hãy gọi hàm load all hóa đơn ở đây
-         // thí dụ: đây là hàm laod hóa đơn: loadHoaDon(); allThongBao(); CountThongBao();
-         loadAll();
-         count();
-       } catch (e) {
-         console.log("lỗi mẹ ròi xem code di: ", e);
-       }
-     });
-   });
+//   useEffect(() => {
+//     const connectWebSocket = () => {
+//       // const socket = new SockJS("http://localhost:8080/ws");
+//       // stomp = Stomp.over(socket);
+//       stomp = Stomp.over(function () {
+//         return new SockJS("http://localhost:8080/ws");
+//       });
+//       stomp.connect(
+//         {},
+//         () => {
+//           console.log("connect websocket");
 
-   return () => {
-     stomp.disconnect();
-   };
- }, []);
+//           stomp.subscribe("/topic/admin/hoa-don", (mes) => {
+//             try {
+//               const pare = JSON.parse(mes.body);
+//               console.log(pare);
+//               // ví du: bạn muốn khi khách hàng bấm đặt hàng mà load lại hóa đơn màn admin thì hãy gọi hàm load all hóa đơn ở đây
+//               // thí dụ: đây là hàm laod hóa đơn: loadHoaDon(); allThongBao(); CountThongBao();
+//               loadAll();
+//               count();
+//             } catch (e) {
+//               console.log("lỗi mẹ ròi xem code di: ", e);
+//             }
+//           });
+//         },
+//         (error) => {
+//           console.error("Failed to connect to WebSocket:", error);
+//           // Thử kết nối lại sau một khoảng thời gian
+//           setTimeout(connectWebSocket, 5000);
+//         }
+//       );
+//     };
+
+//     connectWebSocket();
+//     return () => {
+//       stomp.disconnect();
+//     };
+//   }, []);
   const updateStatus = (id) => {
           ThongBaoAPI.updateStatusClient(id).then((res) => {
       // nếu trạng thái là đã xem thì không load lại cho đỡ lag máy
