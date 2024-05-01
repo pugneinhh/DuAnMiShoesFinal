@@ -6,9 +6,20 @@ import { SlNotebook } from "react-icons/sl";
 import { GiNotebook, GiPiggyBank, GiReturnArrow } from "react-icons/gi";
 import { FaMoneyBillTrendUp, FaTruckFast } from "react-icons/fa6";
 import { ImCancelCircle } from "react-icons/im";
-import { Button, Modal, Table, Tag, Input, Form, Select, Space } from "antd";
+import {
+  Button,
+  Modal,
+  Table,
+  Tag,
+  Input,
+  Form,
+  Select,
+  Space,
+  InputNumber,
+} from "antd";
 import { useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import { DeleteFilled } from "@ant-design/icons";
 import "react-toastify/dist/ReactToastify.css";
 import "./HoaDonDetail.css";
 import moment from "moment";
@@ -47,7 +58,8 @@ export default function HoaDonDetail() {
   const [trangThai, setTrangThai] = useState([]);
   const [listSanPhamTra, setlistSanPhamTra] = useState([]);
   const [listSanPhams, setlistSanPhams] = useState([]);
-
+  const [check, setCheck] = useState(false);
+  console.log("Trạng thái :", trangThai);
   const handleOk = () => {
     setIsModalOpen(false);
     setOpenModalTimeLine(false);
@@ -62,6 +74,7 @@ export default function HoaDonDetail() {
     setIsModalOpenRollBack(false);
     setIsModalHuyHoaDon(false);
   };
+
   const [openXuat, setOpenXuat] = useState(false);
   const componnentRef = useRef();
 
@@ -80,13 +93,12 @@ export default function HoaDonDetail() {
     loadTimeLineHoaDon();
   }, []);
   // load hóa đơn
-    console.log(listSanPhams)
+  console.log(listSanPhams);
   const loadVoucherTotNhatVaVoucherTiepTheo = (idKH, money) => {
     SellAPI.voucherTotNhat(idKH, money).then((res) =>
       setVoucherHienTai(res.data)
     );
     SellAPI.voucherSapDatDuoc(idKH, money).then((res) => {
-
       setSoTienCanMuaThem(res.data[0]);
       setSoTienDuocGiam(res.data[1]);
     });
@@ -132,9 +144,8 @@ export default function HoaDonDetail() {
       setHoaDondetail(res.data);
       setTrangThai(res.data.trangThai);
       setMaHD(res.data.ma);
-        console.log(res.data);
+      console.log(res.data);
     });
-  
   };
 
   const showModal = () => {
@@ -223,6 +234,70 @@ export default function HoaDonDetail() {
     });
   };
 
+  const onChangeSoLuong = async (value, record) => {
+    console.log("record: ", record);
+    let SL = 0; // số lượng trước
+    let SLT = 0; // số lượng tồn
+    await SellAPI.getSLAndSLT(record.idctsp, maHD).then((res) => {
+      SL = res.data.soLuong;
+      SLT = res.data.soLuongTon;
+    });
+    if (value === 0 || !value) {
+      Modal.confirm({
+        title: "Thông báo",
+        content:
+          "Bạn có chắc chắn muốn xóa sản phẩm này ra khỏi hóa đơn hay không?",
+        onOk: () => {
+          SellAPI.deleteInvoiceAndRollBackProduct(record.idctsp, maHD);
+          toast("✔️ Cập nhật hóa đơn thành công!", {
+            position: "top-right",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        },
+        onCancel: () => {},
+        footer: (_, { OkBtn, CancelBtn }) => (
+          <>
+            <CancelBtn />
+            <OkBtn />
+          </>
+        ),
+      });
+    } else {
+      if (SLT + SL < value) {
+        toast("Số lượng tồn không thỏa mãn yêu cầu!", {
+          position: "top-right",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        value = SLT + SL;
+        SellAPI.updateSL(record.idctsp, maHD, value);
+      } else {
+        SellAPI.updateSL(record.idctsp, maHD, value);
+      }
+    }
+    loadHoaDon();
+    loadListSanPhams();
+    setCheck(true);
+  };
+
+  useEffect(() => {
+    if (listSanPhams.length > 0 && check === true) {
+      loadHoaDon();
+      loadListSanPhams();
+      setCheck(false);
+    }
+  }, [listSanPhams.soLuongSP, listSanPhams.length, check]);
   //lịch sử thanh toán
   const columLichSuThanhToan = [
     {
@@ -942,7 +1017,7 @@ export default function HoaDonDetail() {
                   style={{ width: 150, height: 150, marginLeft: 15 }}
                 />
               </div>
-              <div className="col-md-5 ">
+              <div className="col-md-3 ">
                 <div className="mt-1">
                   <h6>
                     {listSanPham.tenHang} {listSanPham.tenSP}{" "}
@@ -973,9 +1048,7 @@ export default function HoaDonDetail() {
                     <IntlProvider locale="vi-VN">
                       <div>
                         <FormattedNumber
-                          value={
-                            listSanPham.thanhTienSP
-                          }
+                          value={listSanPham.thanhTienSP}
                           style="currency"
                           currency="VND"
                           minimumFractionDigits={0}
@@ -994,7 +1067,23 @@ export default function HoaDonDetail() {
                     border: "1px solid black", // Thêm viền đen với độ dày 1px
                   }}
                 ></div>
-                <h6>x{listSanPham.soLuongSP}</h6>
+              </div>
+
+              <div className="col-md-2 text-danger mt-5">
+                <h6>
+                  {trangThai == 0 || trangThai == 1 || trangThai == 2 ? (
+                    <InputNumber
+                      min={0}
+                      value={listSanPham.soLuongSP}
+                      onChange={(value) => onChangeSoLuong(value, listSanPham)}
+                    />
+                  ) : (
+                    <InputNumber
+                      defaultValue={listSanPham.soLuongSP}
+                      disabled={true}
+                    />
+                  )}
+                </h6>
               </div>
 
               <div className="col-md-2 text-danger mt-5">
@@ -1002,7 +1091,7 @@ export default function HoaDonDetail() {
                   <IntlProvider locale="vi-VN">
                     <div>
                       <FormattedNumber
-                        value={listSanPham.thanhTienSP*listSanPham.soLuongSP}
+                        value={listSanPham.thanhTienSP * listSanPham.soLuongSP}
                         style="currency"
                         currency="VND"
                         minimumFractionDigits={0}
@@ -1010,6 +1099,49 @@ export default function HoaDonDetail() {
                     </div>
                   </IntlProvider>
                 </h6>
+              </div>
+
+              <div className="col-md-2 mt-5">
+                <Space size="middle">
+                  <button
+                    className="btn btn-danger"
+                    style={{ borderRadius: 30 }}
+                    onClick={() => {
+                      Modal.confirm({
+                        title: "Thông báo",
+                        content:
+                          "Bạn có chắc chắn muốn xóa sản phẩm này ra khỏi hóa đơn hay không?",
+                        onOk: () => {
+                          SellAPI.deleteInvoiceAndRollBackProduct(
+                            listSanPham.idctsp,
+                            maHD
+                          );
+                          setCheck(true);
+                          toast("✔️ Cập nhật hóa đơn thành công!", {
+                            position: "top-right",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "light",
+                          });
+                        },
+                        footer: (_, { OkBtn, CancelBtn }) => (
+                          <>
+                            <CancelBtn />
+                            <OkBtn />
+                          </>
+                        ),
+                      });
+                    }}
+                  >
+                    <DeleteFilled size={20}/>
+
+
+                  </button>
+                </Space>
               </div>
 
               <hr className="mt-3"></hr>
@@ -1073,9 +1205,7 @@ export default function HoaDonDetail() {
                         <IntlProvider locale="vi-VN">
                           <div>
                             <FormattedNumber
-                              value={
-                                listSanPham.thanhTienSP
-                              }
+                              value={listSanPham.thanhTienSP}
                               style="currency"
                               currency="VND"
                               minimumFractionDigits={0}
@@ -1102,7 +1232,9 @@ export default function HoaDonDetail() {
                       <IntlProvider locale="vi-VN">
                         <div>
                           <FormattedNumber
-                            value={listSanPham.thanhTienSP*listSanPham.soLuongSP}
+                            value={
+                              listSanPham.thanhTienSP * listSanPham.soLuongSP
+                            }
                             style="currency"
                             currency="VND"
                             minimumFractionDigits={0}
@@ -1471,9 +1603,7 @@ export default function HoaDonDetail() {
                           <IntlProvider locale="vi-VN">
                             <div>
                               <FormattedNumber
-                                value={
-                                  listSanPham.thanhTienSP 
-                                }
+                                value={listSanPham.thanhTienSP}
                                 style="currency"
                                 currency="VND"
                                 minimumFractionDigits={0}

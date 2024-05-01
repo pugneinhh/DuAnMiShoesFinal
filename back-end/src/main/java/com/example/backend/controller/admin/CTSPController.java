@@ -83,6 +83,7 @@ public class CTSPController {
     @PutMapping("/updateKM/{idCTSP}")
     public ResponseEntity<?> update(@PathVariable("idCTSP") String idCTSP, @RequestBody KhuyenMai khuyenMai) {
         System.out.println("Vào update");
+        System.out.println("Khuyến mại"+khuyenMai);
         ChiTietSanPham ctsp = ctspService.findChiTietSanPhamByID(idCTSP);
         BigDecimal giaGiam = khuyenMai.getLoai().equals("Tiền mặt") ? khuyenMai.getGia_tri_khuyen_mai()
                 : (ctsp.getGiaBan().subtract(ctsp.getGiaBan().multiply(khuyenMai.getGia_tri_khuyen_mai().divide(new BigDecimal("100")))));
