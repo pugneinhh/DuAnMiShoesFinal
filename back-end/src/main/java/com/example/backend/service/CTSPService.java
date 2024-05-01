@@ -43,8 +43,12 @@ public class CTSPService {
     public List<DetailCTSPRespone> detail(){return ctspRepository.detail();}
 
     public ChiTietSanPham update(String id, UpdateCTSPRequest request) {
+        ChiTietSanPham ctBanDau= ctspRepository.findById(id).get();
         ChiTietSanPham ct = request.map(new ChiTietSanPham());
         ct.setId(id);
+        ct.setKhuyenMai(ctBanDau.getKhuyenMai());
+        ct.setNgayTao(ctBanDau.getNgayTao());
+        ct.setGiaNhap(ctBanDau.getGiaNhap());
         return ctspRepository.save(ct);
     }
 
