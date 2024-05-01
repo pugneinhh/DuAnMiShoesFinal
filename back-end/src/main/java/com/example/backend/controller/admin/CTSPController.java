@@ -121,7 +121,7 @@ public class CTSPController {
 
     @PostMapping("/add")
     public ResponseEntity<String> add(@RequestBody ChiTietSanPhamRequest request, HinhAnhRequest ha) {
-
+        request.setGiaNhap(BigDecimal.valueOf(0));
         request.setTrangThai(0);
         request.setNgayTao(LocalDateTime.now());
         request.setGioiTinh(true);
