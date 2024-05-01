@@ -329,7 +329,7 @@ const ModalSanPham = (props) => {
 
       height={300}
       width={1200}
-      zIndex={10000}
+      // zIndex={10000}
       style={{ top: -200 }}
     >
     <div className="container-fluid" style={{ borderRadius: 20 }}>
@@ -466,6 +466,7 @@ const ModalSanPham = (props) => {
                 </Form.Item>
               </div>
               {/* Trạng Thái */}
+              
               <div className="col-md-4">
                 <Form.Item label="Trạng thái" name="trangThaiCT">
                   <Select placeholder="Chọn một giá trị" defaultValue="0">
