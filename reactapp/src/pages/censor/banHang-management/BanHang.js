@@ -1036,7 +1036,9 @@ SellAPI.voucherSapDatDuoc(
                       `${Intl.NumberFormat("en-US").format(
                         record.giaTriKhuyenMai
                       )} VND`
-                    : "-" + record.giaTriKhuyenMai + "%"
+                    :
+                      ("-" + parseInt(record.giaTriKhuyenMai, 10) + "%")
+                      
                 }
                 color="red"
                 size="small"
@@ -1961,8 +1963,15 @@ SellAPI.voucherSapDatDuoc(
                           </div>
                           <div className="col-md-4">
                             <h6 className="mt-4">VND</h6>
-                            <h6 className="mt-4">VND</h6>
-                            <h6 className="mt-4 text-danger">VND</h6>
+                            <h6 className="" style={{ marginTop: 30 }}>
+                              VND
+                            </h6>
+                            <h6
+                              className="text-danger"
+                              style={{ marginTop: 30 }}
+                            >
+                              VND
+                            </h6>
                             <h6 className="mt-4">VND</h6>
                           </div>
                         </div>
