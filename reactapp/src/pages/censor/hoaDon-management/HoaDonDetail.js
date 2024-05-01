@@ -93,7 +93,6 @@ export default function HoaDonDetail() {
     loadTimeLineHoaDon();
   }, []);
   // load hóa đơn
-  console.log(listSanPhams);
   const loadVoucherTotNhatVaVoucherTiepTheo = (idKH, money) => {
     SellAPI.voucherTotNhat(idKH, money).then((res) =>
       setVoucherHienTai(res.data)
