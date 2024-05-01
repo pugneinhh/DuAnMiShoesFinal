@@ -213,7 +213,7 @@ const ModalSanPham = (props) => {
                    ? "-" +
                      `${Intl.NumberFormat("en-US").format(
                        parseInt(record.giaTriKhuyenMai, 10)
-                     )} VNĐ`
+                     )} VND`
                    : "-" + parseInt(record.giaTriKhuyenMai, 10) + "%"
                }
                color="red"
@@ -252,12 +252,12 @@ const ModalSanPham = (props) => {
              {!record.tenKM ? (
                <span>{`${Intl.NumberFormat("en-US").format(
                  record.giaBan
-               )} VNĐ`}</span>
+               )} VND`}</span>
              ) : (
                <span style={{ color: "red" }}>
                  <del style={{ color: "black" }}>{`${Intl.NumberFormat(
                    "en-US"
-                 ).format(record.giaBan)} VNĐ`}</del>
+                 ).format(record.giaBan)} VND`}</del>
                  <br></br>
                  {`${Intl.NumberFormat("en-US").format(
                    parseFloat(record.giaBan) -
@@ -266,7 +266,7 @@ const ModalSanPham = (props) => {
                          ? record.giaTriKhuyenMai
                          : (record.giaBan * record.giaTriKhuyenMai) / 100
                      )
-                 )} VNĐ`}
+                 )} VND`}
                </span>
              )}
            </>

@@ -503,7 +503,7 @@ export default function CTSP() {
             onChange={(e) => onChangeGB(record, e.target.value)}
           />
         ) : (
-          <span>{`${Intl.NumberFormat('en-US').format(record.giaBan)} VNĐ`}</span>
+          <span>{`${Intl.NumberFormat('en-US').format(record.giaBan)} VND`}</span>
         );
       },
     },

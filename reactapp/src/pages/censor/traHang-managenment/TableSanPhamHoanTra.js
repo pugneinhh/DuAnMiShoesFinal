@@ -4,6 +4,7 @@ import { KhachHangAPI } from "../api/user/khachHang.api";
 import { useDispatch, useSelector } from "react-redux";
 import { floatButtonPrefixCls } from "antd/es/float-button/FloatButton";
 import { DeleteNewBill, GetNewBill, LoadNewBill,UpdateNewBill,UpdateGhiChuBill } from "../../../store/reducer/NewBill.reducer";
+import { FormattedNumber, IntlProvider } from "react-intl";
 
 const TableSanPhamHoanTra = ({ onSelectedSP, sanPhamHoanTra }) => {
   const [form] = Form.useForm();
@@ -13,9 +14,7 @@ const TableSanPhamHoanTra = ({ onSelectedSP, sanPhamHoanTra }) => {
   let totalNewBill = newBill.reduce((accumulator, currentItem) => {
     return accumulator + currentItem.tongTien;
   }, 0); // đây là tổng tiền của bill mới
-  console.log("sanPhamHoanTra",sanPhamHoanTra);
 
-  
 
   useEffect(() => {
     dispatch(DeleteNewBill());
@@ -68,11 +67,41 @@ const TableSanPhamHoanTra = ({ onSelectedSP, sanPhamHoanTra }) => {
       title: "Đơn giá",
       dataIndex: "donGia",
       key: "donGia",
+      render: (donGia) => {
+        return (
+          <IntlProvider locale="vi-VN">
+            <div>
+              <FormattedNumber
+                value={donGia}
+                // style="currency"
+                currency="VND"
+                minimumFractionDigits={0}
+              />
+              {" VND"}
+            </div>
+          </IntlProvider>
+        );
+      },
     },
     {
       title: "Tổng tiền",
       dataIndex: "tongTien",
       key: "tongTien",
+      render: (tongTien) => {
+        return (
+          <IntlProvider locale="vi-VN">
+            <div>
+              <FormattedNumber
+                value={tongTien}
+                // style="currency"
+                currency="VND"
+                minimumFractionDigits={0}
+              />
+              {" VND"}
+            </div>
+          </IntlProvider>
+        );
+      },
     },
     {
       title: "Ghi chú",
@@ -80,19 +109,19 @@ const TableSanPhamHoanTra = ({ onSelectedSP, sanPhamHoanTra }) => {
       key: "idHDCT",
       render: (record) => {
         return (
-          <Input 
-            placeholder="Ghi chú" 
-            onChange={(e) => { 
+          <Input
+            placeholder="Ghi chú"
+            onChange={(e) => {
               dispatch(
                 UpdateGhiChuBill({
                   key: record,
                   ghiChu: e.target.value,
                 })
               );
-            }} 
+            }}
           />
         );
-      }
+      },
     },
   ];
 

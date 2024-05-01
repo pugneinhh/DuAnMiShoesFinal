@@ -455,7 +455,7 @@ const ModalDetailSP = (props) => {
             {ChiTietSanPham.loaiKM ? (
               <span>
                 <del style={{ color: "black" }}>
-                  {Intl.NumberFormat("en-US").format(roundToThousands(ChiTietSanPham.giaBan))} VNĐ{" "}
+                  {Intl.NumberFormat("en-US").format(roundToThousands(ChiTietSanPham.giaBan))} VND{" "}
                 </del>
                 {Intl.NumberFormat("en-US").format(roundToThousands(
                   ChiTietSanPham.loaiKM === "Tiền mặt"
@@ -465,11 +465,11 @@ const ModalDetailSP = (props) => {
                       ChiTietSanPham.giaTriKhuyenMai) /
                     100
                 ))}{" "}
-                VNĐ
+                VND
               </span>
             ) : (
               <span style={{ color: "black" }}>
-                {Intl.NumberFormat("en-US").format(roundToThousands(ChiTietSanPham.giaBan))} VNĐ
+                {Intl.NumberFormat("en-US").format(roundToThousands(ChiTietSanPham.giaBan))} VND
               </span>
             )}
           </h5>
@@ -548,9 +548,9 @@ const ModalDetailSP = (props) => {
           <h5>Mô tả sản phẩm:</h5>
           <p>
             <p>
-              ●<span className="me-2 "></span>{" "}
-              <label className="me-2 motaTitle">Tên hãng:</label>{" "}
-              <span className="motaChitiet">{ChiTietSanPham.tenHang}</span>
+              ●<span className="me-2 "></span>
+              <label className="me-2 ">Tên hãng:</label>{" "}
+              <span className="">{ChiTietSanPham.tenHang}</span>
             </p>
             <p>
               ●<span className="me-2"></span>Độ cao :{" "}

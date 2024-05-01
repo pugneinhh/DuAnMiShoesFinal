@@ -276,7 +276,7 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
             {
               <span>{`${Intl.NumberFormat("en-US").format(
                 record.soTien
-              )} VNĐ`}</span>
+              )} VND`}</span>
             }
           </>
         );
@@ -365,7 +365,7 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
             parseFloat(total) > parseFloat(tongThanhToan)
               ? parseFloat(total) - parseFloat(tongThanhToan)
               : 0
-          )} VNĐ`}
+          )} VND`}
         </h6>
       </div>
       <Table
@@ -381,7 +381,7 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
         <h6
           className="col-md-4 mt-2 text-end text-danger fw-bold"
           style={{ paddingRight: "25px" }}
-        >{`${Intl.NumberFormat("en-US").format(money)} VNĐ`}</h6>
+        >{`${Intl.NumberFormat("en-US").format(money)} VND`}</h6>
       </div>
       <div className="row mt-1">
         <h6 className="col-md-3 mt-2 fw-bold">Tiền thiếu</h6>
@@ -396,8 +396,8 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
                 parseFloat(total) -
                   parseFloat(!money ? 0 : money) -
                   parseFloat(tongThanhToan)
-              )} VNĐ`
-            : " 0 VNĐ"}
+              )} VND`
+            : " 0 VND"}
         </h6>
       </div>
       <div className="row mt-1">
@@ -413,8 +413,8 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
                 parseFloat(money) +
                   parseFloat(tongThanhToan) -
                   parseFloat(total)
-              )} VNĐ`
-            : " 0 VNĐ"}
+              )} VND`
+            : " 0 VND"}
         </h6>
 
       </div>

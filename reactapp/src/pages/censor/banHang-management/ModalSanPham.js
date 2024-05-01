@@ -203,7 +203,7 @@ const ModalSanPham = (props) => {
                     crop="scale"
                     href={link}
                   />) : (
-                  <Badge.Ribbon text={record.loaiKM === "Tiền mặt" ? ("-" + `${Intl.NumberFormat("en-US").format(parseInt(record.giaTriKhuyenMai, 10))} VNĐ`) : ("-" + parseInt(record.giaTriKhuyenMai, 10) + "%")} color="red" size="small">
+                  <Badge.Ribbon text={record.loaiKM === "Tiền mặt" ? ("-" + `${Intl.NumberFormat("en-US").format(parseInt(record.giaTriKhuyenMai, 10))} VND`) : ("-" + parseInt(record.giaTriKhuyenMai, 10) + "%")} color="red" size="small">
                     <Image
                       cloudName="dtetgawxc"
                       publicId={link}
@@ -238,11 +238,11 @@ const ModalSanPham = (props) => {
             {
               (!record.tenKM) ?
                 (
-                  <span>{`${Intl.NumberFormat("en-US").format(record.giaBan)} VNĐ`}</span>
+                  <span>{`${Intl.NumberFormat("en-US").format(record.giaBan)} VND`}</span>
                 ) :
                 (
-                  <span style={{ color: "red" }}><del style={{ color: "black" }}>{`${Intl.NumberFormat("en-US").format(record.giaBan)} VNĐ`}</del>
-                    <br></br>{`${Intl.NumberFormat("en-US").format(parseFloat(record.giaBan) - parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100)))} VNĐ`}</span>
+                  <span style={{ color: "red" }}><del style={{ color: "black" }}>{`${Intl.NumberFormat("en-US").format(record.giaBan)} VND`}</del>
+                    <br></br>{`${Intl.NumberFormat("en-US").format(parseFloat(record.giaBan) - parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100)))} VND`}</span>
                 )
             }
           </>
