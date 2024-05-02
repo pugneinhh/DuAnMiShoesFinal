@@ -25,9 +25,11 @@ export const ProductCard = ({ product }) => {
         });
       });
     } else {
+      if(storedGioHang!=null){
       GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res) => {
         updateTotalQuantity(res.data.length);
       });
+    }
     }
   };
 
@@ -35,7 +37,9 @@ export const ProductCard = ({ product }) => {
     if (storedData!=null) {
       setKhachHang(storedData.userID);
     }
-    
+    if(storedGioHang!=null) {
+      loadCountGioHang();
+    }
     // loadVoucherTotNhatVaVoucherTiepTheo();
   }, []);
   const handleMouseEnter = () => {
