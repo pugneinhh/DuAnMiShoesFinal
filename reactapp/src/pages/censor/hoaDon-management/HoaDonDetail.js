@@ -91,6 +91,7 @@ export default function HoaDonDetail() {
     loadListSanPhamTra();
     loadLichSuThanhToan();
     loadTimeLineHoaDon();
+    loadHoaDonVNP();
   }, []);
   // load hóa đơn
   const loadVoucherTotNhatVaVoucherTiepTheo = (idKH, money) => {
@@ -146,7 +147,14 @@ export default function HoaDonDetail() {
       console.log(res.data);
     });
   };
-
+   const [listVNP, setlistVNP] = useState([]);
+  const loadHoaDonVNP = () => {
+    HoaDonAPI.detaiVNP(id).then((res) => {
+      setlistVNP(res.data);
+      //  console.log("11111", res.data);
+    });
+  };
+  //  console.log("11111", listVNP[0].vnp);
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -373,6 +381,7 @@ export default function HoaDonDetail() {
       setlistHDTimeLine(res.data);
     });
   };
+  console.log(hoaDondetail);
   const showIcon = (trangThai) => {
     if (trangThai === "0") {
       return GiNotebook;
@@ -439,7 +448,7 @@ export default function HoaDonDetail() {
     } else if (trangThai === "2") {
       return "Đang vận chuyển";
     } else if (trangThai === "3") {
-      return "Thành công";
+      return "Đã thanh toán";
     } else if (trangThai === "4") {
       return "Thành công";
     } else if (trangThai === "-1") {
@@ -571,7 +580,9 @@ export default function HoaDonDetail() {
                         type="primary"
                         onClick={showModal}
                       >
-                        {showTitleButtonVanDonTraSau(trangThai)}
+                        {listVNP[0].vnp == null
+                          ? "Đã thanh toán"
+                          : "Thành công"}
                       </Button>
                     ) : trangThai == 4 ? (
                       <Button
@@ -579,7 +590,7 @@ export default function HoaDonDetail() {
                         type="primary"
                         onClick={showModal}
                       >
-                        {showTitleButtonVanDonTraSau(trangThai)}
+                        Thành công
                       </Button>
                     ) : (
                       <></>
