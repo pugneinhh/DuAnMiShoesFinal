@@ -11,7 +11,7 @@ import {
   Tag,
   Badge,
 } from "antd";
-import { BookFilled } from "@ant-design/icons";
+import { BookFilled, RetweetOutlined } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
 import { InfoCircleFilled } from "@ant-design/icons";
 import { useEffect, useState } from "react";
@@ -37,6 +37,8 @@ const ModalSanPham = (props) => {
   const maNV = props.maNV;
   const ctsp = useSelector(GetProduct);
   const invoice = useSelector(GetInvoice);
+  const [chiTietSanPham, setChiTietSanPham] = useState([""]);
+  const [CTSP, setCTSPs] = useState([""])
 
   const handleClose = () => {
     setOpenSanPham(false);
@@ -103,51 +105,56 @@ const ModalSanPham = (props) => {
     .then((response) => setH(response.data));
   };
 
+  //Tìm kiếm
+  const onChangeFilter = (changedValues, allValues) => {
+    const updatedValues = { ...allValues };
+    if (updatedValues.soLuongCT && updatedValues.soLuongCT.length > 0) {
+      updatedValues.soLuongBatDau = updatedValues.soLuongCT[0] !== undefined ? updatedValues.soLuongCT[0] : 1;
+    } else {
+      updatedValues.soLuongBatDau = 1;
+    }
+    if (updatedValues.soLuongCT && updatedValues.soLuongCT.length > 0) {
+      updatedValues.soLuongKetThuc = updatedValues.soLuongCT[1] !== undefined ? updatedValues.soLuongCT[1] : 1000;
+    } else {
+      updatedValues.soLuongKetThuc = 1000;
+    }
+    if (updatedValues.giaBanCT && updatedValues.giaBanCT.length > 0) {
+      updatedValues.giaBanBatDau = updatedValues.giaBanCT[0] !== undefined ? updatedValues.giaBanCT[0] : 100000;
+    } else {
+      updatedValues.giaBanBatDau = 100000;
+    }
+    if (updatedValues.giaBanCT && updatedValues.giaBanCT.length > 0) {
+      updatedValues.giaBanKetThuc = updatedValues.giaBanCT[1] !== undefined ? updatedValues.giaBanCT[1] : 50000000;
+    } else {
+      updatedValues.giaBanKetThuc = 50000000;
+    }
+    if (!allValues.tenCT && !allValues.idKT && !allValues.idMS && !allValues.idDC && !allValues.idCL && !allValues.trangThaiCT && !allValues.giaBanCT && !allValues.idDM && !allValues.idH) {
+      setCTSPs(chiTietSanPham);
+    } else {
+      timKiemCT(updatedValues);
+    }
+  }
+  const timKiemCT = (dataSearch) => {
+    ChiTietSanPhamAPI.searchCTSPBanHang(dataSearch).then(response => {
+      // Update the list of items
+      response.data.map((i) => dispatch(AddProduct({ id: i.idCTSP, soLuong: i.soLuong, linkAnh: i.linkAnh, tenSP: i.tenSP, tenKT: i.tenKT, tenMS: i.tenMS, maMS: i.maMS, loaiKM: i.loaiKM, giaTriKhuyenMai: parseInt(i.giaKhuyenMai, 10), giaBan: i.giaBan, tenKM: i.tenKM })))
+      setCTSPs(response.data)
+    })
+      .catch(error => console.error('Error adding item:', error));
+  }
+
   useEffect(() => {
     loadCTSP();
   }, []);
 
-  // const loadCTSP = async () => {
-  //   const result = await SellAPI.getAllProducts();
-  //   result.data.map((i) =>
-  //     dispatch(
-  //       AddProduct({
-  //         id: i.idCTSP,
-  //         soLuong: i.soLuong,
-  //         linkAnh: i.linkAnh,
-  //         tenSP: i.tenSP,
-  //         tenKT: i.tenKT,
-  //         tenMS: i.tenMS,
-  //         maMS: i.maMS,
-  //         loaiKM: i.loaiKM,
-  //         giaTriKhuyenMai: parseInt(i.giaKhuyenMai, 10),
-  //         giaBan: i.giaBan,
-  //         tenKM: i.tenKM,
-  //       })
-  //     )
-  //   );
-  // };
-    const loadCTSP = () => {
-      const result = SellAPI.getAllProducts().then((item) => {
-        item.data.map((i) =>
-          dispatch(
-            AddProduct({
-              id: i.idCTSP,
-              soLuong: i.soLuong,
-              linkAnh: i.linkAnh,
-              tenSP: i.tenSP,
-              tenKT: i.tenKT,
-              tenMS: i.tenMS,
-              maMS: i.maMS,
-              loaiKM: i.loaiKM,
-              giaTriKhuyenMai: parseInt(i.giaTriKhuyenMai, 10),
-              giaBan: i.giaBan,
-              tenKM: i.tenKM,
-            })
-          )
-        );
-      });
-    };
+  const loadCTSP = () => {
+    const result = SellAPI.getAllProducts().then((item) => {
+      item.data.map((i) => dispatch(AddProduct({ id: i.idCTSP, soLuong: i.soLuong, linkAnh: i.linkAnh, tenSP: i.tenSP, tenKT: i.tenKT, tenMS: i.tenMS, maMS: i.maMS, loaiKM: i.loaiKM, giaTriKhuyenMai: parseInt(i.giaTriKhuyenMai, 10), giaBan: i.giaBan, tenKM: i.tenKM })))
+      setChiTietSanPham(item.data);
+      setCTSPs(item.data)
+    });
+
+  };
   const dispatch = useDispatch();
 
   const handleClickAddProduct = async (record) => {
@@ -352,7 +359,7 @@ const ModalSanPham = (props) => {
       }
       height={300}
       width={1200}
-      zIndex={10000}
+      // zIndex={10000}
       style={{ top: -200 }}
     >
       <div className="container-fluid" style={{ borderRadius: 20 }}>
@@ -371,7 +378,7 @@ const ModalSanPham = (props) => {
               borderRadius: "8px",
             }}
           >
-            <h5>
+             <h5>
               <FilterFilled size={30} /> Bộ lọc
             </h5>
             <hr />
@@ -386,7 +393,7 @@ const ModalSanPham = (props) => {
               initialValues={{
                 size: componentSize,
               }}
-              onValuesChange={onFormLayoutChange}
+              onValuesChange={onChangeFilter}
               size={componentSize}
               style={{
                 maxWidth: 1600,
@@ -396,13 +403,13 @@ const ModalSanPham = (props) => {
               {/* Các Thuộc Tính Dòng 1 */}
               <div className="row mt-3">
                 {/* Tên & Mã */}
-                <div className="col-3">
+                <div className="col-md-4">
                   <Form.Item label="Tên & Mã" name="tenCT">
                     <Input className="border" />
                   </Form.Item>
                 </div>
                 {/* Kích Thước */}
-                <div className="col-3">
+                <div className="col-md-4">
                   <Form.Item label="Kích Thước" name="idKT">
                     <Select placeholder="Chọn một giá trị">
                       {kt.map((item) => (
@@ -414,26 +421,34 @@ const ModalSanPham = (props) => {
                   </Form.Item>
                 </div>
                 {/* Màu Sắc */}
-                <div className="col-3">
+                <div className="col-md-4">
                   <Form.Item label="Màu Sắc" name="idMS">
                     <Select placeholder="Chọn một giá trị">
                       {ms.map((item) => (
                         <Option key={item.id} value={item.id}>
                           <div
                             style={{
+                              color: "white",
+                              fontWeight: "bolder",
                               backgroundColor: `${item.ma}`,
                               borderRadius: 6,
-                              width: 170,
+                              border: "1px solid black",
+                              width: 155,
                               height: 25,
                             }}
-                          ></div>
+                            className="text-center"
+                          >{item.ten} - {item.ma}</div>
                         </Option>
                       ))}
                     </Select>
                   </Form.Item>
                 </div>
+              </div>
+
+              {/* Các Thuộc Tính Dòng 2 */}
+              <div className="row">
                 {/* Chất Liệu */}
-                <div className="col-3">
+                <div className="col-md-4">
                   <Form.Item label="Chất Liệu" name="idCL">
                     <Select placeholder="Chọn một giá trị">
                       {cl.map((item) => (
@@ -444,15 +459,12 @@ const ModalSanPham = (props) => {
                     </Select>
                   </Form.Item>
                 </div>
-              </div>
-              {/* Các Thuộc Tính Dòng 2 */}
-              <div className="row">
                 {/* Độ Cao */}
-                <div className="col-md-3">
-                  <Form.Item label="Độ Cao" name="idDC">
+                <div className="col-md-4">
+                  <Form.Item label="Đế giày" name="idDC">
                     <Select placeholder="Chọn một giá trị">
                       {dc.map((item) => (
-                        <Option key={item.ma} value={item.ma}>
+                        <Option key={item.ma} value={item.id}>
                           {item.ten}
                         </Option>
                       ))}
@@ -460,7 +472,7 @@ const ModalSanPham = (props) => {
                   </Form.Item>
                 </div>
                 {/* Danh Mục */}
-                <div className="col-md-3">
+                <div className="col-md-4">
                   <Form.Item label="Danh Mục" name="idDM">
                     <Select placeholder="Chọn một giá trị">
                       {dm.map((item) => (
@@ -471,47 +483,67 @@ const ModalSanPham = (props) => {
                     </Select>
                   </Form.Item>
                 </div>
+              </div>
+
+              {/* Các Thuộc Tính Dòng 3 */}
+              <div className="row">
                 {/* Hãng */}
-                <div className="col-md-3">
+                <div className="col-md-4">
                   <Form.Item label="Hãng" name="idH">
-                    <Select defaultValue={null}>
-                      <Select.Option value={null}>Tất cả</Select.Option>
+                    <Select placeholder="Chọn một giá trị">
                       {h.map((item) => (
-                        <Select.Option key={item.id} value={item.id}>
+                        <Option key={item.id} value={item.id}>
                           {item.ten}
-                        </Select.Option>
+                        </Option>
                       ))}
                     </Select>
                   </Form.Item>
                 </div>
                 {/* Trạng Thái */}
-                <div className="col-md-3">
-                  <Form.Item label="Số Lượng" name="trangThaiCT">
-                    <Select defaultValue={null}>
-                      <Select.Option value={null}>Tất cả</Select.Option>
-                      <Select.Option value="1">Còn Bán</Select.Option>
-                      <Select.Option value="0">Dừng Bán</Select.Option>
+                <div className="col-md-4">
+                  <Form.Item label="Trạng thái" name="trangThaiCT">
+                    <Select placeholder="Chọn một giá trị" defaultValue="0">
+                      <Select.Option value="0">Còn Bán</Select.Option>
+                      <Select.Option value="1">Dừng Bán</Select.Option>
                     </Select>
                   </Form.Item>
                 </div>
-              </div>
-              {/* Các Thuộc Tính Dòng 3 */}
-              <div className="row">
-                <div className="col-md-6">
+                <div className="col-md-4">
                   <Form.Item label="Số lượng" name="soLuongCT">
-                    <Slider style={{ width: "400px" }} min={1} />
+                    <Slider
+                      range
+                      step={100}
+                      defaultValue={[1, 1000]}
+                      min={1}
+                      max={1000}
+                    />
                   </Form.Item>
                 </div>
-                <div className="col-md-6">
-                  <Form.Item label="Giá bán" name="giaBanCT">
-                    <Slider style={{ width: "400px" }} min={1} />
-                  </Form.Item>
-                </div>
+              </div>
+              <div className="col">
+                <Form.Item
+                  style={{ marginLeft: 100 }}
+                  label="Giá bán"
+                  name="giaBanCT"
+                >
+                  <Slider
+                    range
+                    step={100000}
+                    defaultValue={[100000, 50000000]}
+                    min={100000}
+                    max={50000000}
+                  />
+                </Form.Item>
               </div>
 
               <div className="container-fluid">
-                <Form.Item className="text-center">
-                  <Button type="primary" htmlType="reset">
+                <Form.Item className="text-center" style={{ paddingLeft: 360 }}>
+                  <Button
+                    type="primary"
+                    htmlType="reset"
+                    onClick={loadCTSP}
+                    icon={<RetweetOutlined />}
+                  >
                     Làm mới
                   </Button>
                 </Form.Item>
@@ -534,7 +566,7 @@ const ModalSanPham = (props) => {
               <div>
                 <Table
                   className="text-center"
-                  dataSource={ctsp}
+                  dataSource={CTSP}
                   columns={columns}
                   pagination={{
                     showQuickJumper: true,
