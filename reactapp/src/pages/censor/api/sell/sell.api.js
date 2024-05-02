@@ -193,6 +193,18 @@ export class SellAPI {
       },
     });
   };
+
+  static delete = (idCTSP, ma) => {
+    const getToken = getHeader();
+   return requestAdmin({
+     method: "DELETE",
+     url: `/admin/ban-hang/delete/${idCTSP}/${ma}`,
+     headers: {
+       Authorization: getToken,
+     },
+   });
+ };
+
   static deleteInvoiceAndRollBackProduct = (idCTSP, ma) => {
      const getToken = getHeader();
     return requestAdmin({

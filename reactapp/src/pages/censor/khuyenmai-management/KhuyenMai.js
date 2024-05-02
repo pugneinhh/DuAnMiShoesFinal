@@ -28,6 +28,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { PromotionAPI } from "../../censor/api/promotion/promotion.api";
 import { BsFillEyeFill } from "react-icons/bs";
+import { dispatch } from "../../../store/redux/store";
+import { UpdateKMInvoice, UpdateKMNULLInvoice } from "../../../store/reducer/DetailInvoice.reducer";
 const KhuyenMai = () => {
   const currentTime = moment(); // thời gian hiện tại
    const nav = useNavigate();
@@ -94,6 +96,7 @@ const KhuyenMai = () => {
 
   const updateTrangThai = async (id, value) => {
     await PromotionAPI.updateClosePromotion(id, value).then((response) => {
+      dispatch(UpdateKMNULLInvoice({tenKM: response.ten,loaiKM: response.loai}))
       if (response.status === 200) {
         loadKhuyenMai();
         toast("✔️ Cập nhật thành công!", {
@@ -112,6 +115,8 @@ const KhuyenMai = () => {
 
   const updateTrangThai1 = async (id, value) => {
     await PromotionAPI.updateOpenPromotion(id, value).then((response) => {
+      console.log("RES ",response);
+      dispatch(UpdateKMInvoice({tenKM: response.ten,loaiKM: response.loai,giaTriKhuyenMai: response.gia_tri_khuyen_mai}))
       if (response.status === 200) {
         loadKhuyenMai();
         toast("✔️ Cập nhật thành công!", {

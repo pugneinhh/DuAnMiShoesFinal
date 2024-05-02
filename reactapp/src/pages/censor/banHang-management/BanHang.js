@@ -51,6 +51,7 @@ import {
   LoadInvoice,
   RemoveInvoiceByHoaDon,
   AddInvoice,
+  Remove,
 } from "../../../store/reducer/DetailInvoice.reducer";
 import { SellAPI } from "../api/sell/sell.api";
 import { VoucherAPI } from "../api/voucher/voucher.api";
@@ -92,6 +93,7 @@ const BanHang = () => {
   const [openThanhToan, setOpenThanhToan] = useState(false);
   const [openInHoaDon, setOpenInHoaDon] = useState(false);
   const [storedData, setStoredData] = useState(null);
+  const [hoaDonCT, setHoaDonCT] = useState([]);
 
   useEffect(() => {
     const dataFromLocalStorage = localStorage.getItem("userData");
@@ -483,6 +485,7 @@ SellAPI.voucherSapDatDuoc(
   const load = async (ma) => {
     const result_hdct = await SellAPI.getAllHDCTByHD(ma);
     if (result_hdct.data.length > 0) {
+      setHoaDonCT(result_hdct.data);
       result_hdct.data.map((i) => {
         dispatch(
           LoadInvoice({
@@ -961,12 +964,19 @@ SellAPI.voucherSapDatDuoc(
           dispatch(
             RemoveBill(hoaDons.filter((hoaDon) => hoaDon.key == targetKey)[0])
           );
-          HoaDonAPI.huyHoaDon(targetKey);
           const list = ctspHD.filter((item) => item.hoaDon === targetKey);
+         // HoaDonAPI.huyHoaDon(targetKey);
           list.map((i) =>
-            SellAPI.deleteInvoiceAndRollBackProduct(i.chiTietSanPham, targetKey)
+            //SellAPI.deleteInvoiceAndRollBackProduct(i.chiTietSanPham, targetKey)
+            SellAPI.delete(i.chiTietSanPham, targetKey)
+
           );
-          setActiveKey(hoaDons.filter((h) => h.key !== targetKey)[0].key ? hoaDons.filter((h) => h.key !== targetKey)[0].key : null);
+          if (hoaDons.filter((h) => h.key !== targetKey)[0]){
+            setActiveKey(hoaDons.filter((h) => h.key !== targetKey)[0].key);
+          } else {
+            handleClickAddHD();
+          }
+        
           initState.current--;
           toast("✔️ Xóa hóa đơn thành công!", {
             position: "top-right",

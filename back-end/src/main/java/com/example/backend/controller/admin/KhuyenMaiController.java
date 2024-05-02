@@ -150,6 +150,8 @@ public class KhuyenMaiController {
             if (c.getKhuyenMai() != null && c.getKhuyenMai().getId().equals(id)){
                 c.setKhuyenMai(null);
                 ctspService.updateCTSP(c);
+                hoaDonChiTietService.updateGia(c.getId(),new BigDecimal("0"),c.getGiaBan());
+
             }
         }
         return  ResponseEntity.ok(khuyenMaiService.addKhuyenMai(km));
@@ -160,13 +162,22 @@ public class KhuyenMaiController {
         KhuyenMai km = request.map();
         km.setId(id);
         List<KhuyenMaiSanPham> list = khuyenMaiSanPhamService.getListCTSPByKM(id);
-        for (KhuyenMaiSanPham x : list){
+        for (KhuyenMaiSanPham x : list) {
             x.setTrangThai(1);
             khuyenMaiSanPhamService.add(x);
+//
+//            BigDecimal giaGiam = x.getKhuyenMai().getLoai().equals("Tiền mặt") ? x.getKhuyenMai().getGia_tri_khuyen_mai()
+//                    : (x.getChiTietSanPham().getGiaBan().multiply(x.getKhuyenMai().getGia_tri_khuyen_mai().divide(new BigDecimal("100"))));
+//            BigDecimal giaSauGiam = x.getChiTietSanPham().getGiaBan().subtract(giaGiam);
+//            hoaDonChiTietService.updateGia(x.getChiTietSanPham().getId(), giaGiam, giaSauGiam);
+
         }
-        if (km.getNgay_bat_dau().isAfter(LocalDateTime.now()))
-            km.setTrangThai(0);
-        else km.setTrangThai(1);
+            if (km.getNgay_bat_dau().isAfter(LocalDateTime.now()))
+                km.setTrangThai(0);
+            else {
+                km.setTrangThai(1);
+            }
+
         km.setNgaySua(new Date(new java.util.Date().getTime()));
         return  ResponseEntity.ok(khuyenMaiService.addKhuyenMai(km));
     }
