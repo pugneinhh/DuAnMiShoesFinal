@@ -143,6 +143,7 @@ const DetailHoaDonTraHang = () => {
       
     });
     TraHangAPI.getHoaDonByMa(id).then((res) => {
+      console.log("hóa đơn",res.data);
       setSanPhamHDCT(res.data);
     });
   };

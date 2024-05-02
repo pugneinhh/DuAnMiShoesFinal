@@ -97,6 +97,18 @@ public class BanHangController {
     public void  deleteHoaDonChiTiet (@PathVariable("idCTSP") String idCTSP,@PathVariable("ma")String ma) {
         hoaDonChiTietService.deleteHDCTAndRollBackInSell(idCTSP,ma); //  roll backed
     }
+
+    @DeleteMapping("/delete/{idCTSP}/{ma}")
+    public void  delete (@PathVariable("idCTSP") String idCTSP,@PathVariable("ma")String ma) {
+        hoaDonChiTietService.deleteHDCTAndRollBackInSell(idCTSP,ma);
+        hoaDonServicee.deleteHoaDon(hoaDonServicee.getHDByMa(ma).getId());//  roll backed
+    }
+    @DeleteMapping("/delete-hoa-don-chi-tiet/{idCTSP}/{ma}/{thanhTien}")
+    public void  deleteHoaDonChiTiet (@PathVariable("idCTSP") String idCTSP,@PathVariable("ma")String ma , @PathVariable("thanhTien") BigDecimal thanhTien) {
+        hoaDonChiTietService.deleteHDCTAndRollBackInSell1(idCTSP,ma,thanhTien); //  roll backed
+
+    }
+
     @PostMapping("/thanh-toan")
     public ResponseEntity<?> thanhToan(@PathVariable HoaDonRequest hoaDonRequest){
         hoaDonRequest.setTrangThai(1);
@@ -152,7 +164,7 @@ public class BanHangController {
 
     @PutMapping("/hoa-don/update-van-chuyen/{ma}")
     public ResponseEntity<?> updateVanChuyen (@PathVariable("ma")String ma, @RequestBody HoaDon hd){
-        System.out.println("req hóa đơn"+hd);
+
         return ResponseEntity.ok(hoaDonServicee.update1(hd,ma));
     }
 
@@ -201,15 +213,13 @@ public class BanHangController {
 
     @PutMapping("/thanh-toan/hoa-don/{ma}/{idNV}/{idVoucher}")
     public ResponseEntity<?> thanhToanHoaDon (@PathVariable("ma") String ma,@PathVariable("idNV") String idNV,@PathVariable("idVoucher")String idVoucher) {
-        System.out.println("Mã hóa đơn :"+ma);
-        System.out.println("ID nhân viên :"+idNV);
-        System.out.println("ID Voucher :"+idVoucher);
+
         HoaDon hoaDon=hoaDonServicee.findHoaDonByMa(ma);
-        System.out.println("MÃ hóa đơn :"+hoaDon.getId());
+
         NguoiDung nguoiDung = nguoiDungService.findByID(idNV);
         if (idVoucher != null || idVoucher != "null") {
             Voucher voucher = voucherService.detailVoucher(idVoucher);
-            System.out.println("Voucher thanh toán có hóa đơn "+voucher);
+
             hoaDon.setVoucher(voucher);
             BigDecimal giamToiDa = voucher.getGiamToiDa();
             BigDecimal giam = voucher.getLoaiVoucher().equals("Tiền mặt") ?
@@ -281,12 +291,11 @@ public class BanHangController {
 
     @PutMapping("/thanh-toan/hoa-don/{ma}/{idNV}")
     public ResponseEntity<?> thanhToanHoaDonKhongVoucher (@PathVariable("ma") String ma,@PathVariable("idNV") String idNV) {
-        System.out.println("Mã hóa đơn :"+ma);
-        System.out.println("ID nhân viên :"+idNV);
+
         HoaDon hoaDon=hoaDonServicee.findHoaDonByMa(ma);
         NguoiDung nguoiDung = nguoiDungService.findByID(idNV);
         if (hoaDon == null) return null;
-        System.out.println("MÃ hóa đơn :"+hoaDon.getId());
+
         if(hoaDon.getTraSau() == 0) {
             if (hoaDon.getDiaChi() != null){
                 hoaDon.setTrangThai(2);
@@ -390,7 +399,7 @@ public class BanHangController {
         } else {
             List<VoucherRespone> list = voucherService.noLimited();
             for (VoucherRespone v : list){
-                System.out.println("Voucher"+v);
+
                 BigDecimal mucDoKM = v.getLoaiVoucher().equalsIgnoreCase("Tiền mặt") ? new BigDecimal(v.getMucDo()) : new BigDecimal(money).multiply(new BigDecimal((v.getMucDo()))).divide(new BigDecimal("100"));
                 if (mucDoKM.compareTo(v.getGiamToiDa()) > 0){
                     mucDoKM = v.getGiamToiDa();
@@ -413,7 +422,7 @@ public class BanHangController {
         if(idV != null) {
              vc = voucherService.getVoucherByID(idV);
         }
-        System.out.println("VC"+vc);
+
         BigDecimal soTienDangDuocGiam = new BigDecimal("0");
         if (vc != null) {
             soTienDangDuocGiam = vc.getLoaiVoucher().equalsIgnoreCase("Tiền mặt") ?

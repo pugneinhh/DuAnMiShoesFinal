@@ -52,6 +52,10 @@ public class HoaDonControllerr {
     public ResponseEntity<?> getALLTT(@PathVariable("tt") int tt){
         return  ResponseEntity.ok(hoaDonService.getALLTT(tt));
     }
+    @GetMapping("/getVNP/{idHD}")
+    public ResponseEntity<?> getVNP(@PathVariable("idHD") String id){
+        return  ResponseEntity.ok(hoaDonService.getPhuongThucVNP(id));
+    }
     @GetMapping("/detail-hoa-don/{idHD}")
     public ResponseEntity<?> detailHD(@PathVariable("idHD") String id){
         return  ResponseEntity.ok(hoaDonService.getByID(id));
@@ -66,7 +70,7 @@ public class HoaDonControllerr {
     }
     @PostMapping("/search")
     public ResponseEntity<?> timHoaDon(@RequestBody HoaDonSearch hoaDonSearch)  {
-        System.out.println(hoaDonSearch.toString());
+
         return  ResponseEntity.ok(hoaDonService.getTim(hoaDonSearch));
     }
     @PutMapping("/update-hoa-don/{idHD}/{maNV}")
@@ -78,15 +82,14 @@ public class HoaDonControllerr {
         ls.setIdHD(id);
         ls.setNguoiTao(maNV);
         ls.setMoTaHoatDong(ls.getMoTaHoatDong());
-        System.out.println("trang thai ban dau hd"+hoaDon.getTrangThai());
-        System.out.println("trang thai ban dau hoadon"+hoaDon.getTrangThai());
+
         List<ThanhToan> listThanhToan= thanhToanService.getThanhToanByIdHD(id);
         for (ThanhToan thanhToan : listThanhToan) {
             if (hoaDon.getLoaiHoaDon() == 0) {
                 if (hoaDon.getTrangThai() == 0 && thanhToan.getPhuongThucVnp() != null) {
                     hoaDon.setTrangThai(1);
                     ls.setTrangThai(1);
-                    System.out.println("if 1");
+
                     lichSuHoaDonService.addLichSuHoaDon(ls);
                     return ResponseEntity.ok(
                             hoaDonService.updateHD(hoaDon, id)
@@ -94,7 +97,7 @@ public class HoaDonControllerr {
                 } else if (hoaDon.getTrangThai() == 1 && thanhToan.getPhuongThucVnp() != null) {
                     ls.setTrangThai(2);
                     hoaDon.setTrangThai(2);
-                    System.out.println("if 2");
+
                     lichSuHoaDonService.addLichSuHoaDon(ls);
                     return ResponseEntity.ok(
                             hoaDonService.updateHD(hoaDon, id)
@@ -102,7 +105,7 @@ public class HoaDonControllerr {
                 } else if (hoaDon.getTrangThai() == 2 && thanhToan.getPhuongThucVnp() != null) {
                     ls.setTrangThai(3);
                     hoaDon.setTrangThai(3);
-                    System.out.println("if 2");
+
                     lichSuHoaDonService.addLichSuHoaDon(ls);
                     return ResponseEntity.ok(
                             hoaDonService.updateHD(hoaDon, id)
@@ -110,7 +113,7 @@ public class HoaDonControllerr {
                 } else if (hoaDon.getTrangThai() == 3 && thanhToan.getPhuongThucVnp() != null) {
                     ls.setTrangThai(5);
                     hoaDon.setTrangThai(5);
-                    System.out.println("if 2");
+
                     lichSuHoaDonService.addLichSuHoaDon(ls);
                     return ResponseEntity.ok(
                             hoaDonService.updateHD(hoaDon, id)
@@ -118,7 +121,7 @@ public class HoaDonControllerr {
                 } else if (hoaDon.getTrangThai() == -1 && thanhToan.getPhuongThucVnp() != null) {
                     ls.setTrangThai(-2);
                     hoaDon.setTrangThai(-2);
-                    System.out.println("if 2");
+
                     lichSuHoaDonService.addLichSuHoaDon(ls);
                     return ResponseEntity.ok(
                             hoaDonService.updateHD(hoaDon, id)
@@ -162,7 +165,7 @@ public class HoaDonControllerr {
                }
                else if (hoaDon.getTrangThai() == -1) {
                    ls.setTrangThai(-2);
-                   System.out.println("if 2");
+
                    lichSuHoaDonService.addLichSuHoaDon(ls);
                    return ResponseEntity.ok(
                            hoaDonService.updateHD(hoaDon, id)
@@ -185,15 +188,14 @@ public class HoaDonControllerr {
         ls.setIdHD(id);
         ls.setNguoiTao(maNV);
         ls.setMoTaHoatDong(ls.getMoTaHoatDong());
-        System.out.println("trang thai ban dau hd"+hoaDon.getTrangThai());
-        System.out.println("trang thai ban dau hoadon"+hoaDon.getTrangThai());
+
         List<ThanhToan> listThanhToan= thanhToanService.getThanhToanByIdHD(id);
         for (ThanhToan thanhToan : listThanhToan) {
             if (hoaDon.getLoaiHoaDon() == 0) {
                 if (hoaDon.getTrangThai() == 1 && thanhToan.getPhuongThucVnp() != null) {
                     hoaDon.setTrangThai(0);
                     ls.setTrangThai(0);
-                    System.out.println("if 1");
+
                     lichSuHoaDonService.addLichSuHoaDon(ls);
                     return ResponseEntity.ok(
                             hoaDonService.updateHD(hoaDon, id)
@@ -201,7 +203,7 @@ public class HoaDonControllerr {
                 } else if (hoaDon.getTrangThai() == 2 && thanhToan.getPhuongThucVnp() != null) {
                     ls.setTrangThai(1);
                     hoaDon.setTrangThai(1);
-                    System.out.println("if 2");
+
                     lichSuHoaDonService.addLichSuHoaDon(ls);
                     return ResponseEntity.ok(
                             hoaDonService.updateHD(hoaDon, id)
@@ -209,7 +211,7 @@ public class HoaDonControllerr {
                 } else if (hoaDon.getTrangThai() == 3 && thanhToan.getPhuongThucVnp() != null) {
                     ls.setTrangThai(2);
                     hoaDon.setTrangThai(2);
-                    System.out.println("if 2");
+
                     lichSuHoaDonService.addLichSuHoaDon(ls);
                     return ResponseEntity.ok(
                             hoaDonService.updateHD(hoaDon, id)
@@ -217,7 +219,7 @@ public class HoaDonControllerr {
                 } else if (hoaDon.getTrangThai() == 5 && thanhToan.getPhuongThucVnp() != null) {
                     ls.setTrangThai(3);
                     hoaDon.setTrangThai(3);
-                    System.out.println("if 2");
+
                     lichSuHoaDonService.addLichSuHoaDon(ls);
                     return ResponseEntity.ok(
                             hoaDonService.updateHD(hoaDon, id)
@@ -226,7 +228,7 @@ public class HoaDonControllerr {
                 else if (hoaDon.getTrangThai() == -2 && thanhToan.getPhuongThucVnp() != null) {
                     ls.setTrangThai(-1);
                     hoaDon.setTrangThai(-1);
-                    System.out.println("if 2");
+
                     lichSuHoaDonService.addLichSuHoaDon(ls);
                     return ResponseEntity.ok(
                             hoaDonService.updateHD(hoaDon, id)
@@ -388,10 +390,7 @@ public class HoaDonControllerr {
 
             else {
 
-//                System.out.println("->>>>>>>>>>>>>>"+String.valueOf(new BigDecimal(x.getGiaBanSP()).compareTo(ctsp.getGiaBan()) == 0));
-//                System.out.println("->>>>>>>>>>>>>>"+String.valueOf(x.getIDCTSP().equals(ctsp.getId())));
-//                System.out.println("->>>>>>>>>>>>>>"+ x.get);
-//                System.out.println("->>>>>>>>>>>>>>"+ ctsp.getGiaBan());
+
                 if ((new BigDecimal(x.getThanhTienSP()).compareTo(ctsp.getGiaBan()) == 0) && x.getIDCTSP().equals(ctsp.getId())) {
                     HoaDonChiTiet hdct = hoaDonChiTietService.getHDCTByID(x.getID());
                     hdct.setSoLuong(hdct.getSoLuong() + 1);

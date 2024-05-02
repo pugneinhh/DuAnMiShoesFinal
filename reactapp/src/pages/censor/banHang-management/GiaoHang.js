@@ -312,6 +312,7 @@ const DiaChiGiaoHang = ({
   };
 
   const handleProvinceChange = (value, valueProvince) => {
+    console.log("Province changed: "+valueProvince.valueProvince);
     form.setFieldsValue({ provinceId: valueProvince.valueProvince });
     setProID(valueProvince.valueProvince);
     AddressApi.fetchAllProvinceDistricts(valueProvince.valueProvince).then(
@@ -322,6 +323,7 @@ const DiaChiGiaoHang = ({
   };
 
   const handleDistrictChange = (value, valueDistrict) => {
+    console.log("District changed: " + valueDistrict.valueDistrict)
     form.setFieldsValue({ toDistrictId: valueDistrict.valueDistrict });
     setDistrictID(valueDistrict.valueDistrict);
     AddressApi.fetchAllProvinceWard(valueDistrict.valueDistrict).then((res) => {
@@ -330,6 +332,7 @@ const DiaChiGiaoHang = ({
   };
 
   const handleWardChange = async (value, valueWard) => {
+    console.log("Ward Change: "+valueWard.valueWard)
     form.setFieldsValue({ wardCode: valueWard.valueWard });
     setWardCode(valueWard.valueWard);
 

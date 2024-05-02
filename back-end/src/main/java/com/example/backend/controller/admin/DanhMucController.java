@@ -26,7 +26,7 @@ public class DanhMucController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable("id") String id, @RequestBody DanhMucRequest request){
-        System.out.println(request);
+
         return ResponseEntity.ok(danhMucService.update(id,request));
     }
 

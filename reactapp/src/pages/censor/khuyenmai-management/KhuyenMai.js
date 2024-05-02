@@ -28,6 +28,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { PromotionAPI } from "../../censor/api/promotion/promotion.api";
 import { BsFillEyeFill } from "react-icons/bs";
+import { useDispatch, useSelector } from "react-redux";
+import { GetInvoice, UpdateKMInvoice, UpdateKMNULLInvoice } from "../../../store/reducer/DetailInvoice.reducer";
+import { dispatch } from "../../../store/redux/store";
+import { Update } from "../../../store/reducer/Bill.reducer";
+
 const KhuyenMai = () => {
   const currentTime = moment(); // thời gian hiện tại
    const nav = useNavigate();
@@ -35,6 +40,7 @@ const KhuyenMai = () => {
      nav("/admin-them-khuyen-mai");
    };
   const onChange = (value) => {};
+  const ctspHD = useSelector(GetInvoice);
 
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
@@ -44,7 +50,7 @@ const KhuyenMai = () => {
   const [form] = Form.useForm();
 
   const [componentSize, setComponentSize] = useState("default");
-
+  let items = [];
 
   const [khuyenMai, setKhuyenMais] = useState([]);
 
@@ -96,6 +102,8 @@ const KhuyenMai = () => {
 
   const updateTrangThai = async (id, value) => {
     await PromotionAPI.updateClosePromotion(id, value).then((response) => {
+      dispatch(UpdateKMNULLInvoice({tenKM: response.ten,loaiKM: response.loai}))
+       // console.log("items ",items);
       if (response.status === 200) {
         loadKhuyenMai();
         toast("✔️ Cập nhật thành công!", {
@@ -109,11 +117,47 @@ const KhuyenMai = () => {
           theme: "light",
         });
       }
+
     });
-  };
+    ctspHD.forEach((item,index)=> {
+      if (items.length === 0) {items.push({hoaDon : item.hoaDon , total : item.total});
+      }
+      else {
+        if (items.filter(i => i.hoaDon === item.hoaDon).length > 0){
+          let index = items.indexOf(i => i.hoaDon === item.hoaDon);
+          items[index].total += item.total;
+        
+
+        } else {
+          items.push({hoaDon : item.hoaDon , total : item.total});
+       
+
+        }
+      }
+      });
+     
+      for (let i = 0 ; i < items.length ; i++) {
+      dispatch(Update({key : items[i].hoaDon, thanhTien : items[i].total}));
+      }
+    };
+  
 
   const updateTrangThai1 = async (id, value) => {
     await PromotionAPI.updateOpenPromotion(id, value).then((response) => {
+
+      dispatch(UpdateKMInvoice({tenKM: response.ten,loaiKM: response.loai,giaTriKhuyenMai: response.gia_tri_khuyen_mai}))
+      ctspHD.forEach((item,index)=> {
+        let newItems = {hoaDon : item.hoaDon , total : item.total};
+        if (items.length === 0) items.push(newItems);
+        else if (items.filter(i => i.hoaDon === newItems.hoaDon).length > 0){
+            let index = items.indexOf(i => i.hoaDon === newItems.hoaDon);
+            items[index].total += newItems.total;
+          }
+        });
+        for (let i = 0 ; i < items.length ; i++) {
+        dispatch(Update({key : items[i].hoaDon, thanhTien : items[i].total}));
+        }
+   
       if (response.status === 200) {
         loadKhuyenMai();
         toast("✔️ Cập nhật thành công!", {
@@ -529,7 +573,9 @@ const KhuyenMai = () => {
           <div className="container-fluid mt-4">
             <div>
               <Table
-                dataSource={khuyenMai}
+                dataSource={khuyenMai.sort((a, b) =>  { const dateA = new Date(a.ngayTao);
+                  const dateB = new Date(b.ngayTao);
+                  return dateB - dateA; })}
                 columns={columns}
                 id="bang"
                 scroll={scroll}

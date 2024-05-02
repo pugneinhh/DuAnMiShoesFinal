@@ -59,7 +59,7 @@ export const Home = ({ children }) => {
               (error) => {
                 console.error("Failed to connect to WebSocket:", error);
                 // Thử kết nối lại sau một khoảng thời gian
-                setTimeout(connectWebSocket, 5000);
+                setTimeout(connectWebSocket, 1000);
               }
             );
           };

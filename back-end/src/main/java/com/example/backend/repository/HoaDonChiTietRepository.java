@@ -2,12 +2,14 @@ package com.example.backend.repository;
 
 import com.example.backend.dto.response.HoaDonChiTietBanHangRespone;
 import com.example.backend.dto.response.HoaDonChiTietRespone;
+import com.example.backend.entity.GioHangChiTiet;
 import com.example.backend.entity.HoaDonChiTiet;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,6 +35,9 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, St
 
     @Query(value = "select * from hoa_don_chi_tiet where chi_tiet_san_pham_id =:idCTSP and hoa_don_id =:idHD",nativeQuery = true)
     HoaDonChiTiet getHDCTByCTSPAndHD(String idCTSP, String idHD);
+
+    @Query(value = "select * from hoa_don_chi_tiet where chi_tiet_san_pham_id =:idCTSP and hoa_don_id =:idHD and gia_sau_giam =:thanhTien" ,nativeQuery = true)
+    HoaDonChiTiet getHDCTByCTSPAndHDAndThanhTien(String idCTSP, String idHD , BigDecimal thanhTien);
 
     @Query(value = "select * from hoa_don_chi_tiet where hoa_don_id =:idHD",nativeQuery = true)
     List<HoaDonChiTiet> getAllHDCTByIDHD(String idHD);

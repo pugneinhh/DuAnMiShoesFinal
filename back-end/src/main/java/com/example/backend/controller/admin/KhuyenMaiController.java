@@ -6,6 +6,7 @@ import com.example.backend.dto.request.KhuyenMaiSearch;
 import com.example.backend.entity.ChiTietSanPham;
 import com.example.backend.entity.HoaDonChiTiet;
 import com.example.backend.entity.KhuyenMai;
+import com.example.backend.entity.KhuyenMaiSanPham;
 import com.example.backend.service.CTSPService;
 import com.example.backend.service.HoaDonChiTietService;
 import com.example.backend.service.KhuyenMaiSanPhamService;
@@ -38,24 +39,23 @@ public class KhuyenMaiController {
     HoaDonChiTietService hoaDonChiTietService;
     @Autowired
     KhuyenMaiSanPhamService khuyenMaiSanPhamService;
+
 //    private ScheduledCheck scheduledCheck;
     @GetMapping("hien-thi")
     public ResponseEntity<?> getALL(){
 //        scheduledCheck.checkKhuyenMai();
-        return new ResponseEntity<>(khuyenMaiService.getAllKhuyenMai(), HttpStatus.OK);
+        return  ResponseEntity.ok(khuyenMaiService.getAllKhuyenMai());
     }
 
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody KhuyenMaiRequest request){
         KhuyenMai km = request.map();
-        System.out.println(km.getId()+""+km.getMa()+""+km.getTen()+""+km.getLoai()+""+km.getNgay_bat_dau()+""+km.getNgay_ket_thuc()+""+km.getGia_tri_khuyen_mai());
+
         km.setNgayTao(new Date(new java.util.Date().getTime()));
         LocalDateTime ngayBD =  khuyenMaiService.convertTime(km.getNgay_bat_dau());
         LocalDateTime ngayKT = khuyenMaiService.convertTime(km.getNgay_ket_thuc());
         LocalDateTime today = LocalDateTime.now();
-        System.out.println("Today"+today);
-        System.out.println("Bắt đầu"+ngayBD);
-        System.out.println("Kết thúc"+ngayKT);
+
         if (ngayBD.isAfter(today)) km.setTrangThai(0);
         else if (ngayBD.isBefore(today) && ngayKT.isAfter(today)) km.setTrangThai(1);
         else if (ngayKT.isBefore(today)) km.setTrangThai(2);
@@ -72,10 +72,7 @@ public class KhuyenMaiController {
         LocalDateTime ngayBD =  khuyenMaiService.convertTime(km.getNgay_bat_dau());
         LocalDateTime ngayKT =  khuyenMaiService.convertTime(km.getNgay_ket_thuc());
         LocalDateTime today = LocalDateTime.now();
-        System.out.println("Update ngày bắt đầu"+ngayBD);
-        System.out.println("Update ngày kết thúc"+ngayKT);
-        System.out.println("Update ngày hiện tại"+today);
-        System.out.println("trang thai"+khuyenMaiService.detailKhuyenMai(id).getTrangThai());
+
         if (khuyenMaiService.detailKhuyenMai(id).getTrangThai() != 3){
             if (ngayBD.isAfter(today)) km.setTrangThai(0);
             else if (ngayBD.isBefore(today) && ngayKT.isAfter(today)) km.setTrangThai(1);
@@ -103,7 +100,7 @@ public class KhuyenMaiController {
             List<String> list = ctspService.getCTSPByKM(id);
             for (String x: list) {
                 ChiTietSanPham ctsp = ctspService.findChiTietSanPhamByID(x);
-                ctspService.deleteKM(x); // xóa khuyến mại ở ctsp
+                ctspService.deleteKM(x,id); // xóa khuyến mại ở ctsp
                 for (HoaDonChiTiet h : hoaDonChiTietService.getAllHDCTByIDCTSP(x)) { // kiểm tra hóa đơn chi tiết chưa thanh toán
                     if(h.getTrangThai() == 0) {
                         hoaDonChiTietService.updateGia(x,new BigDecimal(0),ctsp.getGiaBan()); // trả về giá nguyên
@@ -138,6 +135,20 @@ public class KhuyenMaiController {
         km.setId(id);
         km.setTrangThai(3);
         km.setNgaySua(new Date(new java.util.Date().getTime()));
+        List<KhuyenMaiSanPham> list = khuyenMaiSanPhamService.getListCTSPByKM(id);
+        for (KhuyenMaiSanPham x : list){
+            x.setTrangThai(3);
+            khuyenMaiSanPhamService.add(x);
+        }
+        List<ChiTietSanPham>  listCTPS = ctspService.getALL();
+        for (ChiTietSanPham c : listCTPS){
+            if (c.getKhuyenMai() != null && c.getKhuyenMai().getId().equals(id)){
+                c.setKhuyenMai(null);
+                ctspService.updateCTSP(c);
+                hoaDonChiTietService.updateGia(c.getId(),new BigDecimal("0"),c.getGiaBan());
+
+            }
+        }
         return  ResponseEntity.ok(khuyenMaiService.addKhuyenMai(km));
     }
 
@@ -145,9 +156,23 @@ public class KhuyenMaiController {
     public ResponseEntity<?> updateTrangThai3(@PathVariable("id") String id , @RequestBody KhuyenMaiRequest request){
         KhuyenMai km = request.map();
         km.setId(id);
-        if (km.getNgay_bat_dau().isAfter(LocalDateTime.now()))
-            km.setTrangThai(0);
-        else km.setTrangThai(1);
+        List<KhuyenMaiSanPham> list = khuyenMaiSanPhamService.getListCTSPByKM(id);
+        for (KhuyenMaiSanPham x : list) {
+            x.setTrangThai(1);
+            khuyenMaiSanPhamService.add(x);
+//
+//            BigDecimal giaGiam = x.getKhuyenMai().getLoai().equals("Tiền mặt") ? x.getKhuyenMai().getGia_tri_khuyen_mai()
+//                    : (x.getChiTietSanPham().getGiaBan().multiply(x.getKhuyenMai().getGia_tri_khuyen_mai().divide(new BigDecimal("100"))));
+//            BigDecimal giaSauGiam = x.getChiTietSanPham().getGiaBan().subtract(giaGiam);
+//            hoaDonChiTietService.updateGia(x.getChiTietSanPham().getId(), giaGiam, giaSauGiam);
+
+        }
+            if (km.getNgay_bat_dau().isAfter(LocalDateTime.now()))
+                km.setTrangThai(0);
+            else {
+                km.setTrangThai(1);
+            }
+
         km.setNgaySua(new Date(new java.util.Date().getTime()));
         return  ResponseEntity.ok(khuyenMaiService.addKhuyenMai(km));
     }

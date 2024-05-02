@@ -9,7 +9,6 @@ const detailInvoiceSlice = createSlice({
       return action.payload;
     },
     AddInvoice: (state, action) => {
-
       const data = action.payload;
       const exitsItem = state.findIndex(
         (item) =>
@@ -65,14 +64,11 @@ const detailInvoiceSlice = createSlice({
           item.chiTietSanPham === action.payload.chiTietSanPham &&
           item.hoaDon === action.payload.hoaDon
       );
-      return  state.filter((item) => 
-          item.stt !== state[exitsItem].stt
-      );
+      return state.filter((item) => item.stt !== state[exitsItem].stt);
     },
     GetInvoiceByHoaDon: (state, action) => {
       const data = action.payload;
       const index = state.findIndex((period) => period.hoaDon === data.hoaDon);
-   
 
       return state[index];
     },
@@ -85,7 +81,7 @@ const detailInvoiceSlice = createSlice({
     },
     LoadInvoice: (state, action) => {
       const data = action.payload;
-  
+
       const exitsItem = state.findIndex(
         (item) =>
           item.chiTietSanPham === data.chiTietSanPham &&
@@ -111,7 +107,7 @@ const detailInvoiceSlice = createSlice({
           id: data.id,
           soLuong: data.soLuong,
           giaGiam: data.giaGiam,
-         // total: data.total,
+          // total: data.total,
           trangThai: data.trangThai,
           giaBan: data.giaBan,
           giaSauGiam: data.giaSauGiam,
@@ -134,9 +130,54 @@ const detailInvoiceSlice = createSlice({
         });
       }
     },
+
+    Remove: (state, action) => {
+      return initialState;
+    },
+    UpdateKMNULLInvoice: (state, action) => {
+      const updateData = action.payload;
+      state.forEach((i, index) => {
+        if (i.loaiKM === updateData.loaiKM && i.tenKM === updateData.tenKM) {
+          state[index].giaGiam = 0;
+          state[index].giaSauGiam = state[index].giaBan;
+          state[index].total = state[index].giaBan * state[index].soLuong;
+        }
+      });
+    },
+    UpdateKMInvoice: (state, action) => {
+      const updateData = action.payload;
+      state.forEach((i, index) => {
+        if (i.loaiKM === updateData.loaiKM && i.tenKM === updateData.tenKM) {
+          state[index].giaGiam =
+            updateData.giaTriKhuyenMai === "Tiền mặt"
+              ? parseFloat(updateData.giaTriKhuyenMai)
+              : parseFloat(
+                  (state[index].giaBan * updateData.giaTriKhuyenMai) / 100
+                );
+          state[index].giaSauGiam =
+            state[index].giaBan -
+            (updateData.giaTriKhuyenMai === "Tiền mặt"
+              ? parseFloat(updateData.giaTriKhuyenMai)
+              : parseFloat(
+                  (state[index].giaBan * updateData.giaTriKhuyenMai) / 100
+                ));
+          state[index].total =
+            (state[index].giaBan -
+              (updateData.giaTriKhuyenMai === "Tiền mặt"
+                ? parseFloat(updateData.giaTriKhuyenMai)
+                : parseFloat(
+                    (state[index].giaBan * updateData.giaTriKhuyenMai) / 100
+                  ))) *
+            state[index].soLuong;
+        }
+      });
+    },
   },
 });
 export const {
+  UpdateKMNULLInvoice,
+  UpdateKMInvoice,
+  Remove,
   AddInvoice,
   UpdateInvoice,
   RemoveInvoice,

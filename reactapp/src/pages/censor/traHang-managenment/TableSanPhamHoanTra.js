@@ -1,36 +1,32 @@
-import React, { useState, useEffect } from "react";
-import { Table, Form, Input, Badge } from "antd";
-import { KhachHangAPI } from "../api/user/khachHang.api";
+import React, { useEffect } from "react";
+import { Table, Input } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { floatButtonPrefixCls } from "antd/es/float-button/FloatButton";
-import { DeleteNewBill, GetNewBill, LoadNewBill,UpdateNewBill,UpdateGhiChuBill } from "../../../store/reducer/NewBill.reducer";
+import { DeleteNewBill, GetNewBill, LoadNewBill,UpdateGhiChuBill } from "../../../store/reducer/NewBill.reducer";
 import { FormattedNumber, IntlProvider } from "react-intl";
 
 const TableSanPhamHoanTra = ({ onSelectedSP, sanPhamHoanTra }) => {
-  const [form] = Form.useForm();
   const dispatch= useDispatch();
   let newBill = useSelector(GetNewBill);
-
-  let totalNewBill = newBill.reduce((accumulator, currentItem) => {
-    return accumulator + currentItem.tongTien;
-  }, 0); // đây là tổng tiền của bill mới
 
 
   useEffect(() => {
     dispatch(DeleteNewBill());
+    console.log("sp hoàn trả",sanPhamHoanTra)
     sanPhamHoanTra.map((item) => {
-      dispatch(LoadNewBill({
-        key: item.idHDCT,
-        idCTSP:item.idCTSP,
-        tenSP: item.tenSP,
-        soLuong: item.soLuongHienTai,
-        donGia: item.donGia,
-        tenMS:item.tenMS,
-        tenKT:item.tenKT,
-        idHDCT:item.idHDCT,
-        tongTien: parseFloat(item.soLuongHienTai) * parseFloat(item.donGia),
-        ghiChu:null,
-      }))
+      dispatch(
+        LoadNewBill({
+          key: item.idHDCT,
+          idCTSP: item.idCTSP,
+          tenSP: item.tenSP,
+          soLuong: item.soLuongHienTai,
+          donGia: item.donGia,
+          tenMS: item.tenMS,
+          tenKT: item.tenKT,
+          idHDCT: item.idHDCT,
+          tongTien: parseFloat(item.soLuongHienTai) * parseFloat(item.donGia),
+          ghiChu: null,
+        })
+      );
     })
   
   }, [sanPhamHoanTra]);

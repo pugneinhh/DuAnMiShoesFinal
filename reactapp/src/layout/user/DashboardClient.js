@@ -73,7 +73,8 @@ export const DashboardClient = ({ children }) => {
     localStorage.clear();
     //  window.location.reload();
     // set("userGoogle", "");
-    window.location.href = "/login";
+    // window.location.href = "/login";
+        nav("/login");
   };
   const {
     token: { colorBgContainer, borderRadiusLG },

@@ -4,6 +4,7 @@ import com.example.backend.dto.request.HoaDonRequest;
 import com.example.backend.dto.request.hoadonsearch.HoaDonSearch;
 import com.example.backend.dto.request.sanphamsearch.BangConSearch;
 import com.example.backend.dto.response.AdminHoaDonDetailRespon;
+import com.example.backend.dto.response.AdminHoaDonGetVNP;
 import com.example.backend.dto.response.AdminHoaDonResponn;
 import com.example.backend.dto.response.DetailUpdateDiaChiHoaDonRespon;
 import com.example.backend.dto.response.sanpham.DanhMucRespone;
@@ -53,10 +54,13 @@ public class HoaDonServicee {
     }
 
     public HoaDon deleteHoaDon(String idHD) {
-        HoaDon hoaDon = hoaDonRepository.findById(idHD).get();
+        HoaDon hoaDon = hoaDonRepository.getHoaDonByIDHD(idHD);
+        System.out.println(">>>>>>>>>>>>>>>> Xóa hóa đơn");
         hoaDon.setTrangThai(-1);
+        System.out.println("Hóa đơn : "+hoaDon);
         thongBaoService.VanDon(idHD);
-        return  hoaDonRepository.save(hoaDon);
+
+        return   hoaDonRepository.save(hoaDon);
     }
     public List<HoaDon> getAllBillToday() {
         return hoaDonRepository.getAllBillToday();
@@ -241,9 +245,8 @@ public class HoaDonServicee {
 //        }).orElse(null) ;
 //    }
 
-    public HoaDon getHDByIDHD(String idHD){
-        System.out.println("Hóa đơn service"+hoaDonRepository.getHoaDonByIDHD(idHD));
-        return hoaDonRepository.getHoaDonByIDHD(idHD);
+    public List<AdminHoaDonGetVNP> getPhuongThucVNP(String key){
+        return hoaDonRepository.getPhuongThucVNP(key);
     }
 
     public HoaDon updateSample(HoaDon hd){
