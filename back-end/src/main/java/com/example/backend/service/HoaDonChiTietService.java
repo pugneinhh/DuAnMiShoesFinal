@@ -31,6 +31,8 @@ public class HoaDonChiTietService {
     CTSPRepository ctspRepository;
     @Autowired
     HoaDonRepository hoaDonRepository;
+    @Autowired
+    ThongBaoService thongBaoService;
     public List<HoaDonChiTietBanHangRespone> getAllHDCTByHD(String ma){
         System.out.println("Ma"+ma);
         if (hoaDonRepository.getHDByMa(ma) == null) return  null;
@@ -207,6 +209,7 @@ public class HoaDonChiTietService {
             gioHangChiTietRepository.save(gh);
         }
         }
+        thongBaoService.socketLoadSanPham(idCTSP);
     }
 
     public HoaDonChiTiet updateSL(String idCTSP,String ma,int soLuongCapNhat){

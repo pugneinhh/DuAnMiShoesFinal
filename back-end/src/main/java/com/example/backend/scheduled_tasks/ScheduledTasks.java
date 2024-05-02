@@ -27,6 +27,8 @@ public class ScheduledTasks {
     CTSPService ctspService;
     @Autowired
     HoaDonChiTietService hoaDonChiTietService;
+    @Autowired
+    ThongBaoService thongBaoService;
 
     @Scheduled(cron = "0 0 3 * * *") // Lịch chạy vào 3 giờ sáng hàng ngày
     public void deleteBill3AM() {
@@ -143,6 +145,7 @@ public class ScheduledTasks {
                 }
             }
         }
+//        thongBaoService.socketLoadSanPham("1");
     }
 
 }

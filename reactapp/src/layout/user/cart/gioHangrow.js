@@ -89,7 +89,7 @@ function ProductRow({ product, loadghct, loadSoLuongSPTrongGH }) {
         (error) => {
           console.error("Failed to connect to WebSocket:", error);
           // Thử kết nối lại sau một khoảng thời gian
-          setTimeout(connectWebSocket, 1000);
+          setTimeout(connectWebSocket, 5000);
         }
       );
     };
