@@ -13,18 +13,20 @@ const TableSanPhamHoanTra = ({ onSelectedSP, sanPhamHoanTra }) => {
     dispatch(DeleteNewBill());
     console.log("sp hoàn trả",sanPhamHoanTra)
     sanPhamHoanTra.map((item) => {
-      dispatch(LoadNewBill({
-        key: item.idHDCT,
-        idCTSP:item.idCTSP,
-        tenSP: item.tenSP,
-        soLuong: item.soLuongHienTai,
-        donGia: item.giaSauGiam,
-        tenMS:item.tenMS,
-        tenKT:item.tenKT,
-        idHDCT:item.idHDCT,
-        tongTien: parseFloat(item.soLuongHienTai) * parseFloat(item.donGia),
-        ghiChu:null,
-      }))
+      dispatch(
+        LoadNewBill({
+          key: item.idHDCT,
+          idCTSP: item.idCTSP,
+          tenSP: item.tenSP,
+          soLuong: item.soLuongHienTai,
+          donGia: item.donGia,
+          tenMS: item.tenMS,
+          tenKT: item.tenKT,
+          idHDCT: item.idHDCT,
+          tongTien: parseFloat(item.soLuongHienTai) * parseFloat(item.donGia),
+          ghiChu: null,
+        })
+      );
     })
   
   }, [sanPhamHoanTra]);
