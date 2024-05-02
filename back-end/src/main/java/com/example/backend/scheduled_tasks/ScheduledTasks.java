@@ -42,7 +42,7 @@ public class ScheduledTasks {
     }
 
 
-    @Scheduled(fixedRate = 60000) // Chạy mỗi giây
+    @Scheduled(fixedRate = 20000) // Chạy mỗi giây
   public void taskVoucher() {
         LocalDateTime now = LocalDateTime.now();
         System.out.println("Thời gian hiện tại :"+now);
@@ -89,7 +89,7 @@ public class ScheduledTasks {
 
 
 
-    @Scheduled(fixedRate = 60000) // Chạy mỗi giây
+    @Scheduled(fixedRate = 20000) // Chạy mỗi giây
     public void taskPromotion() {
         LocalDateTime now = LocalDateTime.now();
         List<KhuyenMai>  listKM = khuyenMaiService.getAllKhuyenMai();
