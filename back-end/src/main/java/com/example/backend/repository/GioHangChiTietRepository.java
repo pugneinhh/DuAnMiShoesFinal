@@ -23,4 +23,7 @@ SELECT gh.id,gh.gio_hang_id as gioHang,gh.chi_tiet_sp_id as chiTietSanPham,gh.so
 
     @Query("Select pt from GioHangChiTiet pt where pt.gioHang.id=:id and pt.chiTietSanPham.id=:idctsp")
     GioHangChiTiet listGHCTByIdGioHangAndSanPham(String id, String idctsp);
+
+    @Query(value = "select * from gio_hang_chi_tiet where chi_tiet_sp_id =:id",nativeQuery = true)
+    List<GioHangChiTiet> getAllGHCTByCTSP(String id);
 }

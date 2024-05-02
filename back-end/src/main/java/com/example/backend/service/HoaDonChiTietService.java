@@ -185,10 +185,11 @@ public class HoaDonChiTietService {
     }
     public void updateGia(String idCTSP, BigDecimal giaGiam , BigDecimal giaSauGiam){
         List<HoaDonChiTiet> list = hoaDonChiTietRepository.getAllHDCTByCTSP(idCTSP);
-        List<GioHangChiTiet> listGH=hoaDonChiTietRepository.getAllGHCTByCTSP(idCTSP);
+        List<GioHangChiTiet> listGH=gioHangChiTietRepository.getAllGHCTByCTSP(idCTSP);
+        System.out.println("list gh"+listGH);
         System.out.println("Gia giam"+giaGiam);
         System.out.println("gia sau giam"+giaSauGiam);
-        System.out.println("List"+list.size());
+        System.out.println("List"+list);
         for (HoaDonChiTiet h : list){
             System.out.println("H"+h);
             if (h.getTrangThai() == 0) {
@@ -198,9 +199,12 @@ public class HoaDonChiTietService {
             }
             System.out.println( hoaDonChiTietRepository.save(h));
         }
-        for(GioHangChiTiet ghct:listGH){
-            ghct.setThanhTien(giaSauGiam.multiply(BigDecimal.valueOf(ghct.getSoLuong())));
-            gioHangChiTietRepository.save(ghct);
+        if(listGH.size()>0) {
+        for(GioHangChiTiet gh :listGH){
+            System.out.println("giỏ hàng"+gh);
+            gh.setThanhTien(giaSauGiam.multiply(BigDecimal.valueOf(gh.getSoLuong())));
+            gioHangChiTietRepository.save(gh);
+        }
         }
     }
 
