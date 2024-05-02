@@ -467,16 +467,16 @@ export const GioHang = ({ children }) => {
             style={{ height: 2, backgroundColor: "black", fontWeight: "bold" }}
           ></hr>
 
-          <p className="float-right" style={{ color: "red" }}>
+          <p className="float-right ps-4" style={{ color: "red" }}>
             <b>
               <>
                 {soTienCanMuaThem === 0 && soTienDuocGiam === 0
                   ? ""
                   : "Còn thiếu " +
                     Intl.NumberFormat("en-US").format(soTienCanMuaThem) +
-                    "VNĐ để được giảm " +
+                    " VND để được giảm " +
                     Intl.NumberFormat("en-US").format(soTienDuocGiam) +
-                    "VNĐ"}
+                    " VND"}
               </>
             </b>
           </p>
@@ -547,7 +547,7 @@ export const GioHang = ({ children }) => {
             </div>
           </div>
           <div
-            className="row ps-2 pb-2 mt-3"
+            className=" ps-2 pb-2 mt-3 d-flex align-items-end"
             // style={{ borderBottom: "1px dashed black" }}
           >
             <h5 className="col-md-6" style={{ marginLeft: 30 }}>

@@ -52,6 +52,10 @@ public class HoaDonControllerr {
     public ResponseEntity<?> getALLTT(@PathVariable("tt") int tt){
         return  ResponseEntity.ok(hoaDonService.getALLTT(tt));
     }
+    @GetMapping("/getVNP/{idHD}")
+    public ResponseEntity<?> getVNP(@PathVariable("idHD") String id){
+        return  ResponseEntity.ok(hoaDonService.getPhuongThucVNP(id));
+    }
     @GetMapping("/detail-hoa-don/{idHD}")
     public ResponseEntity<?> detailHD(@PathVariable("idHD") String id){
         return  ResponseEntity.ok(hoaDonService.getByID(id));

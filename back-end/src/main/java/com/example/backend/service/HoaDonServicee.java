@@ -4,6 +4,7 @@ import com.example.backend.dto.request.HoaDonRequest;
 import com.example.backend.dto.request.hoadonsearch.HoaDonSearch;
 import com.example.backend.dto.request.sanphamsearch.BangConSearch;
 import com.example.backend.dto.response.AdminHoaDonDetailRespon;
+import com.example.backend.dto.response.AdminHoaDonGetVNP;
 import com.example.backend.dto.response.AdminHoaDonResponn;
 import com.example.backend.dto.response.DetailUpdateDiaChiHoaDonRespon;
 import com.example.backend.dto.response.sanpham.DanhMucRespone;
@@ -241,9 +242,8 @@ public class HoaDonServicee {
 //        }).orElse(null) ;
 //    }
 
-    public HoaDon getHDByIDHD(String idHD){
-        System.out.println("Hóa đơn service"+hoaDonRepository.getHoaDonByIDHD(idHD));
-        return hoaDonRepository.getHoaDonByIDHD(idHD);
+    public List<AdminHoaDonGetVNP> getPhuongThucVNP(String key){
+        return hoaDonRepository.getPhuongThucVNP(key);
     }
 
     public HoaDon updateSample(HoaDon hd){
