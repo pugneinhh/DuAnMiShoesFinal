@@ -32,8 +32,7 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, St
     HoaDonChiTietRespone getOneHDCT(@Param("idHD") String idHD,@Param("idCTSP")String idCTSP);
     @Query(value = "select * from hoa_don_chi_tiet where chi_tiet_san_pham_id =:id",nativeQuery = true)
     List<HoaDonChiTiet> getAllHDCTByCTSP(String id);
-    @Query(value = "select * from gio_hang_chi_tiet where chi_tiet_sp_id =:id",nativeQuery = true)
-    List<GioHangChiTiet> getAllGHCTByCTSP(String id);
+
     @Query(value = "select * from hoa_don_chi_tiet where chi_tiet_san_pham_id =:idCTSP and hoa_don_id =:idHD",nativeQuery = true)
     HoaDonChiTiet getHDCTByCTSPAndHD(String idCTSP, String idHD);
 
