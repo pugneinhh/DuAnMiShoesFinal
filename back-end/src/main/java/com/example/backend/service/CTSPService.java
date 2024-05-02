@@ -47,7 +47,7 @@ public class CTSPService {
     public List<DetailCTSPRespone> detail(){return ctspRepository.detail();}
 
     public ChiTietSanPham update(String id, UpdateCTSPRequest request) {
-        thongBaoService.socketLoadSanPham(id);
+
         ChiTietSanPham ctBanDau= ctspRepository.findById(id).get();
         ChiTietSanPham ct = request.map(new ChiTietSanPham());
         ct.setId(id);
@@ -85,6 +85,7 @@ public class CTSPService {
             }
            gioHangChiTietRepository.save(gh);
         }
+        thongBaoService.socketLoadSanPham(id);
         return ctspRepository.save(ct);
     }
 

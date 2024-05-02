@@ -21,7 +21,8 @@ import { useCart } from "./CartContext";
 import { useAppSelector } from "../../../store/redux/hook";
 import { GetLoading } from "../../../store/reducer/Loading.reducer";
 import loading from "../../../assets/images/logo.png";
-import { faLessThanEqual } from "@fortawesome/free-solid-svg-icons";
+import SockJS from "sockjs-client";
+import { Stomp } from "@stomp/stompjs";
 export const GioHang = ({ children }) => {
   const isLoading = useAppSelector(GetLoading);
   const [checkLoading, setCheckLoading] = useState(false);
@@ -52,7 +53,7 @@ export const GioHang = ({ children }) => {
   const { updateTotalQuantity } = useCart();
   const storedData = get("userData");
   const storedGioHang = get("GioHang");
-  console.log("Loading ", checkLoading);
+  
   const loadVoucherTotNhatVaVoucherTiepTheo = (total) => {
     BanHangClientAPI.voucherTotNhat(
       storedData?.userID ? storedData?.userID : null,
@@ -60,6 +61,7 @@ export const GioHang = ({ children }) => {
     ).then((res) => {
       setVoucher(res.data);
       loadGiamGia(res.data);
+
     });
 
     BanHangClientAPI.voucherSapDatDuoc(
@@ -158,7 +160,45 @@ export const GioHang = ({ children }) => {
       );
     }
   };
+useEffect(() => {
+  let stomp = null;
 
+  const connectWebSocket = () => {
+    const socket = new SockJS("http://localhost:8080/ws");
+    stomp = Stomp.over(socket);
+    stomp.connect(
+      {},
+      () => {
+        console.log("connect websocket");
+
+        stomp.subscribe("/topic/KH/hoa-don", (mes) => {
+          try {
+            const pare = JSON.parse(mes.body);
+            console.log(pare);
+            loadGHCT();
+           
+            // loadVoucherTotNhatVaVoucherTiepTheo();
+          } catch (e) {
+            console.log("lỗi mẹ ròi xem code di: ", e);
+          }
+        });
+      },
+      (error) => {
+        console.error("Failed to connect to WebSocket:", error);
+        // Thử kết nối lại sau một khoảng thời gian
+        setTimeout(connectWebSocket, 1000);
+      }
+    );
+  };
+
+  connectWebSocket();
+
+  return () => {
+    if (stomp !== null) {
+      stomp.disconnect();
+    }
+  };
+}, []);
   const loadGHCT = () => {
     if (storedData && storedData.userID) {
       GioHangAPI.getByIDKH(storedData.userID).then((response) => {
