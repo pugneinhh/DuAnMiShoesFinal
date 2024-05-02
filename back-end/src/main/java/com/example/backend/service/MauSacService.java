@@ -1,7 +1,9 @@
 package com.example.backend.service;
+import com.example.backend.dto.request.sanpham.KichThuocRequest;
 import com.example.backend.dto.request.sanpham.MauSacRequest;
 import com.example.backend.dto.request.sanphamsearch.BangConSearch;
 import com.example.backend.dto.response.sanpham.MauSacRespone;
+import com.example.backend.entity.KichThuoc;
 import com.example.backend.entity.MauSac;
 import com.example.backend.repository.MauSacRespository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,15 @@ public class MauSacService {
     }
     public List<MauSacRespone> getALLMS(){
         return mauSacRespository.getALLMS();
+    }
+
+    public MauSac update(String id, MauSacRequest request) {
+        MauSac msFirst = mauSacRespository.findById(id).get();
+        MauSac ms = request.mapMS(new MauSac());
+        ms.setNgayTao(msFirst.getNgayTao());
+        ms.setNgaySua(LocalDateTime.now());
+        ms.setId(id);
+        return mauSacRespository.save(ms);
     }
 
     public MauSac detailMS(String id){return mauSacRespository.findById(id).get();}

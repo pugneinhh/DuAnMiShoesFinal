@@ -503,7 +503,7 @@ export default function CTSP() {
             onChange={(e) => onChangeGB(record, e.target.value)}
           />
         ) : (
-          <span>{`${Intl.NumberFormat('en-US').format(record.giaBan)} VNĐ`}</span>
+          <span>{`${Intl.NumberFormat('en-US').format(record.giaBan)} VND`}</span>
         );
       },
     },
@@ -804,15 +804,19 @@ export default function CTSP() {
                   <Select placeholder="Chọn một giá trị">
                     {ms.map((item) => (
                       <Option key={item.id} value={item.id}>
-                        <div
-                          style={{
-                            backgroundColor: `${item.ma}`,
-                            borderRadius: 6,
-                            width: 170,
-                            height: 25,
-                          }}
-                        ></div>
-                      </Option>
+                      <div
+                        style={{
+                          color: "white",
+                          fontWeight: "bolder",
+                          backgroundColor: `${item.ma}`,
+                          borderRadius: 6,
+                          border: "1px solid black",
+                          width: 155,
+                          height: 25,
+                        }}
+                        className="text-center"
+                      >{item.ten} - {item.ma}</div>
+                    </Option>
                     ))}
                   </Select>
                 </Form.Item>

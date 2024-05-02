@@ -85,7 +85,7 @@ function ProductRow({ product, loadghct, loadSoLuongSPTrongGH }) {
                   ? "-" +
                     `${Intl.NumberFormat("en-US").format(
                       ctsp.giaTriKhuyenMai
-                    )} VNĐ`
+                    )} VND`
                   : "-" + ctsp.giaTriKhuyenMai + "%"
                 : ""
             }
@@ -161,7 +161,7 @@ function ProductRow({ product, loadghct, loadSoLuongSPTrongGH }) {
       </td>
       <td>
         <h6 className=" fw-bold" style={{ color: "red", marginTop: "50px" }}>
-          {Intl.NumberFormat("en-US").format(price)}VNĐ
+          {Intl.NumberFormat("en-US").format(price)}{" VND"}
         </h6>
       </td>
       <td>

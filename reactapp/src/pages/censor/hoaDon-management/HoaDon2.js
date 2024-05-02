@@ -219,10 +219,9 @@ export default function HoaDon() {
           <div>
             <FormattedNumber
               value={thanhTien}
-              style="currency"
               currency="VND"
               minimumFractionDigits={0}
-            />
+            />{" VND"}
           </div>
         </IntlProvider>
       ),

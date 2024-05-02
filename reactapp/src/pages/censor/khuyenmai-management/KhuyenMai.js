@@ -174,9 +174,8 @@ const KhuyenMai = () => {
         <>
           {x.loai === "Tiền Mặt" || x.loai === "Tiền mặt"
             ? new Intl.NumberFormat("vi-Vi", {
-                style: "currency",
                 currency: "VND",
-              }).format(gia_tri_khuyen_mai)
+              }).format(gia_tri_khuyen_mai) + " VND"
             : gia_tri_khuyen_mai + "%"}
         </>
       ),

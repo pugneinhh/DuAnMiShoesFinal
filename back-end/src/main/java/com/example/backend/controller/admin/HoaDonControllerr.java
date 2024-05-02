@@ -52,6 +52,10 @@ public class HoaDonControllerr {
     public ResponseEntity<?> getALLTT(@PathVariable("tt") int tt){
         return  ResponseEntity.ok(hoaDonService.getALLTT(tt));
     }
+    @GetMapping("/getVNP/{idHD}")
+    public ResponseEntity<?> getVNP(@PathVariable("idHD") String id){
+        return  ResponseEntity.ok(hoaDonService.getPhuongThucVNP(id));
+    }
     @GetMapping("/detail-hoa-don/{idHD}")
     public ResponseEntity<?> detailHD(@PathVariable("idHD") String id){
         return  ResponseEntity.ok(hoaDonService.getByID(id));
@@ -364,7 +368,7 @@ public class HoaDonControllerr {
         for (AdminHoaDonSanPham x : list){
             if (km != null) {
                 if (km.getLoai().equals("Tiền mặt")) {
-                    if ((new BigDecimal(x.getGiaBanSP()).compareTo(ctsp.getGiaBan().subtract(km.getGia_tri_khuyen_mai())) == 0) && x.getIDCTSP().equals(ctsp.getId())) {
+                    if ((new BigDecimal(x.getThanhTienSP()).compareTo(ctsp.getGiaBan().subtract(km.getGia_tri_khuyen_mai())) == 0) && x.getIDCTSP().equals(ctsp.getId())) {
                         HoaDonChiTiet hdct = hoaDonChiTietService.getHDCTByID(x.getID());
                         hdct.setSoLuong(hdct.getSoLuong() + 1);
                         hd.setGiaGoc(hd.getGiaGoc().add(new BigDecimal(x.getGiaBanSP())));
@@ -373,8 +377,9 @@ public class HoaDonControllerr {
                         return ResponseEntity.ok(hoaDonService.updateSample(hd));
                     }
                 }
+
                 else {
-                    if ((new BigDecimal(x.getGiaBanSP()).compareTo(ctsp.getGiaBan().subtract(ctsp.getGiaNhap().multiply(km.getGia_tri_khuyen_mai()).divide(new BigDecimal(100)))) == 0) && x.getIDCTSP().equals(ctsp.getId())) {
+                    if ((new BigDecimal(x.getThanhTienSP()).compareTo(ctsp.getGiaBan().subtract(ctsp.getGiaNhap().multiply(km.getGia_tri_khuyen_mai()).divide(new BigDecimal(100)))) == 0) && x.getIDCTSP().equals(ctsp.getId())) {
                         HoaDonChiTiet hdct = hoaDonChiTietService.getHDCTByID(x.getID());
                         hdct.setSoLuong(hdct.getSoLuong() + 1);
                         hd.setGiaGoc(hd.getGiaGoc().add(new BigDecimal(x.getGiaBanSP())));
@@ -384,8 +389,14 @@ public class HoaDonControllerr {
                     }
                 }
             }
+
             else {
-                if ((new BigDecimal(x.getGiaBanSP()).compareTo(ctsp.getGiaBan()) == 0) && x.getIDCTSP().equals(ctsp.getId())) {
+
+//                System.out.println("->>>>>>>>>>>>>>"+String.valueOf(new BigDecimal(x.getGiaBanSP()).compareTo(ctsp.getGiaBan()) == 0));
+//                System.out.println("->>>>>>>>>>>>>>"+String.valueOf(x.getIDCTSP().equals(ctsp.getId())));
+//                System.out.println("->>>>>>>>>>>>>>"+ x.get);
+//                System.out.println("->>>>>>>>>>>>>>"+ ctsp.getGiaBan());
+                if ((new BigDecimal(x.getThanhTienSP()).compareTo(ctsp.getGiaBan()) == 0) && x.getIDCTSP().equals(ctsp.getId())) {
                     HoaDonChiTiet hdct = hoaDonChiTietService.getHDCTByID(x.getID());
                     hdct.setSoLuong(hdct.getSoLuong() + 1);
                     hd.setGiaGoc(hd.getGiaGoc().add(new BigDecimal(x.getGiaBanSP())));
@@ -412,11 +423,12 @@ public class HoaDonControllerr {
                 hd.setGiaGoc(hd.getGiaGoc().add(ctsp.getGiaBan().subtract(km.getGia_tri_khuyen_mai())));
                 hd.setThanhTien(hd.getThanhTien().add(ctsp.getGiaBan().subtract(km.getGia_tri_khuyen_mai())));
             } else {
-                hoaDonChiTiet.setGiaSauGiam(ctsp.getGiaBan().subtract(ctsp.getGiaNhap().multiply(km.getGia_tri_khuyen_mai()).divide(new BigDecimal(100))));
-                hoaDonChiTiet.setGiaGiam(ctsp.getGiaNhap().multiply(km.getGia_tri_khuyen_mai()).divide(new BigDecimal(100)));
+                hoaDonChiTiet.setGiaSauGiam(ctsp.getGiaBan().subtract(ctsp.getGiaBan().multiply(km.getGia_tri_khuyen_mai()).divide(new BigDecimal(100))));
+                hoaDonChiTiet.setGiaGiam(ctsp.getGiaBan().multiply(km.getGia_tri_khuyen_mai()).divide(new BigDecimal(100)));
                 hd.setGiaGoc(hd.getGiaGoc().add(ctsp.getGiaBan().subtract(ctsp.getGiaNhap().multiply(km.getGia_tri_khuyen_mai()).divide(new BigDecimal(100)))));
                 hd.setThanhTien(hd.getThanhTien().add(ctsp.getGiaBan().subtract(ctsp.getGiaNhap().multiply(km.getGia_tri_khuyen_mai()).divide(new BigDecimal(100)))));
             }
+
         } else {
             hoaDonChiTiet.setGiaSauGiam(ctsp.getGiaBan());
             hoaDonChiTiet.setGiaGiam(new BigDecimal(0));

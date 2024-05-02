@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Divider, Form, Input, Select, Space, Table, Tag, Modal } from 'antd';
+import { Button, Divider, Form, Input, Select, Space, Table, Tag, Modal, Radio } from 'antd';
 import { PlusCircleOutlined, RetweetOutlined } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
@@ -36,11 +36,26 @@ export default function MauSac() {
       setTenMaus(colorName)
     }
   };
+  const doiMauUpdate = (e) => {
+    console.log(e.target.value);
+    const ma = e.target.value;
+    const hexCode = ma.replace("#", "").toUpperCase();
+    const rgb = convert.hex.rgb(hexCode);
+    const colorName = convert.rgb.keyword(rgb);
+    if (colorName !== null) {
+      setmsUpdates({
+        ...msUpdate,
+        ma: e.target.value,
+        ten: colorName
+      });
+    }
+  };
   const [componentSize, setComponentSize] = useState('default');
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
   };
   const [form] = Form.useForm();
+  const [form1] = Form.useForm();
   //Tìm kiếm
   const onChangeFilter = (changedValues, allValues) => {
     timKiemCT(allValues);
@@ -53,7 +68,6 @@ export default function MauSac() {
   }
   //Ấn Add
   const [open, setOpen] = useState(false);
-  const [openUpdate, setOpenUpdate] = useState(false);
   const [bordered] = useState(false);
   const addMauSac = (value) => {
     const chekTrung = (code) => {
@@ -94,22 +108,91 @@ export default function MauSac() {
     }
   }
   //Update
-  const [msUpdate, setmsUpdates] = useState({});
+  const [msUpdate, setmsUpdates] = useState("");
+  const [openUpdate, setOpenUpdate] = useState(false);
+  const [tenCheck, setTenCheck] = useState("");
+  const [maCheck, setMaCheck] = useState("");
   const showModal = async (id) => {
-    MauSacAPI.detail.then((res) => {
+    MauSacAPI.detail(id).then((res) => {
+      form1.setFieldsValue({
+        id: res.data.id,
+        ma: res.data.ma,
+        ten: res.data.ten,
+        trangThai: res.data.trangThai,
+        ngayTao : res.data.ngayTao,
+        ngaySua : res.data.ngaySua,
+        nguoiTao : res.data.nguoiTao,
+        nguoiSua : res.data.nguoiSua,
+      });
       setmsUpdates(res.data)
-      setOpenUpdate(true);
-    }); 
+      setTenCheck(res.data.ten)
+      setMaCheck(res.data.ma)
+    });
+    setOpenUpdate(true);
   };
-  // const showModal = async (id) => {
-  //   setOpenUpdate(true);
-  //   MauSacAPI.detail(id)
-  //   .then((res)=>{
-  //       // setTenCheck(res.data.ten)
-  //       setmsUpdates(res.data)
-  //   })
+  const updateMauSac = () => {
 
-  // };
+    const checkTrungTen = (ten) => {
+      return mauSac.some(x =>
+        x.ten === ten
+      );
+    };
+
+    if (msUpdate.ten != tenCheck) {
+      if (checkTrungTen(msUpdate.ten)) {
+        toast.error('Tên màu trùng với màu sắc khác!', {
+          position: "top-right",
+          autoClose: 2500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        return;
+      }
+    }
+
+    const checkTrungMa = (ma) => {
+      return mauSac.some(x =>
+        x.ma === ma
+      );
+    };
+
+    if (msUpdate.ma != maCheck) {
+      if (checkTrungMa(msUpdate.ma)) {
+        toast.error('Mã màu trùng với màu sắc khác!', {
+          position: "top-right",
+          autoClose: 2500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        return;
+      }
+    }
+
+    MauSacAPI.update(msUpdate.id, msUpdate)
+      .then((res) => {
+        toast('✔️ Sửa thành công!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setmsUpdates("");
+        loadMauSac();
+        setOpenUpdate(false);
+      })
+  }
   //Table
   const [mauSac, setMauSacs] = useState([]);
 
@@ -184,7 +267,7 @@ export default function MauSac() {
       dataIndex: "id",
       render: (title) => (
         <Space size="middle">
-          <a className='btn btn-danger' onClick={() => showModal(`${title}`)}><BsFillEyeFill className='mb-1'  /></a>
+          <a className='btn btn-danger' onClick={() => showModal(`${title}`)}><BsFillEyeFill className='mb-1' /></a>
         </Space>
       ),
     },
@@ -387,9 +470,9 @@ export default function MauSac() {
                     Modal.confirm({
                       centered: true,
                       title: "Thông báo",
-                      content: "Bạn có chắc chắn muốn thêm không?",
+                      content: "Bạn có chắc chắn muốn sửa không?",
                       onOk: () => {
-                        form.submit();
+                        form1.submit();
                       },
                       footer: (_, { OkBtn, CancelBtn }) => (
                         <>
@@ -410,63 +493,88 @@ export default function MauSac() {
                 initialValues={{
                   size: componentSize,
                 }}
-                onValuesChange={onFormLayoutChange}
+                onValuesChange={console.log(form1.value)}
                 size={componentSize}
-                onFinish={addMauSac}
-                form={form}
+                onFinish={updateMauSac}              
+                form={form1}
               >
-                <Form.Item
-                  label="Màu"
-                  name="ma"
-                  hasFeedback
-                  rules={[{ required: true, message: "Vui lòng chọn màu" }]}
-                >
-                  <Input
-                    className="border"
-                    type="color"
-                    value={msUpdate.ma}
-                    onChange={doiMau}
-                  />
-                </Form.Item>
-                <Form.Item
-                  label=" Mã"
-                  name="ma"
-                  hasFeedback
-                  rules={[{ required: true, message: "" }]}
-                >
-                  <Input
-                    readOnly="true"
-                    className="border"
-                    value={msUpdate.ma}
-                    type="text"
-                  />
-                </Form.Item>
-                <Form.Item
-                  label="Tên"
-                  hasFeedback
-                  rules={[
-                    { required: true, message: "Vui lòng không để trống tên!" },
-                  ]}
-                >
-                  <Input
-                    type="text"
-                    value={msUpdate.ten}
-                    onChange={(e) => setmsUpdates({ ...msUpdate, ten: e })}
-                  />
-                </Form.Item>
-                <Form.Item label={<b>Trạng thái </b>}>
-                  <Select
-                    defaultValue={
-                      msUpdate.trangThai == 0 ? "Còn bán" : "Dừng bán"
-                    }
-                    onChange={(e) =>
-                      setmsUpdates({ ...msUpdate, trangThai: e })
-                    }
-                  >
-                    <Select.Option value="0">Còn Bán</Select.Option>
-                    <Select.Option value="1">Dừng Bán</Select.Option>
-                  </Select>
-                </Form.Item>
+                <div className="row">
+                  <div className="col-md-6">
+                    <label>
+                      <b>Màu sắc :</b>
+                    </label>
+                    <Form.Item
+                      name="ma"
+                      hasFeedback
+                      rules={[{ required: true, message: "Vui lòng chọn màu" }]}
+                    >
+                      <Input
+                        className="card-mau"
+                        type="color"
+                        onChange={doiMauUpdate}
+                      />
+                    </Form.Item>
+                  </div>
+                  <div className="col-md-6 mt-3">
+                    <label>
+                      <b>Mã màu :</b>
+                    </label>
+                    <Form.Item
+                      name="ma"
+                      hasFeedback
+                      rules={[{ required: true, message: "" }]}
+                    >
+                      <Input
+                        readOnly={true}
+                        className="border"
+                        value={msUpdate.ma}
+                        type="text" />
+                    </Form.Item>
+
+                    <label>
+                      <b>Tên màu :</b>
+                    </label>
+                    <Form.Item
+                      name="ten"
+                      hasFeedback
+                      rules={[
+                        {
+                          required: true,
+                          message: "Vui lòng không để trống tên!",
+                        },
+                      ]}
+                    >
+                      <Input
+                        type="text"
+                        onChange={(e) =>
+                          setmsUpdates({
+                            ...msUpdate,
+                            ten: e.target.value,
+                          })
+                        }
+                      />
+                    </Form.Item>
+
+                    <label>
+                      <b>Trạng thái :</b>
+                    </label>
+                    <Form.Item>
+                      <Radio.Group
+                        onChange={(e) =>
+                          setmsUpdates({
+                            ...msUpdate,
+                            trangThai: e.target.value,
+                          })
+                        }
+                        value={msUpdate.trangThai}
+                      >
+                        <Radio value={0}>Còn bán</Radio>
+                        <Radio value={1}>Dừng bán</Radio>
+                      </Radio.Group>
+                    </Form.Item>
+                  </div>
+                </div>
+
               </Form>
             </Modal>
           </div>

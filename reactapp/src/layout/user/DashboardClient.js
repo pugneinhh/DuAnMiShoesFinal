@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  Breadcrumb,
   Layout,
   theme,
   Image,
@@ -10,7 +9,6 @@ import {
   Space,
   Col,
   Typography,
-  message,
 } from "antd";
 
 import { Link, useNavigate } from "react-router-dom";
@@ -75,7 +73,8 @@ export const DashboardClient = ({ children }) => {
     localStorage.clear();
     //  window.location.reload();
     // set("userGoogle", "");
-    window.location.href = "/login";
+    // window.location.href = "/login";
+        nav("/login");
   };
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -186,11 +185,10 @@ export const DashboardClient = ({ children }) => {
             onSearch={onSearch}
             value={valueSearch}
             onChange={(e) => setValueSearchs(e.target.value)}
-          >
-          </Search>
+          ></Search>
         </Col>
         <Col span={1} className="float-end"></Col>
-        <Col span={1} className="float-end">
+        <Col span={1} className="float-end menuButton">
           <Notification />
         </Col>
         <Col span={0.5} className="float-end">
@@ -257,21 +255,21 @@ export const DashboardClient = ({ children }) => {
       <marquee
         style={{
           // backgroundColor:"#1F282D",
-          fontStyle:"italic",
+          fontStyle: "italic",
           color: "Black",
           fontSize: 16,
-          fontWeight: "Bolder"
+          fontWeight: "Bolder",
         }}
         direction="left"
         scrollamount="5"
       >
-        🔥🔥 Hè rực rỡ ưu đãi khủng cho hóa đơn từ 10.000.000 VND ! Mua ngay 🔥🔥{" "}
+        🔥🔥 Hè rực rỡ ưu đãi khủng cho hóa đơn từ 10.000.000 VND ! Mua ngay
+        🔥🔥{" "}
       </marquee>
       <Content
-
         style={{
           padding: "0 48px",
-          backgroundColor: "white"
+          backgroundColor: "white",
         }}
       >
         <div className="mt-3 mb-3"></div>
@@ -289,9 +287,10 @@ export const DashboardClient = ({ children }) => {
       <Footer
         style={{
           textAlign: "center",
-          backgroundImage: "url('https://cdn.shopify.com/s/files/1/2495/5044/products/salvas-white-leather-sneaker.slideshow5_eb2d8421-fc8f-4759-97e9-3f8f679f44a4.png?v=1676536621')",
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundImage:
+            "url('https://cdn.shopify.com/s/files/1/2495/5044/products/salvas-white-leather-sneaker.slideshow5_eb2d8421-fc8f-4759-97e9-3f8f679f44a4.png?v=1676536621')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
         }}
       >
         <div className="row">
@@ -304,49 +303,45 @@ export const DashboardClient = ({ children }) => {
             </div>
             <div className="me-4">
               <Link to={"/san-pham"} className="text-decoration-none">
-                <span className="text-dark me-2">
-                  Sản phẩm
-                </span>
+                <span className="text-dark me-2">Sản phẩm</span>
               </Link>
             </div>
             <div className="me-4">
               <Link to={"/tra-cuu-don-hang"} className="text-decoration-none">
-                <span className="text-dark me-2">
-                  Đơn hàng
-                </span>
+                <span className="text-dark me-2">Đơn hàng</span>
               </Link>
             </div>
             <div className="ms-4">
               <Link to={"/chinh-sach"} className="text-decoration-none">
-                <span className="text-dark ">
-                  Chính sách trả hàng
-                </span>
+                <span className="text-dark ">Chính sách trả hàng</span>
               </Link>
-              <br /><br />
-              <div>
-                MiShoes-Created by SD-26
-              </div>
+              <br />
+              <br />
+              <div>MiShoes-Created by SD-26</div>
             </div>
           </div>
-          <div className="col-md-8 mt-5">
-          </div>
+          <div className="col-md-8 mt-5"></div>
           <div className="col-md-2 mt-5">
             <h5>SNEAKER MISHOES</h5>
             <div>
-              <a>Địa chỉ: Nam Từ Liêm – Hà Nội</a><br />
+              <a>Địa chỉ: Nam Từ Liêm – Hà Nội</a>
+              <br />
               <Link to={"tel:0988353709"} className="text-decoration-none">
-                <span className="text-dark">
-                  Hotline: 0988 353 709
-                </span>
-              </Link><br />
-              <Link to={"mailto:shopmishoes@gmail.com"} className="text-decoration-none">
-                <span className="text-dark">
-                  Email: shopmishoes@gmail.com
-                </span>
+                <span className="text-dark">Hotline: 0988 353 709</span>
+              </Link>
+              <br />
+              <Link
+                to={"mailto:shopmishoes@gmail.com"}
+                className="text-decoration-none"
+              >
+                <span className="text-dark">Email: shopmishoes@gmail.com</span>
               </Link>
             </div>
             <div className="mt-4">
-              <Link to={"https://www.facebook.com/profile.php?id=61558806157556"} className="text-decoration-none">
+              <Link
+                to={"https://www.facebook.com/profile.php?id=61558806157556"}
+                className="text-decoration-none"
+              >
                 <span className="text-dark mt-2">
                   <FaFacebook size={30} className="me-2" />
                   <FaTwitter size={30} className="me-2" />
@@ -354,7 +349,8 @@ export const DashboardClient = ({ children }) => {
                   <BiLogoGmail size={30} className="me-2" />
                   <FaTwitch size={30} className="me-2" />
                 </span>
-              </Link><br />
+              </Link>
+              <br />
             </div>
           </div>
         </div>

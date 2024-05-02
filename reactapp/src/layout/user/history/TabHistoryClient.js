@@ -102,7 +102,6 @@ const TabHistoryClient = ({ listBill }) => {
 
               <div>
                 {item.hoaDonDetail.map((item, index) => (
-        
                   <div
                     key={index}
                     className="row mt-3 "
@@ -129,22 +128,23 @@ const TabHistoryClient = ({ listBill }) => {
                       </h6>
                       <h6 className="text-danger">
                         {Intl.NumberFormat("en-US").format(item.thanhTienSP)}
+                        {" VND"}
                       </h6>
                       <h6>
                         {item.tenKichThuoc}-[{item.tenMauSac}]
                       </h6>
                       <h6>x{item.soLuongSP}</h6>
                     </div>
-                    <div className="col-md-3" style={{marginTop:65}}>
+                    <div className="col-md-3" style={{ marginTop: 65 }}>
                       <h6 className="text-danger">
                         <IntlProvider locale="vi-VN">
                           <div>
                             <FormattedNumber
                               value={item.thanhTienSP * item.soLuongSP}
-                              style="currency"
                               currency="VND"
                               minimumFractionDigits={0}
                             />
+                            {" VND"}
                           </div>
                         </IntlProvider>
                       </h6>
@@ -162,10 +162,10 @@ const TabHistoryClient = ({ listBill }) => {
                       <div>
                         <FormattedNumber
                           value={item.thanhTien}
-                          style="currency"
                           currency="VND"
                           minimumFractionDigits={0}
                         />
+                        {" VND"}
                       </div>
                     </IntlProvider>
                   </h5>

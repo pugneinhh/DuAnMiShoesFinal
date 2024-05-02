@@ -93,9 +93,9 @@ export default function HoaDonDetail() {
     loadListSanPhamTra();
     loadLichSuThanhToan();
     loadTimeLineHoaDon();
+    loadHoaDonVNP();
   }, []);
   // load hóa đơn
-  console.log(listSanPhams);
   const loadVoucherTotNhatVaVoucherTiepTheo = (idKH, money) => {
     SellAPI.voucherTotNhat(idKH, money).then((res) =>
       setVoucherHienTai(res.data)
@@ -149,7 +149,14 @@ export default function HoaDonDetail() {
       console.log(res.data);
     });
   };
-
+   const [listVNP, setlistVNP] = useState([]);
+  const loadHoaDonVNP = () => {
+    HoaDonAPI.detaiVNP(id).then((res) => {
+      setlistVNP(res.data);
+      //  console.log("11111", res.data);
+    });
+  };
+  //  console.log("11111", listVNP[0].vnp);
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -333,9 +340,9 @@ export default function HoaDonDetail() {
       render: (tongTien) => (
         <>
           {new Intl.NumberFormat("vi-VN", {
-            style: "currency",
+        
             currency: "VND",
-          }).format(tongTien)}
+          }).format(tongTien)+" VND"}
         </>
       ),
     },
@@ -385,6 +392,7 @@ export default function HoaDonDetail() {
       setlistHDTimeLine(res.data);
     });
   };
+  console.log(hoaDondetail);
   const showIcon = (trangThai) => {
     if (trangThai === "0") {
       return GiNotebook;
@@ -451,7 +459,7 @@ export default function HoaDonDetail() {
     } else if (trangThai === "2") {
       return "Đang vận chuyển";
     } else if (trangThai === "3") {
-      return "Thành công";
+      return "Đã thanh toán";
     } else if (trangThai === "4") {
       return "Thành công";
     } else if (trangThai === "-1") {
@@ -583,7 +591,9 @@ export default function HoaDonDetail() {
                         type="primary"
                         onClick={showModal}
                       >
-                        {showTitleButtonVanDonTraSau(trangThai)}
+                        {listVNP[0].vnp == null
+                          ? "Đã thanh toán"
+                          : "Thành công"}
                       </Button>
                     ) : trangThai == 4 ? (
                       <Button
@@ -591,7 +601,7 @@ export default function HoaDonDetail() {
                         type="primary"
                         onClick={showModal}
                       >
-                        {showTitleButtonVanDonTraSau(trangThai)}
+                        Thành công
                       </Button>
                     ) : (
                       <></>
@@ -815,7 +825,7 @@ export default function HoaDonDetail() {
 
         {/* button hủy hóa đơn */}
         <div className="col-md-2 ">
-          {trangThai == 0 || trangThai == 1 || trangThai == 2 ? (
+          {trangThai == 0 || trangThai == 1 || trangThai == 2 || trangThai == 3 ? (
             <Button
               style={{ backgroundColor: "red", color: "white" }}
               type="primary"
@@ -1041,11 +1051,14 @@ export default function HoaDonDetail() {
                         <IntlProvider locale="vi-VN">
                           <div>
                             <FormattedNumber
-                              value={listSanPham.giaBanSP}
-                              style="currency"
+                              value={
+                                parseInt(listSanPham.thanhTienSP) +
+                                parseInt(listSanPham.giaGiam)
+                              }
                               currency="VND"
                               minimumFractionDigits={0}
                             />
+                            {" VND"}
                           </div>
                         </IntlProvider>
                       </del>
@@ -1060,10 +1073,10 @@ export default function HoaDonDetail() {
                       <div>
                         <FormattedNumber
                           value={listSanPham.thanhTienSP}
-                          style="currency"
                           currency="VND"
                           minimumFractionDigits={0}
                         />
+                        {" VND"}
                       </div>
                     </IntlProvider>
                   </h6>
@@ -1103,10 +1116,10 @@ export default function HoaDonDetail() {
                     <div>
                       <FormattedNumber
                         value={listSanPham.thanhTienSP * listSanPham.soLuongSP}
-                        style="currency"
                         currency="VND"
                         minimumFractionDigits={0}
                       />
+                      {" VND"}
                     </div>
                   </IntlProvider>
                 </h6>
@@ -1154,9 +1167,7 @@ export default function HoaDonDetail() {
 
                     }}
                   >
-                    <DeleteFilled size={20}/>
-
-
+                    <DeleteFilled size={20} />
                   </button>
                 ) : (
                   <button
@@ -1216,11 +1227,14 @@ export default function HoaDonDetail() {
                             <IntlProvider locale="vi-VN">
                               <div>
                                 <FormattedNumber
-                                  value={listSanPham.giaBanSP}
-                                  style="currency"
+                                  value={
+                                    parseInt(listSanPham.thanhTienSP) +
+                                    parseInt(listSanPham.giaGiam)
+                                  }
                                   currency="VND"
                                   minimumFractionDigits={0}
                                 />
+                                {" VND"}
                               </div>
                             </IntlProvider>
                           </del>
@@ -1235,10 +1249,10 @@ export default function HoaDonDetail() {
                           <div>
                             <FormattedNumber
                               value={listSanPham.thanhTienSP}
-                              style="currency"
                               currency="VND"
                               minimumFractionDigits={0}
                             />
+                            {" VND"}
                           </div>
                         </IntlProvider>
                       </h6>
@@ -1264,10 +1278,10 @@ export default function HoaDonDetail() {
                             value={
                               listSanPham.thanhTienSP * listSanPham.soLuongSP
                             }
-                            style="currency"
                             currency="VND"
                             minimumFractionDigits={0}
                           />
+                          {" VND"}
                         </div>
                       </IntlProvider>
                     </h6>
@@ -1373,10 +1387,10 @@ export default function HoaDonDetail() {
                           : parseFloat(hoaDondetail.thanhTien) +
                             parseFloat(hoaDondetail.giaGiam)
                       }
-                      style="currency"
                       currency="VND"
                       minimumFractionDigits={0}
                     />
+                    {" VND"}
                   </div>
                 </IntlProvider>
               </p>
@@ -1388,10 +1402,10 @@ export default function HoaDonDetail() {
                   <div>
                     <FormattedNumber
                       value={hoaDondetail.tienVanChuyen}
-                      style="currency"
                       currency="VND"
                       minimumFractionDigits={0}
                     />
+                    {" VND"}
                   </div>
                 </IntlProvider>
               </p>
@@ -1405,10 +1419,10 @@ export default function HoaDonDetail() {
                       value={
                         hoaDondetail.giaGiam ? "-" + hoaDondetail.giaGiam : 0
                       }
-                      style="currency"
                       currency="VND"
                       minimumFractionDigits={0}
                     />
+                    {" VND"}
                   </div>
                 </IntlProvider>
               </p>
@@ -1430,10 +1444,10 @@ export default function HoaDonDetail() {
                             : 0
                         )
                       }
-                      style="currency"
                       currency="VND"
                       minimumFractionDigits={0}
                     />
+                    {" VND"}
                   </div>
                 </IntlProvider>
               </p>
@@ -1614,11 +1628,14 @@ export default function HoaDonDetail() {
                               <IntlProvider locale="vi-VN">
                                 <div>
                                   <FormattedNumber
-                                    value={listSanPham.giaBanSP}
-                                    style="currency"
+                                    value={
+                                      parseInt(listSanPham.thanhTienSP) +
+                                      parseInt(listSanPham.giaGiam)
+                                    }
                                     currency="VND"
                                     minimumFractionDigits={0}
                                   />
+                                  {" VND"}
                                 </div>
                               </IntlProvider>
                             </del>
@@ -1633,10 +1650,10 @@ export default function HoaDonDetail() {
                             <div>
                               <FormattedNumber
                                 value={listSanPham.thanhTienSP}
-                                style="currency"
                                 currency="VND"
                                 minimumFractionDigits={0}
                               />
+                              {" VND"}
                             </div>
                           </IntlProvider>
                         </h6>
@@ -1662,10 +1679,10 @@ export default function HoaDonDetail() {
                               value={
                                 listSanPham.thanhTienSP * listSanPham.soLuongSP
                               }
-                              style="currency"
                               currency="VND"
                               minimumFractionDigits={0}
                             />
+                            {" VND"}
                           </div>
                         </IntlProvider>
                       </h6>
@@ -1780,10 +1797,10 @@ export default function HoaDonDetail() {
                                 : parseFloat(hoaDondetail.thanhTien) +
                                   parseFloat(hoaDondetail.giaGiam)
                             }
-                            style="currency"
                             currency="VND"
                             minimumFractionDigits={0}
                           />
+                          {" VND"}
                         </div>
                       </IntlProvider>
                     </p>
@@ -1795,10 +1812,10 @@ export default function HoaDonDetail() {
                         <div>
                           <FormattedNumber
                             value={hoaDondetail.tienVanChuyen}
-                            style="currency"
                             currency="VND"
                             minimumFractionDigits={0}
                           />
+                          {" VND"}
                         </div>
                       </IntlProvider>
                     </p>
@@ -1814,10 +1831,10 @@ export default function HoaDonDetail() {
                                 ? "-" + hoaDondetail.giaGiam
                                 : 0
                             }
-                            style="currency"
                             currency="VND"
                             minimumFractionDigits={0}
                           />
+                          {" VND"}
                         </div>
                       </IntlProvider>
                     </p>{" "}
@@ -1829,10 +1846,10 @@ export default function HoaDonDetail() {
                         <div>
                           <FormattedNumber
                             value={hoaDondetail.thanhTien}
-                            style="currency"
                             currency="VND"
                             minimumFractionDigits={0}
                           />
+                          {" VND"}
                         </div>
                       </IntlProvider>
                     </p>

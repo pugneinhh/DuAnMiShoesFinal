@@ -1035,8 +1035,10 @@ SellAPI.voucherSapDatDuoc(
                     ? "-" +
                       `${Intl.NumberFormat("en-US").format(
                         record.giaTriKhuyenMai
-                      )} VNĐ`
-                    : "-" + record.giaTriKhuyenMai + "%"
+                      )} VND`
+                    :
+                      ("-" + parseInt(record.giaTriKhuyenMai, 10) + "%")
+                      
                 }
                 color="red"
                 size="small"
@@ -1073,14 +1075,14 @@ SellAPI.voucherSapDatDuoc(
             {!record.tenKM ? (
               <span>{`${Intl.NumberFormat("en-US").format(
                 record.giaBan
-              )} VNĐ`}</span>
+              )} VND`}</span>
             ) : (
               <span style={{ color: "red" }}>
                 <del style={{ color: "black" }}>{`${Intl.NumberFormat(
                   "en-US"
-                ).format(record.giaBan)} VNĐ`}</del>
+                ).format(record.giaBan)} VND`}</del>
                 <br></br>
-                {`${Intl.NumberFormat("en-US").format(record.giaSauGiam)} VNĐ`}
+                {`${Intl.NumberFormat("en-US").format(record.giaSauGiam)} VND`}
               </span>
             )}
           </>
@@ -1130,7 +1132,7 @@ SellAPI.voucherSapDatDuoc(
       title: "Tổng tiền",
       dataIndex: "total",
       render: (text, record) => (
-        <span>{`${Intl.NumberFormat("en-US").format(record.total)} VNĐ`}</span>
+        <span>{`${Intl.NumberFormat("en-US").format(record.total)} VND`}</span>
       ),
     },
     {
@@ -1618,11 +1620,11 @@ SellAPI.voucherSapDatDuoc(
                                     Intl.NumberFormat("en-US").format(
                                       soTienCanMuaThem
                                     ) +
-                                    "VNĐ để được giảm " +
+                                    "VND để được giảm " +
                                     Intl.NumberFormat("en-US").format(
                                       soTienDuocGiam
                                     ) +
-                                    "VNĐ"}
+                                    "VND"}
                               </>
                             </b>
                           </p>
@@ -1706,20 +1708,20 @@ SellAPI.voucherSapDatDuoc(
                                         {Intl.NumberFormat("en-US").format(
                                           option.dieuKien
                                         )}{" "}
-                                        VNĐ
+                                        VND
                                         <br></br>
                                         Giảm:
                                         {option.loaiVoucher === "Phần trăm"
                                           ? option.mucDo + "% "
                                           : `${Intl.NumberFormat(
                                               "en-US"
-                                            ).format(option.mucDo)} VNĐ `}
+                                            ).format(option.mucDo)} VND `}
                                         <br></br>
                                         Tối đa:
                                         {Intl.NumberFormat("en-US").format(
                                           option.giamToiDa
                                         )}
-                                        VNĐ
+                                        VND
                                       </div>
                                     </div>
                                   </Option>
@@ -1762,20 +1764,20 @@ SellAPI.voucherSapDatDuoc(
                                         {Intl.NumberFormat("en-US").format(
                                           option.dieuKien
                                         )}{" "}
-                                        VNĐ
+                                        VND
                                         <br></br>
                                         Giảm:
                                         {option.loaiVoucher === "Phần trăm"
                                           ? option.mucDo + "% "
                                           : `${Intl.NumberFormat(
                                               "en-US"
-                                            ).format(option.mucDo)} VNĐ `}
+                                            ).format(option.mucDo)} VND `}
                                         <br></br>
                                         Tối đa:
                                         {Intl.NumberFormat("en-US").format(
                                           option.giamToiDa
                                         )}
-                                        VNĐ
+                                        VND
                                       </div>
                                     </div>
                                   </Option>
@@ -1803,7 +1805,7 @@ SellAPI.voucherSapDatDuoc(
                           />
                         </h6>
                         <h6 className="mt-4">
-                          Trả sau:
+                          Thanh toán khi nhận hàng:
                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                           <Switch
                             disabled={isSwitchOn ? false : true}
@@ -1824,8 +1826,9 @@ SellAPI.voucherSapDatDuoc(
                               )}`}
                             </h6>
                             <h6 className="mt-4">
-                              Phí vận chuyển:{" "}
+                              Phí vận chuyển:
                               <InputNumber
+                              min={0}
                                 value={
                                   soTienVanChuyen === 0
                                     ? isSwitchOn
@@ -1938,13 +1941,7 @@ SellAPI.voucherSapDatDuoc(
                                       : 0) +
                                     roundToThousands(
                                       isSwitchOn
-                                        ? // ? hd[0]?.tienVanChuyen && !shipMoney
-                                          //   ? hd[0]?.tienVanChuyen
-                                          //   : hd[0]?.tienVanChuyen &&
-                                          //     hd[0]?.tienVanChuyen !== shipMoney
-                                          //   ? shipMoney
-                                          //   : shipMoney
-                                          // : 0
+                                        ? 
                                           hd[0]?.tienVanChuyen &&
                                           shipMoney === shipMoney1
                                           ? hd[0]?.tienVanChuyen
@@ -1961,8 +1958,15 @@ SellAPI.voucherSapDatDuoc(
                           </div>
                           <div className="col-md-4">
                             <h6 className="mt-4">VND</h6>
-                            <h6 className="mt-4">VND</h6>
-                            <h6 className="mt-4 text-danger">VND</h6>
+                            <h6 className="" style={{ marginTop: 30 }}>
+                              VND
+                            </h6>
+                            <h6
+                              className="text-danger"
+                              style={{ marginTop: 30 }}
+                            >
+                              VND
+                            </h6>
                             <h6 className="mt-4">VND</h6>
                           </div>
                         </div>

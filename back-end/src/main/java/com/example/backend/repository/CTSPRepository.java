@@ -217,15 +217,24 @@ public interface CTSPRepository extends JpaRepository<ChiTietSanPham, String> {
     DetailCTSPClientRespon detailCTSPClientByIdSPbyIdSizebyIdMs(@Param("idSP") String idSP, @Param("idMS") String idMS, @Param("idKT") String idKT);
 
     @Query(value = """
-             SELECT distinct o.id AS idCTSP,MIN(o.ghi_chu) AS linkAnh ,sp.ten AS tenSP ,kt.ten AS tenKT,ms.ten AS tenMS,ms.ma AS maMS,
-             o.so_luong AS soLuong,o.gia_ban AS giaBan,o.trang_thai AS trangThai, km.ten as tenKM , km.gia_tri_khuyen_mai as giaTriKhuyenMai , km.loai as loaiKM
-             FROM duanmishoes.chi_tiet_san_pham o
-             JOIN duanmishoes.san_pham sp  on o.san_pham_id=sp.id
-             JOIN duanmishoes.kich_thuoc kt  on o.kich_thuoc_id=kt.id
-             JOIN duanmishoes.mau_sac ms  on o.mau_sac_id=ms.id
-             JOIN duanmishoes.hinh_anh ha on o.id=ha.chi_tiet_san_pham_id 
-             LEFT JOIN duanmishoes.khuyen_mai km on o.khuyen_mai_id = km.id
-             where o.trang_thai =0 AND                                                    
+            SELECT o.id AS idCTSP,MIN(o.ghi_chu) AS linkAnh,o.mo_ta AS moTa ,sp.ten AS tenSP ,kt.ten AS tenKT,ms.ma AS maMS,ms.ten AS tenMS,cl.ten AS tenCL,dc.ten AS tenDC,
+            dm.ten AS tenDM,h.ten AS tenH,o.so_luong AS soLuong,o.gia_ban AS giaBan,o.trang_thai AS trangThai, km.loai as loaiKM , km.gia_tri_khuyen_mai as giaTriKhuyenMai,
+            km.ten as tenKM
+            FROM chi_tiet_san_pham o
+            JOIN san_pham sp  on o.san_pham_id=sp.id
+            JOIN kich_thuoc kt  on o.kich_thuoc_id=kt.id
+            JOIN mau_sac ms  on o.mau_sac_id=ms.id
+            JOIN chat_lieu cl  on o.chat_lieu_id=cl.id
+            JOIN de_giay dc  on o.de_giay_id=dc.id
+            JOIN danh_muc dm  on o.danh_muc_id=dm.id
+            JOIN hang h  on o.hang_id=h.id
+            LEFT JOIN khuyen_mai km on o.khuyen_mai_id = km.id
+            JOIN hinh_anh ha on o.id=ha.chi_tiet_san_pham_id    
+            GROUP BY 
+            sp.ten,o.kich_thuoc_id,o.mau_sac_id,o.chat_lieu_id,o.de_giay_id,o.danh_muc_id,o.hang_id,o.trang_thai,o.so_luong,o.gia_ban,o.san_pham_id,
+            o.id,o.ghi_chu,o.mo_ta,o.id, o.mo_ta, sp.ten, kt.ten, ms.ma, ms.ten, cl.ten, dc.ten, dm.ten, h.ten, o.so_luong, o.gia_ban
+            ,o.trang_thai,km.loai,km.gia_tri_khuyen_mai,km.ten
+            HAVING                                                                
             ((:#{#ctspSearch.tenCT} IS NULL OR sp.ten LIKE (%:#{#ctspSearch.tenCT}%) ) AND
             (:#{#ctspSearch.idKT} IS NULL OR o.kich_thuoc_id =:#{#ctspSearch.idKT} ) AND
             (:#{#ctspSearch.idMS} IS NULL OR o.mau_sac_id =:#{#ctspSearch.idMS} ) AND
@@ -234,9 +243,8 @@ public interface CTSPRepository extends JpaRepository<ChiTietSanPham, String> {
             (:#{#ctspSearch.idDM} IS NULL OR o.danh_muc_id =:#{#ctspSearch.idDM} ) AND
             (:#{#ctspSearch.idH} IS NULL OR o.hang_id =:#{#ctspSearch.idH} ) AND
             (:#{#ctspSearch.trangThaiCT} IS NULL OR o.trang_thai =:#{#ctspSearch.trangThaiCT}) AND
-            (:#{#ctspSearch.soLuongCT} IS NULL OR o.so_luong <=:#{#ctspSearch.soLuongCT} OR o.so_luong > 0) AND
-            (:#{#ctspSearch.giaBanCT} IS NULL OR o.gia_ban <=:#{#ctspSearch.giaBanCT} OR o.gia_ban > 0)) 
-            group by o.id
+            (o.so_luong BETWEEN :#{#ctspSearch.soLuongBatDau} AND :#{#ctspSearch.soLuongKetThuc} ) AND
+            (o.gia_ban BETWEEN :#{#ctspSearch.giaBanBatDau} AND :#{#ctspSearch.giaBanKetThuc} ))
                      """, nativeQuery = true)
     List<ChiTietSanPhamForBanHang> getTimBanHang(CTSPSearch ctspSearch);
     @Query(value = """
