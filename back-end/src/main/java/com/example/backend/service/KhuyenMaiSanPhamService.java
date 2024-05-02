@@ -39,4 +39,12 @@ public class KhuyenMaiSanPhamService {
     public KhuyenMaiSanPham find(String idKM, String idCTSP){
         return  khuyenMaiSanPhamRepository.findKhuyenMaiSanPham(idKM,idCTSP);
     }
+
+    public List<KhuyenMaiSanPham> getListCTSPByKM(String id){
+        return  khuyenMaiSanPhamRepository.getListCTSPByKM(id);
+    }
+
+    public void delete(KhuyenMaiSanPham kmsp){
+        khuyenMaiSanPhamRepository.delete(kmsp);
+    }
 }

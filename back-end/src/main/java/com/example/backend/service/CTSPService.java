@@ -11,6 +11,7 @@ import com.example.backend.dto.response.sanpham.DetailCtspByQrRespon;
 import com.example.backend.entity.ChiTietSanPham;
 import com.example.backend.entity.HoaDon;
 import com.example.backend.entity.KhuyenMai;
+import com.example.backend.entity.KhuyenMaiSanPham;
 import com.example.backend.model.*;
 import com.example.backend.repository.CTSPRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,8 @@ public class CTSPService {
     ThongBaoService thongBaoService;
     @Autowired
     HoaDonServicee hoaDonServicee;
+    @Autowired
+    KhuyenMaiSanPhamService khuyenMaiSanPhamService;
     public List<ChiTietSanPham> getALL(){
         return ctspRepository.findAll();
     }
@@ -76,10 +79,13 @@ public class CTSPService {
 
 
     public ChiTietSanPham updateKM(String idCTSP , KhuyenMai km){
+        LocalDateTime now = LocalDateTime.now();
         ChiTietSanPham ctsp = ctspRepository.getReferenceById(idCTSP);
-        ctsp.setKhuyenMai(km);
-        ctsp.setNgaySua(LocalDateTime.now());
-        System.out.println("khuyến mại"+ctsp.getKhuyenMai());
+        if (km.getNgay_bat_dau().isAfter(now)) {
+            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>Vào update khuyến mại");
+            ctsp.setKhuyenMai(km);
+            ctsp.setNgaySua(LocalDateTime.now());
+        }
         return ctspRepository.save(ctsp);
     }
 
@@ -91,12 +97,16 @@ public class CTSPService {
         return  ctspRepository.getCTSPByKM(idKM);
     }
 
-    public ChiTietSanPham deleteKM(String idCTSP){
+    public ChiTietSanPham deleteKM(String idCTSP,String idKM){
         ChiTietSanPham ctsp = ctspRepository.getReferenceById(idCTSP);
+        KhuyenMaiSanPham kmsp = khuyenMaiSanPhamService.find(idKM,idCTSP);
+        if (kmsp != null) khuyenMaiSanPhamService.delete(kmsp);
+        if (ctsp.getKhuyenMai().getId().equals(idKM)) {
 //        if  (ctsp.getKhuyenMai()!= null && km.getId().equalsIgnoreCase(ctsp.getKhuyenMai().getId())) {
-        System.out.println("CTSP"+ctsp);
+            System.out.println("CTSP" + ctsp);
             ctsp.setKhuyenMai(null);
             ctsp.setNgaySua(LocalDateTime.now());
+        }
       //  }
         return ctspRepository.save(ctsp);
     }

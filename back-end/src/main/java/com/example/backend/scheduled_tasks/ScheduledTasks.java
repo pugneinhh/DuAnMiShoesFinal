@@ -45,6 +45,7 @@ public class ScheduledTasks {
     @Scheduled(fixedRate = 60000) // Chạy mỗi giây
   public void taskVoucher() {
         LocalDateTime now = LocalDateTime.now();
+        System.out.println("Thời gian hiện tại :"+now);
         List<Voucher> listVoucher = voucherService.getAll();
         for (Voucher x : listVoucher){
             if (x.getTrangThai() == Status.SAP_DIEN_RA && x.getNgayBatDau().isBefore(now)) {
@@ -93,7 +94,7 @@ public class ScheduledTasks {
         LocalDateTime now = LocalDateTime.now();
         List<KhuyenMai>  listKM = khuyenMaiService.getAllKhuyenMai();
         for (KhuyenMai x : listKM){
-            if (x.getTrangThai() == 0 && x.getNgay_bat_dau().isBefore(now)) {
+            if ((x.getTrangThai() == 0 || x.getTrangThai() == 1) && x.getNgay_bat_dau().isBefore(now) && x.getNgay_ket_thuc().isAfter(now)) {
                 x.setTrangThai(1);
                 List<KhuyenMaiSanPham> listKMSP = khuyenMaiSanPhamService.getAll();
                 for (KhuyenMaiSanPham v : listKMSP){
@@ -102,12 +103,20 @@ public class ScheduledTasks {
                         khuyenMaiSanPhamService.add(v);
                     }
                     ChiTietSanPham ctsp = ctspService.findChiTietSanPhamByID(v.getChiTietSanPham().getId());
-                    ctsp.setKhuyenMai(v.getKhuyenMai());
-                    ctspService.updateCTSP(ctsp);
+                    if (ctsp.getKhuyenMai() == null){
+                        ctsp.setKhuyenMai(v.getKhuyenMai());
+                        ctspService.updateCTSP(ctsp);
+                    } else {
+                        if (ctsp.getKhuyenMai().getNgay_bat_dau().isBefore(v.getKhuyenMai().getNgay_bat_dau())) {
+                            ctsp.setKhuyenMai(v.getKhuyenMai());
+                            ctspService.updateCTSP(ctsp);
+                        }
+                    }
                 }
                 khuyenMaiService.addKhuyenMai(x);
             }
-            if (x.getTrangThai() == 1 && x.getNgay_ket_thuc().isBefore(now)){
+           else  if ((x.getTrangThai() == 1|| x.getTrangThai() == 2) && x.getNgay_ket_thuc().isBefore(now)){
+                System.out.println(">>>>>>>>>>>>>>>>>>>>>> Vào update khuyến mại hết hạn");
                 x.setTrangThai(2);
                 List<KhuyenMaiSanPham> listKMSP = khuyenMaiSanPhamService.getAll();
                 for (KhuyenMaiSanPham v : listKMSP){
@@ -116,8 +125,15 @@ public class ScheduledTasks {
                         khuyenMaiSanPhamService.add(v);
                     }
                     ChiTietSanPham ctsp = ctspService.findChiTietSanPhamByID(v.getChiTietSanPham().getId());
-                    ctsp.setKhuyenMai(null);
-                    ctspService.updateCTSP(ctsp);
+                    System.out.println(">>>>>>>>>>>>>>>>>>>>>>>> "+v.getChiTietSanPham().getId());
+                    System.out.println(">>>>>>>>>>>>>>>>>>>>>>>> "+ctsp.getKhuyenMai());
+                    System.out.println(">>>>>>>>>>>>>>>>>>>>>>>> "+x.getId());
+
+                    if (ctsp.getKhuyenMai() != null && ctsp.getKhuyenMai().getId().equals(x.getId())) {
+                        System.out.println(">>>>>>>>>>>>>>>>>>>> vào setKM == null");
+                        ctsp.setKhuyenMai(null);
+                        ctspService.updateCTSP(ctsp);
+                    }
                 }
                 khuyenMaiService.addKhuyenMai(x);
             }

@@ -203,6 +203,18 @@ export class SellAPI {
       },
     });
   };
+
+  static deleteInvoiceAndRollBackProduct1 = (idCTSP, ma , thanhTien) => {
+    const getToken = getHeader();
+   return requestAdmin({
+     method: "DELETE",
+     url: `/admin/ban-hang/delete-hoa-don-chi-tiet/${idCTSP}/${ma}/${thanhTien}`,
+     headers: {
+       Authorization: getToken,
+     },
+   });
+ };
+
   static updateSL = (idCTSP, ma, Value) => {
      const getToken = getHeader();
     return requestAdmin({
