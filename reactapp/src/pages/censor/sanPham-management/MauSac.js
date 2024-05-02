@@ -12,6 +12,7 @@ import './SanPham.css'
 import { MauSacAPI } from '../api/SanPham/mauSac.api';
 export default function MauSac() {
   //Form
+  const [formTim] = Form.useForm();
   const [selectedValue, setSelectedValue] = useState('1');
   const handleChange = (value) => {
     setSelectedValue(value);
@@ -25,15 +26,13 @@ export default function MauSac() {
     },
   };
 
-  const [ten, setTenMaus] = useState('');
   const doiMau = (e) => {
     const ma = e.target.value;
     const hexCode = ma.replace("#", "").toUpperCase();
     const rgb = convert.hex.rgb(hexCode);
     const colorName = convert.rgb.keyword(rgb);
-    if (colorName === null) {
-    } else {
-      setTenMaus(colorName)
+    if (colorName !== null) {
+      form.setFieldsValue({ ten: colorName });
     }
   };
   const doiMauUpdate = (e) => {
@@ -54,10 +53,17 @@ export default function MauSac() {
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
   };
+  const formChange = (changedValues, allValues) => {
+    console.log("Changed values:", changedValues); // Các giá trị mới thay đổi
+    console.log("All values:", allValues); // Tất cả các giá trị
+  };
   const [form] = Form.useForm();
   const [form1] = Form.useForm();
   //Tìm kiếm
   const onChangeFilter = (changedValues, allValues) => {
+    if (allValues.hasOwnProperty('ten')) {
+      allValues.ten = allValues.ten.trim();
+    }
     timKiemCT(allValues);
   }
   const timKiemCT = (dataSearch) => {
@@ -66,38 +72,70 @@ export default function MauSac() {
         setMauSacs(res.data);
       })
   }
+  //Validate
+  const validateDateMauSac = (_, value) => {
+    const { getFieldValue } = form;
+    const tenMauSac = getFieldValue("ten");
+    if (tenMauSac != undefined) {
+      if (!tenMauSac.trim()) {
+        return Promise.reject("Tên không được để trống");
+      }
+    } else {
+      return Promise.reject("Tên không được để trống");
+    }
+    const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+    if (specialCharacterRegex.test(tenMauSac)) {
+      return Promise.reject("Tên không được chứa ký tự đặc biệt");
+    }
+    if (tenMauSac.trim().length > 50) {
+      return Promise.reject("Tên không được vượt quá 50 ký tự");
+    }
+    return Promise.resolve();
+  };
+
+  const validateDateMauSacUpdate = (_, value) => {
+    const { getFieldValue } = form1;
+    const tenMauSac = getFieldValue("ten");
+    if (tenMauSac != undefined) {
+      if (!tenMauSac.trim()) {
+        return Promise.reject("Tên không được để trống");
+      }
+    } else {
+      return Promise.reject("Tên không được để trống");
+    }
+    const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+    if (specialCharacterRegex.test(tenMauSac)) {
+      return Promise.reject("Tên không được chứa ký tự đặc biệt");
+    }
+    if (tenMauSac.trim().length > 50) {
+      return Promise.reject("Tên không được vượt quá 50 ký tự");
+    }
+    return Promise.resolve();
+  };
+
+  const validateDateTim = (_, value) => {
+    const { getFieldValue } = formTim;
+    const tenHang = getFieldValue("ten");   
+    if (tenHang.trim().length > 30) {
+      return Promise.reject("Tên không được vượt quá 30 ký tự");
+    }
+    return Promise.resolve();
+  };
   //Ấn Add
   const [open, setOpen] = useState(false);
   const [bordered] = useState(false);
   const addMauSac = (value) => {
-    const chekTrung = (code) => {
-      return mauSac.some(color => color.ma === code);
+
+    const checkTrungTen = (ten) => {
+      return mauSac.some(x =>
+        x.ten.toLowerCase().trim() === ten.toLowerCase().trim()
+      );
     };
-    if (!chekTrung(value.ma)) {
-      const hexCode = value.ma.replace("#", "").toUpperCase();
-      const rgb = convert.hex.rgb(hexCode);
-      const colorName = convert.rgb.keyword(rgb);
-      value.ten = colorName;
-      MauSacAPI.create(value)
-        .then((res) => {
-          toast('✔️ Thêm thành công!', {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
-          loadMauSac();
-          setOpen(false);
-          form.resetFields();
-        })
-    } else {
-      toast.error('Mã màu đã tồn tại!', {
+
+    if (checkTrungTen(value.ten)) {
+      toast.error('Tên màu trùng với màu sắc khác!', {
         position: "top-right",
-        autoClose: 5000,
+        autoClose: 2500,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -105,7 +143,45 @@ export default function MauSac() {
         progress: undefined,
         theme: "light",
       });
+      return;
     }
+
+    const checkTrungMa = (ma) => {
+      return mauSac.some(x =>
+        x.ma === ma
+      );
+    };
+
+    if (checkTrungMa(value.ma)) {
+      toast.error('Mã màu trùng với màu sắc khác!', {
+        position: "top-right",
+        autoClose: 2500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
+
+    MauSacAPI.create(value)
+      .then((res) => {
+        toast('✔️ Thêm thành công!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        loadMauSac();
+        setOpen(false);
+        form.resetFields();
+      })
   }
   //Update
   const [msUpdate, setmsUpdates] = useState("");
@@ -119,10 +195,10 @@ export default function MauSac() {
         ma: res.data.ma,
         ten: res.data.ten,
         trangThai: res.data.trangThai,
-        ngayTao : res.data.ngayTao,
-        ngaySua : res.data.ngaySua,
-        nguoiTao : res.data.nguoiTao,
-        nguoiSua : res.data.nguoiSua,
+        ngayTao: res.data.ngayTao,
+        ngaySua: res.data.ngaySua,
+        nguoiTao: res.data.nguoiTao,
+        nguoiSua: res.data.nguoiSua,
       });
       setmsUpdates(res.data)
       setTenCheck(res.data.ten)
@@ -134,7 +210,7 @@ export default function MauSac() {
 
     const checkTrungTen = (ten) => {
       return mauSac.some(x =>
-        x.ten === ten
+        x.ten.toLowerCase().trim() === ten.toLowerCase().trim()
       );
     };
 
@@ -303,22 +379,20 @@ export default function MauSac() {
               span: 20,
             }}
             layout="horizontal"
-            // initialValues={{
-            //   size: componentSize,
-            // }}
             onValuesChange={onChangeFilter}
             size={componentSize}
             style={{
               maxWidth: 1400,
             }}
-          >
-            <div className="col-md-5">
-              <Form.Item label="Tên & Mã" name="ten">
-                <Input
-                  className="rounded-pill border-warning"
-                  placeholder="Nhập tên hoặc mã"
-                />
-              </Form.Item>
+            form={formTim}
+            >
+              <div className="col-md-5">
+                <Form.Item label="Tên & Mã" name="ten" rules={[{ validator: validateDateTim }]}>
+                  <Input
+                    maxLength={31}
+                    placeholder="Nhập tên hoặc mã"
+                  />
+                </Form.Item>
             </div>
             <div className="col-md-5">
               <Form.Item label="Trạng Thái" name="trangThai">
@@ -403,7 +477,7 @@ export default function MauSac() {
                 initialValues={{
                   size: componentSize,
                 }}
-                onValuesChange={onFormLayoutChange}
+                onValuesChange={formChange}
                 size={componentSize}
                 onFinish={addMauSac}
                 layout="vertical"
@@ -441,15 +515,15 @@ export default function MauSac() {
                       <b>Tên màu :</b>
                     </label>
                     <Form.Item
+                      name="ten"
                       hasFeedback
                       rules={[
                         {
-                          required: true,
-                          message: "Vui lòng không để trống tên!",
+                          validator: validateDateMauSac
                         },
                       ]}
                     >
-                      <Input type="text" value={ten} />
+                      <Input maxLength={51} onChange={(e) => form.setFieldsValue({ ten: e.target.value })} type="text" />
                     </Form.Item>
                   </div>
                 </div>
@@ -493,9 +567,8 @@ export default function MauSac() {
                 initialValues={{
                   size: componentSize,
                 }}
-                onValuesChange={console.log(form1.value)}
                 size={componentSize}
-                onFinish={updateMauSac}              
+                onFinish={updateMauSac}
                 form={form1}
               >
                 <div className="row">
@@ -539,12 +612,12 @@ export default function MauSac() {
                       hasFeedback
                       rules={[
                         {
-                          required: true,
-                          message: "Vui lòng không để trống tên!",
+                          validator: validateDateMauSacUpdate
                         },
                       ]}
                     >
                       <Input
+                        maxLength={51}
                         type="text"
                         onChange={(e) =>
                           setmsUpdates({
@@ -589,7 +662,7 @@ export default function MauSac() {
                   defaultPageSize: 5,
                   position: ["bottomCenter"],
                   defaultCurrent: 1,
-                  total: 100,
+                  total: mauSac.length,
                 }}
               />
             </div>

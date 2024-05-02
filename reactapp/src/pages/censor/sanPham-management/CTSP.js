@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Divider, Modal, QRCode, Form, Input, InputNumber, Select, Slider, Space, Table, Tag, Popover, } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import { HighlightOutlined, InfoCircleFilled,  QrcodeOutlined, RetweetOutlined } from "@ant-design/icons";
+import { HighlightOutlined, InfoCircleFilled, QrcodeOutlined, RetweetOutlined } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
 import { EyeOutlined } from "@ant-design/icons";
@@ -45,14 +45,9 @@ export default function CTSP() {
   const [form] = Form.useForm();
   const [form1] = Form.useForm();
   const [form2] = Form.useForm();
-  const [openKT, setOpenKT] = useState(false);
-  const [openMS, setOpenMS] = useState(false);
-  const [openCL, setOpenCL] = useState(false);
-  const [openDC, setOpenDC] = useState(false);
-  const [openDM, setOpenDM] = useState(false);
-  const [openH, setOpenH] = useState(false);
   const [ctData, setCTDatas] = useState({});
   const [updateNhanh, setUpdateNhanh] = useState([]);
+
 
   //CheckBox Dong
   // Custom table  
@@ -204,6 +199,7 @@ export default function CTSP() {
           progress: undefined,
           theme: "light",
         });
+        setIsModalOpen(false)
         loadCTSP();
       })
       .catch(error => console.error('Error adding item:', error));
@@ -251,26 +247,6 @@ export default function CTSP() {
       setKT(result.data);
     })
   };
-  const addKichThuoc = (value) => {
-    ChiTietSanPhamAPI.createKichThuoc(value)
-      .then(response => {
-        toast('✔️ Thêm thành công!', {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        loadKT();
-        form1.resetFields();
-
-      })
-      .catch(error => console.error('Error adding item:', error));
-
-  }
   //Load Màu Sắc 
   const [ms, setMS] = useState([]);
   useEffect(() => {
@@ -281,26 +257,6 @@ export default function CTSP() {
       setMS(result.data);
     })
   };
-  const addMauSac = (value) => {
-    ChiTietSanPhamAPI.createMauSac(value)
-      .then(response => {
-        toast('✔️ Thêm thành công!', {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        loadMS();
-        form1.resetFields();
-
-      })
-      .catch(error => console.error('Error adding item:', error));
-
-  }
   //Load Chất Liệu
   const [cl, setCL] = useState([]);
   useEffect(() => {
@@ -311,26 +267,6 @@ export default function CTSP() {
       setCL(result.data);
     })
   };
-  const addChatLieu = (value) => {
-    ChiTietSanPhamAPI.createChatLieu(value)
-      .then(response => {
-        toast('✔️ Thêm thành công!', {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        loadCL();
-        form1.resetFields();
-
-      })
-      .catch(error => console.error('Error adding item:', error));
-
-  }
   //Load Độ Cao
   const [dc, setDC] = useState([]);
   useEffect(() => {
@@ -341,26 +277,6 @@ export default function CTSP() {
       setDC(result.data);
     })
   };
-  const addDoCao = (value) => {
-    ChiTietSanPhamAPI.createDeGiay(value)
-      .then(response => {
-        toast('✔️ Thêm thành công!', {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        loadDC();
-        form1.resetFields();
-
-      })
-      .catch(error => console.error('Error adding item:', error));
-
-  }
   //Load Danh Mục
   const [dm, setDM] = useState([]);
   useEffect(() => {
@@ -371,26 +287,6 @@ export default function CTSP() {
       setDM(result.data);
     })
   };
-  const addDanhMuc = (value) => {
-    ChiTietSanPhamAPI.createDanhMuc(value)
-      .then(response => {
-        toast('✔️ Thêm thành công!', {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        loadDM();
-        form1.resetFields();
-
-      })
-      .catch(error => console.error('Error adding item:', error));
-
-  }
   //Load Hãng
   const [h, setH] = useState([]);
   useEffect(() => {
@@ -401,26 +297,6 @@ export default function CTSP() {
       setH(result.data);
     })
   };
-  const addHang = (value) => {
-    ChiTietSanPhamAPI.createHang(value)
-      .then(response => {
-        toast('✔️ Thêm thành công!', {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        loadH();
-        form1.resetFields();
-
-      })
-      .catch(error => console.error('Error adding item:', error));
-
-  }
   //Table
   const [cTSP, setCTSPs] = useState([]);
 
@@ -682,9 +558,15 @@ export default function CTSP() {
                     </Form.Item>
                   </div>
                   <div className='col-md-4'>
+
                     <Form.Item label={<b>Giá bán </b>}>
                       <InputNumber
-                        placeholder='Nhập giá bán'
+                        min={100000}
+                        formatter={(value) =>
+                          `VND ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                        }
+                        parser={(value) => value.replace(/\VND\s?|(,*)/g, "")}
+                        style={{ width: 150 }}
                         value={ctData.giaBan}
                         onChange={(e) => setCTDatas({ ...ctData, giaBan: e })}
                       ></InputNumber>
@@ -699,7 +581,6 @@ export default function CTSP() {
                     </Form.Item>
                   </div>
                   <label className='mb-2'><b>QR Code :</b></label>
-                  {/* <div><QRCode size={150} type="canvas" value={ctData.id} /></div> */}
                   <Popover
                     overlayInnerStyle={{ padding: 0 }}
                     content={<QRCode value={ctData.id} bordered={false} size={250} />}
@@ -804,19 +685,19 @@ export default function CTSP() {
                   <Select placeholder="Chọn một giá trị">
                     {ms.map((item) => (
                       <Option key={item.id} value={item.id}>
-                      <div
-                        style={{
-                          color: "white",
-                          fontWeight: "bolder",
-                          backgroundColor: `${item.ma}`,
-                          borderRadius: 6,
-                          border: "1px solid black",
-                          width: 155,
-                          height: 25,
-                        }}
-                        className="text-center"
-                      >{item.ten} - {item.ma}</div>
-                    </Option>
+                        <div
+                          style={{
+                            color: "white",
+                            fontWeight: "bolder",
+                            backgroundColor: `${item.ma}`,
+                            borderRadius: 6,
+                            border: "1px solid black",
+                            width: 155,
+                            height: 25,
+                          }}
+                          className="text-center"
+                        >{item.ten} - {item.ma}</div>
+                      </Option>
                     ))}
                   </Select>
                 </Form.Item>

@@ -30,7 +30,7 @@ const ModalKhachHang = ({
   useEffect(() => {
     loadKhachHang();
   }, []);
-
+  const [formTim] = Form.useForm();
   const dispatch = useDispatch();
   const client = useSelector(GetClient);
   const bill = useSelector(GetBill);
@@ -61,10 +61,21 @@ const ModalKhachHang = ({
   };
 
   //Tìm khách hàng
+  const validateDateTim = (_, value) => {
+    const { getFieldValue } = formTim;
+    const tenChiTiet = getFieldValue("ten");   
+    if (tenChiTiet.trim().length > 40) {
+      return Promise.reject("Tên không được vượt quá 40 ký tự");
+    }
+    return Promise.resolve();
+  };
   const [listKH, setListKH] = useState([]);
   const [form] = Form.useForm();
   const [componentSize, setComponentSize] = useState("default");
   const onChangeFilter = (changedValues, allValues) => {
+    if (allValues.hasOwnProperty('ten')) {
+      allValues.ten = allValues.ten.trim();
+    }
     timKiemKH(allValues);
   };
   const timKiemKH = (dataSearch) => {
@@ -211,17 +222,18 @@ const ModalKhachHang = ({
             layout="horizontal"
             initialValues={{
               size: componentSize,
-            }}
+            }} 
             onValuesChange={onChangeFilter}
             size={componentSize}
             style={{
               maxWidth: 1400,
             }}
-            form={form}
+            form={formTim}
           >
             <div className="col-md-10">
-              <Form.Item label="Tìm kiếm" name="ten">
+              <Form.Item label="Tìm kiếm" name="ten" rules={[{ validator: validateDateTim }]}>
                 <Input
+                  maxLength={41}
                   className="rounded-pill border-warning"
                   placeholder="Nhập mã hoặc tên hoặc sđt ..."
                 />
@@ -264,7 +276,7 @@ const ModalKhachHang = ({
             defaultPageSize: 2,
             position: ["bottomCenter"],
             defaultCurrent: 1,
-            total: client.length,
+            total: listKH.length,
           }}
         />
       </div>

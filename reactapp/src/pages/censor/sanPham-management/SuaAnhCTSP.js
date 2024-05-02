@@ -1,86 +1,176 @@
-import React, { useState,useEffect } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
-import { Modal, Upload } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { DeleteFilled, ExclamationCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Image, Modal, Upload, message } from 'antd';
 import { SanPhamAPI } from '../api/SanPham/sanPham.api';
-const getBase64 = (file) =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
-const SuaAnhCTSP = ({ten,idSP}) => {
-  const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewImage, setPreviewImage] = useState('');
-  const [previewTitle, setPreviewTitle] = useState('');  
-  const [fileList, setFileList] = useState([]);
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
+const SuaAnhCTSP = ({ ten, idSP }) => {
+
+  const [linkAnhList, setLinkAnhList] = useState([]);
   const loadAnhCTSP = async () => {
-    SanPhamAPI.getAnhCTSP(ten,idSP)
-    .then((res)=>{   
-      const newFileList = res.data.map((anh, index) => ({
-        uid: `${index}`,
-        name: `Image-${index}`,
-        status: 'done',
-        url: anh.url,
-      }));
-      setFileList(newFileList);
-    })
+    SanPhamAPI.getAnhCTSP(ten, idSP)
+      .then((res) => {
+        setLinkAnhList(res.data);
+      })
   };
 
+  const deleteAnhCTSP = async (idAnh) => {
+    try {
+      await SanPhamAPI.deleteAnh(idAnh);
+      setLinkAnhList((prevList) => prevList.filter((linkAnh) => linkAnh.id !== idAnh));
+      message.success('Ảnh đã được xóa thành công.');
+    } catch (error) {
+      message.error('Xóa ảnh thất bại. Hãy thử lại.');
+    }
+  };
+
+  const confirmDelete = (idAnh) => {
+    Modal.confirm({
+      centered: true,
+      title: 'Xác nhận xóa ảnh',
+      icon: <ExclamationCircleOutlined />,
+      content: 'Bạn có chắc chắn muốn xóa ảnh này không?',
+      okText: 'Xóa',
+      okType: 'danger',
+      cancelText: 'Hủy',
+      onOk: () => deleteAnhCTSP(idAnh), // Xóa khi xác nhận
+    });
+  };
+
+  const handleLinkClick = (e) => {
+    e.preventDefault();
+    const idAnh = e.currentTarget.dataset.id;
+    confirmDelete(idAnh); // Hiển thị Modal xác nhận trước khi xóa
+  };
+
+  console.log(linkAnhList)
   useEffect(() => {
     loadAnhCTSP();
-  }, [ten,idSP]);
+  }, [ten, idSP]);
 
-
-  const handleCancel = () => setPreviewOpen(false);
-  const handlePreview = async (file) => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
+  const customRequest = async ({ file, onSuccess, onError }) => {
+    try {
+      // Gửi file lên Cloudinary
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', 'mishoes');
+      const response = await axios.post(
+        'https://api.cloudinary.com/v1_1/dtetgawxc/image/upload',
+        formData
+      );
+      const imageUrl = response.data.secure_url;
+      const imageObject = {
+        ten: ten,
+        url: imageUrl
+      };
+      SanPhamAPI.addAnhTheoMau(idSP, imageObject)
+        .then((res) => {
+          setLinkAnhList((prevData) => [...prevData, res.data])
+          toast('✔️ Thêm ảnh mới thành công!', {
+            position: "top-right",
+            autoClose: 2500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        })
+      onSuccess();
+    } catch (error) {
+      onError();
+      message.error('Đã xảy ra lỗi trong quá trình upload.');
     }
-    setPreviewImage(file.url || file.preview);
-    setPreviewOpen(true);
-    setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
   };
-  const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
-  const uploadButton = (
-    <button
-      style={{
-        border: 0,
-        background: 'none',
-      }}
-      type="button"
-    >
-      <PlusOutlined />
-      <div
-        style={{
-          marginTop: 8,
-        }}
-      >
-        Upload
-      </div>
-    </button>
-  );
+
+  const beforeUpload = (file, fileList) => {
+    // Kiểm tra định dạng tệp (chỉ cho phép .png)
+    const allowedFormat = '.png';
+    const fileExtension = file.name.split('.').pop().toLowerCase();
+
+    if (fileExtension !== allowedFormat.replace('.', '')) {
+      message.error('Bạn chỉ có thể tải lên các tệp .png.');
+      return false; // Ngăn chặn việc tải lên
+    }
+
+    // Kiểm tra tổng số tệp để không vượt quá giới hạn
+    if (fileList.length + fileList.length > 5) {
+      message.error('Bạn chỉ có thể tải lên tối đa 5 ảnh.');
+      return false; // Ngăn chặn việc tải lên thêm
+    }
+
+    return true; // Cho phép tải lên nếu điều kiện thỏa mãn
+  };
+  const hasEmptySlot = linkAnhList.length < 5;
   return (
     <>
-      <Upload
-        action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-        listType="picture-card"
-        multiple
-        fileList={fileList}
-        onPreview={handlePreview}
-        onChange={handleChange}
-      >
-        {fileList.length >= 5 ? null : uploadButton}
-      </Upload>
-      <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
-        <img
-          alt="example"
-          style={{
-            width: '100%',
-          }}
-          src={previewImage}
-        />
-      </Modal>
+      <div style={{ display: "flex", gap: "10px" }}>
+        <div style={{ display: "flex", gap: "10px" }}>
+          {linkAnhList.map((linkAnh, index) => (
+            <div className="row ms-2">
+              <div
+                style={{
+                  justifyContent: "center",
+                  textAlign: "center",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  objectFit: "cover",
+                  marginBottom: 20
+                }}
+              >
+                <Image
+                  className='mt-2'
+                  key={index}
+                  src={linkAnh.url}
+                  alt={`Ảnh ${index}`}
+                  width={100.4}
+                  height={100.4}
+                />
+                <a
+                  className="btn btn-danger mt-1 mb-1"
+                  style={{ border: 'none', borderRadius: '50px', color: 'black', backgroundColor: 'white' }}
+                  onClick={handleLinkClick}
+                  data-id={linkAnh.id} // Giữ ID của ảnh để dễ xóa
+                >
+                  <DeleteFilled size={10} />
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+        <Upload
+          className='ms-2 mt-4'
+          customRequest={customRequest}
+          listType="picture-card"
+          showUploadList={false}
+          beforeUpload={beforeUpload}
+          multiple={true} // Cho phép tải lên nhiều hình ảnh
+          maxCount={4}
+        >
+          {hasEmptySlot && ( // Hiển thị ô upload chỉ khi có ít hơn 3 ảnh
+            <div>
+              <PlusOutlined style={{ fontSize: "32px", color: "#999" }} />
+              <div style={{ marginTop: 8 }}>Upload</div>
+            </div>
+          )}
+        </Upload>
+      </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      {/* Same as */}
+      <ToastContainer />
     </>
   );
 };

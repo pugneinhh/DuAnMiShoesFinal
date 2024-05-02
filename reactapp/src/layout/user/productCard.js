@@ -344,6 +344,7 @@ export const ProductCard = ({ product }) => {
           </div>
           <div class="color mt-2">
             <Button
+              styles={{border: "1px solid black"}}
               shape="circle"
               className="btn btn-sm border border-dark"
               style={{ backgroundColor: product.colorCode }}

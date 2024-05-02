@@ -1,60 +1,3 @@
-// import React, { useState } from 'react';
-// import { Upload, message, Button } from 'antd';
-// import { PlusCircleFilled, PlusOutlined, UploadOutlined } from '@ant-design/icons';
-// import axios from 'axios';
-
-// const CloudinaryUpload = ({onLinkAnhChange}) => {
-//   const [linkAnh, setLinkAnh] = useState(null);
-
-//   const customRequest = async ({ file, onSuccess, onError }) => {
-//     try {
-//       // Gửi file lên Cloudinary
-//       const formData = new FormData();
-//       formData.append('file', file);
-//       formData.append('upload_preset', 'mishoes');
-
-//       const response = await axios.post(
-//         'https://api.cloudinary.com/v1_1/dtetgawxc/image/upload',
-//         formData
-//       );
-
-//       // Lấy URL của ảnh từ response và gán vào biến linkAnh
-//       const imageUrl = response.data.secure_url;
-//       setLinkAnh(imageUrl);
-
-//       onLinkAnhChange(imageUrl);
-//       // Gọi onSuccess để thông báo cho Ant Design rằng upload thành công
-//       onSuccess();
-
-//       // Hiển thị thông báo thành công
-//     } catch (error) {
-//       // Gọi onError để thông báo cho Ant Design rằng có lỗi xảy ra trong quá trình upload
-//       onError();
-
-//       // Hiển thị thông báo lỗi
-//       message.error('Đã xảy ra lỗi trong quá trình upload.');
-//     }
-//   };
-//   return (
-//     <Upload
-//       customRequest={customRequest}
-//       listType="picture-card"
-//       showUploadList={false}
-//     >
-//         {linkAnh ? (
-//         <img src={linkAnh} alt="Ảnh đã upload" style={{ width: '100%' }} />
-//       ) : (
-//         <div>
-//           <p><PlusOutlined size={50} className='mt-3'/><br></br>Upload</p>
-
-//         </div>
-//       )}
-//     </Upload>
-//   );
-// };
-
-// export default CloudinaryUpload;
-
 import React, { useState,useEffect } from 'react';
 import { Upload, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
@@ -64,13 +7,23 @@ const CloudinaryUpload = ({ onLinkAnhChange }) => {
   const [linkAnhList, setLinkAnhList] = useState([]);
 
   const beforeUpload = (file, fileList) => {
-    // Kiểm tra nếu tổng số tệp sau khi thêm tệp mới sẽ vượt quá giới hạn
-    if (linkAnhList.length + fileList.length > 5) {
+    // Kiểm tra định dạng tệp (chỉ cho phép .png)
+    const allowedFormat = '.png';
+    const fileExtension = file.name.split('.').pop().toLowerCase();
+
+    if (fileExtension !== allowedFormat.replace('.', '')) {
+      message.error('Bạn chỉ có thể tải lên các tệp .png.');
+      return false; // Ngăn chặn việc tải lên
+    }
+
+    // Kiểm tra tổng số tệp để không vượt quá giới hạn
+    if (fileList.length + fileList.length > 5) {
       message.error('Bạn chỉ có thể tải lên tối đa 5 ảnh.');
       return false; // Ngăn chặn việc tải lên thêm
     }
-    return true; // Cho phép tải lên nếu dưới giới hạn
-  };
+
+    return true; // Cho phép tải lên nếu điều kiện thỏa mãn
+  }
 
   const customRequest = async ({ file, onSuccess, onError }) => {
     try {

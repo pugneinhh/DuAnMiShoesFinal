@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {Button,Divider,Radio,Form,Input,Select,Space,Table,Tag,Modal} from 'antd';
+import { Button, Divider, Radio, Form, Input, Select, Space, Table, Tag, Modal } from 'antd';
 import { PlusCircleOutlined, RetweetOutlined } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
@@ -21,6 +21,7 @@ export default function KichThuoc() {
   };
   const [form] = Form.useForm();
   const [form1] = Form.useForm();
+  const [formTim] = Form.useForm();
   const formItemLayout = {
     labelCol: {
       span: 4
@@ -28,7 +29,7 @@ export default function KichThuoc() {
     wrapperCol: {
       span: 20
     },
-  }; 
+  };
   //Ấn Add
   const [open, setOpen] = useState(false);
 
@@ -38,7 +39,7 @@ export default function KichThuoc() {
       return kichThuoc.some(kt => kt.ten.trim().toLowerCase() === code.trim().toLowerCase());
     };
     if (!(checkTrung(value.ten))) {
-     KichThuocAPI.create(value)
+      KichThuocAPI.create(value)
         .then((res) => {
           toast('✔️ Thêm thành công!', {
             position: "top-right",
@@ -67,91 +68,139 @@ export default function KichThuoc() {
       });
     }
   }
-    //Update
-    const [openUpdate, setOpenUpdate] = useState(false);
-    const [ktUpdate, setKtUpdate] = useState("");
-    const [tenCheck, setTenCheck] = useState("");
-  
-    const showModal = async (idDetail) => {
-      await KichThuocAPI.detail(idDetail)
-        .then((res) => {
-          setTenCheck(res.data.ten)
-          setKtUpdate(res.data)
-        })
-        setOpenUpdate(true)
-    };
-    const updateKichThuoc = () => {
-  
-      if (ktUpdate.ten != tenCheck) {
-        const checkTrung = (ten) => {
-          return kichThuoc.some(x =>
-            x.ten === ten
-          );
-        };
-  
-        if (checkTrung(ktUpdate.ten)) {
-          toast.error('Kích thước trùng với kích thước khác !', {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
-          return;
-        }
+  //Update
+  const [openUpdate, setOpenUpdate] = useState(false);
+  const [ktUpdate, setKtUpdate] = useState("");
+  const [tenCheck, setTenCheck] = useState("");
+
+  const showModal = async (idDetail) => {
+    await KichThuocAPI.detail(idDetail)
+      .then((res) => {
+        form1.setFieldsValue({
+          id: res.data.id,
+          ma: res.data.ma,
+          ten: res.data.ten,
+          trangThai: res.data.trangThai,
+          ngayTao: res.data.ngayTao,
+          ngaySua: res.data.ngaySua,
+          nguoiTao: res.data.nguoiTao,
+          nguoiSua: res.data.nguoiSua,
+        });
+        setTenCheck(res.data.ten)
+        setKtUpdate(res.data)
+      })
+    setOpenUpdate(true)
+  };
+  const updateKichThuoc = () => {
+
+    if (ktUpdate.ten != tenCheck) {
+      const checkTrung = (ten) => {
+        return kichThuoc.some(x =>
+          x.ten.trim().toLowerCase() === ten.trim().toLowerCase()
+        );
+      };
+
+      if (checkTrung(ktUpdate.ten)) {
+        toast.error('Kích thước trùng với kích thước khác !', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        return;
       }
-      KichThuocAPI.update(ktUpdate.id, ktUpdate)
-        .then((res) => {
-          toast('✔️ Sửa thành công!', {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
-          setKtUpdate("");
-          loadKichThuoc();
-          setOpenUpdate(false);
-        })
     }
+    KichThuocAPI.update(ktUpdate.id, ktUpdate)
+      .then((res) => {
+        toast('✔️ Sửa thành công!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setKtUpdate("");
+        loadKichThuoc();
+        setOpenUpdate(false);
+      })
+  }
   //Tìm kiếm
   const onChangeFilter = (changedValues, allValues) => {
+    if (allValues.hasOwnProperty('ten')) {
+      allValues.ten = allValues.ten.trim();
+    }
     timKiemKT(allValues);
   }
   const timKiemKT = (dataSearch) => {
-   KichThuocAPI.search(dataSearch)
+    KichThuocAPI.search(dataSearch)
       .then((res) => {
         setKichThuocs(res.data);
       })
   }
 
-    //Validate
-    const validateDateKichThuoc = (_, value) => {
-      const { getFieldValue } = form;
-      const tenKichThuoc = getFieldValue("ten");
-    
-      if (!tenKichThuoc.trim()) {
+  //Validate
+  const validateDateKichThuoc = (_, value) => {
+    const { getFieldValue } = form;
+    const tenTim = getFieldValue("ten");
+    if (tenTim != undefined) {
+      if (!tenTim.trim()) {
         return Promise.reject("Tên không được để trống");
       }
-    
-      const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
-      if (specialCharacterRegex.test(tenKichThuoc)) {
-        return Promise.reject("Tên không được chứa ký tự đặc biệt");
+    } else {
+      return Promise.reject("Tên không được để trống");
+    }
+
+    const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+    if (specialCharacterRegex.test(tenTim)) {
+      return Promise.reject("Tên không được chứa ký tự đặc biệt");
+    }
+
+    const kichThuoc = parseInt(value);
+    if (isNaN(kichThuoc) || kichThuoc < 34 || kichThuoc > 47) {
+      return Promise.reject("Kích thước phải là số nguyên từ 34 đến 47");
+    }
+
+    return Promise.resolve();
+  };
+
+  const validateDateKichThuocUpdate = (_, value) => {
+    const { getFieldValue } = form1;
+    const tenTim = getFieldValue("ten");
+    if (tenTim != undefined) {
+      if (!tenTim.trim()) {
+        return Promise.reject("Tên không được để trống");
       }
-    
-      const kichThuoc = parseInt(value);
-      if (isNaN(kichThuoc) || kichThuoc < 34 || kichThuoc > 47) {
-        return Promise.reject("Kích thước phải là số nguyên từ 34 đến 47");
-      }
-    
-      return Promise.resolve();
-    };
+    } else {
+      return Promise.reject("Tên không được để trống");
+    }
+    const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+    if (specialCharacterRegex.test(tenTim)) {
+      return Promise.reject("Tên không được chứa ký tự đặc biệt");
+    }
+
+    const kichThuoc = parseInt(value);
+    if (isNaN(kichThuoc) || kichThuoc < 34 || kichThuoc > 47) {
+      return Promise.reject("Kích thước phải là số nguyên từ 34 đến 47");
+    }
+
+    return Promise.resolve();
+  };
+
+  const validateDateTim = (_, value) => {
+    const { getFieldValue } = formTim;
+    const ten = getFieldValue("ten");
+    if (ten.trim().length > 30) {
+      return Promise.reject("Tên không được vượt quá 30 ký tự");
+    }
+    return Promise.resolve();
+  };
 
   //Table
   const [kichThuoc, setKichThuocs] = useState([]);
@@ -162,9 +211,9 @@ export default function KichThuoc() {
 
   const loadKichThuoc = () => {
     KichThuocAPI.getAll()
-    .then((res)=>{
-      setKichThuocs(res.data.reverse()); 
-    })
+      .then((res) => {
+        setKichThuocs(res.data);
+      })
   };
 
   const columns = [
@@ -212,7 +261,7 @@ export default function KichThuoc() {
       dataIndex: "id",
       render: (title) => (
         <Space size="middle">
-          <a className='btn btn-danger' onClick={() => showModal(`${title}`) }><BsFillEyeFill className='mb-1' /></a>
+          <a className='btn btn-danger' onClick={() => showModal(`${title}`)}><BsFillEyeFill className='mb-1' /></a>
         </Space>
       ),
     },
@@ -256,22 +305,22 @@ export default function KichThuoc() {
             style={{
               maxWidth: 1400,
             }}
+            form={formTim}
           >
             <div className="col-md-5">
-              <Form.Item label="Tên & Mã" name="ten">
+              <Form.Item label="Tên & Mã" name="ten" rules={[{ validator: validateDateTim }]}>
                 <Input
-                  className="rounded-pill border-warning"
+                  maxLength={31}
                   placeholder="Nhập tên hoặc mã"
                 />
               </Form.Item>
             </div>
             <div className="col-md-5">
               <Form.Item
-                placeholder="Chọn trạng thái"
                 label="Trạng Thái"
                 name="trangThai"
               >
-                <Select value={selectedValue} onChange={handleChange}>
+                <Select value={selectedValue} onChange={handleChange} placeholder="Chọn trạng thái">
                   <Select.Option value="0">Còn Bán</Select.Option>
                   <Select.Option value="1">Dừng Bán</Select.Option>
                 </Select>
@@ -362,7 +411,7 @@ export default function KichThuoc() {
                   hasFeedback
                   rules={[{ validator: validateDateKichThuoc }]}
                 >
-                  <Input className="border" />
+                  <Input maxLength={10} className="border" />
                 </Form.Item>
               </Form>
             </Modal>
@@ -421,24 +470,29 @@ export default function KichThuoc() {
                 form={form1}
               >
                 <Form.Item
+                  name="ten"
                   label={<b>Tên</b>}
                   hasFeedback
                   rules={[
-                    { required: true, message: "Vui lòng không để trống tên!" },
+                    { required: true, validator: validateDateKichThuocUpdate },
                   ]}
                 >
                   <Input
                     className="border"
+                    maxLength={31}
                     value={ktUpdate.ten}
                     onChange={(e) =>
                       setKtUpdate({ ...ktUpdate, ten: e.target.value })
                     }
                   ></Input>
                 </Form.Item>
-                <Form.Item label={<b>Trạng thái </b>}>
+                <Form.Item name="trangThai" label={<b>Trạng thái </b>}>
                   <Radio.Group
                     onChange={(e) =>
-                      setKtUpdate({ ...ktUpdate, trangThai: e.target.value })
+                      setKtUpdate({
+                        ...ktUpdate,
+                        trangThai: e.target.value,
+                      })
                     }
                     value={ktUpdate.trangThai}
                   >
@@ -460,7 +514,7 @@ export default function KichThuoc() {
                   defaultPageSize: 5,
                   position: ["bottomCenter"],
                   defaultCurrent: 1,
-                  total: 100,
+                  total: kichThuoc.length,
                 }}
               />
             </div>

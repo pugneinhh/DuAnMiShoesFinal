@@ -20,6 +20,7 @@ export default function DeGiay() {
   };
   const [form] = Form.useForm();
   const [form1] = Form.useForm();
+  const [formTim] = Form.useForm()
   const formItemLayout = {
     labelCol: {
       span: 4
@@ -71,7 +72,17 @@ export default function DeGiay() {
   
     const showModal = async (idDetail) => {
       await DeGiayAPI.detail(idDetail)
-        .then((res) => {
+        .then((res) => { 
+          form1.setFieldsValue({
+            id: res.data.id,
+            ma: res.data.ma,
+            ten: res.data.ten,
+            trangThai: res.data.trangThai,
+            ngayTao: res.data.ngayTao,
+            ngaySua: res.data.ngaySua,
+            nguoiTao: res.data.nguoiTao,
+            nguoiSua: res.data.nguoiSua,
+          });
           setTenCheck(res.data.ten)
           setDgUpdate(res.data)
         })
@@ -82,7 +93,7 @@ export default function DeGiay() {
       if (dgUpdate.ten != tenCheck) {
         const checkTrung = (ten) => {
           return deGiay.some(x =>
-            x.ten === ten
+            x.ten.trim().toLowerCase() === ten.trim().toLowerCase()
           );
         };
   
@@ -119,6 +130,9 @@ export default function DeGiay() {
     }
   //Tìm kiếm
   const onChangeFilter = (changedValues, allValues) => {
+    if (allValues.hasOwnProperty('ten')) {
+      allValues.ten = allValues.ten.trim();
+    }
     timKiemDG(allValues);
   }
   const timKiemDG = (dataSearch) => {
@@ -128,24 +142,60 @@ export default function DeGiay() {
       })
   }
   //Validate
-  const validateDateDeGiay = (_, value) => {
+  const validateDateAdd = (_, value) => {
     const { getFieldValue } = form;
-    const tenDeGiay = getFieldValue("ten");
-  
-    if (!tenDeGiay.trim()) {
+    const tenTim = getFieldValue("ten");
+    if (tenTim != undefined) {
+      if (!tenTim.trim()) {
+        return Promise.reject("Tên không được để trống");
+      }
+    } else {
       return Promise.reject("Tên không được để trống");
     }
-  
+
     const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
-    if (specialCharacterRegex.test(tenDeGiay)) {
+    if (specialCharacterRegex.test(tenTim)) {
       return Promise.reject("Tên không được chứa ký tự đặc biệt");
     }
-  
-    const deGiay = parseInt(value);
-    if (isNaN(deGiay) || deGiay < 1 || deGiay > 10) {
+
+    const k = parseInt(value);
+    if (isNaN(k) || k < 1 || k > 10) {
       return Promise.reject("Đế giày phải là số nguyên từ 1 đến 10");
     }
-  
+
+    return Promise.resolve();
+  };
+
+  const validateDateUpdate = (_, value) => {
+    const { getFieldValue } = form1;
+    const tenTim = getFieldValue("ten");
+    if (tenTim != undefined) {
+      if (!tenTim.trim()) {
+        return Promise.reject("Tên không được để trống");
+      }
+    } else {
+      return Promise.reject("Tên không được để trống");
+    }
+
+    const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+    if (specialCharacterRegex.test(tenTim)) {
+      return Promise.reject("Tên không được chứa ký tự đặc biệt");
+    }
+
+    const k = parseInt(value);
+    if (isNaN(k) || k < 1 || k > 10) {
+      return Promise.reject("Đế giày phải là số nguyên từ 1 đến 10");
+    }
+
+    return Promise.resolve();
+  };
+
+  const validateDateTim = (_, value) => {
+    const { getFieldValue } = formTim;
+    const ten = getFieldValue("ten");
+    if (ten.trim().length > 30) {
+      return Promise.reject("Tên không được vượt quá 30 ký tự");
+    }
     return Promise.resolve();
   };
 
@@ -159,7 +209,7 @@ export default function DeGiay() {
   const loadDeGiay = async () => {
     DeGiayAPI.getAll()
     .then((res)=>{
-      setDeGiays(res.data.reverse()); 
+      setDeGiays(res.data); 
     })
   };
 
@@ -252,27 +302,27 @@ export default function DeGiay() {
             style={{
               maxWidth: 1400,
             }}
-          >
-            <div className="col-md-5">
-              <Form.Item label="Tên & Mã" name="ten">
-                <Input
-                  className="rounded-pill border-warning"
-                  placeholder="Nhập tên hoặc mã"
-                />
-              </Form.Item>
-            </div>
-            <div className="col-md-5">
-              <Form.Item
-                placeholder="Chọn trạng thái"
-                label="Trạng Thái"
-                name="trangThai"
-              >
-                <Select value={selectedValue} onChange={handleChange}>
-                  <Select.Option value="0">Còn Bán</Select.Option>
-                  <Select.Option value="1">Dừng Bán</Select.Option>
-                </Select>
-              </Form.Item>
-            </div>
+            form={formTim}
+            >
+              <div className="col-md-5">
+                <Form.Item label="Tên & Mã" name="ten" rules={[{ validator: validateDateTim }]}>
+                  <Input
+                    maxLength={31}
+                    placeholder="Nhập tên hoặc mã"
+                  />
+                </Form.Item>
+              </div>
+              <div className="col-md-5">
+                <Form.Item
+                  label="Trạng Thái"
+                  name="trangThai"
+                >
+                  <Select value={selectedValue} onChange={handleChange} placeholder="Chọn trạng thái">
+                    <Select.Option value="0">Còn Bán</Select.Option>
+                    <Select.Option value="1">Dừng Bán</Select.Option>
+                  </Select>
+                </Form.Item>
+              </div>
             <Form.Item className="text-center" style={{ paddingLeft: 200 }}>
               <Button
                 type="primary"
@@ -350,17 +400,17 @@ export default function DeGiay() {
                 }}
                 onFinish={addDeGiay}
                 form={form}
-              >
-                <Form.Item
-                  label="Tên"
-                  name="ten"
-                  hasFeedback
-                  rules={[{ validator: validateDateDeGiay }]}
                 >
-                  <Input className="border" />
-                </Form.Item>
-              </Form>
-            </Modal>
+                  <Form.Item
+                    label="Tên"
+                    name="ten"
+                    hasFeedback
+                    rules={[{ required:true,validator: validateDateAdd }]}
+                  >
+                    <Input maxLength={10} className="border" />
+                  </Form.Item>
+                </Form>
+              </Modal>
             {/* Update đế giày */}
             <Modal
               title="Sửa Đế Giày"
@@ -416,14 +466,16 @@ export default function DeGiay() {
                 form={form1}
               >
                 <Form.Item
+                  name="ten"
                   label={<b>Tên</b>}
                   hasFeedback
                   rules={[
-                    { required: true, message: "Vui lòng không để trống tên!" },
+                    { required: true, validator: validateDateUpdate },
                   ]}
                 >
                   <Input
                     className="border"
+                    maxLength={31}
                     value={dgUpdate.ten}
                     onChange={(e) =>
                       setDgUpdate({ ...dgUpdate, ten: e.target.value })
@@ -455,7 +507,7 @@ export default function DeGiay() {
                   defaultPageSize: 5,
                   position: ["bottomCenter"],
                   defaultCurrent: 1,
-                  total: 100,
+                  total: deGiay.length,
                 }}
               />
             </div>

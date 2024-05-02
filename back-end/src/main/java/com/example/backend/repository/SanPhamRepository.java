@@ -31,7 +31,7 @@ public interface SanPhamRepository extends JpaRepository<SanPham, String> {
             	a.id
             having SUM(coalesce(o.so_luong, 0))> 0
             order by
-            	a.ma desc
+            	a.ngay_tao desc
             """, nativeQuery = true)
     List<SanPhamRespone> getALLSP();
 

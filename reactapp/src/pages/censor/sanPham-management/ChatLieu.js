@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Divider, Form, Input,Radio, Select, Space, Table, Tag, Modal } from 'antd';
+import { Button, Divider, Form, Input, Radio, Select, Space, Table, Tag, Modal } from 'antd';
 import { PlusCircleOutlined, RetweetOutlined } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
@@ -11,6 +11,7 @@ import { ChatLieuAPI } from '../api/SanPham/chatLieu.api';
 export default function ChatLieu() {
   //Form
   const [selectedValue, setSelectedValue] = useState('1');
+
   const handleChange = (value) => {
     setSelectedValue(value);
   };
@@ -20,7 +21,7 @@ export default function ChatLieu() {
   };
   const [form] = Form.useForm();
   const [form1] = Form.useForm();
-
+  const [formTim] = Form.useForm();
   //Ấn Add
   const [open, setOpen] = useState(false);
   const [bordered] = useState(false);
@@ -66,79 +67,132 @@ export default function ChatLieu() {
       });
     }
   }
-   //Update
-   const [openUpdate, setOpenUpdate] = useState(false);
-   const [clUpdate, setClUpdate] = useState("");
-   const [tenCheck, setTenCheck] = useState("");
- 
-   const showModal = async (idDetail) => {
-     await ChatLieuAPI.detail(idDetail)
-       .then((res) => {
-         setTenCheck(res.data.ten)
-         setClUpdate(res.data)
-       })
-       setOpenUpdate(true)
-   };
-   const updateChatLieu = () => {
-     if (clUpdate.ten != tenCheck) {
-       const checkTrung = (ten) => {
-         return chatLieu.some(x =>
-           x.ten === ten
-         );
-       };
- 
-       if (checkTrung(clUpdate.ten)) {
-         toast.error('Chất liệu trùng với chất liệu khác !', {
-           position: "top-right",
-           autoClose: 5000,
-           hideProgressBar: false,
-           closeOnClick: true,
-           pauseOnHover: true,
-           draggable: true,
-           progress: undefined,
-           theme: "light",
-         });
-         return;
-       }
-     }
-     ChatLieuAPI.update(clUpdate.id, clUpdate)
-       .then((res) => {
-         toast('✔️ Sửa thành công!', {
-           position: "top-right",
-           autoClose: 5000,
-           hideProgressBar: false,
-           closeOnClick: true,
-           pauseOnHover: true,
-           draggable: true,
-           progress: undefined,
-           theme: "light",
-         });
-         setClUpdate("");
-         loadChatLieu();
-         setOpenUpdate(false);
-       })
-   }
+  //Update
+  const [openUpdate, setOpenUpdate] = useState(false);
+  const [clUpdate, setClUpdate] = useState("");
+  const [tenCheck, setTenCheck] = useState("");
+
+  const showModal = async (idDetail) => {
+    await ChatLieuAPI.detail(idDetail)
+      .then((res) => {
+        form1.setFieldsValue({
+          id: res.data.id,
+          ma: res.data.ma,
+          ten: res.data.ten,
+          trangThai: res.data.trangThai,
+          ngayTao: res.data.ngayTao,
+          ngaySua: res.data.ngaySua,
+          nguoiTao: res.data.nguoiTao,
+          nguoiSua: res.data.nguoiSua,
+        });
+        setTenCheck(res.data.ten)
+        setClUpdate(res.data)
+      })
+    setOpenUpdate(true)
+  };
+  const updateChatLieu = () => {
+    if (clUpdate.ten != tenCheck) {
+      const checkTrung = (ten) => {
+        return chatLieu.some(x =>
+          x.ten.trim().toLowerCase() === ten.trim().toLowerCase()
+        );
+      };
+
+      if (checkTrung(clUpdate.ten)) {
+        toast.error('Chất liệu trùng với chất liệu khác !', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        return;
+      }
+    }
+    ChatLieuAPI.update(clUpdate.id, clUpdate)
+      .then((res) => {
+        toast('✔️ Sửa thành công!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setClUpdate("");
+        loadChatLieu();
+        setOpenUpdate(false);
+      })
+  }
   //Tìm kiếm
   const onChangeFilter = (changedValues, allValues) => {
+    if (allValues.hasOwnProperty('ten')) {
+      allValues.ten = allValues.ten.trim();
+    }
     timKiemCL(allValues);
   }
   const timKiemCL = (dataSearch) => {
-   ChatLieuAPI.search(dataSearch)
+    ChatLieuAPI.search(dataSearch)
       .then((res) => {
         setChatLieus(res.data);
       })
   }
   //Validate
-  const validateDateChatLieu = (_, value) => {
+  const validateDateAdd = (_, value) => {
     const { getFieldValue } = form;
-    const tenChatLieu = getFieldValue("ten");
-  if (!tenChatLieu.trim()) {
-    return Promise.reject("Tên không được để trống");
-  }
-  const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
-  if (specialCharacterRegex.test(tenChatLieu)) {
-    return Promise.reject("Tên không được chứa ký tự đặc biệt");
-  }
+    const tenTim = getFieldValue("ten");
+    if (tenTim != undefined) {
+      if (!tenTim.trim()) {
+        return Promise.reject("Tên không được để trống");
+      }
+    } else {
+      return Promise.reject("Tên không được để trống");
+    }
+
+    const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+    if (specialCharacterRegex.test(tenTim)) {
+      return Promise.reject("Tên không được chứa ký tự đặc biệt");
+    }
+
+    if (tenTim.trim().length > 30) {
+      return Promise.reject("Tên không được vượt quá 30 ký tự");
+    }
+    return Promise.resolve();
+  };
+
+  const validateDateKichThuocUpdate = (_, value) => {
+    const { getFieldValue } = form1;
+    const tenTim = getFieldValue("ten");
+    if (tenTim != undefined) {
+      if (!tenTim.trim()) {
+        return Promise.reject("Tên không được để trống");
+      }
+    } else {
+      return Promise.reject("Tên không được để trống");
+    }
+
+    const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+    if (specialCharacterRegex.test(tenTim)) {
+      return Promise.reject("Tên không được chứa ký tự đặc biệt");
+    }
+
+    if (tenTim.trim().length > 30) {
+      return Promise.reject("Tên không được vượt quá 30 ký tự");
+    }
+    return Promise.resolve();
+  };
+
+  const validateDateTim = (_, value) => {
+    const { getFieldValue } = formTim;
+    const ten = getFieldValue("ten");
+    if (ten.trim().length > 30) {
+      return Promise.reject("Tên không được vượt quá 30 ký tự");
+    }
     return Promise.resolve();
   };
   //Table
@@ -151,7 +205,7 @@ export default function ChatLieu() {
   const loadChatLieu = () => {
     ChatLieuAPI.getAll()
       .then((res) => {
-        setChatLieus(res.data.reverse());
+        setChatLieus(res.data);
       })
   };
 
@@ -200,7 +254,7 @@ export default function ChatLieu() {
       dataIndex: "id",
       render: (title) => (
         <Space size="middle">
-          <a className='btn btn-danger' onClick={() => showModal(`${title}`) }><BsFillEyeFill className='mb-1' /></a>
+          <a className='btn btn-danger' onClick={() => showModal(`${title}`)}><BsFillEyeFill className='mb-1' /></a>
         </Space>
       ),
     },
@@ -244,22 +298,22 @@ export default function ChatLieu() {
             style={{
               maxWidth: 1400,
             }}
+            form={formTim}
           >
             <div className="col-md-5">
-              <Form.Item label="Tên & Mã" name="ten">
+              <Form.Item label="Tên & Mã" name="ten" rules={[{ validator: validateDateTim }]}>
                 <Input
-                  className="rounded-pill border-warning"
+                  maxLength={31}
                   placeholder="Nhập tên hoặc mã"
                 />
               </Form.Item>
             </div>
             <div className="col-md-5">
               <Form.Item
-                placeholder="Chọn trạng thái"
                 label="Trạng Thái"
                 name="trangThai"
               >
-                <Select value={selectedValue} onChange={handleChange}>
+                <Select placeholder="Chọn trạng thái" value={selectedValue} onChange={handleChange}>
                   <Select.Option value="0">Còn Bán</Select.Option>
                   <Select.Option value="1">Dừng Bán</Select.Option>
                 </Select>
@@ -284,7 +338,7 @@ export default function ChatLieu() {
               <PlusCircleOutlined /> Thêm chất liệu
             </span>
           </button>
- 
+
         </div>
         <div
           className=" bg-light m-2 p-3 pt-2"
@@ -348,9 +402,9 @@ export default function ChatLieu() {
                   label="Tên"
                   name="ten"
                   hasFeedback
-                  rules={[{ validator: validateDateChatLieu }]}
+                  rules={[{ required: true,validator: validateDateAdd }]}
                 >
-                  <Input className="border" />
+                  <Input maxLength={31} className="border" />
                 </Form.Item>
               </Form>
             </Modal>
@@ -409,24 +463,29 @@ export default function ChatLieu() {
                 form={form1}
               >
                 <Form.Item
+                  name="ten"
                   label={<b>Tên</b>}
                   hasFeedback
                   rules={[
-                    { required: true, message: "Vui lòng không để trống tên!" },
+                    { required: true, validator: validateDateKichThuocUpdate },
                   ]}
                 >
                   <Input
                     className="border"
+                    maxLength={31}
                     value={clUpdate.ten}
                     onChange={(e) =>
                       setClUpdate({ ...clUpdate, ten: e.target.value })
                     }
                   ></Input>
                 </Form.Item>
-                <Form.Item label={<b>Trạng thái </b>}>
+                <Form.Item name="trangThai" label={<b>Trạng thái </b>}>
                   <Radio.Group
                     onChange={(e) =>
-                      setClUpdate({ ...clUpdate, trangThai: e.target.value })
+                      setClUpdate({
+                        ...clUpdate,
+                        trangThai: e.target.value,
+                      })
                     }
                     value={clUpdate.trangThai}
                   >
@@ -448,7 +507,7 @@ export default function ChatLieu() {
                   defaultPageSize: 5,
                   position: ["bottomCenter"],
                   defaultCurrent: 1,
-                  total: 100,
+                  total: chatLieu.length,
                 }}
               />
             </div>

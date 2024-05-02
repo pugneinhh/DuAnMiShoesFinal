@@ -35,6 +35,7 @@ const ModalSanPham = (props) => {
   const [chiTietSanPham, setChiTietSanPham] = useState([""]);
   const [CTSP, setCTSPs] = useState([""]);
   const [HDCT, setHDCT] = useState([]);
+  const [formTim] = Form.useForm();
   const handleClose = () => {
     setOpenSanPham(false);
   };
@@ -47,7 +48,19 @@ const ModalSanPham = (props) => {
   };
 
   //Tìm kiếm
+  const validateDateTim = (_, value) => {
+    const { getFieldValue } = formTim;
+    const tenChiTiet = getFieldValue("tenCT");   
+    if (tenChiTiet.trim().length > 40) {
+      return Promise.reject("Tên không được vượt quá 40 ký tự");
+    }
+    return Promise.resolve();
+  };
+  
   const onChangeFilter = (changedValues, allValues) => {
+    if (allValues.hasOwnProperty('tenCT')) {
+      allValues.tenCT = allValues.tenCT.trim();
+    }
     const updatedValues = { ...allValues };
     if (updatedValues.soLuongCT && updatedValues.soLuongCT.length > 0) {
       updatedValues.soLuongBatDau = updatedValues.soLuongCT[0] !== undefined ? updatedValues.soLuongCT[0] : 1;
@@ -386,14 +399,15 @@ const ModalSanPham = (props) => {
               style={{
                 maxWidth: 1600,
               }}
+              form={formTim}
             >
               {/* Form tìm kiếm */}
               {/* Các Thuộc Tính Dòng 1 */}
               <div className="row mt-3">
                 {/* Tên & Mã */}
                 <div className="col-md-4">
-                  <Form.Item label="Tên & Mã" name="tenCT">
-                    <Input className="border" />
+                  <Form.Item label="Tên & Mã" name="tenCT" rules={[{ validator: validateDateTim }]}>
+                    <Input maxLength={30} className="border" />
                   </Form.Item>
                 </div>
                 {/* Kích Thước */}
@@ -561,7 +575,7 @@ const ModalSanPham = (props) => {
                     defaultPageSize: 5,
                     position: ["bottomCenter"],
                     defaultCurrent: 1,
-                    total: ctsp.length,
+                    total: CTSP.length,
                   }}
                 />
               </div>

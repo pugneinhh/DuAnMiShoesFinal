@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import {Button,Divider,Form,Radio,Input,Select,Space,Table,Tag,Modal} from 'antd';
-import {  PlusCircleOutlined, RetweetOutlined } from "@ant-design/icons";
+import { Button, Divider, Form, Radio, Input, Select, Space, Table, Tag, Modal } from 'antd';
+import { PlusCircleOutlined, RetweetOutlined } from "@ant-design/icons";
 import { BookFilled } from "@ant-design/icons";
 import { FilterFilled } from "@ant-design/icons";
 import { ToastContainer, toast } from 'react-toastify';
@@ -21,6 +21,7 @@ export default function Hang() {
   };
   const [form] = Form.useForm();
   const [form1] = Form.useForm();
+  const [formTim] = Form.useForm();
   const formItemLayout = {
     labelCol: {
       span: 4
@@ -28,7 +29,7 @@ export default function Hang() {
     wrapperCol: {
       span: 20
     },
-  }; 
+  };
   //Ấn Add
   const [open, setOpen] = useState(false);
   const [bordered] = useState(false);
@@ -37,7 +38,7 @@ export default function Hang() {
       return hang.some(h => h.ten.trim().toLowerCase() === code.trim().toLowerCase());
     };
     if (!(checkTrung(value.ten))) {
-     HangAPI.create(value)
+      HangAPI.create(value)
         .then((res) => {
           toast('✔️ Thêm thành công!', {
             position: "top-right",
@@ -66,81 +67,130 @@ export default function Hang() {
       });
     }
   }
-   //Update
-   const [openUpdate, setOpenUpdate] = useState(false);
-   const [hangUpdate, setHangUpdate] = useState("");
-   const [tenCheck, setTenCheck] = useState("");
- 
-   const showModal = async (idDetail) => {
-     await HangAPI.detail(idDetail)
-       .then((res) => {
-         setTenCheck(res.data.ten)
-         setHangUpdate(res.data)
-       })
-       setOpenUpdate(true)
-   };
-   const updateHang = () => {
- 
-     if (hangUpdate.ten != tenCheck) {
-       const checkTrung = (ten) => {
-         return hang.some(x =>
-           x.ten === ten
-         );
-       };
- 
-       if (checkTrung(hangUpdate.ten)) {
-         toast.error('Hãng trùng với hãng khác !', {
-           position: "top-right",
-           autoClose: 5000,
-           hideProgressBar: false,
-           closeOnClick: true,
-           pauseOnHover: true,
-           draggable: true,
-           progress: undefined,
-           theme: "light",
-         });
-         return;
-       }
-     }
-     HangAPI.update(hangUpdate.id, hangUpdate)
-       .then((res) => {
-         toast('✔️ Sửa thành công!', {
-           position: "top-right",
-           autoClose: 5000,
-           hideProgressBar: false,
-           closeOnClick: true,
-           pauseOnHover: true,
-           draggable: true,
-           progress: undefined,
-           theme: "light",
-         });
-         setHangUpdate("");
-         loadHang();
-         setOpenUpdate(false);
-       })
-   }
- //Tìm kiếm
- const onChangeFilter = (changedValues, allValues) => {
-   timKiemHang(allValues);
- }
- const timKiemHang = (dataSearch) => {
-  HangAPI.search(dataSearch)
-     .then((res) => {
-       setHangs(res.data);
-     })
- }
+  //Update
+  const [openUpdate, setOpenUpdate] = useState(false);
+  const [hangUpdate, setHangUpdate] = useState("");
+  const [tenCheck, setTenCheck] = useState("");
 
-   //Validate
-   const validateDateHang = (_, value) => {
+  const showModal = async (idDetail) => {
+    await HangAPI.detail(idDetail)
+      .then((res) => {
+        form1.setFieldsValue({
+          id: res.data.id,
+          ma: res.data.ma,
+          ten: res.data.ten,
+          trangThai: res.data.trangThai,
+          ngayTao: res.data.ngayTao,
+          ngaySua: res.data.ngaySua,
+          nguoiTao: res.data.nguoiTao,
+          nguoiSua: res.data.nguoiSua,
+        });
+        setTenCheck(res.data.ten)
+        setHangUpdate(res.data)
+      })
+    setOpenUpdate(true)
+  };
+  const updateHang = () => {
+
+    if (hangUpdate.ten != tenCheck) {
+      const checkTrung = (ten) => {
+        return hang.some(x =>
+          x.ten.trim().toLowerCase() === ten.trim().toLowerCase()
+        );
+      };
+
+      if (checkTrung(hangUpdate.ten)) {
+        toast.error('Hãng trùng với hãng khác !', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        return;
+      }
+    }
+    HangAPI.update(hangUpdate.id, hangUpdate)
+      .then((res) => {
+        toast('✔️ Sửa thành công!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setHangUpdate("");
+        loadHang();
+        setOpenUpdate(false);
+      })
+  }
+  //Tìm kiếm
+  const onChangeFilter = (changedValues, allValues) => {
+    if (allValues.hasOwnProperty('ten')) {
+      allValues.ten = allValues.ten.trim();
+    }
+    timKiemHang(allValues);
+  }
+  const timKiemHang = (dataSearch) => {
+    HangAPI.search(dataSearch)
+      .then((res) => {
+        setHangs(res.data);
+      })
+  }
+
+  //Validate
+  const validateDateHang = (_, value) => {
     const { getFieldValue } = form;
     const tenHang = getFieldValue("ten");
-  if (!tenHang.trim()) {
-    return Promise.reject("Tên không được để trống");
-  }
-  const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
-  if (specialCharacterRegex.test(tenHang)) {
-    return Promise.reject("Tên không được chứa ký tự đặc biệt");
-  }
+    if(tenHang!=undefined){
+      if (!tenHang.trim()) {
+        return Promise.reject("Tên không được để trống");
+      }
+    }else{
+      return Promise.reject("Tên không được để trống");
+    }
+    const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+    if (specialCharacterRegex.test(tenHang)) {
+      return Promise.reject("Tên không được chứa ký tự đặc biệt");
+    }
+    if (tenHang.trim().length > 30) {
+      return Promise.reject("Tên không được vượt quá 30 ký tự");
+    }
+    return Promise.resolve();
+  };
+
+  const validateDateHangUpdate = (_, value) => {
+    const { getFieldValue } = form1;
+    const tenHang = getFieldValue("ten");
+    if(tenHang!=undefined){
+      if (!tenHang.trim()) {
+        return Promise.reject("Tên không được để trống");
+      }
+    }else{
+      return Promise.reject("Tên không được để trống");
+    }
+    const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+    if (specialCharacterRegex.test(tenHang)) {
+      return Promise.reject("Tên không được chứa ký tự đặc biệt");
+    }
+    if (tenHang.trim().length > 30) {
+      return Promise.reject("Tên không được vượt quá 30 ký tự");
+    }
+    return Promise.resolve();
+  };
+
+  const validateDateTim = (_, value) => {
+    const { getFieldValue } = formTim;
+    const tenHang = getFieldValue("ten");   
+    if (tenHang.trim().length > 30) {
+      return Promise.reject("Tên không được vượt quá 30 ký tự");
+    }
     return Promise.resolve();
   };
 
@@ -153,9 +203,9 @@ export default function Hang() {
 
   const loadHang = async () => {
     HangAPI.getAll()
-    .then((res)=>{
-      setHangs(res.data.reverse()); 
-    })
+      .then((res) => {
+        setHangs(res.data);
+      })
   };
 
   const columns = [
@@ -203,7 +253,7 @@ export default function Hang() {
       dataIndex: "id",
       render: (title) => (
         <Space size="middle">
-          <a className='btn btn-danger' onClick={() => showModal(`${title}`) }><BsFillEyeFill className='mb-1' /></a>
+          <a className='btn btn-danger' onClick={() => showModal(`${title}`)}><BsFillEyeFill className='mb-1' /></a>
         </Space>
       ),
     },
@@ -247,22 +297,22 @@ export default function Hang() {
             style={{
               maxWidth: 1400,
             }}
+            form={formTim}
           >
             <div className="col-md-5">
-              <Form.Item label="Tên & Mã" name="ten">
+              <Form.Item label="Tên & Mã" name="ten" rules={[{ validator: validateDateTim }]}>
                 <Input
-                  className="rounded-pill border-warning"
+                  maxLength={31}
                   placeholder="Nhập tên hoặc mã"
                 />
               </Form.Item>
             </div>
             <div className="col-md-5">
-              <Form.Item
-                placeholder="Chọn trạng thái"
+              <Form.Item               
                 label="Trạng Thái"
                 name="trangThai"
               >
-                <Select value={selectedValue} onChange={handleChange}>
+                <Select placeholder="Chọn trạng thái" value={selectedValue} onChange={handleChange}>
                   <Select.Option value="0">Còn Bán</Select.Option>
                   <Select.Option value="1">Dừng Bán</Select.Option>
                 </Select>
@@ -350,9 +400,10 @@ export default function Hang() {
                   label="Tên"
                   name="ten"
                   hasFeedback
+                  required={true}
                   rules={[{ validator: validateDateHang }]}
                 >
-                  <Input className="border" />
+                  <Input maxLength={31} className="border" />
                 </Form.Item>
               </Form>
             </Modal>
@@ -411,21 +462,23 @@ export default function Hang() {
                 form={form1}
               >
                 <Form.Item
+                  name="ten"
                   label={<b>Tên</b>}
                   hasFeedback
                   rules={[
-                    { required: true, message: "Vui lòng không để trống tên!" },
+                    { required: true, validator: validateDateHangUpdate },
                   ]}
                 >
                   <Input
                     className="border"
+                    maxLength={31}
                     value={hangUpdate.ten}
                     onChange={(e) =>
                       setHangUpdate({ ...hangUpdate, ten: e.target.value })
                     }
                   ></Input>
                 </Form.Item>
-                <Form.Item label={<b>Trạng thái </b>}>
+                <Form.Item name="trangThai" label={<b>Trạng thái </b>}>
                   <Radio.Group
                     onChange={(e) =>
                       setHangUpdate({
@@ -453,7 +506,7 @@ export default function Hang() {
                   defaultPageSize: 5,
                   position: ["bottomCenter"],
                   defaultCurrent: 1,
-                  total: 100,
+                  total: hang.length,
                 }}
               />
             </div>

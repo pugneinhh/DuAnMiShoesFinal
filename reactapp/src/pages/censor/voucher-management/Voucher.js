@@ -30,6 +30,9 @@ const Voucher = () => {
   const [dataSearch, setDataSearch] = useState({});
   const [voucher, setVouchers] = useState([]);
   const onChangeFilter = (changedValues, allValues) => {
+    if (allValues.hasOwnProperty('ten')) {
+      allValues.ten = allValues.ten.trim();
+    }
     timKiemVoucher(allValues);
     setDataSearch(allValues);
   };
@@ -347,7 +350,7 @@ const Voucher = () => {
             <div className="col-md-4">
               <Form.Item label="Tìm kiếm" name="ten">
                 <Input
-                  className="rounded-pill border-warning"
+                  maxLength={30}
                   placeholder="Nhập mã hoặc tên hoặc mức độ giảm giá"
                 />
               </Form.Item>
