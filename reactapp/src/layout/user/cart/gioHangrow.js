@@ -71,7 +71,7 @@ function ProductRow({ product, loadghct, loadSoLuongSPTrongGH }) {
           stomp.subscribe("/topic/KH/hoa-don", (mes) => {
             try {
               const pare = JSON.parse(mes.body);
-              console.log("222", pare);
+           
 
               setQuantity(product.soLuong);
               setPrice(product.thanhTien);

@@ -82,9 +82,7 @@ public class CTSPController {
 
     @PutMapping("/updateKM/{idCTSP}")
     public ResponseEntity<?> update(@PathVariable("idCTSP") String idCTSP, @RequestBody KhuyenMai khuyenMai) {
-        System.out.println("Vào update");
-        System.out.println("Khuyến mại"+khuyenMai);
-        System.out.println("IDCTSP "+idCTSP);
+
         ChiTietSanPham ctsp = ctspService.findChiTietSanPhamByID(idCTSP);
         KhuyenMaiSanPham k = khuyenMaiSanPhamService.find(khuyenMai.getId(),idCTSP);
         if (k == null) {
@@ -117,13 +115,13 @@ public class CTSPController {
 
     @GetMapping("/showKM/{idKM}")
     public ResponseEntity<?> getALLCTSPByKM(@PathVariable("idKM") String id) {
-        System.out.println("id" + id);
+
         return ResponseEntity.ok(ctspService.getALLCTSPByKM(id));
     }
 
     @GetMapping("/showCTSP/{idSP}")
     public ResponseEntity<?> getCTSPByIDSP(@PathVariable("idSP") String id) {
-        System.out.println("id " + id);
+
         return ResponseEntity.ok(ctspService.getAllCTSPByIDSP(id));
     }
 

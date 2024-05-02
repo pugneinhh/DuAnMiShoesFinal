@@ -59,7 +59,6 @@ const KhuyenMai = () => {
      PromotionAPI.getAll()
       .then((response) => {
         setKhuyenMais(response.data);
-        console.log("Ngày tạo ", response.data);
       })
       .catch((error) => console.error("Error adding item:", error));
   };
@@ -119,22 +118,21 @@ const KhuyenMai = () => {
     });
     ctspHD.forEach((item,index)=> {
       if (items.length === 0) {items.push({hoaDon : item.hoaDon , total : item.total});
-      console.log("items ",items);}
+      }
       else {
         if (items.filter(i => i.hoaDon === item.hoaDon).length > 0){
           let index = items.indexOf(i => i.hoaDon === item.hoaDon);
           items[index].total += item.total;
-          console.log("items ",items);
+        
 
         } else {
           items.push({hoaDon : item.hoaDon , total : item.total});
-          console.log("items ",items);
+       
 
         }
       }
       });
-      console.log("items ",items);
-
+     
       for (let i = 0 ; i < items.length ; i++) {
       dispatch(Update({key : items[i].hoaDon, thanhTien : items[i].total}));
       }
@@ -143,7 +141,7 @@ const KhuyenMai = () => {
 
   const updateTrangThai1 = async (id, value) => {
     await PromotionAPI.updateOpenPromotion(id, value).then((response) => {
-      console.log("RES ",response);
+
       dispatch(UpdateKMInvoice({tenKM: response.ten,loaiKM: response.loai,giaTriKhuyenMai: response.gia_tri_khuyen_mai}))
       ctspHD.forEach((item,index)=> {
         let newItems = {hoaDon : item.hoaDon , total : item.total};
@@ -156,7 +154,7 @@ const KhuyenMai = () => {
         for (let i = 0 ; i < items.length ; i++) {
         dispatch(Update({key : items[i].hoaDon, thanhTien : items[i].total}));
         }
-        console.log("items ",items);
+   
       if (response.status === 200) {
         loadKhuyenMai();
         toast("✔️ Cập nhật thành công!", {

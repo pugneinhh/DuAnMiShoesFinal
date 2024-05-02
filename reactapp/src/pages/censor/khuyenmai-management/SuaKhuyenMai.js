@@ -23,6 +23,7 @@ import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import { PromotionAPI } from "../../censor/api/promotion/promotion.api";
 import { SellAPI } from "../../censor/api/sell/sell.api";
+import { AdminGuiThongBaoXacNhanDatHang } from "../../../utils/socket/socket";
 const SuaKhuyenMai = () => {
   const navigate = useNavigate();
 
@@ -137,9 +138,10 @@ const SuaKhuyenMai = () => {
         } else {
           console.log("Trường hợp không có km");
             dataCTSP.map((data) => PromotionAPI.deletePromotion(data.idCTSP,id))
-          
+              AdminGuiThongBaoXacNhanDatHang();
         }
       }
+       AdminGuiThongBaoXacNhanDatHang();
         loadKhuyenMai();
         navigate("/admin-khuyen-mai");
         toast("✔️ Sửa thành công!", {

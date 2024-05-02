@@ -50,14 +50,12 @@ public class KhuyenMaiController {
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody KhuyenMaiRequest request){
         KhuyenMai km = request.map();
-        System.out.println(km.getId()+""+km.getMa()+""+km.getTen()+""+km.getLoai()+""+km.getNgay_bat_dau()+""+km.getNgay_ket_thuc()+""+km.getGia_tri_khuyen_mai());
+
         km.setNgayTao(new Date(new java.util.Date().getTime()));
         LocalDateTime ngayBD =  khuyenMaiService.convertTime(km.getNgay_bat_dau());
         LocalDateTime ngayKT = khuyenMaiService.convertTime(km.getNgay_ket_thuc());
         LocalDateTime today = LocalDateTime.now();
-        System.out.println("Today"+today);
-        System.out.println("Bắt đầu"+ngayBD);
-        System.out.println("Kết thúc"+ngayKT);
+
         if (ngayBD.isAfter(today)) km.setTrangThai(0);
         else if (ngayBD.isBefore(today) && ngayKT.isAfter(today)) km.setTrangThai(1);
         else if (ngayKT.isBefore(today)) km.setTrangThai(2);
@@ -74,10 +72,7 @@ public class KhuyenMaiController {
         LocalDateTime ngayBD =  khuyenMaiService.convertTime(km.getNgay_bat_dau());
         LocalDateTime ngayKT =  khuyenMaiService.convertTime(km.getNgay_ket_thuc());
         LocalDateTime today = LocalDateTime.now();
-        System.out.println("Update ngày bắt đầu"+ngayBD);
-        System.out.println("Update ngày kết thúc"+ngayKT);
-        System.out.println("Update ngày hiện tại"+today);
-        System.out.println("trang thai"+khuyenMaiService.detailKhuyenMai(id).getTrangThai());
+
         if (khuyenMaiService.detailKhuyenMai(id).getTrangThai() != 3){
             if (ngayBD.isAfter(today)) km.setTrangThai(0);
             else if (ngayBD.isBefore(today) && ngayKT.isAfter(today)) km.setTrangThai(1);
