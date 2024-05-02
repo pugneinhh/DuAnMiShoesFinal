@@ -48,12 +48,31 @@ const ModalSanPham = (props) => {
 
   //Tìm kiếm
   const onChangeFilter = (changedValues, allValues) => {
-  
+    const updatedValues = { ...allValues };
+    if (updatedValues.soLuongCT && updatedValues.soLuongCT.length > 0) {
+      updatedValues.soLuongBatDau = updatedValues.soLuongCT[0] !== undefined ? updatedValues.soLuongCT[0] : 1;
+    } else {
+      updatedValues.soLuongBatDau = 1;
+    }
+    if (updatedValues.soLuongCT && updatedValues.soLuongCT.length > 0) {
+      updatedValues.soLuongKetThuc = updatedValues.soLuongCT[1] !== undefined ? updatedValues.soLuongCT[1] : 1000;
+    } else {
+      updatedValues.soLuongKetThuc = 1000;
+    }
+    if (updatedValues.giaBanCT && updatedValues.giaBanCT.length > 0) {
+      updatedValues.giaBanBatDau = updatedValues.giaBanCT[0] !== undefined ? updatedValues.giaBanCT[0] : 100000;
+    } else {
+      updatedValues.giaBanBatDau = 100000;
+    }
+    if (updatedValues.giaBanCT && updatedValues.giaBanCT.length > 0) {
+      updatedValues.giaBanKetThuc = updatedValues.giaBanCT[1] !== undefined ? updatedValues.giaBanCT[1] : 50000000;
+    } else {
+      updatedValues.giaBanKetThuc = 50000000;
+    }
     if (!allValues.tenCT && !allValues.idKT && !allValues.idMS && !allValues.idDC && !allValues.idCL && !allValues.trangThaiCT && !allValues.giaBanCT && !allValues.idDM && !allValues.idH) {
       setCTSPs(chiTietSanPham);
-   
     } else {
-      timKiemCT(allValues);
+      timKiemCT(updatedValues);
     }
   }
   const timKiemCT = (dataSearch) => {
@@ -61,7 +80,6 @@ const ModalSanPham = (props) => {
       // Update the list of items
       response.data.map((i) => dispatch(AddProduct({ id: i.idCTSP, soLuong: i.soLuong, linkAnh: i.linkAnh, tenSP: i.tenSP, tenKT: i.tenKT, tenMS: i.tenMS, maMS: i.maMS, loaiKM: i.loaiKM, giaTriKhuyenMai: parseInt(i.giaKhuyenMai, 10), giaBan: i.giaBan, tenKM: i.tenKM })))
       setCTSPs(response.data)
-
     })
       .catch(error => console.error('Error adding item:', error));
   }
@@ -108,7 +126,7 @@ const ModalSanPham = (props) => {
   }, []);
   const loadDC = async () => {
     ChiTietSanPhamAPI.getAllDeGiay().then(response => {
-      setCL(response.data);
+      setDC(response.data);
     })
   };
 
@@ -159,13 +177,13 @@ const ModalSanPham = (props) => {
 
   }
 
-  const handleClickAddProduct =  (record) => {
-    
+  const handleClickAddProduct = (record) => {
+
     const id = uuid();
     const hdct = [{ id: id, hoaDon: activeKey, chiTietSanPham: record.idCTSP, soLuong: 1, giaSauGiam: (parseFloat(record.giaBan) - parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100))), giaGiam: (parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100))) }]
     dispatch(AddInvoice({ id: id, chiTietSanPham: record.idCTSP, tenSP: record.tenSP, maMS: record.maMS, linkAnh: record.linkAnh, tenKT: record.tenKT, giaBan: record.giaBan, hoaDon: activeKey, tenMS: record.tenMS, giaGiam: (parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100))), giaSauGiam: (parseFloat(record.giaBan) - parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100))), nguoiTao: record.nguoiTao, giaBan: record.giaBan, tenKM: record.tenKM, loaiKM: record.loaiKM, giaTriKhuyenMai: record.giaTriKhuyenMai }));
     dispatch(UpdateApartProduct({ id: record.idCTSP, soLuong: 1 }));
-    dispatch(UpdateTienHang({key:activeKey, thanhTien : (parseFloat(record.giaBan) - parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100)))}))
+    dispatch(UpdateTienHang({ key: activeKey, thanhTien: (parseFloat(record.giaBan) - parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100))) }))
     SellAPI.addInvoice(hdct[0]);
     SellAPI.getAllProducts().then((item) => { setCTSPs(item.data); setChiTietSanPham(item.data); })
     //props.getSoTien();
@@ -332,208 +350,205 @@ const ModalSanPham = (props) => {
       // zIndex={10000}
       style={{ top: -200 }}
     >
-    <div className="container-fluid" style={{ borderRadius: 20 }}>
-      <div className="container-fluid">
-        <Divider orientation="center" color="#d0aa73">
-          <h4 className="text-first pt-1 fw-bold">
-            {" "}
-            <InfoCircleFilled size={35} /> Quản lý chi tiết sản phẩm
-          </h4>
-        </Divider>
-        <div
-          className=" bg-light m-2 p-3 pt-2"
-          style={{
-            border: "1px solid #ddd", // Border color
-            boxShadow: "0 3px 8px rgba(0, 0, 0, 0.1)", // Box shadow
-            borderRadius: "8px",
-          }}
-        >
-          <h5>
-            <FilterFilled size={30} /> Bộ lọc
-          </h5>
-          <hr />
-          <Form
-            labelCol={{
-              span: 6,
-            }}
-            wrapperCol={{
-              span: 14,
-            }}
-            layout="horizontal"
-            initialValues={{
-              size: componentSize,
-            }}
-            onValuesChange={onChangeFilter}
-            size={componentSize}
+      <div className="container-fluid" style={{ borderRadius: 20 }}>
+        <div className="container-fluid">
+          <Divider orientation="center" color="#d0aa73">
+            <h4 className="text-first pt-1 fw-bold">
+              {" "}
+              <InfoCircleFilled size={35} /> Quản lý chi tiết sản phẩm
+            </h4>
+          </Divider>
+          <div
+            className=" bg-light m-2 p-3 pt-2"
             style={{
-              maxWidth: 1600,
+              border: "1px solid #ddd", // Border color
+              boxShadow: "0 3px 8px rgba(0, 0, 0, 0.1)", // Box shadow
+              borderRadius: "8px",
             }}
           >
-            {/* Form tìm kiếm */}
-            {/* Các Thuộc Tính Dòng 1 */}
-            <div className="row mt-3">
-              {/* Tên & Mã */}
-              <div className="col-md-4">
-                <Form.Item label="Tên & Mã" name="tenCT">
-                  <Input className="border" />
-                </Form.Item>
+            <h5>
+              <FilterFilled size={30} /> Bộ lọc
+            </h5>
+            <hr />
+            <Form
+              labelCol={{
+                span: 6,
+              }}
+              wrapperCol={{
+                span: 14,
+              }}
+              layout="horizontal"
+              initialValues={{
+                size: componentSize,
+              }}
+              onValuesChange={onChangeFilter}
+              size={componentSize}
+              style={{
+                maxWidth: 1600,
+              }}
+            >
+              {/* Form tìm kiếm */}
+              {/* Các Thuộc Tính Dòng 1 */}
+              <div className="row mt-3">
+                {/* Tên & Mã */}
+                <div className="col-md-4">
+                  <Form.Item label="Tên & Mã" name="tenCT">
+                    <Input className="border" />
+                  </Form.Item>
+                </div>
+                {/* Kích Thước */}
+                <div className="col-md-4">
+                  <Form.Item label="Kích Thước" name="idKT">
+                    <Select placeholder="Chọn một giá trị">
+                      {kt.map((item) => (
+                        <Option key={item.id} value={item.id}>
+                          {item.ten}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </div>
+                {/* Màu Sắc */}
+                <div className="col-md-4">
+                  <Form.Item label="Màu Sắc" name="idMS">
+                    <Select placeholder="Chọn một giá trị">
+                      {ms.map((item) => (
+                        <Option key={item.id} value={item.id}>
+                          <div
+                            style={{
+                              color: "white",
+                              fontWeight: "bolder",
+                              backgroundColor: `${item.ma}`,
+                              borderRadius: 6,
+                              border: "1px solid black",
+                              width: 155,
+                              height: 25,
+                            }}
+                            className="text-center"
+                          >{item.ten} - {item.ma}</div>
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </div>
               </div>
-              {/* Kích Thước */}
-              <div className="col-md-4">
-                <Form.Item label="Kích Thước" name="idKT">
-                  <Select placeholder="Chọn một giá trị">
-                    {kt.map((item) => (
-                      <Option key={item.id} value={item.id}>
-                        {item.ten}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </div>
-              {/* Màu Sắc */}
-              <div className="col-md-4">
-                <Form.Item label="Màu Sắc" name="idMS">
-                  <Select placeholder="Chọn một giá trị">
-                    {ms.map((item) => (
-                      <Option key={item.id} value={item.id}>
-                        <div
-                          style={{
-                            backgroundColor: `${item.ma}`,
-                            borderRadius: 6,
-                            width: 170,
-                            height: 25,
-                          }}
-                        ></div>
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </div>
-            </div>
 
-            {/* Các Thuộc Tính Dòng 2 */}
-            <div className="row">
-              {/* Chất Liệu */}
-              <div className="col-md-4">
-                <Form.Item label="Chất Liệu" name="idCL">
-                  <Select placeholder="Chọn một giá trị">
-                    {cl.map((item) => (
-                      <Option key={item.id} value={item.id}>
-                        {item.ten}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
+              {/* Các Thuộc Tính Dòng 2 */}
+              <div className="row">
+                {/* Chất Liệu */}
+                <div className="col-md-4">
+                  <Form.Item label="Chất Liệu" name="idCL">
+                    <Select placeholder="Chọn một giá trị">
+                      {cl.map((item) => (
+                        <Option key={item.id} value={item.id}>
+                          {item.ten}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </div>
+                {/* Độ Cao */}
+                <div className="col-md-4">
+                  <Form.Item label="Đế giày" name="idDC">
+                    <Select placeholder="Chọn một giá trị">
+                      {dc.map((item) => (
+                        <Option key={item.ma} value={item.id}>
+                          {item.ten}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </div>
+                {/* Danh Mục */}
+                <div className="col-md-4">
+                  <Form.Item label="Danh Mục" name="idDM">
+                    <Select placeholder="Chọn một giá trị">
+                      {dm.map((item) => (
+                        <Option key={item.id} value={item.id}>
+                          {item.ten}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </div>
               </div>
-              {/* Độ Cao */}
-              <div className="col-md-4">
-                <Form.Item label="Đế giày" name="idDC">
-                  <Select placeholder="Chọn một giá trị">
-                    {dc.map((item) => (
-                      <Option key={item.ma} value={item.id}>
-                        {item.ten}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </div>
-              {/* Danh Mục */}
-              <div className="col-md-4">
-                <Form.Item label="Danh Mục" name="idDM">
-                  <Select placeholder="Chọn một giá trị">
-                    {dm.map((item) => (
-                      <Option key={item.id} value={item.id}>
-                        {item.ten}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </div>
-            </div>
 
-            {/* Các Thuộc Tính Dòng 3 */}
-            <div className="row">
-              {/* Hãng */}
-              <div className="col-md-4">
-                <Form.Item label="Hãng" name="idH">
-                  <Select placeholder="Chọn một giá trị">
-                    {h.map((item) => (
-                      <Option key={item.id} value={item.id}>
-                        {item.ten}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
+              {/* Các Thuộc Tính Dòng 3 */}
+              <div className="row">
+                {/* Hãng */}
+                <div className="col-md-4">
+                  <Form.Item label="Hãng" name="idH">
+                    <Select placeholder="Chọn một giá trị">
+                      {h.map((item) => (
+                        <Option key={item.id} value={item.id}>
+                          {item.ten}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </div>
+                {/* Trạng Thái */}
+                <div className="col-md-4">
+                  <Form.Item label="Trạng thái" name="trangThaiCT">
+                    <Select placeholder="Chọn một giá trị" defaultValue="0">
+                      <Select.Option value="0">Còn Bán</Select.Option>
+                      <Select.Option value="1">Dừng Bán</Select.Option>
+                    </Select>
+                  </Form.Item>
+                </div>
+                <div className="col-md-4">
+                  <Form.Item label="Số lượng" name="soLuongCT">
+                    <Slider
+                      range
+                      step={100}
+                      defaultValue={[1, 1000]}
+                      min={1}
+                      max={1000}
+                    />
+                  </Form.Item>
+                </div>
               </div>
-              {/* Trạng Thái */}
-              
-              <div className="col-md-4">
-                <Form.Item label="Trạng thái" name="trangThaiCT">
-                  <Select placeholder="Chọn một giá trị" defaultValue="0">
-                    <Select.Option value="0">Còn Bán</Select.Option>
-                    <Select.Option value="1">Dừng Bán</Select.Option>
-                  </Select>
-                </Form.Item>
-              </div>
-              <div className="col-md-4">
-                <Form.Item label="Số lượng" name="soLuongCT">
+              <div className="col">
+                <Form.Item
+                  style={{ marginLeft: 100 }}
+                  label="Giá bán"
+                  name="giaBanCT"
+                >
                   <Slider
                     range
-                    step={100}
-                    defaultValue={[1, 1000]}
-                    min={1}
-                    max={1000}
+                    step={100000}
+                    defaultValue={[100000, 50000000]}
+                    min={100000}
+                    max={50000000}
                   />
                 </Form.Item>
               </div>
-            </div>
-            <div className="col">
-              <Form.Item
-                style={{ marginLeft: 100 }}
-                label="Giá bán"
-                name="giaBanCT"
-              >
-                <Slider
-                  range
-                  step={100000}
-                  defaultValue={[100000, 50000000]}
-                  min={100000}
-                  max={50000000}
-                />
-              </Form.Item>
-            </div>
 
-            <div className="row">
-            {h.map((item) => (
-                      <span>{item.ten}</span>
-                    ))}
-            </div>
-
-            <div className="container-fluid">
-              <Form.Item className="text-center" style={{ paddingLeft: 360 }}>
-                <Button
-                  type="primary"
-                  htmlType="reset"
-                  onClick={loadCTSP}
-                  icon={<RetweetOutlined />}
-                >
-                  Làm mới
-                </Button>
-              </Form.Item>
-            </div>
-          </Form>
-        </div>
-        <div
-          className=" bg-light m-2 p-3 pt-2"
-          style={{
-            border: "1px solid #ddd", // Border color
-            boxShadow: "0 3px 8px rgba(0, 0, 0, 0.1)", // Box shadow
-            borderRadius: "8px",
-          }}
-        >
-          <h5>
-            <BookFilled size={30} /> Danh sách chi tiết sản phẩm
-          </h5>
+              <div className="container-fluid">
+                <Form.Item className="text-center" style={{ paddingLeft: 360 }}>
+                  <Button
+                    type="primary"
+                    htmlType="reset"
+                    onClick={loadCTSP}
+                    icon={<RetweetOutlined />}
+                  >
+                    Làm mới
+                  </Button>
+                </Form.Item>
+              </div>
+            </Form>
+          </div>
+          <div
+            className=" bg-light m-2 p-3 pt-2"
+            style={{
+              border: "1px solid #ddd", // Border color
+              boxShadow: "0 3px 8px rgba(0, 0, 0, 0.1)", // Box shadow
+              borderRadius: "8px",
+            }}
+          >
+            <h5>
+              <BookFilled size={30} /> Danh sách chi tiết sản phẩm
+            </h5>
             <hr />
             <div className="container-fluid mt-4">
               <div>
