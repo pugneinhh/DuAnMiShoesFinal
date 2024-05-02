@@ -57,6 +57,7 @@ function ProductRow({ product, loadghct, loadSoLuongSPTrongGH }) {
       });
     }
   };
+  
   const handleDeleteGHCT = () => {
     GioHangAPI.deleteGHCT(product.id);
     loadghct();
