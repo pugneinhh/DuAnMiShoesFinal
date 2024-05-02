@@ -160,7 +160,7 @@ const ModalSanPham = (props) => {
   const handleClickAddProduct = async (record) => {
     dispatch(
       AddInvoice({
-        chiTietSanPham: record.id,
+        chiTietSanPham: record.idCTSP,
         tenSP: record.tenSP,
         maMS: record.maMS,
         linkAnh: record.linkAnh,
@@ -168,18 +168,27 @@ const ModalSanPham = (props) => {
         giaBan: record.giaBan,
         hoaDon: activeKey,
         tenMS: record.tenMS,
-        giaGiam: (parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100))),
-        giaSauGiam: (parseFloat(record.giaBan) - parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100))), 
+        giaGiam: parseFloat(
+          record.loaiKM === "Tiền mặt"
+            ? record.giaTriKhuyenMai
+            : (record.giaBan * record.giaTriKhuyenMai) / 100
+        ),
+        giaSauGiam:
+          parseFloat(record.giaBan) -
+          parseFloat(
+            record.loaiKM === "Tiền mặt"
+              ? record.giaTriKhuyenMai
+              : (record.giaBan * record.giaTriKhuyenMai) / 100
+          ),
         nguoiTao: record.nguoiTao,
         tenKM: record.tenKM,
         loaiKM: record.loaiKM,
         giaTriKhuyenMai: record.giaTriKhuyenMai,
-    
       })
     );
-      
-    dispatch(UpdateApartProduct({ id: record.id, soLuong: 1 }));
-    await HoaDonAPI.themSanPham(activeKey,maNV,record.id);
+    
+    dispatch(UpdateApartProduct({ id: record.idCTSP, soLuong: 1 }));
+    await HoaDonAPI.themSanPham(activeKey, maNV, record.idCTSP);
     props.loadHoaDon();
     props.loadListSanPhams();
     setOpenSanPham(false);

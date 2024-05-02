@@ -814,7 +814,7 @@ export default function HoaDonDetail() {
 
         {/* button hủy hóa đơn */}
         <div className="col-md-2 ">
-          {trangThai == 0 || trangThai == 1 || trangThai == 2 ? (
+          {trangThai == 0 || trangThai == 1 || trangThai == 2 || trangThai == 3 ? (
             <Button
               style={{ backgroundColor: "red", color: "white" }}
               type="primary"
