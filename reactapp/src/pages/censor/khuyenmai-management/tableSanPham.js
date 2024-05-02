@@ -21,7 +21,7 @@ const TableSanPham = ({onSelectedSanPham , suaIDSP}) => {
             })
             .catch(error => console.error('Error adding item:', error));
           };
-          if (suaIDSP.length > 0){
+          if (suaIDSP && suaIDSP.length > 0){
             suaIDSP = suaIDSP.filter((item, index) => {
               return suaIDSP.indexOf(item) === index;
             });

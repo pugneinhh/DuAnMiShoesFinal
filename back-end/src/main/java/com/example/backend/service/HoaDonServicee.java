@@ -54,10 +54,13 @@ public class HoaDonServicee {
     }
 
     public HoaDon deleteHoaDon(String idHD) {
-        HoaDon hoaDon = hoaDonRepository.findById(idHD).get();
+        HoaDon hoaDon = hoaDonRepository.getHoaDonByIDHD(idHD);
+        System.out.println(">>>>>>>>>>>>>>>> Xóa hóa đơn");
         hoaDon.setTrangThai(-1);
+        System.out.println("Hóa đơn : "+hoaDon);
         thongBaoService.VanDon(idHD);
-        return  hoaDonRepository.save(hoaDon);
+
+        return   hoaDonRepository.save(hoaDon);
     }
     public List<HoaDon> getAllBillToday() {
         return hoaDonRepository.getAllBillToday();

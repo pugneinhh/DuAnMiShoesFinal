@@ -138,10 +138,10 @@ export class HoaDonAPI {
       },
     });
   };
-  static huyHoaDon = (id) => {
+  static huyHoaDon = (ma) => {
     return requestAdmin({
       method: "PUT",
-      url: `/admin/hoa-don/huy-hoa-don/${id}`,
+      url: `/admin/hoa-don/huy-hoa-don/${ma}`,
       headers: {
         Authorization: this.getToken,
       },

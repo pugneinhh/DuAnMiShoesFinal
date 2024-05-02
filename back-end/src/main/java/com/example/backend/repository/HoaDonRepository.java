@@ -216,4 +216,7 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
     HoaDon getHDByMaTraHang(String ma);
     @Query(value = "select id,ma, ten_nguoi_nhan as tenNguoiNhan,so_dien_thoai as sdt, ghi_chu as ghiChu, dia_chi as diaChi,ngay_du_kien_nhan as ngayDuKienNhan, tien_van_chuyen as tienVanChuyen  from hoa_don where id=:idHD",nativeQuery = true)
     DetailUpdateDiaChiHoaDonRespon detailUpdateDiaChiHoaDon(String idHD);
+
+
+
 }

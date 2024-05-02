@@ -141,10 +141,9 @@ public class HoaDonChiTietService {
         }
         BigDecimal giaGiam = hoaDon.getGiaGiamGia() == null ? new BigDecimal("0") : hoaDon.getGiaGiamGia();
         hoaDon.setGiaGoc(tong);
-        hoaDon.setTrangThai(-1);
         hoaDon.setThanhTien(tong.subtract(giaGiam));
-        hoaDonRepository.save(hoaDon);
         hoaDonChiTietRepository.delete(hdct);
+        hoaDonRepository.save(hoaDon);
     }
 
     public void deleteHDCTAndRollBackInSell1(String idCTSP,String ma , BigDecimal thanhTien){
@@ -168,10 +167,11 @@ public class HoaDonChiTietService {
         }
         BigDecimal giaGiam = hoaDon.getGiaGiamGia() == null ? new BigDecimal("0") : hoaDon.getGiaGiamGia();
         hoaDon.setGiaGoc(tong);
-        hoaDon.setTrangThai(-1);
+        //hoaDon.setTrangThai(-1);
         hoaDon.setThanhTien(tong.subtract(giaGiam));
-        hoaDonRepository.save(hoaDon);
         hoaDonChiTietRepository.delete(hdct);
+        hoaDonRepository.save(hoaDon);
+
     }
 
     public void huyDonHang(String idCTSP,String idHD){
@@ -186,13 +186,14 @@ public class HoaDonChiTietService {
     public void updateGia(String idCTSP, BigDecimal giaGiam , BigDecimal giaSauGiam){
         List<HoaDonChiTiet> list = hoaDonChiTietRepository.getAllHDCTByCTSP(idCTSP);
         List<GioHangChiTiet> listGH=gioHangChiTietRepository.getAllGHCTByCTSP(idCTSP);
-        System.out.println("list gh"+listGH);
-        System.out.println("Gia giam"+giaGiam);
-        System.out.println("gia sau giam"+giaSauGiam);
-        System.out.println("List"+list);
         for (HoaDonChiTiet h : list){
-            System.out.println("H"+h);
             if (h.getTrangThai() == 0) {
+                BigDecimal before = h.getGiaSauGiam().subtract(h.getGiaGiam());
+                BigDecimal after = giaSauGiam.subtract(giaGiam);
+                HoaDon hd = hoaDonRepository.getHoaDonByIDHD(h.getHoaDon().getId());
+                hd.setGiaGoc(hd.getGiaGoc().subtract(h.getGiaSauGiam()).add(giaSauGiam));
+                hd.setThanhTien(hd.getThanhTien().subtract(h.getGiaSauGiam()).add(giaSauGiam));
+                hoaDonRepository.save(hd);
                 h.setGiaGiam(giaGiam);
                 h.setGiaSauGiam(giaSauGiam);
                 hoaDonChiTietRepository.save(h);

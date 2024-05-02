@@ -134,9 +134,42 @@ const detailInvoiceSlice = createSlice({
         });
       }
     },
+
+    Remove: (state,action) => {
+      return initialState;
+    },
+    UpdateKMNULLInvoice: (state, action) => {
+      const updateData = action.payload;
+      const index = state.findIndex(
+        (i) =>
+          i.loaiKM === updateData.loaiKM &&
+          i.tenKM === updateData.tenKM
+      );
+      if (index !== -1) {
+        state[index].giaGiam = 0;
+        state[index].giaSauGiam = state[index].giaBan;
+        state[index].total = state[index].giaBan * state[index].soLuong;
+      }
+    },
+    UpdateKMInvoice: (state, action) => {
+      const updateData = action.payload;
+      const index = state.findIndex(
+        (i) =>
+          i.loaiKM === updateData.loaiKM &&
+          i.tenKM === updateData.tenKM
+      );
+      if (index !== -1) {
+       // state[index].giaGiam = updateData.giaTriKhuyenMai === "Tiền mặt" ? parseFloat(updateData.giaTriKhuyenMai) : parseFloat(updateData.giaBan*updateData.);
+        state[index].giaSauGiam = updateData.giaSauGiam;
+        state[index].total = updateData.giaSauGiam * state[index].soLuong;
+      }
+    }
   },
 });
 export const {
+  UpdateKMNULLInvoice,
+  UpdateKMInvoice,
+  Remove,
   AddInvoice,
   UpdateInvoice,
   RemoveInvoice,
