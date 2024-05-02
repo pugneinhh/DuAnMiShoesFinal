@@ -162,6 +162,9 @@ const SuaKhuyenMai = () => {
 
   const [selectedIDSP, setSelectedIDSP] = useState([]);
   const handleSelectedSanPham = (selectedRowKeys) => {
+    if (selectedIDSP.filter((e) => e === selectedRowKeys).length > 0) {
+      return;
+    } else 
     setSelectedIDSP(selectedRowKeys);
   };
   const [selectedIDCTSP, setSelectedIDCTSP] = useState([]);

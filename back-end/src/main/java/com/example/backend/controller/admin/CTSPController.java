@@ -98,7 +98,8 @@ public class CTSPController {
         }
             BigDecimal giaGiam = khuyenMai.getLoai().equals("Tiền mặt") ? khuyenMai.getGia_tri_khuyen_mai()
                     : (ctsp.getGiaBan().subtract(ctsp.getGiaBan().multiply(khuyenMai.getGia_tri_khuyen_mai().divide(new BigDecimal("100")))));
-            BigDecimal giaSauGiam = ctsp.getGiaBan().subtract(giaGiam);
+            BigDecimal giaSauGiam = ctsp.getGiaBan();
+                    //.subtract(giaGiam);
             hoaDonChiTietService.updateGia(idCTSP, giaGiam, giaSauGiam);
         return ResponseEntity.ok(ctspService.updateKM(idCTSP, khuyenMai));
     }
