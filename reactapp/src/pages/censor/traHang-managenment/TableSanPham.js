@@ -162,7 +162,7 @@ const TableSanPham = ({ onSelectedSP, sanPhamHDCT }) => {
       rowSelection={{
         ...rowSelection,
         getCheckboxProps: (record) => ({
-          disabled: record.giaTriKhuyenMai !== null,
+          disabled: record.giaGiam >0,
         }),
       }}
       defaultSelectedRowKeys={selectedRowKeys}
