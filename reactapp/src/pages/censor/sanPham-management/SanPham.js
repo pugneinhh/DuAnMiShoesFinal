@@ -30,6 +30,7 @@ export default function SanPham() {
   const nav = useNavigate();
   const [soLuongBatDau, setSoLuongBatDau] = useState(100);
   const [soLuongKetThuc, setSoLuongKetThuc] = useState(900);
+  const [formTim] = Form.useForm();
   const themSP = (res) => {
     console.log(res);
 
@@ -52,23 +53,48 @@ export default function SanPham() {
   };
   //Tìm kiếm
   const onChangeFilter = (changedValues, allValues) => {
-    console.log("All values : ", allValues);
-    const dataTim = {
-      soLuongBatDau: allValues.soLuong[0],
-      soLuongKetThuc: allValues.soLuong[1],
-      ten: allValues.ten,
-      trangThai: allValues.trangThai
+    if (allValues.hasOwnProperty('ten')) {
+      allValues.ten = allValues.ten.trim();
     }
-    timKiemCT(dataTim);
+    const updatedValues = { ...allValues };
+    if (updatedValues.soLuong && updatedValues.soLuong.length > 0) {
+      updatedValues.soLuongBatDau = updatedValues.soLuong[0] !== undefined ? updatedValues.soLuong[0] : 1;
+    } else {
+      updatedValues.soLuongBatDau = 1;
+    }
+    if (updatedValues.soLuong && updatedValues.soLuong.length > 0) {
+      updatedValues.soLuongKetThuc = updatedValues.soLuong[1] !== undefined ? updatedValues.soLuong[1] : 1000;
+    } else {
+      updatedValues.soLuongKetThuc = 1000;
+    }
+    if (updatedValues.giaBan && updatedValues.giaBan.length > 0) {
+      updatedValues.giaBanBatDau = updatedValues.giaBan[0] !== undefined ? updatedValues.giaBan[0] : 100000;
+    } else {
+      updatedValues.giaBanBatDau = 100000;
+    }
+    if (updatedValues.giaBan && updatedValues.giaBan.length > 0) {
+      updatedValues.giaBanKetThuc = updatedValues.giaBan[1] !== undefined ? updatedValues.giaBan[1] : 50000000;
+    } else {
+      updatedValues.giaBanKetThuc = 50000000;
+    }
+    timKiemCT(updatedValues)
   };
+  
   const timKiemCT = (dataSearch) => {
     SanPhamAPI.search(dataSearch)
       .then((response) => {
         setSanPhams(response.data);
-        console.log(response.data);
-        console.log(response.data.lenght);
       })
       .catch((error) => console.error("Error adding item:", error));
+  };
+
+  const validateDateTim = (_, value) => {
+    const { getFieldValue } = formTim;
+    const ten = getFieldValue("ten");
+    if (ten.trim().length > 30) {
+      return Promise.reject("Tên không được vượt quá 30 ký tự");
+    }
+    return Promise.resolve();
   };
   //Table
   const [sanPham, setSanPhams] = useState([]);
@@ -269,22 +295,22 @@ export default function SanPham() {
             style={{
               maxWidth: 1400,
             }}
+            form={formTim}
           >
-            <div className="col-md-4">
-              <Form.Item label="Tên & Mã" name="ten">
+          <div className="col-md-4">
+              <Form.Item label="Tên & Mã" name="ten" rules={[{ validator: validateDateTim }]}>
                 <Input
-                  className="rounded-pill border-warning"
+                  maxLength={31}
                   placeholder="Nhập tên hoặc mã"
                 />
               </Form.Item>
             </div>
             <div className="col-md-4">
-              <Form.Item
-                placeholder="Chọn trạng thái"
+              <Form.Item            
                 label="Trạng Thái"
                 name="trangThai"
               >
-                <Select value={selectedValue} onChange={handleChange}>
+                <Select value={selectedValue} onChange={handleChange}  placeholder="Chọn trạng thái">
                   <Select.Option value="0">Còn Bán</Select.Option>
                   <Select.Option value="1">Dừng Bán</Select.Option>
                 </Select>
@@ -346,7 +372,7 @@ export default function SanPham() {
                   defaultPageSize: 5,
                   position: ["bottomCenter"],
                   defaultCurrent: 1,
-                  total: 100,
+                  total: sanPham.length,
                 }}
               />
             </div>

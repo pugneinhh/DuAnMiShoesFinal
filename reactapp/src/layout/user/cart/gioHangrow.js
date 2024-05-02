@@ -183,6 +183,7 @@ function ProductRow({ product, loadghct, loadSoLuongSPTrongGH }) {
             className="mt-2"
             style={{
               backgroundColor: `${ctsp.mauSac}`,
+              border: "1px solid black",
               borderRadius: 6,
               width: 60,
               height: 25,

@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface ChatLieuRepository extends JpaRepository<ChatLieu, String> {
     @Query(value = """
-    SELECT o.id as id,o.ma as ma ,o.ten as ten, o.trang_thai as trangThai FROM chat_lieu o ORDER BY o.ma ASC 
+    SELECT o.id as id,o.ma as ma ,o.ten as ten, o.trang_thai as trangThai FROM chat_lieu o ORDER BY o.ngay_tao DESC
             """, nativeQuery = true)
     List<ChatLieuRespone> getALLCL();
 

@@ -83,6 +83,9 @@ const KhuyenMai = () => {
   const [dataSearch, setDataSearch] = useState({});
 
   const onChangeFilter = (changedValues, allValues) => {
+    if (allValues.hasOwnProperty('ma')) {
+      allValues.ma = allValues.ma.trim();
+    }
     timKiemKhuyenMai(allValues);
     setDataSearch(allValues);
   };
@@ -461,6 +464,7 @@ const KhuyenMai = () => {
               <div className="col-md-4">
                 <Form.Item label="Mã KM" name="ma">
                   <Input
+                    maxLength={30}
                     placeholder="Mã khuyến mại"
                     className="rounded-pill border-warning"
                   />

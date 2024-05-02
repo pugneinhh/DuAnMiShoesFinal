@@ -489,7 +489,7 @@ const ModalDetailSP = (props) => {
                     border:
                       selectedMauSac === listMauSacBySP.mauSacID
                         ? "2px solid #4096ff"
-                        : "none",
+                        : "1px solid black",
                   }}
                   onClick={() => handleMauSacClick(listMauSacBySP.mauSacID)}
                 ></Button>

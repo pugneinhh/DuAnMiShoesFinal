@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface DanhMucRepository extends JpaRepository<DanhMuc, String> {
     @Query(value = """
-    SELECT dm.id as id,dm.ma as ma ,dm.ten as ten, dm.trang_thai as trangThai FROM danh_muc dm ORDER BY dm.ma ASC 
+    SELECT dm.id as id,dm.ma as ma ,dm.ten as ten, dm.trang_thai as trangThai FROM danh_muc dm ORDER BY dm.ngay_tao DESC 
             """, nativeQuery = true)
     List<DanhMucRespone> getALLDM();
 

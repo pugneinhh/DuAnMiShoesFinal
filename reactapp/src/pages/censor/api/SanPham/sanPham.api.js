@@ -69,12 +69,12 @@ export class SanPhamAPI {
     });
   };
 
-  static addAnhTheoMau = (data) => {
+  static addAnhTheoMau = (id,data) => {
     const getToken = getHeader();
     return requestAdmin({
       method: "POST",
       data: data,
-      url: `/admin/hinhanh/add-anh`,
+      url: `/admin/hinhanh/add-anh/${id}`,
       headers: {
         Authorization: getToken,
       },
@@ -87,6 +87,17 @@ export class SanPhamAPI {
       method: "POST",
       url: `admin/san-pham/tim-kiem`,
       data: data,
+      headers: {
+        Authorization: getToken,
+      },
+    });
+  };
+
+  static deleteAnh = (idAnh) => {
+    const getToken = getHeader();
+    return requestAdmin({
+      method: "DELETE",
+      url: `admin/hinhanh/delete-anh/${idAnh}`,
       headers: {
         Authorization: getToken,
       },

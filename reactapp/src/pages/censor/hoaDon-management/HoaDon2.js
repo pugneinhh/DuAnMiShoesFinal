@@ -17,6 +17,9 @@ import { Stomp } from "@stomp/stompjs";
 export default function HoaDon() {
   //Tìm hóa đơn
   const onChangeFilter = (changedValues, allValues) => {
+    if (allValues.hasOwnProperty('tenHD')) {
+        allValues.tenHD = allValues.tenHD.trim();
+      }
     timKiemHD(allValues);
   };
 
@@ -520,7 +523,7 @@ export default function HoaDon() {
         >
           <div className="col-md-6">
             <Form.Item label="Tìm kiếm" name="tenHD">
-              <Input required className="rounded-pill border-warning" />
+              <Input required maxLength={30} />
             </Form.Item>
             <Form.Item
               label="Loại HD"

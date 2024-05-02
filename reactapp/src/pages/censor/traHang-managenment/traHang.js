@@ -15,7 +15,6 @@ const TraHang = () => {
   const navigate = useNavigate();
   
   const handleSubmit=(value)=>{
-   
     TraHangAPI.getHoaDonByMa(value.ma).then((res)=>{
       if(res.data===null || res.data===''){
         toast.error("Không tìm thấy hóa đơn!", {
