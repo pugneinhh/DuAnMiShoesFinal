@@ -59,11 +59,8 @@ const ThemKhuyenMai = () => {
       .then((response) => {
         setIDKM(response.data);
         if (selectedIDCTSP.length > 0){
-        Promise.all(
           selectedIDCTSP.map((id) =>
             PromotionAPI.updateProductByPromotion(id,response.data)
-            
-          )
         );
             }
       

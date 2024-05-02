@@ -143,6 +143,33 @@ public class HoaDonChiTietService {
         hoaDonChiTietRepository.delete(hdct);
     }
 
+    public void deleteHDCTAndRollBackInSell1(String idCTSP,String ma , BigDecimal thanhTien){
+        String idHD = hoaDonRepository.getHDByMa(ma).getId();
+        HoaDonChiTiet hdct = hoaDonChiTietRepository.getHDCTByCTSPAndHDAndThanhTien(idCTSP,idHD,thanhTien);
+        System.out.println("Hóa đơn chi tiết"+hdct);
+        ChiTietSanPham ctsp = ctspRepository.getReferenceById(idCTSP);
+        int slt = ctsp.getSoLuong();
+        int slh = hdct.getSoLuong();
+        ctsp.setSoLuong(slt+slh);
+        ctspRepository.save(ctsp);
+        BigDecimal tong = new BigDecimal("0");
+        HoaDon hoaDon = hoaDonRepository.getHoaDonByIDHD(idHD);
+        List<HoaDonChiTiet> list = hoaDonChiTietRepository.getAllHDCTByIDHD(idHD);
+        for (HoaDonChiTiet x : list) {
+            if (x.getChiTietSanPham().getId().equals(idCTSP)){
+                // tong = tong.add(x.getGiaSauGiam().multiply(BigDecimal.valueOf(soLuongCapNhat)));
+                continue;
+            }
+            tong = tong.add(x.getGiaSauGiam().multiply(BigDecimal.valueOf(x.getSoLuong())));
+        }
+        BigDecimal giaGiam = hoaDon.getGiaGiamGia() == null ? new BigDecimal("0") : hoaDon.getGiaGiamGia();
+        hoaDon.setGiaGoc(tong);
+        hoaDon.setTrangThai(-1);
+        hoaDon.setThanhTien(tong.subtract(giaGiam));
+        hoaDonRepository.save(hoaDon);
+        hoaDonChiTietRepository.delete(hdct);
+    }
+
     public void huyDonHang(String idCTSP,String idHD){
         HoaDonChiTiet hdct = hoaDonChiTietRepository.getHDCTByCTSPAndHD(idCTSP,idHD);
         System.out.println("Hóa đơn chi tiết"+hdct);
@@ -161,9 +188,11 @@ public class HoaDonChiTietService {
             System.out.println("H"+h);
 //            h.setGiaGiam(giaSauGiam.subtract(giaGiam));
 //            h.setGiaSauGiam(giaGiam);
-            h.setGiaGiam(giaGiam);
-            h.setGiaSauGiam(giaSauGiam.subtract(giaGiam));
-            hoaDonChiTietRepository.save(h);
+            if (h.getTrangThai() == 0) {
+                h.setGiaGiam(giaGiam);
+                h.setGiaSauGiam(giaSauGiam.subtract(giaGiam));
+                hoaDonChiTietRepository.save(h);
+            }
             System.out.println( hoaDonChiTietRepository.save(h));
         }
     }

@@ -6,6 +6,7 @@ import com.example.backend.dto.request.KhuyenMaiSearch;
 import com.example.backend.entity.ChiTietSanPham;
 import com.example.backend.entity.HoaDonChiTiet;
 import com.example.backend.entity.KhuyenMai;
+import com.example.backend.entity.KhuyenMaiSanPham;
 import com.example.backend.service.CTSPService;
 import com.example.backend.service.HoaDonChiTietService;
 import com.example.backend.service.KhuyenMaiSanPhamService;
@@ -38,11 +39,12 @@ public class KhuyenMaiController {
     HoaDonChiTietService hoaDonChiTietService;
     @Autowired
     KhuyenMaiSanPhamService khuyenMaiSanPhamService;
+
 //    private ScheduledCheck scheduledCheck;
     @GetMapping("hien-thi")
     public ResponseEntity<?> getALL(){
 //        scheduledCheck.checkKhuyenMai();
-        return new ResponseEntity<>(khuyenMaiService.getAllKhuyenMai(), HttpStatus.OK);
+        return  ResponseEntity.ok(khuyenMaiService.getAllKhuyenMai());
     }
 
     @PostMapping("/add")
@@ -103,7 +105,7 @@ public class KhuyenMaiController {
             List<String> list = ctspService.getCTSPByKM(id);
             for (String x: list) {
                 ChiTietSanPham ctsp = ctspService.findChiTietSanPhamByID(x);
-                ctspService.deleteKM(x); // xóa khuyến mại ở ctsp
+                ctspService.deleteKM(x,id); // xóa khuyến mại ở ctsp
                 for (HoaDonChiTiet h : hoaDonChiTietService.getAllHDCTByIDCTSP(x)) { // kiểm tra hóa đơn chi tiết chưa thanh toán
                     if(h.getTrangThai() == 0) {
                         hoaDonChiTietService.updateGia(x,new BigDecimal(0),ctsp.getGiaBan()); // trả về giá nguyên
@@ -138,6 +140,18 @@ public class KhuyenMaiController {
         km.setId(id);
         km.setTrangThai(3);
         km.setNgaySua(new Date(new java.util.Date().getTime()));
+        List<KhuyenMaiSanPham> list = khuyenMaiSanPhamService.getListCTSPByKM(id);
+        for (KhuyenMaiSanPham x : list){
+            x.setTrangThai(3);
+            khuyenMaiSanPhamService.add(x);
+        }
+        List<ChiTietSanPham>  listCTPS = ctspService.getALL();
+        for (ChiTietSanPham c : listCTPS){
+            if (c.getKhuyenMai() != null && c.getKhuyenMai().getId().equals(id)){
+                c.setKhuyenMai(null);
+                ctspService.updateCTSP(c);
+            }
+        }
         return  ResponseEntity.ok(khuyenMaiService.addKhuyenMai(km));
     }
 
@@ -145,6 +159,11 @@ public class KhuyenMaiController {
     public ResponseEntity<?> updateTrangThai3(@PathVariable("id") String id , @RequestBody KhuyenMaiRequest request){
         KhuyenMai km = request.map();
         km.setId(id);
+        List<KhuyenMaiSanPham> list = khuyenMaiSanPhamService.getListCTSPByKM(id);
+        for (KhuyenMaiSanPham x : list){
+            x.setTrangThai(1);
+            khuyenMaiSanPhamService.add(x);
+        }
         if (km.getNgay_bat_dau().isAfter(LocalDateTime.now()))
             km.setTrangThai(0);
         else km.setTrangThai(1);

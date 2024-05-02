@@ -52,6 +52,7 @@ export default function HoaDonDetail() {
   const [voucher, setVoucher] = useState([]);
   const [soTienCanMuaThem, setSoTienCanMuaThem] = useState(0);
   const [soTienDuocGiam, setSoTienDuocGiam] = useState(0);
+  const [idHDCT, setIdHDCT] = useState(null);
   const [form] = Form.useForm();
   const [formRollBack] = Form.useForm();
   const [formHuyHoaDon] = Form.useForm();
@@ -60,6 +61,7 @@ export default function HoaDonDetail() {
   const [listSanPhams, setlistSanPhams] = useState([]);
   const [check, setCheck] = useState(false);
   console.log("Trạng thái :", trangThai);
+  console.log("Check :", check);
   const handleOk = () => {
     setIsModalOpen(false);
     setOpenModalTimeLine(false);
@@ -187,7 +189,7 @@ export default function HoaDonDetail() {
   const handleHuyHoaDon = (values) => {
     AdminGuiThongBaoXacNhanDatHang();
     listSanPhams.map((listSanPham, index) =>
-      HoaDonAPI.deleteInvoiceAndRollBackProduct(listSanPham.idctsp, id)
+      HoaDonAPI.deleteInvoiceAndRollBackProduct(listSanPham.idctsp, id,listSanPham.thanhTienSP)
     );
     HoaDonAPI.huyHoaDonQLHoaDon(id, maNV, values).then((res) => {
       loadHoaDon();
@@ -255,7 +257,8 @@ export default function HoaDonDetail() {
         content:
           "Bạn có chắc chắn muốn xóa sản phẩm này ra khỏi hóa đơn hay không?",
         onOk: () => {
-          SellAPI.deleteInvoiceAndRollBackProduct(record.idctsp, maHD);
+          SellAPI.deleteInvoiceAndRollBackProduct1(record.idctsp, maHD,record.thanhTienSP);
+          setIdHDCT(record.id);
           toast("✔️ Cập nhật hóa đơn thành công!", {
             position: "top-right",
             autoClose: 1000,
@@ -299,12 +302,20 @@ export default function HoaDonDetail() {
   };
 
   useEffect(() => {
-    if (listSanPhams.length > 0 && check === true) {
+    console.log("kết quả :"+listSanPhams.filter(data => data.id === idHDCT).length)
+    if (check === true) {
       loadHoaDon();
       loadListSanPhams();
       setCheck(false);
     }
-  }, [listSanPhams.soLuongSP, listSanPhams.length, check]);
+    if (listSanPhams.filter(data => data.id === idHDCT).length === 1){
+      loadHoaDon();
+      loadListSanPhams();
+     
+    } else {
+      setIdHDCT(null);
+    }
+  }, [listSanPhams, check , idHDCT]);
   //lịch sử thanh toán
   const columLichSuThanhToan = [
     {
@@ -1116,20 +1127,25 @@ export default function HoaDonDetail() {
 
               <div className="col-md-2 mt-5">
                 <Space size="middle">
+                {trangThai == 0 || trangThai == 1 || trangThai == 2 ?(
                   <button
                     className="btn btn-danger"
                     style={{ borderRadius: 30 }}
-                    onClick={() => {
+                    onClick={ () => {
                       Modal.confirm({
                         title: "Thông báo",
                         content:
                           "Bạn có chắc chắn muốn xóa sản phẩm này ra khỏi hóa đơn hay không?",
-                        onOk: () => {
-                          SellAPI.deleteInvoiceAndRollBackProduct(
+                        onOk:  () => {
+                          SellAPI.deleteInvoiceAndRollBackProduct1(
                             listSanPham.idctsp,
-                            maHD
+                            maHD,
+                            listSanPham.thanhTienSP
                           );
-                          setCheck(true);
+                          loadHoaDon();
+                          loadListSanPhams();
+                          setCheck(true); 
+                          setIdHDCT(listSanPham.id);
                           toast("✔️ Cập nhật hóa đơn thành công!", {
                             position: "top-right",
                             autoClose: 5000,
@@ -1148,10 +1164,23 @@ export default function HoaDonDetail() {
                           </>
                         ),
                       });
+
                     }}
                   >
                     <DeleteFilled size={20} />
                   </button>
+                ) : (
+                  <button
+                  className="btn btn-danger"
+                  style={{ borderRadius: 30 }}
+                  disabled={true}
+                >
+                  <DeleteFilled size={20}/>
+
+
+                </button>
+                )
+              }
                 </Space>
               </div>
 

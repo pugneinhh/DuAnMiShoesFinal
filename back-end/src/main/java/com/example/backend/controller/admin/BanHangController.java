@@ -97,6 +97,11 @@ public class BanHangController {
     public void  deleteHoaDonChiTiet (@PathVariable("idCTSP") String idCTSP,@PathVariable("ma")String ma) {
         hoaDonChiTietService.deleteHDCTAndRollBackInSell(idCTSP,ma); //  roll backed
     }
+    @DeleteMapping("/delete-hoa-don-chi-tiet/{idCTSP}/{ma}/{thanhTien}")
+    public void  deleteHoaDonChiTiet (@PathVariable("idCTSP") String idCTSP,@PathVariable("ma")String ma , @PathVariable("thanhTien") BigDecimal thanhTien) {
+        hoaDonChiTietService.deleteHDCTAndRollBackInSell1(idCTSP,ma,thanhTien); //  roll backed
+    }
+
     @PostMapping("/thanh-toan")
     public ResponseEntity<?> thanhToan(@PathVariable HoaDonRequest hoaDonRequest){
         hoaDonRequest.setTrangThai(1);

@@ -131,11 +131,11 @@ export class PromotionAPI {
     });
   };
 
-  static deletePromotion = (id) => {
+  static deletePromotion = (id,idKM) => {
      const getToken = getHeader();
     return requestAdmin({
       method: "PUT",
-      url: `/admin/ctsp/deleteKM/${id}`,
+      url: `/admin/ctsp/deleteKM/${id}/{idKM}`,
       headers: {
         Authorization:getToken,
       },

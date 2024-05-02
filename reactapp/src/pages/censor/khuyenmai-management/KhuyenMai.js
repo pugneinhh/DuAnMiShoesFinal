@@ -53,6 +53,7 @@ const KhuyenMai = () => {
      PromotionAPI.getAll()
       .then((response) => {
         setKhuyenMais(response.data);
+        console.log("Ngày tạo ", response.data);
       })
       .catch((error) => console.error("Error adding item:", error));
   };
@@ -525,7 +526,9 @@ const KhuyenMai = () => {
           <div className="container-fluid mt-4">
             <div>
               <Table
-                dataSource={khuyenMai}
+                dataSource={khuyenMai.sort((a, b) =>  { const dateA = new Date(a.ngayTao);
+                  const dateB = new Date(b.ngayTao);
+                  return dateB - dateA; })}
                 columns={columns}
                 id="bang"
                 scroll={scroll}
