@@ -1826,8 +1826,9 @@ SellAPI.voucherSapDatDuoc(
                               )}`}
                             </h6>
                             <h6 className="mt-4">
-                              Phí vận chuyển:{" "}
+                              Phí vận chuyển:
                               <InputNumber
+                              min={0}
                                 value={
                                   soTienVanChuyen === 0
                                     ? isSwitchOn
@@ -1940,13 +1941,7 @@ SellAPI.voucherSapDatDuoc(
                                       : 0) +
                                     roundToThousands(
                                       isSwitchOn
-                                        ? // ? hd[0]?.tienVanChuyen && !shipMoney
-                                          //   ? hd[0]?.tienVanChuyen
-                                          //   : hd[0]?.tienVanChuyen &&
-                                          //     hd[0]?.tienVanChuyen !== shipMoney
-                                          //   ? shipMoney
-                                          //   : shipMoney
-                                          // : 0
+                                        ? 
                                           hd[0]?.tienVanChuyen &&
                                           shipMoney === shipMoney1
                                           ? hd[0]?.tienVanChuyen
