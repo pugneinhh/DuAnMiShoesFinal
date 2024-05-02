@@ -5,9 +5,11 @@ import com.example.backend.dto.request.HoaDonChiTietRequest;
 import com.example.backend.dto.response.HoaDonChiTietBanHangRespone;
 import com.example.backend.dto.response.HoaDonChiTietRespone;
 import com.example.backend.entity.ChiTietSanPham;
+import com.example.backend.entity.GioHangChiTiet;
 import com.example.backend.entity.HoaDon;
 import com.example.backend.entity.HoaDonChiTiet;
 import com.example.backend.repository.CTSPRepository;
+import com.example.backend.repository.GioHangChiTietRepository;
 import com.example.backend.repository.HoaDonChiTietRepository;
 import com.example.backend.repository.HoaDonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,8 @@ import java.util.UUID;
 public class HoaDonChiTietService {
     @Autowired
     HoaDonChiTietRepository hoaDonChiTietRepository;
+    @Autowired
+    GioHangChiTietRepository gioHangChiTietRepository;
     @Autowired
     CTSPRepository ctspRepository;
     @Autowired
@@ -181,19 +185,22 @@ public class HoaDonChiTietService {
     }
     public void updateGia(String idCTSP, BigDecimal giaGiam , BigDecimal giaSauGiam){
         List<HoaDonChiTiet> list = hoaDonChiTietRepository.getAllHDCTByCTSP(idCTSP);
+        List<GioHangChiTiet> listGH=hoaDonChiTietRepository.getAllGHCTByCTSP(idCTSP);
         System.out.println("Gia giam"+giaGiam);
         System.out.println("gia sau giam"+giaSauGiam);
         System.out.println("List"+list.size());
         for (HoaDonChiTiet h : list){
             System.out.println("H"+h);
-//            h.setGiaGiam(giaSauGiam.subtract(giaGiam));
-//            h.setGiaSauGiam(giaGiam);
             if (h.getTrangThai() == 0) {
                 h.setGiaGiam(giaGiam);
-                h.setGiaSauGiam(giaSauGiam.subtract(giaGiam));
+                h.setGiaSauGiam(giaSauGiam);
                 hoaDonChiTietRepository.save(h);
             }
             System.out.println( hoaDonChiTietRepository.save(h));
+        }
+        for(GioHangChiTiet ghct:listGH){
+            ghct.setThanhTien(giaSauGiam.multiply(BigDecimal.valueOf(ghct.getSoLuong())));
+            gioHangChiTietRepository.save(ghct);
         }
     }
 

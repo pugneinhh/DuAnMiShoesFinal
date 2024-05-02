@@ -107,13 +107,8 @@ public class CTSPController {
     @PutMapping("/deleteKM/{idCTSP}/{idKM}")
     public ResponseEntity<?> delete(@PathVariable("idCTSP") String idCTSP,@PathVariable("idKM") String idKM) {
         ChiTietSanPham ctsp = ctspService.findChiTietSanPhamByID(idCTSP);
+        hoaDonChiTietService.updateGia(idCTSP, new BigDecimal(0), ctsp.getGiaBan());
 
-        for (HoaDonChiTiet h : hoaDonChiTietService.getAllHDCTByIDCTSP(idCTSP)) {
-            if (h.getTrangThai() == 0) {
-                hoaDonChiTietService.updateGia(idCTSP, new BigDecimal(0), ctsp.getGiaBan());
-
-            }
-        }
 
         return ResponseEntity.ok(ctspService.deleteKM(idCTSP,idKM));
     }
