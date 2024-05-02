@@ -212,7 +212,7 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
 
     @Query(value ="select * from hoa_don where id =:id",nativeQuery = true)
     HoaDon findAllById(String id);
-    @Query(value = "SELECT * FROM hoa_don WHERE ma = :ma AND ngay_sua IS NOT NULL AND ngay_sua >= DATE_SUB(NOW(), INTERVAL 7 DAY);",nativeQuery = true)
+    @Query(value = "SELECT * FROM hoa_don WHERE ma = :ma AND ngay_sua IS NOT NULL AND ngay_sua >= DATE_SUB(NOW(), INTERVAL 7 DAY)  AND trang_thai=5 ;",nativeQuery = true)
     HoaDon getHDByMaTraHang(String ma);
     @Query(value = "select id,ma, ten_nguoi_nhan as tenNguoiNhan,so_dien_thoai as sdt, ghi_chu as ghiChu, dia_chi as diaChi,ngay_du_kien_nhan as ngayDuKienNhan, tien_van_chuyen as tienVanChuyen  from hoa_don where id=:idHD",nativeQuery = true)
     DetailUpdateDiaChiHoaDonRespon detailUpdateDiaChiHoaDon(String idHD);

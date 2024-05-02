@@ -113,22 +113,21 @@ function ProductRow({ product, loadghct, loadSoLuongSPTrongGH }) {
 
     //         // ví du: bạn muốn khi khách hàng bấm đặt hàng mà load lại hóa đơn màn admin thì hãy gọi hàm load all hóa đơn ở đây
     //         // thí dụ: đây là hàm laod hóa đơn: loadHoaDon(); allThongBao(); CountThongBao();
-    //         setQuantity(product.soLuong);
-    //         setPrice(product.thanhTien);
-    //         setPriceOne(product.thanhTien / product.soLuong);
-    //         loadCountGioHang();
-    //         loadghct();
-    //         loadSoLuongSPTrongGH();
-    //         GioHangAPI.detailCTSP(product.chiTietSanPham).then((res) => {
-    //           setCtsp(res.data);
-    //         });
+    //                     setQuantity(product.soLuong);
+    //                     setPrice(product.thanhTien);
+    //                     setPriceOne(product.thanhTien / product.soLuong);
+    //                     loadCountGioHang();
+    //                     loadghct();
+    //                     GioHangAPI.detailCTSP(product.chiTietSanPham).then((res) => {
+    //                       setCtsp(res.data);
+    //                     });
     //       } catch (e) {}
     //     });
     //   });
     //   return () => {
     //     stomp.disconnect();
     //   };
-    // }, []);
+    // }, [product]);
   const handleDeleteGHCT = () => {
     GioHangAPI.deleteGHCT(product.id);
     loadghct();
