@@ -135,7 +135,7 @@ export class PromotionAPI {
      const getToken = getHeader();
     return requestAdmin({
       method: "PUT",
-      url: `/admin/ctsp/deleteKM/${id}/{idKM}`,
+      url: `/admin/ctsp/deleteKM/${id}/${idKM}`,
       headers: {
         Authorization:getToken,
       },

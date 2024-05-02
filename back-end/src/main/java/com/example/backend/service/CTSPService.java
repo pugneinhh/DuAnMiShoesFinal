@@ -101,7 +101,7 @@ public class CTSPService {
         ChiTietSanPham ctsp = ctspRepository.getReferenceById(idCTSP);
         KhuyenMaiSanPham kmsp = khuyenMaiSanPhamService.find(idKM,idCTSP);
         if (kmsp != null) khuyenMaiSanPhamService.delete(kmsp);
-        if (ctsp.getKhuyenMai().getId().equals(idKM)) {
+        if (ctsp.getKhuyenMai() != null && ctsp.getKhuyenMai().getId().equals(idKM)) {
 //        if  (ctsp.getKhuyenMai()!= null && km.getId().equalsIgnoreCase(ctsp.getKhuyenMai().getId())) {
             System.out.println("CTSP" + ctsp);
             ctsp.setKhuyenMai(null);

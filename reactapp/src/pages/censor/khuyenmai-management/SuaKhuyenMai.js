@@ -123,13 +123,13 @@ const SuaKhuyenMai = () => {
         setIDKM(response.data);
         if (new Date() > new Date(value.ngay_ket_thuc)){
           console.log("Trường hợp khuyến mại quá hạn")
-            dataCTSP.map((data) => PromotionAPI.deletePromotion(data.idCTSP,response.data))
+            dataCTSP.map((data) => PromotionAPI.deletePromotion(data.idCTSP,id))
         } else {
         if (selectedIDCTSP.length > 0 && selectedIDSP.length > 0) {
           console.log("Trường hợp có ctsp km");
          // Promise.all(
             dataCTSP.map((data) => selectedIDCTSP.filter(item => item===data.idCTSP).length > 0 ? 
-            PromotionAPI.updateProductByPromotion(data.idCTSP, response.data) :  PromotionAPI.deletePromotion(data.idCTSP,response.data)
+            PromotionAPI.updateProductByPromotion(data.idCTSP, response.data) :  PromotionAPI.deletePromotion(data.idCTSP,id)
             //)
             // selectedIDCTSP.map((id) =>
             //   PromotionAPI.updateProductByPromotion(id, response.data)
@@ -137,7 +137,7 @@ const SuaKhuyenMai = () => {
           );
         } else {
           console.log("Trường hợp không có km");
-            dataCTSP.map((data) => PromotionAPI.deletePromotion(data.idCTSP,response.data))
+            dataCTSP.map((data) => PromotionAPI.deletePromotion(data.idCTSP,id))
           
         }
       }
