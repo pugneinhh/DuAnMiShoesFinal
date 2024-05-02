@@ -8,15 +8,14 @@ import com.example.backend.dto.response.sanpham.CTSPSearchRespone;
 import com.example.backend.dto.response.sanpham.ChiTietSanPhamRespone;
 import com.example.backend.dto.response.sanpham.DetailCTSPRespone;
 import com.example.backend.dto.response.sanpham.DetailCtspByQrRespon;
-import com.example.backend.entity.ChiTietSanPham;
-import com.example.backend.entity.HoaDon;
-import com.example.backend.entity.KhuyenMai;
-import com.example.backend.entity.KhuyenMaiSanPham;
+import com.example.backend.entity.*;
 import com.example.backend.model.*;
 import com.example.backend.repository.CTSPRepository;
+import com.example.backend.repository.GioHangChiTietRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -32,6 +31,8 @@ public class CTSPService {
     HoaDonServicee hoaDonServicee;
     @Autowired
     KhuyenMaiSanPhamService khuyenMaiSanPhamService;
+    @Autowired
+    GioHangChiTietRepository gioHangChiTietRepository;
     public List<ChiTietSanPham> getALL(){
         return ctspRepository.findAll();
     }
@@ -52,6 +53,20 @@ public class CTSPService {
         ct.setKhuyenMai(ctBanDau.getKhuyenMai());
         ct.setNgayTao(ctBanDau.getNgayTao());
         ct.setGiaNhap(ctBanDau.getGiaNhap());
+        List<GioHangChiTiet> listGH=gioHangChiTietRepository.getAllGHCTByCTSP(id);
+        for (GioHangChiTiet gh:listGH) {
+            if(gh.getSoLuong()>ct.getSoLuong()){
+                gh.setSoLuong(ct.getSoLuong());
+                gh.setThanhTien(ct.getGiaBan().multiply(BigDecimal.valueOf(ct.getSoLuong())));
+                gioHangChiTietRepository.save(gh);
+                if(ct.getSoLuong()==0){
+                    gioHangChiTietRepository.delete(gh);
+                }
+            }else{
+                gh.setThanhTien(ct.getGiaBan().multiply(BigDecimal.valueOf(gh.getSoLuong())));
+            }
+           gioHangChiTietRepository.save(gh);
+        }
         return ctspRepository.save(ct);
     }
 
