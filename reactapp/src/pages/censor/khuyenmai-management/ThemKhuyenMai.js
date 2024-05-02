@@ -22,6 +22,7 @@ import TableSanPham from "./tableSanPham";
 import TableChiTietSanPham from "./tableChiTietSanPham";
 import moment from "moment-timezone";
 import {PromotionAPI} from "../../censor/api/promotion/promotion.api";
+import { AdminGuiThongBaoXacNhanDatHang } from "../../../utils/socket/socket";
 
 
 const ThemKhuyenMai = () => {
@@ -56,6 +57,7 @@ const ThemKhuyenMai = () => {
   const handleSubmit = (value) => {
   
    PromotionAPI.create(value)
+   
       .then((response) => {
         setIDKM(response.data);
         if (selectedIDCTSP.length > 0){
@@ -63,7 +65,7 @@ const ThemKhuyenMai = () => {
             PromotionAPI.updateProductByPromotion(id,response.data)
         );
             }
-      
+          AdminGuiThongBaoXacNhanDatHang();
         navigate('/admin-khuyen-mai');
         
         toast("✔️ Thêm thành công!", {
@@ -76,7 +78,7 @@ const ThemKhuyenMai = () => {
           progress: undefined,
           theme: "light",
         });
-   
+    AdminGuiThongBaoXacNhanDatHang();
         loadKhuyenMai();
         setSelectedIDSP("");
         formThemKhuyenMai.resetFields();

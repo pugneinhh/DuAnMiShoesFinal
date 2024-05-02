@@ -10,9 +10,9 @@ const TableChiTietSanPham = ({selectedIDSPs,onSelectedCTSanPham,suaIDCTSP}) => {
   const [ctsp, setCTSP] = useState([]);
   const [idSanPham, setIDSanPham] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  console.log("selected rows" , selectedRowKeys);
-  console.log("ctsp ",ctsp);
-  console.log("selectedIDSPs ",selectedIDSPs);
+  // console.log("selected rows" , selectedRowKeys);
+  // console.log("ctsp ",ctsp);
+  // console.log("selectedIDSPs ",selectedIDSPs);
   useEffect(() => {
     const getCTSPByIDSP = async () => {
       try {
@@ -29,10 +29,10 @@ const TableChiTietSanPham = ({selectedIDSPs,onSelectedCTSanPham,suaIDCTSP}) => {
           if (filterArrray.length !== 0 ) {
            const responses = await Promise.all(filterArrray.map(id => 
             PromotionAPI.loadCTSPBySP(id)));
-            console.log("RES ",responses.data);
+      
             const res = [];
              responses.map(r => (r.data.map(i => res.push(i))));
-            console.log("RES ",res);
+        
             //responses.map((response) => (
               // setCTSP(prevData  => response.data.includes(prevData) ? console.log("trùng:" ,prevData) : 
               //   [...prevData ,...response.data])));

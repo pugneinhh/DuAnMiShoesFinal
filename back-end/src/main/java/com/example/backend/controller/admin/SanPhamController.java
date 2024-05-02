@@ -42,7 +42,7 @@ public class SanPhamController {
 
     @PostMapping("/tim-kiem")
     public ResponseEntity<?> search(@RequestBody SanPhamSearch sanPhamSearch){
-        System.out.println(sanPhamSearch.toString());
+
         return ResponseEntity.ok(sanPhamService.getTim(sanPhamSearch));
     }
 

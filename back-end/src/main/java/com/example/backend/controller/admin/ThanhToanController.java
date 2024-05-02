@@ -32,7 +32,7 @@ public class ThanhToanController {
     NguoiDungService nguoiDungService;
     @PostMapping("/thanh-toan-tien-mat")
     public ResponseEntity<?> thanhToan(@RequestBody ThanhToanRequest request){
-        System.out.println(request);
+
         HoaDon hd = hoaDonService.getHDByMa(request.getHoaDon());
         request.setHoaDon(hd.getId());
         NguoiDung nguoiDung = nguoiDungService.findByID(request.getNguoiTao());
@@ -45,7 +45,7 @@ public class ThanhToanController {
 
     @PostMapping("/thanh-toan-chuyen-khoan")
     public ResponseEntity<?> thanhToanCK(@RequestBody ThanhToanRequest request){
-        System.out.println("Người tạo: "+request.getNguoiTao());
+
         NguoiDung nguoiDung = nguoiDungService.findByID(request.getNguoiTao());
         HoaDon hd = hoaDonService.getHDByMa(request.getHoaDon());
         request.setHoaDon(hd.getId());
