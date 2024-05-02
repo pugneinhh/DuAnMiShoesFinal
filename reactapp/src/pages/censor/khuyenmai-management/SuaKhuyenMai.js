@@ -66,7 +66,6 @@ const SuaKhuyenMai = () => {
 
   const loadCTSP = async () => {
     const x = await PromotionAPI.showProductByPromotion(id);
-
     setCTSP(x.data);
     const SP = await Promise.all(
       x.data.map((idCTSP) => PromotionAPI.showSPByProduct(idCTSP))
