@@ -47,6 +47,7 @@ public class CTSPService {
     public List<DetailCTSPRespone> detail(){return ctspRepository.detail();}
 
     public ChiTietSanPham update(String id, UpdateCTSPRequest request) {
+        thongBaoService.socketLoadSanPham(id);
         ChiTietSanPham ctBanDau= ctspRepository.findById(id).get();
         ChiTietSanPham ct = request.map(new ChiTietSanPham());
         ct.setId(id);
@@ -57,13 +58,30 @@ public class CTSPService {
         for (GioHangChiTiet gh:listGH) {
             if(gh.getSoLuong()>ct.getSoLuong()){
                 gh.setSoLuong(ct.getSoLuong());
-                gh.setThanhTien(ct.getGiaBan().multiply(BigDecimal.valueOf(ct.getSoLuong())));
-                gioHangChiTietRepository.save(gh);
+
+                if(ctBanDau.getKhuyenMai()!=null){
+                    if(ctBanDau.getKhuyenMai().getLoai()=="Tiền mặt"){
+                        gh.setThanhTien((ct.getGiaBan().subtract(ctBanDau.getKhuyenMai().getGia_tri_khuyen_mai())).multiply(BigDecimal.valueOf(ct.getSoLuong())));
+                    }else{
+                        gh.setThanhTien((ct.getGiaBan().subtract(ct.getGiaBan().multiply(ctBanDau.getKhuyenMai().getGia_tri_khuyen_mai()).divide(new BigDecimal(100)))).multiply(BigDecimal.valueOf(ct.getSoLuong())));
+                    }
+                }else{
+                    gh.setThanhTien(ct.getGiaBan().multiply(BigDecimal.valueOf(ct.getSoLuong())));
+                }
                 if(ct.getSoLuong()==0){
                     gioHangChiTietRepository.delete(gh);
                 }
             }else{
-                gh.setThanhTien(ct.getGiaBan().multiply(BigDecimal.valueOf(gh.getSoLuong())));
+                if(ctBanDau.getKhuyenMai()!=null){
+                    if(ctBanDau.getKhuyenMai().getLoai()=="Tiền mặt"){
+                        gh.setThanhTien((ct.getGiaBan().subtract(ctBanDau.getKhuyenMai().getGia_tri_khuyen_mai())).multiply(BigDecimal.valueOf(gh.getSoLuong())));
+                    }else{
+                        gh.setThanhTien((ct.getGiaBan().subtract(ct.getGiaBan().multiply(ctBanDau.getKhuyenMai().getGia_tri_khuyen_mai()).divide(new BigDecimal(100)))).multiply(BigDecimal.valueOf(gh.getSoLuong())));
+                    }
+                }else{
+                    gh.setThanhTien(ct.getGiaBan().multiply(BigDecimal.valueOf(gh.getSoLuong())));
+                }
+
             }
            gioHangChiTietRepository.save(gh);
         }
