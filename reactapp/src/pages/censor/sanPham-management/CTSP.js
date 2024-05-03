@@ -186,6 +186,20 @@ export default function CTSP() {
         return;
       }
     }
+    console.log(ctData.moTa.length)
+    if(ctData.moTa.length > 200){
+      toast.error('Mô tả không quá 200 kí tự !', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
 
     ChiTietSanPhamAPI.updateCTSP(ctData.id, ctData)
       .then(response => {

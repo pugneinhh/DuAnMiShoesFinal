@@ -249,6 +249,15 @@ export default function AddSanPham() {
     setColorGroups(Object.entries(groupedCTSP));
   };
 
+  const validateDateMoTa = (_, value) => {
+    const { getFieldValue } = form1;
+    const ten = getFieldValue("moTa");
+    if (ten.trim().length > 200) {
+      return Promise.reject("Mô tả không được vượt quá 200 ký tự");
+    }
+    return Promise.resolve();
+  };
+
   const [selectedColor, setSelectedColor] = useState(null);
   const handleUploadAnh = (tenMau) => {
     setSelectedColor(tenMau);
@@ -492,8 +501,8 @@ export default function AddSanPham() {
     }
 
     for (let i = 0; i < tableData.length; i++) {
-      if (tableData[i].giaBan === "" || tableData[i].giaBan < 1000000) {
-        toast.error("Không để trống giá bán ! ( Giá bán >= 1,000,000 )", {
+      if (tableData[i].giaBan === "" || tableData[i].giaBan < 100000) {
+        toast.error("Không để trống giá bán ! ( Giá bán >= 100,000 )", {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -507,6 +516,22 @@ export default function AddSanPham() {
       }
     }
 
+    for (let i = 0; i < tableData.length; i++) {
+      if (tableData[i].moTa.length > 200) {
+        toast.error("Mô tả không quá 200 kí tự!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        return;
+      }
+    }
+    
     for (let i = 0; i < tableData.length; i++) {
       if (tableData[i].ghiChu == null) {
         toast.error("Không để trống ảnh!", {
@@ -627,8 +652,7 @@ export default function AddSanPham() {
   const loadKT = async () => {
     ChiTietSanPhamAPI.getAllKichThuoc().then((response) => {
       const data = response.data;
-      const reversedData = data.reverse();
-      setKTData(reversedData);
+      setKTData(data);
     });
   };
   const addKichThuoc = (value) => {
@@ -689,8 +713,7 @@ export default function AddSanPham() {
   const loadMS = async () => {
     ChiTietSanPhamAPI.getAllMauSac().then((response) => {
       const data = response.data;
-      const reversedData = data.reverse();
-      setMSData(reversedData);
+      setMSData(data);
     });
   };
   const addMauSac = (value) => {
@@ -740,8 +763,7 @@ export default function AddSanPham() {
   const loadCL = async () => {
     ChiTietSanPhamAPI.getAllChatLieu().then((response) => {
       const data = response.data;
-      const reversedData = data.reverse();
-      setCL(reversedData);
+      setCL(data);
     });
   };
   const addChatLieu = (value) => {
@@ -810,8 +832,7 @@ export default function AddSanPham() {
   const loadDC = async () => {
     ChiTietSanPhamAPI.getAllDeGiay().then((response) => {
       const data = response.data;
-      const reversedData = data.reverse();
-      setDC(reversedData);
+      setDC(data);
     });
   };
   const addDoCao = (value) => {
@@ -860,8 +881,7 @@ export default function AddSanPham() {
   const loadDM = async () => {
     ChiTietSanPhamAPI.getAllDanhMuc().then((response) => {
       const data = response.data;
-      const reversedData = data.reverse();
-      setDM(reversedData);
+      setDM(data);
     });
   };
   const addDanhMuc = (value) => {
@@ -910,8 +930,7 @@ export default function AddSanPham() {
   const loadH = async () => {
     ChiTietSanPhamAPI.getAllHang().then((response) => {
       const data = response.data;
-      const reversedData = data.reverse();
-      setH(reversedData);
+      setH(data);
     });
   };
   const addHang = (value) => {
@@ -1147,6 +1166,7 @@ export default function AddSanPham() {
                 <TextArea
                   style={{ width: 613, marginLeft: 10 }}
                   rows={5}
+                  maxLength={200}
                   value={dataMoTa}
                   onChange={onChangeMT}
                   placeholder="Nhập mô tả sản phẩm"

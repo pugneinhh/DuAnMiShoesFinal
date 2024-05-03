@@ -17,7 +17,7 @@ const CloudinaryUpload = ({ onLinkAnhChange }) => {
     }
 
     // Kiểm tra tổng số tệp để không vượt quá giới hạn
-    if (fileList.length + fileList.length > 5) {
+    if (linkAnhList.length + fileList.length > 5) {
       message.error('Bạn chỉ có thể tải lên tối đa 5 ảnh.');
       return false; // Ngăn chặn việc tải lên thêm
     }
