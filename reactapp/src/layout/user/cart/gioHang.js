@@ -21,7 +21,8 @@ import { useCart } from "./CartContext";
 import { useAppSelector } from "../../../store/redux/hook";
 import { GetLoading } from "../../../store/reducer/Loading.reducer";
 import loading from "../../../assets/images/logo.png";
-import { faLessThanEqual } from "@fortawesome/free-solid-svg-icons";
+import SockJS from "sockjs-client";
+import { Stomp } from "@stomp/stompjs";
 export const GioHang = ({ children }) => {
   const isLoading = useAppSelector(GetLoading);
   const [checkLoading, setCheckLoading] = useState(false);
@@ -52,7 +53,7 @@ export const GioHang = ({ children }) => {
   const { updateTotalQuantity } = useCart();
   const storedData = get("userData");
   const storedGioHang = get("GioHang");
-  console.log("Loading ", checkLoading);
+  
   const loadVoucherTotNhatVaVoucherTiepTheo = (total) => {
     BanHangClientAPI.voucherTotNhat(
       storedData?.userID ? storedData?.userID : null,
@@ -60,6 +61,7 @@ export const GioHang = ({ children }) => {
     ).then((res) => {
       setVoucher(res.data);
       loadGiamGia(res.data);
+
     });
 
     BanHangClientAPI.voucherSapDatDuoc(
@@ -158,7 +160,45 @@ export const GioHang = ({ children }) => {
       );
     }
   };
+useEffect(() => {
+  let stomp = null;
 
+  const connectWebSocket = () => {
+    const socket = new SockJS("http://localhost:8080/ws");
+    stomp = Stomp.over(socket);
+    stomp.connect(
+      {},
+      () => {
+        console.log("connect websocket");
+
+        stomp.subscribe("/topic/KH/hoa-don", (mes) => {
+          try {
+            const pare = JSON.parse(mes.body);
+            console.log(pare);
+            loadGHCT();
+           
+            // loadVoucherTotNhatVaVoucherTiepTheo();
+          } catch (e) {
+            console.log("lỗi mẹ ròi xem code di: ", e);
+          }
+        });
+      },
+      (error) => {
+        console.error("Failed to connect to WebSocket:", error);
+        // Thử kết nối lại sau một khoảng thời gian
+        setTimeout(connectWebSocket, 5000);
+      }
+    );
+  };
+
+  connectWebSocket();
+
+  return () => {
+    if (stomp !== null) {
+      stomp.disconnect();
+    }
+  };
+}, []);
   const loadGHCT = () => {
     if (storedData && storedData.userID) {
       GioHangAPI.getByIDKH(storedData.userID).then((response) => {
@@ -467,16 +507,16 @@ export const GioHang = ({ children }) => {
             style={{ height: 2, backgroundColor: "black", fontWeight: "bold" }}
           ></hr>
 
-          <p className="float-right" style={{ color: "red" }}>
+          <p className="float-right ps-4" style={{ color: "red" }}>
             <b>
               <>
                 {soTienCanMuaThem === 0 && soTienDuocGiam === 0
                   ? ""
                   : "Còn thiếu " +
                     Intl.NumberFormat("en-US").format(soTienCanMuaThem) +
-                    "VNĐ để được giảm " +
+                    " VND để được giảm " +
                     Intl.NumberFormat("en-US").format(soTienDuocGiam) +
-                    "VNĐ"}
+                    " VND"}
               </>
             </b>
           </p>
@@ -547,7 +587,7 @@ export const GioHang = ({ children }) => {
             </div>
           </div>
           <div
-            className="row ps-2 pb-2 mt-3"
+            className=" ps-2 pb-2 mt-3 d-flex align-items-end"
             // style={{ borderBottom: "1px dashed black" }}
           >
             <h5 className="col-md-6" style={{ marginLeft: 30 }}>

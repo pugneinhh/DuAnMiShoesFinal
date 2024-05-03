@@ -136,7 +136,7 @@ public class BanHangService {
                     .soLuong(request.getSoLuong())
                     .giaGiam(giaGoc.subtract(request.getDonGia().divide(BigDecimal.valueOf(request.getSoLuong()))))
                     .giaSauGiam(request.getDonGia().divide(BigDecimal.valueOf(request.getSoLuong())))
-                    .trangThai(0)
+                    .trangThai(1)
                     .hoaDon(hoaDon)
                     .ngayTao(LocalDateTime.now())
                     .build();

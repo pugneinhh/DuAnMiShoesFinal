@@ -20,8 +20,7 @@ public class HinhAnhController {
     HinhAnhService hinhAnhService;
     @GetMapping("/{ten}/{idSP}")
     public ResponseEntity<?> detail(@PathVariable("ten") String ten,@PathVariable("idSP") String idSP){
-        System.out.println(idSP);
-        System.out.println(ten);
+
         return ResponseEntity.ok(hinhAnhRepository.getAnhCTSP(ten,idSP));
     }
     @PostMapping("/add-anh/{idSP}")

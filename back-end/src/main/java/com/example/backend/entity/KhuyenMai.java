@@ -15,7 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 @Builder
-
+@ToString
 @Table(name = "khuyen_mai")
 public class KhuyenMai {
     @Id
@@ -33,11 +33,7 @@ public class KhuyenMai {
     private Date ngaySua;
     private Integer trangThai;
 
-    @Override
-    public String toString() {
-        return ten;
 
-    }
 
     public String formatCurrency(){
         Locale loc = new Locale("vi","VN");

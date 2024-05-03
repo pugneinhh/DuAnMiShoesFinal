@@ -5,6 +5,7 @@ import com.example.backend.dto.request.HoaDonCLient.SearchHDByMaAndSdtRequest;
 import com.example.backend.dto.request.HoaDonCLient.TrangThaiRequest;
 import com.example.backend.dto.request.hoadonsearch.HoaDonSearch;
 import com.example.backend.dto.response.AdminHoaDonDetailRespon;
+import com.example.backend.dto.response.AdminHoaDonGetVNP;
 import com.example.backend.dto.response.AdminHoaDonResponn;
 import com.example.backend.dto.response.DetailUpdateDiaChiHoaDonRespon;
 import com.example.backend.dto.response.HoaDonCLient.DetailHoaDonClientByIdHDRespon;
@@ -91,7 +92,13 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
             	    """,
             nativeQuery = true)
     AdminHoaDonDetailRespon detailHD(String key);
-
+    @Query(value = """
+    SELECT hd.id as id ,tt.phuong_thuc_vnp as VNP from hoa_don hd\s
+                         left join thanh_toan tt on tt.hoa_don_id=hd.id
+                         WHERE hd.id=:key
+                           	    """,
+            nativeQuery = true)
+    List<AdminHoaDonGetVNP> getPhuongThucVNP(String key);
     @Query(value = """
    SELECT hdct.id as id ,hdct.chi_tiet_san_pham_id as idCTSP , hdct.so_luong AS soLuongSP, ctsp.gia_ban AS giaBanSP,CASE WHEN ctsp.ghi_chu is  NULL   THEN N'khong co'
                                ELSE ctsp.ghi_chu END as urlHA,sp.ten AS tenSP, kt.ten AS tenKichThuoc,ms.ten AS tenMauSac,
@@ -205,8 +212,11 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
 
     @Query(value ="select * from hoa_don where id =:id",nativeQuery = true)
     HoaDon findAllById(String id);
-    @Query(value = "SELECT * FROM hoa_don WHERE ma = :ma AND ngay_sua IS NOT NULL AND ngay_sua >= DATE_SUB(NOW(), INTERVAL 7 DAY);",nativeQuery = true)
+    @Query(value = "SELECT * FROM hoa_don WHERE ma = :ma AND ngay_sua IS NOT NULL AND ngay_sua >= DATE_SUB(NOW(), INTERVAL 7 DAY)  AND trang_thai=5 ;",nativeQuery = true)
     HoaDon getHDByMaTraHang(String ma);
     @Query(value = "select id,ma, ten_nguoi_nhan as tenNguoiNhan,so_dien_thoai as sdt, ghi_chu as ghiChu, dia_chi as diaChi,ngay_du_kien_nhan as ngayDuKienNhan, tien_van_chuyen as tienVanChuyen  from hoa_don where id=:idHD",nativeQuery = true)
     DetailUpdateDiaChiHoaDonRespon detailUpdateDiaChiHoaDon(String idHD);
+
+
+
 }

@@ -32,7 +32,9 @@ export default function AddNhanVien() {
   const handleScanButtonClick = () => {
     setShowModal(true);
   };
-
+  const back=()=>{
+    nav("/admin-nhan-vien");
+  }
   const handleModalClose = () => {
     setShowModal(false);
   };
@@ -588,7 +590,7 @@ export default function AddNhanVien() {
                   </Button>
 
                   <Button
-                    to={"/admin-nhan-vien"}
+                    onClick={back}
                     style={{
                       width: "110px",
                       height: "40px",

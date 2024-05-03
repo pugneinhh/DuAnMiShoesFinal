@@ -173,12 +173,20 @@ const billSlice = createSlice({
     if (index !== -1) {
       state[index].thanhTien -= updatedBill.thanhTien;
     }
+  },
+  Update : (state,action) => {
+    const updatedBill = action.payload; // backend
+    const index = state.findIndex((period) => period.key === updatedBill.key);
+    if (index !== -1) {
+      state[index].thanhTien = updatedBill.thanhTien;
+    }
   }
 },
 },
 );
 
 export const {
+  Update,
   UpdateTienHang,
   UpdateTienHangGiam,
   SetBill,

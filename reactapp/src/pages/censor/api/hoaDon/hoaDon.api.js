@@ -33,6 +33,15 @@ export class HoaDonAPI {
       },
     });
   };
+  static detaiVNP = (idHD) => {
+    return requestAdmin({
+      method: "GET",
+      url: `/admin/hoa-don/getVNP/${idHD}`,
+      headers: {
+        Authorization: this.getToken,
+      },
+    });
+  };
   static detailUpdateHoaDon = (id) => {
     return requestAdmin({
       method: "GET",
@@ -129,10 +138,10 @@ export class HoaDonAPI {
       },
     });
   };
-  static huyHoaDon = (id) => {
+  static huyHoaDon = (ma) => {
     return requestAdmin({
       method: "PUT",
-      url: `/admin/hoa-don/huy-hoa-don/${id}`,
+      url: `/admin/hoa-don/huy-hoa-don/${ma}`,
       headers: {
         Authorization: this.getToken,
       },

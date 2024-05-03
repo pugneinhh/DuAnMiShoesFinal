@@ -21,7 +21,7 @@ public class NguoiDungVoucherController {
     NguoiDungVoucherService nguoiDungVoucherService;
     @GetMapping("/voucher/{id}")
     public ResponseEntity<?> getByVoucher(@PathVariable("id")String id){
-        System.out.println("ID"+id);
+
        // System.out.println("SEND"+nguoiDungVoucherService.getALL());
         return ResponseEntity.ok(nguoiDungVoucherService.getAllByVoucher(id));
        // return null;
@@ -36,8 +36,7 @@ public class NguoiDungVoucherController {
     }
     @PostMapping("/add/{id}")
     public ResponseEntity<?> add(@PathVariable("id")String id,@RequestBody Voucher request){
-        System.out.println("Voucher"+request.toString());
-        System.out.println("IDKH"+id);
+
         return ResponseEntity.ok(nguoiDungVoucherService.add(id,request));
     }
     @DeleteMapping("/delete-ndv/{idND}/{idV}")
