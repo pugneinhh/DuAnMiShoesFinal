@@ -94,7 +94,7 @@ public class VoucherController {
     public ResponseEntity<?> updateTTHD(@PathVariable("id")String id,@RequestBody VoucherRequest request){
 
         Voucher v=request.map(new Voucher());
-  
+
         v.setId(id);
         v.setTrangThai(Status.DANG_HOAT_DONG);
         return ResponseEntity.ok(vs.add(v));
