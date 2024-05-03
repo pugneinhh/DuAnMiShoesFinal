@@ -94,7 +94,22 @@ const Voucher = () => {
       
     });
   };
-
+  const updateTrangThaiHoatDong =  (id, value) => {
+    VoucherAPI.updateTTHD(id, value).then((response) => {
+     loadVoucher();
+       toast("✔️ Cập nhật thành công!", {
+         position: "top-right",
+         autoClose: 5000,
+         hideProgressBar: false,
+         closeOnClick: true,
+         pauseOnHover: true,
+         draggable: true,
+         progress: undefined,
+         theme: "light",
+       });
+     
+   });
+ };
 
 
   const columns = [
@@ -195,7 +210,7 @@ const Voucher = () => {
                       title: "Thông báo",
                       content: "Bạn có chắc chắn muốn sửa không?",
                       onOk: () => {
-                        VoucherAPI.updateTTHD(record.id, record);
+                        updateTrangThaiHoatDong(record.id, record);
                         // form.finish();
                       },
                       footer: (_, { OkBtn, CancelBtn }) => (
