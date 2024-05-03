@@ -22,7 +22,7 @@ const DetailHoaDonTraHang = () => {
   const [tienGiamHDMoi, setTienGiamHDMoi] = useState(0);
   const [tienTra, setTienTra] = useState(0);
   const { id } = useParams("");
-  console.log(id);
+  
   let newBill = useSelector(GetNewBill);
 
   let totalNewBill = newBill.reduce((accumulator, currentItem) => {
@@ -143,7 +143,7 @@ const DetailHoaDonTraHang = () => {
       
     });
     TraHangAPI.getHoaDonByMa(id).then((res) => {
-      console.log("hóa đơn",res.data);
+      
       setSanPhamHDCT(res.data);
     });
   };
@@ -156,28 +156,33 @@ const DetailHoaDonTraHang = () => {
           idCTSP: spt.idCTSP,
           soLuong: spt.soLuong,
           ghiChu: spt.ghiChu,
-          tienMoi: thongTin.thanhTien - tienTra ? tienTra : 0,
+          tienMoi: thongTin.thanhTien - (tienTra ? tienTra : 0),
+          tienGocMoi:thongTin.giaGoc-totalNewBill,
+          tienGiam:tienGiamHDMoi,
         };
         console.log("sanPhamTra", data);
         if (data.ghiChu != null && data.ghiChu.trim() !== "") {
           check = 0;
           TraHangAPI.traHang(data);
-          toast.success("Trả hàng thành công!", {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
+         
         } else {
           check = 1;
         }
       });
     } else {
       toast.error("Vui lòng chọn sản phẩm muốn trả!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+    if(check===0){
+      toast.success("Trả hàng thành công!", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,

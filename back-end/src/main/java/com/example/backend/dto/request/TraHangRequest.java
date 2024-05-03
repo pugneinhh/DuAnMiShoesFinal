@@ -15,6 +15,8 @@ public class TraHangRequest {
     private String id;
     private String idHD;
     private BigDecimal tienMoi;
+    private BigDecimal tienGocMoi;
+    private BigDecimal tienGiam;
     private String idHDCT;
     private String idCTSP;
     private int soLuong;
