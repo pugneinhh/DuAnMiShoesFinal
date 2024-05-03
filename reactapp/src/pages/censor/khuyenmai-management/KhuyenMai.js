@@ -32,6 +32,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { GetInvoice, UpdateKMInvoice, UpdateKMNULLInvoice } from "../../../store/reducer/DetailInvoice.reducer";
 import { dispatch } from "../../../store/redux/store";
 import { Update } from "../../../store/reducer/Bill.reducer";
+import { ja } from "date-fns/locale";
 
 const KhuyenMai = () => {
   const currentTime = moment(); // thời gian hiện tại
@@ -120,43 +121,42 @@ const KhuyenMai = () => {
 
     });
     ctspHD.forEach((item,index)=> {
-      if (items.length === 0) {items.push({hoaDon : item.hoaDon , total : item.total});
-      }
-      else {
-        if (items.filter(i => i.hoaDon === item.hoaDon).length > 0){
-          let index = items.indexOf(i => i.hoaDon === item.hoaDon);
-          items[index].total += item.total;
-        
-
-        } else {
-          items.push({hoaDon : item.hoaDon , total : item.total});
-       
-
+      let newItems = {hoaDon : item.hoaDon , total : item.total};
+      if (items.length === 0) items.push(newItems);
+      else if (items.filter(i => i.hoaDon === newItems.hoaDon).length > 0){
+          let index = items.indexOf(i => i.hoaDon === newItems.hoaDon);
+          items[index].total += newItems.total;
         }
-      }
       });
-     
       for (let i = 0 ; i < items.length ; i++) {
       dispatch(Update({key : items[i].hoaDon, thanhTien : items[i].total}));
       }
     };
-  
+
+
+  const getTotalEachHD = () => {
+    var items = [];
+    for (let j = 0 ; j < ctspHD.length; j++) {
+      if (items.length === 0) {items.push({hoaDon : ctspHD[j].hoaDon , total : ctspHD[j].total});
+          }
+      else {
+        if (items.filter(i => i.hoaDon === ctspHD[j].hoaDon).length > 0){
+          let index = items.indexOf(i => i.hoaDon === ctspHD[j].hoaDon);
+          items[index].total += ctspHD[j].total;
+
+        } else {
+          items.push({hoaDon : ctspHD[j].hoaDon , total : ctspHD[j].total});
+        }
+      }
+      };
+      console.log("items ",items);
+  }
 
   const updateTrangThai1 = async (id, value) => {
     await PromotionAPI.updateOpenPromotion(id, value).then((response) => {
 
       dispatch(UpdateKMInvoice({tenKM: response.ten,loaiKM: response.loai,giaTriKhuyenMai: response.gia_tri_khuyen_mai}))
-      ctspHD.forEach((item,index)=> {
-        let newItems = {hoaDon : item.hoaDon , total : item.total};
-        if (items.length === 0) items.push(newItems);
-        else if (items.filter(i => i.hoaDon === newItems.hoaDon).length > 0){
-            let index = items.indexOf(i => i.hoaDon === newItems.hoaDon);
-            items[index].total += newItems.total;
-          }
-        });
-        for (let i = 0 ; i < items.length ; i++) {
-        dispatch(Update({key : items[i].hoaDon, thanhTien : items[i].total}));
-        }
+
    
       if (response.status === 200) {
         loadKhuyenMai();
@@ -172,6 +172,17 @@ const KhuyenMai = () => {
         });
       }
     });
+    ctspHD.forEach((item,index)=> {
+      let newItems = {hoaDon : item.hoaDon , total : item.total};
+      if (items.length === 0) items.push(newItems);
+      else if (items.filter(i => i.hoaDon === newItems.hoaDon).length > 0){
+          let index = items.indexOf(i => i.hoaDon === newItems.hoaDon);
+          items[index].total += newItems.total;
+        }
+      });
+      for (let i = 0 ; i < items.length ; i++) {
+      dispatch(Update({key : items[i].hoaDon, thanhTien : items[i].total}));
+      }
   };
 
   const columns = [
