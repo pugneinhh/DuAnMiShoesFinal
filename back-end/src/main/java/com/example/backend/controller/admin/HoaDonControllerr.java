@@ -66,7 +66,8 @@ public class HoaDonControllerr {
     }
     @GetMapping("/detail-hoa-don-theo-ma/{ma}")
     public ResponseEntity<?> detailHDByMa(@PathVariable("ma") String ma){
-        return  ResponseEntity.ok(hoaDonService.getHDByMa(ma));
+        HoaDon hoaDon= hoaDonService.findHoaDonByMa(ma);
+        return  ResponseEntity.ok(hoaDonService.getByID(hoaDon.getId()));
     }
     @PostMapping("/search")
     public ResponseEntity<?> timHoaDon(@RequestBody HoaDonSearch hoaDonSearch)  {
