@@ -33,7 +33,9 @@ export default function AddKhachHang() {
   const handleFileUpload = (fileData) => {
     setFileIamge(fileData);
   };
-
+  const back = () => {
+    nav("/admin-khach-hang");
+  };
   const [showModal, setShowModal] = useState(false);
 
   const handleScanButtonClick = () => {
@@ -592,7 +594,7 @@ export default function AddKhachHang() {
                   </Button>
                 </Col>
                 <Button
-                  to={"/nhan-vien"}
+                 onClick={back}
                   style={{
                     width: "110px",
                     height: "40px",
