@@ -28,6 +28,9 @@ public interface ChiTietSanPhamRespone {
     @Value("#{target.soLuong}")
     int getSoLuong();
 
+    @Value("#{target.soLuongTra}")
+    int getSoLuongTra();
+
     @Value("#{target.giaBan}")
     BigDecimal getGiaBan();
 

@@ -51,6 +51,7 @@ public class CTSPService {
         ChiTietSanPham ctBanDau= ctspRepository.findById(id).get();
         ChiTietSanPham ct = request.map(new ChiTietSanPham());
         ct.setId(id);
+        ct.setSoLuongTra(ctBanDau.getSoLuongTra());
         ct.setKhuyenMai(ctBanDau.getKhuyenMai());
         ct.setNgayTao(ctBanDau.getNgayTao());
         ct.setGiaNhap(ctBanDau.getGiaNhap());

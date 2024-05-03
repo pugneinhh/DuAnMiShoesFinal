@@ -30,6 +30,7 @@ public class ChiTietSanPhamRequest {
     public String qrCode;
     public String moTa;
     public int soLuong;
+    public int soLuongTra;
     public LocalDateTime ngayTao;
     public LocalDateTime ngaySua;
     public String nguoiTao;
@@ -52,6 +53,7 @@ public class ChiTietSanPhamRequest {
         ctsp.setQrCode(this.qrCode);
         ctsp.setMoTa(this.moTa);
         ctsp.setSoLuong(this.soLuong);
+        ctsp.setSoLuongTra(this.soLuongTra);
         ctsp.setNgayTao(this.ngayTao);
         ctsp.setNgaySua(this.ngaySua);
         ctsp.setNguoiTao(this.nguoiTao);

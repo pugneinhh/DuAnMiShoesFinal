@@ -323,7 +323,7 @@ export default function CTSP() {
       setCTSPs(result.data);
     })
   };
-
+   console.log(cTSP)
   const dataSource = cTSP.map((item) => ({
     idCTSP: item.idCTSP,
     key: item.idCTSP,
@@ -331,6 +331,7 @@ export default function CTSP() {
     tenSP: item.tenSP,
     giaBan: item.giaBan,
     soLuong: item.soLuong,
+    soLuongTra:item.soLuongTra,
     tenKT: item.tenKT,
     tenMS: item.tenMS,
     maMS: item.maMS,
@@ -431,6 +432,10 @@ export default function CTSP() {
           }} className='custom-div'></div >
         </>;
       }
+    },
+    { 
+      title: "Số lượng trả",
+      dataIndex: "soLuongTra",
     },
     {
       title: "Trạng thái",
