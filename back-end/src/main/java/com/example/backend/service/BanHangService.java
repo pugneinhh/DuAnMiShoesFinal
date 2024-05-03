@@ -175,15 +175,15 @@ public class BanHangService {
         ThanhToanRequest thanhToanRequest = new ThanhToanRequest();
         thanhToanRequest.setHoaDon(saveHoaDon.getId());
         thanhToanRequest.setNgayTao(LocalDateTime.now());
-        thanhToanRequest.setTongTien(saveHoaDon.getThanhTien());
+        thanhToanRequest.setTongTien(saveHoaDon.getThanhTien().add(saveHoaDon.getTienVanChuyen()));
         System.out.println("Thanh toán requesst "+thanhToanRequest);
         if (hoaDonRequest.getIdPayMethod() == 0) {
             System.out.println("Vào 0");
-            thanhToanRequest.setTienMat(saveHoaDon.getThanhTien());
+            thanhToanRequest.setTienMat(saveHoaDon.getThanhTien().add(saveHoaDon.getTienVanChuyen()));
             thanhToanRequest.setPhuongThuc(0);
         } else {
             System.out.println("Vào 1");
-            thanhToanRequest.setChuyenKhoan(saveHoaDon.getThanhTien());
+            thanhToanRequest.setChuyenKhoan(saveHoaDon.getThanhTien().add(saveHoaDon.getTienVanChuyen()));
             thanhToanRequest.setPhuongThuc(1);
             thanhToanRequest.setPhuongThucVnp(hoaDonRequest.getMaGiaoDich());
 
