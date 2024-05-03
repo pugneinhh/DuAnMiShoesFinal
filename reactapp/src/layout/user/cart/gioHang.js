@@ -295,6 +295,19 @@ useEffect(() => {
       });
       return;
     }
+    if(total>=15000000){
+      toast.error("Vui lòng không mua quá 15.000.000 VND!", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
     const hdct = gioHangCT.map((ghct) => {
       return {
         idCTSP: ghct.chiTietSanPham,
