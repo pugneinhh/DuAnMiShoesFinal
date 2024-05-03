@@ -120,12 +120,15 @@ const KhuyenMai = () => {
       }
 
     });
+        var items = [];
     ctspHD.forEach((item,index)=> {
       let newItems = {hoaDon : item.hoaDon , total : item.total};
       if (items.length === 0) items.push(newItems);
       else if (items.filter(i => i.hoaDon === newItems.hoaDon).length > 0){
           let index = items.indexOf(i => i.hoaDon === newItems.hoaDon);
-          items[index].total += newItems.total;
+          if (items[index]) {
+            items[index].total += newItems.total;
+          }
         }
       });
       for (let i = 0 ; i < items.length ; i++) {
@@ -172,12 +175,15 @@ const KhuyenMai = () => {
         });
       }
     });
+    var items = [];
     ctspHD.forEach((item,index)=> {
       let newItems = {hoaDon : item.hoaDon , total : item.total};
       if (items.length === 0) items.push(newItems);
       else if (items.filter(i => i.hoaDon === newItems.hoaDon).length > 0){
           let index = items.indexOf(i => i.hoaDon === newItems.hoaDon);
-          items[index].total += newItems.total;
+          if (items[index]) {
+            items[index].total += newItems.total;
+          }
         }
       });
       for (let i = 0 ; i < items.length ; i++) {
