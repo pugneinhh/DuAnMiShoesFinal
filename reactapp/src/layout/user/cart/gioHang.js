@@ -160,45 +160,45 @@ export const GioHang = ({ children }) => {
       );
     }
   };
-useEffect(() => {
-  let stomp = null;
+// useEffect(() => {
+//   let stomp = null;
 
-  const connectWebSocket = () => {
-    const socket = new SockJS("http://localhost:8080/ws");
-    stomp = Stomp.over(socket);
-    stomp.connect(
-      {},
-      () => {
-        console.log("connect websocket");
+//   const connectWebSocket = () => {
+//     const socket = new SockJS("http://localhost:8080/ws");
+//     stomp = Stomp.over(socket);
+//     stomp.connect(
+//       {},
+//       () => {
+//         console.log("connect websocket");
 
-        stomp.subscribe("/topic/KH/hoa-don", (mes) => {
-          try {
-            const pare = JSON.parse(mes.body);
-            console.log(pare);
-            loadGHCT();
+//         stomp.subscribe("/topic/KH/hoa-don", (mes) => {
+//           try {
+//             const pare = JSON.parse(mes.body);
+//             console.log(pare);
+//             loadGHCT();
            
-            // loadVoucherTotNhatVaVoucherTiepTheo();
-          } catch (e) {
-            console.log("lỗi mẹ ròi xem code di: ", e);
-          }
-        });
-      },
-      (error) => {
-        console.error("Failed to connect to WebSocket:", error);
-        // Thử kết nối lại sau một khoảng thời gian
-        setTimeout(connectWebSocket, 5000);
-      }
-    );
-  };
+//             // loadVoucherTotNhatVaVoucherTiepTheo();
+//           } catch (e) {
+//             console.log("lỗi mẹ ròi xem code di: ", e);
+//           }
+//         });
+//       },
+//       (error) => {
+//         console.error("Failed to connect to WebSocket:", error);
+//         // Thử kết nối lại sau một khoảng thời gian
+//         setTimeout(connectWebSocket, 5000);
+//       }
+//     );
+//   };
 
-  connectWebSocket();
+//   connectWebSocket();
 
-  return () => {
-    if (stomp !== null) {
-      stomp.disconnect();
-    }
-  };
-}, []);
+//   return () => {
+//     if (stomp !== null) {
+//       stomp.disconnect();
+//     }
+//   };
+// }, []);
   const loadGHCT = () => {
     if (storedData && storedData.userID) {
       GioHangAPI.getByIDKH(storedData.userID).then((response) => {

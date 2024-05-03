@@ -57,51 +57,51 @@ function ProductRow({ product, loadghct, loadSoLuongSPTrongGH }) {
       });
     }
   };
-  useEffect(() => {
-    let stomp = null;
+  // useEffect(() => {
+  //   let stomp = null;
 
-    const connectWebSocket = () => {
-      const socket = new SockJS("http://localhost:8080/ws");
-      stomp = Stomp.over(socket);
-      stomp.connect(
-        {},
-        () => {
-          console.log("connect websocket");
+  //   const connectWebSocket = () => {
+  //     const socket = new SockJS("http://localhost:8080/ws");
+  //     stomp = Stomp.over(socket);
+  //     stomp.connect(
+  //       {},
+  //       () => {
+  //         console.log("connect websocket");
 
-          stomp.subscribe("/topic/KH/hoa-don", (mes) => {
-            try {
-              const pare = JSON.parse(mes.body);
+  //         stomp.subscribe("/topic/KH/hoa-don", (mes) => {
+  //           try {
+  //             const pare = JSON.parse(mes.body);
            
 
-              setQuantity(product.soLuong);
-              setPrice(product.thanhTien);
-              setPriceOne(product.thanhTien / product.soLuong);
-              loadCountGioHang();
-              loadghct();
-              GioHangAPI.detailCTSP(product.chiTietSanPham).then((res) => {
-                setCtsp(res.data);
-              });
-            } catch (e) {
-              console.log("lỗi : ", e);
-            }
-          });
-        },
-        (error) => {
-          console.error("Failed to connect to WebSocket:", error);
-          // Thử kết nối lại sau một khoảng thời gian
-          setTimeout(connectWebSocket, 5000);
-        }
-      );
-    };
+  //             setQuantity(product.soLuong);
+  //             setPrice(product.thanhTien);
+  //             setPriceOne(product.thanhTien / product.soLuong);
+  //             loadCountGioHang();
+  //             loadghct();
+  //             GioHangAPI.detailCTSP(product.chiTietSanPham).then((res) => {
+  //               setCtsp(res.data);
+  //             });
+  //           } catch (e) {
+  //             console.log("lỗi : ", e);
+  //           }
+  //         });
+  //       },
+  //       (error) => {
+  //         console.error("Failed to connect to WebSocket:", error);
+  //         // Thử kết nối lại sau một khoảng thời gian
+  //         setTimeout(connectWebSocket, 5000);
+  //       }
+  //     );
+  //   };
 
-    connectWebSocket();
+  //   connectWebSocket();
 
-    return () => {
-      if (stomp !== null) {
-        stomp.disconnect();
-      }
-    };
-  }, [product]);
+  //   return () => {
+  //     if (stomp !== null) {
+  //       stomp.disconnect();
+  //     }
+  //   };
+  // }, [product]);
     // var stomp = null;
     // const socket = new SockJS("http://localhost:8080/ws");
     // stomp = Stomp.over(socket);
