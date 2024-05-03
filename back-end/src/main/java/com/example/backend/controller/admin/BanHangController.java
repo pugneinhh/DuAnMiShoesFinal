@@ -357,6 +357,13 @@ public class BanHangController {
 
     @PutMapping("/tra-sau/hoa-don/{ma}/{idNV}")
     public ResponseEntity<?> traSauHoaDon (@PathVariable("ma") String ma,@PathVariable("idNV") String idNV) {
+        HoaDon hoaDon = hoaDonServicee.getHDByMa(ma);
+        if(hoaDon == null) return null;
+        List<ThanhToan> listTT = thanhToanService.getThanhToanByIdHD(hoaDon.getId());
+        for (ThanhToan tt : listTT){
+            tt.setTrangThai(1);
+            thanhToanService.save(tt);
+        }x
         return ResponseEntity.ok(  hoaDonServicee.updateTraSau(ma,idNV));
 
     }

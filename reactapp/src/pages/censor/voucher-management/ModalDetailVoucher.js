@@ -125,7 +125,7 @@ const ModalDetailVoucher=(props)=>{
                 />
               </Form.Item>
               <Form.Item
-                label="Loại voucher"
+                label="Loại"
                 name="loaiVoucher"
                 labelCol={{ span:25 }}
                 wrapperCol={{ span: 10 }}
