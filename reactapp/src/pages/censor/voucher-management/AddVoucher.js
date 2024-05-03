@@ -35,7 +35,7 @@ const AddVoucher = () => {
       const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     for (let i = 0; i < 6; i++) {
       const randomIndex = Math.floor(Math.random() * characters.length);
-      value.ma = characters.charAt(randomIndex);
+      value.ma += characters.charAt(randomIndex);
     }
     }
    
@@ -192,14 +192,14 @@ const AddVoucher = () => {
                   />
                 </Form.Item>
                 <Form.Item
-                  label="Loại voucher"
+                  label="Loại"
                   name="loaiVoucher"
                   style={{ marginLeft: 0, width: 500 }}
                   hasFeedback
                   rules={[
                     {
                       required: true,
-                      message: "Vui lòng chọn loại voucher!",
+                      message: "Vui lòng chọn loại phiếu giảm giá!",
                     },
                   ]}
                 >

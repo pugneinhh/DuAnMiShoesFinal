@@ -6,20 +6,17 @@ import {
   MDBRow,
   MDBCol,
 } from "mdb-react-ui-kit";
-import { Button, Form, Image, Input } from "antd";
+import { Button, Form, Input } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "./login.css";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 import logoShop from "../../assets/images/logoNgang.png";
-import { FaSquareFacebook } from "react-icons/fa6";
 import { LoginAPI } from "../../pages/censor/api/login/loginApi";
-import { get, set } from "local-storage";
+import {  set } from "local-storage";
 import { GoogleLogin } from "react-google-login";
 import FacebookLogin from "react-facebook-login";
-import { FaFacebookSquare } from "react-icons/fa";
-import { gapi } from "gapi-script";
 export const Login = () => {
   const nav = useNavigate();
   const [password, setPassword] = useState("");
@@ -52,29 +49,16 @@ export const Login = () => {
           progress: undefined,
           theme: "light",
         });
+        return
       });
   };
-  // useEffect(() => {
-  //   const start =()=>{
-  //     gapi.clientId({
-  //       clientId:
-  //         "689459482014-49jc7cvt8hqflu87jegh2osfo2fd17se.apps.googleusercontent.com",
-  //         scope:""
-
-  //     });
-  //   }
-
-  // });
   const onSuccess = (res) => {
     nav("/home");
-    console.log("login thanh cong:", res.profileObj);
-    // set("userGoogle", res.profileObj);
   };
   const signUp = (res) => {
     nav("/sign-up");
   };
   const responseFacebook = (res) => {
-    console.log(res);
     set("userFacebook", res);
     nav("/home");
   };
@@ -209,25 +193,11 @@ export const Login = () => {
                 icon="fa-brands fa-facebook"
                 cssClass=" mb-1 mt-2  fw-bold w-75 h-50 text-light   button-login-face-book"
               />
-
-              {/* <GoogleLogin
-                clientId="689459482014-49jc7cvt8hqflu87jegh2osfo2fd17se.apps.googleusercontent.com"
-                onSuccess={onSuccess}
-                onError={() => {
-                  console.log("loginfaile");
-                }}
-                // cookiePolicy={"single_host_origin"}
-                isSignedIn={true}
-                theme="light"
-                buttonText="Login to Google"
-                // cssClass="mb-1 mt-2  fw-bold w-75 h-50 text-dark button-login-face-book"
-                className="mb-1 mt-2  fw-bold w-75 h-50 text-dark button-login-google"
-              />  */}
               <GoogleLogin
                 clientId="689459482014-49jc7cvt8hqflu87jegh2osfo2fd17se.apps.googleusercontent.com"
                 onSuccess={onSuccess}
                 onError={() => {
-                  console.log("loginfaile");
+               
                 }}
                 cookiePolicy={"single_host_origin"}
                 isSignedIn={true}

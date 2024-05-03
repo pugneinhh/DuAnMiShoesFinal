@@ -92,8 +92,21 @@ public class ThongBaoService {
         } else {
             thongBao.setNguoiDung(NguoiDung.builder().id(hoaDon.getNguoiDung().getId()).build());
         }
+
         thongBao.setHoaDon(hoaDon);
-        thongBao.setNoiDung("hóa đơn " + hoaDon.getMa() + " đã xác nhận đơn hàng");
+        if(hoaDon.getTrangThai()==0){
+            thongBao.setNoiDung("Hóa đơn " + hoaDon.getMa() + " đặt đơn thành công");
+        } else if(hoaDon.getTrangThai()==1){
+            thongBao.setNoiDung("Hóa đơn " + hoaDon.getMa() + " đã xác nhận");
+        } else if(hoaDon.getTrangThai()==2){
+            thongBao.setNoiDung("Hóa đơn " + hoaDon.getMa() + " chờ vận chuyển");
+        } else if(hoaDon.getTrangThai()==3){
+            thongBao.setNoiDung("Hóa đơn " + hoaDon.getMa() + " đang  vận chuyển");
+        } else if(hoaDon.getTrangThai()==4){
+            thongBao.setNoiDung("Hóa đơn " + hoaDon.getMa() + " đã thanh toán");
+        } else if(hoaDon.getTrangThai()==5){
+            thongBao.setNoiDung("Hóa đơn " + hoaDon.getMa() + " thành công");
+        }
         thongBao.setTrangThai(0);//0 : chưa xem, 1: đã xem
         thongBao.setNgayTao(LocalDateTime.now());
         thongBaoRepository.save(thongBao);

@@ -6,77 +6,68 @@ import { FaCheckCircle } from "react-icons/fa";
 import { Image } from "cloudinary-react";
 import "./history.css";
 import { Timeline, TimelineEvent } from "@mailtop/horizontal-timeline";
-import { GiNotebook, GiPiggyBank } from "react-icons/gi";
+import { GiNotebook, GiPiggyBank, GiReturnArrow } from "react-icons/gi";
 import { SlNotebook } from "react-icons/sl";
 import { RiTruckFill } from "react-icons/ri";
-import { FaTruckFast } from "react-icons/fa6";
+import { FaMoneyBillTrendUp, FaTruckFast } from "react-icons/fa6";
 import LogoGHN from "../../../assets/images/LogoGHN.png";
 import { HoaDonClientAPI } from "../../../pages/censor/api/HoaDonClient/HoaDonClientAPI";
-import { HoaDonAPI } from "../../../pages/censor/api/hoaDon/hoaDon.api";
 import moment from "moment";
 import { ToastContainer } from "react-toastify";
 import { FormattedNumber, IntlProvider } from "react-intl";
 import SockJS from "sockjs-client";
 import { Stomp } from "@stomp/stompjs";
+import { ImCancelCircle } from "react-icons/im";
 const DetailTraCuuDonHang = ({ listBill }) => {
   const idHD = useParams();
-  console.log(idHD);
   const nav = useNavigate();
   const [listTimeLine, setlistTimeLine] = useState([]);
   const [bill, setBill] = useState({});
   const [listSanPhams, setlistSanPhams] = useState([]);
   useEffect(() => {
-    HoaDonAPI.detailSanPham(idHD.idHD).then((res) => {
+    HoaDonClientAPI.detailSanPham(idHD.idHD).then((res) => {
       setlistSanPhams(res.data);
     });
     loadDetailHoaDonClient();
     loadTimeLine();
-    // HoaDonAPI.getAllLichSuHoaDon(idHD.idHD).then((res) => {
-    //   setlistTimeLine(res.data);
-    //   console.log(res);
-    // });
   }, [listSanPhams.trangThai]);
-      var stomp = null;
-      const socket = new SockJS("http://localhost:8080/ws");
-      stomp = Stomp.over(socket);
+  var stomp = null;
+  const socket = new SockJS("http://localhost:8080/ws");
+  stomp = Stomp.over(socket);
+  useEffect(() => {
+    stomp.connect({}, () => {
+      stomp.subscribe("/topic/KH/hoa-don", (mes) => {
+        try {
+          const pare = JSON.parse(mes.body);
 
-      useEffect(() => {
-        stomp.connect({}, () => {
-          console.log("connect websocket");
+          // ví du: bạn muốn khi khách hàng bấm đặt hàng mà load lại hóa đơn màn admin thì hãy gọi hàm load all hóa đơn ở đây
+          // thí dụ: đây là hàm laod hóa đơn: loadHoaDon(); allThongBao(); CountThongBao();
+          loadTimeLine();
+          loadDetailHoaDonClient();
+        } catch (e) {
+          console.log("lỗi mẹ ròi xem code di: ", e);
+        }
+      });
+    });
 
-          stomp.subscribe("/topic/KH/hoa-don", (mes) => {
-            try {
-              const pare = JSON.parse(mes.body);
-              console.log(pare);
-              // ví du: bạn muốn khi khách hàng bấm đặt hàng mà load lại hóa đơn màn admin thì hãy gọi hàm load all hóa đơn ở đây
-              // thí dụ: đây là hàm laod hóa đơn: loadHoaDon(); allThongBao(); CountThongBao();
-           loadTimeLine();
-           loadDetailHoaDonClient();
-            } catch (e) {
-              console.log("lỗi mẹ ròi xem code di: ", e);
-            }
-          });
-        });
-
-        return () => {
-          stomp.disconnect();
-        };
-      }, []);
+    return () => {
+      stomp.disconnect();
+    };
+  }, []);
 
   const loadTimeLine = () => {
-    HoaDonAPI.getAllLichSuHoaDon(idHD.idHD).then((res) => {
+    HoaDonClientAPI.getAllLichSuHoaDon(idHD.idHD).then((res) => {
       setlistTimeLine(res.data);
-      console.log("abc", res.data);
+      console.log(res.data);
     });
   };
-    const loadDetailHoaDonClient = () => {
+  const loadDetailHoaDonClient = () => {
     HoaDonClientAPI.DetailHoaDonClient(idHD.idHD).then((res) => {
       setBill(res.data);
+        console.log(res.data);
     });
-    };
+  };
 
-
-  console.log(listSanPhams);
   const showIcon = (trangThai) => {
     if (trangThai === "0") {
       return GiNotebook;
@@ -90,13 +81,20 @@ const DetailTraCuuDonHang = ({ listBill }) => {
       return GiPiggyBank;
     } else if (trangThai === "5") {
       return FaCheckCircle;
+    } else if (trangThai === "10") {
+      return GiReturnArrow;
+    } else if (trangThai === "-1") {
+      return ImCancelCircle;
+    } else if (trangThai === "-2") {
+      return FaMoneyBillTrendUp;
     }
   };
+
   const showTitle = (trangThai) => {
     if (trangThai === "0") {
       return "Chờ xác nhận";
     } else if (trangThai === "1") {
-      return "Xác Nhận";
+      return "Đã xác Nhận";
     } else if (trangThai === "2") {
       return "Chờ vận chuyển";
     } else if (trangThai === "3") {
@@ -105,18 +103,14 @@ const DetailTraCuuDonHang = ({ listBill }) => {
       return "Đã thanh toán";
     } else if (trangThai === "5") {
       return "Thành công";
+    } else if (trangThai === "10") {
+      return "Trả hàng";
     } else if (trangThai === "-1") {
       return "Hủy";
+    } else if (trangThai === "-2") {
+      return "Hoàn tiền";
     }
   };
-  const icon = [
-    GiNotebook,
-    SlNotebook,
-    RiTruckFill,
-    FaTruckFast,
-    GiPiggyBank,
-    FaCheckCircle,
-  ];
 
   return (
     <>
@@ -145,6 +139,10 @@ const DetailTraCuuDonHang = ({ listBill }) => {
                 ? "Trả hàng"
                 : bill.trangThai === "-1"
                 ? "Đã hủy"
+                : bill.trangThai === "-2"
+                ? "Hoàn Tiền"
+                : bill.trangThai === "10"
+                ? "Trả hàng"
                 : "Đã"}
             </span>
           </div>
@@ -162,7 +160,11 @@ const DetailTraCuuDonHang = ({ listBill }) => {
                   <TimelineEvent
                     minEvents={6}
                     key={index}
-                    color={"#3d874d"}
+                    color={
+                      item.trangThai == -1 || item.trangThai == 10
+                        ? "#520808"
+                        : "#3d874d"
+                    }
                     icon={showIcon(item.trangThai)}
                     values={showTitle(item.trangThai)}
                     isOpenEnding={true}
@@ -194,32 +196,39 @@ const DetailTraCuuDonHang = ({ listBill }) => {
                       {listSanPham.tenHang} {listSanPham.tenSP}{" "}
                     </h6>
                   </div>
-                  <div className="text-danger">
-                    <h6>
-                      <del>
-                        <IntlProvider locale="vi-VN">
-                          <div>
-                            <FormattedNumber
-                              value={listSanPham.giaBanSP}
-                              style="currency"
-                              currency="VND"
-                              minimumFractionDigits={0}
-                            />
-                          </div>
-                        </IntlProvider>
-                      </del>
-                    </h6>
-                  </div>
+                  {listSanPham.giaGiam > 0 ? (
+                    <div className="text-danger">
+                      <h6>
+                        <del>
+                          <IntlProvider locale="vi-VN">
+                            <div>
+                              <FormattedNumber
+                                value={
+                                  parseInt(listSanPham.thanhTienSP) +
+                                  parseInt(listSanPham.giaGiam)
+                                }
+                                currency="VND"
+                                minimumFractionDigits={0}
+                              />
+                              {" VND"}
+                            </div>
+                          </IntlProvider>
+                        </del>
+                      </h6>
+                    </div>
+                  ) : (
+                    ""
+                  )}
                   <div className="text-danger">
                     <h6>
                       <IntlProvider locale="vi-VN">
                         <div>
                           <FormattedNumber
                             value={listSanPham.thanhTienSP}
-                            style="currency"
                             currency="VND"
                             minimumFractionDigits={0}
-                          />
+                          />{" "}
+                          {" VND"}
                         </div>
                       </IntlProvider>
                     </h6>
@@ -231,6 +240,7 @@ const DetailTraCuuDonHang = ({ listBill }) => {
                       borderRadius: 6,
                       width: 60,
                       height: 25,
+                      border: "1px solid black", // Thêm viền đen với độ dày 1px
                     }}
                   ></div>
                   <h6>x{listSanPham.soLuongSP}</h6>
@@ -244,17 +254,17 @@ const DetailTraCuuDonHang = ({ listBill }) => {
                           value={
                             listSanPham.thanhTienSP * listSanPham.soLuongSP
                           }
-                          style="currency"
                           currency="VND"
                           minimumFractionDigits={0}
                         />
+                        {" VND"}
                       </div>
                     </IntlProvider>
                   </h6>
                 </div>
-                <div className="col-md-2  mt-5">
+                {/* <div className="col-md-2  mt-5">
                   <Button className=" btn btn-danger">Trả hàng</Button>
-                </div>
+                </div> */}
               </tr>
             ))}
           </div>
@@ -285,7 +295,7 @@ const DetailTraCuuDonHang = ({ listBill }) => {
                   <div className="col">Phí vận chuyển:</div>
                   <div className="col">
                     {Intl.NumberFormat("en-US").format(bill.tienVanChuyen)}
-                    VND
+                    {" VND"}
                   </div>
                 </div>
                 <div
@@ -294,7 +304,8 @@ const DetailTraCuuDonHang = ({ listBill }) => {
                 >
                   <div className="col">Voucher cửa hàng:</div>
                   <div className="col">
-                    {Intl.NumberFormat("en-US").format(bill.giaGiamGia)} VND
+                    {Intl.NumberFormat("en-US").format(bill.giaGiamGia)}{" "}
+                    {" VND"}
                   </div>
                 </div>
                 <div className="row mt-3">
@@ -303,7 +314,8 @@ const DetailTraCuuDonHang = ({ listBill }) => {
                   </div>
                   <div className="col text-danger fs-5">
                     <b>
-                      {Intl.NumberFormat("en-US").format(bill.thanhTien)} VND
+                      {Intl.NumberFormat("en-US").format(bill.thanhTien)}
+                      {" VND"}
                     </b>
                   </div>
                 </div>
@@ -326,8 +338,12 @@ const DetailTraCuuDonHang = ({ listBill }) => {
           {/* phương thức thanh toán */}
           <div className="ms-4 d-flex justify-content-start">
             <h5 className=" mt-1">Phương thức thanh toán :</h5>
-            <p className="ms-5 mt-1">
-              <b>Thanh toán khi nhận hàng</b>
+            <p className="ms-5 fs-5 mt-1 text-danger">
+              <b>
+                {bill.vnp === null
+                  ? "Thanh toán khi nhận hàng"
+                  : "Thanh toán VNP"}
+              </b>
             </p>
           </div>
         </div>

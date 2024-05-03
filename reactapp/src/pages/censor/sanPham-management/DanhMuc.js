@@ -13,9 +13,9 @@ export default function DanhMuc() {
   //Form
   const [selectedValue, setSelectedValue] = useState('1');
   const handleChange = (value) => {
-    console.log(`Selected value: ${value}`);
     setSelectedValue(value);
   };
+  const [formTim] = Form.useForm();
   const [componentSize, setComponentSize] = useState('default');
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
@@ -65,7 +65,7 @@ export default function DanhMuc() {
       });
     }
 
-  }
+  } 
   //Update
   const [openUpdate, setOpenUpdate] = useState(false);
   const [dmUpdate, setDmUpdate] = useState("");
@@ -74,18 +74,27 @@ export default function DanhMuc() {
   const showModal = async (idDetail) => {
     await DanhMucAPI.detailDM(idDetail)
       .then((res) => {
+        form1.setFieldsValue({
+          id: res.data.id,
+          ma: res.data.ma,
+          ten: res.data.ten,
+          trangThai: res.data.trangThai,
+          ngayTao: res.data.ngayTao,
+          ngaySua: res.data.ngaySua,
+          nguoiTao: res.data.nguoiTao,
+          nguoiSua: res.data.nguoiSua,
+        });
         setTenCheck(res.data.ten)
         setDmUpdate(res.data)
       })
       setOpenUpdate(true)
   };
-  console.log(dmUpdate)
   const updateDanhMuc = () => {
 
     if (dmUpdate.ten != tenCheck) {
       const checkTrung = (ten) => {
         return danhMuc.some(dm =>
-          dm.ten === ten
+          dm.ten.trim().toLowerCase() === ten.trim().toLowerCase()
         );
       };
 
@@ -123,7 +132,9 @@ export default function DanhMuc() {
   }
   //Tìm kiếm
   const onChangeFilter = (changedValues, allValues) => {
-    console.log("All values : ", allValues)
+    if (allValues.hasOwnProperty('ten')) {
+      allValues.ten = allValues.ten.trim();
+    }
     timKiemCT(allValues);
   }
   const timKiemCT = (dataSearch) => {
@@ -133,16 +144,56 @@ export default function DanhMuc() {
       })
   }
   //Validate
-  const validateDateDanhMuc = (_, value) => {
+  const validateDateAdd = (_, value) => {
+    const { getFieldValue } = form;
+    const tenTim = getFieldValue("ten");
+    if (tenTim != undefined) {
+      if (!tenTim.trim()) {
+        return Promise.reject("Tên không được để trống");
+      }
+    } else {
+      return Promise.reject("Tên không được để trống");
+    }
+
+    const specialCharacterRegex = /[!@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]/;
+    if (specialCharacterRegex.test(tenTim)) {
+      return Promise.reject("Tên không được chứa ký tự đặc biệt");
+    }
+
+    if (tenTim.trim().length > 30) {
+      return Promise.reject("Tên không được vượt quá 30 ký tự");
+    }
+    return Promise.resolve();
+  };
+
+  const validateDateUpdate = (_, value) => {
     const { getFieldValue } = form1;
-    const tenDanhMuc = getFieldValue("ten");
-  if (!tenDanhMuc.trim()) {
-    return Promise.reject("Tên không được để trống");
-  }
-  const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
-  if (specialCharacterRegex.test(tenDanhMuc)) {
-    return Promise.reject("Tên không được chứa ký tự đặc biệt");
-  }
+    const tenTim = getFieldValue("ten");
+    if (tenTim != undefined) {
+      if (!tenTim.trim()) {
+        return Promise.reject("Tên không được để trống");
+      }
+    } else {
+      return Promise.reject("Tên không được để trống");
+    }
+
+    const specialCharacterRegex = /[!@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]/;
+    if (specialCharacterRegex.test(tenTim)) {
+      return Promise.reject("Tên không được chứa ký tự đặc biệt");
+    }
+
+    if (tenTim.trim().length > 30) {
+      return Promise.reject("Tên không được vượt quá 30 ký tự");
+    }
+    return Promise.resolve();
+  };
+
+  const validateDateTim = (_, value) => {
+    const { getFieldValue } = formTim;
+    const ten = getFieldValue("ten");
+    if (ten.trim().length > 30) {
+      return Promise.reject("Tên không được vượt quá 30 ký tự");
+    }
     return Promise.resolve();
   };
   //Table
@@ -155,7 +206,7 @@ export default function DanhMuc() {
   const loadDanhMuc = () => {
     DanhMucAPI.getAll()
       .then((res) => {
-        setDanhMucs(res.data.reverse());
+        setDanhMucs(res.data);
       })
   };
 
@@ -211,7 +262,6 @@ export default function DanhMuc() {
   ]
   const [form] = Form.useForm();
   const [form1] = Form.useForm();
-  const [form2] = Form.useForm();
   return (
     <div className="container-fluid" style={{ borderRadius: 20 }}>
       <div className="container-fluid">
@@ -250,23 +300,22 @@ export default function DanhMuc() {
             style={{
               maxWidth: 1400,
             }}
-            form={form}
+            form={formTim}
           >
             <div className="col-md-5">
-              <Form.Item label="Tên & Mã" name="ten">
+              <Form.Item label="Tên & Mã" name="ten" rules={[{ validator: validateDateTim }]}>
                 <Input
-                  className="rounded-pill border-warning"
+                  maxLength={31}
                   placeholder="Nhập tên hoặc mã"
                 />
               </Form.Item>
             </div>
             <div className="col-md-5">
               <Form.Item
-                placeholder="Chọn trạng thái"
                 label="Trạng Thái"
                 name="trangThai"
               >
-                <Select value={selectedValue} onChange={handleChange}>
+                <Select placeholder="Chọn trạng thái" value={selectedValue} onChange={handleChange}>
                   <Select.Option value="0">Còn Bán</Select.Option>
                   <Select.Option value="1">Dừng Bán</Select.Option>
                 </Select>
@@ -322,7 +371,7 @@ export default function DanhMuc() {
                       title: "Thông báo",
                       content: "Bạn có chắc chắn muốn thêm không?",
                       onOk: () => {
-                        form1.submit();
+                        form.submit();
                       },
                       footer: (_, { OkBtn, CancelBtn }) => (
                         <>
@@ -348,15 +397,15 @@ export default function DanhMuc() {
                   maxWidth: 1000,
                 }}
                 onFinish={addDanhMuc}
-                form={form1}
+                form={form}
               >
                 <Form.Item
                   label="Tên"
                   name="ten"
                   hasFeedback
-                  rules={[{ validator: validateDateDanhMuc }]}
+                  rules={[{ required: true,validator: validateDateAdd }]}
                 >
-                  <Input className="border"></Input>
+                  <Input maxLength={31} className="border" />
                 </Form.Item>
               </Form>
             </Modal>
@@ -386,7 +435,7 @@ export default function DanhMuc() {
                       title: "Thông báo",
                       content: "Bạn có chắc chắn muốn sửa không?",
                       onOk: () => {
-                        form2.submit();
+                        form1.submit();
                       },
                       footer: (_, { OkBtn, CancelBtn }) => (
                         <>
@@ -413,23 +462,25 @@ export default function DanhMuc() {
                   maxWidth: 1000,
                 }}
                 onFinish={updateDanhMuc}
-                form={form2}
-              >
-                <Form.Item
-                  label={<b>Tên</b>}
-                  hasFeedback
-                  rules={[
-                    { required: true, message: "Vui lòng không để trống tên!" },
-                  ]}
+                form={form1}
                 >
-                  <Input
-                    className="border"
-                    value={dmUpdate.ten}
-                    onChange={(e) =>
-                      setDmUpdate({ ...dmUpdate, ten: e.target.value })
-                    }
-                  ></Input>
-                </Form.Item>
+                  <Form.Item
+                    name="ten"
+                    label={<b>Tên</b>}
+                    hasFeedback
+                    rules={[
+                      { required: true, validator: validateDateUpdate },
+                    ]}
+                  >
+                    <Input
+                      className="border"
+                      maxLength={31}
+                      value={dmUpdate.ten}
+                      onChange={(e) =>
+                        setDmUpdate({ ...dmUpdate, ten: e.target.value })
+                      }
+                    ></Input>
+                  </Form.Item>
                 <Form.Item label={<b>Trạng thái </b>}>
                   <Radio.Group
                     onChange={(e) =>
@@ -454,7 +505,7 @@ export default function DanhMuc() {
                 defaultPageSize: 5,
                 position: ["bottomCenter"],
                 defaultCurrent: 1,
-                total: 100,
+                total: danhMuc.length,
               }}
             />
           </div>

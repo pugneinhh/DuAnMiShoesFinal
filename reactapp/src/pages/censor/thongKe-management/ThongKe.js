@@ -767,7 +767,7 @@ export default function ThongKe() {
               defaultPageSize: 5,
               position: ["bottomCenter"],
               defaultCurrent: 1,
-              total: 100,
+              total: SPBanChay.lenght,
             }}
           ></Table>
           <br />
@@ -788,7 +788,7 @@ export default function ThongKe() {
               defaultPageSize: 5,
               position: ["bottomCenter"],
               defaultCurrent: 1,
-              total: 100,
+              total: SPSapHet.length,
             }}
           ></Table>
         </Card>

@@ -1,7 +1,6 @@
 import { getHeader, requestAdmin,requestClient } from "../request";
 
 export class ThongBaoAPI {
-  
   static getALlThongBaoAdmin = () => {
     const getToken = getHeader();
     // return requestAdmin.get(`/admin/thong-bao/getAll`);
@@ -9,7 +8,8 @@ export class ThongBaoAPI {
       method: "GET",
       url: `/admin/thong-bao/getAll`,
       headers: {
-        'Authorization': getToken}
+        Authorization: getToken,
+      },
       //   params: filter,
     });
   };
@@ -20,7 +20,8 @@ export class ThongBaoAPI {
       method: "GET",
       url: `/admin/thong-bao/count`,
       headers: {
-        'Authorization': getToken}
+        Authorization: getToken,
+      },
       //   params: filter,
     });
   };
@@ -45,8 +46,21 @@ export class ThongBaoAPI {
     const getToken = getHeader();
     return requestAdmin({
       method: "PUT",
-      url: `/admin/thong-bao/da-xem/${id}`, headers: {
-        'Authorization': getToken}
+      url: `/admin/thong-bao/da-xem/${id}`,
+      headers: {
+        Authorization: getToken,
+      },
+      //   params: filter,
+    });
+  };
+  static updateStatusClient = (id) => {
+    const getToken = getHeader();
+    return requestClient({
+      method: "PUT",
+      url: `/thong-bao/da-xem/${id}`,
+      headers: {
+        Authorization: getToken,
+      },
       //   params: filter,
     });
   };

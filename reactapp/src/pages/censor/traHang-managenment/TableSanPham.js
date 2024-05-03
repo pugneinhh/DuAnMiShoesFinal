@@ -9,6 +9,7 @@ import {
   UpdateReturnBill,
 } from "../../../store/reducer/ReturnBill.reducer";
 import { UpdateNewBill } from "../../../store/reducer/NewBill.reducer";
+import { FormattedNumber, IntlProvider } from "react-intl";
 
 const TableSanPham = ({ onSelectedSP, sanPhamHDCT }) => {
   const [form] = Form.useForm();
@@ -74,20 +75,22 @@ const TableSanPham = ({ onSelectedSP, sanPhamHDCT }) => {
           <Form.Item>
             <Button
               type="primary"
-              onClick={() =>
-                {
+              onClick={() => {
                 dispatch(
                   UpdateReturnBill({
                     key: record.idHDCT,
                     soLuongHienTai: record.soLuongHienTai - 1,
                   })
-                ) ;
-          
-                (dispatch(UpdateNewBill({key:record.idHDCT,soLuong:record.soLuongHienTai - 1}))) 
-                
-              }
-            }
-              disabled={record.soLuongHienTai === 0}
+                );
+
+                dispatch(
+                  UpdateNewBill({
+                    key: record.idHDCT,
+                    soLuong: record.soLuongHienTai - 1,
+                  })
+                );
+              }}
+              disabled={record.soLuongHienTai === 1}
             >
               -
             </Button>
@@ -100,19 +103,21 @@ const TableSanPham = ({ onSelectedSP, sanPhamHDCT }) => {
             />
             <Button
               type="primary"
-              onClick={() =>
-                {
+              onClick={() => {
                 dispatch(
                   UpdateReturnBill({
                     key: record.idHDCT,
                     soLuongHienTai: record.soLuongHienTai + 1,
                   })
-                ) ;
-                
-                (dispatch(UpdateNewBill({key:record.idHDCT,soLuong:record.soLuongHienTai + 1}))) 
-                
-              }
-            }
+                );
+
+                dispatch(
+                  UpdateNewBill({
+                    key: record.idHDCT,
+                    soLuong: record.soLuongHienTai + 1,
+                  })
+                );
+              }}
               disabled={record.soLuongHienTai === record.soLuong}
             >
               +
@@ -128,6 +133,21 @@ const TableSanPham = ({ onSelectedSP, sanPhamHDCT }) => {
       title: "Đơn giá",
       dataIndex: "donGia",
       key: "donGia",
+      render: ( donGia) => {
+        return (
+          <IntlProvider locale="vi-VN">
+            <div>
+              <FormattedNumber
+                value={donGia}
+                // style="currency"
+                currency="VND"
+                minimumFractionDigits={0}
+              />
+              {" VND"}
+            </div>
+          </IntlProvider>
+        );
+      },
     },
   ];
 
@@ -142,7 +162,7 @@ const TableSanPham = ({ onSelectedSP, sanPhamHDCT }) => {
       rowSelection={{
         ...rowSelection,
         getCheckboxProps: (record) => ({
-          disabled: record.giaTriKhuyenMai !== null,
+          disabled: record.giaGiam >0,
         }),
       }}
       defaultSelectedRowKeys={selectedRowKeys}

@@ -1,41 +1,21 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { useNavigate, useParams } from "react-router";
-import { BsShop } from "react-icons/bs";
-import { FaUser } from "react-icons/fa";
-import { TfiPencil } from "react-icons/tfi";
-import {
-  Avatar,
-  Button,
-  Card,
-  Col,
-  Divider,
-  Form,
-  Input,
-  message,
-  Row,
-  Space,
-  Select,
-} from "antd";
-import { ToastContainer } from "react-toastify";
-import { get, set } from "local-storage";
-import UpLoadImage from "../../../pages/censor/nhanVien-management/UploadAnh";
+import { useNavigate } from "react-router";
+import { get } from "local-storage";
 import ProfileMenu from "../profile/ProfileMenu";
-import { SellAPI } from "../../../pages/censor/api/sell/sell.api";
 import "./phieugiamgia.css"
+import { Breadcrumb } from "antd";
+import { Link } from "react-router-dom";
+import { BanHangClientAPI } from "../../../pages/censor/api/banHangClient/banHangClient.api";
 const PhieuGiamGiaCLient = (props) => {
-  const idHD = useParams();
-  const [form] = Form.useForm();
   const storedData = get("userData");
   const [userName, setUserName] = useState("");
   const [AnhUser, setLinkAnhUser] = useState("");
   const nav = useNavigate();
-  const [fileImage, setFileIamge] = useState(null);
   const [datas, setData] = useState([]);
   const loadVoucher = () => {
-    SellAPI.getVoucherWithIDKH(storedData.userID)
+    BanHangClientAPI.getVoucherWithIDKH(storedData.userID)
       .then((result) => {
-        console.log(result.data);
         setData(result.data);
       })
       .catch((error) => {
@@ -51,13 +31,22 @@ const PhieuGiamGiaCLient = (props) => {
   const muaNgay = () => {
     nav("/san-pham");
   };
-  const handleFileUpload = (fileData) => {
-    setFileIamge(fileData);
-  };
   return (
-    <div className="row" style={{height:705}}>
-      <ProfileMenu></ProfileMenu>
-      <div
+    <>
+       <Breadcrumb style={{ marginBottom: 10 , borderBottom: "1px solid #E2E1E4",paddingBottom: 5}}>
+        <Breadcrumb.Item>
+          <Link to="/home" className="no-underline text-dark">Trang chủ</Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>
+          <Link to="/tai-khoan-cua-toi" className="no-underline text-dark">Thông tin tài khoản</Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>
+          <Link to="/phieu-giam-gia-cua-toi" className="no-underline text-dark"><b>Phiếu giảm giá</b></Link>
+        </Breadcrumb.Item>
+      </Breadcrumb>
+      <div className="row mb-5 mt-4" style={{ height: 705 }}>
+        <ProfileMenu></ProfileMenu>
+        <div
         className="col-md-10 "
         style={{
           border: "1px solid #ccc",
@@ -80,16 +69,19 @@ const PhieuGiamGiaCLient = (props) => {
             padding: "0 30px",
           }}
         >
-          {datas.map((item, index) => (
+            {datas.map((item, index) => (
             <div className="col-md-4">
               <div class="cardPhieuGiamGia">
-                <div class="cardribbon">
+              <div
+                  class={
+                    item.loaiVoucher === "Tiền mặt" ? "ribbon2" : "ribbon"
+                  }
+                >
                   {item.mucDo.toLocaleString("vi-VN", {
                     style: "currency",
                     currency: "VND",
                   })}
-
-                  <span>{item.loaiVoucher === "Tiền mặt" ? "VND" : "%"}</span>
+ <span>{item.loaiVoucher === "Tiền mặt" ? " VND" : "%"}</span>
                 </div>
                 <h3>{item.ma}</h3>
 
@@ -102,7 +94,6 @@ const PhieuGiamGiaCLient = (props) => {
                     })}
                   </span>
                 </h6>
-
                 <h6>
                   Giảm tối đa:
                   <span className="text-danger ms-2">
@@ -112,7 +103,6 @@ const PhieuGiamGiaCLient = (props) => {
                     })}
                   </span>
                 </h6>
-
                 <h6>
                   Số ngày còn lại:
                   <span className="text-danger ms-2">{item.ngayConLai}</span>
@@ -124,28 +114,12 @@ const PhieuGiamGiaCLient = (props) => {
                 </div>
               </div>
             </div>
-            // <Space direction="vertical" size={16} className="col-md-3">
-            //   <Card
-            //     size="small"
-            //     title={item.ma}
-            //     extra={item.soLuong}
-            //     style={{ width: 300 }}
-            //   >
-            // <p>
-            //   {item.mucDo}
-            //   <span>{item.loaiVoucher === "Tiền mặt" ? "VND" : "%"}</span>
-            // </p>
-            // <p>Điều kiện : {item.dieuKien}</p>
-            // <p>Giảm tối đa: {item.giamToiDa}</p>
-            // <p>Số ngày còn lại: {item.ngayConLai}</p>
-            // <button className="text-end" onClick={muaNgay}>Sử dụng</button>
-            //   </Card>
-            // </Space>
           ))}
         </div>
       </div>
       {/* tab */}
     </div>
+    </>
   );
 };
 export default PhieuGiamGiaCLient;

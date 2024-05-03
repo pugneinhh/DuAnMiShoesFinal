@@ -114,3 +114,13 @@
 .qr-container {
   transition: all 0.3s ease;
 }
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap; /* Cho phép các thẻ được bao trên nhiều dòng nếu cần */
+}
+
+.tag-container {
+  margin: 0 8px 8px 0; /* Khoảng cách giữa các thẻ */
+  flex: 1 0 50%; /* Hai thẻ trên mỗi dòng */
+}

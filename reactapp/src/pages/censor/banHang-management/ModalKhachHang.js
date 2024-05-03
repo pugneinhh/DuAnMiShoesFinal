@@ -1,11 +1,4 @@
-import {
-  Button,
-  Modal,
-  Space,
-  Table,
-  Input,
-  Form
-} from "antd";
+import { Button, Modal, Space, Table, Input, Form } from "antd";
 import { useEffect, useState } from "react";
 import { Image } from "cloudinary-react";
 import { EyeOutlined } from "@ant-design/icons";
@@ -16,13 +9,18 @@ import {
   UpdateKHToBill,
   UpdateNullClient,
 } from "../../../store/reducer/Bill.reducer";
-import {SellAPI} from "../../censor/api/sell/sell.api";
+import { SellAPI } from "../../censor/api/sell/sell.api";
 import ModalAddKhachHang from "./ModalAddKhachHang";
 import { KhachHangAPI } from "../api/user/khachHang.api";
 import { NguoiDungAPI } from "../api/nguoiDung/nguoiDungAPI";
 // import { KhachHangAPI } from "../api/user/khachHang.api";
 
-const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) => {
+const ModalKhachHang = ({
+  setOpenKhachHang,
+  openKhachHang,
+  activeKey,
+  onVoucher,
+}) => {
   // const { openKhachHang, setOpenKhachHang } = props;
   // const activeKey = props.activeKey;
   const [openModalAddKhachHang, setopenModalAddKhachHang] = useState(false);
@@ -32,7 +30,7 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
   useEffect(() => {
     loadKhachHang();
   }, []);
-
+  const [formTim] = Form.useForm();
   const dispatch = useDispatch();
   const client = useSelector(GetClient);
   const bill = useSelector(GetBill);
@@ -40,12 +38,7 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
     ? bill.filter((item) => item.key === activeKey)[0]?.nguoiDung
     : "";
   const handleClickAddClient = async (record) => {
-    console.log("recorrd id",record);
-
     NguoiDungAPI.getDiaChiByIDND(record.idND).then((res) => {
-      console.log("res",res.data);
-      console.log("huyen id",res.data.idHuyen);
-      console.log("xa id",res.data.idXa);
       dispatch(
         UpdateKHToBill({
           key: activeKey,
@@ -57,26 +50,37 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
           idXa: res.data.idXa,
         })
       );
-    })
+    });
 
     await SellAPI.getVoucherWithIDKH(record.idND).then((res) => onVoucher(res));
-   await NguoiDungAPI.getDiaChiByIDND(record.idND).then((resData) => console.log(resData.data));
-   SellAPI.updateKH(activeKey, record.idND);
+    await NguoiDungAPI.getDiaChiByIDND(record.idND).then((resData) =>
+      console.log(resData.data)
+    );
+    SellAPI.updateKH(activeKey, record.idND);
     setOpenKhachHang(false);
   };
 
   //Tìm khách hàng
+  const validateDateTim = (_, value) => {
+    const { getFieldValue } = formTim;
+    const tenChiTiet = getFieldValue("ten");   
+    if (tenChiTiet.trim().length > 40) {
+      return Promise.reject("Tên không được vượt quá 40 ký tự");
+    }
+    return Promise.resolve();
+  };
   const [listKH, setListKH] = useState([]);
   const [form] = Form.useForm();
-    const [componentSize, setComponentSize] = useState("default");
+  const [componentSize, setComponentSize] = useState("default");
   const onChangeFilter = (changedValues, allValues) => {
-    console.log("All values : ", allValues);
+    if (allValues.hasOwnProperty('ten')) {
+      allValues.ten = allValues.ten.trim();
+    }
     timKiemKH(allValues);
   };
   const timKiemKH = (dataSearch) => {
     KhachHangAPI.timKiem(dataSearch).then((res) => {
-       setListKH(res.data);
-      console.log(res.data,"2222222222222");
+      setListKH(res.data);
     });
   };
 
@@ -218,17 +222,18 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
             layout="horizontal"
             initialValues={{
               size: componentSize,
-            }}
+            }} 
             onValuesChange={onChangeFilter}
             size={componentSize}
             style={{
               maxWidth: 1400,
             }}
-            form={form}
+            form={formTim}
           >
             <div className="col-md-10">
-              <Form.Item label="Tìm kiếm" name="ten">
+              <Form.Item label="Tìm kiếm" name="ten" rules={[{ validator: validateDateTim }]}>
                 <Input
+                  maxLength={41}
                   className="rounded-pill border-warning"
                   placeholder="Nhập mã hoặc tên hoặc sđt ..."
                 />
@@ -271,7 +276,7 @@ const ModalKhachHang = ({setOpenKhachHang,openKhachHang,activeKey,onVoucher}) =>
             defaultPageSize: 2,
             position: ["bottomCenter"],
             defaultCurrent: 1,
-            total: client.length,
+            total: listKH.length,
           }}
         />
       </div>

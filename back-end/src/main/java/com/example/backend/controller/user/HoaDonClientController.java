@@ -35,20 +35,19 @@ public class HoaDonClientController {
     private HoaDonChiTietService hoaDonChiTietService;
     @PostMapping("")
     public ResponseEntity<?> getALLHoaDonOL(@RequestBody TrangThaiRequest request) {
-        System.out.println("tttttttt" + request.getTrangThai());
         return ResponseEntity.ok(hoaDonClientService.getALLHDClientByIDKH(request));
     }
 
-    @GetMapping("hoa-don/{id}")
+    @GetMapping("/hoa-don/{id}")
     public ResponseEntity<?> getALLHoaDonOLByIDHD(@PathVariable("id") String id) {
-        return ResponseEntity.ok(hoaDonClientService.detailHDSanPham(id));
+        return ResponseEntity.ok(hoaDonClientService.detailHDSanPhamClient(id));
     }
 
-    @GetMapping("detail-hoa-don/{idHD}")
+    @GetMapping("/detail-hoa-don/{idHD}")
     public ResponseEntity<?> detailHD(@PathVariable("idHD") String id) {
         return ResponseEntity.ok(hoaDonClientService.detailHoaDonClienByIdHD(id));
     }
-    @PostMapping("search")
+    @PostMapping("/search")
     public ResponseEntity<?> detailHD(@RequestBody SearchHDByMaAndSdtRequest request ) {
         return ResponseEntity.ok(hoaDonClientService.search(request));
     }
@@ -77,4 +76,5 @@ public class HoaDonClientController {
     public void  deleteHoaDonChiTiet (@PathVariable("idCTSP") String idCTSP,@PathVariable("id")String id) {
         hoaDonChiTietService.huyDonHang(idCTSP,id); //  roll backed
     }
+
 }

@@ -25,7 +25,7 @@ const rootReducer=(state =initState,action) =>{
             ]
         }
         case 'REMOVE_INVOICE':
-            console.log("key",action.payload.key);
+        
         return{
             
             ...state,hoaDons:[

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  Breadcrumb,
   Layout,
   theme,
   Image,
@@ -14,12 +13,16 @@ import {
 
 import { Link, useNavigate } from "react-router-dom";
 import { TbShoppingCartHeart } from "react-icons/tb";
-import logoShop from "../../assets/images/logoNgang.png";
+import logoShop from "../../assets/images/logoNgang1.png";
 import "./client.css";
 import { get, set } from "local-storage";
 import { KHThongBao } from "../../utils/socket/socket";
 import Notification from "./notificationUser";
 import { useCart } from "./cart/CartContext";
+import { FaFacebook, FaInstagram, FaTwitch, FaTwitter } from "react-icons/fa";
+import { BiLogoGmail } from "react-icons/bi";
+import { toast, ToastContainer } from "react-toastify";
+import Search from "antd/es/input/Search";
 
 const { Header, Content, Footer } = Layout;
 
@@ -31,8 +34,13 @@ export const DashboardClient = ({ children }) => {
   const storedDataGoogle = get("userGoogle");
   const storedDataFaceBook = get("userFacebook");
   const { totalQuantity } = useCart();
+  const [valueSearch, setValueSearchs] = useState('');
 
-    
+  const onSearch = (value) => {
+    nav(`/tim-kiem/${value.trim()}`);
+    setValueSearchs('')
+  };
+
   useEffect(() => {
     if (storedData !== null) {
       setUserName(storedData.ten);
@@ -58,12 +66,15 @@ export const DashboardClient = ({ children }) => {
   const thongTinTaiKhoan = () => {
     nav("/tai-khoan-cua-toi");
   };
-
+  const doiMatKhau = () => {
+    nav("/doi-mat-khau");
+  };
   const dangXuat = () => {
     localStorage.clear();
     //  window.location.reload();
     // set("userGoogle", "");
-    window.location.href = "/login";
+    // window.location.href = "/login";
+        nav("/login");
   };
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -73,12 +84,20 @@ export const DashboardClient = ({ children }) => {
       key: "1",
       label: (
         <a target="_blank" rel="noopener noreferrer" onClick={thongTinTaiKhoan}>
-        Thông tin tài khoản
+          Thông tin tài khoản
         </a>
       ),
     },
     {
       key: "2",
+      label: (
+        <a target="_blank" rel="noopener noreferrer" onClick={doiMatKhau}>
+          Đổi mật khẩu
+        </a>
+      ),
+    },
+    {
+      key: "3",
       label: (
         <a target="_blank" rel="noopener noreferrer" onClick={openHistory}>
           Đơn mua
@@ -86,16 +105,15 @@ export const DashboardClient = ({ children }) => {
       ),
     },
     {
-      key: "3",
+      key: "4",
       label: (
-
-           <a target="_blank" rel="noopener noreferrer" onClick={dangXuat}>
-         Đăng xuất
+        <a target="_blank" rel="noopener noreferrer" onClick={dangXuat}>
+          Đăng xuất
         </a>
       ),
     },
   ];
- 
+
   return (
     <Layout>
       {/* tiêu đề */}
@@ -105,9 +123,9 @@ export const DashboardClient = ({ children }) => {
           display: "flex",
           position: "sticky",
           top: 0,
-          zIndex:30,
+          zIndex: 30,
           width: "100%",
-          backgroundColor: "#ffffff",
+          backgroundColor: "#FFFFFF",
           color: "black",
         }}
       >
@@ -138,37 +156,39 @@ export const DashboardClient = ({ children }) => {
           </Link>
         </Col>
         <Col
-          span={2}
+          span={3}
           className="d-flex align-items-center justify-content-center"
         >
-          <Link to={"/home"} className="text-decoration-none">
+          <Link to={"/tra-cuu-don-hang"} className="text-decoration-none">
             <h6 className="button-menu-trai d-flex align-items-center mt-1 ">
-              Liên hệ
+              Tra Cứu Đơn hàng
             </h6>
           </Link>
         </Col>
         <Col
-          span={3}
+          span={2}
           className="d-flex align-items-center justify-content-center"
         >
-          <Link to={"/tra-cuu-don-hang"} className="text-decoration-none">
+          <Link to={"/chinh-sach"} className="text-decoration-none">
             <h6 className="button-menu-trai d-flex align-items-center mt-1 ">
-              Tra Cứu Đơn hàng
+              Chính sách
             </h6>
           </Link>
         </Col>
-        {/* <Col
+        <Col span={1} className="float-end"></Col>
+        <Col
           span={3}
           className="d-flex align-items-center justify-content-center"
         >
-          <Link to={"/tra-cuu-don-hang"} className="text-decoration-none">
-            <h6 className="button-menu-trai d-flex align-items-center mt-2">
-              Tra Cứu Đơn hàng
-            </h6>
-          </Link>
-        </Col> */}
-        <Col span={6} className="float-end"></Col>
-        <Col span={1} className="float-end">
+          <Search
+            placeholder="Tìm kiếm ..."
+            onSearch={onSearch}
+            value={valueSearch}
+            onChange={(e) => setValueSearchs(e.target.value)}
+          ></Search>
+        </Col>
+        <Col span={1} className="float-end"></Col>
+        <Col span={1} className="float-end menuButton">
           <Notification />
         </Col>
         <Col span={0.5} className="float-end">
@@ -192,13 +212,6 @@ export const DashboardClient = ({ children }) => {
               </Link>
             ) : (
               <>
-                {/* <Avatar
-                  shape="circle"
-                  className="align-content-center"
-                  size="large"
-                  src={linkAnh}
-                  style={{ marginLeft: 35 }}
-                /> */}
                 <Dropdown
                   menu={{
                     items,
@@ -239,20 +252,27 @@ export const DashboardClient = ({ children }) => {
           </div>
         </Col>
       </Header>
+      <marquee
+        style={{
+          // backgroundColor:"#1F282D",
+          fontStyle: "italic",
+          color: "Black",
+          fontSize: 16,
+          fontWeight: "Bolder",
+        }}
+        direction="left"
+        scrollamount="5"
+      >
+        🔥🔥 Hè rực rỡ ưu đãi khủng cho hóa đơn từ 10.000.000 VND ! Mua ngay
+        🔥🔥{" "}
+      </marquee>
       <Content
         style={{
           padding: "0 48px",
+          backgroundColor: "white",
         }}
       >
-        <Breadcrumb
-          style={{
-            margin: "16px 0",
-          }}
-        >
-          <Breadcrumb.Item>Home</Breadcrumb.Item>
-          <Breadcrumb.Item>List</Breadcrumb.Item>
-          <Breadcrumb.Item>App</Breadcrumb.Item>
-        </Breadcrumb>
+        <div className="mt-3 mb-3"></div>
         <div
           style={{
             background: colorBgContainer,
@@ -267,10 +287,88 @@ export const DashboardClient = ({ children }) => {
       <Footer
         style={{
           textAlign: "center",
+          backgroundImage:
+            "url('https://cdn.shopify.com/s/files/1/2495/5044/products/salvas-white-leather-sneaker.slideshow5_eb2d8421-fc8f-4759-97e9-3f8f679f44a4.png?v=1676536621')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
         }}
       >
-        Ant Design ©{new Date().getFullYear()} Created by Ant UED
+        <div className="row">
+          <div className="col-md-2">
+            <div>
+              <Image className="mt-3" src={logoShop} rounded width={150} />
+            </div>
+            <div className="mt-4">
+              <h5>GIỚI THIỆU</h5>
+            </div>
+            <div className="me-4">
+              <Link to={"/san-pham"} className="text-decoration-none">
+                <span className="text-dark me-2">Sản phẩm</span>
+              </Link>
+            </div>
+            <div className="me-4">
+              <Link to={"/tra-cuu-don-hang"} className="text-decoration-none">
+                <span className="text-dark me-2">Đơn hàng</span>
+              </Link>
+            </div>
+            <div className="ms-4">
+              <Link to={"/chinh-sach"} className="text-decoration-none">
+                <span className="text-dark ">Chính sách trả hàng</span>
+              </Link>
+              <br />
+              <br />
+              <div>MiShoes-Created by SD-26</div>
+            </div>
+          </div>
+          <div className="col-md-8 mt-5"></div>
+          <div className="col-md-2 mt-5">
+            <h5>SNEAKER MISHOES</h5>
+            <div>
+              <a>Địa chỉ: Nam Từ Liêm – Hà Nội</a>
+              <br />
+              <Link to={"tel:0988353709"} className="text-decoration-none">
+                <span className="text-dark">Hotline: 0988 353 709</span>
+              </Link>
+              <br />
+              <Link
+                to={"mailto:shopmishoes@gmail.com"}
+                className="text-decoration-none"
+              >
+                <span className="text-dark">Email: shopmishoes@gmail.com</span>
+              </Link>
+            </div>
+            <div className="mt-4">
+              <Link
+                to={"https://www.facebook.com/profile.php?id=61558806157556"}
+                className="text-decoration-none"
+              >
+                <span className="text-dark mt-2">
+                  <FaFacebook size={30} className="me-2" />
+                  <FaTwitter size={30} className="me-2" />
+                  <FaInstagram size={30} className="me-2" />
+                  <BiLogoGmail size={30} className="me-2" />
+                  <FaTwitch size={30} className="me-2" />
+                </span>
+              </Link>
+              <br />
+            </div>
+          </div>
+        </div>
       </Footer>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      {/* Same as */}
+      <ToastContainer />
     </Layout>
   );
 };

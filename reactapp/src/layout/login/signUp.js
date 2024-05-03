@@ -6,7 +6,7 @@ import {
   MDBRow,
   MDBCol,
 } from "mdb-react-ui-kit";
-import { Button, Form, Image, Input } from "antd";
+import { Button, Form, Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "./login.css";
@@ -89,7 +89,7 @@ export const SignUp = () => {
                      nav("/login");
             })
             .catch((error) => {
-              console.log(error);
+              
             });
         })
         .catch(() => {

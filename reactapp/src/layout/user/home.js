@@ -1,6 +1,6 @@
 import "./home.css";
 import React, { useState, useEffect } from "react";
-import { Carousel, Tabs } from "antd";
+import { Breadcrumb, Carousel, Tabs } from "antd";
 import { FaShippingFast } from "react-icons/fa";
 import { TfiReload } from "react-icons/tfi";
 import { IoIosInformationCircleOutline } from "react-icons/io";
@@ -20,13 +20,6 @@ export const Home = ({ children }) => {
   const [newProducts, setNewProducts] = useState([]);
   const [hotProducts, setHotProducts] = useState([]);
 
-  const getAll = () => {
-    HomeAPI.getAllSanPham()
-      .then((res) => {
-        setProducts(res.data);
-      })
-  }
-
   const getNew = () => {
     HomeAPI.getAllNewSanPham()
       .then((res) => {
@@ -43,30 +36,40 @@ export const Home = ({ children }) => {
       var stomp = null;
       const socket = new SockJS("http://localhost:8080/ws");
       stomp = Stomp.over(socket);
-  useEffect(() => {
-    stomp.connect({}, () => {
-      stomp.subscribe("/topic/KH/hoa-don", (mes) => {
-        try {
-          const pare = JSON.parse(mes.body);
-          console.log(pare);
-          // ví du: bạn muốn khi khách hàng bấm đặt hàng mà load lại hóa đơn màn admin thì hãy gọi hàm load all hóa đơn ở đây
-          // thí dụ: đây là hàm laod hóa đơn: loadHoaDon(); allThongBao(); CountThongBao();
-          getAll();
-          getHot();
-          getNew();
-        } catch (e) {
-          console.log("lỗi mẹ ròi xem code di: ", e);
-        }
-      });
-    });
+        useEffect(() => {
+          const connectWebSocket = () => {
+            const socket = new SockJS("http://localhost:8080/ws");
+            stomp = Stomp.over(socket);
+            stomp.connect(
+              {},
+              () => {
+                console.log("connect websocket");
 
-    return () => {
-      stomp.disconnect();
-    };
-  }, []);
+                stomp.subscribe("/topic/KH/hoa-don", (mes) => {
+                  try {
+                    const pare = JSON.parse(mes.body);
+                    console.log(pare);
+                    getHot();
+                    getNew();
+                  } catch (e) {
+                    console.log("lỗi mẹ ròi xem code di: ", e);
+                  }
+                });
+              },
+              (error) => {
+                console.error("Failed to connect to WebSocket:", error);
+                // Thử kết nối lại sau một khoảng thời gian
+                setTimeout(connectWebSocket, 1000);
+              }
+            );
+          };
+          connectWebSocket();
+          return () => {
+            stomp.disconnect();
+          };
+        }, []);
   useEffect(() => {
     getHot();
-    getAll();
     getNew();
   }, [])
 
@@ -83,14 +86,14 @@ export const Home = ({ children }) => {
           />
           <div class="intro-content">
             <div class="css-sanqhm">
-              <h3 class="intro-subtitle text-white">Deals and Promotions</h3>
-              <h1 class="intro-title text-white">Sneakers & Athletic Shoes</h1>
-              <div class="intro-price text-white">from $9.99</div>
+              <h3 class="intro-subtitle text-white">Ưu đãi và Khuyến mãi</h3>
+              <h1 class="intro-title text-white">Chỉ có tại MiShoes</h1>
+              <div class="intro-price text-white">giảm tới 500.000 VNĐ</div>
               <a
                 class="btn btn-white-primary btn-round"
-                href="/react/molla/demo-10/shop/sidebar/list/"
+                href="/san-pham"
               >
-                <span>SHOP NOW</span>
+                <span>Mua Ngay</span>
               </a>
             </div>
           </div>
@@ -103,14 +106,14 @@ export const Home = ({ children }) => {
           />
           <div class="intro-content">
             <div class="css-sanqhm">
-              <h3 class="intro-subtitle text-white">Deals and Promotions</h3>
+              <h3 class="intro-subtitle text-white">Ưu đãi và khuyến mãi</h3>
               <h1 class="intro-title text-white">Can’t-miss Clearance:</h1>
               <div class="intro-price text-white">starting at 60% off</div>
               <a
                 class="btn btn-white-primary btn-round"
-                href="/react/molla/demo-10/shop/sidebar/list/"
+                href="/san-pham"
               >
-                <span>SHOP NOW</span>
+                <span>Mua Ngay</span>
               </a>
             </div>
           </div>
@@ -128,9 +131,9 @@ export const Home = ({ children }) => {
               <div class="intro-price text-white">from $49.99</div>
               <a
                 class="btn btn-white-primary btn-round"
-                href="/react/molla/demo-10/shop/sidebar/list/"
+                href="/san-pham"
               >
-                <span>SHOP NOW</span>
+                <span>Mua Ngay</span>
               </a>
             </div>
           </div>
@@ -145,13 +148,13 @@ export const Home = ({ children }) => {
                 <img src="https://d-themes.com/react/molla/demo-10/images/home/banners/banner-1.jpg" width={"420px"}
                   height={"250px"} />
                 <div class="banner-content ">
-                  <h4 class="banner-subtitle">New Arrivals</h4>
-                  <h3 class="banner-title text-white">
-                    Sneakers &amp;
-                    <br /> Athletic Shoes
+                  <h4 class="banner-subtitle ms-5">Trải Nghiệm Mới</h4>
+                  <h3 class="banner-title text-white ms-5">
+                    Các Mẫu
+                    <br /> Sneaker
                   </h3>
-                  <a class="btn btn-outline-white banner-link btn-round">
-                    Discover Now
+                  <a class="btn btn-outline-white banner-link btn-round ms-5 mt-3" href="/san-pham">
+                    Khám Phá Ngay
                   </a>
                 </div>
               </div>
@@ -162,11 +165,11 @@ export const Home = ({ children }) => {
                   height={"250px"}
                 />
                 <div class="banner-content-left ">
-                  <h4 class="banner-subtitle text-dark">Clearance</h4>
+                  <h4 class="banner-subtitle text-dark">Hè Siêu Sale</h4>
                   <h3 class="banner-title text-dark">Nike</h3>
-                  <div class="banner-text">up to 70% off</div>
-                  <a class="btn btn-outline-dark btn-round banner-link ">
-                    Shop Now
+                  <div class="banner-text">giảm tới 30%</div>
+                  <a class="btn btn-outline-dark btn-round banner-link mt-3" href="/san-pham">
+                    Mua Ngay
                   </a>
                 </div>
               </div>
@@ -177,12 +180,12 @@ export const Home = ({ children }) => {
                 width={"855px"}
                 height={"255px"}
               />
-              <div class="banner-content-middle">
-                <h4 class="banner-subtitle text-dark">On Sale</h4>
-                <h3 class="banner-title text-dark">Sneaker</h3>
-                <div class="banner-text">up to 30% off</div>
-                <a class="btn btn-outline-dark btn-round banner-link">
-                  Shop Now
+              <div class="banner-content-middle mt-3">
+                <h4 class="banner-subtitle text-dark">Sale Sốc</h4>
+                <h3 class="banner-title text-dark">Các Mẫu Sneaker </h3>
+                <div class="banner-text">giảm tới 30%</div>
+                <a class="btn btn-outline-dark btn-round banner-link mt-3" href="/san-pham">
+                  Mua Ngay
                 </a>
               </div>
             </div>
@@ -193,14 +196,6 @@ export const Home = ({ children }) => {
               width={"410px"}
               height={"520px"}
             />
-            <div class="banner-content-middle ">
-              <h4 class="banner-subtitle text-white">Clearance</h4>
-              <h3 class="banner-title text-white">Nike</h3>
-              <div class="banner-text text-white">from $39.00 </div>
-              <a class="btn btn-outline-white btn-round banner-link">
-                Shop Now
-              </a>
-            </div>
           </div>
         </div>
       </div>
@@ -213,8 +208,8 @@ export const Home = ({ children }) => {
                   <FaShippingFast size={40} color="#445f84" />
                 </span>
                 <div class="icon-box-content">
-                  <h3 class="icon-box-title">Free Shipping</h3>
-                  <p>Orders $50 or more</p>
+                  <h3 class="icon-box-title">Miễn Phí Vận Chuyển</h3>
+                  <p>Cho đơn từ 2 triệu</p>
                 </div>
               </div>
             </div>
@@ -225,8 +220,8 @@ export const Home = ({ children }) => {
                 <TfiReload size={40} color="#445f84" />
               </span>
               <div class="icon-box-content">
-                <h3 class="icon-box-title">Free Returns</h3>
-                <p>Within 30 days</p>
+                <h3 class="icon-box-title">Trả Hàng Tại Cửa Hàng</h3>
+                <p>Trong vòng 7 ngày</p>
               </div>
             </div>
           </div>
@@ -236,8 +231,8 @@ export const Home = ({ children }) => {
                 <IoIosInformationCircleOutline size={40} color="#445f84" />
               </span>
               <div class="icon-box-content">
-                <h3 class="icon-box-title">Get 20% Off 1 Item</h3>
-                <p>When you sign up</p>
+                <h3 class="icon-box-title">Nhận Nhiều Ưu Đãi</h3>
+                <p>Khi đăng ký tài khoản</p>
               </div>
             </div>
           </div>
@@ -247,8 +242,8 @@ export const Home = ({ children }) => {
                 <MdOutlineSupport size={40} color="#445f84" />
               </span>
               <div class="icon-box-content">
-                <h3 class="icon-box-title">We Support</h3>
-                <p>24/7 amazing services</p>
+                <h3 class="icon-box-title">Hỗ Trợ</h3>
+                <p>Dịch vụ tuyệt vời 24/7</p>
               </div>
             </div>
           </div>
@@ -260,7 +255,7 @@ export const Home = ({ children }) => {
       <div className="container mt-5">
         <h3 className="text-center">Sản phẩm</h3>
         <Tabs defaultActiveKey="1" centered>
-      <TabPane tab="Sản phẩm bán chạy" key="1">
+          <TabPane tab="Sản phẩm bán chạy" key="1">
             <div class="container">
               <div className="row">
                 {hotProducts.map((product, index) => {
@@ -286,22 +281,6 @@ export const Home = ({ children }) => {
               </div>
             </div>
           </TabPane>
-
-
-          <TabPane tab="Tất cả" key="3">
-            <div class="container">
-              <div className="row">
-              {products.map((product, index) => {
-                  return (
-                    <div className="col-md-3" >
-                      <ProductCard key={index} product={product} />
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </TabPane>
-
         </Tabs>
       </div>
     </div>

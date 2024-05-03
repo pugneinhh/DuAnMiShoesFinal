@@ -14,7 +14,7 @@ const AddModalDiaChi = (props) => {
         setOpenModalAddDiaChi(false);
     };
     //add dia chi khach hang
-    console.log("ID Khashc hàng",idKH)
+
     const handleSubmit = (value) => {
        
         const data={

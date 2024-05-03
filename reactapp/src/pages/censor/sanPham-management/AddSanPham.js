@@ -40,15 +40,13 @@ import convert from "color-convert";
 import "./SanPham.css";
 import { MauSacAPI } from "../api/SanPham/mauSac.api";
 import { ChiTietSanPhamAPI } from "../api/SanPham/chi_tiet_san_pham.api";
-import CloudinaryUploader from "./ModalUploadAnh";
-import SanPham from "./SanPham";
-import { AdminGuiThongBaoXacNhanDatHang } from "../../../utils/socket/socket";
 export default function AddSanPham() {
   //Form
   const nav = useNavigate();
   const [form] = Form.useForm();
   const [form1] = Form.useForm();
   const [form2] = Form.useForm();
+  const [form3] = Form.useForm();
   const [selectedValue, setSelectedValue] = useState("1");
   const handleChange = (value) => {
     setSelectedValue(value);
@@ -90,7 +88,7 @@ export default function AddSanPham() {
       const updatedDataSource = tableData.map((item) => {
         if (item.tenMau === index || item.ghiChu === "") {
           // Cập nhật giá trị ghiChu với một mảng các liên kết
-          return { ...item, ghiChu: linkAnhList[0] };
+          return { ...item, ghiChu: linkAnhList[0], linkAnh: linkAnhList };
         }
         return item;
       });
@@ -200,6 +198,7 @@ export default function AddSanPham() {
             danhMuc: newDataDM[0].id,
             mauSac: newDataMS[j].id,
             kichThuoc: newDataKT[i].id,
+            linkAnh: null,
             ghiChu: null,
             soLuong: dataSoLuong,
             giaBan: dataGiaBan,
@@ -212,7 +211,6 @@ export default function AddSanPham() {
       setTableData([]);
     }
   };
-  console.log(tableData);
   const processColorGroups = () => {
     const colorGroups = {};
     tableData.forEach((item) => {
@@ -251,9 +249,17 @@ export default function AddSanPham() {
     setColorGroups(Object.entries(groupedCTSP));
   };
 
+  const validateDateMoTa = (_, value) => {
+    const { getFieldValue } = form1;
+    const ten = getFieldValue("moTa");
+    if (ten.trim().length > 200) {
+      return Promise.reject("Mô tả không được vượt quá 200 ký tự");
+    }
+    return Promise.resolve();
+  };
+
   const [selectedColor, setSelectedColor] = useState(null);
   const handleUploadAnh = (tenMau) => {
-    console.log("Upload ảnh cho màu:", tenMau);
     setSelectedColor(tenMau);
     setAddAnhs(true);
   };
@@ -264,12 +270,21 @@ export default function AddSanPham() {
 
   useEffect(() => {
     loadDuLieuThem();
-  }, [dataKichThuoc, dataMauSac, dataSoLuong, dataGiaBan, dataSanPham, dataMoTa, dataChatLieu, dataHang, dataDeGiay, dataDanhMuc]);
+  }, [
+    dataKichThuoc,
+    dataMauSac,
+    dataSoLuong,
+    dataGiaBan,
+    dataSanPham,
+    dataMoTa,
+    dataChatLieu,
+    dataHang,
+    dataDeGiay,
+    dataDanhMuc,
+  ]);
 
   //Update nhanh
   const updateNhanh = (newValues) => {
-    console.log("Vão đà", newValues);
-
     if (selectedRowKeys.length <= 0) {
       toast.error("Chưa chọn dòng để sửa !", {
         position: "top-right",
@@ -283,7 +298,6 @@ export default function AddSanPham() {
       });
       return;
     } else {
-      console.log("Đã vào");
       const updatedData = tableData.map((record) => {
         if (selectedRowKeys.includes(record.key)) {
           return {
@@ -314,7 +328,6 @@ export default function AddSanPham() {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
-    console.log(newSelectedRowKeys);
   };
   const rowSelection = {
     selectedRowKeys,
@@ -415,7 +428,7 @@ export default function AddSanPham() {
     {
       title: "Upload ảnh",
       dataIndex: "tenMau",
-      width: 450,
+      width: 400,
       render: (_, record) => {
         return {
           children: (
@@ -444,11 +457,10 @@ export default function AddSanPham() {
   useEffect(() => {
     loadCTSP();
   }, []);
-  const loadCTSP = async () => {
-    ChiTietSanPhamAPI.showCTSP().then(response => {
+  const loadCTSP = () => {
+    ChiTietSanPhamAPI.showCTSP().then((response) => {
       setOptionsCTSP(response.data);
-    })
-
+    });
   };
 
   const addCTSanPham = () => {
@@ -489,8 +501,8 @@ export default function AddSanPham() {
     }
 
     for (let i = 0; i < tableData.length; i++) {
-      if (tableData[i].giaBan === "" || tableData[i].giaBan < 1000000) {
-        toast.error("Không để trống giá bán ! ( Giá bán >= 1,000,000 )", {
+      if (tableData[i].giaBan === "" || tableData[i].giaBan < 100000) {
+        toast.error("Không để trống giá bán ! ( Giá bán >= 100,000 )", {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -504,6 +516,22 @@ export default function AddSanPham() {
       }
     }
 
+    for (let i = 0; i < tableData.length; i++) {
+      if (tableData[i].moTa.length > 200) {
+        toast.error("Mô tả không quá 200 kí tự!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        return;
+      }
+    }
+    
     for (let i = 0; i < tableData.length; i++) {
       if (tableData[i].ghiChu == null) {
         toast.error("Không để trống ảnh!", {
@@ -520,30 +548,31 @@ export default function AddSanPham() {
       }
     }
 
+    const promises = [];
     for (let i = 0; i < tableData.length; i++) {
-      ChiTietSanPhamAPI.createCTSP(tableData[i])
-        .then((response) => {
-          loadCTSP();
-          loadSP();
-          form1.resetFields();
-          form.resetFields();
-          setTableData([]);
-        })
-        .catch((error) => console.error("Error adding item:", error));
+      promises.push(ChiTietSanPhamAPI.createCTSP(tableData[i]));
     }
-    // nav("/admin-san-pham");
-    AdminGuiThongBaoXacNhanDatHang();
-    nav("/admin-san-pham");
-    toast("✔️ Thêm thành công!", {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
+    Promise.all(promises)
+      .then(() => {
+        loadCTSP();
+        form1.resetFields();
+        form.resetFields();
+        setTableData([]);
+        nav("/admin-san-pham");
+        toast("✔️ Thêm thành công!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   //Load san pham
@@ -553,9 +582,9 @@ export default function AddSanPham() {
     loadSP();
   }, []);
   const loadSP = async () => {
-    ChiTietSanPhamAPI.getAllSanPham().then(response => {
+    ChiTietSanPhamAPI.getAllSanPham().then((response) => {
       setOptionsSP(response.data);
-    })
+    });
   };
   const addSanPham = (value) => {
     const checkTrung = (code) => {
@@ -621,11 +650,10 @@ export default function AddSanPham() {
     return Promise.resolve();
   };
   const loadKT = async () => {
-    ChiTietSanPhamAPI.getAllKichThuoc().then(response => {
+    ChiTietSanPhamAPI.getAllKichThuoc().then((response) => {
       const data = response.data;
-      const reversedData = data.reverse();
-      setKTData(reversedData);
-    })
+      setKTData(data);
+    });
   };
   const addKichThuoc = (value) => {
     const checkTrung = (code) => {
@@ -672,32 +700,28 @@ export default function AddSanPham() {
     const rgb = convert.hex.rgb(hexCode);
     const colorName = convert.rgb.keyword(rgb);
     if (colorName === null) {
-      console.log("hehe");
     } else {
-      console.log(colorName);
       setTenMaus(colorName);
     }
   };
 
   const [openMS, setOpenMS] = useState(false);
   const [msData, setMSData] = useState([]);
-  const [optionsMS, setOptionsMS] = useState([]);
   useEffect(() => {
     loadMS();
   }, []);
   const loadMS = async () => {
-    ChiTietSanPhamAPI.getAllMauSac().then(response => {
+    ChiTietSanPhamAPI.getAllMauSac().then((response) => {
       const data = response.data;
-      const reversedData = data.reverse();
-      setMSData(reversedData);
-    })
+      setMSData(data);
+    });
   };
   const addMauSac = (value) => {
     const chekTrung = (code) => {
       return msData.some((color) => color.ma === code);
     };
     if (!chekTrung(value.ma)) {
-      console.log(value.ma);
+
       const hexCode = value.ma.replace("#", "").toUpperCase();
       const rgb = convert.hex.rgb(hexCode);
       const colorName = convert.rgb.keyword(rgb);
@@ -737,11 +761,10 @@ export default function AddSanPham() {
     loadCL();
   }, []);
   const loadCL = async () => {
-    ChiTietSanPhamAPI.getAllChatLieu().then(response => {
+    ChiTietSanPhamAPI.getAllChatLieu().then((response) => {
       const data = response.data;
-      const reversedData = data.reverse();
-      setCL(reversedData);
-    })
+      setCL(data);
+    });
   };
   const addChatLieu = (value) => {
     const checkTrung = (code) => {
@@ -807,11 +830,10 @@ export default function AddSanPham() {
     loadDC();
   }, []);
   const loadDC = async () => {
-    ChiTietSanPhamAPI.getAllDeGiay().then(response => {
+    ChiTietSanPhamAPI.getAllDeGiay().then((response) => {
       const data = response.data;
-      const reversedData = data.reverse();
-      setDC(reversedData);
-    })
+      setDC(data);
+    });
   };
   const addDoCao = (value) => {
     const checkTrung = (code) => {
@@ -857,11 +879,10 @@ export default function AddSanPham() {
     loadDM();
   }, []);
   const loadDM = async () => {
-    ChiTietSanPhamAPI.getAllDanhMuc().then(response => {
+    ChiTietSanPhamAPI.getAllDanhMuc().then((response) => {
       const data = response.data;
-      const reversedData = data.reverse();
-      setDM(reversedData);
-    })
+      setDM(data);
+    });
   };
   const addDanhMuc = (value) => {
     const checkTrung = (code) => {
@@ -907,11 +928,10 @@ export default function AddSanPham() {
     loadH();
   }, []);
   const loadH = async () => {
-    ChiTietSanPhamAPI.getAllHang().then(response => {
+    ChiTietSanPhamAPI.getAllHang().then((response) => {
       const data = response.data;
-      const reversedData = data.reverse();
-      setH(reversedData);
-    })
+      setH(data);
+    });
   };
   const addHang = (value) => {
     const checkTrung = (code) => {
@@ -976,7 +996,6 @@ export default function AddSanPham() {
     const { getFieldValue } = form;
     const check = getFieldValue("giaBan");
 
-
     const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
     if (specialCharacterRegex.test(check)) {
       return Promise.reject("Giá bán không được chứa ký tự đặc biệt");
@@ -988,7 +1007,6 @@ export default function AddSanPham() {
 
     return Promise.resolve();
   };
-
 
   //Hiển Thị
   return (
@@ -1148,6 +1166,7 @@ export default function AddSanPham() {
                 <TextArea
                   style={{ width: 613, marginLeft: 10 }}
                   rows={5}
+                  maxLength={200}
                   value={dataMoTa}
                   onChange={onChangeMT}
                   placeholder="Nhập mô tả sản phẩm"
@@ -1166,8 +1185,7 @@ export default function AddSanPham() {
                       rules={[
                         {
                           required: true,
-                          message:
-                            "Vui lòng không để trống chất liệu !",
+                          message: "Vui lòng không để trống chất liệu !",
                         },
                       ]}
                       label={<b>Chất liệu </b>}
@@ -1772,7 +1790,7 @@ export default function AddSanPham() {
                               title: "Thông báo",
                               content: "Bạn có chắc chắn muốn thêm không?",
                               onOk: () => {
-                                form1.submit();
+                                form3.submit();
                               },
                               footer: (_, { OkBtn, CancelBtn }) => (
                                 <>
@@ -1797,7 +1815,7 @@ export default function AddSanPham() {
                         size={componentSize}
                         onFinish={addMauSac}
                         layout="vertical"
-                        form={form1}
+                        form={form3}
                       >
                         <div className="row">
                           <div className="col-md-6">
@@ -1807,7 +1825,12 @@ export default function AddSanPham() {
                             <Form.Item
                               name="ma"
                               hasFeedback
-                              rules={[{ required: true, message: "Vui lòng chọn màu" }]}
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "Vui lòng chọn màu",
+                                },
+                              ]}
                             >
                               <Input
                                 className="card-mau"
@@ -1825,7 +1848,11 @@ export default function AddSanPham() {
                               hasFeedback
                               rules={[{ required: true, message: "" }]}
                             >
-                              <Input readOnly="true" className="border" type="text" />
+                              <Input
+                                readOnly="true"
+                                className="border"
+                                type="text"
+                              />
                             </Form.Item>
                             <label>
                               <b>Tên màu :</b>

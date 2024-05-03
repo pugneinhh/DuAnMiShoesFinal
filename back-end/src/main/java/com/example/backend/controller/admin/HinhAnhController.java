@@ -18,17 +18,24 @@ public class HinhAnhController {
     HinhAnhRepository hinhAnhRepository;
     @Autowired
     HinhAnhService hinhAnhService;
-    @GetMapping("/{ten}")
-    public ResponseEntity<?> detail(@PathVariable("ten") String ten){
-        return ResponseEntity.ok(hinhAnhRepository.findHinhAnhsByTenOrderByNgayTaoDesc(ten));
+    @GetMapping("/{ten}/{idSP}")
+    public ResponseEntity<?> detail(@PathVariable("ten") String ten,@PathVariable("idSP") String idSP){
+
+        return ResponseEntity.ok(hinhAnhRepository.getAnhCTSP(ten,idSP));
     }
-    @PostMapping("/add-anh")
-    public ResponseEntity<?> upAnh(@RequestBody AddAnhRequest ha){
+    @PostMapping("/add-anh/{idSP}")
+    public ResponseEntity<?> upAnh(@RequestBody HinhAnhRequest ha,@PathVariable("idSP") String idSP){
         int maAnh = hinhAnhService.getALL().size();
+        ha.setChiTietSanPham(idSP);
         ha.setTrangThai(0);
         ha.setNgayTao(LocalDateTime.now());
         ha.setMa("HA-" + (maAnh + 1));
-        hinhAnhService.addAnhMoi(ha);
+        return ResponseEntity.ok(hinhAnhService.add(ha));
+    }
+
+    @DeleteMapping("/delete-anh/{idCTSP}")
+    public ResponseEntity<?> deleteAnh(@PathVariable("idCTSP") String idCTSP){
+        hinhAnhService.deleteAnh(idCTSP);
         return ResponseEntity.ok("Done");
     }
 }

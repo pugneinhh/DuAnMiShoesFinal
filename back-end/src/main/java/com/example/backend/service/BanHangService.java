@@ -75,7 +75,7 @@ public class BanHangService {
 
         BigDecimal tienSauGiam;
         if (hoaDonRequest.getTienSauGiam() == null || hoaDonRequest.getTienSauGiam().compareTo(BigDecimal.ZERO) == 0) {
-            tienSauGiam = hoaDonRequest.getTongTien().add(hoaDonRequest.getTienShip());
+            tienSauGiam = hoaDonRequest.getTongTien();
         } else {
             tienSauGiam = hoaDonRequest.getTienSauGiam();
         }
@@ -96,7 +96,7 @@ public class BanHangService {
                 .trangThai(0)
                 .build();
 
-        System.out.println("Hóa đơn sau builder :"+hoaDon);
+
         if (hoaDonRequest.getIdVoucher() != null) {
             Voucher voucher = voucherRepository.findAllById(hoaDonRequest.getIdVoucher()).get();
             hoaDon.setVoucher(voucher);
@@ -130,16 +130,17 @@ public class BanHangService {
         for (KHHoaDonChiTietRequest request : hoaDonRequest.getListHDCT()) {
 
             ChiTietSanPham spct = ctspRepository.findById(request.getIdCTSP()).get();
-
+            BigDecimal giaGoc= spct.getGiaBan();
             HoaDonChiTiet hdct = HoaDonChiTiet.builder()
                     .chiTietSanPham(spct)
                     .soLuong(request.getSoLuong())
-                    .giaSauGiam(request.getDonGia())
-                    .trangThai(0)
+                    .giaGiam(giaGoc.subtract(request.getDonGia().divide(BigDecimal.valueOf(request.getSoLuong()))))
+                    .giaSauGiam(request.getDonGia().divide(BigDecimal.valueOf(request.getSoLuong())))
+                    .trangThai(1)
                     .hoaDon(hoaDon)
                     .ngayTao(LocalDateTime.now())
                     .build();
-            System.out.println("Hóa đơn chi tiết :"+hdct);
+
             hoaDonChiTietRepository.save(hdct);
             spct.setSoLuong(spct.getSoLuong() - request.getSoLuong());
 
@@ -174,15 +175,15 @@ public class BanHangService {
         ThanhToanRequest thanhToanRequest = new ThanhToanRequest();
         thanhToanRequest.setHoaDon(saveHoaDon.getId());
         thanhToanRequest.setNgayTao(LocalDateTime.now());
-        thanhToanRequest.setTongTien(saveHoaDon.getThanhTien());
+        thanhToanRequest.setTongTien(saveHoaDon.getThanhTien().add(saveHoaDon.getTienVanChuyen()));
         System.out.println("Thanh toán requesst "+thanhToanRequest);
         if (hoaDonRequest.getIdPayMethod() == 0) {
             System.out.println("Vào 0");
-            thanhToanRequest.setTienMat(saveHoaDon.getThanhTien());
+            thanhToanRequest.setTienMat(saveHoaDon.getThanhTien().add(saveHoaDon.getTienVanChuyen()));
             thanhToanRequest.setPhuongThuc(0);
         } else {
             System.out.println("Vào 1");
-            thanhToanRequest.setChuyenKhoan(saveHoaDon.getThanhTien());
+            thanhToanRequest.setChuyenKhoan(saveHoaDon.getThanhTien().add(saveHoaDon.getTienVanChuyen()));
             thanhToanRequest.setPhuongThuc(1);
             thanhToanRequest.setPhuongThucVnp(hoaDonRequest.getMaGiaoDich());
 

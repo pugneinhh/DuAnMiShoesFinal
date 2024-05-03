@@ -1,6 +1,7 @@
 package com.example.backend.controller.admin;
 
 
+import com.example.backend.dto.request.sanpham.KichThuocRequest;
 import com.example.backend.dto.request.sanpham.MauSacRequest;
 import com.example.backend.dto.request.sanphamsearch.BangConSearch;
 import com.example.backend.service.MauSacService;
@@ -28,6 +29,11 @@ public class MauSacController {
     @GetMapping("/detail/{idMS}")
     public ResponseEntity<?> detail(@PathVariable("idMS") String id){
         return ResponseEntity.ok(mauSacService.detailMS(id));
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> update(@PathVariable("id") String id, @RequestBody MauSacRequest request){
+        return ResponseEntity.ok(mauSacService.update(id,request));
     }
 
     @PostMapping("/tim-kiem")

@@ -52,6 +52,8 @@ import ThongKe from "../pages/censor/thongKe-management/ThongKe";
 import BanHang from "../pages/censor/banHang-management/BanHang";
 import GuestGuard from "../guard/GuestGuard";
 import { Home } from "../layout/user/home";
+import { NoiQuyTraHang } from "../layout/user/NoiQuyTraHang";
+import { TimKiem } from "../layout/user/TimKiem";
 import { Login } from "../layout/login/login";
 import { GioHang } from "../layout/user/cart/gioHang";
 import { Shop } from "../layout/user/shop/shop";
@@ -68,6 +70,8 @@ import { CartProvider } from "../layout/user/cart/CartContext";
 import TraHang from "../pages/censor/traHang-managenment/traHang";
 import DetailHoaDonTraHang from "../pages/censor/traHang-managenment/DetailHoaDonTraHang";
 import PhieuGiamGiaCLient from "../layout/user/phieugiamgia/PhieuGiamGiaClient";
+import DoiMatKhauAdmin from "../pages/censor/profile-management/DoiMatKhau";
+import DoiMatKhauClient from "../layout/user/profile/DoiMatKhauClient";
 
 function App() {
   const isLoading = useAppSelector(GetLoading);
@@ -403,6 +407,17 @@ function App() {
                 </AuthGuard>
               }
             />
+
+            <Route
+              path="/admin-doi-mat-khau"
+              element={
+                <AuthGuard>
+                  <DashboardCensor>
+                    <DoiMatKhauAdmin />
+                  </DashboardCensor>
+                </AuthGuard>
+              }
+            />
             {/* Màn client */}
             <Route
               path="/home"
@@ -417,12 +432,48 @@ function App() {
               }
             />
             <Route
+              path="/chinh-sach"
+              element={
+                <GuestGuard>
+                  <CartProvider>
+                    <DashboardClient>
+                      <NoiQuyTraHang />
+                    </DashboardClient>
+                  </CartProvider>
+                </GuestGuard>
+              }
+            />
+            <Route
               path="/gio-hang"
               element={
                 <GuestGuard>
                   <CartProvider>
                     <DashboardClient>
                       <GioHang />
+                    </DashboardClient>
+                  </CartProvider>
+                </GuestGuard>
+              }
+            />
+            <Route
+              path="/tim-kiem/:ten"
+              element={
+                <GuestGuard>
+                  <CartProvider>
+                    <DashboardClient>
+                      <TimKiem />
+                    </DashboardClient>
+                  </CartProvider>
+                </GuestGuard>
+              }
+            />
+            <Route
+              path="/tim-kiem"
+              element={
+                <GuestGuard>
+                  <CartProvider>
+                    <DashboardClient>
+                      <TimKiem />
                     </DashboardClient>
                   </CartProvider>
                 </GuestGuard>
@@ -506,7 +557,7 @@ function App() {
                 <GuestGuard>
                   <CartProvider>
                     <DashboardClient>
-                      <PhieuGiamGiaCLient/>
+                      <PhieuGiamGiaCLient />
                     </DashboardClient>
                   </CartProvider>
                 </GuestGuard>
@@ -531,6 +582,18 @@ function App() {
                   <CartProvider>
                     <DashboardClient>
                       <ThanhToanThatBai />
+                    </DashboardClient>
+                  </CartProvider>
+                </GuestGuard>
+              }
+            />
+            <Route
+              path="/doi-mat-khau"
+              element={
+                <GuestGuard>
+                  <CartProvider>
+                    <DashboardClient>
+                      <DoiMatKhauClient />
                     </DashboardClient>
                   </CartProvider>
                 </GuestGuard>

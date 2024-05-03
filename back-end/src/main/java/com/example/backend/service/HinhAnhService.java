@@ -14,15 +14,19 @@ public class HinhAnhService {
     @Autowired
     HinhAnhRepository hinhAnhRepository;
 
-    public String add (HinhAnhRequest  request){
+    public HinhAnh add (HinhAnhRequest  request){
         HinhAnh ha = request.map(new HinhAnh());
-        hinhAnhRepository.save(ha);
-        return "Done";
+        return hinhAnhRepository.save(ha);
     }
 
     public String addAnhMoi (AddAnhRequest request){
         HinhAnh ha = request.map(new HinhAnh());
         hinhAnhRepository.save(ha);
+        return "Done";
+    }
+
+    public String deleteAnh (String idCTSP){
+        hinhAnhRepository.deleteAnhCTSP(idCTSP);
         return "Done";
     }
 

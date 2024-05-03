@@ -11,6 +11,7 @@ import {
 } from "antd";
 import { CiDiscount1 } from "react-icons/ci";
 import { get, set } from "local-storage";
+import { RiLockPasswordLine } from "react-icons/ri";
 const ProfileMenu = (props) => {
   const idHD = useParams();
   const [form] = Form.useForm();
@@ -31,7 +32,9 @@ const ProfileMenu = (props) => {
     const voucher = () => {
       nav("/phieu-giam-gia-cua-toi");
     };
-
+    const doiMatKhau = () => {
+      nav("/doi-mat-khau");
+    };
   return (
     <div
       className="col-md-2"
@@ -69,15 +72,21 @@ const ProfileMenu = (props) => {
           <b>Tài khoản của tôi</b>
         </span>
       </div>
+      <div className=" mt-3 button-back" onClick={doiMatKhau}>
+        <RiLockPasswordLine className="ms-2  " size={20} />
+        <span className="ms-3 ">
+          <b>Đổi mật khẩu</b>
+        </span>
+      </div>
       <div className="mt-3 button-back " onClick={donMua}>
         <BsShop className="ms-2" size={20} />
-        <span className="ms-4 ">
+        <span className="ms-3 ">
           <b>Đơn mua</b>
         </span>
       </div>
       <div className="mt-3 button-back " onClick={voucher}>
-        <CiDiscount1 className="ms-2" size={25} />
-        <span className="ms-4 ">
+        <CiDiscount1 className="ms-1" size={25} />
+        <span className="ms-3 ">
           <b>Phiếu giảm giá</b>
         </span>
       </div>

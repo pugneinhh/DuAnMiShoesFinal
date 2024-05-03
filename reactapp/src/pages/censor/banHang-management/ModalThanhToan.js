@@ -10,7 +10,7 @@ import {
 } from "../../../store/reducer/PayDetail.reducer";
 import { AddPay, DeletePay } from "../../../store/reducer/Pay.reducer";
 import { SellAPI } from "../../censor/api/sell/sell.api";
-import { RemoveBill } from "../../../store/reducer/Bill.reducer";
+import { RemoveBill,GetBill } from "../../../store/reducer/Bill.reducer";
 import { RemoveInvoiceByHoaDon } from "../../../../src/store/reducer/DetailInvoice.reducer";
 import { ThanhToanAPI } from "../api/thanhToan/thanhToan.api";
 import ModalInHoaDon from "./ModalInHoaDon";
@@ -20,16 +20,12 @@ import logo from "../../../assets/images/logo.png";
 import { useReactToPrint } from "react-to-print";
 
 const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onInHoaDon}) => {
-  // const { openThanhToan, setOpenThanhToan } = props;
-  // const total = props.total;
-  // const hoaDon = props.hoaDon;
-  // const voucher = props.voucher;
+
   const dispatch = useDispatch();
   const payDetail = useSelector(GetPayDetail);
   const data = payDetail.filter((item) => item.hoaDon === hoaDon);
   const [storedData, setStoredData] = useState(null);
 
-  console.log("Voucher tại thanh toán :",voucher);
 
 
   useEffect(() => {
@@ -184,38 +180,19 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
     }
   };
 
-  const loadHoaDon =  () => {
-    HoaDonAPI.chiTietHoaDonTheoMa(hoaDon).then((res) => {
-      console.log("DATA :"+hoaDon);
-      if (!res.data) return;
-     // setHoaDondetail(res.data);
-      //setTrangThai(res.data.trangThai);
-      console.log("DATA IN BILL :",res);
-    });
-  }
-
-
-
-
-  const loadListSanPhams =  () => {
-    HoaDonAPI.hoaDonSanPhamTheoMa(hoaDon).then((res) => {
-      if (!res.data) return;
-      //setlistSanPhams(res.data);
-      console.log("DATA :",res)
-  
-    });
-  };
 
   const handleThanhToan =  () => {
     if (parseFloat(total) <= parseFloat(!tongThanhToan ? 0 : tongThanhToan)) {
       if (voucher) {
+         console.log("Vào thanh toán có voucher");
          SellAPI.thanhToanHoaDon(
           hoaDon,
           storedData,
           voucher
         );
+      } else {
+        SellAPI.thanhToanHoaDonKhongVoucher(hoaDon, storedData);
       }
-       SellAPI.thanhToanHoaDonKhongVoucher(hoaDon, storedData);
       toast("Thanh toán thành công!", {
         position: "top-right",
         autoClose: 1000,
@@ -226,17 +203,13 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
         progress: undefined,
         theme: "light",
       });
-
+    dispatch(RemoveInvoiceByHoaDon({ hoaDon: hoaDon }));
+    dispatch(RemoveBill({ key: hoaDon }));
+    setTongThanhToan(0);
+    onInHoaDon(true);
+    setOpenThanhToan(false);
+    
       // Xóa dữ liệu lưu trong reducer
-
-      dispatch(RemoveInvoiceByHoaDon({ hoaDon: hoaDon }));
-      dispatch(RemoveBill({ key: hoaDon }));
-      setTongThanhToan(0);
-      onInHoaDon(true);
-      loadHoaDon();
-      loadListSanPhams();
-       setOpenThanhToan(false);
-
     } else {
       toast("Chưa đủ điều kiện thanh toán!", {
         position: "top-right",
@@ -249,6 +222,7 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
         theme: "light",
       });
     }
+
   };
 
   const linkVNP = () => {
@@ -302,7 +276,7 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
             {
               <span>{`${Intl.NumberFormat("en-US").format(
                 record.soTien
-              )} VNĐ`}</span>
+              )} VND`}</span>
             }
           </>
         );
@@ -391,7 +365,7 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
             parseFloat(total) > parseFloat(tongThanhToan)
               ? parseFloat(total) - parseFloat(tongThanhToan)
               : 0
-          )} VNĐ`}
+          )} VND`}
         </h6>
       </div>
       <Table
@@ -407,7 +381,7 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
         <h6
           className="col-md-4 mt-2 text-end text-danger fw-bold"
           style={{ paddingRight: "25px" }}
-        >{`${Intl.NumberFormat("en-US").format(money)} VNĐ`}</h6>
+        >{`${Intl.NumberFormat("en-US").format(money)} VND`}</h6>
       </div>
       <div className="row mt-1">
         <h6 className="col-md-3 mt-2 fw-bold">Tiền thiếu</h6>
@@ -422,8 +396,8 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
                 parseFloat(total) -
                   parseFloat(!money ? 0 : money) -
                   parseFloat(tongThanhToan)
-              )} VNĐ`
-            : " 0 VNĐ"}
+              )} VND`
+            : " 0 VND"}
         </h6>
       </div>
       <div className="row mt-1">
@@ -439,8 +413,8 @@ const ModalThanhToan = ({total,hoaDon,voucher,openThanhToan,setOpenThanhToan,onI
                 parseFloat(money) +
                   parseFloat(tongThanhToan) -
                   parseFloat(total)
-              )} VNĐ`
-            : " 0 VNĐ"}
+              )} VND`
+            : " 0 VND"}
         </h6>
 
       </div>

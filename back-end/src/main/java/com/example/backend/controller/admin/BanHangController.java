@@ -3,6 +3,7 @@ package com.example.backend.controller.admin;
 import com.example.backend.dto.request.HoaDonChiTietRequest;
 import com.example.backend.dto.request.HoaDonRequest;
 import com.example.backend.dto.request.LichSuHoaDonRequest;
+import com.example.backend.dto.request.ThanhToanRequest;
 import com.example.backend.dto.response.ChiTietSanPhamForBanHang;
 import com.example.backend.dto.response.HoaDonChiTietRespone;
 import com.example.backend.dto.response.VoucherRespone;
@@ -97,6 +98,18 @@ public class BanHangController {
     public void  deleteHoaDonChiTiet (@PathVariable("idCTSP") String idCTSP,@PathVariable("ma")String ma) {
         hoaDonChiTietService.deleteHDCTAndRollBackInSell(idCTSP,ma); //  roll backed
     }
+
+    @DeleteMapping("/delete/{idCTSP}/{ma}")
+    public void  delete (@PathVariable("idCTSP") String idCTSP,@PathVariable("ma")String ma) {
+        hoaDonChiTietService.deleteHDCTAndRollBackInSell(idCTSP,ma);
+        hoaDonServicee.deleteHoaDon(hoaDonServicee.getHDByMa(ma).getId());//  roll backed
+    }
+    @DeleteMapping("/delete-hoa-don-chi-tiet/{idCTSP}/{ma}/{thanhTien}")
+    public void  deleteHoaDonChiTiet (@PathVariable("idCTSP") String idCTSP,@PathVariable("ma")String ma , @PathVariable("thanhTien") BigDecimal thanhTien) {
+        hoaDonChiTietService.deleteHDCTAndRollBackInSell1(idCTSP,ma,thanhTien); //  roll backed
+
+    }
+
     @PostMapping("/thanh-toan")
     public ResponseEntity<?> thanhToan(@PathVariable HoaDonRequest hoaDonRequest){
         hoaDonRequest.setTrangThai(1);
@@ -152,7 +165,7 @@ public class BanHangController {
 
     @PutMapping("/hoa-don/update-van-chuyen/{ma}")
     public ResponseEntity<?> updateVanChuyen (@PathVariable("ma")String ma, @RequestBody HoaDon hd){
-        System.out.println("req hóa đơn"+hd);
+
         return ResponseEntity.ok(hoaDonServicee.update1(hd,ma));
     }
 
@@ -201,14 +214,13 @@ public class BanHangController {
 
     @PutMapping("/thanh-toan/hoa-don/{ma}/{idNV}/{idVoucher}")
     public ResponseEntity<?> thanhToanHoaDon (@PathVariable("ma") String ma,@PathVariable("idNV") String idNV,@PathVariable("idVoucher")String idVoucher) {
-        System.out.println("Mã hóa đơn :"+ma);
-        System.out.println("ID nhân viên :"+idNV);
-        System.out.println("ID Voucher :"+idVoucher);
+
         HoaDon hoaDon=hoaDonServicee.findHoaDonByMa(ma);
-        System.out.println("MÃ hóa đơn :"+hoaDon.getId());
+
+        NguoiDung nguoiDung = nguoiDungService.findByID(idNV);
         if (idVoucher != null || idVoucher != "null") {
             Voucher voucher = voucherService.detailVoucher(idVoucher);
-            System.out.println("Voucher thanh toán có hóa đơn "+voucher);
+
             hoaDon.setVoucher(voucher);
             BigDecimal giamToiDa = voucher.getGiamToiDa();
             BigDecimal giam = voucher.getLoaiVoucher().equals("Tiền mặt") ?
@@ -221,12 +233,42 @@ public class BanHangController {
         if(hoaDon.getTraSau() == 0) {
             if (hoaDon.getDiaChi() != null){
                 hoaDon.setTrangThai(2);
+                LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
+                lichSuHoaDon.setHoaDon(hoaDon);
+                lichSuHoaDon.setNguoiTao(nguoiDung.getMa());
+                lichSuHoaDon.setTrangThai(4);
+                lichSuHoaDon.setNgayTao(LocalDateTime.now());
+                lichSuHoaDonService.save(lichSuHoaDon);
+                LichSuHoaDon lichSuHoaDon1= new LichSuHoaDon();
+                lichSuHoaDon1.setHoaDon(hoaDon);
+                lichSuHoaDon1.setNguoiTao(nguoiDung.getMa());
+                lichSuHoaDon1.setTrangThai(2);
+                lichSuHoaDon1.setNgayTao(LocalDateTime.now());
+                lichSuHoaDonService.save(lichSuHoaDon1);
             } else {
                 hoaDon.setTrangThai(5);
+                LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
+                lichSuHoaDon.setHoaDon(hoaDon);
+                lichSuHoaDon.setNguoiTao(nguoiDung.getMa());
+                lichSuHoaDon.setTrangThai(5);
+                lichSuHoaDon.setNgayTao(LocalDateTime.now());
+                lichSuHoaDonService.save(lichSuHoaDon);
             }
 
         }  else {
             hoaDon.setTrangThai(2);
+            LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
+            lichSuHoaDon.setHoaDon(hoaDon);
+            lichSuHoaDon.setNguoiTao(nguoiDung.getMa());
+            lichSuHoaDon.setTrangThai(5);
+            lichSuHoaDon.setNgayTao(LocalDateTime.now());
+            lichSuHoaDonService.save(lichSuHoaDon);
+            LichSuHoaDon lichSuHoaDon1= new LichSuHoaDon();
+            lichSuHoaDon1.setHoaDon(hoaDon);
+            lichSuHoaDon1.setNguoiTao(nguoiDung.getMa());
+            lichSuHoaDon1.setTrangThai(2);
+            lichSuHoaDon1.setNgayTao(LocalDateTime.now());
+            lichSuHoaDonService.save(lichSuHoaDon1);
         }
         hoaDon.setNgaySua(LocalDateTime.now());
         hoaDonServicee.updateTrangThaiHoaDon(hoaDon);
@@ -235,18 +277,13 @@ public class BanHangController {
             h.setTrangThai(1);
             hoaDonChiTietService.saveHDCT(h);
         }
-        NguoiDung nguoiDung = nguoiDungService.findByID(idNV);
+
         List<ThanhToan> listTT = thanhToanService.getThanhToanByIdHD(hoaDon.getId());
         for (ThanhToan tt : listTT){
             tt.setTrangThai(1);
             thanhToanService.save(tt);
         }
-        LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
-        lichSuHoaDon.setHoaDon(hoaDon);
-        lichSuHoaDon.setNguoiTao(nguoiDung.getMa());
-        lichSuHoaDon.setTrangThai(5);
-        lichSuHoaDon.setNgayTao(LocalDateTime.now());
-        lichSuHoaDonService.save(lichSuHoaDon);
+
 
         return ResponseEntity.ok(hoaDonServicee.thanhToanHoaDon(ma));
 
@@ -255,20 +292,50 @@ public class BanHangController {
 
     @PutMapping("/thanh-toan/hoa-don/{ma}/{idNV}")
     public ResponseEntity<?> thanhToanHoaDonKhongVoucher (@PathVariable("ma") String ma,@PathVariable("idNV") String idNV) {
-        System.out.println("Mã hóa đơn :"+ma);
-        System.out.println("ID nhân viên :"+idNV);
+
         HoaDon hoaDon=hoaDonServicee.findHoaDonByMa(ma);
+        NguoiDung nguoiDung = nguoiDungService.findByID(idNV);
         if (hoaDon == null) return null;
-        System.out.println("MÃ hóa đơn :"+hoaDon.getId());
+
         if(hoaDon.getTraSau() == 0) {
             if (hoaDon.getDiaChi() != null){
                 hoaDon.setTrangThai(2);
+                LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
+                lichSuHoaDon.setHoaDon(hoaDon);
+                lichSuHoaDon.setNguoiTao(nguoiDung.getMa());
+                lichSuHoaDon.setTrangThai(4);
+                lichSuHoaDon.setNgayTao(LocalDateTime.now());
+                lichSuHoaDonService.save(lichSuHoaDon);
+                LichSuHoaDon lichSuHoaDon1= new LichSuHoaDon();
+                lichSuHoaDon1.setHoaDon(hoaDon);
+                lichSuHoaDon1.setNguoiTao(nguoiDung.getMa());
+                lichSuHoaDon1.setTrangThai(2);
+                lichSuHoaDon1.setNgayTao(LocalDateTime.now());
+                lichSuHoaDonService.save(lichSuHoaDon1);
             } else {
                 hoaDon.setTrangThai(5);
+                LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
+                lichSuHoaDon.setHoaDon(hoaDon);
+                lichSuHoaDon.setNguoiTao(nguoiDung.getMa());
+                lichSuHoaDon.setTrangThai(5);
+                lichSuHoaDon.setNgayTao(LocalDateTime.now());
+                lichSuHoaDonService.save(lichSuHoaDon);
             }
 
         }  else {
             hoaDon.setTrangThai(2);
+            LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
+            lichSuHoaDon.setHoaDon(hoaDon);
+            lichSuHoaDon.setNguoiTao(nguoiDung.getMa());
+            lichSuHoaDon.setTrangThai(5);
+            lichSuHoaDon.setNgayTao(LocalDateTime.now());
+            lichSuHoaDonService.save(lichSuHoaDon);
+            LichSuHoaDon lichSuHoaDon1= new LichSuHoaDon();
+            lichSuHoaDon1.setHoaDon(hoaDon);
+            lichSuHoaDon1.setNguoiTao(nguoiDung.getMa());
+            lichSuHoaDon1.setTrangThai(2);
+            lichSuHoaDon1.setNgayTao(LocalDateTime.now());
+            lichSuHoaDonService.save(lichSuHoaDon1);
         }
         hoaDon.setNgaySua(LocalDateTime.now());
         hoaDonServicee.updateTrangThaiHoaDon(hoaDon);
@@ -277,26 +344,51 @@ public class BanHangController {
             h.setTrangThai(1);
             hoaDonChiTietService.saveHDCT(h);
         }
-        NguoiDung nguoiDung = nguoiDungService.findByID(idNV);
+
         List<ThanhToan> listTT = thanhToanService.getThanhToanByIdHD(hoaDon.getId());
         for (ThanhToan tt : listTT){
             tt.setTrangThai(1);
             thanhToanService.save(tt);
         }
-        LichSuHoaDon lichSuHoaDon= new LichSuHoaDon();
-        lichSuHoaDon.setHoaDon(hoaDon);
-        lichSuHoaDon.setNguoiTao(nguoiDung.getMa());
-        lichSuHoaDon.setTrangThai(5);
-        lichSuHoaDon.setNgayTao(LocalDateTime.now());
-        lichSuHoaDonService.save(lichSuHoaDon);
+
 
         return ResponseEntity.ok(hoaDonServicee.thanhToanHoaDon(ma));
 
     }
 
-    @PutMapping("/tra-sau/hoa-don/{ma}/{idNV}")
-    public ResponseEntity<?> traSauHoaDon (@PathVariable("ma") String ma,@PathVariable("idNV") String idNV) {
+    @PutMapping("/tra-sau/hoa-don/{ma}/{idNV}/{tien}")
+    public ResponseEntity<?> traSauHoaDon (@PathVariable("ma") String ma,@PathVariable("idNV") String idNV,@PathVariable("tien")BigDecimal tien) {
+        HoaDon hd = hoaDonServicee.getHDByMa(ma);
+        ThanhToanRequest request = new ThanhToanRequest();
+        request.setHoaDon(hd.getId());
+        request.setTienMat(tien);
+        request.setTongTien(tien);
+        //NguoiDung nguoiDung = nguoiDungService.findByID(idNV);
+        request.setNguoiTao(idNV);
+        request.setNgayTao(LocalDateTime.now());
+        request.setPhuongThuc(0);
+        request.setTrangThai(0);
+
+        thanhToanService.thanhToanAdmin(request);
         return ResponseEntity.ok(  hoaDonServicee.updateTraSau(ma,idNV));
+
+    }
+
+    @PutMapping("/tra-sau/hoa-don/{ma}/{idNV}/{tien}/{idVoucher}")
+    public ResponseEntity<?> traSauHoaDonCoVoucher (@PathVariable("ma") String ma,@PathVariable("idNV") String idNV,@PathVariable("tien")BigDecimal tien,@PathVariable("idVoucher")String idVoucher) {
+        HoaDon hd = hoaDonServicee.getHDByMa(ma);
+        ThanhToanRequest request = new ThanhToanRequest();
+        request.setHoaDon(hd.getId());
+        request.setTienMat(tien);
+        request.setTongTien(tien);
+        //NguoiDung nguoiDung = nguoiDungService.findByID(idNV);
+        request.setNguoiTao(idNV);
+        request.setNgayTao(LocalDateTime.now());
+        request.setPhuongThuc(0);
+        request.setTrangThai(0);
+
+        thanhToanService.thanhToanAdmin(request);
+        return ResponseEntity.ok(  hoaDonServicee.updateTraSauCoVoucher(ma,idNV,idVoucher));
 
     }
 
@@ -338,7 +430,7 @@ public class BanHangController {
         } else {
             List<VoucherRespone> list = voucherService.noLimited();
             for (VoucherRespone v : list){
-                System.out.println("Voucher"+v);
+
                 BigDecimal mucDoKM = v.getLoaiVoucher().equalsIgnoreCase("Tiền mặt") ? new BigDecimal(v.getMucDo()) : new BigDecimal(money).multiply(new BigDecimal((v.getMucDo()))).divide(new BigDecimal("100"));
                 if (mucDoKM.compareTo(v.getGiamToiDa()) > 0){
                     mucDoKM = v.getGiamToiDa();
@@ -361,7 +453,7 @@ public class BanHangController {
         if(idV != null) {
              vc = voucherService.getVoucherByID(idV);
         }
-        System.out.println("VC"+vc);
+
         BigDecimal soTienDangDuocGiam = new BigDecimal("0");
         if (vc != null) {
             soTienDangDuocGiam = vc.getLoaiVoucher().equalsIgnoreCase("Tiền mặt") ?

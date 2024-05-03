@@ -125,16 +125,16 @@ const ModalDetailVoucher=(props)=>{
                 />
               </Form.Item>
               <Form.Item
-                label="Loại voucher"
+                label="Loại"
                 name="loaiVoucher"
-                labelCol={{ span:25 }}
-                wrapperCol={{ span: 10 }}
+                style={{ marginLeft: 0, width: 500 }}
+                // labelCol={{ span:25 }}
+                // wrapperCol={{ span: 10 }}
               >
                 <Select
-                  defaultValue={"Tiền mặt"}
-                  style={{ borderColor: "yellow", marginLeft: 50, width: 230 }}
-                  onChange={handleChange}
                   
+                  style={{ borderColor: "yellow", marginLeft: 10, width: 230 }}
+                
                 >
                   <Select.Option value="Tiền mặt">Tiền mặt</Select.Option>
                   <Select.Option value="Phần trăm">Phần trăm</Select.Option>

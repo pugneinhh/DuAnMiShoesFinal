@@ -1,37 +1,34 @@
-import { Button, Modal, Space, Table, Tag, Image } from "antd";
+import { Button, Modal, Tag } from "antd";
 import logo from "../../../assets/images/logo.png";
 import { FormattedNumber, IntlProvider } from "react-intl";
-import imgTicket from "../../../assets/images/discountTicket.png";
 import { HoaDonAPI } from "../api/hoaDon/hoaDon.api";
-import { ToastContainer, toast } from "react-toastify";
+import {  toast } from "react-toastify";
 import { useReactToPrint } from "react-to-print";
 import React, { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
-
+import { RemoveBill,GetBill } from "../../../store/reducer/Bill.reducer";
+import { useDispatch, useSelector } from "react-redux";
+import { Image } from "cloudinary-react";
 
 const ModalInHoaDon = (props) => {
   const componnentRef = useRef();
-  const {openInHoaDon, setOpenInHoaDon , openThanhToan} = props;
+  const {openInHoaDon, setOpenInHoaDon , openThanhToan , setActiveKey} = props;
   const [hoaDondetail, setHoaDondetail] = useState([]);
   const [trangThai, setTrangThai] = useState([]);
   const [listSanPhams, setlistSanPhams] = useState([]);
   const id = props.id;
+  const hoaDons = useSelector(GetBill);
 
-  console.log("IDDDĐ ",id);
-  console.log("in hóa đơn "+props.openInHoaDon);
-  console.log("Hóa đơn detail ",hoaDondetail);
   const loadHoaDon =  () => {
     HoaDonAPI.chiTietHoaDonTheoMa(id).then((res) => {
-      console.log("DATA :"+id);
       if (!res.data) return;
       setHoaDondetail(res.data);
       setTrangThai(res.data.trangThai);
-      console.log("DATA IN BILL :",res);
     });
   }
 
 
   const handleCloseInHoaDon = () => {
+    setActiveKey(hoaDons.filter((h) => h.key !== id)[0] ? hoaDons.filter((h) => h.key !== id)[0].key : null);
     setOpenInHoaDon(false);
   };
 
@@ -39,16 +36,25 @@ const ModalInHoaDon = (props) => {
     HoaDonAPI.hoaDonSanPhamTheoMa(id).then((res) => {
       if (!res.data) return;
       setlistSanPhams(res.data);
-      console.log("DATA :",res)
-  
+      
     });
   };
+
+
+
+
   useEffect(() => {
-    if (id) {
+    if (id && openInHoaDon)  {
+    if (listSanPhams.length > 0) {
+      handlePrint();
+      setlistSanPhams([]);
+      setHoaDondetail([]);
+      return handleCloseInHoaDon();
+    }
     loadHoaDon();
     loadListSanPhams();
     }
-  },[id,openThanhToan]);
+  },[id,openThanhToan,hoaDondetail,trangThai,listSanPhams]);
 
   // useEffect(() => {
   //   const interval = setInterval(() => {
@@ -79,7 +85,7 @@ const ModalInHoaDon = (props) => {
       }),
   });
     return (
-        <Modal
+      <Modal
         footer={[]}
         title="In hóa đơn"
         centered
@@ -104,28 +110,6 @@ const ModalInHoaDon = (props) => {
               MI SHOES
             </h2>
             <div className="col-md-3">
-              <div style={{ marginLeft: 30 }}>
-                <h6>Tên khách hàng:</h6>
-              </div>
-              <div className="mt-4" style={{ marginLeft: 30 }}>
-                <h6>Số điện thoại:</h6>
-              </div>
-              <div className="mt-4" style={{ marginLeft: 30 }}>
-                <h6>Địa chỉ:</h6>
-              </div>
-            </div>
-            <div className="col-md-3">
-              <div>
-                <p>{hoaDondetail?.tenKH}</p>
-              </div>
-              <div className="mt-4">
-                <p>{hoaDondetail?.sdt}</p>
-              </div>
-              <div className="mt-4">
-                <p>{hoaDondetail?.diaChi}</p>
-              </div>
-            </div>
-            <div className="col-md-3">
               <div className="ps-4">
                 <h6>Trạng thái:</h6>
               </div>
@@ -133,7 +117,7 @@ const ModalInHoaDon = (props) => {
                 <h6>Loại:</h6>
               </div>
               <div className="mt-4 ps-4">
-                <h6>Thành tiền:</h6>
+                <h6>Địa chỉ:</h6>
               </div>
             </div>
             <div className="col-md-3">
@@ -148,77 +132,119 @@ const ModalInHoaDon = (props) => {
                   <Tag color="cyan">Đang Vận chuyển</Tag>
                 ) : trangThai == 4 ? (
                   <Tag color="orange">Đã Thanh toán</Tag>
+                ) : trangThai == 5 ? (
+                  <Tag color="success">Thành công</Tag>
+                ) : trangThai == 10 ? (
+                  <Tag color="orange">Trả hàng</Tag>
+                ) : trangThai == -1 ? (
+                  <Tag color="red">Hủy</Tag>
+                ) : trangThai == -2 ? (
+                  <Tag color="pink">Hoàn tiền</Tag>
                 ) : (
                   <Tag color="green">Thành công</Tag>
                 )}
               </div>
               <div className="mt-4">
-                {hoaDondetail?.loaiHD == 0 ? (
+                {hoaDondetail.loaiHD == 0 ? (
                   <Tag color="orange">Online</Tag>
                 ) : (
                   <Tag color="red">Tại quầy</Tag>
                 )}
               </div>
               <div className="mt-4">
-                <p>
-                  {" "}
-                  <IntlProvider locale="vi-VN">
-                    <div>
-                      <FormattedNumber
-                        value={hoaDondetail?.thanhTien}
-                        style="currency"
-                        currency="VND"
-                        minimumFractionDigits={0}
-                      />
-                    </div>
-                  </IntlProvider>
-                </p>
+                <p>{hoaDondetail.diaChi}</p>
+              </div>
+            </div>
+            <div className="col-md-3">
+              <div>
+                <h6>Tên khách hàng:</h6>
+              </div>
+              <div className="mt-4">
+                <h6>Số điện thoại:</h6>
+              </div>
+              <div className="mt-4">
+                <h6>Ghi chú :</h6>
+              </div>
+            </div>
+            <div className="col-md-3">
+              <div>
+                <p>{hoaDondetail.tenKH}</p>
+              </div>
+              <div className="mt-4">
+                <p>{hoaDondetail.sdt}</p>
+              </div>
+              <div className="mt-4">
+                <p>{hoaDondetail.ghiChuHD}</p>
               </div>
             </div>
             <div className="container-fuild mt-3 row  radius">
               <div>
-                {listSanPhams ? listSanPhams?.map((listSanPham) => (
+                {listSanPhams.map((listSanPham, index) => (
                   <tr className="pt-3 row">
-                    <div className="col-md-4">
+                    <div className="col-md-3">
                       <Image
                         cloudName="dtetgawxc"
                         publicId={listSanPham.urlHA}
                         width="100"
                         crop="scale"
                         href={listSanPham.urlHA}
-                        src={listSanPham.urlHA}
-                        style={{
-                          width: 100,
-                          height: 100,
-                          marginLeft: 40,
-                          zIndex:200000
-                        }}
+                        style={{ width: 150, height: 150, marginLeft: 15 }}
                       />
-                      {/* <img src={listSanPham.tenHA} style={{ width: 100, height: 100, marginLeft: 40 }} />  */}
                     </div>
-                    <div className="col-md-6 ">
-                      <div className="mt-4">
+                    <div className="col-md-5 ">
+                      <div className="mt-1">
                         <h6>
                           {listSanPham.tenHang} {listSanPham.tenSP}{" "}
-                          {listSanPham.tenMauSac}
                         </h6>
                       </div>
+                      {listSanPham.giaGiam > 0 ? (
+                        <div className="text-danger">
+                          <h6>
+                            <del>
+                              <IntlProvider locale="vi-VN">
+                                <div>
+                                  <FormattedNumber
+                                    value={
+                                      parseInt(listSanPham.thanhTienSP) +
+                                      parseInt(listSanPham.giaGiam)
+                                    }
+                                    currency="VND"
+                                    minimumFractionDigits={0}
+                                  />
+                                  {" VND"}
+                                </div>
+                              </IntlProvider>
+                            </del>
+                          </h6>
+                        </div>
+                      ) : (
+                        ""
+                      )}
                       <div className="text-danger">
                         <h6>
                           <IntlProvider locale="vi-VN">
                             <div>
                               <FormattedNumber
-                                value={listSanPham.giaBanSP}
-                                style="currency"
+                                value={listSanPham.thanhTienSP}
                                 currency="VND"
                                 minimumFractionDigits={0}
                               />
+                              {" VND"}
                             </div>
                           </IntlProvider>
                         </h6>
                       </div>
-                      <div>Size:{listSanPham.tenKichThuoc}</div>
-                      <div>x{listSanPham.soLuongSP}</div>
+                      <h6>Size:{listSanPham.tenKichThuoc}</h6>
+                      <div
+                        style={{
+                          backgroundColor: `${listSanPham.tenMauSac}`,
+                          borderRadius: 6,
+                          width: 60,
+                          height: 25,
+                          border: "1px solid black", // Thêm viền đen với độ dày 1px
+                        }}
+                      ></div>
+                      <h6>x{listSanPham.soLuongSP}</h6>
                     </div>
 
                     <div className="col-md-2 text-danger mt-5">
@@ -226,26 +252,41 @@ const ModalInHoaDon = (props) => {
                         <IntlProvider locale="vi-VN">
                           <div>
                             <FormattedNumber
-                              value={(parseFloat(listSanPham.thanhTienSP) * parseFloat(listSanPham.soLuongSP))}
-                              style="currency"
+                              value={
+                                listSanPham.thanhTienSP * listSanPham.soLuongSP
+                              }
                               currency="VND"
                               minimumFractionDigits={0}
                             />
+                            {" VND"}
                           </div>
                         </IntlProvider>
                       </h6>
                     </div>
+                    {listSanPham.trangThai == 2 ? (
+                      <div className="col-md-2  mt-5">
+                        <Button
+                          style={{ backgroundColor: "red", color: "white" }}
+                        >
+                          Trả hàng
+                        </Button>
+                      </div>
+                    ) : (
+                      <></>
+                    )}
+                    <hr className="mt-3"></hr>
                   </tr>
-                )) : ""}
+                ))}
               </div>
-              <hr></hr>
+
               <tr className="pt-3 row">
                 <div className="col-md-6">
                   <div className="row">
                     <h6 className="col-md-3 mt-2">Mã giảm giá:</h6>
-                    <p className="col-md-6">
-                      {hoaDondetail?.voucher == null ? "Không có voucher" : hoaDondetail?.voucher.ma}
-                </p>
+
+                    {hoaDondetail?.voucher == null
+                      ? "Không có voucher"
+                      : hoaDondetail?.voucher.ma}
                   </div>
                 </div>
                 <div className="col-md-3"></div>
@@ -256,45 +297,65 @@ const ModalInHoaDon = (props) => {
                       <IntlProvider locale="vi-VN">
                         <div>
                           <FormattedNumber
-                            value={hoaDondetail?.thanhTien}
-                            style="currency"
+                            value={
+                              hoaDondetail.giaGiam == null
+                                ? parseFloat(hoaDondetail.thanhTien)
+                                : parseFloat(hoaDondetail.thanhTien) +
+                                  parseFloat(hoaDondetail.giaGiam)
+                            }
                             currency="VND"
                             minimumFractionDigits={0}
                           />
+                          {" VND"}
+                        </div>
+                      </IntlProvider>
+                    </p>
+                  </div>
+                  <div className="d-flex">
+                    <h6 className="col-md-6">Phí vận chuyển:</h6>
+                    <p className="col-md-6">
+                      <IntlProvider locale="vi-VN">
+                        <div>
+                          <FormattedNumber
+                            value={hoaDondetail.tienVanChuyen}
+                            currency="VND"
+                            minimumFractionDigits={0}
+                          />
+                          {" VND"}
+                        </div>
+                      </IntlProvider>
+                    </p>
+                  </div>
+                  <div className="d-flex">
+                    <h6 className="col-md-6">Tổng tiền giảm:</h6>
+                    <p className="col-md-6">
+                      <IntlProvider locale="vi-VN">
+                        <div>
+                          <FormattedNumber
+                            value={
+                              hoaDondetail.giaGiam
+                                ? "-" + hoaDondetail.giaGiam
+                                : 0
+                            }
+                            currency="VND"
+                            minimumFractionDigits={0}
+                          />
+                          {" VND"}
                         </div>
                       </IntlProvider>
                     </p>{" "}
                   </div>
                   <div className="d-flex">
-                    <h6 className="col-md-6">Phí vận chuyển:</h6>{" "}
-                    <p className="col-md-6">
-                    <IntlProvider locale="vi-VN">
-                        <div>
-                          <FormattedNumber
-                            value={hoaDondetail?.tienVanChuyen == null ? 0 : hoaDondetail.tienVanChuyen}
-                            style="currency"
-                            currency="VND"
-                            minimumFractionDigits={0}
-                          />
-                        </div>
-                      </IntlProvider>
-                      </p>{" "}
-                  </div>
-                  <div className="d-flex">
-                    <h6 className="col-md-6">Tổng tiền giảm:</h6>{" "}
-                    <p className="col-md-6">0 VND</p>{" "}
-                  </div>
-                  <div className="d-flex">
-                    <h6 className="col-md-6">Tổng giảm:</h6>{" "}
+                    <h6 className="col-md-6">Tổng giảm:</h6>
                     <p className="col-md-6">
                       <IntlProvider locale="vi-VN">
                         <div>
                           <FormattedNumber
-                            value={hoaDondetail?.giaGiamGia == null ? 0 : hoaDondetail.giaGiamGia}
-                            style="currency"
+                            value={hoaDondetail.thanhTien}
                             currency="VND"
                             minimumFractionDigits={0}
                           />
+                          {" VND"}
                         </div>
                       </IntlProvider>
                     </p>
@@ -312,6 +373,6 @@ const ModalInHoaDon = (props) => {
           </button>
         </>
       </Modal>
-            );
+    );
 };
 export default ModalInHoaDon;

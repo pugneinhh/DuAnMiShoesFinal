@@ -8,14 +8,14 @@ import com.example.backend.dto.response.sanpham.CTSPSearchRespone;
 import com.example.backend.dto.response.sanpham.ChiTietSanPhamRespone;
 import com.example.backend.dto.response.sanpham.DetailCTSPRespone;
 import com.example.backend.dto.response.sanpham.DetailCtspByQrRespon;
-import com.example.backend.entity.ChiTietSanPham;
-import com.example.backend.entity.HoaDon;
-import com.example.backend.entity.KhuyenMai;
+import com.example.backend.entity.*;
 import com.example.backend.model.*;
 import com.example.backend.repository.CTSPRepository;
+import com.example.backend.repository.GioHangChiTietRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -29,6 +29,10 @@ public class CTSPService {
     ThongBaoService thongBaoService;
     @Autowired
     HoaDonServicee hoaDonServicee;
+    @Autowired
+    KhuyenMaiSanPhamService khuyenMaiSanPhamService;
+    @Autowired
+    GioHangChiTietRepository gioHangChiTietRepository;
     public List<ChiTietSanPham> getALL(){
         return ctspRepository.findAll();
     }
@@ -43,8 +47,46 @@ public class CTSPService {
     public List<DetailCTSPRespone> detail(){return ctspRepository.detail();}
 
     public ChiTietSanPham update(String id, UpdateCTSPRequest request) {
+
+        ChiTietSanPham ctBanDau= ctspRepository.findById(id).get();
         ChiTietSanPham ct = request.map(new ChiTietSanPham());
         ct.setId(id);
+        ct.setSoLuongTra(ctBanDau.getSoLuongTra());
+        ct.setKhuyenMai(ctBanDau.getKhuyenMai());
+        ct.setNgayTao(ctBanDau.getNgayTao());
+        ct.setGiaNhap(ctBanDau.getGiaNhap());
+        List<GioHangChiTiet> listGH=gioHangChiTietRepository.getAllGHCTByCTSP(id);
+        for (GioHangChiTiet gh:listGH) {
+            if(gh.getSoLuong()>ct.getSoLuong()){
+                gh.setSoLuong(ct.getSoLuong());
+
+                if(ctBanDau.getKhuyenMai()!=null){
+                    if(ctBanDau.getKhuyenMai().getLoai()=="Tiền mặt"){
+                        gh.setThanhTien((ct.getGiaBan().subtract(ctBanDau.getKhuyenMai().getGia_tri_khuyen_mai())).multiply(BigDecimal.valueOf(ct.getSoLuong())));
+                    }else{
+                        gh.setThanhTien((ct.getGiaBan().subtract(ct.getGiaBan().multiply(ctBanDau.getKhuyenMai().getGia_tri_khuyen_mai()).divide(new BigDecimal(100)))).multiply(BigDecimal.valueOf(ct.getSoLuong())));
+                    }
+                }else{
+                    gh.setThanhTien(ct.getGiaBan().multiply(BigDecimal.valueOf(ct.getSoLuong())));
+                }
+                if(ct.getSoLuong()==0){
+                    gioHangChiTietRepository.delete(gh);
+                }
+            }else{
+                if(ctBanDau.getKhuyenMai()!=null){
+                    if(ctBanDau.getKhuyenMai().getLoai()=="Tiền mặt"){
+                        gh.setThanhTien((ct.getGiaBan().subtract(ctBanDau.getKhuyenMai().getGia_tri_khuyen_mai())).multiply(BigDecimal.valueOf(gh.getSoLuong())));
+                    }else{
+                        gh.setThanhTien((ct.getGiaBan().subtract(ct.getGiaBan().multiply(ctBanDau.getKhuyenMai().getGia_tri_khuyen_mai()).divide(new BigDecimal(100)))).multiply(BigDecimal.valueOf(gh.getSoLuong())));
+                    }
+                }else{
+                    gh.setThanhTien(ct.getGiaBan().multiply(BigDecimal.valueOf(gh.getSoLuong())));
+                }
+
+            }
+           gioHangChiTietRepository.save(gh);
+        }
+        thongBaoService.socketLoadSanPham(id);
         return ctspRepository.save(ct);
     }
 
@@ -55,10 +97,6 @@ public class CTSPService {
     }
 
     public List<CTSPSearchRespone> getSearch(String idSP, CTSPSearch ctspSearch){
-        if(ctspSearch.getSoLuongCT()==0 || ctspSearch.getGiaBanCT() == 0 ){
-            ctspSearch.setGiaBanCT(40000000);
-            ctspSearch.setSoLuongCT(2000);
-        }
         return ctspRepository.getTim(idSP,ctspSearch);
     }
 
@@ -80,10 +118,13 @@ public class CTSPService {
 
 
     public ChiTietSanPham updateKM(String idCTSP , KhuyenMai km){
+        LocalDateTime now = LocalDateTime.now();
         ChiTietSanPham ctsp = ctspRepository.getReferenceById(idCTSP);
-        ctsp.setKhuyenMai(km);
-        ctsp.setNgaySua(LocalDateTime.now());
-        System.out.println("khuyến mại"+ctsp.getKhuyenMai());
+        if (km.getNgay_bat_dau().isAfter(now)) {
+            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>Vào update khuyến mại");
+            ctsp.setKhuyenMai(km);
+            ctsp.setNgaySua(LocalDateTime.now());
+        }
         return ctspRepository.save(ctsp);
     }
 
@@ -95,12 +136,16 @@ public class CTSPService {
         return  ctspRepository.getCTSPByKM(idKM);
     }
 
-    public ChiTietSanPham deleteKM(String idCTSP){
+    public ChiTietSanPham deleteKM(String idCTSP,String idKM){
         ChiTietSanPham ctsp = ctspRepository.getReferenceById(idCTSP);
+        KhuyenMaiSanPham kmsp = khuyenMaiSanPhamService.find(idKM,idCTSP);
+        if (kmsp != null) khuyenMaiSanPhamService.delete(kmsp);
+        if (ctsp.getKhuyenMai() != null && ctsp.getKhuyenMai().getId().equals(idKM)) {
 //        if  (ctsp.getKhuyenMai()!= null && km.getId().equalsIgnoreCase(ctsp.getKhuyenMai().getId())) {
-        System.out.println("CTSP"+ctsp);
+            System.out.println("CTSP" + ctsp);
             ctsp.setKhuyenMai(null);
             ctsp.setNgaySua(LocalDateTime.now());
+        }
       //  }
         return ctspRepository.save(ctsp);
     }

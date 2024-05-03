@@ -9,6 +9,7 @@ import {
   Space,
   Table,
   Tag,
+  Badge,
 } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { PlusCircleOutlined, RetweetOutlined } from "@ant-design/icons";
@@ -20,20 +21,30 @@ import { FaTshirt } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./SanPham.css";
+import { ChiTietSanPhamAPI } from "../api/SanPham/chi_tiet_san_pham.api";
 import { SanPhamAPI } from "../api/SanPham/sanPham.api";
+import { alignPropType } from "react-bootstrap/esm/types";
 
 export default function SanPham() {
   //Form
-   const nav = useNavigate();
-    const themSP = (res) => {
-      console.log(res);
-    
-      nav("/admin-them-san-pham");
-    };
+  const nav = useNavigate();
+  const [soLuongBatDau, setSoLuongBatDau] = useState(100);
+  const [soLuongKetThuc, setSoLuongKetThuc] = useState(900);
+  const [formTim] = Form.useForm();
+  const themSP = (res) => {
+    console.log(res);
+
+    nav("/admin-them-san-pham");
+  };
   const [selectedValue, setSelectedValue] = useState("1");
   const handleChange = (value) => {
     console.log(`Selected value: ${value}`);
     setSelectedValue(value);
+  };
+
+  const onChange = (value) => {
+    setSoLuongBatDau(value[0]);
+    setSoLuongKetThuc(value[1]);
   };
 
   const [componentSize, setComponentSize] = useState("default");
@@ -42,37 +53,95 @@ export default function SanPham() {
   };
   //Tìm kiếm
   const onChangeFilter = (changedValues, allValues) => {
-    console.log("All values : ", allValues);
-    timKiemCT(allValues);
+    if (allValues.hasOwnProperty('ten')) {
+      allValues.ten = allValues.ten.trim();
+    }
+    const updatedValues = { ...allValues };
+    if (updatedValues.soLuong && updatedValues.soLuong.length > 0) {
+      updatedValues.soLuongBatDau = updatedValues.soLuong[0] !== undefined ? updatedValues.soLuong[0] : 1;
+    } else {
+      updatedValues.soLuongBatDau = 1;
+    }
+    if (updatedValues.soLuong && updatedValues.soLuong.length > 0) {
+      updatedValues.soLuongKetThuc = updatedValues.soLuong[1] !== undefined ? updatedValues.soLuong[1] : 1000;
+    } else {
+      updatedValues.soLuongKetThuc = 1000;
+    }
+    if (updatedValues.giaBan && updatedValues.giaBan.length > 0) {
+      updatedValues.giaBanBatDau = updatedValues.giaBan[0] !== undefined ? updatedValues.giaBan[0] : 100000;
+    } else {
+      updatedValues.giaBanBatDau = 100000;
+    }
+    if (updatedValues.giaBan && updatedValues.giaBan.length > 0) {
+      updatedValues.giaBanKetThuc = updatedValues.giaBan[1] !== undefined ? updatedValues.giaBan[1] : 50000000;
+    } else {
+      updatedValues.giaBanKetThuc = 50000000;
+    }
+    timKiemCT(updatedValues)
   };
+  
   const timKiemCT = (dataSearch) => {
     SanPhamAPI.search(dataSearch)
       .then((response) => {
         setSanPhams(response.data);
-        console.log(response.data);
-        console.log(response.data.lenght);
       })
       .catch((error) => console.error("Error adding item:", error));
   };
+
+  const validateDateTim = (_, value) => {
+    const { getFieldValue } = formTim;
+    const ten = getFieldValue("ten");
+    if (ten.trim().length > 30) {
+      return Promise.reject("Tên không được vượt quá 30 ký tự");
+    }
+    return Promise.resolve();
+  };
   //Table
   const [sanPham, setSanPhams] = useState([]);
+  const [listMS, setListMs] = useState([]);
+  const [listKT, setListKt] = useState([]);
+
+  const loadListMauSac = (id) => {
+    if (!listMS[id]) {
+      SanPhamAPI.getListMauSacBySanPhamId(id).then((res) => {
+        setListMs((prevListMS) => ({
+          ...prevListMS,
+          [id]: res.data,
+        }));
+      });
+    }
+  };
+
+  const loadListKichThuoc = (id) => {
+    if (!listKT[id]) {
+      SanPhamAPI.getListKichThuocBySanPhamId(id).then((res) => {
+        setListKt((prevListKT) => ({
+          ...prevListKT,
+          [id]: res.data,
+        }));
+      });
+    }
+  };
+
+  const loadSanPham = () => {
+    SanPhamAPI.getAll().then((res) => {
+      setSanPhams(res.data);
+      res.data.forEach((sp) => {
+        loadListMauSac(sp.idSP);
+        loadListKichThuoc(sp.idSP);
+      });
+    });
+  };
 
   useEffect(() => {
     loadSanPham();
   }, []);
-  // useEffect(() => {
-  //   loadSanPham();
-  // }, [sanPham]);
-  const loadSanPham = () => {
-    SanPhamAPI.getAll().then((res) => {
-      setSanPhams(res.data);
-    });
-  };
 
   const columns = [
     {
       title: "STT",
       dataIndex: "idSP",
+      align: "center",
       key: "id",
       render: (id, record, index) => {
         ++index;
@@ -83,6 +152,7 @@ export default function SanPham() {
     {
       title: "Mã",
       dataIndex: "ma",
+      align: "center",
       center: "true",
       sorter: (a, b) => a.ma - b.ma,
     },
@@ -91,12 +161,73 @@ export default function SanPham() {
       dataIndex: "ten",
     },
     {
+      title: "Màu sắc",
+      key: "mauSac",
+      align: "center",
+      width: 120,
+      render: (record) => {
+        const mauSacList = listMS[record.idSP] || [];
+        return (
+          <div
+            style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
+          >
+            {mauSacList.map((mau, index) => (
+              <div key={index} style={{ width: "50%", padding: "0.5rem" }}>
+                <Tag
+                  style={{
+                    width: 40,
+                    height: 20,
+                    border: "1px solid #C6C5C5",
+                    borderColor: "#C6C5C5",
+                  }}
+                  color={mau}
+                ></Tag>
+              </div>
+            ))}
+          </div>
+        );
+      },
+    },
+    {
+      title: "Kích thước",
+      key: "kichThuoc",
+      align: "center",
+      width: 120,
+      render: (record) => {
+        const kichThuocList = listKT[record.idSP] || [];
+        return (
+          <div
+            style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
+          >
+            {kichThuocList.map((kt, index) => (
+              <div key={index} style={{ width: "50%", padding: "0.5rem" }}>
+                <Tag
+                  style={{
+                    textAlign: "center",
+                    width: 40,
+                    height: 20,
+                    backgroundColor: "white",
+                    border: "1px solid #C6C5C5",
+                    borderColor: "#C6C5C5",
+                  }}
+                >
+                  {kt}
+                </Tag>
+              </div>
+            ))}
+          </div>
+        );
+      },
+    },
+    {
       title: "Số Lượng",
       dataIndex: "soLuong",
+      align: "center",
     },
     {
       title: "Trạng thái",
       dataIndex: "trangThai",
+      align: "center",
       key: "trangThai",
       render: (trang_thai) => (
         <>
@@ -111,6 +242,7 @@ export default function SanPham() {
     {
       title: "Hành động",
       key: "action",
+      align: "center",
       dataIndex: "idSP",
 
       render: (title) => (
@@ -163,22 +295,22 @@ export default function SanPham() {
             style={{
               maxWidth: 1400,
             }}
+            form={formTim}
           >
-            <div className="col-md-4">
-              <Form.Item label="Tên & Mã" name="ten">
+          <div className="col-md-4">
+              <Form.Item label="Tên & Mã" name="ten" rules={[{ validator: validateDateTim }]}>
                 <Input
-                  className="rounded-pill border-warning"
+                  maxLength={31}
                   placeholder="Nhập tên hoặc mã"
                 />
               </Form.Item>
             </div>
             <div className="col-md-4">
-              <Form.Item
-                placeholder="Chọn trạng thái"
+              <Form.Item            
                 label="Trạng Thái"
                 name="trangThai"
               >
-                <Select value={selectedValue} onChange={handleChange}>
+                <Select value={selectedValue} onChange={handleChange}  placeholder="Chọn trạng thái">
                   <Select.Option value="0">Còn Bán</Select.Option>
                   <Select.Option value="1">Dừng Bán</Select.Option>
                 </Select>
@@ -186,7 +318,14 @@ export default function SanPham() {
             </div>
             <div className="col-md-4">
               <Form.Item label="Số lượng" name="soLuong">
-                <Slider defaultValue={100000} min={0} max={100000} step={100} />
+              <Slider
+                    range
+                    step={100}
+                    defaultValue={[1, 1000]}
+                    min={1}
+                    max={1000}
+                    onChange={onChange}
+                  />
               </Form.Item>
             </div>
             <Form.Item className="text-center" style={{ paddingLeft: 200 }}>
@@ -233,7 +372,7 @@ export default function SanPham() {
                   defaultPageSize: 5,
                   position: ["bottomCenter"],
                   defaultCurrent: 1,
-                  total: 100,
+                  total: sanPham.length,
                 }}
               />
             </div>

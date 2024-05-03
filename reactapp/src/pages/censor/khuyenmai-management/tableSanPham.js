@@ -18,20 +18,24 @@ const TableSanPham = ({onSelectedSanPham , suaIDSP}) => {
             await PromotionAPI.loadSP()
             .then(response =>{
               setSanPhams(response.data)
-           
-              setSelectedRowKeys(suaIDSP);
-              onSelectedSanPham(suaIDSP);
             })
             .catch(error => console.error('Error adding item:', error));
           };
-
+          if (suaIDSP && suaIDSP.length > 0){
+            suaIDSP = suaIDSP.filter((item, index) => {
+              return suaIDSP.indexOf(item) === index;
+            });
+          setSelectedRowKeys(suaIDSP);
+          onSelectedSanPham(suaIDSP);
+          }
           loadSanPham();
       }, [suaIDSP]);
      
 
       
       const handleCheckboxChange = (selectedKeys , selectedRowKeys) => {
-       
+       console.log("selectedRowKeys",selectedRowKeys);
+       console.log("selected",selectedKeys);
       if (selectedRowKeys !== null){
         setSelectedRowKeys(selectedKeys);
         onSelectedSanPham(selectedKeys);

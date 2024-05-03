@@ -20,11 +20,10 @@ import { Image } from "cloudinary-react";
 import { AddProduct, GetProduct, UpdateApartProduct } from "../../../store/reducer/Product.reducer";
 import { AddInvoice, GetInvoice } from "../../../store/reducer/DetailInvoice.reducer";
 import { SellAPI } from "../../censor/api/sell/sell.api"
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import axios from "axios";
 import { ChiTietSanPhamAPI } from "../api/SanPham/chi_tiet_san_pham.api";
 import { v4 as uuid } from "uuid";
+import { UpdateTienHang } from "../../../store/reducer/Bill.reducer";
 
 const ModalSanPham = (props) => {
   const [form1] = Form.useForm();
@@ -36,32 +35,57 @@ const ModalSanPham = (props) => {
   const [chiTietSanPham, setChiTietSanPham] = useState([""]);
   const [CTSP, setCTSPs] = useState([""]);
   const [HDCT, setHDCT] = useState([]);
+  const [formTim] = Form.useForm();
   const handleClose = () => {
     setOpenSanPham(false);
-
   };
 
   const { Option } = Select;
 
-  //Form
-  // const [selectedValue, setSelectedValue] = useState("");
-  // const handleChange = (value) => {
-  //   console.log(`Selected value: ${value}`);
-  //   setSelectedValue(value);
-  // };
   const [componentSize, setComponentSize] = useState("default");
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
   };
 
   //Tìm kiếm
-  const onChangeFilter = (changedValues, allValues) => {
+  const validateDateTim = (_, value) => {
+    const { getFieldValue } = formTim;
+    const tenChiTiet = getFieldValue("tenCT");   
+    if (tenChiTiet.trim().length > 40) {
+      return Promise.reject("Tên không được vượt quá 40 ký tự");
+    }
+    return Promise.resolve();
+  };
   
+  const onChangeFilter = (changedValues, allValues) => {
+    if (allValues.hasOwnProperty('tenCT')) {
+      allValues.tenCT = allValues.tenCT.trim();
+    }
+    const updatedValues = { ...allValues };
+    if (updatedValues.soLuongCT && updatedValues.soLuongCT.length > 0) {
+      updatedValues.soLuongBatDau = updatedValues.soLuongCT[0] !== undefined ? updatedValues.soLuongCT[0] : 1;
+    } else {
+      updatedValues.soLuongBatDau = 1;
+    }
+    if (updatedValues.soLuongCT && updatedValues.soLuongCT.length > 0) {
+      updatedValues.soLuongKetThuc = updatedValues.soLuongCT[1] !== undefined ? updatedValues.soLuongCT[1] : 1000;
+    } else {
+      updatedValues.soLuongKetThuc = 1000;
+    }
+    if (updatedValues.giaBanCT && updatedValues.giaBanCT.length > 0) {
+      updatedValues.giaBanBatDau = updatedValues.giaBanCT[0] !== undefined ? updatedValues.giaBanCT[0] : 100000;
+    } else {
+      updatedValues.giaBanBatDau = 100000;
+    }
+    if (updatedValues.giaBanCT && updatedValues.giaBanCT.length > 0) {
+      updatedValues.giaBanKetThuc = updatedValues.giaBanCT[1] !== undefined ? updatedValues.giaBanCT[1] : 50000000;
+    } else {
+      updatedValues.giaBanKetThuc = 50000000;
+    }
     if (!allValues.tenCT && !allValues.idKT && !allValues.idMS && !allValues.idDC && !allValues.idCL && !allValues.trangThaiCT && !allValues.giaBanCT && !allValues.idDM && !allValues.idH) {
       setCTSPs(chiTietSanPham);
-   
     } else {
-      timKiemCT(allValues);
+      timKiemCT(updatedValues);
     }
   }
   const timKiemCT = (dataSearch) => {
@@ -69,7 +93,6 @@ const ModalSanPham = (props) => {
       // Update the list of items
       response.data.map((i) => dispatch(AddProduct({ id: i.idCTSP, soLuong: i.soLuong, linkAnh: i.linkAnh, tenSP: i.tenSP, tenKT: i.tenKT, tenMS: i.tenMS, maMS: i.maMS, loaiKM: i.loaiKM, giaTriKhuyenMai: parseInt(i.giaKhuyenMai, 10), giaBan: i.giaBan, tenKM: i.tenKM })))
       setCTSPs(response.data)
-
     })
       .catch(error => console.error('Error adding item:', error));
   }
@@ -116,7 +139,7 @@ const ModalSanPham = (props) => {
   }, []);
   const loadDC = async () => {
     ChiTietSanPhamAPI.getAllDeGiay().then(response => {
-      setCL(response.data);
+      setDC(response.data);
     })
   };
 
@@ -167,15 +190,17 @@ const ModalSanPham = (props) => {
 
   }
 
-  const handleClickAddProduct =  (record) => {
-    
+  const handleClickAddProduct = (record) => {
+
     const id = uuid();
-    const hdct = [{ id: id, hoaDon: activeKey, chiTietSanPham: record.idCTSP, soLuong: 1, giaSauGiam: (parseFloat(record.giaBan) - parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100))), giaGiam: (parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100))) }]
+    const hdct = [{ id: id, hoaDon: activeKey, chiTietSanPham: record.idCTSP, soLuong: 1, giaSauGiam: (parseFloat(record.giaBan) - parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100))),giaGiam: (parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100))) }];
     dispatch(AddInvoice({ id: id, chiTietSanPham: record.idCTSP, tenSP: record.tenSP, maMS: record.maMS, linkAnh: record.linkAnh, tenKT: record.tenKT, giaBan: record.giaBan, hoaDon: activeKey, tenMS: record.tenMS, giaGiam: (parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100))), giaSauGiam: (parseFloat(record.giaBan) - parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100))), nguoiTao: record.nguoiTao, giaBan: record.giaBan, tenKM: record.tenKM, loaiKM: record.loaiKM, giaTriKhuyenMai: record.giaTriKhuyenMai }));
     dispatch(UpdateApartProduct({ id: record.idCTSP, soLuong: 1 }));
+    dispatch(UpdateTienHang({ key: activeKey, thanhTien: (parseFloat(record.giaBan) - parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100))) }))
     SellAPI.addInvoice(hdct[0]);
+    console.log("Hóa đơn chi tiết :",hdct[0]);
     SellAPI.getAllProducts().then((item) => { setCTSPs(item.data); setChiTietSanPham(item.data); })
-    props.getSoTien();
+    //props.getSoTien();
     setOpenSanPham(false);
 
   };
@@ -210,7 +235,7 @@ const ModalSanPham = (props) => {
                     crop="scale"
                     href={link}
                   />) : (
-                  <Badge.Ribbon text={record.loaiKM === "Tiền mặt" ? ("-" + `${Intl.NumberFormat("en-US").format(parseInt(record.giaTriKhuyenMai, 10))} VNĐ`) : ("-" + parseInt(record.giaTriKhuyenMai, 10) + "%")} color="red" size="small">
+                  <Badge.Ribbon text={record.loaiKM === "Tiền mặt" ? ("-" + `${Intl.NumberFormat("en-US").format(parseInt(record.giaTriKhuyenMai, 10))} VND`) : ("-" + parseInt(record.giaTriKhuyenMai, 10) + "%")} color="red" size="small">
                     <Image
                       cloudName="dtetgawxc"
                       publicId={link}
@@ -245,11 +270,11 @@ const ModalSanPham = (props) => {
             {
               (!record.tenKM) ?
                 (
-                  <span>{`${Intl.NumberFormat("en-US").format(record.giaBan)} VNĐ`}</span>
+                  <span>{`${Intl.NumberFormat("en-US").format(record.giaBan)} VND`}</span>
                 ) :
                 (
-                  <span style={{ color: "red" }}><del style={{ color: "black" }}>{`${Intl.NumberFormat("en-US").format(record.giaBan)} VNĐ`}</del>
-                    <br></br>{`${Intl.NumberFormat("en-US").format(parseFloat(record.giaBan) - parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100)))} VNĐ`}</span>
+                  <span style={{ color: "red" }}><del style={{ color: "black" }}>{`${Intl.NumberFormat("en-US").format(record.giaBan)} VND`}</del>
+                    <br></br>{`${Intl.NumberFormat("en-US").format(parseFloat(record.giaBan) - parseFloat(record.loaiKM === "Tiền mặt" ? record.giaTriKhuyenMai : (record.giaBan * record.giaTriKhuyenMai / 100)))} VND`}</span>
                 )
             }
           </>
@@ -273,6 +298,8 @@ const ModalSanPham = (props) => {
             <div
               style={{
                 backgroundColor: `${record.maMS}`,
+                border: '1px solid black',
+                borderColor: 'black',
                 borderRadius: 30,
                 width: 25,
                 height: 25,
@@ -323,7 +350,7 @@ const ModalSanPham = (props) => {
   return (
     <Modal
       title="Sản phẩm"
-      centered
+      centered={true}
       open={openSanPham}
       onCancel={handleClose}
       footer={
@@ -334,7 +361,7 @@ const ModalSanPham = (props) => {
 
       height={300}
       width={1200}
-      zIndex={10000}
+      // zIndex={10000}
       style={{ top: -200 }}
     >
       <div className="container-fluid" style={{ borderRadius: 20 }}>
@@ -353,7 +380,9 @@ const ModalSanPham = (props) => {
               borderRadius: "8px",
             }}
           >
-            <h5><FilterFilled size={30} /> Bộ lọc</h5>
+            <h5>
+              <FilterFilled size={30} /> Bộ lọc
+            </h5>
             <hr />
             <Form
               labelCol={{
@@ -371,22 +400,22 @@ const ModalSanPham = (props) => {
               style={{
                 maxWidth: 1600,
               }}
+              form={formTim}
             >
-
               {/* Form tìm kiếm */}
               {/* Các Thuộc Tính Dòng 1 */}
-              <div className='row mt-3'>
+              <div className="row mt-3">
                 {/* Tên & Mã */}
                 <div className="col-md-4">
-                  <Form.Item label="Tên & Mã" name="tenCT">
-                    <Input className="border" />
+                  <Form.Item label="Tên & Mã" name="tenCT" rules={[{ validator: validateDateTim }]}>
+                    <Input maxLength={30} className="border" />
                   </Form.Item>
                 </div>
                 {/* Kích Thước */}
-                <div className='col-md-4' >
+                <div className="col-md-4">
                   <Form.Item label="Kích Thước" name="idKT">
-                    <Select placeholder="Chọn một giá trị" >
-                      {kt.map(item => (
+                    <Select placeholder="Chọn một giá trị">
+                      {kt.map((item) => (
                         <Option key={item.id} value={item.id}>
                           {item.ten}
                         </Option>
@@ -395,17 +424,23 @@ const ModalSanPham = (props) => {
                   </Form.Item>
                 </div>
                 {/* Màu Sắc */}
-                <div className='col-md-4'>
+                <div className="col-md-4">
                   <Form.Item label="Màu Sắc" name="idMS">
                     <Select placeholder="Chọn một giá trị">
-                      {ms.map(item => (
+                      {ms.map((item) => (
                         <Option key={item.id} value={item.id}>
-                          <div style={{
-                            backgroundColor: `${item.ma}`,
-                            borderRadius: 6,
-                            width: 170,
-                            height: 25,
-                          }}></div >
+                          <div
+                            style={{
+                              color: "white",
+                              fontWeight: "bolder",
+                              backgroundColor: `${item.ma}`,
+                              borderRadius: 6,
+                              border: "1px solid black",
+                              width: 155,
+                              height: 25,
+                            }}
+                            className="text-center"
+                          >{item.ten} - {item.ma}</div>
                         </Option>
                       ))}
                     </Select>
@@ -413,14 +448,13 @@ const ModalSanPham = (props) => {
                 </div>
               </div>
 
-
               {/* Các Thuộc Tính Dòng 2 */}
-              <div className='row'>
+              <div className="row">
                 {/* Chất Liệu */}
-                <div className='col-md-4' >
+                <div className="col-md-4">
                   <Form.Item label="Chất Liệu" name="idCL">
                     <Select placeholder="Chọn một giá trị">
-                      {cl.map(item => (
+                      {cl.map((item) => (
                         <Option key={item.id} value={item.id}>
                           {item.ten}
                         </Option>
@@ -429,10 +463,10 @@ const ModalSanPham = (props) => {
                   </Form.Item>
                 </div>
                 {/* Độ Cao */}
-                <div className='col-md-4'>
+                <div className="col-md-4">
                   <Form.Item label="Đế giày" name="idDC">
                     <Select placeholder="Chọn một giá trị">
-                      {dc.map(item => (
+                      {dc.map((item) => (
                         <Option key={item.ma} value={item.id}>
                           {item.ten}
                         </Option>
@@ -441,10 +475,10 @@ const ModalSanPham = (props) => {
                   </Form.Item>
                 </div>
                 {/* Danh Mục */}
-                <div className='col-md-4'>
+                <div className="col-md-4">
                   <Form.Item label="Danh Mục" name="idDM">
                     <Select placeholder="Chọn một giá trị">
-                      {dm.map(item => (
+                      {dm.map((item) => (
                         <Option key={item.id} value={item.id}>
                           {item.ten}
                         </Option>
@@ -455,12 +489,12 @@ const ModalSanPham = (props) => {
               </div>
 
               {/* Các Thuộc Tính Dòng 3 */}
-              <div className='row'>
+              <div className="row">
                 {/* Hãng */}
-                <div className='col-md-4'>
+                <div className="col-md-4">
                   <Form.Item label="Hãng" name="idH">
                     <Select placeholder="Chọn một giá trị">
-                      {h.map(item => (
+                      {h.map((item) => (
                         <Option key={item.id} value={item.id}>
                           {item.ten}
                         </Option>
@@ -469,33 +503,54 @@ const ModalSanPham = (props) => {
                   </Form.Item>
                 </div>
                 {/* Trạng Thái */}
-                <div className='col-md-4'>
+                <div className="col-md-4">
                   <Form.Item label="Trạng thái" name="trangThaiCT">
                     <Select placeholder="Chọn một giá trị" defaultValue="0">
-                      <Select.Option value='0'>Còn Bán</Select.Option>
-                      <Select.Option value='1'>Dừng Bán</Select.Option>
+                      <Select.Option value="0">Còn Bán</Select.Option>
+                      <Select.Option value="1">Dừng Bán</Select.Option>
                     </Select>
                   </Form.Item>
                 </div>
-                <div className='col-md-4'>
+                <div className="col-md-4">
                   <Form.Item label="Số lượng" name="soLuongCT">
-                    <Slider style={{ width: '200px' }} min={1} />
+                    <Slider
+                      range
+                      step={100}
+                      defaultValue={[1, 1000]}
+                      min={1}
+                      max={1000}
+                    />
                   </Form.Item>
                 </div>
               </div>
-              <div className='col'>
-                <Form.Item style={{ marginLeft: 100 }} label="Giá bán" name="giaBanCT">
-                  <Slider style={{ width: '430px' }} min={1000000} max={10000000} step={1000000} />
+              <div className="col">
+                <Form.Item
+                  style={{ marginLeft: 100 }}
+                  label="Giá bán"
+                  name="giaBanCT"
+                >
+                  <Slider
+                    range
+                    step={100000}
+                    defaultValue={[100000, 50000000]}
+                    min={100000}
+                    max={50000000}
+                  />
                 </Form.Item>
               </div>
 
-
-              <div className='container-fluid'>
-                <Form.Item className='text-center' style={{ paddingLeft: 360 }}>
-                  <Button type="primary" htmlType='reset' onClick={loadCTSP} icon={<RetweetOutlined />}>Làm mới</Button>
+              <div className="container-fluid">
+                <Form.Item className="text-center" style={{ paddingLeft: 360 }}>
+                  <Button
+                    type="primary"
+                    htmlType="reset"
+                    onClick={loadCTSP}
+                    icon={<RetweetOutlined />}
+                  >
+                    Làm mới
+                  </Button>
                 </Form.Item>
               </div>
-
             </Form>
           </div>
           <div
@@ -521,7 +576,7 @@ const ModalSanPham = (props) => {
                     defaultPageSize: 5,
                     position: ["bottomCenter"],
                     defaultCurrent: 1,
-                    total: ctsp.length,
+                    total: CTSP.length,
                   }}
                 />
               </div>

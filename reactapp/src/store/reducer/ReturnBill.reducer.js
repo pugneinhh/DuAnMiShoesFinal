@@ -24,7 +24,7 @@ const returnBillSilde = createSlice({
                     giaGiam:data.giaGiam,
                     disabled: data.giaTriKhuyenMai !== null,
                }
-                console.log(newRetunBill);
+            
                 state.unshift(newRetunBill);
                 state.forEach((item,index) => {
                     item.stt = index + 1;

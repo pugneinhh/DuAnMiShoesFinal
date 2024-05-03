@@ -38,4 +38,12 @@ public class SanPhamService {
     public List<String>  getSPByCTSP(String id){
         return sanPhamRepository.getIDSPbyCTSP(id);
     }
+
+    public List<String>  getListMauSacBySanPhamID(String id){
+        return sanPhamRepository.getListMauSacBySanPhamId(id);
+    }
+
+    public List<String>  getListKichThuocBySanPhamID(String id){
+        return sanPhamRepository.getListKichThuocBySanPhamId(id);
+    }
 }

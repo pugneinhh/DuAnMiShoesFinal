@@ -42,7 +42,7 @@ public class SanPhamController {
 
     @PostMapping("/tim-kiem")
     public ResponseEntity<?> search(@RequestBody SanPhamSearch sanPhamSearch){
-        System.out.println(sanPhamSearch.toString());
+
         return ResponseEntity.ok(sanPhamService.getTim(sanPhamSearch));
     }
 
@@ -54,6 +54,16 @@ public class SanPhamController {
         v.setTrangThai(0);
         return  ResponseEntity.ok(sanPhamService.addSP(v));
 
+    }
+
+    @GetMapping("/listMS/{id}")
+    public ResponseEntity<?> getListMauSacBySanPhamId(@PathVariable("id") String id){
+        return ResponseEntity.ok(sanPhamService.getListMauSacBySanPhamID(id));
+    }
+
+    @GetMapping("/listKT/{id}")
+    public ResponseEntity<?> getListKichThuocBySanPhamId(@PathVariable("id") String id){
+        return ResponseEntity.ok(sanPhamService.getListKichThuocBySanPhamID(id));
     }
 
     @GetMapping("/showSP/{idCTSP}")

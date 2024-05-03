@@ -15,9 +15,11 @@ import {
   Form,
   Select,
   Space,
+  InputNumber,
 } from "antd";
 import { useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import { DeleteFilled } from "@ant-design/icons";
 import "react-toastify/dist/ReactToastify.css";
 import "./HoaDonDetail.css";
 import moment from "moment";
@@ -46,17 +48,20 @@ export default function HoaDonDetail() {
   const [activeKey, setActiveKey] = useState(0);
   const [listHDTimeLine, setlistHDTimeLine] = useState([]);
   const [voucherHienTai, setVoucherHienTai] = useState(null);
-   const [maHD, setMaHD] = useState([]);
+  const [maHD, setMaHD] = useState([]);
   const [voucher, setVoucher] = useState([]);
   const [soTienCanMuaThem, setSoTienCanMuaThem] = useState(0);
   const [soTienDuocGiam, setSoTienDuocGiam] = useState(0);
+  const [idHDCT, setIdHDCT] = useState(null);
   const [form] = Form.useForm();
   const [formRollBack] = Form.useForm();
-   const [formHuyHoaDon] = Form.useForm();
+  const [formHuyHoaDon] = Form.useForm();
   const [trangThai, setTrangThai] = useState([]);
   const [listSanPhamTra, setlistSanPhamTra] = useState([]);
   const [listSanPhams, setlistSanPhams] = useState([]);
- 
+  const [check, setCheck] = useState(false);
+  console.log("Trạng thái :", trangThai);
+  console.log("Check :", check);
   const handleOk = () => {
     setIsModalOpen(false);
     setOpenModalTimeLine(false);
@@ -69,35 +74,33 @@ export default function HoaDonDetail() {
     setOpenSanPham(false);
     setOpenDiaChiUpdate(false);
     setIsModalOpenRollBack(false);
-      setIsModalHuyHoaDon(false);
+    setIsModalHuyHoaDon(false);
   };
+
   const [openXuat, setOpenXuat] = useState(false);
   const componnentRef = useRef();
-
 
   const { TextArea } = Input;
   const [hoaDondetail, setHoaDondetail] = useState([]);
   const [maNV, setmaNV] = useState("");
-    const [tenNV, settenNV] = useState("");
+  const [tenNV, settenNV] = useState("");
   useEffect(() => {
     const storedData = get("userData");
     setmaNV(storedData.ma);
-      settenNV(storedData.ten);
+    settenNV(storedData.ten);
     loadHoaDon();
     loadListSanPhams();
     loadListSanPhamTra();
     loadLichSuThanhToan();
     loadTimeLineHoaDon();
+    loadHoaDonVNP();
   }, []);
   // load hóa đơn
-
   const loadVoucherTotNhatVaVoucherTiepTheo = (idKH, money) => {
-    // console.log("money", money);
     SellAPI.voucherTotNhat(idKH, money).then((res) =>
       setVoucherHienTai(res.data)
     );
     SellAPI.voucherSapDatDuoc(idKH, money).then((res) => {
-      // console.log("res", res.data);
       setSoTienCanMuaThem(res.data[0]);
       setSoTienDuocGiam(res.data[1]);
     });
@@ -138,15 +141,22 @@ export default function HoaDonDetail() {
     });
   };
 
-  const loadHoaDon =  () => {
+  const loadHoaDon = () => {
     HoaDonAPI.detailHD(id).then((res) => {
       setHoaDondetail(res.data);
       setTrangThai(res.data.trangThai);
       setMaHD(res.data.ma);
-      console.log("hd",res.data)
+      console.log(res.data);
     });
   };
-
+   const [listVNP, setlistVNP] = useState([]);
+  const loadHoaDonVNP = () => {
+    HoaDonAPI.detaiVNP(id).then((res) => {
+      setlistVNP(res.data);
+      //  console.log("11111", res.data);
+    });
+  };
+  //  console.log("11111", listVNP[0].vnp);
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -173,43 +183,19 @@ export default function HoaDonDetail() {
       });
     });
   };
-    const showModalHuyHoaDon = () => {
-      setIsModalHuyHoaDon(true);
-    };
-  const handleHuyHoaDon = (values) => {
-     AdminGuiThongBaoXacNhanDatHang();
-     listSanPhams.map((listSanPham, index) =>   HoaDonAPI.deleteInvoiceAndRollBackProduct(listSanPham.idctsp, id));
-      HoaDonAPI.huyHoaDonQLHoaDon(id, maNV, values).then((res) => {
-        loadHoaDon();
-        loadTimeLineHoaDon();
-        formHuyHoaDon.resetFields();
-        setIsModalHuyHoaDon(false);
-        toast("🦄 Thành công!", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-      });
+  const showModalHuyHoaDon = () => {
+    setIsModalHuyHoaDon(true);
   };
-  // update trạng thái hóa đơn
-  const handleSubmit = (values) => {
+  const handleHuyHoaDon = (values) => {
     AdminGuiThongBaoXacNhanDatHang();
-    HoaDonAPI.updateTTHoaDon(id, maNV, values).then((res) => {
-      console.log("values", values);
-      console.log("trang thau", trangThai);
+    listSanPhams.map((listSanPham, index) =>
+      HoaDonAPI.deleteInvoiceAndRollBackProduct(listSanPham.idctsp, id,listSanPham.thanhTienSP)
+    );
+    HoaDonAPI.huyHoaDonQLHoaDon(id, maNV, values).then((res) => {
       loadHoaDon();
       loadTimeLineHoaDon();
-      form.resetFields();
-      setIsModalOpen(false);
-         if (trangThai == 0) {
-           setOpenXuat(true);
-            handlePrint();     
-         }
+      formHuyHoaDon.resetFields();
+      setIsModalHuyHoaDon(false);
       toast("🦄 Thành công!", {
         position: "top-right",
         autoClose: 3000,
@@ -221,12 +207,35 @@ export default function HoaDonDetail() {
         theme: "light",
       });
     });
-
   };
-const handlePrint = useReactToPrint({
-  content: () => componnentRef.current, // Assuming componnentRef is a ref to the component you want to print
-  documentTitle: maHD,
-});
+  // update trạng thái hóa đơn
+  const handleSubmit = (values) => {
+    AdminGuiThongBaoXacNhanDatHang();
+    HoaDonAPI.updateTTHoaDon(id, maNV, values).then((res) => {
+      loadHoaDon();
+      loadTimeLineHoaDon();
+      form.resetFields();
+      setIsModalOpen(false);
+      if (trangThai == 0) {
+        setOpenXuat(true);
+        handlePrint();
+      }
+      toast("🦄 Thành công!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    });
+  };
+  const handlePrint = useReactToPrint({
+    content: () => componnentRef.current, // Assuming componnentRef is a ref to the component you want to print
+    documentTitle: maHD,
+  });
   const [LichSuThanhToan, setLichSuThanhToan] = useState([]);
   const loadLichSuThanhToan = () => {
     ThanhToanAPI.LichSuThanhToanByIdHD(id).then((res) => {
@@ -234,6 +243,79 @@ const handlePrint = useReactToPrint({
     });
   };
 
+  const onChangeSoLuong = async (value, record) => {
+    console.log("record: ", record);
+    let SL = 0; // số lượng trước
+    let SLT = 0; // số lượng tồn
+    await SellAPI.getSLAndSLT(record.idctsp, maHD).then((res) => {
+      SL = res.data.soLuong;
+      SLT = res.data.soLuongTon;
+    });
+    if (value === 0 || !value) {
+      Modal.confirm({
+        title: "Thông báo",
+        content:
+          "Bạn có chắc chắn muốn xóa sản phẩm này ra khỏi hóa đơn hay không?",
+        onOk: () => {
+          SellAPI.deleteInvoiceAndRollBackProduct1(record.idctsp, maHD,record.thanhTienSP);
+          setIdHDCT(record.id);
+          toast("✔️ Cập nhật hóa đơn thành công!", {
+            position: "top-right",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        },
+        onCancel: () => {},
+        footer: (_, { OkBtn, CancelBtn }) => (
+          <>
+            <CancelBtn />
+            <OkBtn />
+          </>
+        ),
+      });
+    } else {
+      if (SLT + SL < value) {
+        toast("Số lượng tồn không thỏa mãn yêu cầu!", {
+          position: "top-right",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        value = SLT + SL;
+        SellAPI.updateSL(record.idctsp, maHD, value);
+      } else {
+        SellAPI.updateSL(record.idctsp, maHD, value);
+      }
+    }
+    loadHoaDon();
+    loadListSanPhams();
+    setCheck(true);
+  };
+
+  useEffect(() => {
+    console.log("kết quả :"+listSanPhams.filter(data => data.id === idHDCT).length)
+    if (check === true) {
+      loadHoaDon();
+      loadListSanPhams();
+      setCheck(false);
+    }
+    if (listSanPhams.filter(data => data.id === idHDCT).length === 1){
+      loadHoaDon();
+      loadListSanPhams();
+     
+    } else {
+      setIdHDCT(null);
+    }
+  }, [listSanPhams, check , idHDCT]);
   //lịch sử thanh toán
   const columLichSuThanhToan = [
     {
@@ -258,9 +340,9 @@ const handlePrint = useReactToPrint({
       render: (tongTien) => (
         <>
           {new Intl.NumberFormat("vi-VN", {
-            style: "currency",
+        
             currency: "VND",
-          }).format(tongTien)}
+          }).format(tongTien)+" VND"}
         </>
       ),
     },
@@ -295,13 +377,9 @@ const handlePrint = useReactToPrint({
       center: "true",
     },
   ];
-
-
-  // console.log("list sản phẩm", listSanPhams);
   const loadListSanPhams = () => {
     HoaDonAPI.detailSanPham(id).then((res) => {
       setlistSanPhams(res.data);
-     
     });
   };
   const loadListSanPhamTra = () => {
@@ -314,6 +392,7 @@ const handlePrint = useReactToPrint({
       setlistHDTimeLine(res.data);
     });
   };
+  console.log(hoaDondetail);
   const showIcon = (trangThai) => {
     if (trangThai === "0") {
       return GiNotebook;
@@ -335,7 +414,7 @@ const handlePrint = useReactToPrint({
       return FaMoneyBillTrendUp;
     }
   };
-  
+
   const showTitle = (trangThai) => {
     if (trangThai === "0") {
       return "Chờ xác nhận";
@@ -370,7 +449,7 @@ const handlePrint = useReactToPrint({
       return "Thành công";
     } else if (trangThai === "-1") {
       return "Hoàn tiền";
-    } 
+    }
   };
   const showTitleButtonVanDonTraTruoc = (trangThai) => {
     if (trangThai === "0") {
@@ -380,14 +459,14 @@ const handlePrint = useReactToPrint({
     } else if (trangThai === "2") {
       return "Đang vận chuyển";
     } else if (trangThai === "3") {
-      return "Thành công";
+      return "Đã thanh toán";
     } else if (trangThai === "4") {
       return "Thành công";
     } else if (trangThai === "-1") {
       return "Hoàn tiền";
-    } 
+    }
   };
-   
+
   return (
     <div className="container-fuild mt-4 radius  ">
       <div className="container-fuild  row pt-3 pb-4 bg-light rounded border-danger ">
@@ -403,7 +482,11 @@ const handlePrint = useReactToPrint({
                 <TimelineEvent
                   minEvents={6}
                   key={index}
-                  color={item.trangThai == -1 ? "#520808" : "#3d874d"}
+                  color={
+                    item.trangThai == -1 || item.trangThai == 10
+                      ? "#520808"
+                      : "#3d874d"
+                  }
                   icon={showIcon(item.trangThai)}
                   values={showTitle(item.trangThai)}
                   isOpenEnding={true}
@@ -508,7 +591,9 @@ const handlePrint = useReactToPrint({
                         type="primary"
                         onClick={showModal}
                       >
-                        {showTitleButtonVanDonTraSau(trangThai)}
+                        {listVNP[0].vnp == null
+                          ? "Đã thanh toán"
+                          : "Thành công"}
                       </Button>
                     ) : trangThai == 4 ? (
                       <Button
@@ -516,7 +601,7 @@ const handlePrint = useReactToPrint({
                         type="primary"
                         onClick={showModal}
                       >
-                        {showTitleButtonVanDonTraSau(trangThai)}
+                        Thành công
                       </Button>
                     ) : (
                       <></>
@@ -740,7 +825,7 @@ const handlePrint = useReactToPrint({
 
         {/* button hủy hóa đơn */}
         <div className="col-md-2 ">
-          {trangThai == 0 || trangThai == 1 || trangThai == 2 ? (
+          {trangThai == 0 || trangThai == 1 || trangThai == 2 || trangThai == 3 ? (
             <Button
               style={{ backgroundColor: "red", color: "white" }}
               type="primary"
@@ -814,6 +899,7 @@ const handlePrint = useReactToPrint({
 
             <ModalDiaChiUpdate
               idKH={hoaDondetail.nguoiDung}
+              loadHoaDon={loadHoaDon}
               idHD={id}
               maNV={maNV}
               activeKey={id}
@@ -899,9 +985,14 @@ const handlePrint = useReactToPrint({
         className="d-flex bd-highlight"
         style={{ marginTop: "20px", paddingTop: "20px" }}
       >
-        <div className="flex-grow-1 bd-highlight">
-          <h5>Thông tin sản phẩm</h5>
-        </div>
+        {listSanPhams.length > 0 ? (
+          <div className="flex-grow-1 bd-highlight">
+            <h5>Thông tin sản phẩm</h5>
+          </div>
+        ) : (
+          <></>
+        )}
+
         {/* chỉnh sửa sản phẩm */}
 
         <>
@@ -929,9 +1020,8 @@ const handlePrint = useReactToPrint({
             <></>
           )}
         </>
+        {listSanPhams.length > 0 ? <hr></hr> : <></>}
       </div>
-
-      <hr></hr>
 
       {/* detail hóa đơn */}
       <div className="container-fuild mt-3 row bg-light radius">
@@ -948,7 +1038,7 @@ const handlePrint = useReactToPrint({
                   style={{ width: 150, height: 150, marginLeft: 15 }}
                 />
               </div>
-              <div className="col-md-5 ">
+              <div className="col-md-3 ">
                 <div className="mt-1">
                   <h6>
                     {listSanPham.tenHang} {listSanPham.tenSP}{" "}
@@ -961,11 +1051,14 @@ const handlePrint = useReactToPrint({
                         <IntlProvider locale="vi-VN">
                           <div>
                             <FormattedNumber
-                              value={listSanPham.giaBanSP}
-                              style="currency"
+                              value={
+                                parseInt(listSanPham.thanhTienSP) +
+                                parseInt(listSanPham.giaGiam)
+                              }
                               currency="VND"
                               minimumFractionDigits={0}
                             />
+                            {" VND"}
                           </div>
                         </IntlProvider>
                       </del>
@@ -980,10 +1073,10 @@ const handlePrint = useReactToPrint({
                       <div>
                         <FormattedNumber
                           value={listSanPham.thanhTienSP}
-                          style="currency"
                           currency="VND"
                           minimumFractionDigits={0}
                         />
+                        {" VND"}
                       </div>
                     </IntlProvider>
                   </h6>
@@ -995,9 +1088,26 @@ const handlePrint = useReactToPrint({
                     borderRadius: 6,
                     width: 60,
                     height: 25,
+                    border: "1px solid black", // Thêm viền đen với độ dày 1px
                   }}
                 ></div>
-                <h6>x{listSanPham.soLuongSP}</h6>
+              </div>
+
+              <div className="col-md-2 text-danger mt-5">
+                <h6>
+                  {trangThai == 0 || trangThai == 1 || trangThai == 2 ? (
+                    <InputNumber
+                      min={0}
+                      value={listSanPham.soLuongSP}
+                      onChange={(value) => onChangeSoLuong(value, listSanPham)}
+                    />
+                  ) : (
+                    <InputNumber
+                      defaultValue={listSanPham.soLuongSP}
+                      disabled={true}
+                    />
+                  )}
+                </h6>
               </div>
 
               <div className="col-md-2 text-danger mt-5">
@@ -1006,23 +1116,74 @@ const handlePrint = useReactToPrint({
                     <div>
                       <FormattedNumber
                         value={listSanPham.thanhTienSP * listSanPham.soLuongSP}
-                        style="currency"
                         currency="VND"
                         minimumFractionDigits={0}
                       />
+                      {" VND"}
                     </div>
                   </IntlProvider>
                 </h6>
               </div>
-              {listSanPham.trangThai == 2 ? (
-                <div className="col-md-2  mt-5">
-                  <Button style={{ backgroundColor: "red", color: "white" }}>
-                    Trả hàng
-                  </Button>
-                </div>
-              ) : (
-                <></>
-              )}
+
+              <div className="col-md-2 mt-5">
+                <Space size="middle">
+                {trangThai == 0 || trangThai == 1 || trangThai == 2 ?(
+                  <button
+                    className="btn btn-danger"
+                    style={{ borderRadius: 30 }}
+                    onClick={ () => {
+                      Modal.confirm({
+                        title: "Thông báo",
+                        content:
+                          "Bạn có chắc chắn muốn xóa sản phẩm này ra khỏi hóa đơn hay không?",
+                        onOk:  () => {
+                          SellAPI.deleteInvoiceAndRollBackProduct1(
+                            listSanPham.idctsp,
+                            maHD,
+                            listSanPham.thanhTienSP
+                          );
+                          loadHoaDon();
+                          loadListSanPhams();
+                          setCheck(true); 
+                          setIdHDCT(listSanPham.id);
+                          toast("✔️ Cập nhật hóa đơn thành công!", {
+                            position: "top-right",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "light",
+                          });
+                        },
+                        footer: (_, { OkBtn, CancelBtn }) => (
+                          <>
+                            <CancelBtn />
+                            <OkBtn />
+                          </>
+                        ),
+                      });
+
+                    }}
+                  >
+                    <DeleteFilled size={20} />
+                  </button>
+                ) : (
+                  <button
+                  className="btn btn-danger"
+                  style={{ borderRadius: 30 }}
+                  disabled={true}
+                >
+                  <DeleteFilled size={20}/>
+
+
+                </button>
+                )
+              }
+                </Space>
+              </div>
+
               <hr className="mt-3"></hr>
             </tr>
           ))}
@@ -1066,11 +1227,14 @@ const handlePrint = useReactToPrint({
                             <IntlProvider locale="vi-VN">
                               <div>
                                 <FormattedNumber
-                                  value={listSanPham.giaBanSP}
-                                  style="currency"
+                                  value={
+                                    parseInt(listSanPham.thanhTienSP) +
+                                    parseInt(listSanPham.giaGiam)
+                                  }
                                   currency="VND"
                                   minimumFractionDigits={0}
                                 />
+                                {" VND"}
                               </div>
                             </IntlProvider>
                           </del>
@@ -1085,10 +1249,10 @@ const handlePrint = useReactToPrint({
                           <div>
                             <FormattedNumber
                               value={listSanPham.thanhTienSP}
-                              style="currency"
                               currency="VND"
                               minimumFractionDigits={0}
                             />
+                            {" VND"}
                           </div>
                         </IntlProvider>
                       </h6>
@@ -1100,6 +1264,7 @@ const handlePrint = useReactToPrint({
                         borderRadius: 6,
                         width: 60,
                         height: 25,
+                        border: "1px solid black", // Thêm viền đen với độ dày 1px
                       }}
                     ></div>
                     <h6>x{listSanPham.soLuongSP}</h6>
@@ -1113,15 +1278,19 @@ const handlePrint = useReactToPrint({
                             value={
                               listSanPham.thanhTienSP * listSanPham.soLuongSP
                             }
-                            style="currency"
                             currency="VND"
                             minimumFractionDigits={0}
                           />
+                          {" VND"}
                         </div>
                       </IntlProvider>
                     </h6>
                   </div>
-
+                  <div className="col-md-2  mt-5">
+                    <Button style={{ backgroundColor: "red", color: "white" }}>
+                      Trả hàng
+                    </Button>
+                  </div>
                   <hr className="mt-3"></hr>
                 </tr>
               ))}
@@ -1218,10 +1387,10 @@ const handlePrint = useReactToPrint({
                           : parseFloat(hoaDondetail.thanhTien) +
                             parseFloat(hoaDondetail.giaGiam)
                       }
-                      style="currency"
                       currency="VND"
                       minimumFractionDigits={0}
                     />
+                    {" VND"}
                   </div>
                 </IntlProvider>
               </p>
@@ -1233,10 +1402,10 @@ const handlePrint = useReactToPrint({
                   <div>
                     <FormattedNumber
                       value={hoaDondetail.tienVanChuyen}
-                      style="currency"
                       currency="VND"
                       minimumFractionDigits={0}
                     />
+                    {" VND"}
                   </div>
                 </IntlProvider>
               </p>
@@ -1250,10 +1419,10 @@ const handlePrint = useReactToPrint({
                       value={
                         hoaDondetail.giaGiam ? "-" + hoaDondetail.giaGiam : 0
                       }
-                      style="currency"
                       currency="VND"
                       minimumFractionDigits={0}
                     />
+                    {" VND"}
                   </div>
                 </IntlProvider>
               </p>
@@ -1275,10 +1444,10 @@ const handlePrint = useReactToPrint({
                             : 0
                         )
                       }
-                      style="currency"
                       currency="VND"
                       minimumFractionDigits={0}
                     />
+                    {" VND"}
                   </div>
                 </IntlProvider>
               </p>
@@ -1459,11 +1628,14 @@ const handlePrint = useReactToPrint({
                               <IntlProvider locale="vi-VN">
                                 <div>
                                   <FormattedNumber
-                                    value={listSanPham.giaBanSP}
-                                    style="currency"
+                                    value={
+                                      parseInt(listSanPham.thanhTienSP) +
+                                      parseInt(listSanPham.giaGiam)
+                                    }
                                     currency="VND"
                                     minimumFractionDigits={0}
                                   />
+                                  {" VND"}
                                 </div>
                               </IntlProvider>
                             </del>
@@ -1478,10 +1650,10 @@ const handlePrint = useReactToPrint({
                             <div>
                               <FormattedNumber
                                 value={listSanPham.thanhTienSP}
-                                style="currency"
                                 currency="VND"
                                 minimumFractionDigits={0}
                               />
+                              {" VND"}
                             </div>
                           </IntlProvider>
                         </h6>
@@ -1493,6 +1665,7 @@ const handlePrint = useReactToPrint({
                           borderRadius: 6,
                           width: 60,
                           height: 25,
+                          border: "1px solid black", // Thêm viền đen với độ dày 1px
                         }}
                       ></div>
                       <h6>x{listSanPham.soLuongSP}</h6>
@@ -1506,10 +1679,10 @@ const handlePrint = useReactToPrint({
                               value={
                                 listSanPham.thanhTienSP * listSanPham.soLuongSP
                               }
-                              style="currency"
                               currency="VND"
                               minimumFractionDigits={0}
                             />
+                            {" VND"}
                           </div>
                         </IntlProvider>
                       </h6>
@@ -1624,33 +1797,59 @@ const handlePrint = useReactToPrint({
                                 : parseFloat(hoaDondetail.thanhTien) +
                                   parseFloat(hoaDondetail.giaGiam)
                             }
-                            style="currency"
                             currency="VND"
                             minimumFractionDigits={0}
                           />
+                          {" VND"}
+                        </div>
+                      </IntlProvider>
+                    </p>
+                  </div>
+                  <div className="d-flex">
+                    <h6 className="col-md-6">Phí vận chuyển:</h6>
+                    <p className="col-md-6">
+                      <IntlProvider locale="vi-VN">
+                        <div>
+                          <FormattedNumber
+                            value={hoaDondetail.tienVanChuyen}
+                            currency="VND"
+                            minimumFractionDigits={0}
+                          />
+                          {" VND"}
+                        </div>
+                      </IntlProvider>
+                    </p>
+                  </div>
+                  <div className="d-flex">
+                    <h6 className="col-md-6">Tổng tiền giảm:</h6>
+                    <p className="col-md-6">
+                      <IntlProvider locale="vi-VN">
+                        <div>
+                          <FormattedNumber
+                            value={
+                              hoaDondetail.giaGiam
+                                ? "-" + hoaDondetail.giaGiam
+                                : 0
+                            }
+                            currency="VND"
+                            minimumFractionDigits={0}
+                          />
+                          {" VND"}
                         </div>
                       </IntlProvider>
                     </p>{" "}
                   </div>
                   <div className="d-flex">
-                    <h6 className="col-md-6">Phí vận chuyển:</h6>{" "}
-                    <p className="col-md-6">0 VND</p>{" "}
-                  </div>
-                  <div className="d-flex">
-                    <h6 className="col-md-6">Tổng tiền giảm:</h6>{" "}
-                    <p className="col-md-6">0 VND</p>{" "}
-                  </div>
-                  <div className="d-flex">
-                    <h6 className="col-md-6">Tổng giảm:</h6>{" "}
+                    <h6 className="col-md-6">Tổng giảm:</h6>
                     <p className="col-md-6">
                       <IntlProvider locale="vi-VN">
                         <div>
                           <FormattedNumber
                             value={hoaDondetail.thanhTien}
-                            style="currency"
                             currency="VND"
                             minimumFractionDigits={0}
                           />
+                          {" VND"}
                         </div>
                       </IntlProvider>
                     </p>

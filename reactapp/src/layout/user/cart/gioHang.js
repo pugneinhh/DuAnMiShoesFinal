@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import "./gioHang.css";
-import { Button, Switch, Tag, Modal } from "antd";
-import {  FaMapMarkerAlt } from "react-icons/fa";
+import { Button, Switch, Tag, Modal, Breadcrumb } from "antd";
+import { FaMapMarkerAlt } from "react-icons/fa";
 import { BiSolidDiscount } from "react-icons/bi";
 import ModalDiaChi from "./modalDiaChi";
 import ModalVoucher from "./modalVoucher";
@@ -11,19 +11,22 @@ import { get, set } from "local-storage";
 import DiaChiGiaoHang from "./GiaoHang";
 import LogoVNP from "../../../assets/images/vnp.png";
 import { BanHangClientAPI } from "../../../pages/censor/api/banHangClient/banHangClient.api";
-import { v4 as uuid } from "uuid";
-import { KhachHangAPI } from "../../../pages/censor/api/user/khachHang.api";
 import { ShipAPI } from "../../../pages/censor/api/ship/ship.api";
 import { toast, ToastContainer } from "react-toastify";
 import logoBanner from "../../../assets/images/page-header-bg.jpg";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Moment from "moment";
-import {
-  KHGuiThongBaoDatHang,
-} from "../../../utils/socket/socket";
+import { KHGuiThongBaoDatHang } from "../../../utils/socket/socket";
 import { useCart } from "./CartContext";
-
+import { useAppSelector } from "../../../store/redux/hook";
+import { GetLoading } from "../../../store/reducer/Loading.reducer";
+import loading from "../../../assets/images/logo.png";
+import SockJS from "sockjs-client";
+import { Stomp } from "@stomp/stompjs";
 export const GioHang = ({ children }) => {
+  const isLoading = useAppSelector(GetLoading);
+  const [checkLoading, setCheckLoading] = useState(false);
+  const [loaddingLogo, setLoaddingLogo] = useState(null);
   const [openModalDiaChi, setOpenModalDiaChi] = useState(false);
   const [openModalVoucher, setOpenModalVoucher] = useState(false);
   const [khachHang, setKhachHang] = useState(null);
@@ -50,16 +53,25 @@ export const GioHang = ({ children }) => {
   const { updateTotalQuantity } = useCart();
   const storedData = get("userData");
   const storedGioHang = get("GioHang");
-
+  
   const loadVoucherTotNhatVaVoucherTiepTheo = (total) => {
-    BanHangClientAPI.voucherTotNhat(storedData?.userID ? storedData?.userID : null, total).then((res) => {setVoucher(res.data); loadGiamGia(res.data);});
-    
-    BanHangClientAPI.voucherSapDatDuoc(storedData?.userID ? storedData?.userID : null, total, voucher ? voucher.id : null).then(
-      (res) => {
-        setSoTienCanMuaThem(res.data[0]);
-        setSoTienDuocGiam(res.data[1]);
-      }
-    );
+    BanHangClientAPI.voucherTotNhat(
+      storedData?.userID ? storedData?.userID : null,
+      total
+    ).then((res) => {
+      setVoucher(res.data);
+      loadGiamGia(res.data);
+
+    });
+
+    BanHangClientAPI.voucherSapDatDuoc(
+      storedData?.userID ? storedData?.userID : null,
+      total,
+      voucher ? voucher.id : null
+    ).then((res) => {
+      setSoTienCanMuaThem(res.data[0]);
+      setSoTienDuocGiam(res.data[1]);
+    });
   };
 
   const loadCountGioHang = () => {
@@ -70,7 +82,6 @@ export const GioHang = ({ children }) => {
         });
       });
     } else {
-      
       GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res) => {
         updateTotalQuantity(res.data.length);
       });
@@ -103,7 +114,7 @@ export const GioHang = ({ children }) => {
       loadDiaChiMacDinh();
     }
     loadGHCT();
-   // loadVoucherTotNhatVaVoucherTiepTheo();
+    // loadVoucherTotNhatVaVoucherTiepTheo();
   }, []);
 
   // useEffect(() => {
@@ -121,7 +132,7 @@ export const GioHang = ({ children }) => {
       } else {
         setDiscount(Math.min(total * (voucher.mucDo / 100), voucher.giamToiDa));
       }
-    }else{
+    } else {
       setDiscount(0);
     }
   };
@@ -131,7 +142,7 @@ export const GioHang = ({ children }) => {
     if (storedData?.userID) {
       await BanHangClientAPI.getDiaChiMacDinh(storedData.userID).then((res) => {
         setDiaChi(res.data);
-       
+
         idHuyen = res.data.idHuyen;
         idXa = res.data.idXa;
       });
@@ -147,31 +158,69 @@ export const GioHang = ({ children }) => {
           (res) => res.data.data.total
         )
       );
-
-
     }
   };
+// useEffect(() => {
+//   let stomp = null;
 
+//   const connectWebSocket = () => {
+//     const socket = new SockJS("http://localhost:8080/ws");
+//     stomp = Stomp.over(socket);
+//     stomp.connect(
+//       {},
+//       () => {
+//         console.log("connect websocket");
+
+//         stomp.subscribe("/topic/KH/hoa-don", (mes) => {
+//           try {
+//             const pare = JSON.parse(mes.body);
+//             console.log(pare);
+//             loadGHCT();
+           
+//             // loadVoucherTotNhatVaVoucherTiepTheo();
+//           } catch (e) {
+//             console.log("lỗi mẹ ròi xem code di: ", e);
+//           }
+//         });
+//       },
+//       (error) => {
+//         console.error("Failed to connect to WebSocket:", error);
+//         // Thử kết nối lại sau một khoảng thời gian
+//         setTimeout(connectWebSocket, 5000);
+//       }
+//     );
+//   };
+
+//   connectWebSocket();
+
+//   return () => {
+//     if (stomp !== null) {
+//       stomp.disconnect();
+//     }
+//   };
+// }, []);
   const loadGHCT = () => {
     if (storedData && storedData.userID) {
       GioHangAPI.getByIDKH(storedData.userID).then((response) => {
         setIDGH(response.data.id);
         GioHangAPI.getAllGHCTByIDGH(response.data.id).then((res) => {
           setGioHangCT(res.data);
-          let tongTien = (res.data.map(i => i.thanhTien).reduce((total,currenMoney) => total+currenMoney,0));
+          let tongTien = res.data
+            .map((i) => i.thanhTien)
+            .reduce((total, currenMoney) => total + currenMoney, 0);
           loadVoucherTotNhatVaVoucherTiepTheo(tongTien);
-      
         });
       });
     } else if (storedGioHang && storedGioHang != null) {
       setIDGH(storedGioHang.id);
       GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res) => {
         setGioHangCT(res.data);
-        let tongTien = (res.data.map(i => i.thanhTien).reduce((total,currenMoney) => total+currenMoney,0));
+        let tongTien = res.data
+          .map((i) => i.thanhTien)
+          .reduce((total, currenMoney) => total + currenMoney, 0);
         loadVoucherTotNhatVaVoucherTiepTheo(tongTien);
       });
     }
-
   };
 
   useEffect(() => {
@@ -205,7 +254,10 @@ export const GioHang = ({ children }) => {
     phuongThuc,
     dataVanChuyen
   ) => {
-    if (!diaChi && !dataVanChuyen){
+    if (checkLoading === false) {
+      setCheckLoading(true);
+    }
+    if (!diaChi && !dataVanChuyen) {
       return toast.error("Đơn hàng chưa có địa chỉ!", {
         position: "top-right",
         autoClose: 1000,
@@ -230,19 +282,32 @@ export const GioHang = ({ children }) => {
     );
     // const idHD = uuid();
     // let hoaDonID;
-      if(gioHangCT.length<=0){
-        toast.error("Giỏ hàng trống!", {
-          position: "top-right",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        return;
-      }
+    if (gioHangCT.length <= 0) {
+      toast.error("Giỏ hàng trống!", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
+    if(total>=15000000){
+      toast.error("Vui lòng không mua quá 15.000.000 VND!", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
     const hdct = gioHangCT.map((ghct) => {
       return {
         idCTSP: ghct.chiTietSanPham,
@@ -260,7 +325,7 @@ export const GioHang = ({ children }) => {
       idUser: userID,
       tongTien: total,
       giaGiamGia: discount,
-      tienSauGiam: total - (discount?discount:0),
+      tienSauGiam: total - (discount ? discount : 0),
       diaChi: diaChi
         ? diaChi.diaChi +
           "/" +
@@ -277,10 +342,10 @@ export const GioHang = ({ children }) => {
       sdt: diaChi ? diaChi.soDienThoai : dataVanChuyen.soDienThoai,
       listHDCT: hdct,
     };
-    
+
     if (phuongThuc === 1) {
       BanHangClientAPI.getLinkVnpay(
-        total + (moneyShip ? moneyShip : 0) - (discount?discount:0)
+        total + (moneyShip ? moneyShip : 0) - (discount ? discount : 0)
       ).then((res) => {
         if (res.data) {
           const maGiaoDichs = Object.keys(res.data)[0];
@@ -296,8 +361,6 @@ export const GioHang = ({ children }) => {
           console.log("lỗi ");
         }
       });
-
-    
     } else {
       BanHangClientAPI.checkout(hoaDon).then((check) => {
         if (check.data) {
@@ -329,7 +392,34 @@ export const GioHang = ({ children }) => {
 
   return (
     <div>
-      <div className="banner-san-pham-shop">
+      {checkLoading
+        ? isLoading && (
+            <div className="loading-overlay">
+              <div className="loading-logo">
+                <img src={loading} alt="Logo" />
+              </div>
+            </div>
+          )
+        : ""}
+      <Breadcrumb
+        style={{
+          marginBottom: 10,
+          borderBottom: "1px solid #E2E1E4",
+          paddingBottom: 5,
+        }}
+      >
+        <Breadcrumb.Item>
+          <Link to="/home" className="no-underline text-dark">
+            Trang chủ
+          </Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>
+          <Link to="/gio-hang" className="no-underline text-dark">
+            <b>Giỏ hàng</b>
+          </Link>
+        </Breadcrumb.Item>
+      </Breadcrumb>
+      <div className="banner-san-pham-shop mt-4">
         <img src={logoBanner} alt="Logo Banner"></img>
         <h1 className="banner-title-logo">Giỏ hàng</h1>
       </div>
@@ -430,16 +520,16 @@ export const GioHang = ({ children }) => {
             style={{ height: 2, backgroundColor: "black", fontWeight: "bold" }}
           ></hr>
 
-          <p className="float-right" style={{ color: "red" }}>
+          <p className="float-right ps-4" style={{ color: "red" }}>
             <b>
               <>
                 {soTienCanMuaThem === 0 && soTienDuocGiam === 0
                   ? ""
                   : "Còn thiếu " +
                     Intl.NumberFormat("en-US").format(soTienCanMuaThem) +
-                    "VNĐ để được giảm " +
+                    " VND để được giảm " +
                     Intl.NumberFormat("en-US").format(soTienDuocGiam) +
-                    "VNĐ"}
+                    " VND"}
               </>
             </b>
           </p>
@@ -503,14 +593,14 @@ export const GioHang = ({ children }) => {
             <div className="col-md-5">
               <span>
                 <span style={{ color: "blue" }}>
-                  {discount?Intl.NumberFormat("en-US").format(discount):0}
+                  {discount ? Intl.NumberFormat("en-US").format(discount) : 0}
                 </span>
                 <span> VND</span>
               </span>
             </div>
           </div>
           <div
-            className="row ps-2 pb-2 mt-3"
+            className=" ps-2 pb-2 mt-3 d-flex align-items-end"
             // style={{ borderBottom: "1px dashed black" }}
           >
             <h5 className="col-md-6" style={{ marginLeft: 30 }}>
@@ -518,7 +608,10 @@ export const GioHang = ({ children }) => {
             </h5>
             <h5 className="col-md-5">
               <span style={{ color: "blue" }}>
-                {Intl.NumberFormat("en-US").format(roundToThousands(total - (discount?discount:0)))} VND
+                {Intl.NumberFormat("en-US").format(
+                  roundToThousands(total - (discount ? discount : 0))
+                )}{" "}
+                VND
               </span>
             </h5>
           </div>
@@ -607,7 +700,7 @@ export const GioHang = ({ children }) => {
             <h5 className="col">Giảm giá</h5>
 
             <h5 className="col">
-              : {discount?Intl.NumberFormat("en-US").format(discount):0} VND
+              : {discount ? Intl.NumberFormat("en-US").format(discount) : 0} VND
             </h5>
           </div>
           <div className="row mt-3" style={{ color: "red" }}>
@@ -615,13 +708,17 @@ export const GioHang = ({ children }) => {
             <h5 className="col">
               :{" "}
               {Intl.NumberFormat("en-US").format(
-                roundToThousands(total + (moneyShip ? moneyShip : 0) - (discount?discount:0))
+                roundToThousands(
+                  total +
+                    (moneyShip ? moneyShip : 0) -
+                    (discount ? discount : 0)
+                )
               )}{" "}
               VND
             </h5>
           </div>
           <hr className="mt-5 mb-5"></hr>
-          <div className="d-flex flex-row-reverse bd-highlight">
+          <div className="d-flex flex-row-reverse bd-highlight mb-5">
             {/* <Button
               className="p-2 bd-highlight"
               style={{
@@ -675,7 +772,7 @@ export const GioHang = ({ children }) => {
                       voucher,
                       diaChi,
                       phuongThuc,
-                      dataVanChuyen,
+                      dataVanChuyen
                     );
                   },
                   onCancel: () => {
@@ -700,7 +797,7 @@ export const GioHang = ({ children }) => {
               </figure>
               <div className="thank-you">Cảm ơn</div>
               <div className="other-day">Bạn đã đặt hàng</div>
-              <div className="click-run">Click run text</div>
+              {/* <div className="click-run">Click run text</div> */}
             </a>
           </div>
         </div>

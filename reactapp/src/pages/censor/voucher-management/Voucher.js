@@ -30,6 +30,9 @@ const Voucher = () => {
   const [dataSearch, setDataSearch] = useState({});
   const [voucher, setVouchers] = useState([]);
   const onChangeFilter = (changedValues, allValues) => {
+    if (allValues.hasOwnProperty('ten')) {
+      allValues.ten = allValues.ten.trim();
+    }
     timKiemVoucher(allValues);
     setDataSearch(allValues);
   };
@@ -37,8 +40,6 @@ const Voucher = () => {
 
      const nav = useNavigate();
      const themVoucher = (res) => {
-       console.log(res);
-
        nav("/admin-add-voucher");
      };
   //call api tìm kiếm
@@ -50,6 +51,7 @@ const Voucher = () => {
   };
 
   const loadVoucher = async () => {
+
     await VoucherAPI.getAll()
       .then((response) => {
         // Update the list of items
@@ -63,10 +65,13 @@ const Voucher = () => {
   }, []);
 
   useEffect(() => {
+    const intervalId = setInterval(() => {
     if (!dataSearch.ten && !dataSearch.loaivoucher && !dataSearch.trangThai && !dataSearch.ngayBatDau && !dataSearch.ngayKetThuc){
       loadVoucher();
     }
-  }, [voucher]);
+  }, 60000); // 60000 milliseconds = 1 phút 
+  return () => clearInterval(intervalId);
+  }, []);
 
   const [componentSize, setComponentSize] = useState("default");
 
@@ -89,7 +94,22 @@ const Voucher = () => {
       
     });
   };
-
+  const updateTrangThaiHoatDong =  (id, value) => {
+    VoucherAPI.updateTTHD(id, value).then((response) => {
+     loadVoucher();
+       toast("✔️ Cập nhật thành công!", {
+         position: "top-right",
+         autoClose: 5000,
+         hideProgressBar: false,
+         closeOnClick: true,
+         pauseOnHover: true,
+         draggable: true,
+         progress: undefined,
+         theme: "light",
+       });
+     
+   });
+ };
 
 
   const columns = [
@@ -190,7 +210,7 @@ const Voucher = () => {
                       title: "Thông báo",
                       content: "Bạn có chắc chắn muốn sửa không?",
                       onOk: () => {
-                        VoucherAPI.updateTTHD(record.id, record);
+                        updateTrangThaiHoatDong(record.id, record);
                         // form.finish();
                       },
                       footer: (_, { OkBtn, CancelBtn }) => (
@@ -345,7 +365,7 @@ const Voucher = () => {
             <div className="col-md-4">
               <Form.Item label="Tìm kiếm" name="ten">
                 <Input
-                  className="rounded-pill border-warning"
+                  maxLength={30}
                   placeholder="Nhập mã hoặc tên hoặc mức độ giảm giá"
                 />
               </Form.Item>

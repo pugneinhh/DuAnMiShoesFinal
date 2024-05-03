@@ -1,24 +1,21 @@
 import React, { useEffect, useState } from "react";
-import {
-  Button,
-  Card,
-  Col,
-  Divider,
-  Form,
-  Input,
-  Row,
-  Select,
-} from "antd";
+import { Button, Card, Col, Divider, Form, Input, Row, Select } from "antd";
 import { FaMoneyBills } from "react-icons/fa6";
 import UpLoadImage from "./UploadAnh";
 import { AddressApi } from "../api/address/AddressApi";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { NhanVienAPI } from "../api/user/nhanVien.api";
 import QRScannerModal from "../api/QR_Code/QrCode";
 import { ToastContainer, toast } from "react-toastify";
 import moment from "moment";
 import { NguoiDungAPI } from "../api/nguoiDung/nguoiDungAPI";
+import { useAppSelector } from "../../../store/redux/hook";
+import { GetLoading } from "../../../store/reducer/Loading.reducer";
+
+import loading from "../../../assets/images/logo.png";
+import { isFulfilled } from "@reduxjs/toolkit";
 export default function AddNhanVien() {
+  const isLoading = useAppSelector(GetLoading);
   const [form] = Form.useForm();
   const [fileImage, setFileIamge] = useState(null);
   const [listProvince, setListProvince] = useState([]);
@@ -35,7 +32,9 @@ export default function AddNhanVien() {
   const handleScanButtonClick = () => {
     setShowModal(true);
   };
-
+  const back = () => {
+    nav("/admin-nhan-vien");
+  };
   const handleModalClose = () => {
     setShowModal(false);
   };
@@ -143,7 +142,7 @@ export default function AddNhanVien() {
         )[0].DistrictID
       ).then((res) => {
         setListWard(res.data.data);
-       
+
         setWard(
           res.data.data.filter(
             (item) =>
@@ -168,20 +167,6 @@ export default function AddNhanVien() {
       tenThanhPho: result.substring(indexHuyen + 1, sixIndex),
     });
   };
-  // const defaultImage =
-  //   "https://res.cloudinary.com/dm0w2qws8/image/upload/v1706933984/user-128_vsllkw.png";
-  // const fetchImage = async () => {
-  //   try {
-  //     const response = await fetch(defaultImage);
-  //     const blob = await response.blob();
-  //     const file = new File([blob], "cloudinary_image.jpg", {
-  //       type: "image/jpeg",
-  //     });
-  //     setFileIamge(file);
-  //   } catch (error) {
-  //     console.error("Error fetching image:", error);
-  //   }
-  // };
 
   const [ListNguoiDung, setListNguoiDung] = useState([]);
   const loadNguoiDung = () => {
@@ -238,7 +223,30 @@ export default function AddNhanVien() {
           });
           return;
         }
-
+       let today = new Date();
+       let birthDate = new Date(values.ngaySinh);
+       let age = today.getFullYear() - birthDate.getFullYear();
+       let monthDiff = today.getMonth() - birthDate.getMonth();
+       if (
+         monthDiff < 0 ||
+         (monthDiff === 0 && today.getDate() < birthDate.getDate())
+         
+       ) {
+         age--;
+       }
+        if (age < 18) {
+          toast.error("🦄 Nhân viên chưa đủ tuổi!", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          return;
+        }
         const data = {
           ...values,
           ngaySinh: values.ngaySinh
@@ -249,14 +257,12 @@ export default function AddNhanVien() {
           idXa: ward.key == null ? ward.WardCode : ward.key,
         };
         const formData = new FormData();
-        console.log(fileImage, "->>>>>>>>>>>>>>");
 
         formData.append("file", fileImage);
 
         formData.append("request", JSON.stringify(data));
 
-        NhanVienAPI.create(formData)
-        .then((result) => {
+        NhanVienAPI.create(formData).then((result) => {
           nav("/admin-nhan-vien");
           toast("🦄 Thêm Thành công!", {
             position: "top-right",
@@ -270,8 +276,8 @@ export default function AddNhanVien() {
           });
         });
       })
-      .catch(() => {
-        toast("🦄 Thêm Thất bại!", {
+      .catch((e) => {
+        toast("🦄 Thêm Thất bại!" +e, {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -286,6 +292,14 @@ export default function AddNhanVien() {
 
   return (
     <>
+      {isLoading && (
+        <div className="loading-overlay">
+          <div className="loading-logo">
+            <img src={loading} alt="Logo" />
+          </div>
+        </div>
+      )}
+
       <h1>
         <Divider orientation="center" color="none">
           <h3 className="text-first  fw-bold">
@@ -599,7 +613,7 @@ export default function AddNhanVien() {
                   </Button>
 
                   <Button
-                    to={"/admin-nhan-vien"}
+                    onClick={back}
                     style={{
                       width: "110px",
                       height: "40px",

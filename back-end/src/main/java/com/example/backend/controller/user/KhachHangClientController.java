@@ -1,7 +1,9 @@
 package com.example.backend.controller.user;
 
 import com.example.backend.dto.request.DiaChiRequest;
+import com.example.backend.dto.request.DoiMatKhauRequest;
 import com.example.backend.service.KhachHangService;
+import com.example.backend.service.NguoiDungService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 public class KhachHangClientController {
     @Autowired
     KhachHangService khachHangService;
+    @Autowired
+    NguoiDungService nguoiDungService;
     @GetMapping("/dia-chi/{idKH}")
     public ResponseEntity<?> getALLDCbyKH(@PathVariable("idKH") String idKH){
         return ResponseEntity.ok(khachHangService.findDiaChiByKH(idKH));
@@ -40,4 +44,9 @@ public class KhachHangClientController {
     public ResponseEntity<?> updateTTDC(@PathVariable("id")String id){
         return ResponseEntity.ok(khachHangService.updateTTDiaChi(id));
     }
+    @PutMapping("/doi-mat-khau/{idNV}")
+    public ResponseEntity<?> doiMatKhau(@RequestBody DoiMatKhauRequest doiMatKhauRequest, @PathVariable("idNV") String idNV){
+        return ResponseEntity.ok(nguoiDungService.doiMatKhau(idNV,doiMatKhauRequest));
+    }
+
 }

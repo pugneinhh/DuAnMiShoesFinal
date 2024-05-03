@@ -1,7 +1,6 @@
 import {getHeader,requestAdmin } from "../request";
 
 export class NguoiDungAPI {
-
   static getALLNguoiDung = () => {
     const getToken = getHeader();
     return requestAdmin({
@@ -22,5 +21,27 @@ export class NguoiDungAPI {
         Authorization: getToken,
       },
     });
-  }
+  };
+  static doiMatKhau = (idNV, data) => {
+    const getToken = getHeader();
+    return requestAdmin({
+      method: "PUT",
+      url: `/admin/nguoi-dung/doi-mat-khau/${idNV}`,
+      data: data,
+      headers: {
+        Authorization: getToken,
+      },
+    });
+  };
+  static doiMatKhauClient = (idNV, data) => {
+    const getToken = getHeader();
+    return requestAdmin({
+      method: "PUT",
+      url: `/khach-hang/doi-mat-khau/${idNV}`,
+      data: data,
+      headers: {
+        Authorization: getToken,
+      },
+    });
+  };
 }

@@ -56,10 +56,9 @@ public class VoucherController {
         LocalDateTime ngayKT = vs.convertTime(request.getNgayKetThuc());
         request.setNgayBatDau(ngayBD);
         request.setNgayKetThuc(ngayKT);
-        System.out.println("Ngày bắt đầu"+ngayBD);
-        System.out.println("Ngày kết thúc "+ngayKT);
+
         LocalDateTime lc= LocalDateTime.now();
-        System.out.println("LC"+lc);
+
         if(request.getNgayBatDau().compareTo(lc)>0){
             request.setTrangThai(Status.SAP_DIEN_RA);
         }else if(request.getNgayBatDau().compareTo(lc)<=0 && request.getNgayKetThuc().compareTo(lc)>0){
@@ -88,16 +87,18 @@ public class VoucherController {
     }
     @PostMapping("/search-voucher")
     public ResponseEntity<?> search(@RequestBody VoucherSearch voucherSearch){
-        System.out.println("voucherrrrrrrrrrrrrrrrrrr"+voucherSearch.getNgayBatDau());
+
         return ResponseEntity.ok(vs.getSearch(voucherSearch));
     }
     @PutMapping("/updateTTHD/{id}")
     public ResponseEntity<?> updateTTHD(@PathVariable("id")String id,@RequestBody VoucherRequest request){
-        System.out.println("Vào update TTHD");
         Voucher v=request.map(new Voucher());
-        System.out.println("V"+v);
         v.setId(id);
         v.setTrangThai(Status.DANG_HOAT_DONG);
+        LocalDateTime ngayBD =  vs.convertTime(request.getNgayBatDau());
+        LocalDateTime ngayKT = vs.convertTime(request.getNgayKetThuc());
+        v.setNgayBatDau(ngayBD);
+        v.setNgayKetThuc(ngayKT);
         return ResponseEntity.ok(vs.add(v));
     }
     @PutMapping("/updateTTNgung/{id}")

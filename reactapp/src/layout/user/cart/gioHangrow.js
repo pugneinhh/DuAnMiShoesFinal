@@ -4,6 +4,8 @@ import { GioHangAPI } from "../../../pages/censor/api/gioHang/gioHang.api";
 import { Badge, Image } from "antd";
 import { get, set } from "local-storage";
 import { useCart } from "../cart/CartContext";
+import SockJS from "sockjs-client";
+import { Stomp } from "@stomp/stompjs";
 function ProductRow({ product, loadghct, loadSoLuongSPTrongGH }) {
   const [quantity, setQuantity] = useState();
   const [price, setPrice] = useState();
@@ -12,8 +14,6 @@ function ProductRow({ product, loadghct, loadSoLuongSPTrongGH }) {
   const { updateTotalQuantity } = useCart();
   const storedData = get("userData");
   const storedGioHang = get("GioHang");
-  console.log("chit tioeest sản phẩm", ctsp);
-  console.log("thit pro", product);
   useEffect(() => {
     setQuantity(product.soLuong);
     setPrice(product.thanhTien);
@@ -23,7 +23,7 @@ function ProductRow({ product, loadghct, loadSoLuongSPTrongGH }) {
       setCtsp(res.data);
     });
     //loadghct();
-  }, [product.id]);
+  }, [product]);
 
   const decreaseQuantity = () => {
     setQuantity(quantity - 1 > 0 ? quantity - 1 : 0);
@@ -49,26 +49,91 @@ function ProductRow({ product, loadghct, loadSoLuongSPTrongGH }) {
       GioHangAPI.getByIDKH(storedData.userID).then((res) => {
         GioHangAPI.getAllGHCTByIDGH(res.data.id).then((res) => {
           updateTotalQuantity(res.data.length);
-          console.log("counttttttt", res.data.length);
         });
       });
     } else {
-      console.log("giỏ hàng", storedGioHang);
       GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res) => {
         updateTotalQuantity(res.data.length);
-        console.log("count", res.data);
       });
     }
   };
+  // useEffect(() => {
+  //   let stomp = null;
+
+  //   const connectWebSocket = () => {
+  //     const socket = new SockJS("http://localhost:8080/ws");
+  //     stomp = Stomp.over(socket);
+  //     stomp.connect(
+  //       {},
+  //       () => {
+  //         console.log("connect websocket");
+
+  //         stomp.subscribe("/topic/KH/hoa-don", (mes) => {
+  //           try {
+  //             const pare = JSON.parse(mes.body);
+           
+
+  //             setQuantity(product.soLuong);
+  //             setPrice(product.thanhTien);
+  //             setPriceOne(product.thanhTien / product.soLuong);
+  //             loadCountGioHang();
+  //             loadghct();
+  //             GioHangAPI.detailCTSP(product.chiTietSanPham).then((res) => {
+  //               setCtsp(res.data);
+  //             });
+  //           } catch (e) {
+  //             console.log("lỗi : ", e);
+  //           }
+  //         });
+  //       },
+  //       (error) => {
+  //         console.error("Failed to connect to WebSocket:", error);
+  //         // Thử kết nối lại sau một khoảng thời gian
+  //         setTimeout(connectWebSocket, 5000);
+  //       }
+  //     );
+  //   };
+
+  //   connectWebSocket();
+
+  //   return () => {
+  //     if (stomp !== null) {
+  //       stomp.disconnect();
+  //     }
+  //   };
+  // }, [product]);
+    // var stomp = null;
+    // const socket = new SockJS("http://localhost:8080/ws");
+    // stomp = Stomp.over(socket);
+    // useEffect(() => {
+    //   stomp.connect({}, () => {
+    //     stomp.subscribe("/topic/KH/hoa-don", (mes) => {
+    //       try {
+    //         const pare = JSON.parse(mes.body);
+
+    //         // ví du: bạn muốn khi khách hàng bấm đặt hàng mà load lại hóa đơn màn admin thì hãy gọi hàm load all hóa đơn ở đây
+    //         // thí dụ: đây là hàm laod hóa đơn: loadHoaDon(); allThongBao(); CountThongBao();
+    //                     setQuantity(product.soLuong);
+    //                     setPrice(product.thanhTien);
+    //                     setPriceOne(product.thanhTien / product.soLuong);
+    //                     loadCountGioHang();
+    //                     loadghct();
+    //                     GioHangAPI.detailCTSP(product.chiTietSanPham).then((res) => {
+    //                       setCtsp(res.data);
+    //                     });
+    //       } catch (e) {}
+    //     });
+    //   });
+    //   return () => {
+    //     stomp.disconnect();
+    //   };
+    // }, [product]);
   const handleDeleteGHCT = () => {
-    //  loadghct();
-    //  loadCountGioHang();
-    console.log("Xóa sp", product);
     GioHangAPI.deleteGHCT(product.id);
     loadghct();
     loadCountGioHang();
-    // loadSoLuongSPTrongGH();
   };
+
   const handleUpdateGHCT = (quantity, price, product) => {
     const data = {
       id: product.id,
@@ -92,7 +157,7 @@ function ProductRow({ product, loadghct, loadSoLuongSPTrongGH }) {
                   ? "-" +
                     `${Intl.NumberFormat("en-US").format(
                       ctsp.giaTriKhuyenMai
-                    )} VNĐ`
+                    )} VND`
                   : "-" + ctsp.giaTriKhuyenMai + "%"
                 : ""
             }
@@ -118,6 +183,7 @@ function ProductRow({ product, loadghct, loadSoLuongSPTrongGH }) {
             className="mt-2"
             style={{
               backgroundColor: `${ctsp.mauSac}`,
+              border: "1px solid black",
               borderRadius: 6,
               width: 60,
               height: 25,
@@ -168,7 +234,8 @@ function ProductRow({ product, loadghct, loadSoLuongSPTrongGH }) {
       </td>
       <td>
         <h6 className=" fw-bold" style={{ color: "red", marginTop: "50px" }}>
-          {Intl.NumberFormat("en-US").format(price)}VNĐ
+          {Intl.NumberFormat("en-US").format(price)}
+          {" VND"}
         </h6>
       </td>
       <td>

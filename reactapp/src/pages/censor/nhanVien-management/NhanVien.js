@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {Button,Form,Input,Divider,Select,Space,Table,Tag,Image} from "antd";
+import { Button, Form, Input, Divider, Select, Space, Table, Tag, Image } from "antd";
 import { FilterFilled } from "@ant-design/icons";
 import { BsFillEyeFill, BsPencilSquare } from "react-icons/bs";
 import { PlusCircleOutlined } from "@ant-design/icons";
@@ -13,37 +13,38 @@ export default function NhanVien() {
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
   };
-   const nav = useNavigate();
-   const themNV = (res) => {
-     console.log(res);
-
-     nav("/admin-them-nhan-vien");
-   };
+  const nav = useNavigate();
+  const themNV = (res) => {
+    nav("/admin-them-nhan-vien");
+  };
   const [form] = Form.useForm();
-// load nhan vien
+  // load nhan vien
   useEffect(() => {
     loadNhanVien();
   }, []);
   const [nhanVien, setNhanVien] = useState([]);
   const loadNhanVien = () => {
-     NhanVienAPI.getAll()
-    .then((res)=>{
-      setNhanVien(res.data);
-       
-    })
+    NhanVienAPI.getAll()
+      .then((res) => {
+        setNhanVien(res.data);
+
+      })
   };
-  
+
 
   //Tìm nhân viên
   const onChangeFilter = (changedValues, allValues) => {
+    if (allValues.hasOwnProperty('ten')) {
+      allValues.ten = allValues.ten.trim();
+    }
     timKiemNV(allValues);
   }
   const timKiemNV = (dataSearch) => {
     NhanVienAPI.timKiem(dataSearch)
-    .then((res)=>{
-      setNhanVien(res.data);
-       
-    })
+      .then((res) => {
+        setNhanVien(res.data);
+
+      })
   }
 
   const columns = [
@@ -95,17 +96,17 @@ export default function NhanVien() {
       title: "Ngày sinh",
       dataIndex: "ngaySinh",
       render: (ngaySinh) => (
-       <>
-       {
-        new Date(ngaySinh*1).toLocaleDateString()
-  
-       }
-       </>
-        ),
+        <>
+          {
+            new Date(ngaySinh * 1).toLocaleDateString()
+
+          }
+        </>
+      ),
       sorter: (a, b) => a.ngaySinh - b.ngaySinh,
       //render: (_, record) => <ConvertLongToDate long={record.ngaySinh} />,
     },
-  
+
     {
       title: "Trạng thái",
       dataIndex: "trangThai",
@@ -139,7 +140,7 @@ export default function NhanVien() {
       title: "Action",
       key: "action",
       dataIndex: 'idND',
-      
+
       render: (title) => (
         <Space size="middle">
           <Link to={`/admin-detail-nhan-vien/${title}`} className='btn btn-success'><BsFillEyeFill /></Link>
@@ -229,7 +230,7 @@ export default function NhanVien() {
             <div className="col-md-5">
               <Form.Item label="Tìm kiếm" name="ten">
                 <Input
-                  className="rounded-pill border-warning"
+                  maxLength={30}
                   placeholder="Nhập mã hoặc tên hoặc sđt ..."
                 />
               </Form.Item>
@@ -255,7 +256,7 @@ export default function NhanVien() {
         {/* hết form tìm kiếm */}
         {/* view add nhân viên */}
         <div className=" text-end mt-3">
-       
+
           <button onClick={themNV} class="button-them">
             <span class="text">
               <PlusCircleOutlined /> Thêm nhân viên

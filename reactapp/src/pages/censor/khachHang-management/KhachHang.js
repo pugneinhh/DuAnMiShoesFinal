@@ -15,8 +15,6 @@ export default function KhachHang() {
   const [componentSize, setComponentSize] = useState("default");
      const nav = useNavigate();
      const themKH = (res) => {
-       console.log(res);
-
        nav("/admin-them-khach-hang");
      };
   const onFormLayoutChange = ({ size }) => {
@@ -42,7 +40,9 @@ export default function KhachHang() {
 
   //Tìm khách hàng
   const onChangeFilter = (changedValues, allValues) => {
-  
+    if (allValues.hasOwnProperty('ten')) {
+      allValues.ten = allValues.ten.trim();
+    }
     timKiemKH(allValues);
   }
   const timKiemKH = (dataSearch) => {
@@ -298,7 +298,7 @@ export default function KhachHang() {
             <div className="col-md-5">
               <Form.Item label="Tìm kiếm" name="ten">
                 <Input
-                  className="rounded-pill border-warning"
+                  maxLength={30}
                   placeholder="Nhập mã hoặc tên hoặc sđt ..."
                 />
               </Form.Item>

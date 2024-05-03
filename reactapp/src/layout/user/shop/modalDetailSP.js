@@ -5,6 +5,7 @@ import { SanPhamClientAPI } from "../../../pages/censor/api/home/sanPham/sanPham
 import { GioHangAPI } from "../../../pages/censor/api/gioHang/gioHang.api";
 import { get, set } from "local-storage";
 import { useCart } from "../cart/CartContext";
+import { SanPhamAPI } from "../../../pages/censor/api/SanPham/sanPham.api";
 
 const ModalDetailSP = (props) => {
   const { openModalDetailSP, setOpenModalDetailSP, idCt, setidCTSP } = props;
@@ -13,13 +14,36 @@ const ModalDetailSP = (props) => {
   const [ChiTietSanPham, setChiTietSanPham] = useState([]);
   const [selectedMauSac, setSelectedMauSac] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
-  const [IDSanPham, setIDSanPham] = useState("");
-  const [IDMauSac, setIDMauSac] = useState("");
+  const [IDSanPham, setIDSanPham] = useState("1");
+  const [IDMauSac, setIDMauSac] = useState("1");
   const [IDSize, setIDSize] = useState("");
   const [soLuong, setSoLuong] = useState(1);
   const [khachHang, setKhachHang] = useState(null);
   const storedData = get("userData");
   const storedGioHang = get("GioHang");
+
+  //Load ảnh lên Modal
+  const [fileList, setFileList] = useState([]);
+  const loadAnhCTSP = async () => {
+    SanPhamAPI.getAnhCTSPClient(IDMauSac, ChiTietSanPham.id)
+      .then((res) => {
+        if (res.data && res.data.length > 0) {
+          setLargeImage(res.data[0].url);
+          const newFileList = res.data.map((anh, index) => ({
+            uid: `${index}`,
+            name: `Image-${index}`,
+            status: 'done',
+            url: anh.url,
+          }));
+          setFileList(newFileList);
+        } else {
+      
+        }
+      })
+  };
+  useEffect(() => {
+    loadAnhCTSP();
+  }, [IDMauSac, ChiTietSanPham.id]);
 
   const loadCountGioHang = () => {
     if (storedData != null) {
@@ -28,14 +52,14 @@ const ModalDetailSP = (props) => {
           updateTotalQuantity(res.data.length);
         });
       });
-    }else {
-      if(storedGioHang!=null){
+    } else {
+      if (storedGioHang != null) {
 
-      GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res) => {
-        updateTotalQuantity(res.data.length);
-        
-      });
-    }
+        GioHangAPI.getAllGHCTByIDGH(storedGioHang.id).then((res) => {
+          updateTotalQuantity(res.data.length);
+
+        });
+      }
     }
   };
 
@@ -50,9 +74,9 @@ const ModalDetailSP = (props) => {
 
   const loadCTSP = () => {
     SanPhamClientAPI.getCTSP(idCt).then((res) => {
-      if (res.data === undefined || res.data === "") {   
+      if (res.data === undefined || res.data === "") {
         return;
-      }    
+      }
       setChiTietSanPham(res.data);
       setIDSanPham(res.data.sanPhamID);
       setSelectedMauSac(res.data.mauSacID);
@@ -65,7 +89,6 @@ const ModalDetailSP = (props) => {
         res.data.sanPhamID,
         res.data.mauSacID
       ).then((res) => {
-        console.log(res.data)
         setListSizeByMS(res.data);
       });
       setLargeImage(res.data.anh);
@@ -113,12 +136,11 @@ const ModalDetailSP = (props) => {
   };
   const handleMauSacClick = (mauSacId) => {
     // Update the selected color when a button is clicked
+    
     setIDMauSac(mauSacId);
     setSelectedMauSac(mauSacId);
-    // window.location.href = `/client/sanpham/kich-thuoc-sp/${IDSanPham}/${mauSacId}`;
     SanPhamClientAPI.changeListSizeBySPandMS(IDSanPham, mauSacId).then(
       (res) => {
-      
         setListSizeByMS(res.data);
         const kichThuocExists = res.data.some(
           (item) => item.kichThuocID === selectedSize
@@ -151,7 +173,7 @@ const ModalDetailSP = (props) => {
         GioHangAPI.getByIDKH(khachHang).then((res) => {
           if (res.data !== null && res.data !== "") {
             //nếu như tồn tại giỏ hàng của khách đăng nhập thì kiểm tra xem sp có trùng vs sp trong ghct đó k
-          
+
 
             const idgh = res.data.id;
 
@@ -168,13 +190,13 @@ const ModalDetailSP = (props) => {
                   thanhTien: ChiTietSanPham.loaiKM
                     ? ChiTietSanPham.loaiKM === "Tiền mặt"
                       ? (ChiTietSanPham.giaBan -
-                          ChiTietSanPham.giaTriKhuyenMai) *
-                        soLuong
+                        ChiTietSanPham.giaTriKhuyenMai) *
+                      soLuong
                       : (ChiTietSanPham.giaBan -
-                          (ChiTietSanPham.giaBan *
-                            ChiTietSanPham.giaTriKhuyenMai) /
-                            100) *
-                        soLuong
+                        (ChiTietSanPham.giaBan *
+                          ChiTietSanPham.giaTriKhuyenMai) /
+                        100) *
+                      soLuong
                     : ChiTietSanPham.giaBan * soLuong,
                 };
 
@@ -199,13 +221,13 @@ const ModalDetailSP = (props) => {
                   thanhTien: ChiTietSanPham.loaiKM
                     ? ChiTietSanPham.loaiKM === "Tiền mặt"
                       ? (ChiTietSanPham.giaBan -
-                          ChiTietSanPham.giaTriKhuyenMai) *
-                        soLuong
+                        ChiTietSanPham.giaTriKhuyenMai) *
+                      soLuong
                       : (ChiTietSanPham.giaBan -
-                          (ChiTietSanPham.giaBan *
-                            ChiTietSanPham.giaTriKhuyenMai) /
-                            100) *
-                        soLuong
+                        (ChiTietSanPham.giaBan *
+                          ChiTietSanPham.giaTriKhuyenMai) /
+                        100) *
+                      soLuong
                     : ChiTietSanPham.giaBan * soLuong,
                 };
 
@@ -235,13 +257,13 @@ const ModalDetailSP = (props) => {
                   thanhTien: ChiTietSanPham.loaiKM
                     ? ChiTietSanPham.loaiKM === "Tiền mặt"
                       ? (ChiTietSanPham.giaBan -
-                          ChiTietSanPham.giaTriKhuyenMai) *
-                        soLuong
+                        ChiTietSanPham.giaTriKhuyenMai) *
+                      soLuong
                       : (ChiTietSanPham.giaBan -
-                          (ChiTietSanPham.giaBan *
-                            ChiTietSanPham.giaTriKhuyenMai) /
-                            100) *
-                        soLuong
+                        (ChiTietSanPham.giaBan *
+                          ChiTietSanPham.giaTriKhuyenMai) /
+                        100) *
+                      soLuong
                     : ChiTietSanPham.giaBan * soLuong,
                 };
                 if (soLuong > ChiTietSanPham.soLuong) {
@@ -285,11 +307,11 @@ const ModalDetailSP = (props) => {
               thanhTien: ChiTietSanPham.loaiKM
                 ? ChiTietSanPham.loaiKM === "Tiền mặt"
                   ? (ChiTietSanPham.giaBan - ChiTietSanPham.giaTriKhuyenMai) *
-                    soLuong
+                  soLuong
                   : (ChiTietSanPham.giaBan -
-                      (ChiTietSanPham.giaBan * ChiTietSanPham.giaTriKhuyenMai) /
-                        100) *
-                    soLuong
+                    (ChiTietSanPham.giaBan * ChiTietSanPham.giaTriKhuyenMai) /
+                    100) *
+                  soLuong
                 : ChiTietSanPham.giaBan * soLuong,
             };
             if (soLuong > ChiTietSanPham.soLuong) {
@@ -336,11 +358,11 @@ const ModalDetailSP = (props) => {
             thanhTien: ChiTietSanPham.loaiKM
               ? ChiTietSanPham.loaiKM === "Tiền mặt"
                 ? (ChiTietSanPham.giaBan - ChiTietSanPham.giaTriKhuyenMai) *
-                  soLuong
+                soLuong
                 : (ChiTietSanPham.giaBan -
-                    (ChiTietSanPham.giaBan * ChiTietSanPham.giaTriKhuyenMai) /
-                      100) *
-                  soLuong
+                  (ChiTietSanPham.giaBan * ChiTietSanPham.giaTriKhuyenMai) /
+                  100) *
+                soLuong
               : ChiTietSanPham.giaBan * soLuong,
           };
 
@@ -365,11 +387,11 @@ const ModalDetailSP = (props) => {
             thanhTien: ChiTietSanPham.loaiKM
               ? ChiTietSanPham.loaiKM === "Tiền mặt"
                 ? (ChiTietSanPham.giaBan - ChiTietSanPham.giaTriKhuyenMai) *
-                  soLuong
+                soLuong
                 : (ChiTietSanPham.giaBan -
-                    (ChiTietSanPham.giaBan * ChiTietSanPham.giaTriKhuyenMai) /
-                      100) *
-                  soLuong
+                  (ChiTietSanPham.giaBan * ChiTietSanPham.giaTriKhuyenMai) /
+                  100) *
+                soLuong
               : ChiTietSanPham.giaBan * soLuong,
           };
           GioHangAPI.addGHCT(data).then((res) => {
@@ -409,54 +431,22 @@ const ModalDetailSP = (props) => {
             />
           </div>
           <div className="row mt-2">
-            <div className="col-md-3">
-              <img
-                style={{ width: 90, height: 90, cursor: "pointer" }}
-                src="https://res.cloudinary.com/dm0w2qws8/image/upload/v1706369414/z5112244316883_4f6532ed804a61321b068673ee56a1e6_oitnz6.jpg"
-                alt="Product 1"
-                onClick={() =>
-                  handleImageClick(
-                    "https://res.cloudinary.com/dm0w2qws8/image/upload/v1706369414/z5112244316883_4f6532ed804a61321b068673ee56a1e6_oitnz6.jpg"
-                  )
-                }
-              />
-            </div>
-            <div className="col-md-3">
-              <img
-                style={{ width: 90, height: 90, cursor: "pointer" }}
-                src="https://res.cloudinary.com/dm0w2qws8/image/upload/v1706369415/z5112244321028_f6fcdc3c05a4e07141bdf44715b5b065_a0ygmi.jpg"
-                alt="Product 2"
-                onClick={() =>
-                  handleImageClick(
-                    "https://res.cloudinary.com/dm0w2qws8/image/upload/v1706369415/z5112244321028_f6fcdc3c05a4e07141bdf44715b5b065_a0ygmi.jpg"
-                  )
-                }
-              />
-            </div>
-            <div className="col-md-3">
-              <img
-                style={{ width: 90, height: 90, cursor: "pointer" }}
-                src="https://res.cloudinary.com/dm0w2qws8/image/upload/v1706369414/z5112244316883_4f6532ed804a61321b068673ee56a1e6_oitnz6.jpg"
-                alt="Product 3"
-                onClick={() =>
-                  handleImageClick(
-                    "https://res.cloudinary.com/dm0w2qws8/image/upload/v1706369414/z5112244316883_4f6532ed804a61321b068673ee56a1e6_oitnz6.jpg"
-                  )
-                }
-              />
-            </div>
-            <div className="col-md-3">
-              <img
-                style={{ width: 90, height: 90, cursor: "pointer" }}
-                src="https://res.cloudinary.com/dm0w2qws8/image/upload/v1706369415/z5112244321028_f6fcdc3c05a4e07141bdf44715b5b065_a0ygmi.jpg"
-                alt="Product 4"
-                onClick={() =>
-                  handleImageClick(
-                    "https://res.cloudinary.com/dm0w2qws8/image/upload/v1706369415/z5112244321028_f6fcdc3c05a4e07141bdf44715b5b065_a0ygmi.jpg"
-                  )
-                }
-              />
-            </div>
+            {
+              fileList.map((anh, index) => (
+                <div className="col-md-3">
+                <img
+                  style={{ width: 90, height: 90, cursor: "pointer" }}
+                  src={anh.url}
+                  alt={anh.uuid}
+                  onClick={() =>
+                    handleImageClick(
+                    anh.url
+                    )
+                  }
+                />
+              </div>
+              ))
+            }        
           </div>
         </div>
         <div className="col-md-6 ">
@@ -465,21 +455,21 @@ const ModalDetailSP = (props) => {
             {ChiTietSanPham.loaiKM ? (
               <span>
                 <del style={{ color: "black" }}>
-                  {Intl.NumberFormat("en-US").format(roundToThousands(ChiTietSanPham.giaBan))} VNĐ{" "}
+                  {Intl.NumberFormat("en-US").format(roundToThousands(ChiTietSanPham.giaBan))} VND{" "}
                 </del>
                 {Intl.NumberFormat("en-US").format(roundToThousands(
                   ChiTietSanPham.loaiKM === "Tiền mặt"
                     ? ChiTietSanPham.giaBan - ChiTietSanPham.giaTriKhuyenMai
                     : ChiTietSanPham.giaBan -
-                        (ChiTietSanPham.giaBan *
-                          ChiTietSanPham.giaTriKhuyenMai) /
-                          100
+                    (ChiTietSanPham.giaBan *
+                      ChiTietSanPham.giaTriKhuyenMai) /
+                    100
                 ))}{" "}
-                VNĐ
+                VND
               </span>
             ) : (
               <span style={{ color: "black" }}>
-                {Intl.NumberFormat("en-US").format(roundToThousands(ChiTietSanPham.giaBan))} VNĐ
+                {Intl.NumberFormat("en-US").format(roundToThousands(ChiTietSanPham.giaBan))} VND
               </span>
             )}
           </h5>
@@ -499,7 +489,7 @@ const ModalDetailSP = (props) => {
                     border:
                       selectedMauSac === listMauSacBySP.mauSacID
                         ? "2px solid #4096ff"
-                        : "none",
+                        : "1px solid black",
                   }}
                   onClick={() => handleMauSacClick(listMauSacBySP.mauSacID)}
                 ></Button>
@@ -558,9 +548,9 @@ const ModalDetailSP = (props) => {
           <h5>Mô tả sản phẩm:</h5>
           <p>
             <p>
-              ●<span className="me-2 "></span>{" "}
-              <label className="me-2 motaTitle">Tên hãng:</label>{" "}
-              <span className="motaChitiet">{ChiTietSanPham.tenHang}</span>
+              ●<span className="me-2 "></span>
+              <label className="me-2 ">Tên hãng:</label>{" "}
+              <span className="">{ChiTietSanPham.tenHang}</span>
             </p>
             <p>
               ●<span className="me-2"></span>Độ cao :{" "}

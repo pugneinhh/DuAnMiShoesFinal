@@ -17,6 +17,9 @@ import { Stomp } from "@stomp/stompjs";
 export default function HoaDon() {
   //Tìm hóa đơn
   const onChangeFilter = (changedValues, allValues) => {
+    if (allValues.hasOwnProperty('tenHD')) {
+        allValues.tenHD = allValues.tenHD.trim();
+      }
     timKiemHD(allValues);
   };
 
@@ -35,11 +38,19 @@ export default function HoaDon() {
       stomp.subscribe("/topic/admin/hoa-don", (mes) => {
         try {
           const pare = JSON.parse(mes.body);
-          console.log(pare);
+    
           // ví du: bạn muốn khi khách hàng bấm đặt hàng mà load lại hóa đơn màn admin thì hãy gọi hàm load all hóa đơn ở đây
           // thí dụ: đây là hàm laod hóa đơn: loadHoaDon(); allThongBao(); CountThongBao();
-          loadHoaDon();
-          loadHoaDonCho();
+   
+              loadHoaDon();
+              loadHoaDonCho();
+              loadHoaDonCVC();
+              loadHoaDonHT();
+              loadHoaDonTT();
+              loadHoaDonVC();
+              loadHoaDonXN();
+              loadHoaDonHuy();
+              loadHoaDonTraHang();
         } catch (e) {
           console.log("lỗi mẹ ròi xem code di: ", e);
         }
@@ -59,7 +70,7 @@ export default function HoaDon() {
     loadHoaDonVC();
     loadHoaDonXN();
     loadHoaDonHuy();
-   
+   loadHoaDonTraHang();
   }, []);
   // load full hóa đơn
   const [hoaDon, setHoaDons] = useState([]);
@@ -127,6 +138,7 @@ export default function HoaDon() {
 
     });
   };
+
   //load hóa đơn thành công
   const [hoaDonHuy, setHoaDonHuy] = useState([]);
   const loadHoaDonHuy = () => {
@@ -134,7 +146,13 @@ export default function HoaDon() {
       setHoaDonHuy(res.data);
     });
   };
-
+// load hóa đơn trả hàng
+  const [hoaDonTraHang, setHoaDonTraHang] = useState([]);
+  const loadHoaDonTraHang = () => {
+    HoaDonAPI.getAllbyTT(10).then((res) => {
+      setHoaDonTraHang(res.data);
+    });
+  };
   const columns = [
     {
       title: "STT",
@@ -204,10 +222,9 @@ export default function HoaDon() {
           <div>
             <FormattedNumber
               value={thanhTien}
-              style="currency"
               currency="VND"
               minimumFractionDigits={0}
-            />
+            />{" VND"}
           </div>
         </IntlProvider>
       ),
@@ -233,8 +250,8 @@ export default function HoaDon() {
             <Tag color="green">Hoàn thành</Tag>
           ) : trangThai == -1 ? (
             <Tag color="#cd201f">Hủy</Tag>
-          ) : trangThai == -2 ? (
-            <Tag color="#cd201f">Hoàn tiền</Tag>
+          ) : trangThai == 10 ? (
+            <Tag color="#cd201f">Trả hàng</Tag>
           ) : (
             <Tag color="gold">Đã thanh toán</Tag>
           )}
@@ -434,7 +451,27 @@ export default function HoaDon() {
         />
       ),
     },
-  
+    {
+      key: "9",
+      label: (
+        <Badge count={0} offset={[8, 1]}>
+          Trả hàng
+        </Badge>
+      ),
+      children: (
+        <Table
+          dataSource={hoaDonTraHang}
+          columns={columns}
+          pagination={{
+            showQuickJumper: true,
+            position: ["bottomCenter"],
+            defaultPageSize: 5,
+            defaultCurrent: 1,
+            total: 100,
+          }}
+        />
+      ),
+    },
   ];
 
   const [componentSize, setComponentSize] = useState("default");
@@ -486,7 +523,7 @@ export default function HoaDon() {
         >
           <div className="col-md-6">
             <Form.Item label="Tìm kiếm" name="tenHD">
-              <Input required className="rounded-pill border-warning" />
+              <Input required maxLength={30} />
             </Form.Item>
             <Form.Item
               label="Loại HD"

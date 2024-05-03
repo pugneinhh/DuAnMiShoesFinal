@@ -5,9 +5,11 @@ import com.example.backend.dto.request.HoaDonChiTietRequest;
 import com.example.backend.dto.response.HoaDonChiTietBanHangRespone;
 import com.example.backend.dto.response.HoaDonChiTietRespone;
 import com.example.backend.entity.ChiTietSanPham;
+import com.example.backend.entity.GioHangChiTiet;
 import com.example.backend.entity.HoaDon;
 import com.example.backend.entity.HoaDonChiTiet;
 import com.example.backend.repository.CTSPRepository;
+import com.example.backend.repository.GioHangChiTietRepository;
 import com.example.backend.repository.HoaDonChiTietRepository;
 import com.example.backend.repository.HoaDonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +26,13 @@ public class HoaDonChiTietService {
     @Autowired
     HoaDonChiTietRepository hoaDonChiTietRepository;
     @Autowired
+    GioHangChiTietRepository gioHangChiTietRepository;
+    @Autowired
     CTSPRepository ctspRepository;
     @Autowired
     HoaDonRepository hoaDonRepository;
+    @Autowired
+    ThongBaoService thongBaoService;
     public List<HoaDonChiTietBanHangRespone> getAllHDCTByHD(String ma){
         System.out.println("Ma"+ma);
         if (hoaDonRepository.getHDByMa(ma) == null) return  null;
@@ -40,6 +46,7 @@ public class HoaDonChiTietService {
         System.out.println("Hóa đơn chi tiết request"+request);
         String idCTSP= request.getChiTietSanPham();
         HoaDon hoaDon = hoaDonRepository.getHDByMa(request.getHoaDon());
+        if (hoaDon == null) return null;
         request.setHoaDon(hoaDon.getId());
         HoaDonChiTiet hdct=request.map(new HoaDonChiTiet());
         BigDecimal giaHienTai = hoaDon.getGiaGoc() == null ? new BigDecimal("0") : hoaDon.getGiaGoc();
@@ -137,8 +144,36 @@ public class HoaDonChiTietService {
         BigDecimal giaGiam = hoaDon.getGiaGiamGia() == null ? new BigDecimal("0") : hoaDon.getGiaGiamGia();
         hoaDon.setGiaGoc(tong);
         hoaDon.setThanhTien(tong.subtract(giaGiam));
-        hoaDonRepository.save(hoaDon);
         hoaDonChiTietRepository.delete(hdct);
+        hoaDonRepository.save(hoaDon);
+    }
+
+    public void deleteHDCTAndRollBackInSell1(String idCTSP,String ma , BigDecimal thanhTien){
+        String idHD = hoaDonRepository.getHDByMa(ma).getId();
+        HoaDonChiTiet hdct = hoaDonChiTietRepository.getHDCTByCTSPAndHDAndThanhTien(idCTSP,idHD,thanhTien);
+        System.out.println("Hóa đơn chi tiết"+hdct);
+        ChiTietSanPham ctsp = ctspRepository.getReferenceById(idCTSP);
+        int slt = ctsp.getSoLuong();
+        int slh = hdct.getSoLuong();
+        ctsp.setSoLuong(slt+slh);
+        ctspRepository.save(ctsp);
+        BigDecimal tong = new BigDecimal("0");
+        HoaDon hoaDon = hoaDonRepository.getHoaDonByIDHD(idHD);
+        List<HoaDonChiTiet> list = hoaDonChiTietRepository.getAllHDCTByIDHD(idHD);
+        for (HoaDonChiTiet x : list) {
+            if (x.getChiTietSanPham().getId().equals(idCTSP)){
+                // tong = tong.add(x.getGiaSauGiam().multiply(BigDecimal.valueOf(soLuongCapNhat)));
+                continue;
+            }
+            tong = tong.add(x.getGiaSauGiam().multiply(BigDecimal.valueOf(x.getSoLuong())));
+        }
+        BigDecimal giaGiam = hoaDon.getGiaGiamGia() == null ? new BigDecimal("0") : hoaDon.getGiaGiamGia();
+        hoaDon.setGiaGoc(tong);
+        //hoaDon.setTrangThai(-1);
+        hoaDon.setThanhTien(tong.subtract(giaGiam));
+        hoaDonChiTietRepository.delete(hdct);
+        hoaDonRepository.save(hoaDon);
+
     }
 
     public void huyDonHang(String idCTSP,String idHD){
@@ -152,18 +187,29 @@ public class HoaDonChiTietService {
     }
     public void updateGia(String idCTSP, BigDecimal giaGiam , BigDecimal giaSauGiam){
         List<HoaDonChiTiet> list = hoaDonChiTietRepository.getAllHDCTByCTSP(idCTSP);
-        System.out.println("Gia giam"+giaGiam);
-        System.out.println("gia sau giam"+giaSauGiam);
-        System.out.println("List"+list.size());
+        List<GioHangChiTiet> listGH=gioHangChiTietRepository.getAllGHCTByCTSP(idCTSP);
         for (HoaDonChiTiet h : list){
-            System.out.println("H"+h);
-//            h.setGiaGiam(giaSauGiam.subtract(giaGiam));
-//            h.setGiaSauGiam(giaGiam);
-            h.setGiaGiam(giaGiam);
-            h.setGiaSauGiam(giaSauGiam.subtract(giaGiam));
-            hoaDonChiTietRepository.save(h);
+            if (h.getTrangThai() == 0) {
+                BigDecimal before = h.getGiaSauGiam().subtract(h.getGiaGiam());
+                BigDecimal after = giaSauGiam.subtract(giaGiam);
+                HoaDon hd = hoaDonRepository.getHoaDonByIDHD(h.getHoaDon().getId());
+                hd.setGiaGoc(hd.getGiaGoc().subtract(h.getGiaSauGiam()).add(giaSauGiam));
+                hd.setThanhTien(hd.getThanhTien().subtract(h.getGiaSauGiam()).add(giaSauGiam));
+                hoaDonRepository.save(hd);
+                h.setGiaGiam(giaGiam);
+                h.setGiaSauGiam(giaSauGiam);
+                hoaDonChiTietRepository.save(h);
+            }
             System.out.println( hoaDonChiTietRepository.save(h));
         }
+        if(listGH.size()>0) {
+        for(GioHangChiTiet gh :listGH){
+            System.out.println("giỏ hàng"+gh);
+            gh.setThanhTien(giaSauGiam.multiply(BigDecimal.valueOf(gh.getSoLuong())));
+            gioHangChiTietRepository.save(gh);
+        }
+        }
+        thongBaoService.socketLoadSanPham(idCTSP);
     }
 
     public HoaDonChiTiet updateSL(String idCTSP,String ma,int soLuongCapNhat){

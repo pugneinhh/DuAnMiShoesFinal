@@ -1,6 +1,7 @@
 import LogoGHN from "../../../assets/images/logoDiShip.jpg";
 import React, { useEffect, useState } from "react";
 import {
+  Breadcrumb,
   Button,
   Col,
   Form,
@@ -10,6 +11,7 @@ import {
 import { HoaDonClientAPI } from "../../../pages/censor/api/HoaDonClient/HoaDonClientAPI";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 
 const TraCuuDonHangClient = () => {
   const [form] = Form.useForm();
@@ -20,7 +22,7 @@ const TraCuuDonHangClient = () => {
       .then((res) => {
         setlistBill(res.data);
         if (res.data.id != null) {
-      
+
           form.resetFields();
           toast("🦄 Tra cứu đơn hàng thành công!", {
             position: "top-right",
@@ -32,9 +34,9 @@ const TraCuuDonHangClient = () => {
             progress: undefined,
             theme: "light",
           });
-              nav(`/hd/${res.data.id}`);
+          nav(`/hd/${res.data.id}`);
         }
-       
+
         toast("🦄 Tra cứu đơn hàng thất bại !", {
           position: "top-right",
           autoClose: 3000,
@@ -45,7 +47,7 @@ const TraCuuDonHangClient = () => {
           progress: undefined,
           theme: "light",
         });
-    
+
       })
       .catch(() => {
         toast("🦄 Tra cứu đơn hàng thành công!", {
@@ -63,12 +65,21 @@ const TraCuuDonHangClient = () => {
 
   return (
     <>
+       <Breadcrumb style={{ marginBottom: 10 , borderBottom: "1px solid #E2E1E4",paddingBottom: 5}}>
+        <Breadcrumb.Item>
+          <Link to="/home" className="no-underline text-dark">Trang chủ</Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>
+          <Link to="/tra-cuu-don-hang" className="no-underline text-dark"><b>Tra cứu đơn hàng</b></Link>
+        </Breadcrumb.Item>
+      </Breadcrumb>
       <div className="row d-flex justify-content-center">
         <Form
           form={form}
           layout="vertical "
           style={{ paddingLeft: 400 }}
           onFinish={handleSubmit}
+          className="mt-5"
         >
           <Row>
             <Col span={7} style={{ marginRight: "20px" }}>
@@ -86,8 +97,8 @@ const TraCuuDonHangClient = () => {
                 label="Số điện thoại"
                 tooltip="Vui lòng nhập sdt"
 
-                // labelCol={{ span: 9 }}
-                // wrapperCol={{ span: 15 }}
+              // labelCol={{ span: 9 }}
+              // wrapperCol={{ span: 15 }}
               >
                 <Input
 
@@ -113,9 +124,9 @@ const TraCuuDonHangClient = () => {
             </Col>
           </Row>
         </Form>
-      </div>
-      <div className="text-center">
+      <div className="text-center mb-5">
         <img src={LogoGHN} style={{ width: 700, height: 403 }}></img>
+      </div>
       </div>
       <ToastContainer
         position="top-right"

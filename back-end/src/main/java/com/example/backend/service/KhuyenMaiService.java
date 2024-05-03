@@ -18,12 +18,14 @@ import java.util.List;
 public class KhuyenMaiService {
     @Autowired
     KhuyenMaiRepository khuyenMaiRespone;
-
+    @Autowired
+    ThongBaoService thongBaoService;
     public List<KhuyenMai> getAllKhuyenMai(){
         return khuyenMaiRespone.findAll();
     }
 
     public KhuyenMai addKhuyenMai(KhuyenMai km){
+                thongBaoService.socketLoadSanPham("1");
         return khuyenMaiRespone.save(km);
     }
     public KhuyenMai detailKhuyenMai(String id){return  khuyenMaiRespone.findById(id).get();}

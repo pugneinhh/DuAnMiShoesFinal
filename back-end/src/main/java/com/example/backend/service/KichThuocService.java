@@ -23,7 +23,9 @@ public class KichThuocService {
         return kichThuocRepository.getALLKT();
     }
     public KichThuoc update(String id, KichThuocRequest request) {
+        KichThuoc ktGoc = kichThuocRepository.findById(id).get();
         KichThuoc kt = request.mapKT(new KichThuoc());
+        kt.setNgayTao(ktGoc.getNgayTao());
         kt.setId(id);
         return kichThuocRepository.save(kt);
     }

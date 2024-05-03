@@ -24,7 +24,7 @@ public interface AdminHoaDonSanPham {
     String getThanhTienSP();
     @Value("#{target.idCTSP}")
     String getIDCTSP();
-    @Value("#{target.giaGiam}")
+//    @Value("#{target.giaGiam}")
     String getGiaGiam();
 
     @Value("#{target.id}")

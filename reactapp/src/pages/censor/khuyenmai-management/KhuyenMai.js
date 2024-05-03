@@ -28,15 +28,20 @@ import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { PromotionAPI } from "../../censor/api/promotion/promotion.api";
 import { BsFillEyeFill } from "react-icons/bs";
+import { useDispatch, useSelector } from "react-redux";
+import { GetInvoice, UpdateKMInvoice, UpdateKMNULLInvoice } from "../../../store/reducer/DetailInvoice.reducer";
+import { dispatch } from "../../../store/redux/store";
+import { Update } from "../../../store/reducer/Bill.reducer";
+import { ja } from "date-fns/locale";
+
 const KhuyenMai = () => {
   const currentTime = moment(); // thời gian hiện tại
    const nav = useNavigate();
    const themKM = (res) => {
-     console.log(res);
-
      nav("/admin-them-khuyen-mai");
    };
   const onChange = (value) => {};
+  const ctspHD = useSelector(GetInvoice);
 
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
@@ -46,10 +51,10 @@ const KhuyenMai = () => {
   const [form] = Form.useForm();
 
   const [componentSize, setComponentSize] = useState("default");
-
+  let items = [];
 
   const [khuyenMai, setKhuyenMais] = useState([]);
-  console.log("Khuyến mại",khuyenMai);
+
 
   const loadKhuyenMai =  () => {
      PromotionAPI.getAll()
@@ -65,18 +70,23 @@ const KhuyenMai = () => {
   }, []);
 
   useEffect(() => {
-    if (!dataSearch.ma && !dataSearch.ten && !dataSearch.gia_tri_khuyen_mai && !dataSearch.loai && !dataSearch.ngay_bat_dau && !dataSearch.ngay_ket_thuc){
-      loadKhuyenMai();
-    }
-  }, [khuyenMai]);
+    const intervalId = setInterval(() => {
+      if (!dataSearch.ma && !dataSearch.ten && !dataSearch.gia_tri_khuyen_mai && !dataSearch.loai && !dataSearch.ngay_bat_dau && !dataSearch.ngay_ket_thuc ) {
+        loadKhuyenMai();
+      }
+    }, 60000); // 60000 milliseconds = 1 phút
+    return () => clearInterval(intervalId);
+
+  }, []);
 
   // tìm kiếm
 
   const [dataSearch, setDataSearch] = useState({});
 
   const onChangeFilter = (changedValues, allValues) => {
-    console.log(changedValues);
-    console.log(allValues);
+    if (allValues.hasOwnProperty('ma')) {
+      allValues.ma = allValues.ma.trim();
+    }
     timKiemKhuyenMai(allValues);
     setDataSearch(allValues);
   };
@@ -93,6 +103,8 @@ const KhuyenMai = () => {
 
   const updateTrangThai = async (id, value) => {
     await PromotionAPI.updateClosePromotion(id, value).then((response) => {
+      dispatch(UpdateKMNULLInvoice({tenKM: response.ten,loaiKM: response.loai}))
+       // console.log("items ",items);
       if (response.status === 200) {
         loadKhuyenMai();
         toast("✔️ Cập nhật thành công!", {
@@ -106,11 +118,49 @@ const KhuyenMai = () => {
           theme: "light",
         });
       }
+
     });
-  };
+        var items = [];
+    ctspHD.forEach((item,index)=> {
+      let newItems = {hoaDon : item.hoaDon , total : item.total};
+      if (items.length === 0) items.push(newItems);
+      else if (items.filter(i => i.hoaDon === newItems.hoaDon).length > 0){
+          let index = items.indexOf(i => i.hoaDon === newItems.hoaDon);
+          if (items[index]) {
+            items[index].total += newItems.total;
+          }
+        }
+      });
+      for (let i = 0 ; i < items.length ; i++) {
+      dispatch(Update({key : items[i].hoaDon, thanhTien : items[i].total}));
+      }
+    };
+
+
+  const getTotalEachHD = () => {
+    var items = [];
+    for (let j = 0 ; j < ctspHD.length; j++) {
+      if (items.length === 0) {items.push({hoaDon : ctspHD[j].hoaDon , total : ctspHD[j].total});
+          }
+      else {
+        if (items.filter(i => i.hoaDon === ctspHD[j].hoaDon).length > 0){
+          let index = items.indexOf(i => i.hoaDon === ctspHD[j].hoaDon);
+          items[index].total += ctspHD[j].total;
+
+        } else {
+          items.push({hoaDon : ctspHD[j].hoaDon , total : ctspHD[j].total});
+        }
+      }
+      };
+      console.log("items ",items);
+  }
 
   const updateTrangThai1 = async (id, value) => {
     await PromotionAPI.updateOpenPromotion(id, value).then((response) => {
+
+      dispatch(UpdateKMInvoice({tenKM: response.ten,loaiKM: response.loai,giaTriKhuyenMai: response.gia_tri_khuyen_mai}))
+
+   
       if (response.status === 200) {
         loadKhuyenMai();
         toast("✔️ Cập nhật thành công!", {
@@ -125,6 +175,20 @@ const KhuyenMai = () => {
         });
       }
     });
+    var items = [];
+    ctspHD.forEach((item,index)=> {
+      let newItems = {hoaDon : item.hoaDon , total : item.total};
+      if (items.length === 0) items.push(newItems);
+      else if (items.filter(i => i.hoaDon === newItems.hoaDon).length > 0){
+          let index = items.indexOf(i => i.hoaDon === newItems.hoaDon);
+          if (items[index]) {
+            items[index].total += newItems.total;
+          }
+        }
+      });
+      for (let i = 0 ; i < items.length ; i++) {
+      dispatch(Update({key : items[i].hoaDon, thanhTien : items[i].total}));
+      }
   };
 
   const columns = [
@@ -173,9 +237,8 @@ const KhuyenMai = () => {
         <>
           {x.loai === "Tiền Mặt" || x.loai === "Tiền mặt"
             ? new Intl.NumberFormat("vi-Vi", {
-                style: "currency",
                 currency: "VND",
-              }).format(gia_tri_khuyen_mai)
+              }).format(gia_tri_khuyen_mai) + " VND"
             : gia_tri_khuyen_mai + "%"}
         </>
       ),
@@ -418,6 +481,7 @@ const KhuyenMai = () => {
               <div className="col-md-4">
                 <Form.Item label="Mã KM" name="ma">
                   <Input
+                    maxLength={30}
                     placeholder="Mã khuyến mại"
                     className="rounded-pill border-warning"
                   />
@@ -526,7 +590,9 @@ const KhuyenMai = () => {
           <div className="container-fluid mt-4">
             <div>
               <Table
-                dataSource={khuyenMai}
+                dataSource={khuyenMai.sort((a, b) =>  { const dateA = new Date(a.ngayTao);
+                  const dateB = new Date(b.ngayTao);
+                  return dateB - dateA; })}
                 columns={columns}
                 id="bang"
                 scroll={scroll}
