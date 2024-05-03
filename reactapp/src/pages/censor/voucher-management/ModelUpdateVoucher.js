@@ -235,7 +235,7 @@ const ModelUpdateVoucher = (props) => {
               rules={[
                 {
                   required: true,
-                  message: "Vui lòng không đẻ trống tên voucher!",
+                  message: "Vui lòng không đẻ trống tên !",
                 },
               ]}
             >
@@ -245,14 +245,14 @@ const ModelUpdateVoucher = (props) => {
               />
             </Form.Item>
             <Form.Item
-              label="Loại voucher"
+              label="Loại"
               name="loaiVoucher"
               style={{ marginLeft: 0, width: 500 }}
               hasFeedback
               rules={[
                 {
                   required: true,
-                  message: "Vui lòng chọn loại voucher!",
+                  message: "Vui lòng chọn loại !",
                 },
               ]}
             >
