@@ -160,7 +160,7 @@ const DetailHoaDonTraHang = () => {
           tienGocMoi:thongTin.giaGoc-totalNewBill,
           tienGiam:tienGiamHDMoi,
         };
-        console.log("sanPhamTra", data);
+        // console.log("sanPhamTra", data);
         if (data.ghiChu != null && data.ghiChu.trim() !== "") {
           check = 0;
           TraHangAPI.traHang(data);

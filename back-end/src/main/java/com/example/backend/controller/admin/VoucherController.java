@@ -92,11 +92,13 @@ public class VoucherController {
     }
     @PutMapping("/updateTTHD/{id}")
     public ResponseEntity<?> updateTTHD(@PathVariable("id")String id,@RequestBody VoucherRequest request){
-
         Voucher v=request.map(new Voucher());
-
         v.setId(id);
         v.setTrangThai(Status.DANG_HOAT_DONG);
+        LocalDateTime ngayBD =  vs.convertTime(request.getNgayBatDau());
+        LocalDateTime ngayKT = vs.convertTime(request.getNgayKetThuc());
+        v.setNgayBatDau(ngayBD);
+        v.setNgayKetThuc(ngayKT);
         return ResponseEntity.ok(vs.add(v));
     }
     @PutMapping("/updateTTNgung/{id}")
