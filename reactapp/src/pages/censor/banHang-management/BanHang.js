@@ -73,7 +73,7 @@ const BanHang = () => {
   const [shipMoney, setShipMoney] = useState("");
   const [shipMoney1, setShipMoney1] = useState("");
   const [openSanPham, setOpenSanPham] = useState(false);
-  console.log("Hóa đơn " ,hoaDons);
+  // console.log("Hóa đơn " ,hoaDons);
   let lengthSP = 0;
   let data = [""];
   let hd = [""];
