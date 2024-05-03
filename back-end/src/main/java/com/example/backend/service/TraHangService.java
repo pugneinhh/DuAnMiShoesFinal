@@ -58,6 +58,8 @@ public class TraHangService {
         HoaDon hoaDon=hoaDonRepository.getHoaDonByIDHD(request.getIdHD());
         hoaDon.setTrangThai(10);
         hoaDon.setThanhTien(request.getTienMoi());
+        hoaDon.setGiaGoc(request.getTienGocMoi());
+        hoaDon.setGiaGiamGia(request.getTienGiam());
         hoaDonRepository.save(hoaDon);
         LichSuHoaDon lichSuHoaDon=new LichSuHoaDon();
         lichSuHoaDon.setHoaDon(hoaDon);
