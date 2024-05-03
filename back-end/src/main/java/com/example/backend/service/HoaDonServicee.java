@@ -107,6 +107,27 @@ public class HoaDonServicee {
         HoaDon hoaDon = findHoaDonByMa(ma);
         hoaDon.setTraSau(1);
         hoaDon.setNhanVien(idNV);
+
+        hoaDon.setNgayMua(LocalDateTime.now());
+        return hoaDonRepository.save(hoaDon);
+    }
+
+    public HoaDon updateTraSauCoVoucher(String ma,String idNV,String idVoucher){
+        HoaDon hoaDon = findHoaDonByMa(ma);
+        if (idVoucher != null || idVoucher != "null") {
+            Voucher voucher = voucherRepository.detail(idVoucher);
+
+            hoaDon.setVoucher(voucher);
+            BigDecimal giamToiDa = voucher.getGiamToiDa();
+            BigDecimal giam = voucher.getLoaiVoucher().equals("Tiền mặt") ?
+                    ( BigDecimal.valueOf(voucher.getMucDo()).compareTo(giamToiDa) < 0 ?  BigDecimal.valueOf(voucher.getMucDo()) : giamToiDa ) :
+                    ((hoaDon.getThanhTien().multiply(BigDecimal.valueOf(voucher.getMucDo())).divide(new BigDecimal(100))).compareTo(giamToiDa) < 0 ? (hoaDon.getThanhTien().multiply(BigDecimal.valueOf(voucher.getMucDo())).divide(new BigDecimal(100))) : giamToiDa);
+            hoaDon.setGiaGiamGia(giam);
+            hoaDon.setThanhTien(hoaDon.getGiaGoc().subtract(giam));
+
+        }
+        hoaDon.setTraSau(1);
+        hoaDon.setNhanVien(idNV);
         hoaDon.setNgayMua(LocalDateTime.now());
         return hoaDonRepository.save(hoaDon);
     }

@@ -3,10 +3,8 @@ import { getHeader,requestAdmin } from "../request";
 
 
 export class SellAPI {
-  
-
   static getAllCustomers = () => {
-     const getToken = getHeader();
+    const getToken = getHeader();
     return requestAdmin({
       method: "GET",
       url: "/admin/khach-hang",
@@ -17,7 +15,7 @@ export class SellAPI {
   };
 
   static getAllSizes = () => {
-     const getToken = getHeader();
+    const getToken = getHeader();
     return requestAdmin({
       method: "GET",
       url: "/admin/kich-thuoc",
@@ -28,7 +26,7 @@ export class SellAPI {
   };
 
   static getAllColors = () => {
-     const getToken = getHeader();
+    const getToken = getHeader();
     return requestAdmin({
       method: "GET",
       url: "/admin/mau-sac",
@@ -39,7 +37,7 @@ export class SellAPI {
   };
 
   static getAllMeterials = () => {
-     const getToken = getHeader();
+    const getToken = getHeader();
     return requestAdmin({
       method: "GET",
       url: "/admin/chat-lieu",
@@ -50,7 +48,7 @@ export class SellAPI {
   };
 
   static getAllSoles = () => {
-     const getToken = getHeader();
+    const getToken = getHeader();
     return requestAdmin({
       method: "GET",
       url: "/admin/de-giay",
@@ -61,7 +59,7 @@ export class SellAPI {
   };
 
   static getAllCategories = () => {
-     const getToken = getHeader();
+    const getToken = getHeader();
     return requestAdmin({
       method: "GET",
       url: "/admin/danh-muc",
@@ -72,7 +70,7 @@ export class SellAPI {
   };
 
   static getAllBrands = () => {
-     const getToken = getHeader();
+    const getToken = getHeader();
     return requestAdmin({
       method: "GET",
       url: "/admin/hang",
@@ -83,7 +81,7 @@ export class SellAPI {
   };
 
   static getAllProducts = () => {
-     const getToken = getHeader();
+    const getToken = getHeader();
     return requestAdmin({
       method: "GET",
       url: "/admin/ban-hang/getALLCTSP",
@@ -94,7 +92,7 @@ export class SellAPI {
   };
 
   static addBill = (data) => {
-     const getToken = getHeader();
+    const getToken = getHeader();
     return requestAdmin({
       method: "POST",
       url: "/admin/ban-hang/add-hoa-don",
@@ -106,7 +104,7 @@ export class SellAPI {
   };
 
   static getAllHoaDonCho = () => {
-     const getToken = getHeader();
+    const getToken = getHeader();
     return requestAdmin({
       method: "GET",
       url: "/admin/ban-hang/hoa-don/hoa-don-cho",
@@ -117,7 +115,7 @@ export class SellAPI {
   };
 
   static getAllHoaDonChoHomNay = () => {
-     const getToken = getHeader();
+    const getToken = getHeader();
     return requestAdmin({
       method: "GET",
       url: "/admin/ban-hang/hoa-don/hoa-don-cho-hom-nay",
@@ -128,7 +126,7 @@ export class SellAPI {
   };
 
   static getAllHDCTByHD = (ma) => {
-     const getToken = getHeader();
+    const getToken = getHeader();
     return requestAdmin({
       method: "GET",
       url: `/admin/ban-hang/hien-thi-hdct/${ma}`,
@@ -139,7 +137,7 @@ export class SellAPI {
   };
 
   static addInvoice = (data) => {
-     const getToken = getHeader();
+    const getToken = getHeader();
     return requestAdmin({
       method: "POST",
       url: "/admin/ban-hang/addHDCT",
@@ -150,19 +148,30 @@ export class SellAPI {
     });
   };
 
-  static updateTraSau = (ma,idNV) => {
-     const getToken = getHeader();
+  static updateTraSau = (ma, idNV, tien) => {
+    const getToken = getHeader();
     return requestAdmin({
       method: "PUT",
-      url: `/admin/ban-hang/tra-sau/hoa-don/${ma}/${idNV}`,
+      url: `/admin/ban-hang/tra-sau/hoa-don/${ma}/${idNV}/${tien}`,
       headers: {
         Authorization: getToken,
       },
     });
-  }
+  };
+
+  static updateTraSauCoVoucher = (ma, idNV, tien , idVoucher) => {
+    const getToken = getHeader();
+    return requestAdmin({
+      method: "PUT",
+      url: `/admin/ban-hang/tra-sau/hoa-don/${ma}/${idNV}/${tien}/${idVoucher}`,
+      headers: {
+        Authorization: getToken,
+      },
+    });
+  };
 
   static getLinkVnpay = (hoaDon, money) => {
-     const getToken = getHeader();
+    const getToken = getHeader();
     return requestAdmin({
       method: "GET",
       url: `/vnppayment/chuyen-khoan/${hoaDon}/${money}`,
@@ -173,7 +182,7 @@ export class SellAPI {
   };
 
   static getVoucherNoLimited = () => {
-     const getToken = getHeader();
+    const getToken = getHeader();
     return requestAdmin({
       method: "GET",
       url: `/admin/ban-hang/voucher/no-limited`,
@@ -184,7 +193,7 @@ export class SellAPI {
   };
 
   static getVoucherWithIDKH = (id) => {
-     const getToken = getHeader();
+    const getToken = getHeader();
     return requestAdmin({
       method: "GET",
       url: `/admin/ban-hang/voucher/${id}`,
@@ -196,17 +205,17 @@ export class SellAPI {
 
   static delete = (idCTSP, ma) => {
     const getToken = getHeader();
-   return requestAdmin({
-     method: "DELETE",
-     url: `/admin/ban-hang/delete/${idCTSP}/${ma}`,
-     headers: {
-       Authorization: getToken,
-     },
-   });
- };
+    return requestAdmin({
+      method: "DELETE",
+      url: `/admin/ban-hang/delete/${idCTSP}/${ma}`,
+      headers: {
+        Authorization: getToken,
+      },
+    });
+  };
 
   static deleteInvoiceAndRollBackProduct = (idCTSP, ma) => {
-     const getToken = getHeader();
+    const getToken = getHeader();
     return requestAdmin({
       method: "DELETE",
       url: `/admin/ban-hang/delete-hoa-don-chi-tiet/${idCTSP}/${ma}`,
@@ -216,19 +225,19 @@ export class SellAPI {
     });
   };
 
-  static deleteInvoiceAndRollBackProduct1 = (idCTSP, ma , thanhTien) => {
+  static deleteInvoiceAndRollBackProduct1 = (idCTSP, ma, thanhTien) => {
     const getToken = getHeader();
-   return requestAdmin({
-     method: "DELETE",
-     url: `/admin/ban-hang/delete-hoa-don-chi-tiet/${idCTSP}/${ma}/${thanhTien}`,
-     headers: {
-       Authorization: getToken,
-     },
-   });
- };
+    return requestAdmin({
+      method: "DELETE",
+      url: `/admin/ban-hang/delete-hoa-don-chi-tiet/${idCTSP}/${ma}/${thanhTien}`,
+      headers: {
+        Authorization: getToken,
+      },
+    });
+  };
 
   static updateSL = (idCTSP, ma, Value) => {
-     const getToken = getHeader();
+    const getToken = getHeader();
     return requestAdmin({
       method: "PUT",
       url: `/admin/ban-hang/hoa-don/updateSL/${idCTSP}/${ma}/${Value}`,
@@ -239,7 +248,7 @@ export class SellAPI {
   };
 
   static updateSL1 = (idCTSP, idHD) => {
-     const getToken = getHeader();
+    const getToken = getHeader();
     return requestAdmin({
       method: "PUT",
       url: `/admin/ban-hang/hoa-don/updateSL1/${idCTSP}/${idHD}`,
@@ -250,7 +259,7 @@ export class SellAPI {
   };
 
   static updateKH = (ma, idKH) => {
-     const getToken = getHeader();
+    const getToken = getHeader();
     return requestAdmin({
       method: "PUT",
       url: `/admin/ban-hang/nguoi-dung/update-nguoi-dung/${ma}/${idKH}`,
@@ -261,7 +270,7 @@ export class SellAPI {
   };
 
   static updateReturnKhachLe = (ma) => {
-     const getToken = getHeader();
+    const getToken = getHeader();
     return requestAdmin({
       method: "PUT",
       url: `/admin/ban-hang/nguoi-dung/update-khach-le/${ma}`,
@@ -272,7 +281,7 @@ export class SellAPI {
   };
 
   static updateThanhTien = (idHD) => {
-     const getToken = getHeader();
+    const getToken = getHeader();
     return requestAdmin({
       method: "PUT",
       url: `/admin/ban-hang/hoa-don/update-thanh-tien/${idHD}`,
@@ -283,7 +292,7 @@ export class SellAPI {
   };
 
   static updateVoucherToHD = (idHD, idVoucher) => {
-     const getToken = getHeader();
+    const getToken = getHeader();
     return requestAdmin({
       method: "PUT",
       url: `/admin/ban-hang/hoa-don/them-voucher/${idHD}/${idVoucher}`,
@@ -293,7 +302,7 @@ export class SellAPI {
     });
   };
   static thanhToanTienMat = (data) => {
-     const getToken = getHeader();
+    const getToken = getHeader();
     return requestAdmin({
       method: "POST",
       url: `/admin/thanh-toan/thanh-toan-tien-mat`,
@@ -305,7 +314,7 @@ export class SellAPI {
   };
 
   static thanhToanChuyenKhoan = (data) => {
-     const getToken = getHeader();
+    const getToken = getHeader();
     return requestAdmin({
       method: "POST",
       url: `/admin/thanh-toan/thanh-toan-chuyen-khoan`,
@@ -316,35 +325,30 @@ export class SellAPI {
     });
   };
 
-
-  static thanhToanHoaDon = (ma,idNV,idVoucher) => {
+  static thanhToanHoaDon = (ma, idNV, idVoucher) => {
     const getToken = getHeader();
-   return requestAdmin({
-     method: "PUT",
-     url: `/admin/ban-hang/thanh-toan/hoa-don/${ma}/${idNV}/${idVoucher}`,
-     headers: {
-       Authorization: getToken,
-     },
-   });
-   
- };
+    return requestAdmin({
+      method: "PUT",
+      url: `/admin/ban-hang/thanh-toan/hoa-don/${ma}/${idNV}/${idVoucher}`,
+      headers: {
+        Authorization: getToken,
+      },
+    });
+  };
 
- static thanhToanHoaDonKhongVoucher = (ma,idNV) => {
-  const getToken = getHeader();
- return requestAdmin({
-   method: "PUT",
-   url: `/admin/ban-hang/thanh-toan/hoa-don/${ma}/${idNV}`,
-   headers: {
-     Authorization: getToken,
-   },
- });
- 
-};
-
-
+  static thanhToanHoaDonKhongVoucher = (ma, idNV) => {
+    const getToken = getHeader();
+    return requestAdmin({
+      method: "PUT",
+      url: `/admin/ban-hang/thanh-toan/hoa-don/${ma}/${idNV}`,
+      headers: {
+        Authorization: getToken,
+      },
+    });
+  };
 
   static updateVanChuyen = (ma, data) => {
-     const getToken = getHeader();
+    const getToken = getHeader();
     return requestAdmin({
       method: "PUT",
       url: `/admin/ban-hang/hoa-don/update-van-chuyen/${ma}`,
@@ -356,7 +360,7 @@ export class SellAPI {
   };
 
   static deleteVanChuyen = (ma) => {
-     const getToken = getHeader();
+    const getToken = getHeader();
     return requestAdmin({
       method: "PUT",
       url: `/admin/ban-hang/hoa-don/delete-van-chuyen/${ma}`,
@@ -367,7 +371,7 @@ export class SellAPI {
   };
 
   static addBillClient = (data) => {
-     const getToken = getHeader();
+    const getToken = getHeader();
     return requestAdmin({
       method: "POST",
       url: "/admin/ban-hang/addHDClient",
@@ -378,8 +382,8 @@ export class SellAPI {
     });
   };
 
-  static getSLAndSLT = (idSP,ma) => {
-     const getToken = getHeader();
+  static getSLAndSLT = (idSP, ma) => {
+    const getToken = getHeader();
     return requestAdmin({
       method: "GET",
       url: `/admin/ban-hang/hoa-don/san-pham/so-luong/${idSP}/${ma}`,
@@ -389,8 +393,8 @@ export class SellAPI {
     });
   };
 
-  static updateTienVanChuyen = (ma,tien) => {
-     const getToken = getHeader();
+  static updateTienVanChuyen = (ma, tien) => {
+    const getToken = getHeader();
     return requestAdmin({
       method: "PUT",
       url: `/admin/ban-hang/hoa-don/update-tien-van-chuyen/${ma}/${tien}`,
@@ -398,10 +402,10 @@ export class SellAPI {
         Authorization: getToken,
       },
     });
-  }
+  };
 
   static getThanhTienbyMaHD = (ma) => {
-     const getToken = getHeader();
+    const getToken = getHeader();
     return requestAdmin({
       method: "GET",
       url: `/admin/ban-hang/hoa-don/so-tien/${ma}`,
@@ -409,10 +413,10 @@ export class SellAPI {
         Authorization: getToken,
       },
     });
-  }
+  };
 
-  static voucherTotNhat = (idKH,money) => {
-     const getToken = getHeader();
+  static voucherTotNhat = (idKH, money) => {
+    const getToken = getHeader();
     return requestAdmin({
       method: "GET",
       url: `/admin/ban-hang/hoa-don/voucher-tot-nhat/${idKH}/${money}`,
@@ -420,10 +424,10 @@ export class SellAPI {
         Authorization: getToken,
       },
     });
-  }
+  };
 
-  static voucherSapDatDuoc = (idKH,money,idV) => {
-     const getToken = getHeader();
+  static voucherSapDatDuoc = (idKH, money, idV) => {
+    const getToken = getHeader();
     return requestAdmin({
       method: "GET",
       url: `/admin/ban-hang/hoa-don/khuyen-mai-sap-dat-duoc/${idKH}/${money}/${idV}`,
@@ -431,10 +435,10 @@ export class SellAPI {
         Authorization: getToken,
       },
     });
-  }
+  };
 
   static detailHoaDon = (ma) => {
-     const getToken = getHeader();
+    const getToken = getHeader();
     return requestAdmin({
       method: "GET",
       url: `/admin/ban-hang/detail-hoa-don/${ma}`,
@@ -442,5 +446,5 @@ export class SellAPI {
         Authorization: getToken,
       },
     });
-  }
+  };
 }

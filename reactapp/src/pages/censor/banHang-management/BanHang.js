@@ -106,7 +106,6 @@ const BanHang = () => {
     }
   }, []);
 
-
   const handleRemoveOption = () => {
     setVoucherHienTai(null); // Xóa lựa chọn hiện tại
   };
@@ -213,7 +212,6 @@ const BanHang = () => {
     };
   };
 
-
   lengthSP = ctspHD
     .filter((f) => f.hoaDon === activeKey)
     .reduce(
@@ -255,28 +253,29 @@ const BanHang = () => {
     }
   };
 
-
-
   const getSoTien = () => {
-  if (activeKey) {
-    let tien = hoaDons.filter(e => e.key === activeKey).length > 0  ?
-    hoaDons.filter(e => e.key === activeKey)[0].thanhTien ? hoaDons.filter(e => e.key === activeKey)[0].thanhTien : 0 : 0;
-    if (voucherHienTai && voucherHienTai.dieuKien > tien ) {
-      setVoucherHienTai(null);
+    if (activeKey) {
+      let tien =
+        hoaDons.filter((e) => e.key === activeKey).length > 0
+          ? hoaDons.filter((e) => e.key === activeKey)[0].thanhTien
+            ? hoaDons.filter((e) => e.key === activeKey)[0].thanhTien
+            : 0
+          : 0;
+      if (voucherHienTai && voucherHienTai.dieuKien > tien) {
+        setVoucherHienTai(null);
+      }
+      SellAPI.voucherTotNhat(idKH ? idKH : null, tien).then((res) =>
+        setVoucherHienTai(res.data)
+      );
+      SellAPI.voucherSapDatDuoc(
+        idKH ? idKH : null,
+        tien,
+        voucherHienTai ? voucherHienTai.id : null
+      ).then((res) => {
+        setSoTienCanMuaThem(res.data[0]);
+        setSoTienDuocGiam(res.data[1]);
+      });
     }
-  SellAPI.voucherTotNhat(idKH ? idKH : null, tien).then((res) =>
-  setVoucherHienTai(res.data)
-);
-SellAPI.voucherSapDatDuoc(
-  idKH ? idKH : null,
-  tien ,
-  voucherHienTai ? voucherHienTai.id : null
-).then((res) => {
-  setSoTienCanMuaThem(res.data[0]);
-  setSoTienDuocGiam(res.data[1]);
-
-});
-  }
   };
 
   useEffect(() => {
@@ -291,7 +290,7 @@ SellAPI.voucherSapDatDuoc(
     if (activeKey) {
       getSoTien();
     }
-  }, [activeKey,hoaDons.thanhTien,ctspHD,openSanPham]);
+  }, [activeKey, hoaDons.thanhTien, ctspHD, openSanPham]);
 
   useEffect(() => {
     if (activeKey !== "") {
@@ -305,9 +304,9 @@ SellAPI.voucherSapDatDuoc(
         );
 
         setMoney(res.data.thanhTien ? res.data.thanhTien : 0);
-       });
+      });
     }
-  }, [soTienHoaDon,openSanPham , activeKey]);
+  }, [soTienHoaDon, openSanPham, activeKey]);
 
   useEffect(() => {
     if (
@@ -319,10 +318,6 @@ SellAPI.voucherSapDatDuoc(
       setIsSwitchOn(true);
     }
   }, [activeKey, hoaDons.tenNguoiNhan, hoaDons.ngayDuKienNhan]);
-
-
-
-
 
   //đang fixx
   const handleSwitchTraSau = () => {
@@ -364,7 +359,98 @@ SellAPI.voucherSapDatDuoc(
                 });
                 return setIsSwitchTraSau(false);
               } else {
-                SellAPI.updateTraSau(activeKey, storedData);
+                if (!voucherHienTai) {
+                  SellAPI.updateTraSau(
+                    activeKey,
+                    storedData,
+                    roundToThousands(
+                      data.reduce((accumulator, currentProduct) => {
+                        return accumulator + currentProduct.total;
+                      }, 0) -
+                        (voucherHienTai
+                          ? voucherHienTai.loaiVoucher === "Tiền mặt"
+                            ? parseFloat(voucherHienTai.mucDo) <
+                              parseFloat(voucherHienTai.giamToiDa)
+                              ? voucherHienTai.mucDo
+                              : voucherHienTai.giamToiDa
+                            : parseFloat(
+                                (data.reduce((accumulator, currentProduct) => {
+                                  return accumulator + currentProduct.total;
+                                }, 0) *
+                                  voucherHienTai.mucDo) /
+                                  100
+                              ) < parseFloat(voucherHienTai.giamToiDa)
+                            ? (parseFloat(
+                                data.reduce((accumulator, currentProduct) => {
+                                  return accumulator + currentProduct.total;
+                                }, 0)
+                              ) *
+                                parseFloat(voucherHienTai.mucDo)) /
+                              100
+                            : voucherHienTai.giamToiDa
+                          : 0) +
+                        roundToThousands(
+                          isSwitchOn
+                            ? soTienVanChuyen
+                              ? soTienVanChuyen
+                              : hd[0]?.tienVanChuyen && shipMoney === shipMoney1
+                              ? hd[0]?.tienVanChuyen
+                              : shipMoney1
+                              ? shipMoney1
+                              : shipMoney
+                              ? shipMoney
+                              : 0
+                            : 0
+                        )
+                    )
+                  );
+                } else {
+                  SellAPI.updateTraSauCoVoucher(
+                    activeKey,
+                    storedData,
+                    roundToThousands(
+                      data.reduce((accumulator, currentProduct) => {
+                        return accumulator + currentProduct.total;
+                      }, 0) -
+                        (voucherHienTai
+                          ? voucherHienTai.loaiVoucher === "Tiền mặt"
+                            ? parseFloat(voucherHienTai.mucDo) <
+                              parseFloat(voucherHienTai.giamToiDa)
+                              ? voucherHienTai.mucDo
+                              : voucherHienTai.giamToiDa
+                            : parseFloat(
+                                (data.reduce((accumulator, currentProduct) => {
+                                  return accumulator + currentProduct.total;
+                                }, 0) *
+                                  voucherHienTai.mucDo) /
+                                  100
+                              ) < parseFloat(voucherHienTai.giamToiDa)
+                            ? (parseFloat(
+                                data.reduce((accumulator, currentProduct) => {
+                                  return accumulator + currentProduct.total;
+                                }, 0)
+                              ) *
+                                parseFloat(voucherHienTai.mucDo)) /
+                              100
+                            : voucherHienTai.giamToiDa
+                          : 0) +
+                        roundToThousands(
+                          isSwitchOn
+                            ? soTienVanChuyen
+                              ? soTienVanChuyen
+                              : hd[0]?.tienVanChuyen && shipMoney === shipMoney1
+                              ? hd[0]?.tienVanChuyen
+                              : shipMoney1
+                              ? shipMoney1
+                              : shipMoney
+                              ? shipMoney
+                              : 0
+                            : 0
+                        )
+                    ),
+                    voucherHienTai.id
+                  );
+                }
                 toast("✔️ Cập nhật thành công!", {
                   position: "top-right",
                   autoClose: 1000,
@@ -397,8 +483,8 @@ SellAPI.voucherSapDatDuoc(
   };
   const handleClearVoucher = () => {
     setVoucherHienTai(null);
-  }
-  const onChangeVoucher =  (value,option) => {
+  };
+  const onChangeVoucher = (value, option) => {
     if (option.dieuKien > money) {
       setVoucherHienTai(null);
       toast.error(
@@ -418,7 +504,7 @@ SellAPI.voucherSapDatDuoc(
         }
       );
     }
-   // if (option.key !== voucherHienTai?.id)
+    // if (option.key !== voucherHienTai?.id)
     else {
       setVoucherHienTai(option);
       SellAPI.voucherSapDatDuoc(idKH, money, option.key).then((res) => {
@@ -427,10 +513,8 @@ SellAPI.voucherSapDatDuoc(
       });
       dispatch(UpdateVoucherToBill({ voucher: option.key, key: activeKey }));
     }
-    
   };
   // Lấy thông tin nhân viên
-
 
   //load nguoi dung voucher
 
@@ -562,7 +646,7 @@ SellAPI.voucherSapDatDuoc(
             idThanhPho: item.idThanhPho,
             // nguoiSua: item.nguoiSua,
             // ngaySua: item.ngaySua,
-             //ngayTao: storedData,
+            //ngayTao: storedData,
             trangThai: 0,
             key: item.ma,
             tienVanChuyen: item.tienVanChuyen,
@@ -652,7 +736,6 @@ SellAPI.voucherSapDatDuoc(
     }
   };
 
-
   const onChangeSoLuong = async (value, record) => {
     let SL = 0; // số lượng trước
     let SLT = 0; // số lượng tồn
@@ -663,7 +746,7 @@ SellAPI.voucherSapDatDuoc(
     setShipMoney(0);
     setShipMoney1(0);
 
-    if (value === 0 || !value ) {
+    if (value === 0 || !value) {
       Modal.confirm({
         title: "Thông báo",
         content:
@@ -678,15 +761,22 @@ SellAPI.voucherSapDatDuoc(
           dispatch(
             UpdatePushProduct({
               id: record.chiTietSanPham,
-              soLuong: record.soLuong ,
+              soLuong: record.soLuong,
             })
           );
-          dispatch(UpdateTienHangGiam({key:record.hoaDon,thanhTien : parseFloat(value - record.soLuong)*parseFloat(record.giaSauGiam)}));
+          dispatch(
+            UpdateTienHangGiam({
+              key: record.hoaDon,
+              thanhTien:
+                parseFloat(value - record.soLuong) *
+                parseFloat(record.giaSauGiam),
+            })
+          );
           SellAPI.deleteInvoiceAndRollBackProduct(
             record.chiTietSanPham,
             record.hoaDon
           );
-         // getSoTien();
+          // getSoTien();
           // SellAPI.updateThanhTien(record.hoaDon);
           data = ctspHD.filter((f) => f.hoaDon === activeKey);
           toast("✔️ Cập nhật giỏ hàng thành công!", {
@@ -737,7 +827,14 @@ SellAPI.voucherSapDatDuoc(
             soLuong: value - record.soLuong,
           })
         );
-        dispatch(UpdateTienHang({key:record.hoaDon,thanhTien : parseFloat(value - record.soLuong)*parseFloat(record.giaSauGiam)}));
+        dispatch(
+          UpdateTienHang({
+            key: record.hoaDon,
+            thanhTien:
+              parseFloat(value - record.soLuong) *
+              parseFloat(record.giaSauGiam),
+          })
+        );
         SellAPI.updateSL(record.chiTietSanPham, activeKey, value);
         //getSoTien();
         //SellAPI.updateThanhTien(activeKey);
@@ -755,9 +852,16 @@ SellAPI.voucherSapDatDuoc(
             soLuong: value - record.soLuong,
           })
         );
-        dispatch(UpdateTienHang({key:record.hoaDon,thanhTien : parseFloat(value - record.soLuong)*parseFloat(record.giaSauGiam)}));
+        dispatch(
+          UpdateTienHang({
+            key: record.hoaDon,
+            thanhTien:
+              parseFloat(value - record.soLuong) *
+              parseFloat(record.giaSauGiam),
+          })
+        );
         SellAPI.updateSL(record.chiTietSanPham, activeKey, value);
-       // getSoTien();
+        // getSoTien();
         // SellAPI.updateThanhTien(activeKey);
       }
     }
@@ -809,7 +913,6 @@ SellAPI.voucherSapDatDuoc(
     setOpenKhachHang(false);
   };
 
-
   const handleCloseThanhToan = () => {
     setOpenThanhToan(false);
   };
@@ -818,33 +921,34 @@ SellAPI.voucherSapDatDuoc(
     setSoTienVanChuyen(0);
     let v = null;
     if (key) {
-    SellAPI.detailHoaDon(key).then((res) => {
-      setIDKH(
-        res.data.nguoiDung
-          ? res.data.nguoiDung.id
+      SellAPI.detailHoaDon(key).then((res) => {
+        setIDKH(
+          res.data.nguoiDung
             ? res.data.nguoiDung.id
+              ? res.data.nguoiDung.id
+              : null
             : null
-          : null
-      );
-      setMoney(res.data.thanhTien ? res.data.thanhTien : 0);
-      const v = SellAPI.voucherTotNhat(
-        res.data.nguoiDung
-          ? res.data.nguoiDung.id
+        );
+        setMoney(res.data.thanhTien ? res.data.thanhTien : 0);
+        const v = SellAPI.voucherTotNhat(
+          res.data.nguoiDung
             ? res.data.nguoiDung.id
-            : null
-          : null,
-        res.data.thanhTien ? res.data.thanhTien : 0
-      );
-      setVoucherHienTai(v.data);
-    });
+              ? res.data.nguoiDung.id
+              : null
+            : null,
+          res.data.thanhTien ? res.data.thanhTien : 0
+        );
+        setVoucherHienTai(v.data);
+      });
 
-    SellAPI.getVoucherWithIDKH(
-      hoaDons.filter((item) => item.key === key && item.nguoiDung)[0]?.nguoiDung
-    ).then((res) => setVoucherByIDKH(res));
-    setShipMoney(0);
-    setShipMoney1(0);
-    setSoTienVanChuyen(0);
-  }
+      SellAPI.getVoucherWithIDKH(
+        hoaDons.filter((item) => item.key === key && item.nguoiDung)[0]
+          ?.nguoiDung
+      ).then((res) => setVoucherByIDKH(res));
+      setShipMoney(0);
+      setShipMoney1(0);
+      setSoTienVanChuyen(0);
+    }
   };
 
   ////tạo hóa đơn bằng redux
@@ -868,81 +972,80 @@ SellAPI.voucherSapDatDuoc(
         theme: "light",
       });
     } else {
-
       setProcessing(true);
       const result = await SellAPI.getAllHoaDonChoHomNay();
-    const currentDate = new Date();
-    const currentDateInMilliseconds = Date.UTC(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      currentDate.getDate(),
-      currentDate.getHours(),
-      currentDate.getMinutes(),
-      currentDate.getSeconds()
-    );
-    const value = [
-      {
-        ma:
-          "HDTQ" +
+      const currentDate = new Date();
+      const currentDateInMilliseconds = Date.UTC(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        currentDate.getDate(),
+        currentDate.getHours(),
+        currentDate.getMinutes(),
+        currentDate.getSeconds()
+      );
+      const value = [
+        {
+          ma:
+            "HDTQ" +
+            currentDateInMilliseconds +
+            "-" +
+            (!result.data ? 0 : parseFloat(result.data.length) + 1),
+          trangThai: 0,
+          nhanVien: storedData,
+          nguoiTao: storedData,
+        },
+      ];
+      dispatch(
+        CreateBill({
+          ma:
+            "HDTQ" +
+            currentDateInMilliseconds +
+            "-" +
+            (!result.data ? 0 : parseFloat(result.data.length) + 1),
+          nhanVien: storedData,
+          nguoiDung: null,
+          voucher: null,
+          ngayMua: null,
+          giaGoc: 0,
+          giaGiamGia: 0,
+          thanhTien: 0,
+          diemSuDung: null,
+          giaTriDiem: null,
+          tenNguoiNhan: null,
+          soDienThoai: null,
+          diaChi: null,
+          qrCode: null,
+          ghiChu: null,
+          ngayDuKienNhan: null,
+          ngayNhan: "null",
+          ngayTraHang: null,
+          nguoiTao: storedData,
+          idHuyen: null,
+          idXa: null,
+          idThanhPho: null,
+          nguoiSua: null,
+          ngaySua: null,
+          trangThai: 0,
+          key:
+            "HDTQ" +
+            currentDateInMilliseconds +
+            "-" +
+            (!result.data ? 0 : parseFloat(result.data.length) + 1),
+        })
+      );
+      SellAPI.addBill(value[0]);
+      setActiveKey(
+        "HDTQ" +
           currentDateInMilliseconds +
           "-" +
-          (!result.data ? 0 : parseFloat(result.data.length) + 1),
-        trangThai: 0,
-        nhanVien: storedData,
-        nguoiTao: storedData,
-      },
-    ];
-    dispatch(
-      CreateBill({
-        ma:
-          "HDTQ" +
-          currentDateInMilliseconds +
-          "-" +
-          (!result.data ? 0 : parseFloat(result.data.length) + 1),
-        nhanVien: storedData,
-        nguoiDung: null,
-        voucher: null,
-        ngayMua: null,
-        giaGoc: 0,
-        giaGiamGia: 0,
-        thanhTien: 0,
-        diemSuDung: null,
-        giaTriDiem: null,
-        tenNguoiNhan: null,
-        soDienThoai: null,
-        diaChi: null,
-        qrCode: null,
-        ghiChu: null,
-        ngayDuKienNhan: null,
-        ngayNhan: "null",
-        ngayTraHang: null,
-        nguoiTao: storedData,
-        idHuyen: null,
-        idXa: null,
-        idThanhPho: null,
-        nguoiSua: null,
-        ngaySua: null,
-        trangThai: 0,
-        key:
-          "HDTQ" +
-          currentDateInMilliseconds +
-          "-" +
-          (!result.data ? 0 : parseFloat(result.data.length) + 1),
-      })
-    );
-    SellAPI.addBill(value[0]);
-    setActiveKey(
-      "HDTQ" +
-        currentDateInMilliseconds +
-        "-" +
-        (!result.data ? 0 : parseFloat(result.data.length) + 1)
-    );
-    setVoucherHienTai(null);
-    setMoney(0);
-    setIDKH(null);
-    setShipMoney(0);
-    setProcessing(false);
-  }
+          (!result.data ? 0 : parseFloat(result.data.length) + 1)
+      );
+      setVoucherHienTai(null);
+      setMoney(0);
+      setIDKH(null);
+      setShipMoney(0);
+      setProcessing(false);
+    }
   };
   // ///remove hóa đơn bằng redux
   const handleClickRemoveHD = (targetKey) => {
@@ -966,18 +1069,17 @@ SellAPI.voucherSapDatDuoc(
             RemoveBill(hoaDons.filter((hoaDon) => hoaDon.key == targetKey)[0])
           );
           const list = ctspHD.filter((item) => item.hoaDon === targetKey);
-         // HoaDonAPI.huyHoaDon(targetKey);
+          // HoaDonAPI.huyHoaDon(targetKey);
           list.map((i) =>
             //SellAPI.deleteInvoiceAndRollBackProduct(i.chiTietSanPham, targetKey)
             SellAPI.delete(i.chiTietSanPham, targetKey)
-
           );
-          if (hoaDons.filter((h) => h.key !== targetKey)[0]){
+          if (hoaDons.filter((h) => h.key !== targetKey)[0]) {
             setActiveKey(hoaDons.filter((h) => h.key !== targetKey)[0].key);
           } else {
             handleClickAddHD();
           }
-        
+
           initState.current--;
           toast("✔️ Xóa hóa đơn thành công!", {
             position: "top-right",
@@ -1047,9 +1149,7 @@ SellAPI.voucherSapDatDuoc(
                       `${Intl.NumberFormat("en-US").format(
                         record.giaTriKhuyenMai
                       )} VND`
-                    :
-                      ("-" + parseInt(record.giaTriKhuyenMai, 10) + "%")
-                      
+                    : "-" + parseInt(record.giaTriKhuyenMai, 10) + "%"
                 }
                 color="red"
                 size="small"
@@ -1171,7 +1271,14 @@ SellAPI.voucherSapDatDuoc(
                       soLuong: record.soLuong,
                     })
                   );
-                  dispatch(UpdateTienHangGiam({key:activeKey,thanhTien:parseFloat(record.soLuong)*parseFloat(record.giaSauGiam)}))
+                  dispatch(
+                    UpdateTienHangGiam({
+                      key: activeKey,
+                      thanhTien:
+                        parseFloat(record.soLuong) *
+                        parseFloat(record.giaSauGiam),
+                    })
+                  );
                   SellAPI.deleteInvoiceAndRollBackProduct(
                     record.chiTietSanPham,
                     activeKey
@@ -1505,7 +1612,7 @@ SellAPI.voucherSapDatDuoc(
                                   //       : 0) +
                                   //     roundToThousands(
                                   //       isSwitchOn
-                                  //         ? soTienVanChuyen ? soTienVanChuyen : 
+                                  //         ? soTienVanChuyen ? soTienVanChuyen :
                                   //         hd[0]?.tienVanChuyen &&
                                   //           shipMoney === shipMoney1
                                   //           ? hd[0]?.tienVanChuyen
@@ -1542,10 +1649,8 @@ SellAPI.voucherSapDatDuoc(
                                   //         }
                                   //       );
                                   //     } else {
-                                        handleAddBill(activeKey);
-                                      //}
-                                   
-                                  
+                                  handleAddBill(activeKey);
+                                  //}
 
                                   //handleAddBill(dispatch(GetBillByKey({activeKey})))}
                                 }}
@@ -1596,9 +1701,11 @@ SellAPI.voucherSapDatDuoc(
                                     : voucherHienTai.giamToiDa
                                   : 0) +
                                 roundToThousands(
-                                  isSwitchOn ? soTienVanChuyen ? soTienVanChuyen :
-                                     hd[0]?.tienVanChuyen &&
-                                      shipMoney === shipMoney1
+                                  isSwitchOn
+                                    ? soTienVanChuyen
+                                      ? soTienVanChuyen
+                                      : hd[0]?.tienVanChuyen &&
+                                        shipMoney === shipMoney1
                                       ? hd[0]?.tienVanChuyen
                                       : shipMoney1
                                       ? shipMoney1
@@ -1840,7 +1947,7 @@ SellAPI.voucherSapDatDuoc(
                             <h6 className="mt-4">
                               Phí vận chuyển:
                               <InputNumber
-                              min={0}
+                                min={0}
                                 value={
                                   soTienVanChuyen === 0
                                     ? isSwitchOn
@@ -1953,9 +2060,10 @@ SellAPI.voucherSapDatDuoc(
                                       : 0) +
                                     roundToThousands(
                                       isSwitchOn
-                                        ? soTienVanChuyen ? soTienVanChuyen :
-                                          hd[0]?.tienVanChuyen &&
-                                          shipMoney === shipMoney1
+                                        ? soTienVanChuyen
+                                          ? soTienVanChuyen
+                                          : hd[0]?.tienVanChuyen &&
+                                            shipMoney === shipMoney1
                                           ? hd[0]?.tienVanChuyen
                                           : shipMoney1
                                           ? shipMoney1

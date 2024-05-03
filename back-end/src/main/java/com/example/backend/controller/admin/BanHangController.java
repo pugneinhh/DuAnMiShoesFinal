@@ -3,6 +3,7 @@ package com.example.backend.controller.admin;
 import com.example.backend.dto.request.HoaDonChiTietRequest;
 import com.example.backend.dto.request.HoaDonRequest;
 import com.example.backend.dto.request.LichSuHoaDonRequest;
+import com.example.backend.dto.request.ThanhToanRequest;
 import com.example.backend.dto.response.ChiTietSanPhamForBanHang;
 import com.example.backend.dto.response.HoaDonChiTietRespone;
 import com.example.backend.dto.response.VoucherRespone;
@@ -355,16 +356,39 @@ public class BanHangController {
 
     }
 
-    @PutMapping("/tra-sau/hoa-don/{ma}/{idNV}")
-    public ResponseEntity<?> traSauHoaDon (@PathVariable("ma") String ma,@PathVariable("idNV") String idNV) {
-        HoaDon hoaDon = hoaDonServicee.getHDByMa(ma);
-        if(hoaDon == null) return null;
-        List<ThanhToan> listTT = thanhToanService.getThanhToanByIdHD(hoaDon.getId());
-        for (ThanhToan tt : listTT){
-            tt.setTrangThai(1);
-            thanhToanService.save(tt);
-        }
+    @PutMapping("/tra-sau/hoa-don/{ma}/{idNV}/{tien}")
+    public ResponseEntity<?> traSauHoaDon (@PathVariable("ma") String ma,@PathVariable("idNV") String idNV,@PathVariable("tien")BigDecimal tien) {
+        HoaDon hd = hoaDonServicee.getHDByMa(ma);
+        ThanhToanRequest request = new ThanhToanRequest();
+        request.setHoaDon(hd.getId());
+        request.setTienMat(tien);
+        request.setTongTien(tien);
+        //NguoiDung nguoiDung = nguoiDungService.findByID(idNV);
+        request.setNguoiTao(idNV);
+        request.setNgayTao(LocalDateTime.now());
+        request.setPhuongThuc(0);
+        request.setTrangThai(0);
+
+        thanhToanService.thanhToanAdmin(request);
         return ResponseEntity.ok(  hoaDonServicee.updateTraSau(ma,idNV));
+
+    }
+
+    @PutMapping("/tra-sau/hoa-don/{ma}/{idNV}/{tien}/{idVoucher}")
+    public ResponseEntity<?> traSauHoaDonCoVoucher (@PathVariable("ma") String ma,@PathVariable("idNV") String idNV,@PathVariable("tien")BigDecimal tien,@PathVariable("idVoucher")String idVoucher) {
+        HoaDon hd = hoaDonServicee.getHDByMa(ma);
+        ThanhToanRequest request = new ThanhToanRequest();
+        request.setHoaDon(hd.getId());
+        request.setTienMat(tien);
+        request.setTongTien(tien);
+        //NguoiDung nguoiDung = nguoiDungService.findByID(idNV);
+        request.setNguoiTao(idNV);
+        request.setNgayTao(LocalDateTime.now());
+        request.setPhuongThuc(0);
+        request.setTrangThai(0);
+
+        thanhToanService.thanhToanAdmin(request);
+        return ResponseEntity.ok(  hoaDonServicee.updateTraSauCoVoucher(ma,idNV,idVoucher));
 
     }
 
