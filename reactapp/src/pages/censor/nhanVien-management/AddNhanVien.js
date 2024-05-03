@@ -3,7 +3,7 @@ import { Button, Card, Col, Divider, Form, Input, Row, Select } from "antd";
 import { FaMoneyBills } from "react-icons/fa6";
 import UpLoadImage from "./UploadAnh";
 import { AddressApi } from "../api/address/AddressApi";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { NhanVienAPI } from "../api/user/nhanVien.api";
 import QRScannerModal from "../api/QR_Code/QrCode";
 import { ToastContainer, toast } from "react-toastify";
@@ -13,9 +13,9 @@ import { useAppSelector } from "../../../store/redux/hook";
 import { GetLoading } from "../../../store/reducer/Loading.reducer";
 
 import loading from "../../../assets/images/logo.png";
+import { isFulfilled } from "@reduxjs/toolkit";
 export default function AddNhanVien() {
-  
-   const isLoading = useAppSelector(GetLoading);
+  const isLoading = useAppSelector(GetLoading);
   const [form] = Form.useForm();
   const [fileImage, setFileIamge] = useState(null);
   const [listProvince, setListProvince] = useState([]);
@@ -32,9 +32,9 @@ export default function AddNhanVien() {
   const handleScanButtonClick = () => {
     setShowModal(true);
   };
-  const back=()=>{
+  const back = () => {
     nav("/admin-nhan-vien");
-  }
+  };
   const handleModalClose = () => {
     setShowModal(false);
   };
@@ -223,7 +223,30 @@ export default function AddNhanVien() {
           });
           return;
         }
-
+       let today = new Date();
+       let birthDate = new Date(values.ngaySinh);
+       let age = today.getFullYear() - birthDate.getFullYear();
+       let monthDiff = today.getMonth() - birthDate.getMonth();
+       if (
+         monthDiff < 0 ||
+         (monthDiff === 0 && today.getDate() < birthDate.getDate())
+         
+       ) {
+         age--;
+       }
+        if (age < 18) {
+          toast.error("🦄 Nhân viên chưa đủ tuổi!", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          return;
+        }
         const data = {
           ...values,
           ngaySinh: values.ngaySinh
@@ -253,8 +276,8 @@ export default function AddNhanVien() {
           });
         });
       })
-      .catch(() => {
-        toast("🦄 Thêm Thất bại!", {
+      .catch((e) => {
+        toast("🦄 Thêm Thất bại!" +e, {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
