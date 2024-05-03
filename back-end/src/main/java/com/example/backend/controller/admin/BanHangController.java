@@ -363,7 +363,7 @@ public class BanHangController {
         for (ThanhToan tt : listTT){
             tt.setTrangThai(1);
             thanhToanService.save(tt);
-        }x
+        }
         return ResponseEntity.ok(  hoaDonServicee.updateTraSau(ma,idNV));
 
     }
