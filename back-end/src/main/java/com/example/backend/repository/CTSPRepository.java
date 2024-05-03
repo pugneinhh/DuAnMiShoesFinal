@@ -28,6 +28,7 @@ public interface CTSPRepository extends JpaRepository<ChiTietSanPham, String> {
             ,CASE WHEN MIN(o.ghi_chu) IS NULL THEN N'Chưa có ảnh' ELSE MIN(o.ghi_chu) END AS linkAnh 
             ,sp.ten AS tenSP ,kt.ten AS tenKT,ms.ten AS tenMS,ms.ma AS maMS
             ,CASE WHEN o.so_luong IS NULL THEN N'0' ELSE o.so_luong END AS soLuong
+            ,CASE WHEN o.so_luong_tra IS NULL THEN N'0' ELSE o.so_luong_tra END AS soLuongTra
             ,o.gia_ban AS giaBan,o.trang_thai AS trangThai
             FROM chi_tiet_san_pham o
             JOIN san_pham sp  on o.san_pham_id=sp.id

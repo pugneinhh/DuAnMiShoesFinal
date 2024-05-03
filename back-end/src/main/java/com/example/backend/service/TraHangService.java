@@ -3,10 +3,7 @@ package com.example.backend.service;
 import com.example.backend.dto.request.TraHangRequest;
 import com.example.backend.dto.response.HoaDonChiTietBanHangRespone;
 import com.example.backend.entity.*;
-import com.example.backend.repository.HoaDonChiTietRepository;
-import com.example.backend.repository.HoaDonRepository;
-import com.example.backend.repository.LichSuHoaDonRepository;
-import com.example.backend.repository.TraHangRepository;
+import com.example.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +21,8 @@ public class TraHangService {
     TraHangRepository traHangRepository;
     @Autowired
     LichSuHoaDonRepository lichSuHoaDonRepository;
+    @Autowired
+    CTSPRepository ctspRepository;
 
     public List<HoaDonChiTietBanHangRespone> getAllHDCTByHoaDon(String ma){
         HoaDon hoaDon=hoaDonRepository.getHDByMaTraHang(ma);
@@ -40,6 +39,9 @@ public class TraHangService {
         TraHang traHang=request.map(new TraHang());
         traHang.setNgayTao(LocalDateTime.now());
         traHang.setTrangThai(0);
+        ChiTietSanPham chiTietSanPham= ctspRepository.findById(request.getIdCTSP()).get();
+        chiTietSanPham.setSoLuongTra(chiTietSanPham.getSoLuongTra()+request.getSoLuong());
+        ctspRepository.save(chiTietSanPham);
         HoaDonChiTiet hdct=hoaDonChiTietRepository.findById(request.getIdHDCT()).get();
         if(traHang.getSoLuong()== hdct.getSoLuong()){
             hdct.setTrangThai(2);

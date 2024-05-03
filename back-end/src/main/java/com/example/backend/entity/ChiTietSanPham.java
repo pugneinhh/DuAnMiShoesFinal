@@ -51,6 +51,8 @@ public class ChiTietSanPham {
     private String qrCode;
     private String moTa;
     private int soLuong;
+
+    private int soLuongTra;
     private LocalDateTime ngayTao;
     private LocalDateTime ngaySua;
     private String nguoiTao;
